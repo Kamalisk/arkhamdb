@@ -20,6 +20,8 @@ class ExcelController extends Controller
 	
 	public function downloadProcessAction(Request $request)
 	{
+		$ignoredFields = ['id', 'dateCreation', 'dateUpdate'];
+		
 		$em = $this->getDoctrine()->getManager();
 		
 		$pack_id = $request->request->get('pack');
@@ -54,6 +56,7 @@ class ExcelController extends Controller
 		}
 		foreach($fieldNames as $fieldName)
 		{
+			if(in_array($fieldName, $ignoredFields)) continue;
 			$phpCell = $phpActiveSheet->getCellByColumnAndRow($col_index++, 1);
 			$phpCell->setValue($fieldName);
 		}
@@ -73,6 +76,8 @@ class ExcelController extends Controller
 			}
 			foreach($fieldNames as $fieldName)
 			{
+				if(in_array($fieldName, $ignoredFields)) continue;
+				
 				$getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
 				$value = $card->$getter() ?: '';
 
@@ -101,7 +106,7 @@ class ExcelController extends Controller
         return $this->render('AppBundle:Excel:upload_form.html.twig');
     }
     
-    public function uploadAction(Request $request)
+    public function uploadProcessAction(Request $request)
     {
         /* @var $uploadedFile \Symfony\Component\HttpFoundation\File\UploadedFile */
         $uploadedFile = $request->files->get('upfile');
@@ -113,9 +118,11 @@ class ExcelController extends Controller
         $objWorksheet  = $objPHPExcel->getActiveSheet();
 
         $enableCardCreation = $request->request->has('create');
-        $enableUniversalFields = $request->request->has('universal');
         
-        $cards = array();
+        // analysis of first row
+        $colNames = [];
+        
+        $cards = [];
         $firstRow = true;
         foreach($objWorksheet ->getRowIterator() as $row)
         {
@@ -123,97 +130,82 @@ class ExcelController extends Controller
             if($firstRow)
             {
                 $firstRow = false;
+                
+                // analysis of first row
+                foreach ($row->getCellIterator() as $cell)
+                {
+                	$colNames[$cell->getColumn()] = $cell->getValue();
+                }
                 continue;
             }
             
-            $card = array();
-            $specificFields = array('A', 'E', 'H', 'I', 'V');
+            $card = [];
             
             $cellIterator = $row->getCellIterator();
             foreach ($cellIterator as $cell) {
-                $c = $cell->getColumn();
-                if(!$enableUniversalFields && !in_array($c, $specificFields)) continue;
-                // A:code // E:name // H:keywords // I:text // V:flavor
-                switch($c)
-                {
-                	case 'A': $card['code'] = $cell->getValue(); break;
-                	case 'B': $card['pack'] = $cell->getValue(); break;
-                	case 'C': $card['number'] = $cell->getValue(); break;
-                	case 'D': $card['uniqueness'] = $cell->getValue(); break;
-                	case 'E': $card['title'] = $cell->getValue(); break;
-                	case 'F': $card['cost'] = $cell->getValue(); break;
-                	case 'G': $card['type'] = $cell->getValue(); break;
-                	case 'H': $card['keywords'] = $cell->getValue(); break;
-                	case 'I': $card['text'] = str_replace("\n", "\r\n", $cell->getValue()); break;
-                	case 'J': $card['side'] = $cell->getValue(); break;
-                	case 'K': $card['faction'] = $cell->getValue(); break;
-                	case 'L': $card['factionCost'] = $cell->getValue(); break;
-                	case 'M': $card['strength'] = $cell->getValue(); break;
-                	case 'N': $card['trashCost'] = $cell->getValue(); break;
-                	case 'O': $card['memoryUnits'] = $cell->getValue(); break;
-                	case 'P': $card['advancementCost'] = $cell->getValue(); break;
-                	case 'Q': $card['agendaPoints'] = $cell->getValue(); break;
-                	case 'R': $card['minimumDeckSize'] = $cell->getValue(); break;
-                	case 'S': $card['influenceLimit'] = $cell->getValue(); break;
-                	case 'T': $card['baseLink'] = $cell->getValue(); break;
-                	case 'U': $card['illustrator'] = $cell->getValue(); break;
-                	case 'V': $card['flavor'] = $cell->getValue(); break;
-                	case 'W': $card['quantity'] = $cell->getValue(); break;
-                	case 'X': $card['limited'] = $cell->getValue(); break;
-                }
+                $col = $cell->getColumn();
+                $colName = $colNames[$col];
                 
+                //$setter = str_replace(' ', '', ucwords(str_replace('_', ' ', "set_$fieldName")));
+                $card[$colName] = $cell->getValue();
             }
             if(count($card) && !empty($card['code'])) $cards[] = $card;
         }
         
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
-        $repo = $em->getRepository('AppBundle\Entity\Card');
+        $repo = $em->getRepository('AppBundle:Card');
+        
+        $metaData = $em->getClassMetadata('AppBundle:Card');
+        $fieldNames = $metaData->getFieldNames();
+        $associationMappings = $metaData->getAssociationMappings();
         
         $counter = 0;
         foreach($cards as $card)
         {
-        	/* @var $dbcard \AppBundle\Entity\Card */
-        	$dbcard = $repo->findOneBy(array('code' => $card['code']));
-        	if(!$dbcard) {
+        	/* @var $entity \AppBundle\Entity\Card */
+        	$entity = $repo->findOneBy(array('code' => $card['code']));
+        	if(!$entity) {
         		if($enableCardCreation) {
-        			$dbcard = new Card();
-        			$dbcard->setTs(new \DateTime());
+        			$entity = new Card();
+        			$now = new \DateTime();
+        			$entity->setDateCreation($now);
+        			$entity->setDateUpdate($now);
         		} else {
         			continue;
         		}
         	}
         
-        	if(isset($card['pack'])) {
-        		$card['pack'] = $em->getRepository('AppBundle:Pack')->findOneBy(array("name$loc" => $card['pack']));
-        		if(!$card['pack']) continue;
+        	foreach($card as $colName => $value)
+        	{
+        		$setter = str_replace(' ', '', ucwords(str_replace('_', ' ', "set_$colName")));
+        		
+        		if(key_exists($colName, $associationMappings))
+        		{
+        			$associationMapping = $associationMappings[$colName];
+        			
+        			$associationRepository = $em->getRepository($associationMapping['targetEntity']);
+        			$associationEntity = $associationRepository->findOneBy(['name' => $value]);
+        			if($associationEntity) {
+        				$entity->$setter($associationEntity);
+        			}
+        		}
+        		else if(in_array($colName, $fieldNames))
+        		{
+        			$type = $metaData->getTypeOfField($colName);
+        			if($type === 'boolean') {
+        				$value = (boolean) $value;
+        			}
+        			$entity->$setter($value);
+        		}
         	}
-
-        	if(isset($card['type'])) {
-        		$card['type'] = $em->getRepository('AppBundle:Type')->findOneBy(array("name$loc" => $card['type']));
-        		if(!$card['type']) continue;
-        	}
-        
-        	if(isset($card['side'])) {
-        		$card['side'] = $em->getRepository('AppBundle:Side')->findOneBy(array("name$loc" => $card['side']));
-        		if(!$card['side']) continue;
-        	}
-        
-        	if(isset($card['faction'])) {
-        		$card['faction'] = $em->getRepository('AppBundle:Faction')->findOneBy(array("name$loc" => $card['faction'], "side" => $card['side']));
-        		if(!$card['faction']) continue;
-        	}
-        
-        	foreach($card as $key => $value) {
-        		$func = 'set'.ucfirst($key);
-        		$dbcard->$func($value);
-        	}
-        
-        	$em->persist($dbcard);
+        	
+        	$em->persist($entity);
         	$counter++;
         }
+        
         $em->flush();
         
-        return new Response($counter." card changed");
+        return new Response($counter." card changed or added");
     }
 }

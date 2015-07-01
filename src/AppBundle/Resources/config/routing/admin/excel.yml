@@ -10,18 +10,14 @@ excel_download_process:
     defaults:
         _controller: AppBundle:Excel:downloadProcess
 
-excel_form:
-    pattern: /form
-    defaults:
-        _controller: AppBundle:Excel:form
-
-excel_upload:
+excel_upload_form:
     pattern: /upload
+    methods: [GET]
     defaults:
-        _controller: AppBundle:Excel:upload
+        _controller: AppBundle:Excel:uploadForm
 
-excel_confirm:
-    pattern: /confirm
+excel_upload_process:
+    pattern: /upload
+    methods: [POST]
     defaults:
-        _controller: AppBundle:Excel:confirm
-    
+        _controller: AppBundle:Excel:uploadProcess
