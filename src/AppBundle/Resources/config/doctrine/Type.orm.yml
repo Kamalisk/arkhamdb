@@ -1,0 +1,4 @@
+AppBundle\Entity\Type:
+    type: entity
+    table: type
+     

@@ -1,0 +1,41 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block body %}
+
+<div class="container decklist">
+
+<h1>Comparison of 2 decklists</h1>
+
+<div class="row">
+<div class="col-sm-4">
+<h3><a href="{{ path('decklist_detail', {'decklist_id': decklist1.id,'decklist_name':decklist1.prettyname}) }}">{{ decklist1.name }}</a></h3>
+{% for card in decklist1.content %}
+<div>
+    {{ card.qty }}x
+    <a href="{{ path('cards_zoom', {'card_code':card.code}) }}" class="card" data-index="{{ card.code }}">{{ card.title }}</a>
+</div>
+{% endfor %}
+</div>
+<div class="col-sm-4">
+<h3 class="decklist-name">&#8745;</h3>
+{% for card in shared %}
+<div>
+    {{ card.qty }}x
+    <a href="{{ path('cards_zoom', {'card_code':card.code}) }}" class="card" data-index="{{ card.code }}">{{ card.title }}</a>
+</div>
+{% endfor %}
+</div>
+<div class="col-sm-4">
+<h3><a href="{{ path('decklist_detail', {'decklist_id': decklist2.id,'decklist_name':decklist2.prettyname}) }}">{{ decklist2.name }}</a></h3>
+{% for card in decklist2.content %}
+<div>
+    {{ card.qty }}x
+    <a href="{{ path('cards_zoom', {'card_code':card.code}) }}" class="card" data-index="{{ card.code }}">{{ card.title }}</a>
+</div>
+{% endfor %}
+</div>
+</div>
+
+</div>
+
+{% endblock %}

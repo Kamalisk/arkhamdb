@@ -1,0 +1,5 @@
+<p><b>{{ username }}</b> also commented on a decklist <b><a href="{{ url|replace({'&':'&amp;'})|raw }}">{{ decklist_name }}</a></b></p>
+<div style="font-family:sans-serif;border:1px solid lightgray;border-width:1px 0px">
+{{ comment|raw }}
+</div>
+<p style="color:lightgray;font-size:0.8em">To unsubscribe from those notifications, change your <a href="{{ profile }}">account settings</a>.</p>

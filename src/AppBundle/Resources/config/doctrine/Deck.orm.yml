@@ -1,0 +1,3 @@
+AppBundle\Entity\Deck:
+    type: entity
+    table: deck

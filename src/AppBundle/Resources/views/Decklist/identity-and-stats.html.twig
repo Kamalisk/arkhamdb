@@ -1,0 +1,20 @@
+
+<!-- Identity and Stats -->
+<div class="row">
+	<div class="col-sm-3">
+		<img id="img_identity" src="#empty" alt="Identity" class="img-responsive  hidden-xs">
+	</div><!-- /.col-md-3 -->
+	<div class="col-sm-9">
+		<h3 id="identity">Identity</h3>
+		<div id="influence"></div>
+		<div id="agendapoints"></div>
+		<div id="cardcount"></div>
+		<div id="latestpack"></div>
+		{% if decklist.tournament %}
+        <a class="btn btn-ghost btn-success btn-sm" href="{{ path('decklists_list', {type:'tournament'}) }}">
+            <span class="glyphicon glyphicon-certificate"></span> {{ decklist.tournament }}
+        </a>
+        {% endif %}
+    </div><!-- /.col-md-9 -->
+</div><!-- /.row -->
+<!-- Identity and Stats -->

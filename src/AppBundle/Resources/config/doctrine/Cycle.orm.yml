@@ -1,0 +1,4 @@
+AppBundle\Entity\Cycle:
+    type: entity
+    table: cycle
+        

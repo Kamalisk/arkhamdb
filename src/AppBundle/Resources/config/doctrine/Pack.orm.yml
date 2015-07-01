@@ -1,0 +1,4 @@
+AppBundle\Entity\Pack:
+    type: entity
+    table: pack
+        

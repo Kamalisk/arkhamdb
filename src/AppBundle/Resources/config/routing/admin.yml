@@ -1,0 +1,35 @@
+
+AppBundle_admin_cycle:
+    resource: "@AppBundle/Resources/config/routing/admin/cycle.yml"
+    prefix:   /cycle
+
+AppBundle_admin_pack:
+    resource: "@AppBundle/Resources/config/routing/admin/pack.yml"
+    prefix:   /pack
+
+AppBundle_admin_card:
+    resource: "@AppBundle/Resources/config/routing/admin/card.yml"
+    prefix:   /card
+
+AppBundle_admin_type:
+    resource: "@AppBundle/Resources/config/routing/admin/type.yml"
+    prefix:   /type
+    
+AppBundle_excel:
+    resource: "@AppBundle/Resources/config/routing/admin/excel.yml"
+    prefix:   /excel
+    
+all_comments:
+    pattern: /deckcomments/{page}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Social:comments
+        page: 1
+    
+user_comments:
+    pattern: /user/comments/{page}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Social:usercomments
+        page: 1
+        

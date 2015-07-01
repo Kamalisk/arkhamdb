@@ -1,0 +1,15 @@
+{% extends 'AppBundle:Search:display.html.twig' %}
+
+{% block main %}
+
+{% for key, value in cards %}
+<h2>{{ key }}</h2>
+<div class="shortlist" style="-webkit-column-count: 3;-moz-column-count: 3;column-count: 3;">
+{% for i in 0..value|length-1 %}
+{% set card = value[i] %}
+<a href="{{ card.url }}" class="{% if card.available == false %} card-preview{% endif %}">{{ card.title }}</a><br>
+{% endfor %}
+</div>
+{% endfor %}
+
+{% endblock %}

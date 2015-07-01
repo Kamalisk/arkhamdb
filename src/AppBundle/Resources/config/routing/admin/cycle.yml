@@ -1,0 +1,30 @@
+admin_cycle:
+    pattern:  /
+    defaults: { _controller: "AppBundle:Cycle:index" }
+
+admin_cycle_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "AppBundle:Cycle:show" }
+
+admin_cycle_new:
+    pattern:  /new
+    defaults: { _controller: "AppBundle:Cycle:new" }
+
+admin_cycle_create:
+    pattern:  /create
+    defaults: { _controller: "AppBundle:Cycle:create" }
+    requirements: { _method: post }
+
+admin_cycle_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "AppBundle:Cycle:edit" }
+
+admin_cycle_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "AppBundle:Cycle:update" }
+    requirements: { _method: post|put }
+
+admin_cycle_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "AppBundle:Cycle:delete" }
+    requirements: { _method: post|delete }

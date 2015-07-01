@@ -1,0 +1,52 @@
+AppBundle\Entity\Card:
+    type: entity
+    table: card
+    fields:
+        quantity:
+            type: smallint
+            nullable: false
+        gold:
+            type: smallint
+            nullable: true
+        claim:
+            type: smallint
+            nullable: true
+        initiative:
+            type: smallint
+            nullable: true
+        reserve:
+            type: smallint
+            nullable: true
+        strength:
+            type: smallint
+            nullable: true
+        keywords:
+            type: string
+            length: 255
+            nullable: true
+        flavor:
+            type: text
+            nullable: true
+        illustrator:
+            type: string
+            length: 255
+            nullable: true
+        is_unique:
+            type: boolean
+            nullable: false
+        is_limited:
+            type: boolean
+            nullable: false
+        is_loyal:
+            type: boolean
+            nullable: false
+        is_military:
+            type: boolean
+            nullable: false
+        is_intrigue:
+            type: boolean
+            nullable: false
+        is_power:
+            type: boolean
+            nullable: false
+    

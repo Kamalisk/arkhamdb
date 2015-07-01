@@ -1,0 +1,102 @@
+adb_admin:
+    resource: "@AppBundle/Resources/config/routing/admin.yml"
+    prefix: /admin
+
+adb_api_oauth2:
+    resource: "@AppBundle/Resources/config/routing/api_oauth2.yml"
+    prefix: /api_oauth2
+
+adb_api:
+    resource: "@AppBundle/Resources/config/routing/api.yml"
+    prefix: /api
+
+adb_cards:
+    resource: "@AppBundle/Resources/config/routing/cards.yml"
+#    prefix: 
+
+adb_deck:
+    resource: "@AppBundle/Resources/config/routing/deck.yml"
+    prefix: /deck
+
+adb_decklist:
+    resource: "@AppBundle/Resources/config/routing/decklist.yml"
+    prefix: /decklist
+
+adb_review:
+    resource: "@AppBundle/Resources/config/routing/review.yml"
+    prefix: /review
+
+adb_tag:
+    resource: "@AppBundle/Resources/config/routing/tag.yml"
+    prefix: /tag
+
+adb_user:
+    resource: "@AppBundle/Resources/config/routing/user.yml"
+    prefix: /user
+
+netrunnerdb_index:
+    pattern: /
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Index:index
+
+donators:
+    pattern: /donators
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Social:donators
+
+decks_list:
+    pattern: /decks
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Builder:list
+
+decklists_searchform:
+    pattern: /decklists/search
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Social:search
+
+decklists_list:
+    pattern: /decklists/{type}/{page}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Social:list
+        page: 1
+    requirements:
+        page: \d+
+
+card_reviews_list:
+    pattern: /reviews/{page}
+    defaults:
+        _controller: AppBundle:Review:list
+        page: 1
+    requirements:
+        page: \d+
+
+faction_page:
+    pattern: /faction/{faction_code}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Faction:faction
+
+about:
+    pattern: /about
+    defaults:
+        _controller: AppBundle:Default:about
+
+apidoc:
+    pattern: /apidoc
+    defaults:
+        _controller: AppBundle:Default:apidoc
+
+rules:
+    pattern: /rules
+    defaults:
+        _controller: AppBundle:Default:rules
+
+ffg:
+    pattern: /ffg
+    defaults:
+        _controller: AppBundle:Default:ffg

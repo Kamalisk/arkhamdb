@@ -1,0 +1,154 @@
+
+deck_buildform:
+    pattern:  /new/{side_text}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Builder:buildform
+
+deck_initbuild:
+    pattern: /build/{card_code}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Builder:initbuild
+
+deck_save:
+    pattern: /save
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Builder:save
+
+deck_edit:
+    pattern: /edit/{deck_id}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Builder:edit
+    requirements:
+        deck_id: \d+
+
+deck_view:
+    pattern: /view/{deck_id}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Builder:view
+    requirements:
+        deck_id: \d+
+
+deck_duplicate:
+    pattern: /duplicate/{deck_id}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Builder:duplicate
+    requirements:
+        deck_id: \d+
+        
+deck_delete:
+    pattern: /delete
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Builder:delete
+
+deck_delete_list:
+    pattern: /delete_list
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Builder:deleteList
+
+deck_import:
+    pattern: /import
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Builder:import
+
+deck_textimport:
+    pattern: /textimport
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Builder:textimport
+
+deck_fileimport:
+    pattern: /fileimport
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Builder:fileimport
+
+deck_meteorimport:
+    pattern: /meteorimport
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Builder:meteorimport
+        
+deck_copy:
+    pattern: /copy/{decklist_id}
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Builder:copy
+    requirements:
+        decklist_id: \d+
+        
+decklist_new:
+    pattern: /publish
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Social:new
+    
+
+decks_upload_all:
+    pattern: /import/all
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Builder:uploadall
+
+deck_export_octgn:
+    pattern: /export/octgn/{deck_id}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Builder:octgnexport
+    requirements:
+        deck_id: \d+
+
+deck_export_text:
+    pattern: /export/text/{deck_id}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Builder:textexport
+    requirements:
+        deck_id: \d+
+
+deck_export_octgn_list:
+    pattern: /export/octgn/list
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Builder:octgnexportList
+
+deck_export_text_list:
+    pattern: /export/text/list
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Builder:textexportList
+
+deck_email:
+    pattern: /export/email/{deck_id}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Builder:email
+        deck_id: \d+
+
+deck_publish:
+    pattern: /can_publish/{deck_id}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Social:publish
+        deck_id: \d+
+
+deck_autosave:
+    pattern: /autosave/{deck_id}
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Builder:autosave
+
+decks_download_all:
+    pattern: /export/all
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Builder:downloadall
+        

@@ -1,0 +1,63 @@
+<!DOCTYPE head PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.css">
+    <link rel="stylesheet" href="/web/bundles/app/css/icons.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script type="text/javascript">$.noConflict();</script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.js"></script>
+    <script src="/web/bundles/app/js/taffy.js"></script>
+    <script src="/web/bundles/app/js/nrdb.data.js"></script>
+    <script src="/web/bundles/app/js/nrdb.format.js"></script>
+    <script src="/web/bundles/app/js/nrdb.tip.js"></script>
+    
+</head>
+<body>
+<h1>NetrunnerDB Integration</h1>
+<p>This page doesn't include the usual setup of js and css files of other NetrunnerDB pages. Instead, it includes only the files that some external page may want to include to add some features.</p>
+<h2>Card Tooltip</h2>
+<h3>Setup</h3>
+<ol>
+<li>include <tt>//cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.css</tt></li>
+<li>include <tt>http://netrunnerdb.com/web/bundles/app/css/icons.css</tt></li>
+<li>include <tt>//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js</tt></li>
+<li>include <tt>//cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.js</tt></li>
+<li>include <tt>http://netrunnerdb.com/web/bundles/app/js/taffy.js</tt></li>
+<li>include <tt>http://netrunnerdb.com/web/bundles/app/js/nrdb.data.js</tt></li>
+<li>include <tt>http://netrunnerdb.com/web/bundles/app/js/nrdb.format.js</tt></li>
+<li>include <tt>http://netrunnerdb.com/web/bundles/app/js/nrdb.tip.js</tt></li>
+<li>add links pointing to NetrunnerDB pages, like <a href="http://netrunnerdb.com/en/card/01001">Noise: Hacker Extraordinaire</a> or <a href="http://netrunnerdb.com/en/card/01041">The Toolbox</a></li>
+</ol>
+<h3>JS encapsulation</h3>
+<p>All the code from <tt>nrdb.*.js</tt> lives in the NRDB namespace and uses jQuery in noConflict mode (like this page).</p>
+<p><tt>taffy.js</tt> lives in the TAFFY namespace.</p>
+<h3>CSS Styling</h3>
+<b>Warning:</b> <tt>icons.css</tt> adds styling to all <tt>.icon</tt> elements.
+<ul>
+<li>the tooltip is <tt>div.qtip-nrdb</tt></li>
+<li>the content is <tt>div.qtip-content</tt></li>
+<li>the title is <tt>h4</tt></li>
+<li>the line of info under the title is <tt>p.card-info</tt></li>
+<li>the type in the info line is <tt>span.card-type</tt></li>
+<li>the subtype in the info line is <tt>span.card-keywords</tt></li>
+<li>the rest of the info line is <tt>span.card-prop</tt></li>
+<li>the text of the card is <tt>div.card-text</tt></li>
+<li>each line of text of the card is <tt>p</tt></li>
+<li>the last line with influence and faction is <tt>p.card-faction</tt></li>
+</ul>
+<pre>
+div.qtip-nrdb
+  div.qtip-content
+    h4
+    p.card-info
+      span.card-type
+      span.card-keywords
+      span.card-prop
+    div.card-text
+      p
+      p
+      p
+    p.card-faction
+</pre>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<div id="recent_other" style="margin-bottom:2em">
+		<h3 class="section">Card reviews <a href="{{ path('card_reviews_list') }}" class="small">more</a></h3>
+		<div class="reviews">
+		{% for review in reviews %}
+		<article class="review">
+		<h4>
+		  <span class="pull-right"><span class="glyphicon glyphicon-heart social-icon-like"></span> {{ review.nbvotes }}</span>
+		  <a href="{{ path('cards_zoom', {card_code:review.card_code}) }}#review-{{ review.id }}" class="card">{{ review.card_title }}</a>
+		</h4>
+		<div class="username small">
+    		by <a href="{{ path('user_profile_view', {user_id:review.user_id,user_name:review.username|e('url')}) }}" class="{{ review.usercolor }}">{{ review.username }}</a>
+    		{% if review.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="NetrunnerDB Gracious Donator"></span>{% endif %}
+    		<small class="reputation">{{ review.reputation }}</small>
+    	</div>
+		<p><small>{{ review.rawtext|raw }}</small></p>
+		</article>
+		{% endfor %}
+		</div>
+</div><!-- #recent_other} -->

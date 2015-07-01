@@ -1,0 +1,133 @@
+{% extends 'AppBundle:Search:display.html.twig' %}
+
+{% block head %}
+<script src="{{ asset('/web/bundles/netrunnerdbcards/js/reviews.js') }}"></script>
+<script type="text/javascript">
+NRDB.user.params.card_id = {{ cards[0].id|json_encode|raw }};
+</script>
+{% endblock %}
+
+{% block main %}
+
+<div class="row">
+    <div class="col-md-9">
+        <div class="row">
+{% for i in 0..cards|length-1 %}{% set card = cards[i] %}
+        	<div class="col-sm-7" style="margin-bottom:2em">
+        		<div>
+        			<div class="panel panel-default">
+        				<div class="panel-heading">
+        					<h3 class="panel-title card-title">
+        						{% if card.uniqueness == true %}&diams;{% endif %}
+        						<a href="{{ card.url }}" class="card-title{% if card.available == false %} card-preview{% endif %}">{{ card.title }}</a>
+        					</h3>
+        	  			</div>
+        				<div class="panel-body">
+        					<div class="card-info">
+        						<span class="card-type">{{ card.type }}</span>{% if card.subtype %}<span class="card-keywords">: {{ card.subtype }}</span>{% endif %}
+        						<span class="card-prop">&bull;
+        						{% if card.type_code == "agenda" %} Adv: {{ card.advancementcost }} &bull; Score: {{ card.agendapoints }} {% endif %}
+        						{% if card.type_code == "identity" and card.side_code == "corp" %}Deck: {{ card.minimumdecksize }} &bull; Influence: {% if card.influencelimit is null %} &#8734; {% else %} {{ card.influencelimit }} {% endif %} {% endif %}
+        						{% if card.type_code == "identity" and card.side_code == "runner" %}Link: {{ card.baselink }} &bull; Deck: {{ card.minimumdecksize }} &bull; Influence: {% if card.influencelimit is null %} &#8734; {% else %} {{ card.influencelimit }} {% endif %} {% endif %}
+        						{% if card.type_code == "operation" or card.type_code == "event" %}Cost: {{ card.cost }} &bull; Influence: {{ card.factioncost }}{% endif %}
+        						{% if card.type_code == "resource" or card.type_code == "hardware" %}Install: {{ card.cost }} &bull; Influence: {{ card.factioncost }}{% endif %}
+        						{% if card.type_code == "program" %}Install: {{ card.cost }} &bull; Memory: {{ card.memoryunits }} {% if card.strength is not null %}&bull; Strength: {{ card.strength }}{% endif %} &bull; Influence: {{ card.factioncost }}{% endif %}
+        						{% if card.type_code == "asset" or card.type_code == "upgrade" %}Rez: {{ card.cost }} &bull; Trash: {{ card.trash }} &bull; Influence: {{ card.factioncost }}{% endif %}
+        						{% if card.type_code == "ice" %}Rez: {{ card.cost }} &bull; Strength: {{ card.strength }} &bull; Influence: {{ card.factioncost }}{% endif %}
+        						</span>
+        					</div>
+        					<div class="card-text">
+        						{{ card.text|raw }}
+        					</div>
+        					<div class="card-flavor">
+        						<small>{{ card.flavor|raw|nl2br }}</small>
+        					</div>
+        					<div class="card-illustrator">
+        						<small>
+        						{{ card.faction }} &bull;
+        						{% if card.illustrator %}{{ card.illustrator }} &bull; {% endif %}{{ card.setname }} #{{ card.number }}
+        						</small>
+        					</div>
+        				</div>
+        			</div>
+        			Links: <a href="{{ path('decklists_list',{type:'find',_locale:app.request.locale,'cards[]':card.code}) }}">Decklists</a> | <a href="{{ card.ancurLink }}">ANCUR</a>
+        		</div>
+        	</div>
+        	<div class="col-sm-5">
+        		<div class="card-image">
+        			{% if card.imagesrc %}
+        			   <img src="{{ card.imagesrc }}" alt="{{ card.title }}" class="img-responsive" style="margin:auto">
+        			{% else %}
+        			   <div class="no-image" style="margin:auto"><div class="no-image-text">No image</div></div>
+        			{% endif %}
+        		</div>
+        	</div>
+        	{% if card.available == true %}
+        	<div class="col-md-12" style="margin-top:2em">
+        	   <div style="line-height:34px" id="reviews-header">
+            	   <span style="font-size:24px">Reviews</span>
+        	   </div>
+        	   <form method="POST" action="{{ path('card_review_post') }}" style="clear:right" id="review-edit-form">
+            	   <input type="hidden" name="card_id" value="{{ card.id }}">
+            	   <input type="hidden" name="review_id" value="">
+               </form>
+        	   {% if card.reviews|length %}
+        	   {% for review in card.reviews %}
+        	   <article class="review" data-index="{{ review.id }}" id="review-{{ review.id }}">
+        	   
+        	       <div class="review-like">
+        	           <a id="review-social-icon-like" href="#" class="social-icon-like" data-toggle="tooltip" data-placement="bottom" title="Like that review">
+                    	   <span class="glyphicon glyphicon-heart"></span> <span class="num">{{ review.nbvotes }}</span>
+                	   </a>
+        	       </div>
+        	       <div class="review-content">
+        	       <div class="review-text">
+                	   {{ review.text|raw }}
+            	   </div>
+            	   <div class="review-date">
+            	       <time datetime="{{ review.datecreation|date('c') }}" title="{{ review.datecreation|date('F jS, Y') }}">{{ review.datecreation|date('n/j/y') }}</time>
+            	   </div>
+            	   <div class="review-author">
+            	       <a href="{{ path('user_profile_view', {user_id:review.author_id,user_name:review.author_name|e('url')}) }}" rel="author" class="username {{ review.author_color }}">{{ review.author_name }}</a>
+            	       {% if review.author_donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="NetrunnerDB Gracious Donator"></span>{% endif %}
+                	   <small class="reputation">{{ review.author_reputation }}</small>
+            	   </div>
+            	   
+            	   {% if review.comments|length %}
+            	   
+            	   {% for comment in review.comments %}
+            	   <div class="review-comment text-muted small">{{ comment.text }}
+            	   &mdash;
+            	   <a title="{{ comment.author.reputation }} reputation" href="{{ path('user_profile_view', {user_id:comment.author.id,user_name:comment.author.username|e('url')}) }}" rel="author" class="username {{ comment.author.faction }}">{{ comment.author.username }}</a>
+            	       {% if comment.author.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="NetrunnerDB Gracious Donator"></span>{% endif %}
+               	   <time datetime="{{ comment.datecreation|date('c') }}" title="{{ comment.datecreation|date('F jS, Y') }}">{{ comment.datecreation|date('n/j/y') }}</time>
+                </div>
+            	   {% endfor %}
+            	   
+            	   {% endif %}
+            	   <form action="{{ path('card_reviewcomment_post') }}" method="POST" class="form-comment">
+            	   <input type="hidden" name="comment_review_id" value="{{ review.id }}">
+            	   <button class="btn btn-link btn-write-comment">Add a comment</button  >
+            	   </form>
+            	   </div>
+        	   </article>
+        	   {% endfor %}
+        	   {% else %}
+        	   <p><i>No review yet for this card.</i></p>
+        	   {% endif %}
+           </div>
+           {% else %}
+           <div class="col-md-12" style="margin-top:2em">
+               <p class="text-muted">Reviews will be enabled for this card when it is officially released.</p>
+           </div>
+           {% endif %}
+{% endfor %}
+        </div>
+    </div>
+   	<div class="col-md-3">
+   	    {% include 'AppBundle:Default:google_adaptable_ad.html.twig' %}
+	</div>
+</div>
+
+{% endblock %}
+

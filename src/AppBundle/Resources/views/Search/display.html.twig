@@ -1,0 +1,32 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<div class="container">
+
+{{ searchbar|raw }}
+
+<div id="list">
+
+{{ pagination|raw }}
+
+{% if cards|length > 0 %}
+
+{% block main %}{% endblock %}
+
+{% else %}
+
+<div class="col-sm-12" style="margin-top:10px">
+	<p class="alert alert-warning">Your query didn't match any card.</p>
+</div>
+	
+{% endif %}
+
+{{ pagination|raw }}
+
+</div>
+
+</div>
+
+{% endblock %}

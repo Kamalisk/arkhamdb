@@ -1,0 +1,147 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block head %}
+<script src="{{ asset('/web/bundles/app/js/search.js') }}"></script>
+<script type="text/javascript">
+$(function () {
+	var type = {{ type|json_encode|raw }};
+	$('time').each(function (index, element) {
+		var datetime = moment($(element).attr('datetime'));
+		var formatted;
+		switch(type) {
+		case 'popular':
+		case 'recent':
+		case 'hottopics':
+			 formatted = datetime.fromNow();
+			 break;
+		case 'halloffame':
+		case 'favorites':
+		case 'mine':
+		case 'search':
+		default:
+			formatted = datetime.format('ll');
+			 break;
+		}
+		$(element).html(formatted);
+		$(element).attr('title', datetime.format('LLLL'));
+	});
+});
+</script>
+{% endblock %}
+
+{% block body %}
+
+<div class="container decklists">
+<div class="row">
+<div class="col-md-3">
+
+<ul class="nav nav-pills nav-stacked" style="margin-bottom:2em">
+{% set linkurl = path('decklists_list', {type:'popular'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Popular</a></li>
+{% set linkurl = path('decklists_list', {type:'recent'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Recent</a></li>
+{% set linkurl = path('decklists_list', {type:'tournament'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Tournaments <span class="label label-success">new</span></a></li>
+{% set linkurl = path('decklists_list', {type:'hottopics'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Hot topics</a></li>
+{% set linkurl = path('decklists_list', {type:'halloffame'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Hall of Fame</a></li>
+{% set linkurl = path('decklists_list', {type:'favorites'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">My favorites</a></li>
+{% set linkurl = path('decklists_list', {type:'mine'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">My decklists</a></li>
+{% set linkurl = path('decklists_searchform') %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}"><span class="glyphicon glyphicon-search"></span> Search</a></li>
+</ul>
+
+{% include 'AppBundle:Default:google_adaptable_ad.html.twig' %}
+
+</div>
+
+<div class="col-md-9">
+
+{{ header|raw }}
+
+<div class="text-center">
+<ul class="pagination pagination-sm" style="margin-top:0">
+{% if prevurl is null %}
+  <li class="disabled"><a href="#">&laquo;</a></li>
+{% else %}
+  <li class=""><a href="{{ prevurl }}">&laquo;</a></li>
+{% endif %}
+{% for page in pages %}
+{% if page.current %}
+  <li class="active"><a href="{{ page.url }}">{{ page.numero }} <span class="sr-only">(current)</span></a></li>
+{% else %}
+  <li><a href="{{ page.url }}">{{ page.numero }}</a></li>
+{% endif %}
+{% endfor %}
+{% if nexturl is null %}
+  <li class="disabled"><a href="#">&raquo;</a></li>
+{% else %}
+  <li class=""><a href="{{ nexturl }}">&raquo;</a></li>
+{% endif %}
+  </ul>
+</div>
+
+<table class="table">
+<thead></thead>
+<tbody>
+
+{% for decklist in decklists %}
+
+<tr>
+<td class="decklist-identity-image hidden-xs">
+	<img src="/web/bundles/netrunnerdbcards/images/cards/en/{{ decklist.code }}.png" alt="{{ decklist.identity }}" class="card img-responsive" data-index="{{ decklist.code }}">
+</td>
+<td>
+    <article>
+	<h4>
+		<small class="pull-right social">
+			<span class="glyphicon glyphicon-heart social-icon-like"></span> {{ decklist.nbvotes }}
+			<span class="glyphicon glyphicon-star social-icon-favorite"></span> {{ decklist.nbfavorites }}
+			<span class="glyphicon glyphicon-comment social-icon-comment"></span> {{ decklist.nbcomments }}
+		</small>
+		<a class="decklist-name" href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.prettyname|e('url') }) }}">{{ decklist.name }}</a>
+	</h4>
+	<h5>
+		<time class="pull-right" datetime="{{ decklist.creation|date('c') }}">{{ decklist.creation|date('M d') }}</time>
+		<span class="username">
+    		<a href="{{ path('user_profile_view', {user_id:decklist.user_id,user_name:decklist.username|e('url')}) }}" class="{{ decklist.usercolor }}">{{ decklist.username }}</a>
+    		{% if decklist.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="NetrunnerDB Gracious Donator"></span>{% endif %}
+    		<small class="reputation">{{ decklist.reputation }}</small>
+		</span>
+        {% if decklist.tournament %}
+		<span class="text-success" style="margin-left:1em">
+            <span class="glyphicon glyphicon-certificate"></span> {{ decklist.tournament }}
+        </span>
+	    {% endif %}
+	</h5>
+	</article>
+</td>
+</tr>
+{% endfor %}
+
+</tbody>
+</table>
+
+<div class="text-center">
+<ul class="pagination pagination-sm" style="margin:0">
+{% if prevurl is null %}
+  <li class="disabled"><a href="#">&laquo;</a></li>
+{% else %}
+  <li class=""><a href="{{ prevurl }}">&laquo;</a></li>
+{% endif %}
+{% for page in pages %}
+{% if page.current %}
+  <li class="active"><a href="{{ page.url }}">{{ page.numero }} <span class="sr-only">(current)</span></a></li>
+{% else %}
+  <li><a href="{{ page.url }}">{{ page.numero }}</a></li>
+{% endif %}
+{% endfor %}
+{% if nexturl is null %}
+  <li class="disabled"><a href="#">&raquo;</a></li>
+{% else %}
+  <li class=""><a href="{{ nexturl }}">&raquo;</a></li>
+{% endif %}
+  </ul>
+</div>
+
+</div>
+
+</div>
+</div>
+
+{% endblock %}

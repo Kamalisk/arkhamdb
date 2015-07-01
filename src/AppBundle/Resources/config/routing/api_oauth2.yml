@@ -1,0 +1,26 @@
+
+api_oauth2_decks:
+    pattern: /api_oauth2/decks
+    defaults:
+        _controller: AppBundle:Api:decks
+
+api_oauth2_load_deck:
+    pattern: /api_oauth2/load_deck/{deck_id}
+    defaults:
+        _controller: AppBundle:Api:loadDeck
+    requirements:
+        deck_id: \d+
+
+api_oauth2_save_deck:
+    pattern: /api_oauth2/save_deck/{deck_id}
+    defaults:
+        _controller: AppBundle:Api:saveDeck
+    requirements:
+        deck_id: \d+
+
+api_oauth2_publish_deck:
+    pattern: /api_oauth2/publish_deck/{deck_id}
+    defaults:
+        _controller: AppBundle:Api:publish
+    requirements:
+        deck_id: \d+

@@ -1,0 +1,41 @@
+{% extends 'AppBundle:Search:display.html.twig' %}
+
+{% block main %}
+
+<table class="rwd-table table table-striped table-condensed">
+<thead>
+<tr>
+<th>{% trans %}Title{% endtrans %}</th>
+<th>{% trans %}Faction{% endtrans %}</th>
+<th title="Cost"><span class="icon icon-credit"></span></th>
+<th>{% trans %}Type{% endtrans %}</th>
+<th title="Strength/Agenda Points/Trash Cost">&hellip;</th>
+<th>{% trans %}Subtype{% endtrans %}</th>
+<th title="Influence">&bullet;</th>
+<th>{% trans %}Set{% endtrans %}</th>
+</tr>
+</thead>
+{% for i in 0..cards|length-1 %}
+<tr class="{% if i%2==0 %}even{% else %}odd{% endif %}">
+   {% set card = cards[i] %}
+	<td data-th="{% trans %}Title{% endtrans %}">
+		<a href="{{ card.url }}" class="card{% if card.available == false %} card-preview{% endif %}" data-index="{{ card.code }}">{{ card.title }}</a>
+	</td>
+	<td data-th="{% trans %}Faction{% endtrans %}">{% if card.faction_code != 'neutral' %}<span class="icon icon-{{ card.faction_code }} {{ card.faction_code }}"></span>{% endif %}</td>
+	<td data-th="Cost">{{ card.cost }}{{ card.advancementcost }}</td>
+	<td data-th="Type" >{{ card.type }}</td>
+	<td data-th="&hellip;">{{ card.strength }}{{ card.agendapoints }}{{ card.trash }}</td>
+	<td data-th="{% trans %}Subtype{% endtrans %}">{{ card.subtype }}</td>
+	<td data-th="Influence">
+		{% if card.factioncost > 0 %}
+		<span class="influence-{{ card.cssfaction }}">
+			{% for i in 1..card.factioncost %}&#9679;{% if i%5==0 %}&nbsp;{% endif %}{% endfor %}
+		</span>
+		{% endif %}
+	</td>
+	<td data-th="{% trans %}Set{% endtrans %}">{{ card.setname }} {{ card.number }}</td>
+</tr>
+{% endfor %}
+</table>
+
+{% endblock %}

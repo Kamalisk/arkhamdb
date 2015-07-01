@@ -1,0 +1,6 @@
+<h3 class="username">
+    <a href="{{ path('user_profile_view', {_locale:app.request.locale,user_id:decklist.user_id,user_name:decklist.username|e('url')}) }}" class="{{ decklist.usercolor }}">{{ decklist.username }}</a>
+    {% if decklist.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="NetrunnerDB Gracious Donator"></span>{% endif %}
+    <small title="User Reputation">{{ decklist.reputation }}</small>
+</h3>
+<div id="deck-description">{{ decklist.description|raw }}</div>

@@ -1,0 +1,1667 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block title %}Comprehensive Android:Netrunner Rules{% endblock %}
+
+{% block body %}
+<div class="container">
+
+<h1>{{ block('title') }}</h1>
+
+<nav id="prime">
+<ul>
+<li><a href="#rop">Rules of Play 1.0</a></li>
+<li><a href="#tsr">Timing Structure of a Run 1.6</a></li>
+<li><a href="#faq">FAQ 1.6</a></li>
+<li><a href="#tr">Tournament Rules 1.6</a></li>
+</ul>
+</nav>
+
+<article class="rules rop">
+<h2 id="rop">Rules of Play 1.0</h2>
+<nav class="inner rop">
+	<ul>
+	<li><a href="#rop2">Game Overview</a></li>
+	<li><a href="#rop3">Object of the Game</a></li>
+	<li><a href="#rop4">Corporate Factions</a></li>
+	<li><a href="#rop5">Runner Factions</a></li>
+	<li><a href="#rop6">Neutral Cards</a></li>
+	<li><a href="#rop7">Setup</a>
+	<ul>
+	<li><a href="#rop8">The Golden Rule</a></li>
+	</ul></li>
+	<li><a href="#rop9">Starter Decks</a></li>
+	<li><a href="#rop10">Important Vocabulary</a></li>
+	<li><a href="#rop11">Play Areas</a>
+	<ul>
+	<li><a href="#rop12">Credit Pool</a></li>
+	<li><a href="#rop13">Identity Card</a></li>
+	<li><a href="#rop14">Score Area</a></li>
+	<li><a href="#rop15">Click Tracker</a></li>
+	<li><a href="#rop16">Corporation Play Area</a>
+	<ul>
+	<li><a href="#rop17">Central Servers</a>
+	<ul>
+	<li><a href="#rop18">Headquarters (HQ)</a></li>
+	<li><a href="#rop19">Research and Development (R&amp;D)</a></li>
+	<li><a href="#rop20">Archives</a></li>
+	<li><a href="#rop21">Root</a></li>
+	</ul></li>
+	<li><a href="#rop22">Remote Servers</a></li>
+	<li><a href="#rop23">Ice</a></li>
+	</ul></li>
+	<li><a href="#rop24">Runner Play Area</a>
+	<ul>
+	<li><a href="#rop25">Grip</a></li>
+	<li><a href="#rop26">Stack</a></li>
+	<li><a href="#rop27">Heap</a></li>
+	<li><a href="#rop28">Rig</a></li>
+	</ul></li>
+	</ul></li>
+	<li><a href="#rop29">Corporation Cards</a>
+	<ul>
+	<li><a href="#rop30">Corporation Identity Card</a></li>
+	<li><a href="#rop31">Operations</a></li>
+	<li><a href="#rop32">Agendas</a></li>
+	<li><a href="#rop33">Ice</a></li>
+	<li><a href="#rop34">Upgrades</a></li>
+	<li><a href="#rop35">Assets</a></li>
+	</ul></li>
+	<li><a href="#rop36">Runner Cards</a>
+	<ul>
+	<li><a href="#rop37">Runner Identity Card</a></li>
+	<li><a href="#rop38">Hardware</a></li>
+	<li><a href="#rop39">Resources</a></li>
+	<li><a href="#rop40">Programs</a></li>
+	<li><a href="#rop41">Events</a></li>
+	<li><a href="#rop42">Paid Abilities</a></li>
+	<li><a href="#rop43">Unique Cards</a></li>
+	</ul></li>
+	<li><a href="#rop44">Playing the Game</a>
+	<ul>
+	<li><a href="#rop45">Turn Overview</a></li>
+	</ul></li>
+	<li><a href="#rop46">Corporation's Turn</a>
+	<ul>
+	<li><a href="#rop47">Rezzed and Unrezzed Cards</a></li>
+	<li><a href="#rop48">1. Draw Phase</a></li>
+	<li><a href="#rop49">2. Action Phase</a>
+	<ul>
+	<li><a href="#rop50">Drawing One Card</a></li>
+	<li><a href="#rop51">Gaining One Credit</a></li>
+	<li><a href="#rop52">Installing Cards</a>
+	<ul>
+	<li><a href="#rop53">Agendas</a></li>
+	<li><a href="#rop54">Assets</a></li>
+	<li><a href="#rop55">Upgrades</a></li>
+	<li><a href="#rop56">Ice</a></li>
+	</ul></li>
+	<li><a href="#rop57">Playing Operations</a></li>
+	<li><a href="#rop58">Advancing a Card</a>
+	<ul>
+	<li><a href="#rop59">Scoring Agendas</a></li>
+	</ul></li>
+	</ul></li>
+	<li><a href="#rop60">Advancing Assets</a>
+	<ul>
+	<li><a href="#rop61">Delayed Scoring</a></li>
+	<li><a href="#rop62">Trashing a Runner's Resource</a></li>
+	<li><a href="#rop63">Purging Virus Counters</a></li>
+	<li><a href="#rop64">Triggering <span class="icon icon-click"></span> Abilities</a></li>
+	</ul></li>
+	<li><a href="#rop65">3. Discard Phase</a></li>
+	<li><a href="#rop66">Trashing and Discarding</a></li>
+	</ul></li>
+	<li><a href="#rop67">Runner's Turn</a>
+	<ul>
+	<li><a href="#rop68">1. Action Phase</a>
+	<ul>
+	<li><a href="#rop69">Drawing One Card</a></li>
+	<li><a href="#rop70">Gaining One Credit</a></li>
+	<li><a href="#rop71">Installing Cards</a>
+	<ul>
+	<li><a href="#rop72">Programs</a></li>
+	<li><a href="#rop73">Resources</a></li>
+	<li><a href="#rop74">Hardware</a></li>
+	</ul></li>
+	<li><a href="#rop75">Playing Events</a></li>
+	<li><a href="#rop76">Removing Tags</a></li>
+	<li><a href="#rop77">Making a Run</a></li>
+	<li><a href="#rop78">Triggering <span class="icon icon-click"></span> Abilities</a></li>
+	</ul></li>
+	<li><a href="#rop79">2. Discard Phase</a></li>
+	</ul></li>
+	<li><a href="#rop80">Runs</a>
+	<ul>
+	<li><a href="#rop81">Ice</a>
+	<ul>
+	<li><a href="#rop82">Subroutines</a></li>
+	</ul></li>
+	<li><a href="#rop83">Icebreakers</a>
+	<ul>
+	<li><a href="#rop84">Increasing an Icebreaker's Strength</a></li>
+	</ul></li>
+	<li><a href="#rop85">Phases of a Run</a></li>
+	<li><a href="#rop139">Bad Publicity</a></li>
+	<li><a href="#rop86">1. Initiation Phase</a></li>
+	<li><a href="#rop87">2. Confrontation Phase</a>
+	<ul>
+	<li><a href="#rop88">Approaching Ice</a></li>
+	<li><a href="#rop89">Encountering Ice</a>
+	<ul>
+	<li><a href="#rop90">Breaking Subroutines</a></li>
+	</ul></li>
+	</ul></li>
+	<li><a href="#rop91">3. Access Phase</a>
+	<ul>
+	<li><a href="#rop92">Stealing Agendas</a></li>
+	<li><a href="#rop93">Trashing Cards</a></li>
+	<li><a href="#rop94">Accessing Multiple Cards</a></li>
+	<li><a href="#rop95">Concluding the Run</a></li>
+	</ul></li>
+	<li><a href="#rop96">Run Example</a></li>
+	</ul></li>
+	<li><a href="#rop97">Traces and Tags</a>
+	<ul>
+	<li><a href="#rop98">Traces</a></li>
+	<li><a href="#rop99">Trace Example</a></li>
+	<li><a href="#rop100">Tags</a></li>
+	</ul></li>
+	<li><a href="#rop101">Damage</a></li>
+	<li><a href="#rop102">Winning the Game</a></li>
+	<li><a href="#rop103">Additional Rules</a>
+	<ul>
+	<li><a href="#rop104">Card Abilities</a>
+	<ul>
+	<li><a href="#rop105">Constant Abilities</a></li>
+	<li><a href="#rop106">Triggered Abilities</a>
+	<ul>
+	<li><a href="#rop107">Paid abilities</a></li>
+	<li><a href="#rop108">Conditional abilities</a></li>
+	</ul></li>
+	</ul></li>
+	<li><a href="#rop109">Other Terms and Concepts</a>
+	<ul>
+	<li><a href="#rop110">Timing Priority</a></li>
+	<li><a href="#rop111">Prevent or Avoid</a></li>
+	<li><a href="#rop112">Self-referential Language</a></li>
+	<li><a href="#rop113">Negative Effects</a></li>
+	<li><a href="#rop114">Trashing</a></li>
+	<li><a href="#rop115">Expose</a></li>
+	<li><a href="#rop116">Simultaneous Effects</a></li>
+	</ul></li>
+	<li><a href="#rop117">Simultaneous Effect Example</a>
+	<ul>
+	<li><a href="#rop118">Hosting</a></li>
+	<li><a href="#rop119">Forfeiting Agendas</a></li>
+	</ul></li>
+	<li><a href="#rop120">Symbols</a></li>
+	</ul></li>
+	<li><a href="#rop121">Deckbuilding</a>
+	<ul>
+	<li><a href="#rop122">Why deckbuild?</a></li>
+	<li><a href="#rop123">Restrictions</a></li>
+	<li><a href="#rop124">Influence</a></li>
+	</ul></li>
+	<li><a href="#rop137">GLOSSARY</a></li>
+	<li><a href="#rop138">Credits</a></li>
+	</ul>
+</nav>
+
+<h2 id="rop2">Game Overview</h2>
+
+<p><span class="anr">Android: Netrunner</span> is a card game for two players set in the dystopian future of the Android universe. One player assumes the role of a Runner, a rogue hacker armed with bleeding-edge gear and software, while the other player controls a powerful Corporation that will stop at nothing to achieve its goals.</p>
+
+<p>In <span class="anr">Android: Netrunner</span>, players alternate taking turns, beginning with the Corporation. During the Corporation's turn, he has three clicks to spend. The Corporation can spend his clicks to perform a variety of actions, including gaining credits, drawing cards, installing cards, and advancing agendas. The Corporation must carefully divide his efforts between defensive actions, such as protecting his servers from the Runner, and offensive actions, such as tracing the Runner or advancing agendas.</p>
+
+<p>The Runner has four clicks to spend during his turn. The Runner can also spend his clicks to perform a variety of actions, including gaining credits, drawing cards, installing cards, and making runs. During a run, the Runner attempts to hack into the Corporation's servers in an effort to hinder the Corporation and steal his agendas. The Runner has several different targets to choose from when initiating a run; choosing where and when to run is a key part of an effective Runner strategy.</p>
+
+<h2 id="rop3">Object of the Game</h2>
+
+<p>The objective for both players is to score seven agenda points. The Corporation scores agenda points by advancing agendas; the Runner scores agenda points by stealing agendas from the Corporation. Agendas are cards that only appear in the Corporation's deck.</p>
+
+<p>The Corporation also wins if the Runner is flatlined (see <a href="#rop101">Damage</a>) and the Runner wins if the Corporation must draw a card from his empty draw deck.</p>
+
+<h2 id="rop4">Corporate Factions</h2>
+
+<p>In <span class="anr">Android: Netrunner</span> there are four different Corporate factions to choose from. Corporate factions are important for deckbuilding (see <a href="#rop121">Deckbuilding</a>) and each Corporate faction has certain cards affiliated with it. These factions are:</p>
+
+<ul>
+<li>Haas-Bioroid</li>
+<li>Jinteki</li>
+<li>NBN</li>
+<li>Weyland Consortium</li>
+</ul>
+
+<h2 id="rop5">Runner Factions</h2>
+
+<p>In <span class="anr">Android: Netrunner</span> there are three different Runner factions to choose from. Factions are important for deckbuilding and each Runner faction has certain cards affiliated with it. These factions are:</p>
+
+<ul>
+<li>Anarch</li>
+<li>Criminal</li>
+<li>Shaper</li>
+</ul>
+
+<h2 id="rop6">Neutral Cards</h2>
+
+<p>Some Corporation and Runner cards have no faction affiliation. These cards are called neutral cards and can be used in any deck of the corresponding side.</p>
+
+<h2 id="rop7">Setup</h2>
+
+<p>To prepare a game of <span class="anr">Android: Netrunner</span>, carefully follow the steps below.</p>
+<ol>
+<li>
+<p><b>Choose Sides:</b> The players decide who will play as the Runner and who will play as the Corporation. Then, each player places his identity card faceup in his play area and takes a corresponding deck.</p>
+<p><b>Note:</b> New players should use the Shaper and Jinteki starter decks for their first game.</p>
+</li>
+<li>
+<p><b>Create Token Bank:</b> Gather the credits, advancement, brain damage, tag, bad publicity, and generic tokens into piles. Keep these piles within reach of both players.</p>
+</li>
+<li>
+<p><b>Collect Starting Credits:</b> Each player takes five credits from the bank.</p>
+</li>
+<li>
+<p><b>Shuffle Decks:</b> Each player shuffles his deck. After shuffling, each player offers his deck to his opponent for further shuffling.</p>
+</li>
+<li>
+<p><b>Draw Starting Hands:</b> Each player draws five cards from the top of his deck to form his starting hand. After drawing starting hands, the Corporation may choose to take a mulligan by shuffling his hand back into his deck and then drawing a new starting hand. After the Corporation decides whether to mulligan, the Runner decides whether to mulligan as well. If a player takes a mulligan, he must keep his second hand as his starting hand. When the players are satisfied with their starting hands, each player places his deck facedown in his play area.</p>
+</li>
+</ol>
+
+<aside>
+<h3 id="rop8">The Golden Rule</h3>
+
+<p>If the text of a card directly conflicts with the rules in this book, the card text takes precedence.</p>
+</aside>
+
+<aside>
+<h2 id="rop9">Starter Decks</h2>
+
+<p>The game can be enjoyed straight out of the box by building starter decks to play with.</p>
+
+<p>To make a starter deck, take all the cards of a single Corporate or Runner faction and shuffle in all of the neutral cards for the chosen side. Starter decks are quick to build and are legal for tournament play.</p>
+
+<p>Below are the card numbers for the Corporate factions, Runner factions, and Neutral cards that appear in the core set:</p>
+
+<p>Corporation:</p>
+<ul>
+<li>Haas-Bioroid Cards #54-66</li>
+<li>Jinteki Cards #67-79</li>
+<li>NBN Cards #80-92</li>
+<li>Weyland Cards #93-105</li>
+<li>Neutral Cards #106-113</li>
+</ul>
+
+<p>Runner:</p>
+<ul>
+<li>Anarch Cards #1-16</li>
+<li>Criminal Cards #17-32</li>
+<li>Shaper Cards #33-48</li>
+<li>Neutral Cards #49-53</li>
+</ul>
+</aside>
+
+<h2 id="rop10">Important Vocabulary</h2>
+
+<p>Players should become familiar with the following terms before reading the rest of the rules. Refer to the &ldquo;Glossary&rdquo;  to look up other terms as needed.</p>
+
+<p>Active: An active card's abilities affect the game and can be triggered.</p>
+
+<p>Inactive: An inactive card's abilities do not affect the game and cannot be triggered.</p>
+
+<p>Install: This is the game term for playing a card onto the table.</p>
+
+<p>Credit: This is the basic unit of wealth, represented by <span class="icon icon-credit"></span>.</p>
+
+<p>Click: This is the basic unit of work, represented by <span class="icon icon-click"></span>.</p>
+
+<p>Rez: This is the act of flipping a facedown card faceup. The Corporation installs his cards facedown and must rez them in order to use them.</p>
+
+<h2 id="rop11">Play Areas</h2>
+
+<p>In <span class="anr">Android: Netrunner</span>, the play areas for the Corporation and the Runner differ significantly from one another. However, both players have a credit pool, identity card, score area, and click tracker.</p>
+
+<h4 id="rop12">Credit Pool</h4>
+<p>Each player has a credit pool where he keeps the credit tokens he has available to spend. Spent credits are returned to the token bank.</p>
+
+<h4 id="rop13">Identity Card</h4>
+<p>Each player has an identity card that is placed faceup in his play area. The identity card does not count toward his maximum hand or deck size, and is always active during the game.</p>
+
+<h4 id="rop14">Score Area</h4>
+<p>Each player has a score area that holds his scored or stolen agendas. Agendas in a score area add their agenda points to a player's score.</p>
+
+<h4 id="rop15">Click Tracker</h4>
+<p>Each player has a click tracker that he uses to track the number of clicks left that he has to spend on his turn. This is a game aid only and its use is optional.</p>
+
+<h3 id="rop16">Corporation Play Area</h3>
+
+<p>In addition to his credit pool, identity card, score area, and click tracker, the Corporation's play area includes his servers and his ice. There are two types of servers: central servers and remote servers.</p>
+
+<h4 id="rop17">Central Servers</h4>
+<p>The Corporation has three central servers: Headquarters,</p>
+
+<p>Research and Development, and Archives. Each central server also has a root.</p>
+
+<p><strong id="rop18">Headquarters (HQ)</strong> &ndash; This is the Corporation's hand of cards. Cards in HQ are inactive. The Corporation begins the game with a maximum hand size of five cards. The Corporation identity card represents HQ for the purposes of card installation.</p>
+
+<p><strong id="rop19">Research and Development (R&amp;D)</strong> &ndash; This is the Corporation's draw deck. R&amp;D is kept facedown within reach of the Corporation. Cards in R&amp;D are inactive.</p>
+
+<p><strong id="rop20">Archives</strong> &ndash; This is the Corporation's trash pile. Archives is kept adjacent to R&amp;D. This is where Corporation cards are placed when they are trashed or discarded. Cards in Archives are inactive.</p>
+
+<p>Some cards enter Archives faceup, and some cards enter Archives facedown. Facedown cards in Archives should be oriented horizontally so that the Runner can easily see them. Both the Corporation and Runner may look through the faceup cards stored in Archives at any time, and do not need to maintain the order of its cards while doing so. The Corporation can also look at the facedown cards in Archives at any time; the Runner cannot.</p>
+
+<p><strong id="rop21">Root</strong> &ndash; This is the area of a central server where upgrades for the server are installed. When an upgrade is installed in the root, it should be placed below the server. If a root has no cards installed in it, it is considered to be empty.</p>
+
+<h4 id="rop22">Remote Servers</h4>
+<p>The Corporation has no remote servers at the beginning of the game. The Corporation creates remote servers by installing cards. Cards in remote servers are active if rezzed and inactive if unrezzed.</p>
+
+<p>There is no limit to the number of remote servers the Corporation can have at any given time.</p>
+
+<h4 id="rop23">Ice</h4>
+<p>The Corporation installs ice to protect his servers. Installed ice is always dedicated to a particular server and placed in front of that server. Ice can protect an empty server. Ice is active if rezzed and inactive if unrezzed.</p>
+
+<h3 id="rop24">Runner Play Area</h3>
+
+<p>In addition to his credit pool, identity card, score area, and click tracker, the Runner's play area includes his grip, his stack, his heap, and his rig.</p>
+
+<h4 id="rop25">Grip</h4>
+<p>This is the Runner's hand of cards. The Runner begins the game with a maximum hand size of five cards. Cards in the grip are inactive.</p>
+
+<h4 id="rop26">Stack</h4>
+<p>This is the Runner's draw deck. The stack is kept facedown within reach of the Runner. Cards in the stack are inactive.</p>
+
+<h4 id="rop27">Heap</h4>
+<p>This is the Runner's trash pile. The heap is kept adjacent to the Runner's identity card. This is where Runner cards are placed when they are trashed or discarded. Cards in the heap are faceup and inactive. Both the Runner and Corporation may look through the heap at any time, but must maintain the order of its cards.</p>
+
+<h4 id="rop28">Rig</h4>
+<p>This is where the Runner installs his cards. The rig is separated into three rows: one for programs, one for hardware, and one for resources. Cards in the rig are active.</p>
+
+<h2 id="rop29">Corporation Cards</h2>
+
+<p>There are six types of Corporation cards: identities, operations, agendas, ice, upgrades, and assets. All cards except the identity card are shuffled into the Corporation's deck at the beginning of the game. Corporation cards are installed facedown, and are inactive unless rezzed (see <a href="#rop47">Rezzed and Unrezzed Cards</a>).</p>
+
+<h4 id="rop30">Corporation Identity Card</h4>
+<p><b>Identity cards indicate which identity the Corporation has assumed.</b></p>
+
+<p>The Corporation identity card defines the Corporation's faction and describes the identity's special ability. It also provides a minimum deck size that must be observed when deckbuilding (8) and the amount of influence available for spending on out-of-faction cards (9). See <a href="#rop121">Deckbuilding</a>  for more information.</p>
+
+<p><b>Note:</b> The Corporation's identity card also represents his HQ for the purposes of card installation: ice protecting HQ is installed in front of the Corporation's identity card, and upgrades installed in the root of HQ are installed behind the Corporation's identity card.</p>
+
+<h4 id="rop31">Operations</h4>
+<p><b>Operations represent singular occurrences and are always trashed after being played.</b></p>
+
+<p>The Corporation pays credits equal to the play cost (1) of an operation to play it. When played, an operation's abilities as listed in its text box (4) are resolved. Then, the operation is immediately trashed. Operations are never installed.</p>
+
+<h4 id="rop32">Agendas</h4>
+<p><b>Agendas are valuable pieces of the Corporation's data, and are the only cards in Android:Netrunner that are worth agenda points.</b></p>
+
+<p>The Corporation installs agendas in remote servers. Agendas are the only cards in the game worth agenda points (11). Agendas have an advancement requirement (10) that must be met before the Corporation can score them (see <a href="#rop58">Advancing a Card</a>).</p>
+
+<p>Agendas cannot be rezzed and are only active while in a score area. There can be only one agenda <b>or</b> one asset installed in a remote server at a time.</p>
+
+<h4 id="rop33">Ice</h4>
+<p><b>Ice defends the Corporation's servers against intrusions by the Runner.</b></p>
+
+<p>The Corporation installs ice in front of any server. Ice is not active until it is rezzed by paying credits equal to its rez cost (12).</p>
+
+<p>A piece of ice has one or more subroutines (<span class="icon icon-subroutine"></span>) in its text box (4) that the Runner must break during a run or suffer their effects (see <a href="#rop81">Ice</a>) if the ice is rezzed.</p>
+
+<h4 id="rop34">Upgrades</h4>
+<p><b>Upgrades are improvements to a server that provide the Corporation with a wide variety of benefits and bonuses.</b></p>
+
+<p>The Corporation installs upgrades in remote servers or the roots of central servers. Upgrades are the only card type that can be installed in the root of a central server. An upgrade is not active until it is rezzed by paying credits equal to its rez cost (12).</p>
+
+<p>There is no limit to the number of upgrades that can be installed in a server. When the Runner accesses an upgrade, he can trash it by paying credits equal to its trash cost (13).</p>
+
+<h4 id="rop35">Assets</h4>
+<p><b>Assets provide the Corporation with resources and connections that help him advance and score his agendas.</b></p>
+
+<p>The Corporation installs assets in remote servers. An asset is not active until it is rezzed by paying credits equal to its rez cost (12).</p>
+
+<p>Some assets can also be advanced, giving them the appearance of agendas and potentially misleading the Runner. When the Runner accesses an asset, he can trash it by paying credits equal to its trash cost (13).</p>
+
+<p>There can be only one agenda or one asset installed in a remote server at a time.</p>
+
+<h2 id="rop36">Runner Cards</h2>
+
+<p>There are five types of Runner cards: identities, hardware, resources, programs, and events. All cards except the identity card are shuffled into the Runner's deck at the beginning of the game. Runner cards are always active while installed.</p>
+
+<h4 id="rop37">Runner Identity Card</h4>
+<p><b>Identity cards indicate which identity the Runner has assumed.</b></p>
+
+<p>The Runner identity card defines the Runner's faction and describes the identity's special ability. It also provides a minimum deck size that must be observed when constructing a deck (6), and the amount of influence available for spending on out-of-faction cards (7). See <a href="#rop121">Deckbuilding</a>  for more information.</p>
+
+<h4 id="rop38">Hardware</h4>
+<p><b>Hardware is the array of physical tools at the Runner's disposal.</b></p>
+
+<p>The Runner installs hardware in his rig by paying an install cost (9).</p>
+
+<p>There is no limit to the amount of hardware the Runner can install in his rig.</p>
+
+<h4 id="rop39">Resources</h4>
+<p><b>Resources are a wide variety of connections, assets, and skills that aid the Runner.</b></p>
+
+<p>The Runner installs resources in his rig by paying an install cost (9).</p>
+
+<p>There is no limit to the number of resources the Runner can install in his rig.</p>
+
+<p>When the Runner is tagged (see <a href="#rop100">Tags</a>), resources may be trashed by the Corporation.</p>
+
+<h4 id="rop40">Programs</h4>
+<p><b>Programs are digital tools at the Runner's disposal, primarily used as a means of intrusion.</b></p>
+
+<p>The Runner installs programs in his rig by paying an install cost (9).</p>
+
+<p>Programs are the only card type that have a memory cost (11). The memory cost of his installed programs can never exceed his current memory limit (see <a href="#rop40">Programs</a>).</p>
+
+<p>The Runner uses a program subtype called an icebreaker (4) to break ice subroutines during runs (see <a href="#rop83">Icebreakers</a>). An icebreaker's strength (12) must be equal to or greater than the ice it is interacting with.</p>
+
+<h4 id="rop41">Events</h4>
+<p><b>Events represent singular occurrences and are always trashed after being played.</b></p>
+
+<p>The Runner pays credits equal to the play cost (13) of an event to play it. When played, an event's abilities as listed in its text box are resolved. Then, the event is immediately trashed. Events are never installed.</p>
+
+<aside>
+<h3 id="rop42">Paid Abilities</h3>
+
+<p>Some card abilities have trigger costs that a player must pay before the effect of the ability can be resolved. These abilities are called paid abilities. A card's trigger cost is always listed in its text box before the effect, following the format &ldquo;cost: effect.&rdquo;</p>
+
+<p>The most common costs are spending clicks (<span class="icon icon-click"></span><span class="icon icon-click"></span>), spending credits (<span class="icon icon-credit"></span>), trashing the card (<span class="icon icon-trash"></span>), and spending hosted counters. Some effects feature a combination of costs.</p>
+
+<p>Example: The Runner card Datasucker has the text &ldquo;Hosted virus counter: Rezzed piece of ice currently being encountered has -1 strength until the end of the encounter.&rdquo; The Runner must spend 1 of the virus counters on Datasucker (returning it to the token bank) in order to trigger this ability, after which the strength of the chosen ice is lowered by 1.</p>
+
+<p>If the player cannot pay the full cost of an ability, he cannot trigger it.</p>
+</aside>
+
+<aside>
+<h3 id="rop43">Unique Cards</h3>
+
+<p>Some cards have a unique symbol ([Unique]) in front of their title. There can be only one unique card of the same title active at a time. If a card with a unique title becomes active, any other card that shares its title is immediately trashed. This trashing cannot be prevented.</p>
+</aside>
+
+<h2 id="rop44">Playing the Game</h2>
+
+<p>In <span class="anr">Android: Netrunner</span>, the Corporation and the Runner alternate taking turns. <span class="anr">Android: Netrunner</span> is unusual in that the Runner and the Corporation are governed by different rules. Players should familiarize themselves with the rules for both sides.</p>
+
+<p>The Corporation always takes the first turn of the game.</p>
+
+<h3 id="rop45">Turn Overview</h3>
+
+<p>Each player, during his turn, takes actions by spending clicks. A player can only spend his clicks during his own Action phase, and he <b><i>must</i></b> spend all of his clicks in each Action phase. The Corporation begins his turn with three clicks (<span class="icon icon-click"></span> <span class="icon icon-click"></span> <span class="icon icon-click"></span>) and the Runner begins his turn with four clicks ( <span class="icon icon-click"></span> <span class="icon icon-click"></span> <span class="icon icon-click"></span> <span class="icon icon-click"></span>).</p>
+
+<h2 id="rop46">Corporation's Turn</h2>
+
+<p>The Corporation's turn consists of three phases, which he performs in the following order:</p>
+
+<ol>
+<li><b>Draw Phase:</b> The Corporation draws one card from R&amp;D.</li>
+<li><b>Action Phase:</b> The Corporation has <span class="icon icon-click"></span> <span class="icon icon-click"></span> <span class="icon icon-click"></span> with which to perform actions.</li>
+<li><b>Discard Phase:</b> The Corporation discards down to his maximum hand size, if necessary.</li>
+</ol>
+
+<aside>
+<h3 id="rop47">Rezzed and Unrezzed Cards</h3>
+
+<p>The Corporation's installed cards have two play states: rezzed, which means that the card is faceup and active, and unrezzed, which means that the card is facedown and inactive. The Corporation can look at his unrezzed cards at any time. To rez an installed card, the Corporation pays its rez cost and turns the card faceup.</p>
+
+<p><b>Note:</b> Rezzing a card does not cost the Corporation a click.</p>
+
+<p>To organize this hidden information for both players, it is important that the Corporation observes the following rules for card orientation:</p>
+
+<ul>
+<li>Agendas, assets, and upgrades are always installed in a vertical orientation. </li>
+<li>Ice is always installed in a horizontal orientation. </li>
+</ul>
+</aside>
+
+<h3 id="rop48">1. Draw Phase</h3>
+
+<p>The Corporation draws the top card of R&amp;D. This does not cost the Corporation any clicks.</p>
+
+<p><b>Note:</b> If the Corporation's R&amp;D is empty when he attempts to draw a card, the Runner immediately wins the game.</p>
+
+<h3 id="rop49">2. Action Phase</h3>
+
+<p>In his Action phase, the Corporation takes actions by spending <span class="icon icon-click"></span> <span class="icon icon-click"></span> <span class="icon icon-click"></span>. He can only take actions during his Action phase, and he must spend all three of his clicks during his Action phase.</p>
+
+<p>The Corporation can perform any of the following actions as many times as he likes, and in any combination, provided he can pay for them. These are listed in the format of &ldquo;cost: effect.&rdquo;</p>
+
+<ul>
+<li><span class="icon icon-click"></span>: Draw one card from R&amp;D.</li>
+<li><span class="icon icon-click"></span>: Gain 1<span class="icon icon-credit"></span> (one credit). </li>
+<li><span class="icon icon-click"></span>: Install an agenda, asset, upgrade, or piece of ice. </li>
+<li><span class="icon icon-click"></span>: Play an operation. </li>
+<li><span class="icon icon-click"></span>, 1<span class="icon icon-credit"></span>: Advance a card. </li>
+<li><span class="icon icon-click"></span>, 2<span class="icon icon-credit"></span>: Trash a resource in the Runner's rig if the Runner is tagged. </li>
+<li><span class="icon icon-click"></span> <span class="icon icon-click"></span> <span class="icon icon-click"></span>: Purge virus counters. </li>
+<li>Trigger a <span class="icon icon-click"></span> ability on an active card (cost varies). </li>
+</ul>
+
+<p>Whenever the Corporation spends clicks on one of these actions, he is considered to be taking an action and cannot take another action until the current action fully resolves.</p>
+
+<p>When the Corporation has spent all of his clicks, his Action phase ends and his Discard phase begins.</p>
+
+<h4 id="rop50">Drawing One Card</h4>
+<p>For <span class="icon icon-click"></span>, the Corporation draws the top card of R&amp;D and adds it to HQ.</p>
+
+<h4 id="rop51">Gaining One Credit</h4>
+<p>For <span class="icon icon-click"></span>, the Corporation takes 1<span class="icon icon-credit"></span> from the bank and adds it to his credit pool.</p>
+
+<h4 id="rop52">Installing Cards</h4>
+<p>For <span class="icon icon-click"></span>, the Corporation installs a single agenda, asset, upgrade, or piece of ice from HQ, placing it facedown on the table.</p>
+
+<p><b>Note:</b> When an asset or upgrade is installed, the Corporation can pay its rez cost to rez it at almost any time (see the &ldquo;Timing Structures&rdquo; on pages 32-33). Ice can only be rezzed when the Runner approaches it during a run (see <a href="#rop88">Approaching Ice</a>).</p>
+
+<p>When installing a card in a server, the Corporation can first trash any cards already installed in that server. Trashed cards go to Archives faceup if they are rezzed, and facedown if they are unrezzed.</p>
+
+<p>If the Corporation chooses to create a remote server when installing a card, he installs the card by placing it facedown in a discrete location in his play area. Agendas, assets, upgrades, and ice can all be used to create a new remote server. If the Corporation creates a remote server by installing ice, the server exists, but is considered to be empty. An empty server can still be run against by the Runner.</p>
+
+<p><b>Note:</b> Installed cards cannot be rearranged or mixed-up by either player except through card effects.</p>
+
+<p>The following entries describe the installation restrictions and associated costs of each card type:</p>
+
+<p><strong id="rop53">Agendas</strong> &ndash; An agenda can only be installed in a remote server. After an agenda is installed, the Corporation can advance and ultimately score it (<a href="#rop58">Advancing a Card</a>).</p>
+
+<p><b>Note:</b> A remote server can have only one agenda <b>or</b> asset installed in it at a time.</p>
+
+<p>If the Corporation wants to install an agenda in a remote server that has an asset or an agenda already installed in it, he can install the card but <b><i>must</i></b> trash the existing card first as part of the install action. The Corporation does not have to trash upgrades in order to install an agenda or an asset.</p>
+
+<p><strong id="rop54">Assets</strong> &ndash; An asset can only be installed in a remote server.</p>
+
+<p>If the Corporation wants to install an agenda in a remote server that has an asset or an agenda already installed in it, he can install the card but must trash the existing card first as part of the install action.</p>
+
+<p><strong id="rop55">Upgrades</strong> &ndash; An upgrade can be installed in any server. When an upgrade is installed in a central server, it is installed in the central server's root.</p>
+
+<p>Unlike an agenda or asset, there is no limit to the number of upgrades the Corporation can install in any server, central or remote.</p>
+
+<p><b>Note:</b> The Corporation can only have one upgrade with the <b>region</b> subtype installed per server or server root, as listed in the text box of these cards.</p>
+
+<p><strong id="rop56">Ice</strong> &ndash; Ice can be installed in front of any server in order to protect that server. After a piece of ice is installed in front of a server, it is dedicated to that server and cannot be moved or rearranged.</p>
+
+<p>When the Corporation installs a piece of ice, he must install it in the outermost position in front of the server and pay an install cost equal to the number of pieces of ice already protecting that server. The outermost position is the position farthest from the server, in front of any other pieces of ice that are protecting the server.</p>
+
+<p>When installing ice, the Corporation can first trash any ice protecting that server in order to reduce the install cost. Then, he installs the new piece of ice in the outermost position in front of the server.</p>
+
+<h4 id="rop57">Playing Operations</h4>
+<p>For <span class="icon icon-click"></span>, the Corporation plays an operation from his hand by paying its play cost. He then places it faceup in his play area, immediately resolves the effects of the operation, and trashes it.</p>
+
+<h4 id="rop58">Advancing a Card</h4>
+<p>For <span class="icon icon-click"></span> and 1<span class="icon icon-credit"></span>, the Corporation adds one advancement token to an installed card. Agendas can always be advanced while installed. Cards other than agendas can only be advanced if their text box allows it. There is no limit to the number of times a card can be advanced.</p>
+
+<p><b>Note:</b> If a card's text box says that the card can be advanced, the card can be advanced even when the card is unrezzed.</p>
+
+<p><strong id="rop59">Scoring Agendas</strong> &ndash; When the number of advancement tokens on an agenda is equal to or higher than its advancement requirement, the agenda is fully advanced and the Corporation can score it. The only times the Corporation can score an agenda is right before his turn begins, or after he completes an action.</p>
+
+<p>To score an agenda, the Corporation turns it faceup and places it in his score area, resolving any conditional abilities on the agenda that use the language &ldquo;When you score.&rdquo; The Corporation cannot score an agenda until it is fully advanced. Scoring an agenda does not cost a click and is not an action.</p>
+
+<p>While an agenda is in the Corporation's score area, it is active and adds its agenda points to his score.</p>
+
+<aside>
+<h3 id="rop60">Advancing Assets</h3>
+
+<p>Some assets can be advanced. Advancing assets gives them the appearance of being agendas. This can be useful in bluffing the Runner into making runs which are not beneficial to him.</p>
+</aside>
+
+<p><strong id="rop61">Delayed Scoring</strong> &ndash; An agenda sometimes has an ability that rewards advancement beyond the agenda's advancement requirement, or an ability that encourages the Corporation to delay scoring the agenda. The Corporation is not required to score an agenda immediately upon satisfying its advancement requirement. He may instead advance it more, or wait for a more opportune time to score it.</p>
+
+<h4 id="rop62">Trashing a Runner's Resource</h4>
+<p>If the Runner is tagged, the Corporation can spend <span class="icon icon-click"></span> and 2<span class="icon icon-credit"></span> to choose one of the Runner's resources and trash it (see <a href="#rop100">Tags</a>).</p>
+
+<h4 id="rop63">Purging Virus Counters</h4>
+<p>For <span class="icon icon-click"></span> <span class="icon icon-click"></span> <span class="icon icon-click"></span>, the Corporation removes all virus counters hosted (see <a href="#rop118">Hosting</a>) on cards, returning them to the token bank.</p>
+
+<h4 id="rop64">Triggering <span class="icon icon-click"></span> Abilities</h4>
+
+<p>Some cards have abilities with trigger costs that require the Corporation to spend one or more clicks. These abilities list the <span class="icon icon-click"></span> icon in their trigger cost, and the Corporation can trigger these abilities only during his Action phase.</p>
+
+<h3 id="rop65">3. Discard Phase</h3>
+
+<p>The Corporation begins the game with a maximum hand size of five cards, but card effects can increase or decrease this limit. If the cards in HQ exceed the Corporation's current maximum hand size at the beginning of the Discard phase, he must discard down to his maximum hand size.</p>
+
+<aside>
+<h3 id="rop66">Trashing and Discarding</h3>
+
+<p>A discarded card is not considered to have been trashed, and vice versa. Cards that prevent a card from being trashed cannot prevent a card from being discarded.</p>
+</aside>
+
+<p>If the Corporation must discard more than one card from HQ, he chooses and discards cards from HQ one at a time until he is no longer above his current maximum hand size.</p>
+
+<p>Cards discarded from HQ are always sent to Archives facedown, regardless of whether they have been previously accessed by the Runner.</p>
+
+<p>After the Corporation completes his Discard phase, the Runner begins his turn.</p>
+
+<h2 id="rop67">Runner's Turn</h2>
+
+<p>The Runner's turn is divided into two phases, which he performs in the following order:</p>
+
+<ol>
+<li><b>Action Phase:</b> The Runner has <span class="icon icon-click"></span> <span class="icon icon-click"></span> <span class="icon icon-click"></span> <span class="icon icon-click"></span> with which to perform actions. </li>
+<li><b>Discard Phase:</b> The Runner discards down to his maximum hand size, if necessary. </li>
+</ol>
+
+<h3 id="rop68">1. Action Phase</h3>
+
+<p>In his Action phase, the Runner takes actions by spending <span class="icon icon-click"></span> <span class="icon icon-click"></span> <span class="icon icon-click"></span> <span class="icon icon-click"></span>. He can only take actions during his Action phase, and he must spend all four of his clicks during his Action phase.</p>
+
+<p>The Runner can perform any of the following actions as many times as he likes, and in any combination, provided he can pay for them. These are listed in the format of &ldquo;cost: effect.&rdquo;</p>
+
+<ul>
+<li><span class="icon icon-click"></span>: Draw one card from the stack. </li>
+<li><span class="icon icon-click"></span>: Gain 1<span class="icon icon-credit"></span>. </li>
+<li><span class="icon icon-click"></span>: Install a program, resource, or piece of hardware. </li>
+<li><span class="icon icon-click"></span>: Play an event. </li>
+<li><span class="icon icon-click"></span>, 2<span class="icon icon-credit"></span>: Remove one tag. </li>
+<li><span class="icon icon-click"></span>: Make a run. </li>
+<li>Trigger a <span class="icon icon-click"></span> ability on an active card (cost varies). </li>
+</ul>
+
+<p>Whenever the Runner spends clicks on one of these actions, he is considered to be taking an action and cannot take another action until the current action fully resolves.</p>
+
+<p>When the Runner has spent all of his clicks, his Action phase ends and his Discard phase begins.</p>
+
+<h4 id="rop69">Drawing One Card</h4>
+<p>For <span class="icon icon-click"></span>, the Runner draws the top card from his stack and adds it to his grip.</p>
+
+<h4 id="rop70">Gaining One Credit</h4>
+<p>For <span class="icon icon-click"></span>, the Runner takes 1<span class="icon icon-credit"></span> from the bank and adds it to his credit pool.</p>
+
+<h4 id="rop71">Installing Cards</h4>
+<p>For <span class="icon icon-click"></span>, the Runner installs a single program, resource, or piece of hardware faceup in his rig. An installed Runner card is active and does not have to be rezzed like a Corporation card.</p>
+
+<p><b>Note:</b> The Runner's cards are always installed faceup and in a vertical orientation.</p>
+
+<p><strong id="rop72">Programs</strong> &ndash; To install a program, the Runner pays the program's install cost and places it in his program row. Each program also has a memory cost. The Runner cannot have programs installed that have a combined memory cost greater than his available memory units (MU). The Runner begins the game with four MU, though certain card effects can increase or decrease this value.</p>
+
+<p>If the MU costs of the Runner's installed programs ever exceed his available MU, he must trash his installed programs until he is no longer exceeding his available MU.</p>
+
+<p>The Runner can choose to trash any number of his installed programs at the beginning of an install program action.</p>
+
+<p><strong id="rop73">Resources</strong> &ndash; To install a resource, the Runner pays the resource's install cost and places it in his resource row.</p>
+
+<p>There is no limit to the number of resources a Runner can have installed.</p>
+
+<p><strong id="rop74">Hardware</strong> &ndash; To install a piece of hardware, the Runner pays the hardware's install cost and places it in his hardware row.</p>
+
+<p>There is no limit to the amount of hardware a Runner can have installed.</p>
+
+<p><b>Note:</b> The Runner can only have one piece of hardware with the console subtype installed at a time, as listed in the text box of these cards.</p>
+
+<h4 id="rop75">Playing Events</h4>
+<p>For <span class="icon icon-click"></span>, the Runner plays an event from his hand by paying its play cost. He then places it faceup in his play area, immediately resolves the effects of the event, and trashes it.</p>
+
+<h4 id="rop76">Removing Tags</h4>
+<p>For <span class="icon icon-click"></span> and 2<span class="icon icon-credit"></span>, the Runner removes one of his tags.</p>
+
+<h4 id="rop77">Making a Run</h4>
+<p>For <span class="icon icon-click"></span>, the Runner initiates a run against the Corporation (see <a href="#rop80">Runs</a>) in order to steal the Corporation's agendas and trash his cards.</p>
+
+<h4 id="rop78">Triggering <span class="icon icon-click"></span> Abilities</h4>
+
+<p>Some cards have abilities with trigger costs that require the Runner to spend one or more clicks. These abilities list the <span class="icon icon-click"></span> icon in their trigger cost, and the Runner can trigger these abilities only during his Action phase.</p>
+
+<h3 id="rop79">2. Discard Phase</h3>
+
+<p>The Runner begins the game with a maximum hand size of five cards, but card effects can increase or decrease this limit (see <a href="#rop101">Brain Damage</a>). If the cards in the Runner's grip exceed his current maximum hand size at the beginning of the Discard phase, he must discard down to his maximum hand size.</p>
+
+<p>If the Runner must discard more than one card from his grip, he chooses and discards cards from his grip one at a time until he is no longer above his current maximum hand size.</p>
+
+<p>After the Runner completes his Discard phase, the Corporation begins his turn.</p>
+
+<h2 id="rop80">Runs</h2>
+
+<p>Runs are the heart of <span class="anr">Android: Netrunner</span>, and provide opportunities for the Runner to steal the Corporation's agendas and trash his cards. In a run, the Runner attacks one of the Corporation's servers in an attempt to access cards, using his installed programs to help him pass the Corporation's ice.</p>
+
+<p>Because most runs pit the Runner's installed icebreaker programs against the Corporation's installed ice, it is vital that both players understand the functions and subtypes of the Corporation's ice and the Runner's icebreakers.</p>
+
+<h3 id="rop81">Ice</h3>
+
+<p>Ice is defensive software the Corporation installs in front of his servers to protect his valuable data. There are four main subtypes that can appear on a piece of ice: <b>sentry</b>, <b>barrier</b>, <b>code gate</b>, and <b>trap</b>. Ice also has separate abilities called subroutines.</p>
+
+<h4 id="rop82">Subroutines</h4>
+<p>Subroutines are abilities of a piece of ice marked by the <span class="icon icon-subroutine"></span> symbol. If the Runner encounters a piece of rezzed ice and does not or cannot break its subroutines, the unbroken subroutines trigger and resolve one by one.</p>
+
+<p>In addition to preventing the Runner's access to the Corporation's servers by ending his run, subroutines can pose other hazards if allowed to trigger, such as damaging the Runner or initiating trace attempts (see <a href="#rop97">Traces and Tags</a>).</p>
+
+<h3 id="rop83">Icebreakers</h3>
+
+<p>Icebreakers are programs with the <b>icebreaker</b> subtype that the Runner can use to overcome ice encountered during a run. Each icebreaker has a strength, an install cost, and one or more subtypes that reflect which kind of ice subroutine it is designed to break.</p>
+
+<p>The Runner uses icebreakers to interact with and break subroutines on ice. An icebreaker can only interact with ice that has equal or lower strength than the icebreaker.</p>
+
+<p>In addition to this strength requirement, many icebreaker abilities can only be used to break subroutines on particular subtypes of ice. For example, an icebreaker that has the ability &ldquo;1<span class="icon icon-credit"></span>: Break <b>barrier</b> subroutine&rdquo; can only use this ability to break subroutines on a piece of ice with the barrier subtype. It does not matter if the ice has additional subtypes, provided it has any subtypes referred to by the icebreaker's ability. If an ability does not restrict itself to a subtype (i.e., &ldquo;Break ice subroutine&rdquo;), it can be used against any piece of ice.</p>
+
+<h4 id="rop84">Increasing an Icebreaker's Strength</h4>
+<p>Many icebreakers allow the Runner to temporarily increase the icebreaker's strength by spending credits. This helps the Runner deal with stronger pieces of ice, provided he has enough credits to spend. This strength increase <b><i>only</i></b> lasts only while the current piece of ice is being encountered, unless otherwise noted by card abilities. After an encounter with a piece of ice, the icebreaker's strength returns to the value shown on its card. This applies to any other strength modifiers given by icebreakers as well.</p>
+
+<h3 id="rop85">Phases of a Run</h3>
+
+<p>Runs typically transpire in three phases. Not every run will include all of these phases. Players are encouraged to use the following text in combination with the &ldquo;Timing Structure of a Run&rdquo; diagram  in order to fully understand the intricacies of runs.</p>
+
+<ol>
+<li>Initiation Phase </li>
+<li>Confrontation Phase </li>
+<li>Access Phase</li>
+</ol>
+
+<aside>
+<h3 id="rop139">Bad Publicity</h3>
+
+<p>Some cards and events in <span class="anr">Android: Netrunner</span> give the Corporation bad publicity. For each point of bad publicity the Corporation has, the Runner gains 1<span class="icon icon-credit"></span> at the beginning of each run. The Runner may spend these credits during his run as if they were in his credit pool, but any unspent bad publicity credits return to the bank at the end of the run. Bad publicity always generates revenue for the Runner at the beginning of a run, even when the Runner makes multiple runs in a single turn.</p>
+</aside>
+
+<h3 id="rop86">1. Initiation Phase</h3>
+
+<p>To initiate a run, the Runner declares the server that he is attacking. The Runner can only initiate a run against a single server per run action.</p>
+
+<p>After the Runner declares the server he is attacking, he gains 1<span class="icon icon-credit"></span> to spend during the run for each point of bad publicity the Corporation has. Then, both players check to see if there is ice protecting the attacked server.</p>
+
+<p>If there is ice protecting the server, the run proceeds to the Confrontation phase.</p>
+
+<p>If there is no ice protecting the server, the run proceeds to the Access phase.</p>
+
+<h3 id="rop87">2. Confrontation Phase</h3>
+
+<p>The Confrontation phase consists of approaching a piece of ice and then potentially encountering that ice. A Runner approaches each piece of ice protecting the server one at a time, starting with the outermost piece. The Runner must pass each piece of ice in order to approach the next piece of ice protecting the server, continuing until all pieces of ice have been passed or until the run ends.</p>
+
+<p>If the Runner passes all pieces of ice protecting the attacked server, the run proceeds to the Access phase.</p>
+
+<h4 id="rop88">Approaching Ice</h4>
+<p>When the Runner approaches a piece of ice, he must first decide whether he wishes to continue the run or jack out. If he decides to jack out, he ends his run and the run is considered unsuccessful. <b>The Runner cannot jack out while approaching the first piece of ice during a run.</b></p>
+
+<p>If the Runner decides to continue instead of jacking out, the Corporation has the opportunity to rez the approached piece of ice and any other non-ice cards.</p>
+
+<p><b>Note:</b> The Corporation can only rez ice when it is approached.</p>
+
+<p>If the approached piece of ice is rezzed after the Corporation has the opportunity to rez cards, then the Runner encounters it.</p>
+
+<p>If after rezzing cards the approached piece of ice is not rezzed, then the Runner passes it. He then continues the run by either approaching the next piece of ice protecting the server or proceeding to the Access phase if there is no more ice to approach.</p>
+
+<h4 id="rop89">Encountering Ice</h4>
+<p>When the Runner encounters a piece of ice, he has the opportunity to break any subroutines on that piece of ice. After the Runner finishes breaking any subroutines that he wishes to break, each unbroken subroutine on that ice triggers in the order as listed on the card. If a subroutine ends the run, then the run ends immediately and no further subroutines on that piece of ice trigger.</p>
+
+<p><strong id="rop90">Breaking Subroutines</strong> &ndash; To break a subroutine, the Runner uses abilities on his installed icebreakers. The Runner can break the subroutines on the encountered ice in any order he chooses. There is no limit to the number of installed cards a Runner can use to interact with the encountered ice, but he generally only needs one icebreaker. Remember that before an icebreaker can interact with a piece of ice, the icebreaker's strength must be equal to or higher than the encountered ice's strength.</p>
+
+<p><b>Note:</b> Breaking all subroutines on a piece of ice does not mean the ice is trashed. A passed piece of ice remains installed and is approached during every subsequent run against the server it protects.</p>
+
+<p>After the Runner breaks all of the ice's subroutines and/or any effects from unbroken subroutines resolve without ending the run, he has passed that piece of ice. He then continues the run by either approaching the next piece of ice protecting the server or proceeding to the Access phase if there is no more ice to approach.</p>
+
+<h3 id="rop91">3. Access Phase</h3>
+
+<p>After the Runner has passed all of the ice protecting the attacked server, he has one final opportunity to jack out. If he chooses to continue, the Corporation has one final opportunity to rez cards. After rezzing cards, the run is considered to be successful and the Runner accesses the Corporation's cards by looking at them. The type of server attacked determines the degree and method of access, and the Runner must access cards according to the following rules:</p>
+
+<ul>
+<li><b>R&amp;D:</b> The Runner accesses the top card of R&amp;D, and any upgrades in its root. Unless the Runner scores, trashes, or is forced by a card's text to reveal the card, he does not show cards accessed from R&amp;D to the Corporation. </li>
+
+<li><b>HQ:</b> The Runner accesses one random card from HQ and any upgrades in its root. Any cards the Runner does not score or trash return to HQ. </li>
+
+<li><b>Archives:</b> The Runner accesses all cards in Archives and any upgrades in its root. The Runner turns all cards faceup when accessing them, and does not need to keep them in order. The Runner steals all agendas in Archives and cannot trash cards that are already in Archives. After accessing Archives, all cards in Archives return to Archives faceup. </li>
+
+<li><b>Remote Server:</b> The Runner accesses all cards in the server. <b>Note:</b> Installed ice is not in a server and is never accessed. </li>
+</ul>
+
+<h4 id="rop92">Stealing Agendas</h4>
+<p>If the Runner accesses an agenda, he steals it and places it faceup in his score area, resolving any conditional abilities on the agenda that use the language &ldquo;When you steal.&rdquo; While an agenda is in the Runner's score area, it adds its agenda points to his score. The Runner cannot decline to steal agendas he accesses.</p>
+
+<h4 id="rop93">Trashing Cards</h4>
+<p>If the Runner accesses a card with a trash cost, he may pay credits equal to its trash cost in order to trash it to Archives faceup.</p>
+
+<h4 id="rop94">Accessing Multiple Cards</h4>
+<p>When accessing multiple cards, the Runner accesses them one at a time in any order he likes. For example, the Runner may access a card from HQ, then an upgrade installed in the root of HQ, and then another card from HQ, if he has the ability to do so.</p>
+
+<p>When accessing multiple cards from R&amp;D, the Runner must draw them in order from the top of the deck, and must return any cards not scored or trashed in reverse order, so as to preserve their positions in R&amp;D.</p>
+
+<p>The Runner must fully resolve his access to a card (steal it, pay to trash it, etc.) before accessing the next card. If the Runner scores an agenda that gives him seven or more points, he immediately wins the game, even if he would otherwise access more cards.</p>
+
+<h4 id="rop95">Concluding the Run</h4>
+<p>After the Runner has accessed all required cards, he returns any cards not stolen or trashed to their original play states. For example, an unrezzed card in a remote server returns facedown to that server, and a card accessed from HQ returns to HQ.</p>
+
+<p>After a Runner finishes accessing cards, the run ends. The Runner returns any unspent bad publicity credits to the token bank, and the Runner resumes his Action phase.</p>
+
+<aside>
+<h3 id="rop96">Run Example</h3>
+
+<p>Spending his last click, Bart the Runner initiates a run against Olivia's remote server. Bart has a Gordian Blade, Crypsis, Sacrificial Construct, and The Toolbox installed. He has 5<span class="icon icon-credit"></span>. The remote server has two unrezzed cards in it and three pieces of ice protecting it, one rezzed. One of the cards has an advancement counter on it. Olivia has 7<span class="icon icon-credit"></span>.</p>
+
+<p>Since the first piece of ice protecting the attacked server is rezzed, Bart must encounter it. The Gordian Blade is already at strength 2, and Bart spends 1<span class="icon icon-credit"></span> from The Toolbox to break Enigma's second subroutine, &ldquo;End the run,&rdquo; and declares he is finished breaking subroutines (1). The first subroutine, &ldquo;The Runner loses <span class="icon icon-click"></span>, if able&rdquo; resolves, but Bart has no clicks to lose.</p>
+
+<p>Since the ice was passed, Bart approaches the next piece of ice protecting the server and can either continue the run or jack out. He still has 5<span class="icon icon-credit"></span> in his credit pool and 1<span class="icon icon-credit"></span> on The Toolbox, and decides to continue. Olivia has the opportunity to rez cards, but declines to do so. Bart then passes that piece of ice and approaches the innermost piece of ice protecting the server.</p>
+
+<p>Bart once again chooses to continue the run, feeling confident with his credits and his programs in play. Olivia, with 7<span class="icon icon-credit"></span>, again has the opportunity to rez cards. She decides to rez the upgrade installed in the server by spending 1<span class="icon icon-credit"></span>, and flips over Akitaro Watanabe (2). This leaves her with only 6<span class="icon icon-credit"></span>. Her third piece of ice is a Wall of Thorns. While normally this ice would be too expensive for her to rez, Akitaro Watanabe lowers the rez cost of ice protecting that server by 2. She rezzes the piece of ice by paying 6<span class="icon icon-credit"></span>, leaving her with no credits (3).</p>
+
+<p>Bart encounters Wall of Thorns, spending 1<span class="icon icon-credit"></span> from The Toolbox and 4<span class="icon icon-credit"></span> from his pool to boost the strength of Crypsis to 5 (4). With only 1<span class="icon icon-credit"></span> left he cannot break both subroutines on the Wall of Thorns. He breaks the &ldquo;End the run&rdquo; subroutine by spending 1<span class="icon icon-credit"></span> (5), and then must either remove 1 hosted virus counter from Crypsis or trash it.</p>
+
+<p>Since there are no virus counters on Crypsis, Bart decides to use his Sacrificial Construct and triggers its prevent effect, trashing it instead of Crypsis (6).</p>
+
+<p>The first subroutine on Wall of Thorns then triggers and resolves, doing 2 net damage. Bart must trash two random cards from his grip. He does so, leaving him with a single card.</p>
+
+<p>Now that Bart has passed every piece of ice protecting the server, he has one last opportunity to jack out. He once again decides to continue the run. Olivia can now rez cards. Since the unrezzed card in the server is an agenda, she declines.</p>
+
+<p>The run is then considered to be successful and Bart gets to access cards. The Runner chooses the order in which cards are accessed in, and Bart chooses the unrezzed card first. He flips over the agenda, steals it, and adds it to his score area (7), and then takes 1 net damage from Jinteki's identity card ability. This trashes the last card from his grip. He then accesses the upgrade, but since he cannot pay the trash cost, Akitaro Watanabe remains installed. The run then ends.</p>
+</aside>
+
+<h2 id="rop97">Traces and Tags</h2>
+
+<p>Though the Corporation spends much of the game repelling the Runner's intrusions, traces and tags give the Corporation opportunities to attack the Runner.</p>
+
+<h3 id="rop98">Traces</h3>
+
+<p>Some card abilities initiate a trace on the Runner. Traces are marked by the language &ldquo;Trace<sup>X</sup>&rdquo; on a card, with X equaling the base trace strength of the trace. Traces pit the Corporation's trace strength against the Runner's link strength, both of which are increased by spending credits.</p>
+
+<p>The Corporation acts first during a trace, openly spending any number of credits to increase his trace strength by one point for each credit he spends. There is no limit to the number of credits the Corporation can spend on the trace.</p>
+
+<p>After the Corporation spends his credits, the Runner has the opportunity to openly spend credits to increase his link strength. The Runner's base link strength is equal to the number of links (<span class="icon icon-link"></span>) he has in play. The Runner increases his link strength by one point for each credit he spends. There is no limit to the number of credits the Runner can spend on the trace.</p>
+
+<p>After the Runner finishes increasing his link strength, it is compared to the Corporation's trace strength. If the trace strength exceeds the link strength, the trace is successful and any &ldquo;If successful&rdquo; effects associated with the trace are resolved. If the link strength is equal to or greater than the trace strength, then the trace is unsuccessful, and any &ldquo;If unsuccessful&rdquo; effects associated with the trace are resolved.</p>
+
+<aside>
+<h3 id="rop99">Trace Example</h3>
+
+<p>A Runner encounters Data Raven, and is unable to break the trace subroutine. The Runner's identity card is Kate &ldquo;Mac&rdquo; McCaffrey (link of 1) and he has one copy of Access to Globalsec (link of 1) in his rig, for a base link strength of 2. The Data Raven has a base trace strength of 3, and the Corporation decides to spend 2<span class="icon icon-credit"></span>, increasing the Data Raven's trace strength to 5. This means that the Runner would need to spend 3<span class="icon icon-credit"></span> in order to make the trace unsuccessful. The Runner has 7<span class="icon icon-credit"></span> in his pool and decides to spend 3<span class="icon icon-credit"></span>, matching the Corporation's trace strength. Because the trace was unsuccessful, no power counter is placed on Data Raven.</p>
+</aside>
+
+<h3 id="rop100">Tags</h3>
+
+<p>Certain card effects result in a tag being placed on the Runner. As long as the Runner has at least one tag, he is considered to be tagged. While the Runner is tagged, the Corporation may, as an action, spend <span class="icon icon-click"></span> and 2<span class="icon icon-credit"></span> to trash one of the Runner's resources. Certain card effects can also trigger off of the Runner being tagged, and it is usually dangerous for the Runner to remain tagged for very long.</p>
+
+<p>While tagged, the Runner may, as an action, spend <span class="icon icon-click"></span> and 2<span class="icon icon-credit"></span> to remove the tag, returning it to the token bank. The Runner can repeat this action as many times he likes, provided he has the clicks and credits to pay its cost, and as long as he has a tag to remove.</p>
+
+<h2 id="rop101">Damage</h2>
+
+<p>Many cards and ice subroutines inflict damage on the Runner. The Runner can receive the following three types of damage:</p>
+
+<ul>
+<li><b>Meat damage:</b> The Runner randomly trashes one card from his grip for each point of meat damage done to him. </li>
+<li><b>Net damage:</b> The Runner randomly trashes one card from his grip for each point of net damage done to him. </li>
+<li><b>Brain damage:</b> The Runner randomly trashes one card from his grip for each point of brain damage done to him, and his maximum hand size is permanently reduced by one card. The Runner takes a brain damage token to track this. </li>
+</ul>
+
+<p><b>Note:</b> The only differences between net and meat damage are the cards that inflict and prevent them.</p>
+
+<p>When the Runner trashes multiple cards for damage, the cards are placed in his heap in the order they were randomly trashed.</p>
+
+<p>If the Runner takes more damage than the number of cards in his grip, or if he has a maximum hand size of less than zero at the end of his turn, then he is flatlined and the Corporation wins the game.</p>
+
+<h2 id="rop102">Winning the Game</h2>
+
+<p>If at any time a player has seven agenda points in his score area, he immediately wins the game.</p>
+
+<p>If R&amp;D contains no cards and the Corporation attempts to draw a card, the Runner immediately wins the game.</p>
+
+<p>If the Runner is flatlined (see <a href="#rop101">Damage</a> above), the Corporation wins the game.</p>
+
+<h2 id="rop103">Additional Rules</h2>
+
+<p>The following sections describe additional important rules and information not addressed in the previous sections.</p>
+
+<h3 id="rop104">Card Abilities</h3>
+
+<p>There are two different types of card abilities in <span class="anr">Android: Netrunner</span>: constant abilities and triggered abilities. The following information explains how these abilities function in the game.</p>
+
+<h4 id="rop105">Constant Abilities</h4>
+<p>Constant abilities continually affect the game as long as the card they appear on is active and any other specified conditions are met. They are not triggered and do not have costs associated with them. An example of a constant ability is the card Experiential Data, which reads, &ldquo;All ice protecting this server has +1 strength.&rdquo;</p>
+
+<h4 id="rop106">Triggered Abilities</h4>
+<p>In order to use a triggered ability a prerequisite must be met. This prerequisite is either a trigger cost that must be paid (paid ability) or a trigger condition that must be met (conditional ability). Once an ability is triggered, its effect is resolved immediately and can only be stopped by prevent or avoid effects. Players must follow all restrictions on the cards when triggering abilities.</p>
+
+<p><strong id="rop107">Paid abilities</strong> &ndash; In order to trigger a paid ability, a trigger cost must be paid. The most common trigger costs are spending clicks, credits, or hosted counters, and trashing cards. A card's trigger cost is always listed in its text box before the effect, following the format &ldquo;cost: effect.&rdquo; A paid ability can be triggered an unlimited number of times as long as the cost is paid and any restrictions specified by the effect are observed. Paid abilities can be triggered at the beginning of each turn, before and after each player action, and at certain points during a run, unless the ability requires a click, in which case it must be triggered as an action. An example of a paid ability is the card Magnum Opus, which reads, &ldquo;<span class="icon icon-click"></span>: Gain 2<span class="icon icon-credit"></span>.&rdquo;</p>
+
+<p><strong id="rop108">Conditional abilities</strong> &ndash; In order for a conditional ability to trigger, a trigger condition must be met. A conditional ability can only be resolved once per trigger condition. Trigger conditions commonly use the terms &ldquo;When&rdquo; or &ldquo;Whenever&rdquo; in their card text. An example of a conditional ability is the card PAD Campaign, which reads, &ldquo;Gain 1<span class="icon icon-credit"></span> when your turn begins.&rdquo;</p>
+
+<p>If a conditional ability uses the word &ldquo;may&rdquo; in its description, it is an optional conditional ability. The decision to trigger the ability belongs to the player who controls the card, provided the ability's trigger condition is met. If a conditional ability does not use the word &ldquo;may&rdquo; in its description, it is a required conditional ability. It must be triggered when its trigger condition is met, although the exact time of resolution may vary (see <a href="#rop116">Simultaneous Effects</a>).</p>
+
+<p><b>Note:</b> Ice subroutines are required conditional abilities that can be broken, in which case they do not resolve.</p>
+
+<h3 id="rop109">Other Terms and Concepts</h3>
+
+<p>There are several other terms and concepts that players should know when resolving abilities.</p>
+
+<h4 id="rop110">Timing Priority</h4>
+<p>Whenever there is an opportunity to trigger paid abilities, rez cards and/or score agendas (usually at the beginning of a turn and after each action), the player who is currently taking his turn gets the first opportunity to act. He can trigger as many abilities, rez as many cards, and/or score as many agendas as he wishes in the order of his choosing. When he is finished, the other player gets the opportunity to act. When that player is finished, the first player gets the opportunity to act once again.</p>
+
+<p>After both players have had at least one opportunity to act and a player declines to act, then the players cannot trigger more abilities, rez more cards, or score more agendas until the next opportunity to do so.</p>
+
+<p>For more information on the intricacies of triggering card abilities, rezzing cards, and scoring agendas, consult the timing diagrams on pages 32-33.</p>
+
+<h4 id="rop111">Prevent or Avoid</h4>
+<p>Some card abilities use the words &ldquo;prevent&rdquo; or &ldquo;avoid.&rdquo; Prevent or avoid effects are the only effects which can disrupt another effect. A prevent or avoid effect states what it is preventing or avoiding, and an effect that is prevented or avoided is not resolved. Prevent or avoid effects can be triggered whenever the effect they are preventing or avoiding is resolving.</p>
+
+<h4 id="rop112">Self-referential Language</h4>
+<p>Unless otherwise noted, a card with text that refers to its own card title only refers to itself and does not refer to other copies of cards with that title.</p>
+
+<h4 id="rop113">Negative Effects</h4>
+<p>If an effect prohibits a player from doing something, usually by using the word &ldquo;cannot,&rdquo; it always takes precedence over other effects unless another effect explicitly overrides it.</p>
+
+<h4 id="rop114">Trashing</h4>
+<p>When trashing a card as part of a trigger cost for its own paid ability (<span class="icon icon-trash"></span>), the effect on that card will resolve even though the card is no longer active.</p>
+
+<h4 id="rop115">Expose</h4>
+<p>Some effects expose one or more cards. Generally, only unrezzed installed cards can be exposed, unless an ability specifies otherwise. An exposed card is revealed to all players, and then returned to its previous state. If multiple cards are exposed by one effect, they are considered to be exposed simultaneously.</p>
+
+<h4 id="rop116">Simultaneous Effects</h4>
+<p>When one or more abilities have the same timing trigger or can be triggered at the same time, each player chooses the order his own abilities trigger. A player can trigger an optional conditional ability before a required conditional ability if they both have the same trigger condition.</p>
+
+<aside>
+<h3 id="rop117">Simultaneous Effect Example</h3>
+
+<p>The Runner has Aesop's Pawnshop and Wyldside installed and both have the same trigger condition of &ldquo;When your turn begins.&rdquo; The Runner begins his turn and can choose to trigger the optional conditional ability on Aesop's Pawnshop first, gaining 3<span class="icon icon-credit"></span> by trashing Wyldside. This stops Wyldside's required conditional ability from triggering, keeping the Runner from losing <span class="icon icon-click"></span>.</p>
+</aside>
+
+<p>If players ever want to perform simultaneous effects at the same time, the player whose turn it is resolves all of his effects first.</p>
+
+<h4 id="rop118">Hosting</h4>
+
+<p>&ldquo;Hosting&rdquo; is the result of placing a card, counter, or token on top of a card, creating a relationship between the host card and what is hosted. If a card allows other cards to be hosted on it, those cards must be hosted on the card when they are installed, unless a card says otherwise.</p>
+
+<p>Hosted counters or tokens can be spent without affecting their host. If a trigger cost requires one or more hosted counters or tokens, those counters or tokens are &ldquo;spent&rdquo; by being returned to the token bank from the card the ability appears on.</p>
+
+<p>If a host is trashed, all cards, counters, and tokens hosted on it are also trashed. This cannot be prevented.</p>
+
+<p>The state of hosting is distinct (but not exclusive from) the state of installing. Most cards are hosted on another card when they are installed. If a card is hosted but not installed, the card is inactive.</p>
+
+<h4 id="rop119">Forfeiting Agendas</h4>
+<p>Some card abilities require the Corporation or Runner to forfeit an agenda. When a player forfeits an agenda, he selects any agenda in his score area and permanently removes it from the game (it does not go to Archives or the heap). He no longer scores points for the forfeited agenda.</p>
+
+<h3 id="rop120">Symbols</h3>
+
+<p>The following symbols appear on cards:</p>
+
+<p><span class="icon icon-credit"></span>: This symbol stands for credit. It always appears with a numeral, such as 1<span class="icon icon-credit"></span>, which means &ldquo;one credit,&rdquo; or 3<span class="icon icon-credit"></span>, which means &ldquo;three credits.&rdquo;</p>
+
+<p><span class="icon icon-click"></span>: This symbol stands for a single click. Multiple clicks are represented by multiple symbols, such as <span class="icon icon-click"></span> <span class="icon icon-click"></span>, which means &ldquo;two clicks.&rdquo;</p>
+
+<p><span class="icon icon-recurring-credit"></span>: This symbol stands for recurring credit. It always appears with a numeral, such as 1<span class="icon icon-recurring-credit"></span>, which means &ldquo;one recurring credit,&rdquo; or 3<span class="icon icon-recurring-credit"></span>, which means &ldquo;three recurring credits.&rdquo; Any recurring credits a player spends are replaced on their host card at the beginning of that player's turn. A player can only spend these credits as instructed by their host card.</p>
+
+<p><span class="icon icon-link"></span>: This symbol stands for link. It is always used with a quantity, such as +1<span class="icon icon-link"></span>, which means &ldquo;plus 1 link.&rdquo;</p>
+
+<p><span class="icon icon-mu"></span>: This symbol stands for memory unit. It always appears with a quantity, such as +2<span class="icon icon-mu"></span> which means &ldquo;plus 2 memory units.&rdquo;</p>
+
+<p><span class="icon icon-subroutine"></span>: This symbol stands for subroutine and only appears on ice. Each symbol marks a single subroutine on a piece of ice.</p>
+
+<p><span class="icon icon-trash"></span>: This symbol stands for trash. It is used as a self-referential trigger cost in a card text, such as &ldquo;<span class="icon icon-trash"></span>: Draw 2 cards,&rdquo; which means &ldquo;trash this card to draw 2 cards.&rdquo;</p>
+
+<h2 id="rop121">Deckbuilding</h2>
+
+<p>In a Living Card Game, players can customize their decks by adding and removing cards, creating a unique play experience.</p>
+
+<h3 id="rop122">Why deckbuild?</h3>
+
+<p>Deckbuilding is a great way to experience the game in a completely new way. Instead of adapting to the game, you can force the game to adapt to you. Deckbuilding opens up new strategies, new experiences, and ultimately can lead to more exciting games where you feel more invested. When you deckbuild, you do not just participate in the game; you actively shape how the game is played.</p>
+
+<p>When first building a deck, it is usually a good idea to modify one of the starter decks rather than start from scratch. After playing <span class="anr">Android: Netrunner</span> a few times with different decks, you should have a general idea of what the various cards do. Pick your favorite faction, and then modify that faction's starter deck by switching out some cards for cards from other factions. In most cases you will want to build a deck at the minimum deck size, as it makes your deck more efficient. Don't worry about building the perfect deck&ndash;enjoy the process and try out cards that are appealing to you and seem fun to play with.</p>
+
+<p>When building a deck from scratch, it is generally helpful to sort your cards by faction. Once you have sorted the factions, choose one and separate those cards by card type. You will want to make sure you have a good mix of card types in your deck. Adding cards from a second core set greatly increases the number of options you will have.</p>
+
+<p>One thing to consider when building a deck in <span class="anr">Android: Netrunner</span> is how to spend your influence. It is a good idea to use as much of it as possible, since there are many powerful cards in other factions. If you aren't sure what to add, look for broadly applicable cards like icebreakers or ice. For the Corporation, a surprise rez of an out-of-faction ice can be an important turning point in the game!</p>
+
+<p>Another thing the Corporation should consider is how much ice you have in your deck. You will want to make sure you put in enough to stop the Runner. We recommend building about 17-20 pieces of ice into a 45-49 card deck. Also make sure you have enough ways to generate credits quicker than the regular &ldquo;<span class="icon icon-click"></span> for 1<span class="icon icon-credit"></span>&rdquo; action. Having a strong economy will give you plenty of credits to spend and put a lot of pressure on your opponent.</p>
+
+<p>Once you've built your deck, it is time to play some games! This is where you will begin to understand whether or not your deck is working. Do you have enough resources? Is your ice too expensive? Are you drawing your icebreakers fast enough? Figure out what the weak points of your deck are, and try switching out some cards. Looking through your cards again, you may even have another idea for a different deck!</p>
+
+<h3 id="rop123">Restrictions</h3>
+<p>When building a deck for organized play, players must observe the following restrictions:</p>
+
+<ul>
+<li>A deck must be associated with a single identity card, and cannot contain fewer cards than the minimum deck size value listed on the chosen identity card. There is no maximum deck size, but the deck must be able to be sufficiently randomized in a short period of time. Identity cards, reference cards, and click tracker cards are never counted as part of a deck and do not count against the minimum deck size. </li>
+
+<li>A deck cannot have more than three copies of a single card (by title) in it. </li>
+
+<li>A deck associated with a Runner identity can never contain Corporation cards, and vice versa. </li>
+
+<li>A deck cannot contain out-of-faction cards with a total influence value that exceeds the influence limit listed on the chosen identity card (see <a href="#rop124">Influence</a> below). Cards that match the faction of the identity card do not count against this limit. </li>
+
+<li>A Corporation deck must have a specific number of agenda points in it based on the size of the deck, as follows:
+<ul>
+<li>40 to 44 cards requires 18 or 19 agenda points. (<b>Note:</b> Identities in this set have a 45 card minimum)</li>
+<li>45 to 49 cards requires 20 or 21 agenda points. </li>
+<li>50 to 54 cards requires 22 or 23 agenda points. </li>
+</ul>
+
+<p>For decks larger than this, add 2 additional agenda points to the 54 card deck requirements <b>each time</b> the number of cards in the deck reaches a multiple of 5 (55, 60, 65, etc.).</p>
+
+<p>For example, a 66 card deck requires 6 additional agenda points (2 at 55, 2 at 60, and 2 at 65 cards). This gives a final requirement of either 28 or 29 agenda points.</p>
+</li>
+</ul>
+
+<h3 id="rop124">Influence</h3>
+
+<p>A player may wish to include cards in his deck that do not match the faction of his identity card. He is restricted, however, by the influence limit on his identity card. The combined influence value of out-of-faction cards in his deck cannot exceed this limit. Each card's influence value is represented by small blue orbs near the bottom of the card.</p>
+
+<p>Neutral cards are not part of any faction, can be used in any deck of the side they are affiliated with, and generally have an influence value of zero.</p>
+
+<p><b>Note:</b> Some cards do not have any influence value (this is different than a card that has an influence value of zero). These cards are identified by their lack of an influence box. A card without an influence value cannot be used with an identity card that has a different faction affiliation.</p>
+
+<h2 id="rop137">GLOSSARY</h2>
+
+<p><b>Accessing:</b> The act of a Runner looking at a Corporation card as part of a successful run, which he can then trash or steal.</p>
+
+<p><b>Action:</b> What a player performs on his turn whenever he spends one or more clicks.</p>
+
+<p><b>Active:</b> A state in which a card's effects and abilities are able to be used and affect the game.</p>
+
+<p><b>Advancing:</b> The act of putting one advancement token on a card that can be advanced. Agendas can always be advanced.</p>
+
+<p><b>Advancement Requirement:</b> The number of advancement tokens that must be on an agenda before the Corporation can score it.</p>
+
+<p><b>Agenda:</b> A Corporation card type that is installed in remote servers and is worth agenda points.</p>
+
+<p><b>Agenda Counter:</b> A counter used to track various effects on agenda cards.</p>
+
+<p><b>Agenda Points:</b> A value on agenda cards. This value is how many points an agenda is worth while it is in a score area.</p>
+
+<p><b>Anarch:</b> One of the three Runner factions available to a player in <span class="anr">Android: Netrunner</span>.</p>
+
+<p><b>Approach:</b> The step of a run in which the Runner makes contact with a piece of ice and decides whether or not to continue the run.</p>
+
+<p><b>Archives:</b> The Corporation's trash pile. A central server.</p>
+
+<p><b>Asset:</b> A Corporation card type which is installed in his remote servers and grants him various benefits.</p>
+
+<p><b>Avoid effect:</b> An effect that stops another effect from resolving.</p>
+
+<p><b>Barrier:</b> One of the four subtypes of ice which the Corporation can use to defend his servers.</p>
+
+<p><b>Click (<span class="icon icon-click"></span>):</b> The basic unit of work in <span class="anr">Android: Netrunner</span>. Players spend their clicks to perform actions and trigger abilities.</p>
+
+<p><b>Code gate:</b> One of the four subtypes of ice that the Corporation can use to defend his servers.</p>
+
+<p><b>Constant Ability:</b> An ability that continually affects the game provided its card is active.</p>
+
+<p><b>Corporation:</b> One of the two sides available to the player in <span class="anr">Android: Netrunner</span>; the opponent of the Runner. Referred to as &ldquo;the Corp&rdquo; on card text.</p>
+
+<p><b>Credit (<span class="icon icon-credit"></span>):</b> The basic unit of wealth in <span class="anr">Android: Netrunner</span>.</p>
+
+<p><b>Credit, Recurring (<span class="icon icon-recurring-credit"></span>):</b> A credit that, when spent, returns to its host card at the start of that player's next turn. A player can only spend recurring credits as instructed by their host.</p>
+
+<p><b>Credit bank:</b> The supply of credits not yet in play.</p>
+
+<p><b>Credit pool:</b> The supply of credits currently available to a player for spending.</p>
+
+<p><b>Criminal:</b> One of the three Runner factions available to a player in <span class="anr">Android: Netrunner</span>.</p>
+
+<p><b>Damage, Brain:</b> A unit of damage that requires the Runner to trash one card from his grip at random, and reduces his maximum hand size by one card.</p>
+
+<p><b>Damage, Meat or Net:</b> A unit of damage that requires the Runner to trash one card from his grip at random.</p>
+
+<p><b>Derez:</b> The act of flipping a rezzed card facedown, inactive.</p>
+
+<p><b>Discard:</b> The act by which a player moves a card to his trash pile at the end of his turn if he has exceeded his maximum hand size.</p>
+
+<p><b>Effect:</b> The resolution of a card ability.</p>
+
+<p><b>Event:</b> A single-use card type that is played by the Runner during his turn and is trashed when its effects are resolved.</p>
+
+<p><b>Expose:</b> The act of revealing a card to all players. Only unrezzed installed cards can be exposed unless otherwise noted. An exposed card returns to its previous state after being exposed.</p>
+
+<p><b>Flatline:</b> A condition that results from the Runner being forced to trash more cards than he has in his grip, or from having a maximum hand size that is below zero at the end of his turn, and which causes the Runner to immediately lose the game.</p>
+
+<p><b>Grip:</b> The Runner's hand of cards.</p>
+
+<p><b>Hardware:</b> A Runner card type which is installed in the Runner's play area and grants him various abilities.</p>
+
+<p><b>Haas-Bioroid:</b> One of the four Corporation factions available to a player in <span class="anr">Android: Netrunner</span>.</p>
+
+<p><b>Heap:</b> The Runner's trash pile.</p>
+
+<p><b>Host:</b> A card that is currently holding other cards or counters.</p>
+
+<p><b>Headquarters (HQ):</b> The Corporation's hand of cards. A central sever.</p>
+
+<p><b>Ice:</b> A Corporation card type which protects his servers from the Runner.</p>
+
+<p><b>Icebreaker:</b> A program subtype which enables the Runner to break ice.</p>
+
+<p><b>Inactive:</b> A state in which a card's effects and abilities are ignored.</p>
+
+<p><b>Influence:</b> A value that appears on certain cards which is used in deckbuilding. Influence restricts the number of out-of-faction cards in a deck.</p>
+
+<p><b>Install:</b> The act of placing an agenda, asset, ice, upgrade, hardware, program or resource card onto the table. The Runner installs cards in his rig, the Corporation in his servers.</p>
+
+<p><b>Install cost:</b> The cost which must be paid in order for a card to be installed.</p>
+
+<p><b>Jack out:</b> The process by which a Runner voluntarily ends his own run.</p>
+
+<p><b>Jinteki:</b> One of the four Corporation factions available to a player in <span class="anr">Android: Netrunner</span>.</p>
+
+<p><b>Link (<span class="icon icon-link"></span>):</b> A value that increases the Runner's link strength during a trace.</p>
+
+<p><b>Link strength:</b> The Runner's total strength during a trace; the sum of his links and the amount of credits the Runner spends on the trace.</p>
+
+<p><b>Maximum Hand Size:</b> The maximum number of cards a player can have in his hand during his discard phase.</p>
+
+<p><b>Memory Unit (MU):</b> A unit of space available to the Runner to install programs. The Runner begins the game with four memory units.</p>
+
+<p><b>Mulligan:</b> The act of drawing a new hand at the start of the game. Each player gets one mulligan per game.</p>
+
+<p><b>NBN:</b> One of the four Corporation factions available to a player in <span class="anr">Android: Netrunner</span>.</p>
+
+<p><b>Operation:</b> A single-use card type that is played by the Corporation during his turn and is trashed when its effects are resolved.</p>
+
+<p><b>Power Counter:</b> A counter used to track various effects on cards.</p>
+
+<p><b>Program:</b> A Runner card type that is installed and grants him various abilities.</p>
+
+<p><b>Prevent effect:</b> An effect that stops another effect from resolving. </p>
+
+<p><b>Research and Development (R&amp;D):</b> The Corporation's draw deck. A central server.</p>
+
+<p><b>Resource:</b> A Runner card type that is installed and grants the Runner various benefits.</p>
+
+<p><b>Rez:</b> The process by which the Corporation reveals his installed cards and allows them to take effect; once rezzed, a card is turned faceup.</p>
+
+<p><b>Rez cost:</b> The credits that the Corporation must pay in order to rez a card.</p>
+
+<p><b>Root:</b> The portion of the central server where the Corporation installs upgrades.</p>
+
+<p><b>Runner:</b> One of the two sides available to the player in <span class="anr">Android: Netrunner</span>; the opponent of the Corporation.</p>
+
+<p><b>Score (noun):</b> The number of agenda points a player has on agendas in his score area.</p>
+
+<p><b>Score (verb):</b> The act of the Corporation turning an installed agenda faceup and adding it to his score area. An agenda must have at least as many advancement tokens on it as its advancement requirement to be scored.</p>
+
+<p><b>Score Area:</b> A place where each player places his scored or stolen agendas.</p>
+
+<p><b>Sentry:</b> One of the four subtypes of ice which the Corporation uses to defend his servers.</p>
+
+<p><b>Server, Central:</b> A type of server which includes R&amp;D, HQ, and Archives.</p>
+
+<p><b>Server, Remote:</b> A server built by the Corporation. Assets and agendas can only be installed in remote servers.</p>
+
+<p><b>Shaper:</b> One of the three Runner factions available to a player in <span class="anr">Android: Netrunner</span>.</p>
+
+<p><b>Stack:</b> The Runner's draw deck.</p>
+
+<p><b>Steal:</b> The act of the Runner adding an accessed agenda to his score area.</p>
+
+<p><b>Strength:</b> An attribute of programs and ice.</p>
+
+<p><b>Subroutine (<span class="icon icon-subroutine"></span>):</b> An ability of a piece of ice which interferes with the Runner if allowed to trigger during a run.</p>
+
+<p><b>Subtype:</b> A card descriptor.</p>
+
+<p><b>Tag:</b> An effect that, when acquired by the Runner, can allow the Corporation to trash the Runner's resources.</p>
+
+<p><b>Tagged:</b> A state which describes a Runner when he has one or more tags.</p>
+
+<p><b>Trace:</b> An attempt by the Corporation to tag or damage the Runner.</p>
+
+<p><b>Trace Strength:</b> The Corporation's total strength during a trace; the sum of the base trace strength on the card initiating the trace and the amount of credits the Corporation spends on the trace.</p>
+
+<p><b>Trap:</b> One of the four subtypes of ice which the Corporation can use to defend his servers.</p>
+
+<p><b>Trash:</b> The act of moving a card to its owner's trash pile.</p>
+
+<p><b>Triggered Ability:</b> An ability that has a prerequisite that must be met or paid before it is used.</p>
+
+<p><b>Upgrade:</b> A Corporation card type that is installed in any server and grants the Corporation various abilities.</p>
+
+<p><b>Virus Counter:</b> A counter used to track various effects on virus cards.</p>
+
+<p><b>Weyland Consortium:</b> One of the four Corporation factions available to a player in <span class="anr">Android: Netrunner</span>.</p>
+
+<h2 id="rop138">Credits</h2>
+
+<p><b>Original Game Design:</b> Richard Garfield</p>
+
+<p><b>Game Development:</b> Lukas Litzsinger</p>
+
+<p><b>IP Development:</b> Daniel Lovat Clark</p>
+
+<p><b>Rules Text:</b> David Hansen, Michael Hurley, and Lukas Litzsinger</p>
+
+<p><b>Editing:</b> David Hansen and Lukas Litzsinger</p>
+
+<p><b>Graphic Design:</b> Michael Silsby with Chris Beck, Shaun Boyke, Dallas Mehlhoff, Andrew Navaro, and Evan Simonet</p>
+
+<p><b>Cover Art:</b> Imaginary FS Pte Ltd</p>
+
+<p><b>Art Direction:</b> Zo&euml; Robinson</p>
+
+<p><b>Managing Art Director:</b> Andrew Navaro</p>
+
+<p><b>Licensing Coordinator:</b> Deb Beck</p>
+
+<p><b>Producer:</b> Lukas Litzsinger</p>
+
+<p><b>Production Manager:</b> Eric Knight</p>
+
+<p><b>Executive Game Designer:</b> Corey Konieczka</p>
+
+<p><b>Executive Game Producer:</b> Michael Hurley</p>
+
+<p><b>Publisher:</b> Christian T. Petersen</p>
+
+<p><b>Android Universe created by Kevin Wilson with Daniel Lovat Clark</b></p>
+
+<p><b>Playtesters:</b> Patrick John Haggerty, Brent Bartlett, Patrick Burroughs, Chris Long, Mendel Schmiedekamp, Brian Olmstead, Christopher &ldquo;Tarnis Phoenix&rdquo; Seefeld, WiL Springer, Mike Linnemann, Bryan Bornmueller, Maximum Deb, Joshua B. Grace, Andrew Fischer, Erik Dahlman, Nate French, Damon &ldquo;Stormaggedon Dark Lord of All&rdquo; Stone, Francesco Moggia, Andrew Baussan, Brad Andres, Nathan LeSueur, Kalar Komarec, Andy Christensen, &ldquo;Lovey the Snake,&rdquo; Joseph Houff, Patrick Burroughs, John Laughlin, Brent Bartlett, Jon Waddington, Maya Waddington, Aiden Tanner, Chad Tanner, Becky Zamborsky, Steve Zamborsky, Kevin Ancell, Jimmie Hardin, jeremy barrett, James Abele, Michael Hurley, Michael Silsby, Julia Lewandowski, Mat Nowak, Josh Bailey, Johnny Anderson, Engoduun, Noshrok Grimskull, Emmanuel &ldquo;Playful_EE&rdquo; Estournet, Wormhole Surfer aka Ludovic Schmidt, JudgeWhyMe, The_Little_Bug, Hugo &ldquo;Ophidian Lord,&rdquo; Will &ldquo;Kennon&rdquo; Lentz, Richard A. Edwards, William Edwards, Kathy Bishop, Eric Damron, Joe Becker, &ldquo;The Shadow,&rdquo; and Nick Jordan.</p>
+
+<h3>Wizards of the Coast Licensing Approvals Team</h3>
+
+<p><b>Senior Creative Director:</b> Jon Schindehette</p>
+
+<p><b>Editorial Review:</b> Jennifer Wilkes Clark</p>
+
+<p><b>Associate Brand Manager:</b> Hilary Ross</p>
+
+<p>Netrunner is a TM of R. Talsorian Games, Inc. Android is TM & &copy; 2012 Fantasy Flight Publishing, Inc. All rights reserved. Netrunner is licensed by Wizards of the Coast LLC. &copy; 2012 Wizards. Wizards of the Coast and its logo are property of Wizards of the Coast LLC in the U.S.A. and other countries. Android, Fantasy Flight Games, Fantasy Flight Supply, and the FFG logo are trademarks of Fantasy Flight Publishing, Inc. Living Card Game, LCG, and the LCG logo are registered trademarks of Fantasy Flight Publishing, Inc. All rights reserved.</p>
+
+</article>
+<article class="rules tsr">
+<h2 id="tsr">Timing Structure of a Run 1.1</h2>
+<ol>
+	<li><p><a id="tsr1" href="#tsr1">1</a>. The Runner initiates a <em>run</em> and declares the <em>attacked server</em>.</p>
+	<ul>
+		<li><p>If the attacked server has one or more pieces of ice protecting it, go to [<a href="#tsr2">2</a>]. If the attacked server does not have ice protecting it, go to [<a href="#tsr4">4</a>].</p></li>
+	</ul></li>
+	<li><p><a id="tsr2" href="#tsr2">2</a>. The Runner <em>approaches</em> the outermost piece of ice not already approached on the attacked server.</p>
+	<ol>
+		<li><p><a id="tsr2_1" href="#tsr2_1">2.1</a> Paid abilities can be triggered.</p></li>
+		<li><p><a id="tsr2_2" href="#tsr2_2">2.2</a> The Runner decides whether to continue the run.</p>
+		<ul>
+			<li><p>...Either the Runner <em>jacks out</em>: go to [<a href="#tsr6">6</a>] (cannot jack out if this is the first ice approached this run)</p></li>
+			<li><p>...Or the Runner continues the run: go to [<a href="#tsr2_3">2.3</a>]</p></li>
+		</ul></li>
+		<li><p><a id="tsr2_3" href="#tsr2_3">2.3</a> Approached ice can be rezzed, Paid abilities can be triggered, Non-ice cards can be rezzed (in any order).</p></li>
+		<li><p><a id="tsr2_4" href="#tsr2_4">2.4</a> Players check to see if the approached ice is rezzed.</p>
+		<ul>
+			<li><p>If the approached ice is <em>rezzed</em>, go to [<a href="#tsr3">3</a>]. If the approached ice is <em>unrezzed</em>, the Runner <em>passes</em> it: go to [<a href="#tsr2">2</a>] if there is another piece of ice protecting the server, go to [<a href="#tsr4">4</a>] if there is not another piece of ice protecting the server.</p></li>
+		</ul></li>
+	</ol></li>
+	<li><p><a id="tsr3" href="#tsr3">3</a>. The Runner <em>encounters</em> a piece of ice. (&ldquo;When encountered&rdquo; conditionals meet their trigger conditions)</p>
+	<ol>
+		<li><p><a id="tsr3_1" href="#tsr3_1">3.1</a> Icebreakers can interact with the encountered ice, Paid abilities can be triggered.</p></li>
+		<li><p><a id="tsr3_2" href="#tsr3_2">3.2</a> Resolve all subroutines not broken on the encountered ice.</p>
+		<ul>
+			<li><p>...Either the run ends: go to [<a href="#tsr6">6</a>]</p></li>
+			<li><p>...Or the run continues: if there is another piece of ice protecting the server, go to [<a href="#tsr2">2</a>]; if there is not another piece of ice protecting the server, go to [<a href="#tsr4">4</a>].</p></li>
+		</ul></li>
+	</ol></li>
+	<li><p><a id="tsr4" href="#tsr4">4</a>. The Runner <em>approaches</em> the attacked server.</p>
+	<ol>
+		<li><p><a id="tsr4_1" href="#tsr4_1">4.1</a> Paid abilities can be triggered.</p></li>
+		<li><p><a id="tsr4_2" href="#tsr4_2">4.2</a> The Runner decides whether to continue the run.</p>
+		<ul>
+			<li><p>...Either the Runner <em>jacks out</em>: go to [<a href="#tsr6">6</a>]</p></li>
+			<li><p>...Or the Runner continues the run: go to [<a href="#tsr4_3">4.3</a>].</p></li>
+		</ul></li>
+		<li><p><a id="tsr4_3" href="#tsr4_3">4.3</a> Paid abilities can be triggered, Non-ice cards can be rezzed (in any order).</p></li>
+		<li><p><a id="tsr4_4" href="#tsr4_4">4.4</a> The run is considered to be <em>successful</em>. (&ldquo;When successful&rdquo; conditionals meet their trigger conditions)</p></li>
+		<li><p><a id="tsr4_5" href="#tsr4_5">4.5</a> Access cards, then go to [<a href="#tsr5">5</a>].</p>
+		<ul>
+			<li><p>If an <em>agenda</em> is accessed, the Runner <em>steals</em> it. If a card with a <em>trash cost</em> is accessed, the Runner may pay its trash cost to <em>trash</em> it.</p></li>
+			<li><p>All accessed cards not stolen or trashed are returned to the server in their previous states.</p></li>
+		</ul></li>
+	</ol></li>
+	<li><p><a id="tsr5" href="#tsr5">5</a>. The run ends.</p></li>
+	<li><p><a id="tsr6" href="#tsr6">6</a>. The run ends and is considered to be <em>unsuccessful</em>. (&ldquo;When unsuccessful&rdquo; conditionals meet their trigger conditions)</p></li>
+</ol>
+
+</article>
+<article class="rules faq">
+<h2 id="faq">FAQ 1.6</h2>
+<nav class="inner faq">
+	<ul>
+		<li><a href="#faq0">Card Errata</a></li>
+		<li><a href="#faq1">Rules Clarifications</a>
+		<ul>
+			<li><a href="#faq2">Accessing</a>
+			<ul>
+				<li><a href="#faq3">When accessed abilities</a></li>
+				<li><a href="#faq4">Accessing Archives</a></li>
+				<li><a href="#faq5">Accessing Multiple Cards from HQ</a></li>
+				<li><a href="#faq6">Accessing Multiple Cards from R&amp;D</a></li>
+			</ul></li>
+			<li><a href="#faq7">Terminology</a>
+			<ul>
+				<li><a href="#faq8">&ldquo;All&rdquo;</a></li>
+				<li><a href="#faq9">&ldquo;Bypass&rdquo;</a></li>
+				<li><a href="#faq10">&ldquo;Hosted&rdquo;</a></li>
+				<li><a href="#faq11">&ldquo;Limit 1 console per player.&rdquo;</a></li>
+				<li><a href="#faq12">&ldquo;If successful...&rdquo;</a></li>
+				<li><a href="#faq13">&ldquo;Normally be Trashed&rdquo;</a></li>
+				<li><a href="#faq14">Installed</a></li>
+				<li><a href="#faq15">Uninstalled</a></li>
+				<li><a href="#faq16">&ldquo;Using&rdquo;</a></li>
+			</ul></li>
+			<li><a href="#faq17">Actions and Abilities</a>
+			<ul>
+				<li><a href="#faq18">Triggering Actions and Abilities</a></li>
+				<li><a href="#faq19">Subroutines</a></li>
+				<li><a href="#faq20">Replacement Effects</a></li>
+				<li><a href="#faq21">Using Icebreakers</a></li>
+				<li><a href="#faq22">Prevent/Avoid Effects</a></li>
+				<li><a href="#faq23">Installing Multiple Cards</a></li>
+				<li><a href="#faq24">Rezzing Cards</a></li>
+			</ul></li>
+			<li><a href="#faq25">Costs</a>
+			<ul>
+				<li><a href="#faq26">Memory Cost</a></li>
+				<li><a href="#faq27">Trashing as a Cost</a></li>
+				<li><a href="#faq28">Additional Costs</a></li>
+				<li><a href="#faq29">Rez Cost &amp; Play Cost</a></li>
+			</ul></li>
+			<li><a href="#faq30">Other</a>
+			<ul>
+				<li><a href="#faq31">Hosting</a></li>
+				<li><a href="#faq32">Destruction of Servers</a></li>
+				<li><a href="#faq33">Destruction of Ice</a></li>
+				<li><a href="#faq34">Subtypes</a></li>
+				<li><a href="#faq35">Encountering Ice</a></li>
+				<li><a href="#faq36">Recurring Credits</a></li>
+				<li><a href="#faq37">Search</a></li>
+				<li><a href="#faq38">Choosing Multiple Cards</a></li>
+				<li><a href="#faq39">Revealing Cards</a></li>
+				<li><a href="#faq40">Negative Strength</a></li>
+				<li><a href="#faq41">Card Memory</a></li>
+				<li><a href="#faq42">Infinite Loops</a></li>
+			</ul></li>
+		</ul></li>
+		<li><a href="#faq43">Card Clarification</a></li>
+		<li><a href="#faq44">Frequently Asked Questions</a></li>
+
+		
+	</ul>
+</nav>
+
+<h2 id="faq0">Card Errata</h2>
+<p>Please refer to the <a href="http://ancur.wikia.com/wiki/Category:Cards_with_errata">Cards with errata page</a> on Project ANCUR for the latest Card Errata list.</p>
+<h2 id="faq1">Rules  Clarifications</h2>
+<p>This section contains the official rule clarifications and enhancements for <span class="anr">Android: Netrunner</span>. Used in conjunction with the core set rulebook, these clarifications and enhancements should enable a player to navigate through the most complex situations that can arise while playing the game.</p>
+<h3 id="faq2">Accessing</h3>
+<h4 id="faq3">When Accessed Abilities</h4>
+<p>A card with an ability that triggers when the card is accessed does not have to be active in order for the ability to trigger. When resolving such an ability, simply follow the instructions on the card.</p>
+<p><i><b>Example:</b> The Corporation does not have to rez <a href="/card/01069">Project Junebug</a> before the Runner accesses it in order to use its ability.</i></p>
+<h4 id="faq4">Accessing Archives</h4>
+<p>When accessing cards in Archives, the Runner turns all cards faceup in Archives before accessing them. Then he accesses and resolves individual cards one by one, in any order he wants.</p>
+<p>If the Runner uses a replacement effect, then he does not turn any facedown cards faceup.</p>
+<h4 id="faq5">Accessing Multiple Cards from HQ</h4>
+<p>When the Runner accesses multiple cards from HQ, the cards are accessed one at a time, and do not return to HQ until the Runner is finished accessing.</p>
+<h4 id="faq6">Accessing Multiple Cards from R&amp;D</h4>
+<p>The Runner can intersperse accessing cards from R&amp;D with any upgrades installed in the root of R&amp;D. The Runner cannot choose to access the cards in R&amp;D out of order.</p>
+<p><i><b>Example:</b> The Runner has an <a href="/card/02107">R&amp;D Interface</a> installed and makes a successful run on R&amp;D. He accesses the top card of R&amp;D, and afterward chooses and accesses an upgrade installed in the root of R&amp;D. The Runner then finishes accessing cards by accessing the second card of R&amp;D.</i></p>
+<h3 id="faq7">Terminology</h3>
+<h4 id="faq8">&ldquo;All&rdquo;</h4>
+<p>The word &ldquo;all&rdquo; includes the number zero.</p>
+<p><i><b>Example:</b> The Corporation plays an <a href="/card/02079">Oversight AI</a> and rezzes a <a href="/card/02057">Woodcutter</a>. The Runner encounters the Woodcutter while it has zero subroutines. The Runner is considered to have broken all the subroutines on the Woodcutter, and the ice is trashed.</i></p>
+<h4 id="faq9">&ldquo;Bypass&rdquo;</h4>
+<p>When an effect allows the Runner to &ldquo;bypass&rdquo; a piece of ice, he immediately passes that ice and continues the run. All subroutines (including 0) on the ice bypassed are not broken.</p>
+<p><i><b>Example:</b> The Runner encounters a piece of ice that she can bypass with <a href="/card/01026">Femme Fatale</a>. The last piece of ice the Runner encountered was <a href="/card/01075">Chum</a>, whose subroutine the Runner did not break. The Runner pays to bypass the current piece of ice with Femme Fatale, and takes 3 net damage from Chum's ability, since subroutines on bypassed ice are not broken.</i></p>
+<p>Bypassing prevents any unresolved conditional abilities that met their trigger condition when the ice was encountered from resolving.</p>
+<p><i><b>Example:</b> The Runner encounters a <a href="/card/01090">Tollbooth</a> that she can bypass with <a href="/card/01026">Femme Fatale</a>. Both cards have the same trigger condition, but it is the Runner's turn so her ability triggers first and resolves. The ice is now bypassed and Tollbooth's ability cannot resolve.</i></p>
+<h4 id="faq10">&ldquo;Hosted&rdquo;</h4>
+<p>&ldquo;Hosted&rdquo; is always self-referential and refers to cards and tokens hosted on that card, unless otherwise noted. Cards are always hosted faceup, unless otherwise noted.</p>
+<h4 id="faq11">&ldquo;Limit 1 console per player.&rdquo;</h4>
+<p>This restriction refers only to active consoles. A player can have multiple copies of a console, and even different consoles, in his deck.</p>
+<p>The limit of 1 console per player prevents the Runner from installing a second console, even if the Runner wishes to trash the first.</p>
+<h4 id="faq12">&ldquo;If successful...&rdquo;</h4>
+<p>Whenever there is an &ldquo;If successful...&rdquo; effect tied to the outcome of a run, the run itself must have been successful against the specified server(s), if applicable. If the Runner initiates a run against the specified server but ends the run on a different server, the &ldquo;If successful...&rdquo; effect does not resolve when the run is successful.</p>
+<p><i><b>Example:</b> The Runner plays <a href="/card/05035">Legwork</a> on HQ. During the run, a <a href="/card/02073">Bullfrog</a> moves the Runner to R&amp;D. Even though the run is successful, the Runner cannot use the &ldquo;If successful...&rdquo; effect on Legwork because the run was not successful against HQ. </i></p>
+<p>If the ability including &ldquo;If successful...&rdquo; does not specify a server, then it does not matter if the attacked server is changed during the run, and the ability resolves as normal.</p>
+<h4 id="faq13">&ldquo;Normally be Trashed&rdquo;</h4>
+<p>Trashing cards that &ldquo;cannot normally be trashed&rdquo; only refers to
+trashing cards that do not have a trash cost.</p>
+<h4 id="faq14">Installed</h4>
+<p>Events, operations, and identity cards are never installed.</p>
+<h4 id="faq15">Uninstalled</h4>
+<p>Anytime an installed card enters HQ, R&amp;D, Archives, or the
+Runner’s grip, stack, or heap, or is removed from the game, the
+card has been &ldquo;uninstalled.&rdquo;</p>
+<h4 id="faq16">&ldquo;Using&rdquo;</h4>
+<p>Any time an ability is optional, the player resolving the ability is &ldquo;using&rdquo; the ability. This includes all paid abilities and all optional conditional abilities (triggered abilities that use the word &ldquo;may&rdquo; or &ldquo;allows&rdquo;).</p>
+<h3 id="faq17">Actions and Abilities</h3>
+<h4 id="faq18">Triggering Actions and Abilities</h4>
+<p>A player cannot trigger an action/ability unless he is also able to resolve it.</p>
+<p><i><b>Example:</b> The Corp cannot play <a href="/card/01058">Archived Memories</a> if there are no cards in Archives.</i></p>
+<h4 id="faq19">Subroutines</h4>
+<p>Unless specified otherwise, the Corporation always chooses the effects of a subroutine, when necessary.</p>
+<p><i>Example: <a href="/card/01062">Ichi 1.0</a> has &ldquo;<span class="icon icon-subroutine"></span>Trash 1 program.&rdquo; If this subroutine triggers, then the Corporation chooses and trashes one of the Runner's installed programs.</i></p>
+<h4 id="faq20">Replacement Effects</h4>
+<p>Replacement effects can only occur once per trigger. A
+replacement effect uses the word &ldquo;instead&rdquo;</p>
+<p><i><b>Example:</b> The Runner cannot use two <a href="/card/01029">Bank Jobs</a> during the same run. When the run is successful, the Runner may either access cards or use the ability of a Bank Job. Using Bank Job replaces accessing cards, so once the Runner triggers one of the Bank Jobs he cannot trigger the other.</i></p>
+<h4 id="faq21">Using Icebreakers</h4>
+<p>The Runner can boost the strength of his icebreakers outside of an encounter with a piece of ice. However, unless the icebreaker says otherwise, its strength is immediately reset to its previous value.</p>
+<h4 id="faq22">Prevent/Avoid Effects</h4>
+<p>Prevent/Avoid effects take priority over conditional abilities that would trigger from whatever is being prevented or avoided, except when a conditional ability uses the word &ldquo;additional.&rdquo; An &ldquo;additional&rdquo; conditional ability occurs simultaneously with the trigger condition and can be prevented/avoided along with the trigger condition.</p>
+<h4 id="faq23">Installing Multiple Cards</h4>
+<p>Whenever multiple cards are installed by the same effect, those cards are installed one at a time.</p>
+<p><i><b>Example:</b> The Runner uses <a href="/card/05051">Mass Install</a> to install three programs, including <a href="/card/04022">Scheherazade</a>. The Runner can install the Scheherazade first, and then host the other two programs on it.</i></p>
+<h4 id="faq24">Rezzing cards</h4>
+<p>The Corporation may rez non-ice cards after the Runner approaches any piece of ice. See step 2 of a run on the <a href="#tsr">Timing Structure of a Run</a>.</p>
+<h3 id="faq25">Costs</h3>
+<h4 id="faq26">Memory Cost</h4>
+<p>For the purposes of card abilities, a program's memory cost is not considered an additional cost.</p>
+<p><i><b>Example:</b>  The Runner plays a <a href="/card/02047">Test Run</a> with no free MU. He will have to trash a program to make room for the program being installed, since the memory cost of that program is not ignored as an additional cost.</i></p>
+<h3 id="faq27">Trashing as a Cost</h3>
+<p>If the cost of a paid ability requires a card to be trashed, then preventing that card from being trashed prevents the cost from being paid and the paid ability does not resolve.</p>
+<p><i>Example: The Runner trashes <a href="/card/02005">Cortez Chip</a> and has an installed <a href="/card/01048">Sacrificial Construct</a>. If the Sacrificial Construct is used to prevent the Cortez Chip from being trashed, then the paid ability on Cortez Chip does not resolve.</i></p>
+<h4 id="faq28">Additional Costs</h4>
+<p>A player may decline to pay an additional cost, even if he is able to do so.</p>
+<h4 id="faq29">Rez Cost &amp; Play Cost</h4>
+<p>Rez and play costs are formulas that take into account any effects that modify them. They are not just the printed number on the card.</p>
+<h3 id="faq30">Other</h3>
+<h4 id="faq31">Hosting</h4>
+<p>The following replaces the rules on hosting that appear in the core set rulebook:</p>
+<p>&ldquo;Hosting&rdquo; is the result of placing a card, counter, or token on top of a card, creating a relationship between the host card and what is hosted. If a card allows other cards to be hosted on it, those cards must be hosted on the card when they are installed, unless a card says otherwise.</p>
+<p>Hosted counters or tokens can be spent without affecting their host. If a trigger cost requires one or more hosted counters or tokens, those counters or tokens are &ldquo;spent&rdquo; by being returned to the token bank from the card the ability appears on.</p>
+<p>If a host is trashed, all cards, counters, and tokens hosted on it are also trashed. This cannot be prevented. If a host Corp card is derezzed, all cards, counters, and tokens hosted on it remain hosted.</p>
+<p>The state of hosting is distinct (but not exclusive from) the state of installing. Most cards are hosted on another card when they are installed. If a card is hosted but not installed, the card is inactive.</p>
+
+<h3 id="faq32">Destruction of Servers</h3>
+<p>The Corp cannot choose to destroy a server when installing cards; at least one card must be installed for other cards in or protecting that server to be trashed.</p>
+<p>If there are no cards installed in or protecting a remote server, then the server immediately ceases to exist. If a server ceases to exist during a run, the run immediately ends. Unless the run has passed step 4.4 of the timing structure of a run, it is not considered to be successful or unsuccessful.</p>
+<h4 id="faq33">Destruction of Ice</h4>
+<p>If a piece of ice is destroyed during an approach or encounter with that piece of ice, then the ice is immediately passed and the run continues. Any open paid ability window closes immediately.</p>
+<h4 id="faq34">Subtypes</h4>
+<p>A card has all of its subtypes when it is inactive.</p>
+
+<h4 id="faq35">Encountering Ice</h4>
+<p>When the Runner encounters a piece of ice, he must resolve any abilities triggered by the encounter before he can trigger paid effects or break subroutines. See step 3 of a run on the <a href="#tsr">Timing Structure of a Run</a>.</p>
+
+<h4 id="faq36">Recurring Credits</h4>
+<p>Recurring credits are placed on a card when the card becomes active, and can be used immediately. Recurring credits do not stack; a player only replaces recurring credits up to the number listed on the card when his or her turn begins. This occurs at step 1.2 of the turn, before any conditional abilities can be triggered. Recurring credits are only ever replaced up to their current value, not removed. </p>
+<h4 id="faq37">Search</h4>
+<p>If a player is searching for a card, he must find the card, if able. If a player is unable to fulfill the condition of the search, then nothing happens, but the deck is always reshuffled.</p>
+<h4 id="faq38">Choosing Multiple Cards</h4>
+<p>If an ability allows a player to choose multiple cards, all of the
+cards must be chosen before the effect resolves.</p>
+<p><i><b>Example:</b> The Runner plays <a href="/card/02023">Satellite Uplink</a>. The Runner chooses two cards to expose, and then both are exposed simultaneously.</i></p>
+<h4 id="faq39">Revealing Cards</h4>
+<p>If a Corporation card is not visible to the Runner when it is trashed or discarded, then it is sent to Archives facedown. If a Corporation card is visible to the Runner when it is trashed or discarded, it is sent to Archives faceup.</p>
+<p>If a specific card or card type in an inactive state is chosen by a card effect, the Corporation must show that card to the Runner without changing its faceup or facedown status. The Corporation only reveals the card if it was facedown and the effect says he must reveal it.</p>
+<h4 id="faq40">Negative Strength</h4>
+<p>Ice and icebreakers can have negative strength.</p>
+<h4 id="faq41">Card Memory</h4>
+<p>Whenever a card is uninstalled, there is no memory of its previous state and it is considered to be a new copy of the card.</p>
+<h4 id="faq42">Infinite Loops</h4>
+<p>If an infinite loop is created, the player responsible for the loop must choose a number. The loop instantaneously resolves that many times, and then ends. The Runner must jack out to end an infinite loop that occurs during a run, unless a card ability prevents that from occurring. If the Runner cannot jack out, then it is the Corp's responsibility to end the loop by letting the Runner through to the server.</p>
+<h2 id="faq43">Card Clarification</h2>
+<p>Please refer to the <a href="http://ancur.wikia.com/wiki/Category:Cards_with_clarifications">Cards with clarifications page</a> on Project ANCUR for the latest Card Clarification list.</p>
+<h2 id="faq44">Frequently Asked Questions</h2>
+<p>Please refer to the <a href="http://ancur.wikia.com/wiki/Category:Cards_with_FAQ">Cards with FAQ page</a> on Project ANCUR for the latest FAQ.</p>
+</article>
+<article class="rules tr">
+<h2 id="tr">Tournament Rules 1.6</h2>
+<nav class="inner tr">
+	<ul>
+    	<li><a href="#tr0">Player Conduct</a>
+    	<ul>
+        	<li><a href="#tr1">Card Interpretations and Rules</a></li>
+        	<li><a href="#tr2">Unsportsmanlike Conduct</a></li>
+        	<li><a href="#tr3">Cheating</a></li>
+        	<li><a href="#tr4">Slow Play</a></li>
+    	</ul></li>
+       	<li><a href="#tr5">Tiers of Tournament Play</a>
+    	<ul>
+        	<li><a href="#tr6">Casual</a></li>
+        	<li><a href="#tr7">Competitive</a></li>
+        	<li><a href="#tr8">Premier</a></li>
+    	</ul></li>
+    	<li><a href="#tr9">Pregame Information</a>
+    	<ul>
+        	<li><a href="#tr10">Corporation and Runner Decks</a></li>
+        	<li><a href="#tr11">Authorized Cards</a></li>
+        	<li><a href="#tr12">Card Sleeves</a></li>
+        	<li><a href="#tr13">Deck Restrictions</a></li>
+        	<li><a href="#tr14">Deck Lists</a></li>
+        	<li><a href="#tr15">Tokens</a></li>
+    	</ul></li>
+       	<li><a href="#tr16">Miscellany</a>
+    	<ul>
+        	<li><a href="#tr17">Card Shuffling</a></li>
+        	<li><a href="#tr18">Open Information</a></li>
+        	<li><a href="#tr19">Taking Notes</a></li>
+        	<li><a href="#tr20">Tournament Organizer Participation</a></li>
+        	<li><a href="#tr21">Randomization</a></li>
+    	</ul></li>
+    	<li><a href="#tr22">Tournament Structure</a>
+    	<ul>
+        	<li><a href="#tr23">Swiss Pairings</a></li>
+        	<li><a href="#tr24">Match Play</a></li>
+        	<li><a href="#tr25">Prestige</a></li>
+        	<li><a href="#tr26">Going to Time</a></li>
+        	<li><a href="#tr27">Byes</a></li>
+    	</ul></li>
+    	<li><a href="#tr28">Championship Play</a>
+    	<ul>
+        	<li><a href="#tr29">Double-Elimination Pairings</a></li>
+        	<li><a href="#tr30">Game Play</a></li>
+        	<li><a href="#tr31">Going to Time</a></li>
+    	</ul></li>
+    	<li><a href="#tr32">Draft Tournaments and Match Structure</a>
+    	<ul>
+        	<li><a href="#tr33">Tournament Rules</a></li>
+        	<li><a href="#tr34">Modified Swiss Pairings</a></li>
+    	</ul></li>
+	</ul>
+</nav>
+<p>Updated 10/6/2014</p>
+<p>Fantasy Flight Games’ Organized Play for Android: Netrunner will follow the organization and rules provided in this document. Please remember that these tournaments are designed for players who want to celebrate and enjoy the most challenging aspects of Android: Netrunner. Players should be respectful to others and follow the instructions set forth in this document and by their tournament organizer.</p>
+
+<h2 id="tr0">Player Conduct</h2>
+<h3 id="tr1">Card Interpretations and Rules</h3>
+<p>Tournaments are played using the most recent rules set and the most recently updated official FAQ document, which can be found on the <span class="anr">Android: Netrunner</span> support page at www.fantasyflightgames.com. Remember the golden rule when interpreting card effects and interactions: if the text of a card directly conflicts with the rules of the game, the card text takes precedence.</p>
+<p>The tournament organizer (TO) is the final authority for all card interpretations at that event.</p>
+<h3 id="tr2">Unsportsmanlike Conduct</h3>
+<p>Players are expected to behave in a mature and considerate manner, and to play within the rules and not abuse them. This prohibits maintaining an illegal game state, colluding with another player, behaving inappropriately, scouting decks, artificially manufacturing the results of a game, treating an opponent with a lack of courtesy or respect, etc. The TO, at his or her sole discretion, may remove players from the tournament for unsportsmanlike conduct.</p>
+<h3 id="tr3">Cheating</h3>
+<p>Cheating will not be tolerated. The TO reviews all cheating allegations, and he or she can immediately remove an offending player from the tournament if he or she believes that player has cheated.</p>
+<h3 id="tr4">Slow Play</h3>
+<p>Players must play in a timely fashion regardless of the complexity of the game situation and adhere to time limits specified in the tournament. Players must maintain a pace to allow the match to be finished within the announced time limit.
+Stalling is not acceptable. Players may request a TO to watch their game for slow play.</p>
+<h2 id="tr5">Tiers of Tournament Play</h2>
+<p>Fantasy Flight Games' Organized Play events are broken into three tiers of play. Each tier communicates what expectations the players, judges, and tournament organizers should have when they are involved with an Android: Netrunner tournament. In addition, the Competitive and Premier tiers ensure that no matter where a tournament is held, it will be run with the same standards of play and rules enforcement as other tournaments of the same kind around the world. </p>
+<h3 id="tr6">Casual</h3>
+<p>Casual events stress fun and a friendly atmosphere. These events help build local communities and are a great way for new players to experience their favorite game without worrying whether they know every little rule. This tier may include
+leagues, weekly game nights, and any event using an <span class="anr">Android: Netrunner</span> variant.</p>
+<h3 id="tr7">Competitive</h3>
+<p>Competitive events require players to have general knowledge of a game's rules. While experienced players will come to these events to compete for prizes, players should not be punished for their lack of understanding in the finer points of Android: Netrunner rules. Players can come to these events expecting a consistent experience from store to store. This tier includes Store Championships and unique, one-off events such as the <span class="anr">Android: Netrunner</span> Chronos Protocol Tour.</p>
+<h3 id="tr8">Premier</h3>
+<p>Premier events are the highest level of competition for Fantasy Flight Games tournaments, and all players, judges, and tournament organizers involved are held to the highest levels of conduct. Players are assumed to be familiar with the game's rules, as well as the latest FAQ and tournament rules, and should expect all rules to be strictly enforced. Regional Championships, National Championships, and World Championships are premier events.</p>
+
+<h2 id="tr9">Pregame Information</h2>
+<h3 id="tr10">Corporation and Runner Decks</h3>
+<p>Each player must bring both 1 Corporation and 1 Runner deck to a tournament. Players will play both decks throughout the tournament.</p>
+<h3 id="tr11">Authorized Cards</h3>
+<p>All <span class="anr">Android: Netrunner</span> cards produced by Fantasy Flight Games are legal for sanctioned play (unless banned). No other cards or proxy cards are permitted. In North America, cards are legal upon their release. Competitors outside North America should check with their TO to determine which cards are tournament legal.</p>
+<h3 id="tr12">Card Sleeves</h3>
+<p>For all competitive and premier events, players are required to use protective sleeves for their decks. Sleeves for each deck must all be identical and cards must be placed in these sleeves in an identical manner. If a player’s deck contains alternate art cards, the sleeves must be art sleeves or opaque. Players can use different sleeves for their Corporation and Runner decks. Cards that are not shuffled into a deck, such as identity or click tracker cards, are not required to be sleeved. No card sleeves are required for casual events, but players are encouraged to use sleeves to protect their cards.</p>
+<h3 id="tr13">Deck Restrictions</h3>
+<p>When building a deck for organized play, players must observe the following restrictions:</p>
+<ul>
+<li><p>A deck must be associated with a single identity card, and cannot contain fewer cards than the minimum deck size value listed on the chosen identity card. There is no maximum deck size, but the deck must be able to be sufficiently randomized in a short period of time. Identity cards, reference cards, and click tracker cards are never counted as part of a deck and do not count against the minimum deck size.</p></li>
+<li><p>A deck cannot have more than three copies of a single card (by title) in it.</p></li>
+<li><p>A deck associated with a Runner identity can never contain Corporation cards, and vice versa.</p></li>
+<li><p>A deck cannot contain out-of-faction cards with a total influence value that exceeds the influence limit listed on the chosen identity card. Cards that match the faction of the identity card do not count against this limit.</p></li>
+<li><p>A Corporation deck must have a specific number of agenda points in it based on the size of the deck, as follows:</p>
+<ul>
+<li>40 to 44 cards requires 18 or 19 agenda points. </li>
+<li>45 to 49 cards requires 20 or 21 agenda points. </li>
+<li>50 to 54 cards requires 22 or 23 agenda points. </li>
+</ul>
+<p>For decks larger than this, add 2 additional agenda points to the 54 card deck requirements each time the number of cards in the deck reaches a multiple of 5 (55, 60, 65, etc.).</p>
+</li>
+</ul>
+<h3 id="tr14">Deck Lists</h3>
+<p>Players are required to submit a deck list for each of their decks in order to enter a competitive or premier event. Decklists may be required for casual tournaments at the discretion of the TO. Decklists must detail the name and quantity of each card in the deck, as well as the player's name. No substitutions of cards are allowed during the entire tournament.</p>
+<h3 id="tr15">Tokens</h3>
+<p>Players are responsible to bring their own tokens for tournament play.</p>
+<h2 id="tr16">Miscellany</h2>
+<h3 id="tr17">Card Shuffling</h3>
+<p>Decks must be randomized by some form of shuffling prior to the start of every game and whenever instruction requires it. Each time a deck is randomized, the opponent must be given an opportunity to shuffle and/or cut the cards as well.</p>
+<h3 id="tr18">Open Information</h3>
+<p>The number of cards in a player's hand or deck, and the number of credits in his credit pool, are open information.</p>
+<h3 id="tr19">Taking Notes</h3>
+<p>Players are not allowed to take notes to aid memory or gameplay, whether physically or digitally, during a tournament match. Referencing outside material and information during a match is also prohibited, except for official rule documents.</p>
+<h3 id="tr20">Tournament Organizer Participation</h3>
+<p>The Tournament Organizer (TO) may participate in a casual or competitive tournament for which he or she is responsible if there is a second tournament organizer present. This second TO must be present and announced at the beginning of the tournament, and is responsible for all rulings for games in which the primary TO is playing.</p>
+<p>TOs and Judges for premier tournaments are expected to commit their full attention to organizing and judging the event, and therefore are not permitted to participate in their own events as players.</p>
+<h3 id="tr21">Randomization</h3>
+<p>Players can use dice or other external aids to randomize results, provided the randomization does not impede the flow of the game. Players cannot force other players to use external aids when randomizing. A shuffle from the Corp and a subsequent choice by the Runner is enough to fulfill the requirements of randomness when accessing HQ.</p>
+<h2 id="tr22">Tournament Structure</h2>
+<p>Tournaments for <span class="anr">Android: Netrunner</span> will use the following format:</p>
+<ul>
+<li><p>65 minute rounds (the TO may adjust this time by +/- 10 minutes at his discretion before the tournament begins) </p></li>
+<li><p>Swiss pairings with match play consisting of two games</p></li>
+</ul>
+<p>Each tournament round, players gain prestige based on the results of their games. After a predetermined number of tournament rounds (depending on the field size and time constraints of the tournament), the player with the most prestige is the winner of the tournament, unless the tournament uses the championship play structure (see "Championship Play" on the next page). Ties are broken by strength of schedule. To calculate strength of schedule, total up the prestige of each player’s opponents. If two players have the same strength of schedule, the tie is broken at random.</p>
+<h3 id="tr23">Swiss Pairings</h3>
+<p>Standard Swiss style pairings are used. Random pairings are recommended for the first round. For each round after the first, all pairings will be based on the amount of prestige gained by the players. Each player will be matched with an opponent who has the same amount of prestige, or as close an amount as possible.</p>
+<p>Each pairing should be checked to ensure that no two players are matched up against one another more than once before either the end of the tournament or the beginning of championship play, whichever comes first. As each pair is formed, the TO checks to make sure that players have not already played one another. If they have, one of the players is moved down in the order of prestige two places, and match-ups continue until every player is paired with an opponent he has not played.</p>
+<p>If there is an odd number of players in the tournament, one of the lowest-ranked players receives a bye, counting as a Match Win (see "Byes" below).</p>
+<h3 id="tr24">Match Play</h3>
+<p>A match consists of two games. Players alternate playing Corporation and Runner during a match. For the first game of a match, the players must decide who will play Corporation and who will play Runner by using a random method (such as a die roll or coin flip). The winner of this random method chooses which side to play.</p>
+<p>After drawing his or her starting hand, the Corporation must decide first whether to take his or her mulligan, followed by the Runner.</p>
+<h3 id="tr25">Prestige</h3>
+<p>At the conclusion of each match, players are awarded prestige based on their results. For each game a player wins during his or her match, he or she gains 2 prestige.</p>
+<p><i>Example: Kevin just finished playing his match against Jasmine, and each player won a single game. This means that they each gain 2 prestige.</i></p>
+<h3 id="tr26">Going to Time</h3>
+<p>Players play both games over the course of 65 minutes. The second game is not started until the first game is completed.</p>
+<p>If time is called and neither player has achieved victory in the current game, then play continues until both players have completed one turn. If victory has still not been achieved after the final turn, then the player with the highest number of agenda points gets a modified win and gains 1 prestige. If players have the same number of agenda points, they each gain 1 prestige.</p>
+<p><i>Example: Simon and Doc are unable to finish their current game in time. Simon is taking his turn when time is called, and so the game is completed after Doc's next turn. At that point Simon has 6 agenda points and Doc has 4, so Simon gains 1 prestige.</i></p>
+<p>If the players have not started the second game of a match when time is called, then they do not gain any prestige from that game. A game is not considered to have started until the Corporation draws 1 card from R&amp;D at the beginning of his first turn.</p>
+<h3 id="tr27">Byes</h3>
+<p>If during Swiss pairings there is an odd number of players, the player at the bottom of the standings does not play that round but gains 4 prestige (though no strength of schedule is accumulated, and no credit for Corp or Runner wins is given). Match pairings should be adjusted so that no player receives more than one bye per tournament.</p>
+
+<h2 id="tr28">Championship Play</h2>
+<p>While most tournaments do not require using championship
+play to crown a winner, it is an exciting way to end a
+tournament. Unlike match play during Swiss rounds,
+championship play consists of the following:</p>
+<ul>
+<li>35 minute rounds</li>
+<li>Double-elimination pairing</li>
+</ul>
+<p>Championship play is recommended for tournaments with a large number of players (33 or more) and is used for all premier tournaments. It is not recommended for casual tournaments or tournaments with a smaller number of players (32 or less).</p>
+<h3 id="tr29">Double-Elimination Pairings</h3>
+<p>The players with the most prestige (usually a top 8 or top 16) will be seeded and paired up in order to determine the tournament champion. The number of players who make the cut must be determined and announced before the start of the tournament. Each player’s order of finish in the preliminary rounds determines his or her seeding in championship play: the player who qualifies with the most prestige in the preliminary rounds will play against the player who qualified with the least prestige in the preliminary rounds, the player with the second-most prestige will play against the player with the second-least prestige, and so on. Ties are broken by strength of schedule, and then by random chance.</p>
+<p>A double-elimination bracket is divided into an upper bracket and a lower bracket. When a player wins a game in the upper bracket, he or she advances in that bracket and the loser falls into the lower bracket at a designated spot. Each time a player loses his or her second game during the double-elimination bracket, that player is eliminated. Refer to the included double-elimination bracket at the end of this document.</p>
+<h3 id="tr30">Game Play</h3>
+<p>For each round of championship play, players alternate playing as the Runner and Corporation. During the first round, the higher seed chooses which side he or she wishes to play. In subsequent rounds, each player plays the side that he or she has played the least.</p>
+<p>If both players have played the same side the least, the player who has the greater differential between his or her two sides plays that side. If both players have the same differential, then they must decide who will play Corporation and who will play Runner by using a random method (such as a die roll or coin flip). The winner of this random method chooses which side to play.</p>
+<p><i>Example: Mike has played Runner twice and Corp once. He is paired against Gavin, who has played Runner three times and Corp once. Since they have both played the same side the least, the differential of each player is compared. Mike has a differential between his two sides of one, while Gavin has a differential of
+two. Gavin, then, plays the Corp and Mike plays Runner.</i></p>
+<h3 id="tr31">Going to Time</h3>
+<p>Players play a single game over the course of 35 minutes. Judges should encourage players to play at a pace that allows the game to finish in the allotted time limit. If time is called and neither player has achieved victory in the current game, then play continues until both players have completed one turn. If victory has still not been achieved after the final turn, then the player with the highest number of agenda points is the winner of the game. If players have the same number of agenda points, then the higher seed wins the game.</p>
+<h2 id="tr32">Draft Tournaments and Match Structure</h2>
+<h3 id="tr33">Tournament Rules</h3>
+<p>All standard Android: Netrunner tournament rules are observed
+in a full draft. Remember that games are played to six agenda
+points, instead of seven.</p>
+<ul>
+<li>50 minute rounds (the TO may adjust this time by +/- 10 minutes at his discretion before the tournament begins)</li>
+<li>Modified Swiss pairings with match play consisting of two games</li>
+</ul>
+<p>It is recommended to run a full draft tournament with six or eight players. An even number of players is required, so that each player has an opponent to play against each round.</p>
+<p>The following rules are observed in a half draft:</p>
+<ul>
+<li>30 minute rounds (the TO may adjust this time by +/- 5 minutes at his discretion before the tournament begins)</li>
+<li>Play consisting of one game</li>
+</ul>
+<p>It is recommended to run a half draft tournament with 8, 12, or 16 players. An even number of players is required when running a half draft.</p>
+<h3 id="tr34">Modified Swiss Pairings</h3>
+<p>When pairing players for the first round of a full draft tournament, each player should be matched against the player furthest away from his seat. Subsequent rounds follow normal swiss pairing rules.</p>
+
+</article>
+
+</div>
+{% endblock %}

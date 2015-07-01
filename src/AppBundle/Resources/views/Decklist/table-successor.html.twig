@@ -1,0 +1,19 @@
+<table class="table table-condensed" id="table-successor">
+<thead>
+<tr><th colspan="{% if successor_decklists|length %}4{% else %}1{% endif %}"><span class="glyphicon glyphicon-forward"></span> Inspiration for</th></tr>
+</thead>
+<tbody>
+{% if successor_decklists|length %}
+{% for decklist in successor_decklists %}
+<tr>
+	<td class="decklist-name"><a href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.prettyname|e('url') }) }}">{{ decklist.name }}</a></td>
+	<td class="social"><span class="glyphicon glyphicon-heart social-icon-like"></span> {{ decklist.nbvotes }}</td>
+	<td class="social"><span class="glyphicon glyphicon-star social-icon-favorite"></span> {{ decklist.nbfavorites }}</td>
+	<td class="social"><span class="glyphicon glyphicon-comment social-icon-comment"></span> {{ decklist.nbcomments }}</td>
+</tr>
+{% endfor %}
+{% else %}
+<tr><td>None yet</td></tr>
+{% endif %}
+</tbody>
+</table>

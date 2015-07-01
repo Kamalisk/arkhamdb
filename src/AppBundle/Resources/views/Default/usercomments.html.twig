@@ -1,0 +1,56 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block body %}
+
+<div class="container">
+<div class="row">
+
+<div class="col-md-6">
+
+   	<h3>Published comments:</h3>
+<table class="table">
+<thead></thead>
+<tbody>
+
+{% for comment in comments %}
+
+<tr>
+<td>
+<div>{{ comment.creation|date('M d, Y') }} on <a href="{{ path('decklist_detail', {decklist_id:comment.decklist_id,decklist_name:comment.decklist_prettyname}) }}#{{ comment.id }}">{{ comment.decklist_name }}</a>:</div>
+{{ comment.text|raw }}
+</td>
+</tr>
+{% endfor %}
+
+</tbody>
+</table>
+
+<div class="text-center">
+<ul class="pagination pagination-sm" style="margin:0">
+{% if prevurl is null %}
+  <li class="disabled"><a href="#">&laquo;</a></li>
+{% else %}
+  <li class=""><a href="{{ prevurl }}">&laquo;</a></li>
+{% endif %}
+{% for page in pages %}
+{% if page.current %}
+  <li class="active"><a href="{{ page.url }}">{{ page.numero }} <span class="sr-only">(current)</span></a></li>
+{% else %}
+  <li><a href="{{ page.url }}">{{ page.numero }}</a></li>
+{% endif %}
+{% endfor %}
+{% if nexturl is null %}
+  <li class="disabled"><a href="#">&raquo;</a></li>
+{% else %}
+  <li class=""><a href="{{ nexturl }}">&raquo;</a></li>
+{% endif %}
+  </ul>
+</div>
+
+</div>
+
+
+</div>
+</div> <!-- .container -->
+
+{% endblock %}

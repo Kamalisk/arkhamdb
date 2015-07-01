@@ -1,0 +1,348 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block head %}
+
+<script src="{{ asset('/web/bundles/app/js/nrdb.draw_simulator.js') }}"></script>
+<script src="{{ asset('/web/bundles/app/js/nrdb.card_modal.js') }}"></script>
+<script src="{{ asset('/web/bundles/app/js/nrdb.smart_filter.js') }}"></script>
+<script src="{{ asset('/web/bundles/app/js/nrdb.suggestions.js') }}"></script>
+<script src="{{ asset('/web/bundles/app/js/nrdb.diff.js') }}"></script>
+<script src="{{ asset('/web/bundles/app/js/deck.js') }}"></script>
+<script type="text/javascript">
+
+var Filters = {},
+	FilterQuery = {},
+	CardDivs = [null, {}, {}, {}],
+	Sort = "type",
+	Order = 1,
+	Identity = null,
+	InfluenceSpent = 0,
+	InfluenceLimit = 0,
+	MinimumDeckSize = 0,
+	DeckSize = 0,
+	Deck = {{ deck.slots|json_encode|raw }},
+	Side = {{ deck.side_name|json_encode|raw }},
+	Deck_id = {{ deck.id|json_encode|raw }},
+	History = {{ deck.history|json_encode|raw }},
+	Url_FactionImage = '{{  asset('/web/bundles/app/images/factions/16px/xxx.png') }}',
+	Url_TypeImage = '{{ asset('/web/bundles/app/images/types/xxx.png') }}',
+	DisplaySort = 'type',
+	HideDisabled = true,
+	ShowOnlyDeck = false;
+	
+</script>
+
+{% endblock %}
+
+{% block body %}
+<div class="container deck">
+
+{% if deck.unsaved %}
+<div class="alert alert-danger" role="alert" id="deck-unsaved-alert"><span class="glyphicon glyphicon-warning-sign"></span> This deck has unsaved changes. Please save the deck or cancel the changes before making further edits.</div>
+{% endif %}
+
+<div class="row">
+
+<!-- Left-side Column -->
+<div class="col-md-6" id="deck">
+
+<!-- Identity and Stats -->
+<div class="row">
+	<div class="col-sm-3 hidden-xs">
+		<img id="img_identity" src="#empty" alt="Identity" class="img-responsive">
+	</div><!-- /.col-sm-3 -->
+	<div class="col-sm-9">
+		<h4 id="identity">Identity</h4>
+		<div id="influence"></div>
+		<div id="agendapoints"></div>
+		<div id="cardcount"></div>
+		<div id="latestpack"></div>
+	</div><!-- /.col-sm-9 -->
+</div><!-- /.row -->
+<!-- Identity and Stats -->
+
+<!-- Deck Content -->
+<div class="row" id="deck-content" style="margin-bottom:1em;min-height:300px">
+</div><!-- /#deck-content -->
+<!-- Deck Content -->
+
+<!-- Suggestions -->
+<table class="table table-condensed" id="table-suggestions">
+<thead>
+<tr><th colspan="6"><span class="glyphicon glyphicon-fast-forward"></span> Card suggestions</th></tr>
+</thead>
+<tbody>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table>
+<!-- Suggestions -->
+
+<form method="POST" action="{{ path('deck_save') }}" id="save_form" role="form" style="margin-bottom:1em">
+	<input type="hidden" id="deck-save-id" name="id" value="{{ deck.id }}">
+	<input type="hidden" id="deck-save-as-copy" name="copy" value="0">
+	<input type="hidden" id="deck-cancel-edits" name="cancel_edits" value="0">
+	<input type="hidden" name="content">
+	<input type="hidden" name="description">
+	<input type="hidden" name="tags">
+		<div class="form-group">
+			<label for="name">Name</label>
+			<input type="text" class="form-control decklist-name" name="name" value="{{ deck.name }}">
+		</div>
+	<button type="submit" class="btn btn-warning">Save</button>
+	<button type="submit" id="btn-save-as-copy" class="btn btn-default">Save as Copy</button>
+	<button type="submit" id="btn-cancel-edits" class="btn btn-link">Cancel edits</button>
+</form>
+
+</div><!-- /#deck -->
+<!-- Left-side Column -->
+
+<!-- Right-side Column -->
+<div class="col-md-6">
+
+<div role="tabpanel">
+
+<!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#tab-pane-build" aria-controls="tab-pane-build" role="tab" data-toggle="tab">Build</a></li>
+    <li role="presentation"><a href="#tab-pane-infos" aria-controls="tab-pane-infos" role="tab" data-toggle="tab">Notes</a></li>
+    <li role="presentation"><a href="#tab-pane-check" aria-controls="tab-pane-check" role="tab" data-toggle="tab">Check</a></li>
+    <li role="presentation"><a href="#tab-pane-history" aria-controls="tab-pane-history" role="tab" data-toggle="tab" id="tab-header-history">History</a></li>
+   </ul>
+  
+   <!-- Tab panes -->
+  <div class="tab-content">
+  
+   <div role="tabpanel" class="tab-pane active" id="tab-pane-build">
+
+<div class="row">
+	<div class="col-md-12 text-right" style="margin-bottom:10px">
+        <button class="btn btn-default btn-xs" type="button" id="filter-text-button">Filter help</button>
+        <div class="btn-group">
+			<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">Sets <span class="caret"></span></button>
+			<ul class="dropdown-menu filter pull-right" id="set_code" title="Shift+Click to select only one option ; Alt+Shift+Click to select all other options"></ul>
+		</div>
+		<div class="btn-group">
+			<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">Options <span class="caret"></span></button>
+			<ul class="dropdown-menu pull-right">
+			    <li><a href="#"><label><input type="checkbox" name="show-disabled"> Show unusable cards</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="only-deck"> Show only used cards</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="display-column-1"> Display on 1 column</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="display-column-2"> Display on 2 columns</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="display-column-3"> Display on 3 columns</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="core-set-1"> Use 1 Core Set</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="core-set-2"> Use 2 Core Sets</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="core-set-3"> Use 3 Core Sets</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="show-suggestions-0"> Show no suggestion</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="show-suggestions-3"> Show 3 suggestions</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="show-suggestions-10"> Show 10 suggestions</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="buttons-behavior-cumulative"> Faction/type cumulative</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="buttons-behavior-exclusive"> Faction/type exclusive</label></a></li>
+			</ul>
+		</div><!-- /.btn-group -->
+	</div><!-- /.col-sm-6 -->
+</div><!-- /.row -->
+
+<!-- Search Bar -->
+<div class="row">
+	<div class="col-sm-12" style="margin-bottom:10px">
+		<input type="text" class="form-control" id="filter-text" placeholder="Find a card or filter the list" tabindex="1">
+	</div>
+</div>
+<!-- Search Bar -->
+
+<div class="row search-buttons" style="margin-bottom:10px">
+    <div class="col-xs-6">
+        <div id="faction_code" class="filter" data-toggle="buttons"></div>
+    </div>
+    <div class="col-xs-6 text-right">
+        <div id="type_code" class="filter" data-toggle="buttons"></div>
+    </div>
+</div>
+
+<!-- Collection Table -->
+<div class="row" id="collection">
+	<div class="col-sm-12">
+		<table class="table table-condensed table-hover" style="margin-bottom:10px">
+			<thead>
+				<tr>
+					<th style="min-width:85px"><a href="#" data-sort="indeck">Quantity</a></th>
+					<th><a href="#" data-sort="title">Name</a></th>
+					<th><a href="#" data-sort="factioncost" title="Influence">I.</a></th>
+					<th class="type"><a href="#" data-sort="type" title="Type">T.</a><span class="caret"></span></th>
+					<th class="faction"><a href="#" data-sort="faction" title="Faction">F.</a></th>
+				</tr>
+			</thead>
+			<tbody id="collection-table" class="collection"></tbody>
+		</table>
+	</div><!-- /.col-sm-12 -->
+	<div id="collection-grid" class="col-sm-12"></div>
+</div><!-- /.row -->
+<!-- Collection Table -->
+	
+	
+	</div>
+	<div role="tabpanel" class="tab-pane" id="tab-pane-check">
+	
+	
+{% include 'AppBundle:Builder:draw-simulator.html.twig' %}
+
+<!-- Graphs -->
+<table class="table table-condensed" id="table-graph-costs">
+<thead>
+<tr><th colspan="1"><span class="glyphicon glyphicon-stats"></span> Repartition by Cost</th></tr>
+</thead>
+<tbody>
+<tr>
+	<td><div id="costChart"></div></td>
+</tr>
+</tbody>
+</table>
+
+<table class="table table-condensed" id="table-graph-strengths">
+<thead>
+<tr><th colspan="1"><span class="glyphicon glyphicon-stats"></span> Repartition by Strength</th></tr>
+</thead>
+<tbody>
+<tr>
+	<td><div id="strengthChart"></div></td>
+</tr>
+</tbody>
+</table>
+	
+	
+	
+	</div>
+    <div role="tabpanel" class="tab-pane" id="tab-pane-infos">
+    
+
+<!-- Notes Form -->
+<div class="row">
+	<div class="col-sm-12">
+		<div class="form-group">
+			<label for="tags_">Tags</label>
+			<input type="text" class="form-control" name="tags_" value="{{ deck.tags }}"></input>
+			<span class="help-block">Tags are for easy filtering in your list of decks, e.g. <i>tournament</i> or <i>glacier</i>.</span>
+		</div>
+		<div class="form-group">
+			<label for="description_">Notes</label>
+			<textarea class="form-control" rows="20" name="description_" id="description" placeholder="Type # to enter a card name. Type $ to enter a symbol.">{{ deck.description }}</textarea>
+		</div>
+		<div class="well text-muted" id="description-preview"><small>Preview. Look <a href="http://daringfireball.net/projects/markdown/dingus">here</a> for a Markdown syntax reference.</small></div>
+	</div><!-- /.col-sm-12 -->
+</div><!-- /.row -->
+<!-- Notes Form -->
+    
+    
+    
+    </div>
+    <div role="tabpanel" class="tab-pane" id="tab-pane-history">
+    
+
+<!-- History -->
+<div class="row">
+	<div class="col-sm-12">
+	   <div class="progress">
+	       <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="60" style="width:0%" id="history-timer-bar"><span class="sr-only">Time remaining</span></div>
+	   </div>
+		<table class="table">
+		  <thead>
+		      <tr>
+		          <th>Time</th>
+		          <th>Change</th>
+		          <th>Action</th>
+		      </tr>
+		  </thead>
+		  <tbody id="tbody-history">
+		  </tbody>
+		</table>
+	</div><!-- /.col-sm-12 -->
+</div><!-- /.row -->
+<!-- History -->
+    
+<!-- Published decklists Table -->
+<table class="table table-condensed" id="table-predecessor">
+	<thead>
+		<tr><th colspan="{% if published_decklists|length %}4{% else %}1{% endif %}"><span class="glyphicon glyphicon-share"></span> Published versions</th></tr>
+	</thead>
+	<tbody>
+	{% if published_decklists|length %}
+	{% for decklist in published_decklists %}
+		<tr>
+			<td class="decklist-name"><a href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.prettyname|e('url') }) }}">{{ decklist.name }}</a></td>
+			<td class="social"><span class="glyphicon glyphicon-heart social-icon-like"></span> {{ decklist.nbvotes }}</td>
+			<td class="social"><span class="glyphicon glyphicon-star social-icon-favorite"></span> {{ decklist.nbfavorites }}</td>
+			<td class="social"><span class="glyphicon glyphicon-comment social-icon-comment"></span> {{ decklist.nbcomments }}</td>
+		</tr>
+	{% endfor %}
+	{% else %}
+		<tr><td>None.</td></tr>
+	{% endif %}
+	</tbody>
+</table>
+<!-- Published decklists Table -->
+    
+    
+    
+    </div>
+  </div>
+
+</div>
+	
+</div><!-- .col-md-8 -->
+<!-- Right-side Column -->
+	
+</div><!-- .row -->
+</div><!-- .container -->
+
+<!-- Modal -->
+<div class="modal" id="oddsModal" tabindex="-1" role="dialog" aria-labelledby="oddsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title">Odds Calculator</h3>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+						<form class="form-horizontal" role="form">
+						    <div class="form-group">
+						        <label for="inputEmail3" class="col-xs-7 control-label">Number of cards in deck</label>
+						        <div class="col-xs-2">
+						            <input type="number" class="form-control" id="odds-calculator-N" value="0">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputPassword3" class="col-xs-7 control-label">Number of <em>desired</em> cards in deck</label>
+								<div class="col-xs-2">
+									<input type="number" class="form-control" id="odds-calculator-K" value="0">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputPassword3" class="col-xs-7 control-label">Number of cards drawn</label>
+								<div class="col-xs-2">
+									<input type="number" class="form-control" id="odds-calculator-n" value="0">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputPassword3" class="col-xs-7 control-label">Number of <em>desired</em> cards in draw (at least)</label>
+								<div class="col-xs-2">
+									<input type="number" class="form-control" id="odds-calculator-k" value="0">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputPassword3" class="col-xs-7 control-label">Probability of such an outcome</label>
+								<div class="col-xs-2">
+									 <p class="form-control-static"><span id="odds-calculator-p"></span>%</p>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal -->
+
+{% endblock %}

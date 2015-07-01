@@ -1,0 +1,20 @@
+<div class="col-sm-4" style="margin-bottom:.5em">
+<select name="sort" class="form-control">
+	<option value="name"    {% if sort|default('name') == "name"    %}selected{% endif %}>{% trans %}Sort by Name{% endtrans %}</option>
+	<option value="set"     {% if sort|default('name') == "set"     %}selected{% endif %}>{% trans %}Sort by Set{% endtrans %}</option>
+	<option value="faction" {% if sort|default('name') == "faction" %}selected{% endif %}>{% trans %}Sort by Faction{% endtrans %}</option>
+	<option value="type"    {% if sort|default('name') == "type"    %}selected{% endif %}>{% trans %}Sort by Type{% endtrans %}</option>
+	<option value="cost"    {% if sort|default('name') == "cost"    %}selected{% endif %}>{% trans %}Sort by Cost{% endtrans %}</option>
+	<option value="strength"{% if sort|default('name') == "strength"%}selected{% endif %}>{% trans %}Sort by Strength{% endtrans %}</option>
+</select>
+</div>
+<div class="col-sm-4" style="margin-bottom:.5em">
+<select name="view" class="form-control">
+	<option value="list"    {% if view|default('list') == "list"    %}selected{% endif %}>{% trans %}View as a Checklist{% endtrans %}</option>
+	<option value="spoiler" {% if view|default('list') == "spoiler" %}selected{% endif %}>{% trans %}View as a Spoiler{% endtrans %}</option>
+	<option value="card"    {% if view|default('list') == "card"    %}selected{% endif %}>{% trans %}View as Full Cards{% endtrans %}</option>
+	<option value="scan"    {% if view|default('list') == "scan"    %}selected{% endif %}>{% trans %}View as Scans only{% endtrans %}</option>
+	<option value="short"   {% if view|default('list') == "short"   %}selected{% endif %}>{% trans %}View as Simple List{% endtrans %}</option>
+</select>
+<input name="_locale" type="hidden" value="{{ app.request.locale }}">
+</div>

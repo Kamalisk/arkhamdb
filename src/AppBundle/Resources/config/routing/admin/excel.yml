@@ -1,0 +1,27 @@
+excel_download_form:
+    pattern: /download
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Excel:downloadForm
+
+excel_download_process:
+    pattern: /download
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Excel:downloadProcess
+
+excel_form:
+    pattern: /form
+    defaults:
+        _controller: AppBundle:Excel:form
+
+excel_upload:
+    pattern: /upload
+    defaults:
+        _controller: AppBundle:Excel:upload
+
+excel_confirm:
+    pattern: /confirm
+    defaults:
+        _controller: AppBundle:Excel:confirm
+    

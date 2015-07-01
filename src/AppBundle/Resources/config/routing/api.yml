@@ -1,0 +1,51 @@
+
+api_decklist:
+    pattern: /api/decklist/{decklist_id}.{_format}
+    defaults:
+        _controller: AppBundle:Api:decklist
+        _format: json
+    requirements:
+        _format: json
+        decklist_id: \d+
+
+api_decklists:
+    pattern: /api/decklists/by_date/{date}.{_format}
+    defaults:
+        _controller: AppBundle:Api:decklists
+        _format: json
+    requirements:
+        _format: json
+        date: \d\d\d\d-\d\d-\d\d
+
+api_decks:
+    pattern: /api/decks
+    defaults:
+        _controller: AppBundle:Api:decks
+
+api_cards:
+    pattern: /api/cards/
+    defaults:
+        _controller: AppBundle:Api:cards
+
+api_card:
+    pattern: /api/card/{card_code}.{_format}
+    defaults:
+        _controller: AppBundle:Api:card
+        _format: json
+    requirements:
+        _format: json
+        card_code: \d+
+
+api_sets:
+    pattern: /api/sets/
+    defaults:
+        _controller: AppBundle:Api:sets
+
+api_set:
+    pattern: /api/set/{pack_code}.{_format}
+    defaults:
+        _controller: AppBundle:Api:set
+        _format: json
+    requirements:
+        _format: json|xml|xlsx|xls
+        

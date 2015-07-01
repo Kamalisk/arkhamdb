@@ -1,0 +1,15 @@
+<div class="row">
+<div class="col-sm-12">
+<ul class="pager">
+	<li class="previous">
+		{% if prevtitle %}<a href="{{ prevhref }}">&larr; {{ prevtitle }}</a>{% endif %}
+	</li>
+	<li>
+		<a href="{{ sethref }}">{{ settitle }}</a>
+	</li>
+	<li class="next">
+		{% if nexttitle %}<a href="{{ nexthref }}">{{ nexttitle }} &rarr;</a>{% endif %}
+	</li>
+</ul>
+</div>
+</div>

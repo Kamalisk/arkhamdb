@@ -1,0 +1,37 @@
+parameters:
+    judge.class: AppBundle\Services\Judge
+    decks.class: AppBundle\Services\Decks
+    highlight.class: AppBundle\Services\Highlight
+    decklists.class: AppBundle\Services\Decklists
+    reviews.class: AppBundle\Services\Reviews
+    texts.class: AppBundle\Services\Texts
+    diff.class: AppBundle\Services\Diff
+    cards_data.class: AppBundle\Services\CardsData
+
+services:
+    judge:
+        class: "%judge.class%"
+        arguments: ["@doctrine.orm.entity_manager"]
+    decks:
+        class: "%decks.class%"
+        arguments: ["@doctrine.orm.entity_manager", "@judge", "@diff", "@logger"]
+    highlight:
+        class: "%highlight.class%"
+        arguments: ["@doctrine.orm.entity_manager"]
+    decklists:
+        class: "%decklists.class%"
+        arguments: ["@doctrine.orm.entity_manager"]
+    reviews:
+        class: "%reviews.class%"
+        arguments: ["@doctrine.orm.entity_manager"]
+    texts:
+        class: "%texts.class%"
+        arguments: ["%kernel.cache_dir%"]
+    diff:
+        class: "%diff.class%"
+        arguments: ["@doctrine.orm.entity_manager"]
+    cards_data:
+        class: "%cards_data.class%"
+        arguments: ["@doctrine", "@request_stack", "@router"]
+
+

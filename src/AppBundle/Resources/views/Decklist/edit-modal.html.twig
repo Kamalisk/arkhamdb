@@ -1,0 +1,46 @@
+<!-- Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 class="modal-title" id="editModalLabel">Edit decklist</h3>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<form action="{{ path('decklist_edit', {decklist_id:decklist.id}) }}" method="POST" enctype="application/x-www-form-urlencoded" id="edit-decklistform">
+							<input type="hidden" name="decklist_id" id="edit-decklist-id" value="{{ decklist.id }}">
+							<div class="form-group">
+								<label for="edit-decklist-name">Name</label>
+								<input type="text" class="form-control decklist-name" name="name" id="edit-decklist-name" maxlength="60" value="{{ decklist.name }}" placeholder="Enter a name for this decklist">
+							</div>
+							<div class="form-group">
+								<label for="edit-decklist-derived">Derived from</label>
+								<input type="text" class="form-control" name="derived" id="edit-decklist-derived" maxlength="80" value="{% if precedent_decklists|length %}{{ precedent_decklists[0].id }}{% endif %}" placeholder="Enter the id or url of a decklist">
+							</div>
+							<div class="form-group">
+								<label for="edit-decklist-description">Description</label>
+								<textarea class="form-control" name="description" id="edit-decklist-description" rows="5" placeholder="Enter a brief explanation of the deck strategy and your significant choices">{{ decklist.rawdescription }}</textarea>
+							</div>
+							<div class="form-group">
+								<label for="edit-decklist-tournament">Placed high in a tournament</label>
+								<select class="form-control" name="tournament" id="edit-decklist-tournament">
+								<option value="">No</option>
+								{% for tournament in tournaments %}
+								<option value="{{ tournament.id }}"{% if tournament.id == decklist.tournament_id %} selected{% endif %}>{{ tournament.description }}</option>
+								{% endfor %}
+								</select>
+							</div>
+							<div class="pull-right">
+								<button type="submit" id="btn-publish-submit" class="btn btn-success">Go</button>
+								<button type="button" class="btn btn-default" onclick="$('#editModal').modal('hide')">Cancel</button>
+							</div>
+						</form>
+					</div><!-- /#modal-info -->
+				</div><!-- /.row -->
+			</div><!-- /.modal-body -->
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Modal -->

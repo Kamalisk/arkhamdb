@@ -1,0 +1,8 @@
+alsciende_deckbuilder:
+    resource: "@AlsciendeDeckbuilderBundle/Resources/config/routing.yml"
+    prefix:   /
+
+app:
+    resource: "@AppBundle/Resources/config/routing.yml"
+    prefix:   /
+

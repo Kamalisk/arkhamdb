@@ -1,0 +1,27 @@
+<!-- Modal -->
+<div class="modal fade" id="compareModal" tabindex="-1" role="dialog" aria-labelledby="compareModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 class="modal-title" id="compareModalLabel">Compare with another decklist</h3>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<input type="hidden" name="decklist1_id" id="compare-decklist-id" value="{{ decklist.id }}">
+						<div class="form-group">
+							<label for="decklist2_url">Link or ID of the other decklist</label>
+							<input type="text" class="form-control" name="decklist2_url" id="decklist2_url" maxlength="250" placeholder="Copy the URL link of a decklist">
+						</div>
+						<div class="pull-right">
+							<button type="submit" id="btn-compare-submit" class="btn btn-success">Go</button>
+							<button type="button" class="btn btn-default" onclick="$('#compareModal').modal('hide')">Cancel</button>
+						</div>
+					</div><!-- /#modal-info -->
+				</div><!-- /.row -->
+			</div><!-- /.modal-body -->
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Modal -->

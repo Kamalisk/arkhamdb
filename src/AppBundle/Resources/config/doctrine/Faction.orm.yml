@@ -1,0 +1,4 @@
+AppBundle\Entity\Faction:
+    type: entity
+    table: faction
+     

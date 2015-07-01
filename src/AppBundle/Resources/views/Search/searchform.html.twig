@@ -1,0 +1,231 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block title %}{% trans %}Card Search{% endtrans %}{% endblock %}
+
+{% block body %}
+<div class="container">
+
+<script type="text/javascript" src="{{ asset('/web/bundles/netrunnerdbcards/js/save-settings.js') }}"></script>
+
+<div class="row">
+
+<div class="col-md-4">
+    <h2>Browse by set</h2>
+	{{ allsets|raw }}
+
+</div>
+
+<div class="col-md-8">
+
+<h1>{{ block('title') }}</h1>
+<form method="GET" action="{{ path('cards_processSearchForm') }}" role="form" style="margin-bottom:2em">
+
+<fieldset>
+<legend>Title and texts</legend>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="form-group">
+			<label for="q">{% trans %}Title{% endtrans %}</label>
+			<div>
+				<input class="form-control" size="30" id="q" name="q" value="">
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+		<div class="form-group">
+			<label for="x">{% trans %}Text{% endtrans %}</label>
+			<div>
+				<input class="form-control" size="40" id="x" name="x" value="">
+			</div>
+		</div>
+    </div>
+    <div class="col-sm-6">
+		<div class="form-group">
+			<label for="a">{% trans %}Flavor Text{% endtrans %}</label>
+			<div>
+				<input class="form-control" size="30" id="a" name="a" value="">
+			</div>
+		</div>
+	</div>
+</div>
+</fieldset>
+<fieldset>
+<legend>Faction and side</legend>
+<div class="row">
+    <div class="col-sm-4">
+        <div class="form-group">
+			<label>{% trans %}Side{% endtrans %}</label>
+			<div class="btn-group btn-group-justified" data-toggle="buttons">
+				<label class="btn btn-default active"><input type="radio" name="d" checked value="">{% trans %}Either{% endtrans %}</label>
+				<label class="btn btn-default"><input type="radio" name="d" value="c">{% trans %}Corp{% endtrans %}</label>
+				<label class="btn btn-default"><input type="radio" name="d" value="r">{% trans %}Runner{% endtrans %}</label>
+			</div>
+		</div>
+    </div>
+    <div class="col-sm-8">
+        <div class="form-group">
+			<label>{% trans %}Faction{% endtrans %}</label>
+			<div class="btn-group" data-toggle="buttons">
+				<label class="btn btn-default active"><input type="checkbox" name="f[]" checked value="a"><span class="icon icon-anarch anarch"></span></label>
+				<label class="btn btn-default active"><input type="checkbox" name="f[]" checked value="c"><span class="icon icon-criminal criminal"></span></label>
+				<label class="btn btn-default active"><input type="checkbox" name="f[]" checked value="s"><span class="icon icon-shaper shaper"></span></label>
+				<label class="btn btn-default active"><input type="checkbox" name="f[]" checked value="h"><span class="icon icon-haas-bioroid haas-bioroid"></span></label>
+				<label class="btn btn-default active"><input type="checkbox" name="f[]" checked value="j"><span class="icon icon-jinteki jinteki"></span></label>
+				<label class="btn btn-default active"><input type="checkbox" name="f[]" checked value="n"><span class="icon icon-nbn nbn"></span></label>
+				<label class="btn btn-default active"><input type="checkbox" name="f[]" checked value="w"><span class="icon icon-weyland-consortium weyland-consortium"></span></label>
+				<label class="btn btn-default active"><input type="checkbox" name="f[]" checked value="-">{% trans %}Neutral{% endtrans %}</label>
+			</div>
+		</div>
+    </div>
+</div>
+</fieldset>
+<fieldset>
+<legend>Attributes</legend>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="form-group">
+			<label for="e">{% trans %}Set{% endtrans %}</label>
+			<div>
+				<select class="form-control" name="e" id="e"><option value="">{% trans %}any{% endtrans %}</option>{% for pack in packs %}<option value="{{ pack.code }}">{{ pack.name }}</option>{% endfor %}</select>
+			</div>
+		</div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+			<label for="t">{% trans %}Type{% endtrans %}</label>
+			<div>
+				<select class="form-control" name="t" id="t"><option value="">{% trans %}any{% endtrans %}</option>{% for type in types %}<option value="{{ type }}">{{ type }}</option>{% endfor %}</select>
+			</div>
+		</div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="form-group">
+			<label for="u">{% trans %}Unique{% endtrans %}</label>
+			<div>
+				<select class="form-control" name="u" id="u">
+					<option value="">{% trans %}any{% endtrans %}</option>
+					<option value="0">{% trans %}No{% endtrans %}</option>
+					<option value="1">{% trans %}Yes{% endtrans %}</option>
+				</select>
+			</div>
+		</div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+			<label for="s">{% trans %}Subtype{% endtrans %}</label>
+			<div>
+				<select class="form-control" name="s" id="s"><option value="">{% trans %}any{% endtrans %}</option>{% for keyword in keywords %}<option value="{{ keyword }}">{{ keyword }}</option>{% endfor %}</select>
+			</div>
+		</div>
+    </div>
+</div>
+</fieldset>
+<fieldset>
+<legend>Numerics</legend>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="form-group">
+			<label for="o">{% trans %}Cost{% endtrans %}</label>
+			<div class="row">
+                <div class="col-xs-4">
+                    <select name="oo" id="oo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
+                </div>
+                <div class="col-xs-8">
+                    <input id="o" name="o" value="" class="form-control">
+                </div>
+			</div>
+		</div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+			<label for="n">{% trans %}Influence{% endtrans %}</label>
+			<div class="row">
+                <div class="col-xs-4">
+                    <select name="no" id="no" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
+                </div>
+                <div class="col-xs-8">
+                    <input id="n" name="n" value="" class="form-control">
+                </div>
+			</div>
+		</div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="form-group">
+			<label for="p">{% trans %}Strength{% endtrans %}</label>
+			<div class="row">
+                <div class="col-xs-4">
+                    <select name="po" id="po" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
+                </div>
+                <div class="col-xs-8">
+                    <input id="p" name="p" value="" class="form-control">
+                </div>
+			</div>
+		</div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+			<label for="y">{% trans %}Quantity{% endtrans %}</label>
+			<div class="row">
+                <div class="col-xs-4">
+                    <select name="yo" id="yo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
+                </div>
+                <div class="col-xs-8">
+                    <input id="y" name="y" value="" class="form-control">
+                </div>
+			</div>
+		</div>
+    </div>
+</div>
+</fieldset>
+<fieldset>
+<legend>Other</legend>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="form-group">
+			<label>{% trans %}Previews{% endtrans %}</label>
+			<div class="btn-group btn-group-justified" data-toggle="buttons">
+				<label class="btn btn-default active"><input type="radio" name="r" checked value="">{% trans %}Yes{% endtrans %}</label>
+				<label class="btn btn-default"><input type="radio" name="r" value="<now">{% trans %}No{% endtrans %}</label>
+				<label class="btn btn-default"><input type="radio" name="r" value=">now">{% trans %}Only{% endtrans %}</label>
+			</div>
+		</div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+			<label for="i">{% trans %}Illustrator{% endtrans %}</label>
+			<div>
+				<select class="form-control" name="i" id="i"><option value="">{% trans %}any{% endtrans %}</option>{% for illustrator in illustrators %}<option value="{{ illustrator }}">{{ illustrator }}</option>{% endfor %}</select>
+			</div>
+		</div>
+    </div>
+</div>
+</fieldset>
+<fieldset>
+<legend>Submit</legend>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="form-group">
+	       {% include 'AppBundle:Search:searchoptions.html.twig' %}
+	       <div class="col-sm-4">
+		      <button class="btn btn-primary" type="submit">{% trans %}Search{% endtrans %}</button>
+	       </div>
+        </div>
+     </div>
+</div>
+</fieldset>
+</form>
+
+{% include 'AppBundle:Default:google_adaptable_ad.html.twig' %}
+
+</div>
+
+</div>
+
+</div>
+{% endblock %}

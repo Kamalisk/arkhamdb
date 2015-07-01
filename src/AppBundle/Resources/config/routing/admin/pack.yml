@@ -1,0 +1,30 @@
+admin_pack:
+    pattern:  /
+    defaults: { _controller: "AppBundle:Pack:index" }
+
+admin_pack_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "AppBundle:Pack:show" }
+
+admin_pack_new:
+    pattern:  /new
+    defaults: { _controller: "AppBundle:Pack:new" }
+
+admin_pack_create:
+    pattern:  /create
+    defaults: { _controller: "AppBundle:Pack:create" }
+    requirements: { _method: post }
+
+admin_pack_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "AppBundle:Pack:edit" }
+
+admin_pack_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "AppBundle:Pack:update" }
+    requirements: { _method: post|put }
+
+admin_pack_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "AppBundle:Pack:delete" }
+    requirements: { _method: post|delete }

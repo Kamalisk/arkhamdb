@@ -1,0 +1,3 @@
+AppBundle\Entity\Decklist:
+    type: entity
+    table: decklist

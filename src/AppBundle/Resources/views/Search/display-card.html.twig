@@ -1,0 +1,66 @@
+{% extends 'AppBundle:Search:display.html.twig' %}
+
+{% block main %}
+
+<div class="row">
+    <div class="col-md-9">
+        <div class="row">
+{% for i in 0..cards|length-1 %}{% set card = cards[i] %}
+        	<div class="col-sm-7" style="margin-bottom:2em">
+        		<div>
+        			<div class="panel panel-default">
+        				<div class="panel-heading">
+        					<h3 class="panel-title card-title">
+        						{% if card.uniqueness == true %}&diams;{% endif %}
+        						<a href="{{ card.url }}" class="card-title{% if card.available == false %} card-preview{% endif %}">{{ card.title }}</a>
+        					</h3>
+        	  			</div>
+        				<div class="panel-body">
+        					<div class="card-info">
+        						<span class="card-type">{{ card.type }}</span>{% if card.subtype %}<span class="card-keywords">: {{ card.subtype }}</span>{% endif %}
+        						<span class="card-prop">&bull;
+        						{% if card.type_code == "agenda" %} Adv: {{ card.advancementcost }} &bull; Score: {{ card.agendapoints }} {% endif %}
+        						{% if card.type_code == "identity" and card.side_code == "corp" %}Deck: {{ card.minimumdecksize }} &bull; Influence: {% if card.influencelimit is null %} &#8734; {% else %} {{ card.influencelimit }} {% endif %} {% endif %}
+        						{% if card.type_code == "identity" and card.side_code == "runner" %}Link: {{ card.baselink }} &bull; Deck: {{ card.minimumdecksize }} &bull; Influence: {% if card.influencelimit is null %} &#8734; {% else %} {{ card.influencelimit }} {% endif %} {% endif %}
+        						{% if card.type_code == "operation" or card.type_code == "event" %}Cost: {{ card.cost }} &bull; Influence: {{ card.factioncost }}{% endif %}
+        						{% if card.type_code == "resource" or card.type_code == "hardware" %}Install: {{ card.cost }} &bull; Influence: {{ card.factioncost }}{% endif %}
+        						{% if card.type_code == "program" %}Install: {{ card.cost }} &bull; Memory: {{ card.memoryunits }} {% if card.strength is not null %}&bull; Strength: {{ card.strength }}{% endif %} &bull; Influence: {{ card.factioncost }}{% endif %}
+        						{% if card.type_code == "asset" or card.type_code == "upgrade" %}Rez: {{ card.cost }} &bull; Trash: {{ card.trash }} &bull; Influence: {{ card.factioncost }}{% endif %}
+        						{% if card.type_code == "ice" %}Rez: {{ card.cost }} &bull; Strength: {{ card.strength }} &bull; Influence: {{ card.factioncost }}{% endif %}
+        						</span>
+        					</div>
+        					<div class="card-text">
+        						{{ card.text|raw }}
+        					</div>
+        					<div class="card-flavor">
+        						<small>{{ card.flavor|raw|nl2br }}</small>
+        					</div>
+        					<div class="card-illustrator">
+        						<small>
+        						{{ card.faction }} &bull;
+        						{% if card.illustrator %}{{ card.illustrator }} &bull; {% endif %}{{ card.setname }} #{{ card.number }}
+        						</small>
+        					</div>
+        				</div>
+        			</div>
+        		</div>
+        	</div>
+        	<div class="col-sm-5" style="margin-bottom:2em">
+        		<div class="card-image">
+        			{% if card.imagesrc %}
+        			   <img src="{{ card.imagesrc }}" alt="{{ card.title }}" class="img-responsive" style="margin:auto">
+        			{% else %}
+        			   <div class="no-image" style="margin:auto"><div class="no-image-text">No image</div></div>
+        			{% endif %}
+        		</div>
+        	</div>
+{% endfor %}
+        </div>
+    </div>
+    <div class="col-md-3">
+        {% include 'AppBundle:Default:google_adaptable_ad.html.twig' %}
+    </div>
+</div>
+
+{% endblock %}
+

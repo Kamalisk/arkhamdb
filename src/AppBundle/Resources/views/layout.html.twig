@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ pagetitle|default('Deckbuilder') }} &middot; NetrunnerDB</title>
+    <link rel="icon" sizes="16x16" href="/favicon.png" />
+    <link rel="icon" sizes="196x196" href="/icon.png" />
+    <link rel="apple-touch-icon" sizes="129x129" href="/apple-touch-icon.png" />
+{% if app.request.locale != "en" %}
+{% set _route_params = app.request.attributes.get('_route_params')|default({}) %}
+{% set _get_params = app.request.query.all()|default({}) %}
+    <link rel="canonical" href="{{ url(app.request.attributes.get('_route'), _route_params|merge(_get_params)|merge({'_locale': 'en'})) }}"/>
+{% endif %}
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    {% if pagedescription is defined %}<meta name="description" content="{{ pagedescription }}">{% endif %}
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.css">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora%3A400%2C700%2C400italic%2C700italic%7CExo%7COrbitron&amp;subset=latin%2Clatin-ext">
+    <link rel="stylesheet" href="{{ asset('/web/bundles/app/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('/web/bundles/app/css/icons.css') }}">
+
+    <script src="{{ asset('/web/bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.9/highcharts.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/pagedown/1.0/Markdown.Converter.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.textcomplete/0.2.2/jquery.textcomplete.min.js"></script>
+    <script src="{{ asset('/web/bundles/app/libs/taffy.js') }}"></script>
+    <script src="{{ asset('/web/bundles/app/libs/moment-with-locales.min.js') }}"></script>
+    <script src="{{ asset('/web/bundles/app/libs/moment-timezone-with-data-2010-2020.min.js') }}"></script>
+    <script type="text/javascript">
+	var NRDB = {
+		data_loaded: $.Callbacks(),
+		api_url: {
+			sets: '{{ path('api_sets')|raw }}',
+			cards: '{{ path('api_cards')|raw }}'
+		},
+		locale: '{{ app.request.locale }}'
+	};
+	moment.locale(window.navigator.language);
+
+{% if app.environment == 'prod' %}{%include 'appbundle::google-analytics.html.twig' %}{% endif %}
+    </script>
+    <script src="{{ asset('/web/bundles/app/js/nrdb.js') }}"></script>
+    <script src="{{ asset('/web/bundles/app/js/nrdb.user.js') }}"></script>
+    <script src="{{ asset('/web/bundles/app/js/nrdb.data.js') }}"></script>
+    <script src="{{ asset('/web/bundles/app/js/nrdb.format.js') }}"></script>
+    <script src="{{ asset('/web/bundles/app/js/nrdb.tip.js') }}"></script>
+{% block head %}{% endblock %}
+
+  </head>
+  <body>
+  <div id="wrapper">
+      <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+      <div class="container">
+          {% block navbar %}
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{{ path('netrunnerdb_index') }}">
+            <span class="icon icon-link-half-top"></span>
+            <span class="icon icon-link-half-bottom"></span>
+            NetrunnerDB
+          </a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="{{ path('decks_list') }}">My Decks</a></li>
+            <li><a href="{{ path('decklists_list', {type:'popular'}) }}">Decklists</a></li>
+            <li><a href="{{ path('cards_search') }}">Cards</a></li>
+            <li class="hidden-sm dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Factions <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li role="presentation" class="dropdown-header">Runner</li>
+                <li><a href="{{ path('faction_page',{faction_code:'anarch'}) }}"><span class="icon icon-anarch influence-anarch"></span> Anarch</a></li>
+                <li><a href="{{ path('faction_page',{faction_code:'criminal'}) }}"><span class="icon icon-criminal influence-criminal"></span> Criminal</a></li>
+                <li><a href="{{ path('faction_page',{faction_code:'shaper'}) }}"><span class="icon icon-shaper influence-shaper"></span> Shaper</a></li>
+                <li class="divider"></li>
+                <li role="presentation" class="dropdown-header">Corp</li>
+                <li><a href="{{ path('faction_page',{faction_code:'haas-bioroid'}) }}"><span class="icon icon-haas-bioroid influence-haas-bioroid"></span> Haas-Bioroid</a></li>
+                <li><a href="{{ path('faction_page',{faction_code:'jinteki'}) }}"><span class="icon icon-jinteki influence-jinteki"></span> Jinteki</a></li>
+                <li><a href="{{ path('faction_page',{faction_code:'nbn'}) }}"><span class="icon icon-nbn influence-nbn"></span> NBN</a></li>
+                <li><a href="{{ path('faction_page',{faction_code:'weyland-consortium'}) }}"><span class="icon icon-weyland-consortium influence-weyland-consortium"></span> Weyland Consortium</a></li>
+              </ul>
+            </li>
+            <li class="hidden-sm"><a href="{{ path('card_reviews_list') }}">Reviews</a></li>
+            {#<li><a href="{{ path('events_past') }}">Events</a></li>#}
+            <li><a href="{{ path('cards_rulings') }}">Rules</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown hidden-xs hidden-lg">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-search"></span></a>
+                <div class="dropdown-menu">
+                  <form action="{{ path('cards_find') }}" target="_blank">
+                    <input type="text" placeholder="Card Search" class="form-control" name="q">
+                  </form>
+              </div>
+            </li>
+            <li id="login">
+                <a href="#" class="dropdown-toggle loginname" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
+            </li>
+          </ul>
+          <form class="navbar-form navbar-right visible-lg-block visible-xs-block external" action="{{ path('cards_find') }}" target="_blank">
+            <div class="form-group">
+              <input type="text" placeholder="Card Search" class="form-control" name="q">
+            </div>
+          </form>
+        </div><!--/.navbar-collapse -->
+        {% endblock %}
+      </div>
+    </nav>
+  
+{% block body %}{% endblock %}
+    <div id="push"></div>
+  </div>
+  <footer class="hidden-print">
+    <div class="container">
+
+{% block footer %}
+<div class="row">
+    <div class="col-xs-12">
+    
+    <ul class="list-inline pull-right">
+    {% if locales is defined %}
+	{{ locales|raw }}
+	{% endif %}
+    </ul>
+    
+    <ul class="list-inline">
+    <li><a href="{{ path('cards_about') }}">About</a></li>
+    <li><a href="{{ path('cards_api') }}">API</a></li>
+    <li><a href="{{ path('tools_demo') }}">Integration</a></li>
+    <li><a href="{{ path('donators') }}">Donators</a> <span class="glyphicon glyphicon-gift donator" title="NetrunnerDB Gracious Donator"></span></li>
+    <li><a href="javascript:localStorage.clear()">Clear data</a></li>
+    </ul>
+    
+    <p>
+    Designed and built by <a href="//twitter.com/alsciende">@alsciende</a>
+    </p>
+    
+    <p>
+    Bug reports and Feature Requests on <a href="https://bitbucket.org/alsciende/nrdb/issues?status=new&amp;status=open">BitBucket</a>
+    </p>
+
+    <p>
+    Contribute by giving money on <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=4SB7QHB5XRN7Y">Paypal (€)</a> or <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=HHBUW2QYG6ZUC">Paypal ($)</a> or directly to <i>alsciende</i> (at) <i>icloud.com</i>.
+    </p>
+    
+    <p style="color:#333">
+    The information presented on this site about Android:Netrunner, both literal and graphical, is copyrighted by Fantasy Flight Games and/or Wizards of the Coast.
+    </p>
+    <p style="color:#333">
+    This website is not produced, endorsed, supported, or affiliated with Fantasy Flight Games and/or Wizards of the Coast.
+    </p>
+
+    <svg width="0" height="0" viewBox="0 0 677 601" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="nrdb_svg_hex">
+ 		<defs>
+			<symbol id="hex"><polygon points="623,302.91412353515625 480,550.5973510742188 194,550.5973510742188 51,302.91412353515625 194,55.23085021972656 480,55.23085021972656 623,302.91412353515625 "/></symbol>
+			<symbol id="rect"><rect x="0" y="0" width="677" height="601" fill="white" /></symbol>
+		</defs>
+    </svg>
+    
+    </div>
+</div>
+{% endblock %}
+
+    </div>
+    </footer>
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+    </body>
+</html>

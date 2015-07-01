@@ -1,0 +1,61 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block head %}
+
+<script src="{{ asset('/web/bundles/app/js/directimport.js') }}"></script>
+<script src="{{ asset('/web/bundles/app/js/nrdb.fuzzy_search.js') }}"></script>
+<script src="{{ asset('/web/bundles/app/libs/string_score.min.js') }}"></script>
+<script type="text/javascript">
+
+var CardDB, CardNames;
+
+</script>
+
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+<div class="row">
+
+<div class="col-md-5">
+<form role="form">
+  <div class="form-group">
+    <label for="content">Paste deck here</label>
+    <textarea class="form-control" name="content" rows="30"></textarea>
+  </div>
+  <button id="btn-import" type="button" class="btn btn-default" disabled="disabled" onclick="do_import()">Import</button>
+</form>
+</div>
+
+<div class="col-md-5">
+<form role="form" action="{{ path('deck_save') }}" method="POST">
+  <div class="form-group">
+    <label for="">Import result here</label>
+    <ul class="list-group" id="analyzed">
+    </ul>
+  </div>
+  <div class="form-group">
+    <label for="name">Deck Name</label>
+    <input class="form-control decklist-name" type="text" name="name" placeholder="Name">
+  </div>
+  <input type="hidden" name="content">
+  <button id="btn-save" type="submit" class="btn btn-success" disabled="disabled" onclick="do_save()">Save</button>
+</form>
+</div>
+
+<div class="col-md-2">
+<form role="form">
+  <div class="form-group">
+    <label for="">Statistics</label>
+    <div id="stats"></div>
+  </div>
+</form>
+</div>
+
+</div> <!-- .row -->
+
+</div> <!-- .container -->
+
+{% endblock %}

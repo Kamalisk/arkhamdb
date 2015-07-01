@@ -1,0 +1,57 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block body %}
+
+<script type="text/javascript">
+$(function() {
+	$('.list-group').on('mouseenter touchstart', 'a', function(event) {
+		var card_code = $(this).data('code');
+		var card = NRDB.data.get_card_by_code(card_code);
+		$('#cardimg').prop('src', card.imagesrc);
+	});
+    $(window).scroll(function() {
+        var scrollingDiv = $("#initIdentity");
+        if(!scrollingDiv.is(':visible')) return;
+        var y = $(this).scrollTop(),
+            maxY = $('footer').offset().top,
+            scrollHeight = scrollingDiv.height(),
+            scrollTop = $(window).scrollTop();
+
+        if(y < maxY - scrollHeight - 200) {
+            scrollingDiv.stop().animate({"marginTop": scrollTop + "px"}, "slow");
+        }
+    });
+});
+    
+</script>
+
+<div class="container">
+
+<div class="row">
+
+<div class="col-sm-8">
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading"><b>Choose your identity</b></div>
+  <!-- List group -->
+<div class="list-group">
+{% for identity in identities %}
+<a href="{{ path('deck_initbuild', {card_code:identity.code}) }}" class="list-group-item" data-code="{{ identity.code }}">
+	<span class="icon icon-{{ identity.faction.code }} {{ identity.faction.code }}"></span>
+	<span>{{ identity.title(app.request.locale) }}</span> <span class="small">({{ identity.pack.name }})</span>
+</a>
+{% endfor %}
+</div>
+</div>
+</div>
+<div id="initIdentity" class="col-sm-4 hidden-xs">
+<img src="#empty" class="img-responsive" id="cardimg" alt="Identity">
+</div>
+
+</div>
+
+
+
+</div>
+
+{% endblock %}

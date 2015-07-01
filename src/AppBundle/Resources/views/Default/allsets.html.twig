@@ -1,0 +1,13 @@
+<ol>
+{% for cycle in data %}
+<li><a href="{{ cycle.url }}">{{ cycle.name }}</a><span> {% if cycle.cyclenumber != 0 and cycle.known != cycle.total %}({{cycle.known}}/{{cycle.total}}){% endif %}</span>
+{% if cycle.packs|length > 1 %}
+<ol>
+{% for pack in cycle.packs %}
+<li><a href="{{ pack.url }}">{{ pack.name }}</a><span> {% if cycle.cyclenumber != 0 and pack.known != pack.total %}({{pack.known}}/{{pack.total}}){% endif %}</span></li>
+{% endfor %}
+</ol>
+{% endif %}
+</li>
+{% endfor %}
+</ol>

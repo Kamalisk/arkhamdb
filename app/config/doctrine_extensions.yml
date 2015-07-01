@@ -1,0 +1,10 @@
+# services to handle doctrine extensions
+# import it in config.yml
+services:
+    # Doctrine Extension listeners to handle behaviors
+    gedmo.listener.timestampable:
+        class: Gedmo\Timestampable\TimestampableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ @annotation_reader ] ]

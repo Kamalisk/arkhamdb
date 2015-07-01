@@ -1,0 +1,35 @@
+{% if decklist %}
+<div id="highlight" class="decklist">
+
+<h2 class="section">Decklist of the week </h2>
+<h3><a class="decklist-name" href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.prettyname|e('url') }) }}">{{ decklist.name }}</a></h3>
+	
+<!-- Identity and Stats -->
+<div class="row">
+	<div class="col-sm-3">
+		<img id="img_identity" src="#empty" alt="Identity" class="img-responsive  hidden-xs">
+	</div><!-- /.col-sm-3 -->
+	<div class="col-sm-9">
+        <h4 id="identity">Identity</h4>
+    	<div id="influence" class="small"></div>
+    	<div id="agendapoints" class="small"></div>
+    	<div id="cardcount" class="small"></div>
+    	<div id="latestpack" class="small"></div>
+	</div>
+</div>
+<!-- Identity and Stats -->
+	
+<div id="deck-content" class="row"></div>
+    
+<h4>
+    Description by the author:
+    <span class="username">
+    <a href="{{ path('user_profile_view', {user_id:decklist.user_id,user_name:decklist.username|e('url')}) }}" class="{{ decklist.usercolor }}">{{ decklist.username }}</a>
+    {% if decklist.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="NetrunnerDB Gracious Donator"></span>{% endif %}
+    <small title="User Reputation">{{ decklist.reputation }}</small>
+    </span>
+</h4>
+{{ decklist.description|raw }}
+
+</div> <!-- #highlight -->
+{% endif %}
