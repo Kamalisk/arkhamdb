@@ -95,9 +95,9 @@ DisplaySort = 'type',
     </button>
     <ul class="dropdown-menu" role="menu" id="menu-sort">
 			<li><a href="#" id="btn-sort-type"><label><input type="radio" name="sort-order" checked="checked">by Type</label></a></li>
-			<li><a href="#" id="btn-sort-number"><label><input type="radio" name="sort-order">by Set</label></a></li>
+			<li><a href="#" id="btn-sort-position"><label><input type="radio" name="sort-order">by Set</label></a></li>
 			<li><a href="#" id="btn-sort-faction"><label><input type="radio" name="sort-order">by Faction</label></a></li>
-			<li><a href="#" id="btn-sort-title"><label><input type="radio" name="sort-order">by Name</label></a></li>
+			<li><a href="#" id="btn-sort-name"><label><input type="radio" name="sort-order">by Name</label></a></li>
     </ul>
   </div>
 
@@ -163,7 +163,7 @@ DisplaySort = 'type',
 	{% for decklist in published_decklists %}
 		<tr>
 			<td class="decklist-name"><a href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.prettyname|e('url') }) }}">{{ decklist.name }}</a></td>
-			<td class="social"><span class="glyphicon glyphicon-heart social-icon-like"></span> {{ decklist.nbvotes }}</td>
+			<td class="social"><span class="glyphicon glyphicon-heart social-icon-like"></span> {{ decklist.nbVotes }}</td>
 			<td class="social"><span class="glyphicon glyphicon-star social-icon-favorite"></span> {{ decklist.nbfavorites }}</td>
 			<td class="social"><span class="glyphicon glyphicon-comment social-icon-comment"></span> {{ decklist.nbcomments }}</td>
 		</tr>

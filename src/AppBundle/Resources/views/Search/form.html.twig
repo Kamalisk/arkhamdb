@@ -20,7 +20,7 @@
             <div class="form-group">
 				<label for="">Cards used</label>
 				{{ cards|default('')|raw }}
-				<input type="text" class="form-control" id="card" placeholder="Enter card title">
+				<input type="text" class="form-control" id="card" placeholder="Enter card name">
 			</div>
 		</div>
 		<div class="col-sm-4">
@@ -31,8 +31,8 @@
 			</div>
 			<div class="form-group">
 				<label for="">Decklist name</label> <input type="text"
-					class="form-control" id="title" name="title" value="{{ title }}"
-					placeholder="Enter text to search in title">
+					class="form-control" id="name" name="name" value="{{ name }}"
+					placeholder="Enter text to search in name">
 			</div>
 			<div class="form-group">
 				<label for="">Sort</label> <select class="form-control" id="sort"

@@ -78,7 +78,7 @@ class Card
     /**
      * @var string
      */
-    private $keywords;
+    private $traits;
 
     /**
      * @var string
@@ -471,27 +471,27 @@ class Card
     }
 
     /**
-     * Set keywords
+     * Set traits
      *
-     * @param string $keywords
+     * @param string $traits
      *
      * @return Card
      */
-    public function setKeywords($keywords)
+    public function setTraits($traits)
     {
-        $this->keywords = $keywords;
+        $this->traits = $traits;
 
         return $this;
     }
 
     /**
-     * Get keywords
+     * Get traits
      *
      * @return string
      */
-    public function getKeywords()
+    public function getTraits()
     {
-        return $this->keywords;
+        return $this->traits;
     }
 
     /**

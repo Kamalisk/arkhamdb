@@ -25,7 +25,7 @@ class CardType extends AbstractType
             ->add('initiative')
             ->add('reserve')
             ->add('strength')
-            ->add('keywords')
+            ->add('traits')
             ->add('flavor', 'textarea', array('required' => false))
             ->add('illustrator')
             ->add('is_unique', 'checkbox', array('required' => false))

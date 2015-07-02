@@ -15,11 +15,11 @@
 	<div class="col-md-9">
 
 {% for item in decklists %}
-<h2>{{ item['identity'].title }}</h2>
+<h2>{{ item['identity'].name }}</h2>
 
 <div class="row">
 <div class="col-md-3">
-<a href="{{ path('cards_zoom',{_locale:app.request.locale,card_code:item['identity'].code}) }}" class="no-popup"><img src="/web/bundles/netrunnerdbcards/images/cards/en/{{ item['identity'].code }}.png" class="img-responsive"></a>
+<a href="{{ path('cards_zoom',{card_code:item['identity'].code}) }}" class="no-popup"><img src="/web/bundles/netrunnerdbcards/images/cards/en/{{ item['identity'].code }}.png" class="img-responsive"></a>
 </div>
 <div class="col-md-9">
 <table class="table table-condensed">
@@ -29,7 +29,7 @@
 	    <article>
 		<h4>
 			<small class="pull-right social">
-				<span class="glyphicon glyphicon-heart social-icon-like"></span> {{ decklist.nbvotes }}
+				<span class="glyphicon glyphicon-heart social-icon-like"></span> {{ decklist.nbVotes }}
 				<span class="glyphicon glyphicon-star social-icon-favorite"></span> {{ decklist.nbfavorites }}
 				<span class="glyphicon glyphicon-comment social-icon-comment"></span> {{ decklist.nbcomments }}
 			</small>
@@ -49,7 +49,7 @@
 	</tr>
 {% endfor %}
 </table>
-<a  class="btn btn-default btn-xs" href="{{ path('decklists_list',{type:'find',_locale:app.request.locale,'cards[]':item['identity'].code,'sort':'popularity'}) }}">Show more <span class="glyphicon glyphicon-menu-right"></span></a>
+<a  class="btn btn-default btn-xs" href="{{ path('decklists_list',{type:'find','cards[]':item['identity'].code,'sort':'popularity'}) }}">Show more <span class="glyphicon glyphicon-menu-right"></span></a>
 </div>
 </div>
 	

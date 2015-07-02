@@ -27,7 +27,7 @@ NRDB.fuzzy_search = {};
     			options.push(record);
     		});
     		options = options.sort(function (a, b) {
-    			return a.title.length - b.title.length;
+    			return a.name.length - b.name.length;
     		});
     	} else if(typeof String.prototype.score === "function") {
     		var matches = [];

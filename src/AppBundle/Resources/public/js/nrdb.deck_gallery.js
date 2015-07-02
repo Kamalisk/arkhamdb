@@ -16,7 +16,7 @@ NRDB.deck_gallery = {};
 			type_code : {
 				'!is' : 'identity'
 			}
-		}).order('type_code,title').each(function(record) {
+		}).order('type_code,name').each(function(record) {
 			images.push(record.imagesrc);
 			qtys.push(record.indeck);
 		});

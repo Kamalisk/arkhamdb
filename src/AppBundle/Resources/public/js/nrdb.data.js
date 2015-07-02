@@ -4,8 +4,7 @@ if (typeof NRDB != "object")
 		api_url: {
 			sets: 'http://netrunnerdb.com/api/sets/',
 			cards: 'http://netrunnerdb.com/api/cards/'
-		},
-		locale: 'en'
+		}
 	};
 NRDB.data = {};
 (function(data, $) {
@@ -18,12 +17,8 @@ NRDB.data = {};
 
 	data.query = function() {
 		data.initialize();
-		data.promise_sets = $
-				.ajax(NRDB.api_url.sets+"?jsonp=NRDB.data.parse_sets&_locale="
-						+ NRDB.locale);
-		data.promise_cards = $
-				.ajax(NRDB.api_url.cards+"?jsonp=NRDB.data.parse_cards&_locale="
-						+ NRDB.locale);
+		data.promise_sets = $.ajax(NRDB.api_url.sets+"?jsonp=NRDB.data.parse_sets");
+		data.promise_cards = $.ajax(NRDB.api_url.cards+"?jsonp=NRDB.data.parse_cards");
 		$.when(data.promise_sets, data.promise_cards).done(data.initialize);
 	};
 
@@ -33,15 +28,15 @@ NRDB.data = {};
 
 		sets_data = sets_data
 				|| JSON.parse(localStorage
-						.getItem('sets_data_' + NRDB.locale));
+						.getItem('sets_data'));
 		if(!sets_data) return;
 		data.sets = TAFFY(sets_data);
-		data.sets.sort("cyclenumber,number");
+		data.sets.sort("cycleposition,position");
 
 		cards_data = cards_data
 				|| JSON
 						.parse(localStorage
-								.getItem('cards_data_' + NRDB.locale));
+								.getItem('cards_data'));
 		if(!cards_data) return;
 		data.cards = TAFFY(cards_data);
 		data.cards.sort("code");
@@ -53,16 +48,16 @@ NRDB.data = {};
 		if(typeof response === "undefined") return;
 		var json = JSON.stringify(sets_data = response);
 		is_modified = is_modified
-				|| json != localStorage.getItem("sets_data_" + NRDB.locale);
-		localStorage.setItem("sets_data_" + NRDB.locale, json);
+				|| json != localStorage.getItem("sets_data");
+		localStorage.setItem("sets_data", json);
 	};
 
 	data.parse_cards = function(response) {
 		if(typeof response === "undefined") return;
 		var json = JSON.stringify(cards_data = response);
 		is_modified = is_modified
-				|| json != localStorage.getItem("cards_data_" + NRDB.locale);
-		localStorage.setItem("cards_data_" + NRDB.locale, json);
+				|| json != localStorage.getItem("cards_data");
+		localStorage.setItem("cards_data", json);
 	};
 
 	data.get_card_by_code = function(code) {

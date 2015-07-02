@@ -88,7 +88,7 @@ Optional GET parameter "jsonp" for script tags. Unavailable for OAuth2 endpoints
 The response is in ascii encoding. Non-ascii characters are encoded with \uXXXX with XXXX their hexadecimal unicode value.<br>
 To test your application, 3 cards are useful:
 <ul>
-<li><a href="/api/card/02020">02020</a> to test Unicode characters, [Credits] and [Subroutine] tokens, <tt>&lt;strong></tt> and <tt>&lt;sup></tt> markup for traces and keywords.</li>
+<li><a href="/api/card/02020">02020</a> to test Unicode characters, [Credits] and [Subroutine] tokens, <tt>&lt;strong></tt> and <tt>&lt;sup></tt> markup for traces and traits.</li>
 <li><a href="/api/card/02046">02046</a> to test Unicode characters, :, ", [Memory Unit] token-with-space</li>
 <li><a href="/api/card/01036">01036</a> to test ", ', &</li>
 </ul>
@@ -105,10 +105,6 @@ To test your application, 3 cards are useful:
 <ul>
 <li>All API responses expect for OAuth2 endpoints include a CORS header: <tt>Access-Control-Allow-Origin:*</tt></li>
 </ul>
-
-<h3>Localization</h3>
-
-Add a parameter _locale=xx to get the results in xx locale.
 
 </div>
 {% endblock %}

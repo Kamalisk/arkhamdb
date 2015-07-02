@@ -31,9 +31,9 @@ function do_action_deck(event) {
 		case 'btn-download-octgn': location.href=Routing.generate('deck_export_octgn', {deck_id:SelectedDeck.id}); break;
 		case 'btn-print': window.print(); break;
 		case 'btn-sort-type': DisplaySort = 'type'; switch_to_web_view(); break;
-		case 'btn-sort-number': DisplaySort = 'number'; switch_to_web_view(); break;
+		case 'btn-sort-position': DisplaySort = 'position'; switch_to_web_view(); break;
 		case 'btn-sort-faction': DisplaySort = 'faction'; switch_to_web_view(); break;
-		case 'btn-sort-title': DisplaySort = 'title'; switch_to_web_view(); break;
+		case 'btn-sort-name': DisplaySort = 'name'; switch_to_web_view(); break;
 		case 'btn-display-plain': export_plaintext(); break;
 		case 'btn-display-bbcode': export_bbcode(); break;
 		case 'btn-display-markdown': export_markdown(); break;

@@ -1,7 +1,6 @@
 if (typeof NRDB != "object")
 	var NRDB = { 
-		data_loaded: jQuery.Callbacks(), 
-		locale: 'en'
+		data_loaded: jQuery.Callbacks()
 	};
 NRDB.suggestions = {};
 (function(suggestions, $) {
@@ -120,7 +119,7 @@ NRDB.suggestions = {};
 		
 		var imgsrc = record.faction_code == "neutral" ? "" : '<img src="'
 					+ Url_FactionImage.replace('xxx', record.faction_code)
-					+ '.png" alt="'+record.title+'">';
+					+ '.png" alt="'+record.name+'">';
 		var div = $('<tr class="card-container" data-index="'
 					+ record.code
 					+ '"><td><button type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Remove</span></button></td>'
@@ -129,7 +128,7 @@ NRDB.suggestions = {};
 					+ '</div></td><td><a class="card" href="'
 					+ Routing.generate('cards_zoom', {card_code:record.code})
 					+ '" data-target="#cardModal" data-remote="false" data-toggle="modal">'
-					+ record.title + '</a></td><td class="influence-' + faction
+					+ record.name + '</a></td><td class="influence-' + faction
 					+ '">' + influ + '</td><td class="type" title="' + record.type
 					+ '"><img src="/web/bundles/app/images/types/'
 					+ record.type_code + '.png" alt="'+record.type+'">'

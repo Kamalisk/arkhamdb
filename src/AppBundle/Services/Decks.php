@@ -33,11 +33,11 @@ class Decks
                 d.tags,
                 (select count(*) from deckchange c where c.deck_id=d.id and c.saved=0) unsaved,
                 d.problem,
-				c.title identity_title,
+				c.name identity_name,
                 c.code identity_code,
 				f.code faction_code,
                 p.cycle_id cycle_id,
-                p.number pack_number,
+                p.position pack_position,
 				s.name side
 				from deck d
 				left join card c on d.identity_id=c.id
@@ -139,7 +139,7 @@ class Decks
                 d.tags,
                 (select count(*) from deckchange c where c.deck_id=d.id and c.saved=0) unsaved,
                 d.problem,
-				c.title identity_title,
+				c.name identity_name,
                 c.code identity_code,
 				f.code faction_code,
 				s.name side
@@ -225,10 +225,10 @@ class Decks
             if (! $latestPack) {
                 $latestPack = $pack;
             } else
-                if ($latestPack->getCycle()->getNumber() < $pack->getCycle()->getNumber()) {
+                if ($latestPack->getCycle()->getPosition() < $pack->getCycle()->getPosition()) {
                     $latestPack = $pack;
                 } else
-                    if ($latestPack->getCycle()->getNumber() == $pack->getCycle()->getNumber() && $latestPack->getNumber() < $pack->getNumber()) {
+                    if ($latestPack->getCycle()->getPosition() == $pack->getCycle()->getPosition() && $latestPack->getPosition() < $pack->getPosition()) {
                         $latestPack = $pack;
                     }
             if ($card->getType()->getName() == "Identity") {

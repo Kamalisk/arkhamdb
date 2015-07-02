@@ -39,7 +39,7 @@ class ReviewController extends Controller
         if(!$card) {
             throw new BadRequestHttpException("Unable to find card.");
         }
-        if(!$card->getPack()->getReleased()) {
+        if(!$card->getPack()->getDateRelease()) {
         	return new Response(json_encode("You may not write a review for an unreleased card."));
         }
         
@@ -65,7 +65,7 @@ class ReviewController extends Controller
         $review->setUser($user);
         $review->setRawtext($review_raw);
         $review->setText($review_html);
-        $review->setNbvotes(0);
+        $review->setnbVotes(0);
         
         $em->persist($review);
         
@@ -151,7 +151,7 @@ class ReviewController extends Controller
                 $author = $review->getUser();
                 $author->setReputation($author->getReputation() + 1);
                 $user->addReviewVote($review);
-                $review->setNbvotes($review->getNbvotes() + 1);
+                $review->setnbVotes($review->getnbVotes() + 1);
                 $em->flush();
             }
         }
@@ -241,7 +241,6 @@ class ReviewController extends Controller
                 array(
                         'pagetitle' => $pagetitle,
                         'pagedescription' => "Read the latest user-submitted reviews on the cards.",
-                        'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
                         'reviews' => $reviews,
                         'url' => $this->getRequest()->getRequestUri(),
                         'route' => $route,
@@ -313,7 +312,6 @@ class ReviewController extends Controller
                 array(
                         'pagetitle' => $pagetitle,
                         'pagedescription' => "Read the latest user-submitted reviews on the cards.",
-                        'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
                         'reviews' => $reviews,
                         'url' => $this->getRequest()->getRequestUri(),
                         'route' => $route,

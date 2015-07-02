@@ -1,7 +1,0 @@
-{% set _route_params = app.request.attributes.get('_route_params')|merge(app.request.query.all()) %}
-<li><a class="flag flag-us" href="{{ path(app.request.attributes.get('_route'), _route_params|merge({'_locale': 'en'})) }}"></a></li>
-<li><a class="flag flag-fr" href="{{ path(app.request.attributes.get('_route'), _route_params|merge({'_locale': 'fr'})) }}"></a></li>
-<li><a class="flag flag-de" href="{{ path(app.request.attributes.get('_route'), _route_params|merge({'_locale': 'de'})) }}"></a></li>
-<li><a class="flag flag-es" href="{{ path(app.request.attributes.get('_route'), _route_params|merge({'_locale': 'es'})) }}"></a></li>
-<li><a class="flag flag-pl" href="{{ path(app.request.attributes.get('_route'), _route_params|merge({'_locale': 'pl'})) }}"></a></li>
-<li><a class="flag flag-it" href="{{ path(app.request.attributes.get('_route'), _route_params|merge({'_locale': 'it'})) }}"></a></li>

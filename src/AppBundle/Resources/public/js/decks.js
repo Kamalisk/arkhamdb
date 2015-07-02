@@ -79,17 +79,17 @@ function do_diff(ids) {
 	var listings = diff[0];
 	var intersect = diff[1];
 	
-	var collator = new Intl.Collator(NRDB.locale);
+	var collator = new Intl.Collator();
 	var container = $('#diff_content');
 	container.empty();
 	container.append("<h4>Cards in all decks</h4>");
 	var list = $('<ul></ul>').appendTo(container);
 	var cards = $.map(intersect, function(qty, card_code) {
 		var card = NRDB.data.get_card_by_code(card_code);
-		if(card) return { title: card.title, qty: qty };
-	}).sort(function (a, b) { return collator.compare(a.title,b.title); });
+		if(card) return { name: card.name, qty: qty };
+	}).sort(function (a, b) { return collator.compare(a.name,b.name); });
 	$.each(cards, function (index, card) {
-		list.append('<li>'+card.title+' x'+card.qty+'</li>');
+		list.append('<li>'+card.name+' x'+card.qty+'</li>');
 	});
 	
 	for(var i=0; i<listings.length; i++) {
@@ -97,10 +97,10 @@ function do_diff(ids) {
 		var list = $('<ul></ul>').appendTo(container);
 		var cards = $.map(listings[i], function(qty, card_code) {
 			var card = NRDB.data.get_card_by_code(card_code);
-			if(card) return { title: card.title, qty: qty };
-		}).sort(function (a, b) { return collator.compare(a.title,b.title); });
+			if(card) return { name: card.name, qty: qty };
+		}).sort(function (a, b) { return collator.compare(a.name,b.name); });
 		$.each(cards, function (index, card) {
-			list.append('<li>'+card.title+' x'+card.qty+'</li>');
+			list.append('<li>'+card.name+' x'+card.qty+'</li>');
 		});
 	}
 	$('#diffModal').modal('show');
@@ -168,7 +168,7 @@ function do_diff_collection(ids) {
 	var list = $('<ul></ul>').appendTo(container);
 	$.each(intersect, function (card_code, qty) {
 		var card = NRDB.data.get_card_by_code(card_code);
-		if(card) list.append('<li>'+card.title+' x'+qty+'</li>');
+		if(card) list.append('<li>'+card.name+' x'+qty+'</li>');
 	});
 
 	for(var i=0; i<listings.length; i++) {
@@ -176,7 +176,7 @@ function do_diff_collection(ids) {
 		var list = $('<ul></ul>').appendTo(container);
 		$.each(listings[i], function (card_code, qty) {
 			var card = NRDB.data.get_card_by_code(card_code);
-			if(card) list.append('<li>'+card.title+' x'+qty+'</li>');
+			if(card) list.append('<li>'+card.name+' x'+qty+'</li>');
 		});
 	}
 	$('#diffModal').modal('show');
@@ -221,13 +221,13 @@ function do_action_deck(event) {
 	var action_id = $(this).attr('id');
 	if(!action_id) return;
 	switch(action_id) {
-		case 'btn-view': location.href=Routing.generate('deck_view', {deck_id:deck.id,_locale:NRDB.locale}); break;
-		case 'btn-edit': location.href=Routing.generate('deck_edit', {deck_id:deck.id,_locale:NRDB.locale}); break;
+		case 'btn-view': location.href=Routing.generate('deck_view', {deck_id:deck.id}); break;
+		case 'btn-edit': location.href=Routing.generate('deck_edit', {deck_id:deck.id}); break;
 		case 'btn-publish': confirm_publish(deck); break;
-		case 'btn-duplicate': location.href=Routing.generate('deck_duplicate', {deck_id:deck.id,_locale:NRDB.locale}); break;
+		case 'btn-duplicate': location.href=Routing.generate('deck_duplicate', {deck_id:deck.id}); break;
 		case 'btn-delete': confirm_delete(deck); break;
-		case 'btn-download-text': location.href=Routing.generate('deck_export_text', {deck_id:deck.id,_locale:NRDB.locale}); break;
-		case 'btn-download-octgn': location.href=Routing.generate('deck_export_octgn', {deck_id:deck.id,_locale:NRDB.locale}); break;
+		case 'btn-download-text': location.href=Routing.generate('deck_export_text', {deck_id:deck.id}); break;
+		case 'btn-download-octgn': location.href=Routing.generate('deck_export_octgn', {deck_id:deck.id}); break;
 		case 'btn-export-bbcode': export_bbcode(deck); break;
 		case 'btn-export-markdown': export_markdown(deck); break;
 		case 'btn-export-plaintext': export_plaintext(deck); break;
@@ -261,9 +261,9 @@ function do_action_sort(event) {
 	switch(action_id) {
 		case 'btn-sort-update': sort_list('dateupdate'); break;
 		case 'btn-sort-creation': sort_list('datecreation'); break;
-		case 'btn-sort-identity': sort_list('identity_title,name'); break;
+		case 'btn-sort-identity': sort_list('identity_name,name'); break;
 		case 'btn-sort-faction': sort_list('faction_code,name'); break;
-		case 'btn-sort-lastpack': sort_list('cycle_id,pack_number'); break;
+		case 'btn-sort-lastpack': sort_list('cycle_id,pack_position'); break;
 		case 'btn-sort-name': sort_list('name'); break;
 	}
 	return false;
@@ -496,8 +496,8 @@ function show_deck() {
 		NRDB.data.get_cards_by_code(slot.card_code).update({indeck:parseInt(slot.qty,10)});
 	}
 	$('#deck-name').text(deck.name);
-	$('#btn-view').attr('href', Routing.generate('deck_view', {deck_id:deck.id,_locale:NRDB.locale}));
-	$('#btn-edit').attr('href', Routing.generate('deck_edit', {deck_id:deck.id,_locale:NRDB.locale}));
+	$('#btn-view').attr('href', Routing.generate('deck_view', {deck_id:deck.id}));
+	$('#btn-edit').attr('href', Routing.generate('deck_edit', {deck_id:deck.id}));
 	
 	update_deck();
 	// convert date from UTC to local

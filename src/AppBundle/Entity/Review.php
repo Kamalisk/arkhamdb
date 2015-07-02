@@ -179,7 +179,7 @@ class Review
      *
      * @return Review
      */
-    public function setNbVotes($nbVotes)
+    public function setnbVotes($nbVotes)
     {
         $this->nbVotes = $nbVotes;
 
@@ -191,7 +191,7 @@ class Review
      *
      * @return integer
      */
-    public function getNbVotes()
+    public function getnbVotes()
     {
         return $this->nbVotes;
     }

@@ -16,7 +16,7 @@ function update_cardsearch_result() {
 	if ($.isEmptyObject(query))
 		return;
 	var tabindex = 2;
-	NRDB.data.cards.apply(window, query).order("title intl").each(
+	NRDB.data.cards.apply(window, query).order("name intl").each(
 			function(record) {
 				$('#card_search_results').append(
 						'<tr><td><span class="icon icon-' + record.faction_code
@@ -26,7 +26,7 @@ function update_cardsearch_result() {
 								+ '" href="'
 								+ Routing.generate('cards_zoom', {card_code:record.code})
 								+ '" class="card" data-index="' + record.code
-								+ '">' + record.title
+								+ '">' + record.name
 								+ '</a></td><td class="small">'
 								+ record.setname + '</td></tr>');
 			});

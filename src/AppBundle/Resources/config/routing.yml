@@ -34,7 +34,7 @@ adb_user:
     resource: "@AppBundle/Resources/config/routing/user.yml"
     prefix: /user
 
-netrunnerdb_index:
+index:
     pattern: /
     methods: [GET]
     defaults:

@@ -40,8 +40,8 @@ class Decklists
                 u.reputation,
                 u.donation,
                 c.code,
-                c.title identity,
-                d.nbvotes,
+                c.name identity,
+                d.nbVotes,
                 d.nbfavorites,
                 d.nbcomments
                 from decklist d
@@ -90,8 +90,8 @@ class Decklists
                 u.reputation,
                 u.donation,
                 c.code,
-                c.title identity,
-                d.nbvotes,
+                c.name identity,
+                d.nbVotes,
                 d.nbfavorites,
                 d.nbcomments
                 from decklist d
@@ -137,8 +137,8 @@ class Decklists
                 u.reputation,
                 u.donation,
                 c.code,
-                c.title identity,
-                d.nbvotes,
+                c.name identity,
+                d.nbVotes,
                 d.nbfavorites,
                 d.nbcomments,
                 DATEDIFF(CURRENT_DATE, d.creation) nbjours
@@ -147,7 +147,7 @@ class Decklists
                 join card c on d.identity_id=c.id
                 left join tournament t on d.tournament_id=t.id
                 where d.creation > DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
-                order by 2*nbvotes/(1+nbjours*nbjours) DESC, nbvotes desc, nbcomments desc
+                order by 2*nbVotes/(1+nbjours*nbjours) DESC, nbVotes desc, nbcomments desc
                 limit $start, $limit")->fetchAll(\PDO::FETCH_ASSOC);
     
         $count = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];
@@ -183,16 +183,16 @@ class Decklists
                 u.reputation,
                 u.donation,
                 c.code,
-                c.title identity,
-                d.nbvotes,
+                c.name identity,
+                d.nbVotes,
                 d.nbfavorites,
                 d.nbcomments
                 from decklist d
                 join user u on d.user_id=u.id
                 join card c on d.identity_id=c.id
                 left join tournament t on d.tournament_id=t.id
-                where nbvotes > 10
-                order by nbvotes desc, creation desc
+                where nbVotes > 10
+                order by nbVotes desc, creation desc
                 limit $start, $limit")->fetchAll(\PDO::FETCH_ASSOC);
     
         $count = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];
@@ -228,8 +228,8 @@ class Decklists
                 u.reputation,
                 u.donation,
                 c.code,
-                c.title identity,
-                d.nbvotes,
+                c.name identity,
+                d.nbVotes,
                 d.nbfavorites,
                 d.nbcomments,
                 (select count(*) from comment where comment.decklist_id=d.id and DATEDIFF(CURRENT_DATE, comment.creation)<1) nbrecentcomments
@@ -274,8 +274,8 @@ class Decklists
                 u.reputation,
                 u.donation,
                 c.code,
-                c.title identity,
-                d.nbvotes,
+                c.name identity,
+                d.nbVotes,
                 d.nbfavorites,
                 d.nbcomments
                 from decklist d
@@ -319,8 +319,8 @@ class Decklists
                 u.reputation,
                 u.donation,
                 c.code,
-                c.title identity,
-                d.nbvotes,
+                c.name identity,
+                d.nbVotes,
                 d.nbfavorites,
                 d.nbcomments
                 from decklist d
@@ -367,8 +367,8 @@ class Decklists
                 u.reputation,
                 u.donation,
                 c.code,
-                c.title identity,
-                d.nbvotes,
+                c.name identity,
+                d.nbVotes,
                 d.nbfavorites,
                 d.nbcomments
                 from decklist d
@@ -417,9 +417,9 @@ class Decklists
                 u.reputation,
                 u.donation,
                 c.code,
-                c.title identity,
+                c.name identity,
                 p.name lastpack,
-                d.nbvotes,
+                d.nbVotes,
                 d.nbfavorites,
                 d.nbcomments
                 from decklist d
@@ -462,7 +462,7 @@ class Decklists
         }
         $faction_code = filter_var($request->query->get('faction'), FILTER_SANITIZE_STRING);
         $author_name = filter_var($request->query->get('author'), FILTER_SANITIZE_STRING);
-        $decklist_title = filter_var($request->query->get('title'), FILTER_SANITIZE_STRING);
+        $decklist_name = filter_var($request->query->get('name'), FILTER_SANITIZE_STRING);
         $sort = $request->query->get('sort');
         $packs = $request->query->get('packs');
         
@@ -493,9 +493,9 @@ class Decklists
             $params[] = $author_name;
             $types[] = \PDO::PARAM_STR;
         }
-        if (! empty($decklist_title)) {
+        if (! empty($decklist_name)) {
             $wheres[] = 'd.name like ?';
-            $params[] = '%' . $decklist_title . '%';
+            $params[] = '%' . $decklist_name . '%';
             $types[] = \PDO::PARAM_STR;
         }
         if (count($cards_code) ) {
@@ -532,7 +532,7 @@ class Decklists
                 $order = 'creation';
                 break;
             case 'likes':
-                $order = 'nbvotes';
+                $order = 'nbVotes';
                 break;
             case 'reputation':
                 $order = 'reputation';
@@ -540,7 +540,7 @@ class Decklists
         	case 'popularity':
             default:
         	    $order = 'popularity';
-        		$extra_select = '(d.nbvotes/(1+DATEDIFF(CURRENT_TIMESTAMP(),d.creation)/10)) as popularity,';
+        		$extra_select = '(d.nbVotes/(1+DATEDIFF(CURRENT_TIMESTAMP(),d.creation)/10)) as popularity,';
         		break;
         }
     
@@ -559,8 +559,8 @@ class Decklists
                 u.reputation,
                 u.donation,
                 c.code,
-                c.title identity,
-                d.nbvotes,
+                c.name identity,
+                d.nbVotes,
                 d.nbfavorites,
                 d.nbcomments
                 from decklist d

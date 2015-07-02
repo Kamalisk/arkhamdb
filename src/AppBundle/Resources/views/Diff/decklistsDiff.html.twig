@@ -12,7 +12,7 @@
 {% for card in decklist1.content %}
 <div>
     {{ card.qty }}x
-    <a href="{{ path('cards_zoom', {'card_code':card.code}) }}" class="card" data-index="{{ card.code }}">{{ card.title }}</a>
+    <a href="{{ path('cards_zoom', {'card_code':card.code}) }}" class="card" data-index="{{ card.code }}">{{ card.name }}</a>
 </div>
 {% endfor %}
 </div>
@@ -21,7 +21,7 @@
 {% for card in shared %}
 <div>
     {{ card.qty }}x
-    <a href="{{ path('cards_zoom', {'card_code':card.code}) }}" class="card" data-index="{{ card.code }}">{{ card.title }}</a>
+    <a href="{{ path('cards_zoom', {'card_code':card.code}) }}" class="card" data-index="{{ card.code }}">{{ card.name }}</a>
 </div>
 {% endfor %}
 </div>
@@ -30,7 +30,7 @@
 {% for card in decklist2.content %}
 <div>
     {{ card.qty }}x
-    <a href="{{ path('cards_zoom', {'card_code':card.code}) }}" class="card" data-index="{{ card.code }}">{{ card.title }}</a>
+    <a href="{{ path('cards_zoom', {'card_code':card.code}) }}" class="card" data-index="{{ card.code }}">{{ card.name }}</a>
 </div>
 {% endfor %}
 </div>

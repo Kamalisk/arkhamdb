@@ -318,7 +318,7 @@ class Decklist
      *
      * @return Decklist
      */
-    public function setNbVotes($nbVotes)
+    public function setnbVotes($nbVotes)
     {
         $this->nbVotes = $nbVotes;
 
@@ -330,7 +330,7 @@ class Decklist
      *
      * @return integer
      */
-    public function getNbVotes()
+    public function getnbVotes()
     {
         return $this->nbVotes;
     }

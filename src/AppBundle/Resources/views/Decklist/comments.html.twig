@@ -10,8 +10,8 @@
     </div>
     <div class="collapse{% if not comment.hidden %} in{% endif %}" id="div-comment-{{ comment.id }}">
         <span class="comment-date" title="{{ comment.creation|date('r') }}">{{ comment.creation|date('M d, Y') }}</span>
-        <a href="{{ path('user_profile_view', {_locale:app.request.locale,user_id:comment.user_id,user_name:comment.author|e('url')}) }}" class="comment-author username {{ comment.authorcolor }}">{{ comment.author }}</a>
-        {% if comment.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="NetrunnerDB Gracious Donator"></span>{% endif %}
+        <a href="{{ path('user_profile_view', {user_id:comment.user_id,user_name:comment.author|e('url')}) }}" class="comment-author username {{ comment.authorcolor }}">{{ comment.author }}</a>
+        {% if comment.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="AGoT2db Gracious Donator"></span>{% endif %}
         <div class="comment-text">{{ comment.text|raw }}</div>
     </div>
 </td></tr>

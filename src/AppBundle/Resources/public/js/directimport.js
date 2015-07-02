@@ -45,13 +45,13 @@ function import_one_line(line, lineNumber) {
 		return '<i>No match for '+name+'</i>';
 	} else if(options.length == 1) {
 		return '<input type="hidden" name="'+lineNumber+'" value="'+options[0].code+':'+qty_int+'">'
-		+qty_text+'<a class="card" data-code="'+options[0].code+'" href="#">'+options[0].title+' </a>';
+		+qty_text+'<a class="card" data-code="'+options[0].code+'" href="#">'+options[0].name+' </a>';
 	} else {
 		var text = '<input type="hidden" name="'+lineNumber+'" value="'+options[0].code+':'+qty_int+'">'
-		+qty_text+'<a class="card dropdown-toggle text-warning" data-toggle="dropdown" data-code="'+options[0].code+'" href="#">'+options[0].title+' <span class="caret"></span></a>';
+		+qty_text+'<a class="card dropdown-toggle text-warning" data-toggle="dropdown" data-code="'+options[0].code+'" href="#">'+options[0].name+' <span class="caret"></span></a>';
 		text += '<ul class="dropdown-menu">';
 		$.each(options, function (index, option) {
-			text += '<li><a href="#" data-code="'+option.code+'">'+option.title+'</a></li>';
+			text += '<li><a href="#" data-code="'+option.code+'">'+option.name+'</a></li>';
 		});
 		text += '</ul>';
 		return text;

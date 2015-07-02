@@ -38,7 +38,7 @@ $(function() {
 {% for identity in identities %}
 <a href="{{ path('deck_initbuild', {card_code:identity.code}) }}" class="list-group-item" data-code="{{ identity.code }}">
 	<span class="icon icon-{{ identity.faction.code }} {{ identity.faction.code }}"></span>
-	<span>{{ identity.title(app.request.locale) }}</span> <span class="small">({{ identity.pack.name }})</span>
+	<span>{{ identity.name }}</span> <span class="small">({{ identity.pack.name }})</span>
 </a>
 {% endfor %}
 </div>

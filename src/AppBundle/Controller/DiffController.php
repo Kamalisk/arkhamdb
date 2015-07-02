@@ -21,8 +21,6 @@ class DiffController extends Controller
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('short_cache'));
         
-        $locale = $request->getLocale();
-        
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
         /* @var $d1 Decklist */
@@ -42,7 +40,7 @@ class DiffController extends Controller
         foreach($listings[0] as $code => $qty) {
             $card = $em->getRepository('AppBundle:Card')->findOneBy(array('code' => $code));
             if($card) $content1[] = array(
-                    'title' => $card->getName(),
+                    'name' => $card->getName(),
                     'code' => $code,
                     'qty' => $qty
                     );
@@ -52,7 +50,7 @@ class DiffController extends Controller
         foreach($listings[1] as $code => $qty) {
             $card = $em->getRepository('AppBundle:Card')->findOneBy(array('code' => $code));
             if($card) $content2[] = array(
-                    'title' => $card->getName(),
+                    'name' => $card->getName(),
                     'code' => $code,
                     'qty' => $qty
             );
@@ -62,7 +60,7 @@ class DiffController extends Controller
         foreach($intersect as $code => $qty) {
             $card = $em->getRepository('AppBundle:Card')->findOneBy(array('code' => $code));
             if($card) $shared[] = array(
-                    'title' => $card->getName(),
+                    'name' => $card->getName(),
                     'code' => $code,
                     'qty' => $qty
             );

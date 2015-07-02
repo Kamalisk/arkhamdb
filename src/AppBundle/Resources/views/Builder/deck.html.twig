@@ -166,7 +166,7 @@ var Filters = {},
 			<thead>
 				<tr>
 					<th style="min-width:85px"><a href="#" data-sort="indeck">Quantity</a></th>
-					<th><a href="#" data-sort="title">Name</a></th>
+					<th><a href="#" data-sort="name">Name</a></th>
 					<th><a href="#" data-sort="factioncost" title="Influence">I.</a></th>
 					<th class="type"><a href="#" data-sort="type" title="Type">T.</a><span class="caret"></span></th>
 					<th class="faction"><a href="#" data-sort="faction" title="Faction">F.</a></th>
@@ -269,7 +269,7 @@ var Filters = {},
 	{% for decklist in published_decklists %}
 		<tr>
 			<td class="decklist-name"><a href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.prettyname|e('url') }) }}">{{ decklist.name }}</a></td>
-			<td class="social"><span class="glyphicon glyphicon-heart social-icon-like"></span> {{ decklist.nbvotes }}</td>
+			<td class="social"><span class="glyphicon glyphicon-heart social-icon-like"></span> {{ decklist.nbVotes }}</td>
 			<td class="social"><span class="glyphicon glyphicon-star social-icon-favorite"></span> {{ decklist.nbfavorites }}</td>
 			<td class="social"><span class="glyphicon glyphicon-comment social-icon-comment"></span> {{ decklist.nbcomments }}</td>
 		</tr>

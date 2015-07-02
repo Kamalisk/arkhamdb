@@ -30,7 +30,6 @@ class IndexController extends Controller
                 array(
                         'pagetitle' => "Android:Netrunner Cards and Deckbuilder",
                         'pagedescription' => "Build your deck for Android:Netrunner, the LCG by Fantasy Flight Games. Browse the cards and the thousand of decklists submitted by the community. Publish your own decks and get feedback.",
-                        'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
                         'decklists' => $decklists_recent,
                         'decklist' => $decklist,
                         'reviews' => $reviews_recent,

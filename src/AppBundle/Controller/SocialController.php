@@ -115,7 +115,7 @@ class SocialController extends Controller
             ->getFaction());
         $decklist->setSide($deck->getSide());
         $decklist->setLastPack($deck->getLastPack());
-        $decklist->setNbvotes(0);
+        $decklist->setnbVotes(0);
         $decklist->setNbfavorites(0);
         $decklist->setNbcomments(0);
         $decklist->setTournament($tournament);
@@ -152,7 +152,7 @@ class SocialController extends Controller
         $cards_code = $request->query->get('cards');
         $faction_code = filter_var($request->query->get('faction'), FILTER_SANITIZE_STRING);
         $author_name = filter_var($request->query->get('author'), FILTER_SANITIZE_STRING);
-        $decklist_title = filter_var($request->query->get('title'), FILTER_SANITIZE_STRING);
+        $decklist_name = filter_var($request->query->get('name'), FILTER_SANITIZE_STRING);
         $sort = $request->query->get('sort');
         $packs = $request->query->get('packs');
         
@@ -160,28 +160,26 @@ class SocialController extends Controller
             $packs = $dbh->executeQuery("select id from pack")->fetchAll(\PDO::FETCH_COLUMN);
         }
         
-        $locale = $request->query->get('_locale') ?: $request->getLocale();
-        
         $categories = array();
         $on = 0; $off = 0;
         $categories[] = array("label" => "Core / Deluxe", "packs" => array());
-        $list_cycles = $this->get('doctrine')->getRepository('AppBundle:Cycle')->findBy(array(), array("number" => "ASC"));
+        $list_cycles = $this->get('doctrine')->getRepository('AppBundle:Cycle')->findBy(array(), array("position" => "ASC"));
         foreach($list_cycles as $cycle) {
             $size = count($cycle->getPacks());
-            if($cycle->getNumber() == 0 || $size == 0) continue;
+            if($cycle->getPosition() == 0 || $size == 0) continue;
             $first_pack = $cycle->getPacks()[0];
             if($size === 1 && $first_pack->getName() == $cycle->getName()) {
                 $checked = count($packs) ? in_array($first_pack->getId(), $packs) : true;
                 if($checked) $on++;
                 else $off++;
-                $categories[0]["packs"][] = array("id" => $first_pack->getId(), "label" => $first_pack->getName($locale), "checked" => $checked, "future" => $first_pack->getReleased() === NULL);
+                $categories[0]["packs"][] = array("id" => $first_pack->getId(), "label" => $first_pack->getName(), "checked" => $checked, "future" => $first_pack->getDateRelease() === NULL);
             } else {
-                $category = array("label" => $cycle->getName($locale), "packs" => array());
+                $category = array("label" => $cycle->getName(), "packs" => array());
                 foreach($cycle->getPacks() as $pack) {
                     $checked = count($packs) ? in_array($pack->getId(), $packs) : true;
                     if($checked) $on++;
                     else $off++;
-                    $category['packs'][] = array("id" => $pack->getId(), "label" => $pack->getName($locale), "checked" => $checked, "future" => $pack->getReleased() === NULL);
+                    $category['packs'][] = array("id" => $pack->getId(), "label" => $pack->getName(), "checked" => $checked, "future" => $pack->getDateRelease() === NULL);
                 }
                 $categories[] = $category;
             }
@@ -192,7 +190,7 @@ class SocialController extends Controller
                 'on' => $on,
                 'off' => $off,
                 'author' => $author_name,
-                'title' => $decklist_title
+                'name' => $decklist_name
         );
         $params['sort_'.$sort] = ' selected="selected"';
         $params['faction_'.substr($faction_code, 0, 1)] = ' selected="selected"';
@@ -200,9 +198,7 @@ class SocialController extends Controller
         if (! empty($cards_code) && is_array($cards_code)) {
             $cards = $dbh->executeQuery(
                     "SELECT
-    				c.title" . ($this->getRequest()
-            				        ->getLocale() == "en" ? '' : '_' . $this->getRequest()
-            				        ->getLocale()) . " title,
+    				c.name,
     				c.code,
                     f.code faction_code
     				from card c
@@ -293,9 +289,7 @@ class SocialController extends Controller
         $dbh = $this->get('doctrine')->getConnection();
         $factions = $dbh->executeQuery(
                 "SELECT
-				f.name" . ($this->getRequest()
-                    ->getLocale() == "en" ? '' : '_' . $this->getRequest()
-                    ->getLocale()) . " name,
+				f.name,
 				f.code
 				from faction f
 				order by f.side_id asc, f.name asc")
@@ -303,9 +297,7 @@ class SocialController extends Controller
         
         $packs = $dbh->executeQuery(
                 "SELECT
-				p.name" . ($this->getRequest()
-                    ->getLocale() == "en" ? '' : '_' . $this->getRequest()
-                    ->getLocale()) . " name,
+				p.name,
 				p.code
 				from pack p
 				where p.released is not null
@@ -341,7 +333,6 @@ class SocialController extends Controller
                 array(
                         'pagetitle' => $pagetitle,
                         'pagedescription' => "Browse the collection of thousands of premade decks.",
-                        'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
                         'decklists' => $decklists,
                         'packs' => $packs,
                         'factions' => $factions,
@@ -390,7 +381,7 @@ class SocialController extends Controller
 				u.donation,
 				c.code identity_code,
 				f.code faction_code,
-				d.nbvotes,
+				d.nbVotes,
 				d.nbfavorites,
 				d.nbcomments
 				from decklist d
@@ -449,7 +440,7 @@ class SocialController extends Controller
 					d.id,
 					d.name,
 					d.prettyname,
-					d.nbvotes,
+					d.nbVotes,
 					d.nbfavorites,
 					d.nbcomments
 					from decklist d
@@ -463,7 +454,7 @@ class SocialController extends Controller
 					d.id,
 					d.name,
 					d.prettyname,
-					d.nbvotes,
+					d.nbVotes,
 					d.nbfavorites,
 					d.nbcomments
 					from decklist d
@@ -482,7 +473,6 @@ class SocialController extends Controller
         return $this->render('AppBundle:Decklist:decklist.html.twig',
                 array(
                         'pagetitle' => $decklist['name'],
-                        'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
                         'decklist' => $decklist,
                         'commenters' => $commenters,
                         'similar' => $similar_decklists,
@@ -632,7 +622,7 @@ class SocialController extends Controller
             );
             foreach($spool as $email => $view) {
                 $message = \Swift_Message::newInstance()
-                ->setSubject("[NetrunnerDB] New comment")
+                ->setSubject("[AGoT2db] New comment")
                 ->setFrom(array("alsciende@netrunnerdb.com" => $user->getUsername()))
                 ->setTo($email)
                 ->setBody($this->renderView($view, $email_data), 'text/html');
@@ -711,7 +701,7 @@ class SocialController extends Controller
                 $author = $decklist->getUser();
                 $author->setReputation($author->getReputation() + 1);
                 $decklist->setTs(new \DateTime());
-                $decklist->setNbvotes($decklist->getNbvotes() + 1);
+                $decklist->setnbVotes($decklist->getnbVotes() + 1);
                 $this->get('doctrine')
                 ->getManager()
                 ->flush();
@@ -770,7 +760,7 @@ class SocialController extends Controller
 					d.id,
 					d.name,
 					d.prettyname,
-					d.nbvotes,
+					d.nbVotes,
 					d.nbfavorites,
 					d.nbcomments
 					from decklist d
@@ -1001,7 +991,7 @@ class SocialController extends Controller
         if (! $decklist || $decklist->getUser()->getId() != $user->getId())
             throw new UnauthorizedHttpException("You don't have access to this decklist.");
         
-        if ($decklist->getNbvotes() || $decklist->getNbfavorites() || $decklist->getNbcomments())
+        if ($decklist->getnbVotes() || $decklist->getNbfavorites() || $decklist->getNbcomments())
             throw new UnauthorizedHttpException("Cannot delete this decklist.");
         
         $precedent = $decklist->getPrecedent();
@@ -1055,7 +1045,6 @@ class SocialController extends Controller
                 array(
                         'pagetitle' => $user->getUsername(),
                         'user' => $user,
-                        'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
                         'nbdecklists' => $nbdecklists,
                         'nbreviews' => $nbreviews
                 ), $response);
@@ -1121,7 +1110,6 @@ class SocialController extends Controller
         return $this->render('AppBundle:Default:usercomments.html.twig',
                 array(
                         'user' => $user,
-                        'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
                         'comments' => $comments,
                         'url' => $this->getRequest()
                             ->getRequestUri(),
@@ -1192,7 +1180,6 @@ class SocialController extends Controller
         
         return $this->render('AppBundle:Default:allcomments.html.twig',
                 array(
-                        'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
                         'comments' => $comments,
                         'url' => $this->getRequest()
                             ->getRequestUri(),
@@ -1214,14 +1201,10 @@ class SocialController extends Controller
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('long_cache'));
         
-        $locale = $request->query->get('_locale') ?: $request->getLocale();
-        
         $dbh = $this->get('doctrine')->getConnection();
         $factions = $dbh->executeQuery(
                 "SELECT
-				f.name" . ($this->getRequest()
-                    ->getLocale() == "en" ? '' : '_' . $this->getRequest()
-                    ->getLocale()) . " name,
+				f.name,
 				f.code
 				from faction f
 				order by f.side_id asc, f.name asc")
@@ -1229,23 +1212,23 @@ class SocialController extends Controller
         
         $categories = array(); $on = 0; $off = 0;
         $categories[] = array("label" => "Core / Deluxe", "packs" => array());
-        $list_cycles = $this->get('doctrine')->getRepository('AppBundle:Cycle')->findBy(array(), array("number" => "ASC"));
+        $list_cycles = $this->get('doctrine')->getRepository('AppBundle:Cycle')->findBy(array(), array("position" => "ASC"));
         foreach($list_cycles as $cycle) {
             $size = count($cycle->getPacks());
-            if($cycle->getNumber() == 0 || $size == 0) continue;
+            if($cycle->getPosition() == 0 || $size == 0) continue;
             $first_pack = $cycle->getPacks()[0];
             if($size === 1 && $first_pack->getName() == $cycle->getName()) {
-                $checked = $first_pack->getReleased() !== NULL;
+                $checked = $first_pack->getDateRelease() !== NULL;
                 if($checked) $on++;
                 else $off++;
-                $categories[0]["packs"][] = array("id" => $first_pack->getId(), "label" => $first_pack->getName($locale), "checked" => $checked, "future" => $first_pack->getReleased() === NULL);
+                $categories[0]["packs"][] = array("id" => $first_pack->getId(), "label" => $first_pack->getName(), "checked" => $checked, "future" => $first_pack->getDateRelease() === NULL);
             } else {
-                $category = array("label" => $cycle->getName($locale), "packs" => array());
+                $category = array("label" => $cycle->getName(), "packs" => array());
                 foreach($cycle->getPacks() as $pack) {
-                    $checked = $pack->getReleased() !== NULL;
+                    $checked = $pack->getDateRelease() !== NULL;
                     if($checked) $on++;
                     else $off++;
-                    $category['packs'][] = array("id" => $pack->getId(), "label" => $pack->getName($locale), "checked" => $checked, "future" => $pack->getReleased() === NULL);
+                    $category['packs'][] = array("id" => $pack->getId(), "label" => $pack->getName(), "checked" => $checked, "future" => $pack->getDateRelease() === NULL);
                 }
                 $categories[] = $category;
             }
@@ -1256,7 +1239,6 @@ class SocialController extends Controller
                         'pagetitle' => 'Decklist Search',
                         'url' => $this->getRequest()
                             ->getRequestUri(),
-                        'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
                         'factions' => $factions,
                         'form' => $this->renderView('AppBundle:Search:form.html.twig',
                             array(
@@ -1264,7 +1246,7 @@ class SocialController extends Controller
                                 'on' => $on,
                                 'off' => $off,
                                 'author' => '',
-                                'title' => '',
+                                'name' => '',
                             )
                         ),
                 ), $response);

@@ -16,7 +16,9 @@ class SearchController extends Controller
 	{
 		$card = $this->getDoctrine()->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
 		if(!$card) throw $this->createNotFoundException('Sorry, this card is not in the database (yet?)');
+		
 		$meta = $card->getName().", a ".$card->getFaction()->getName()." ".$card->getType()->getName()." card for A Game of Thrones 2nd Edition from the set ".$card->getPack()->getName()." published by Fantasy Flight Games.";
+		
 		return $this->forward(
 			'AppBundle:Search:display',
 			array(
@@ -25,10 +27,8 @@ class SearchController extends Controller
 			    'q' => $card->getCode(),
 				'view' => 'card',
 				'sort' => 'set',
-				'title' => $card->getName(),
-				'meta' => $meta,
-				'locale' => $request->getLocale(),
-				'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
+				'pagetitle' => $card->getName(),
+				'meta' => $meta
 			)
 		);
 	}
@@ -37,9 +37,11 @@ class SearchController extends Controller
 	{
 		$pack = $this->getDoctrine()->getRepository('AppBundle:Pack')->findOneBy(array("code" => $pack_code));
 		if(!$pack) throw $this->createNotFoundException('This pack does not exist');
-		$meta = $pack->getName($request->getLocale()).", a set of cards for A Game of Thrones 2nd Edition"
-				.($pack->getReleased() ? " published on ".$pack->getReleased()->format('Y/m/d') : "")
+		
+		$meta = $pack->getName().", a set of cards for A Game of Thrones 2nd Edition"
+				.($pack->getDateRelease() ? " published on ".$pack->getDateRelease()->format('Y/m/d') : "")
 				." by Fantasy Flight Games.";
+		
 		return $this->forward(
 			'AppBundle:Search:display',
 			array(
@@ -49,10 +51,8 @@ class SearchController extends Controller
 				'view' => $view,
 				'sort' => $sort,
 			    'page' => $page,
-				'title' => $pack->getName($request->getLocale()),
+				'pagetitle' => $pack->getName(),
 				'meta' => $meta,
-				'locale' => $request->getLocale(),
-				'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
 			)
 		);
 	}
@@ -61,20 +61,20 @@ class SearchController extends Controller
 	{
 		$cycle = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findOneBy(array("code" => $cycle_code));
 		if(!$cycle) throw $this->createNotFoundException('This cycle does not exist');
-		$meta = $cycle->getName($request->getLocale()).", a cycle of datapack for A Game of Thrones 2nd Edition published by Fantasy Flight Games.";
+		
+		$meta = $cycle->getName().", a cycle of datapack for A Game of Thrones 2nd Edition published by Fantasy Flight Games.";
+		
 		return $this->forward(
 			'AppBundle:Search:display',
 			array(
 			    '_route' => $request->attributes->get('_route'),
 			    '_route_params' => $request->attributes->get('_route_params'),
-			    'q' => 'c:'.$cycle->getNumber(),
+			    'q' => 'c:'.$cycle->getPosition(),
 				'view' => $view,
 				'sort' => $sort,
 			    'page' => $page,
-			    'title' => $cycle->getName($request->getLocale()),
+			    'pagetitle' => $cycle->getName(),
 				'meta' => $meta,
-				'locale' => $request->getLocale(),
-				'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
 			)
 		);
 	}
@@ -84,7 +84,6 @@ class SearchController extends Controller
 	{
 		$view = $request->query->get('view') ?: 'list';
 		$sort = $request->query->get('sort') ?: 'name';
-		$locale = $request->query->get('_locale') ?: $request->getLocale();
 		
 		$operators = array(":","!","<",">");
 		
@@ -117,7 +116,6 @@ class SearchController extends Controller
 		$find = array('q' => implode(" ",$params));
 		if($sort != "name") $find['sort'] = $sort;
 		if($view != "list") $find['view'] = $view;
-		if($locale != "en") $find['_locale'] = $locale;
 		return $this->redirect($this->generateUrl('cards_find').'?'.http_build_query($find));
 	}
 
@@ -128,22 +126,19 @@ class SearchController extends Controller
 		$page = $request->query->get('page') ?: 1;
 		$view = $request->query->get('view') ?: 'list';
 		$sort = $request->query->get('sort') ?: 'name';
-		$locale = $request->query->get('_locale') ?: 'en';
-		
-		$request->setLocale($locale);
 
 		// we may be able to redirect to a better url if the search is on a single set
 		$conditions = $this->get('cards_data')->syntax($q);
 		if(count($conditions) == 1 && count($conditions[0]) == 3 && $conditions[0][1] == ":") {
 		    if($conditions[0][0] == "e") {
-		        $url = $this->get('router')->generate('cards_list', array('pack_code' => $conditions[0][2], 'view' => $view, 'sort' => $sort, 'page' => $page, '_locale' => $request->getLocale()));
+		        $url = $this->get('router')->generate('cards_list', array('pack_code' => $conditions[0][2], 'view' => $view, 'sort' => $sort, 'page' => $page));
 		        return $this->redirect($url);
 		    }
 		    if($conditions[0][0] == "c") {
-		        $cycle_number = $conditions[0][2];
-		        $cycle = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findOneBy(array('number' => $cycle_number));
+		        $cycle_position = $conditions[0][2];
+		        $cycle = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findOneBy(array('position' => $cycle_position));
 		        if($cycle) {
-		            $url = $this->get('router')->generate('cards_cycle', array('cycle_code' => $cycle->getCode(), 'view' => $view, 'sort' => $sort, 'page' => $page, '_locale' => $request->getLocale()));
+		            $url = $this->get('router')->generate('cards_cycle', array('cycle_code' => $cycle->getCode(), 'view' => $view, 'sort' => $sort, 'page' => $page));
 		            return $this->redirect($url);
 		        }
 		    }
@@ -156,23 +151,18 @@ class SearchController extends Controller
 				'view' => $view,
 				'sort' => $sort,
 				'page' => $page,
-				'locale' => $locale,
-				'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
 				'_route' => $request->get('_route')
 			)
 		);
 	}
 	
-	public function displayAction($q, $view="card", $sort, $page=1, $title="", $meta="", $locale=null, $locales=null, Request $request)
+	public function displayAction($q, $view="card", $sort, $page=1, $pagetitle="", $meta="", Request $request)
 	{
 		$response = new Response();
 		$response->setPublic();
 		$response->setMaxAge($this->container->getParameter('short_cache'));
 		
 	    static $availability = array();
-
-		if(empty($locale)) $locale = $request->getLocale();
-		else $request->setLocale($locale);
 
 		$cards = array();
 		$first = 0;
@@ -206,15 +196,15 @@ class SearchController extends Controller
 				$view = 'zoom';
 			}
 			
-			if($title == "") {
+			if($pagetitle == "") {
         		if(count($conditions) == 1 && count($conditions[0]) == 3 && $conditions[0][1] == ":") {
         			if($conditions[0][0] == "e") {
         				$pack = $this->getDoctrine()->getRepository('AppBundle:Pack')->findOneBy(array("code" => $conditions[0][2]));
-        				if($pack) $title = $pack->getName($request->getLocale());
+        				if($pack) $pagetitle = $pack->getName();
         			}
         			if($conditions[0][0] == "c") {
         				$cycle = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findOneBy(array("code" => $conditions[0][2]));
-        				if($cycle) $title = $cycle->getName($request->getLocale());
+        				if($cycle) $pagetitle = $cycle->getName();
         			}
         		}
 			}
@@ -236,7 +226,7 @@ class SearchController extends Controller
 				$cardinfo = $this->get('cards_data')->getCardInfo($card, false);
 				if(empty($availability[$pack->getCode()])) {
 					$availability[$pack->getCode()] = false;
-					if($pack->getReleased() && $pack->getReleased() <= new \DateTime()) $availability[$pack->getCode()] = true;
+					if($pack->getDateRelease() && $pack->getDateRelease() <= new \DateTime()) $availability[$pack->getCode()] = true;
 				}
 				$cardinfo['available'] = $availability[$pack->getCode()];
 				if($view == "zoom") {
@@ -250,9 +240,9 @@ class SearchController extends Controller
 			// si on a des cartes on affiche une bande de navigation/pagination
 			if(count($rows)) {
 				if(count($rows) == 1) {
-					$pagination = $this->setnavigation($card, $q, $view, $sort, $locale);
+					$pagination = $this->setnavigation($card, $q, $view, $sort);
 				} else {
-					$pagination = $this->pagination($nb_per_page, count($rows), $first, $q, $view, $sort, $locale);
+					$pagination = $this->pagination($nb_per_page, count($rows), $first, $q, $view, $sort);
 				}
 			}
 			
@@ -260,10 +250,10 @@ class SearchController extends Controller
 			if(count($cards) && $view == "short") {
 				
 				$sortfields = array(
-					'set' => 'setname',
-					'name' => 'title',
-					'faction' => 'faction',
-					'type' => 'type',
+					'set' => 'pack_name',
+					'name' => 'name',
+					'faction' => 'faction_name',
+					'type' => 'type_name',
 					'cost' => 'cost',
 					'strength' => 'strength',
 				);
@@ -285,8 +275,8 @@ class SearchController extends Controller
 			"sort" => $sort,
 		));
 		
-		if(empty($title)) {
-			$title = $q;
+		if(empty($pagetitle)) {
+			$pagetitle = $q;
 		}
 
 		// attention si $s="short", $cards est un tableau à 2 niveaux au lieu de 1 seul
@@ -298,32 +288,30 @@ class SearchController extends Controller
 			"last" => $last,
 			"searchbar" => $searchbar,
 			"pagination" => $pagination,
-			"pagetitle" => $title,
+			"pagetitle" => $pagetitle,
 			"metadescription" => $meta,
-			"locales" => $locales,
 		), $response);
 	}
 
-	public function setnavigation($card, $q, $view, $sort, $locale)
+	public function setnavigation($card, $q, $view, $sort)
 	{
 	    $em = $this->getDoctrine();
-	    $prev = $em->getRepository('AppBundle:Card')->findOneBy(array("pack" => $card->getPack(), "number" => $card->getNumber()-1));
-	    $next = $em->getRepository('AppBundle:Card')->findOneBy(array("pack" => $card->getPack(), "number" => $card->getNumber()+1));
+	    $prev = $em->getRepository('AppBundle:Card')->findOneBy(array("pack" => $card->getPack(), "position" => $card->getPosition()-1));
+	    $next = $em->getRepository('AppBundle:Card')->findOneBy(array("pack" => $card->getPack(), "position" => $card->getPosition()+1));
 	    return $this->renderView('AppBundle:Search:setnavigation.html.twig', array(
 	            "prevtitle" => $prev ? $prev->getName() : "",
-	            "prevhref" => $prev ? $this->get('router')->generate('cards_zoom', array('card_code' => $prev->getCode(), "_locale" => $locale)) : "",
+	            "prevhref" => $prev ? $this->get('router')->generate('cards_zoom', array('card_code' => $prev->getCode())) : "",
 	            "nexttitle" => $next ? $next->getName() : "",
-	            "nexthref" => $next ? $this->get('router')->generate('cards_zoom', array('card_code' => $next->getCode(), "_locale" => $locale)) : "",
+	            "nexthref" => $next ? $this->get('router')->generate('cards_zoom', array('card_code' => $next->getCode())) : "",
 	            "settitle" => $card->getPack()->getName(),
-	            "sethref" => $this->get('router')->generate('cards_list', array('pack_code' => $card->getPack()->getCode(), "_locale" => $locale)),
-	            "_locale" => $locale,
+	            "sethref" => $this->get('router')->generate('cards_list', array('pack_code' => $card->getPack()->getCode())),
 	    ));
 	}
 	
-	public function paginationItem($q = null, $v, $s, $ps, $pi, $total, $locale)
+	public function paginationItem($q = null, $v, $s, $ps, $pi, $total)
 	{
 		return $this->renderView('AppBundle:Search:paginationitem.html.twig', array(
-			"href" => $q == null ? "" : $this->get('router')->generate('cards_find', array('q' => $q, 'view' => $v, 'sort' => $s, 'page' => $pi, '_locale' => $locale)),
+			"href" => $q == null ? "" : $this->get('router')->generate('cards_find', array('q' => $q, 'view' => $v, 'sort' => $s, 'page' => $pi)),
 			"ps" => $ps,
 			"pi" => $pi,
 			"s" => $ps*($pi-1)+1,
@@ -331,7 +319,7 @@ class SearchController extends Controller
 		));
 	}
 	
-	public function pagination($pagesize, $total, $current, $q, $view, $sort, $locale)
+	public function pagination($pagesize, $total, $current, $q, $view, $sort)
 	{
 		if($total < $pagesize) {
 			$pagesize = $total;
@@ -342,24 +330,24 @@ class SearchController extends Controller
 		
 		$first = "";
 		if($pageindex > 2) {
-			$first = $this->paginationItem($q, $view, $sort, $pagesize, 1, $total, $locale);
+			$first = $this->paginationItem($q, $view, $sort, $pagesize, 1, $total);
 		}
 
 		$prev = "";
 		if($pageindex > 1) {
-			$prev = $this->paginationItem($q, $view, $sort, $pagesize, $pageindex - 1, $total, $locale);
+			$prev = $this->paginationItem($q, $view, $sort, $pagesize, $pageindex - 1, $total);
 		}
 		
-		$current = $this->paginationItem(null, $view, $sort, $pagesize, $pageindex, $total, $locale);
+		$current = $this->paginationItem(null, $view, $sort, $pagesize, $pageindex, $total);
 
 		$next = "";
 		if($pageindex < $pagecount) {
-			$next = $this->paginationItem($q, $view, $sort, $pagesize, $pageindex + 1, $total, $locale);
+			$next = $this->paginationItem($q, $view, $sort, $pagesize, $pageindex + 1, $total);
 		}
 		
 		$last = "";
 		if($pageindex < $pagecount - 1) {
-			$last = $this->paginationItem($q, $view, $sort, $pagesize, $pagecount, $total, $locale);
+			$last = $this->paginationItem($q, $view, $sort, $pagesize, $pagecount, $total);
 		}
 		
 		return $this->renderView('AppBundle:Search:pagination.html.twig', array(

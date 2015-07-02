@@ -83,7 +83,7 @@ AppBundle\Entity\Card:
         strength:
             type: smallint
             nullable: true
-        keywords:
+        traits:
             type: string
             length: 255
             nullable: true

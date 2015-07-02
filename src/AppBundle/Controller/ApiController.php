@@ -25,11 +25,9 @@ class ApiController extends Controller
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 	
 		$jsonp = $this->getRequest()->query->get('jsonp');
-		$locale = $this->getRequest()->query->get('_locale');
-		if(isset($locale)) $this->getRequest()->setLocale($locale);
 	
 		$data = $this->get('cards_data')->allsetsnocycledata();
-	
+		
 		$content = json_encode($data);
 		if(isset($jsonp))
 		{
@@ -94,8 +92,6 @@ class ApiController extends Controller
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 	
 		$jsonp = $this->getRequest()->query->get('jsonp');
-		$locale = $this->getRequest()->query->get('_locale');
-		if(isset($locale)) $this->getRequest()->setLocale($locale);
 	
 		$cards = array();
 		$last_modified = null;
@@ -136,8 +132,6 @@ class ApiController extends Controller
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 	
 		$jsonp = $this->getRequest()->query->get('jsonp');
-		$locale = $this->getRequest()->query->get('_locale');
-		if(isset($locale)) $this->getRequest()->setLocale($locale);
 	
 		$format = $this->getRequest()->getRequestFormat();
 	
@@ -190,12 +184,6 @@ class ApiController extends Controller
 				$card['subtype'] = str_replace(' - ','-',$card['subtype']);
 	
 				$matches = array();
-				if(preg_match('/(.*): (.*)/', $card['title'], $matches)) {
-					$card['title'] = $matches[1];
-					$card['subtitle'] = $matches[2];
-				} else {
-					$card['subtitle'] = "";
-				}
 					
 				if(!isset($card['cost'])) {
 					if(isset($card['advancementcost'])) $card['cost'] = $card['advancementcost'];
@@ -261,10 +249,10 @@ class ApiController extends Controller
 					"setname" => "Pack",
 					"number" => "Number",
 					"uniqueness" => "Unique",
-					"title" => "Name",
+					"name" => "Name",
 					"cost" => "Cost",
 					"type" => "Type",
-					"subtype" => "Keywords",
+					"subtype" => "Traits",
 					"text" => "Text",
 					"side" => "Side",
 					"faction" => "Faction",
@@ -283,12 +271,12 @@ class ApiController extends Controller
 					"limited" => "Deck limit",
 			);
 			$phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
-			$phpExcelObject->getProperties()->setCreator("NetrunnerDB")
+			$phpExcelObject->getProperties()->setCreator("AGoT2db")
 			->setLastModifiedBy($last_modified->format('Y-m-d'))
 			->setTitle($pack->getName())
 			->setSubject($pack->getName())
 			->setDescription($pack->getName() . " Cards Description")
-			->setKeywords("android:netrunner ".$pack->getName());
+			->setTraits("android:netrunner ".$pack->getName());
 			$phpActiveSheet = $phpExcelObject->setActiveSheetIndex(0);
 			$phpActiveSheet->setTitle($pack->getName());
 	
@@ -330,10 +318,10 @@ class ApiController extends Controller
 					"setname" => "Pack",
 					"number" => "Number",
 					"uniqueness" => "Unique",
-					"title" => "Name",
+					"name" => "Name",
 					"cost" => "Cost",
 					"type" => "Type",
-					"subtype" => "Keywords",
+					"subtype" => "Traits",
 					"text" => "Text",
 					"side" => "Side",
 					"faction" => "Faction",
@@ -352,12 +340,12 @@ class ApiController extends Controller
 					"limited" => "Deck limit",
 			);
 			$phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
-			$phpExcelObject->getProperties()->setCreator("NetrunnerDB")
+			$phpExcelObject->getProperties()->setCreator("AGoT2db")
 			->setLastModifiedBy($last_modified->format('Y-m-d'))
 			->setTitle($pack->getName())
 			->setSubject($pack->getName())
 			->setDescription($pack->getName() . " Cards Description")
-			->setKeywords("android:netrunner ".$pack->getName());
+			->setTraits("android:netrunner ".$pack->getName());
 			$phpActiveSheet = $phpExcelObject->setActiveSheetIndex(0);
 			$phpActiveSheet->setTitle($pack->getName());
 	
@@ -407,9 +395,6 @@ class ApiController extends Controller
         ));
         
         $jsonp = $this->getRequest()->query->get('jsonp');
-        $locale = $this->getRequest()->query->get('_locale');
-        if (isset($locale))
-            $this->getRequest()->setLocale($locale);
         
         $dbh = $this->get('doctrine')->getConnection();
         $rows = $dbh->executeQuery(
@@ -480,9 +465,6 @@ class ApiController extends Controller
         ));
         
         $jsonp = $this->getRequest()->query->get('jsonp');
-        $locale = $this->getRequest()->query->get('_locale');
-        if (isset($locale))
-            $this->getRequest()->setLocale($locale);
         
         $dbh = $this->get('doctrine')->getConnection();
         $decklists = $dbh->executeQuery(
@@ -547,10 +529,6 @@ class ApiController extends Controller
         $response = new Response();
         $response->setPrivate();
         $response->headers->set('Content-Type', 'application/json');
-        
-        $locale = $this->getRequest()->query->get('_locale');
-        if (isset($locale))
-            $this->getRequest()->setLocale($locale);
         
         /* @var $user \AppBundle\Entity\User */
         $user = $this->getUser();
@@ -686,7 +664,7 @@ class ApiController extends Controller
                 ->getFaction());
         $decklist->setSide($deck->getSide());
         $decklist->setLastPack($deck->getLastPack());
-        $decklist->setNbvotes(0);
+        $decklist->setnbVotes(0);
         $decklist->setNbfavorites(0);
         $decklist->setNbcomments(0);
         foreach ($deck->getSlots() as $slot) {
@@ -721,10 +699,6 @@ class ApiController extends Controller
         $response = new Response();
         $response->setPrivate();
         $response->headers->set('Content-Type', 'application/json');
-        
-        $locale = $this->getRequest()->query->get('_locale');
-        if (isset($locale))
-            $this->getRequest()->setLocale($locale);
         
         /* @var $user \AppBundle\Entity\User */
         $user = $this->getUser();

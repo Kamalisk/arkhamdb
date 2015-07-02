@@ -14,9 +14,6 @@ class UserController extends Controller
     	$user = $this->getUser();
     	
     	$factions = $this->get('doctrine')->getRepository('AppBundle:Faction')->findAll();
-    	foreach($factions as $i => $faction) {
-    		$factions[$i]->localizedName = $faction->getName($this->getRequest()->getLocale());
-    	}
     	
     	return $this->render('AppBundle:Default:profile.html.twig', array(
     			'user'=> $user, 'factions' => $factions));
@@ -76,9 +73,6 @@ class UserController extends Controller
     public function infoAction(Request $request)
     {
         $jsonp = $request->query->get('jsonp');
-        $locale = $request->query->get('_locale');
-        if(isset($locale)) $request->setLocale($locale);
-        $locale = $request->getLocale();
         
         $decklist_id = $request->query->get('decklist_id');
         $card_id = $request->query->get('card_id');
@@ -92,7 +86,6 @@ class UserController extends Controller
             $user_id = $user->getId();
             
             $public_profile_url = $this->get('router')->generate('user_profile_view', array(
-                    '_locale' => $this->getRequest()->getLocale(),
                     'user_id' => $user_id,
                     'user_name' => urlencode($user->getUsername())
             ));
@@ -101,7 +94,6 @@ class UserController extends Controller
                     'id' => $user_id,
                     'name' => $user->getUsername(),
                     'faction' => $user->getFaction(),
-                    'locale' => $locale,
                     'donation' => $user->getDonation(),
             );
             
@@ -132,7 +124,7 @@ class UserController extends Controller
                     
     			    $content['is_author'] = ($user_id == $decklist->getUser()->getId());
     
-    			    $content['can_delete'] = ($decklist->getNbcomments() == 0) && ($decklist->getNbfavorites() == 0) && ($decklist->getNbvotes() == 0);
+    			    $content['can_delete'] = ($decklist->getNbcomments() == 0) && ($decklist->getNbfavorites() == 0) && ($decklist->getnbVotes() == 0);
 				}
             }
             

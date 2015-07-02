@@ -6,16 +6,18 @@ namespace AppBundle\Services;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Bundle\FrameworkBundle\Templating\Helper\AssetsHelper;
 
 /*
  *
  */
 class CardsData
 {
-	public function __construct(Registry $doctrine, RequestStack $request_stack, Router $router) {
+	public function __construct(Registry $doctrine, RequestStack $request_stack, Router $router, AssetsHelper $assets_helper) {
 		$this->doctrine = $doctrine;
         $this->request_stack = $request_stack;
         $this->router = $router;
+        $this->assets_helper = $assets_helper;
 	}
 
 	/**
@@ -39,7 +41,7 @@ class CardsData
 			$real = count($pack->getCards());
 			$max = $pack->getSize();
 			$packs[] = array(
-					"name" => $pack->getName($this->request_stack->getCurrentRequest()->getLocale()),
+					"name" => $pack->getName(),
 					"code" => $pack->getCode(),
 					"position" => $pack->getPosition(),
 					"cycleposition" => $pack->getCycle()->getPosition(),
@@ -65,7 +67,7 @@ class CardsData
 				$max = $pack->getSize();
 				$smax += $max;
 				$packs[] = array(
-						"name" => $pack->getName($this->request_stack->getCurrentRequest()->getLocale()),
+						"name" => $pack->getName(),
 						"code" => $pack->getCode(),
 				        "cycleposition" => $cycle->getPosition(),
 						"available" => $pack->getDateRelease() ? $pack->getDateRelease()->format('Y-m-d') : '',
@@ -76,12 +78,12 @@ class CardsData
 						"packs" => '',
 				);
 			}
-			if(count($packs) == 1 && $packs[0]["name"] == $cycle->getName($this->request_stack->getCurrentRequest()->getLocale())) {
+			if(count($packs) == 1 && $packs[0]["name"] == $cycle->getName()) {
 				$cycles[] = $packs[0];
 			}
 			else {
 				$cycles[] = array(
-						"name" => $cycle->getName($this->request_stack->getCurrentRequest()->getLocale()),
+						"name" => $cycle->getName(),
 						"code" => $cycle->getCode(),
 				        "cycleposition" => $cycle->getPosition(),
 						"known" => intval($sreal),
@@ -115,22 +117,22 @@ class CardsData
 			$operator = array_shift($condition);
 			switch($type)
 			{
-				case '': // title or index
+				case '': // name or index
 					$or = array();
 					foreach($condition as $arg) {
-						$code = preg_match('/^\d\d\d\d\d$/u', $arg);
+						$code = preg_match('/^\d\d\d\d\d.?$/u', $arg);
 						$acronym = preg_match('/^[A-Z]{2,}$/', $arg);
 						if($code) {
 							$or[] = "(c.code = ?$i)";
 							$qb->setParameter($i++, $arg);
 						} else if($acronym) {
-							$or[] = "(BINARY(c.title) like ?$i)";
+							$or[] = "(BINARY(c.name) like ?$i)";
 							$qb->setParameter($i++, "%$arg%");
 							$like = implode('% ', str_split($arg));
-							$or[] = "(REPLACE(c.title, '-', ' ') like ?$i)";
+							$or[] = "(REPLACE(c.name, '-', ' ') like ?$i)";
 							$qb->setParameter($i++, "$like%");
 						} else {
-							$or[] = "(c.title like ?$i)";
+							$or[] = "(c.name like ?$i)";
 							$qb->setParameter($i++, "%$arg%");
 						}
 					}
@@ -214,19 +216,19 @@ class CardsData
 					}
 					$qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
 					break;
-				case 's': // subtype (keywords)
+				case 's': // subtype (traits)
 					$or = array();
 					foreach($condition as $arg) {
 						switch($operator) {
 							case ':':
-								$or[] = "((c.keywords = ?$i) or (c.keywords like ?".($i+1).") or (c.keywords like ?".($i+2).") or (c.keywords like ?".($i+3)."))";
+								$or[] = "((c.traits = ?$i) or (c.traits like ?".($i+1).") or (c.traits like ?".($i+2).") or (c.traits like ?".($i+3)."))";
 								$qb->setParameter($i++, "$arg.");
 								$qb->setParameter($i++, "$arg. %");
 								$qb->setParameter($i++, "%. $arg.");
 								$qb->setParameter($i++, "%. $arg. %");
 								break;
 							case '!':
-								$or[] = "(c.keywords is null or ((c.keywords != ?$i) and (c.keywords not like ?".($i+1).") and (c.keywords not like ?".($i+2).") and (c.keywords not like ?".($i+3).")))";
+								$or[] = "(c.traits is null or ((c.traits != ?$i) and (c.traits not like ?".($i+1).") and (c.traits not like ?".($i+2).") and (c.traits not like ?".($i+3).")))";
 								$qb->setParameter($i++, "$arg.");
 								$qb->setParameter($i++, "$arg. %");
 								$qb->setParameter($i++, "%. $arg.");
@@ -345,8 +347,16 @@ class CardsData
 	    {
 	    	if($associationMapping['isOwningSide']) {
 	    		$getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
-	    		$value = $card->$getter() ? $card->$getter()->getCode() : NULL;
-	    		$cardinfo[$fieldName] = $value;
+	    		$associationEntity = $card->$getter();
+	    		if(!$associationEntity) continue;
+	    		
+	    		if($api) {
+	    			$cardinfo[$fieldName] = $associationEntity->getCode();
+	    		} else {
+	    			$cardinfo[$fieldName.'_id'] = $associationEntity->getId();
+	    			$cardinfo[$fieldName.'_code'] = $associationEntity->getCode();
+	    			$cardinfo[$fieldName.'_name'] = $associationEntity->getName();
+	    		}
 	    	}
 	    }
 	    
@@ -367,10 +377,10 @@ class CardsData
 	    }
 	    
 		$cardinfo['url'] = $this->router->generate('cards_zoom', array('card_code' => $card->getCode()), true);
-		
-		unset($cardinfo['id']);
+		$cardinfo['imagesrc'] = $this->assets_helper->getUrl('bundles/app/images/cards/'.$card->getCode().'.png');
 		
 		if($api) {
+			unset($cardinfo['id']);
 			$cardinfo = array_filter($cardinfo, function ($var) { return isset($var); });
 		} else {
 			$cardinfo['text'] = $this->replaceSymbols($cardinfo['text']);
@@ -487,7 +497,7 @@ class CardsData
 	
     public function get_reviews($card)
     {
-        $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(array('card' => $card), array('nbvotes' => 'DESC'));
+        $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(array('card' => $card), array('nbVotes' => 'DESC'));
         
         $response = array();
         foreach($reviews as $review) {
@@ -503,7 +513,7 @@ class CardsData
                     'author_donation' => $user->getDonation(),
                     'author_color' => $user->getFaction(),
                     'datecreation' => $datecreation,
-                    'nbvotes' => $review->getNbvotes(),
+                    'nbVotes' => $review->getnbVotes(),
                     'comments' => $review->getComments(),
             );
         }

@@ -31,7 +31,7 @@ NRDB.user.params.decklist_id = Decklist.id;
 					<span class="hidden-xs">published: </span>
 					<time datetime="{{ decklist.creation|date('c') }}">{{ decklist.creation|date('M d, Y') }}</time>
 					| <a id="social-icon-like" href="#" class="social-icon-like" data-toggle="tooltip" data-placement="bottom" title="Like">
-						<span class="glyphicon glyphicon-heart"></span> <span class="num">{{ decklist.nbvotes }}</span>
+						<span class="glyphicon glyphicon-heart"></span> <span class="num">{{ decklist.nbVotes }}</span>
 					</a>
 					| <a id="social-icon-favorite" href="#" class="social-icon-favorite" data-toggle="tooltip" data-placement="bottom" title="Favorite">
 						<span class="glyphicon glyphicon-star"></span> <span class="num">{{ decklist.nbfavorites }}</span>

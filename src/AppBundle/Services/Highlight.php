@@ -34,7 +34,7 @@ class Highlight
 	            u.donation,
 				c.code identity_code,
 				f.code faction_code,
-				d.nbvotes,
+				d.nbVotes,
 				d.nbfavorites,
 				d.nbcomments
 				from decklist d
@@ -42,7 +42,7 @@ class Highlight
 				join card c on d.identity_id=c.id
 				join faction f on d.faction_id=f.id
 				where d.creation > date_sub( current_date, interval 7 day )
-                order by nbvotes desc , nbcomments desc
+                order by nbVotes desc , nbcomments desc
                 limit 0,1
 				", array())->fetchAll();
     

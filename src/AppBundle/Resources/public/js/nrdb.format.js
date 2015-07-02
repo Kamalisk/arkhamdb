@@ -5,7 +5,7 @@ NRDB.format = {};
 	
 	format.type = function(card) {
 		var type = '<span class="card-type">'+card.type+'</span>';
-		if(card.subtype) type += '<span class="card-keywords">: '+card.subtype+'</span>';
+		if(card.subtype) type += '<span class="card-traits">: '+card.subtype+'</span>';
 		if(card.type_code == "agenda") type += ' &middot; <span class="card-prop">'+card.advancementcost+'/'+card.agendapoints+'</span>';
 		if(card.type_code == "identity" && card.side_code == "corp") type += ' &middot; <span class="card-prop">'+card.minimumdecksize+'/'+card.influencelimit+'</span>';
 		if(card.type_code == "identity" && card.side_code == "runner") type += ' &middot; <span class="card-prop">'+card.minimumdecksize+'/'+card.influencelimit+' '+card.baselink+'<span class="icon icon-link"></span></span>';

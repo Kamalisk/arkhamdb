@@ -49,7 +49,7 @@ NRDB.draw_simulator = {};
 				special_button.hide();
 		}
 		if (special_draw) {
-			special_button.text(identity.title.split(":")[0]).attr("disabled",false).show();
+			special_button.text(identity.name.split(":")[0]).attr("disabled",false).show();
 		}
 	}
 	
@@ -60,9 +60,9 @@ NRDB.draw_simulator = {};
 			var card = spliced[0];
 			var card_element;
 			if(card.imagesrc) {
-				card_element = $('<img src="'+card.imagesrc+'" class="card-image" alt="'+card.title+'">');
+				card_element = $('<img src="'+card.imagesrc+'" class="card-image">');
 			} else {
-				card_element = $('<div class="card-proxy"><div>'+card.title+'</div></div>');
+				card_element = $('<div class="card-proxy"><div>'+card.name+'</div></div>');
 			}
 			switch (draw_type) {
 				case "maxx":

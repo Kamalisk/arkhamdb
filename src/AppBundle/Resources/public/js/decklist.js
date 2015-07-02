@@ -53,19 +53,19 @@ function setup_comment_form() {
 						match : /\B#([\-+\w]*)$/,
 						search : function(term, callback) {
 							callback(NRDB.data.cards({
-								title : {
+								name : {
 									likenocase : term
 								},
-								cyclenumber : {
+								cycleposition : {
 									'!=': 0
 								}
 							}).get());
 						},
 						template : function(value) {
-							return value.title;
+							return value.name;
 						},
 						replace : function(value) {
-							return '[' + value.title + ']('
+							return '[' + value.name + ']('
 									+ Routing.generate('cards_zoom', {card_code:value.code})
 									+ ')';
 						},

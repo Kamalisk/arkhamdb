@@ -177,8 +177,8 @@ NRDB.data_loaded.add(function() {
 
 	function findMatches(q, cb) {
 		if(q.match(/^\w:/)) return;
-		var matches = NRDB.data.cards({title: {likenocase: q}}).map(function (record) {
-			return { value: record.title };
+		var matches = NRDB.data.cards({name: {likenocase: q}}).map(function (record) {
+			return { value: record.name };
 		});
 		cb(matches);
 	}
@@ -451,19 +451,19 @@ $(function() {
 						match : /\B#([\-+\w]*)$/,
 						search : function(term, callback) {
 							callback(NRDB.data.cards({
-								title : {
+								name : {
 									likenocase : term
 								},
-								cyclenumber : {
+								cycleposition : {
 									'!=': 0
 								}
 							}).get());
 						},
 						template : function(value) {
-							return value.title;
+							return value.name;
 						},
 						replace : function(value) {
-							return '[' + value.title + ']('
+							return '[' + value.name + ']('
 									+ Routing.generate('cards_zoom', {card_code:value.code})
 									+ ')';
 						},
@@ -513,12 +513,12 @@ function add_snapshot(snapshot) {
 		$.each(snapshot.variation[0], function (code, qty) {
 			var card = NRDB.data.get_card_by_code(code);
 			if(!card) return; 
-			list.push('+'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card" data-index="'+code+'">'+card.title+'</a>');
+			list.push('+'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card" data-index="'+code+'">'+card.name+'</a>');
 		});
 		$.each(snapshot.variation[1], function (code, qty) {
 			var card = NRDB.data.get_card_by_code(code);
 			if(!card) return; 
-			list.push('&minus;'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card" data-index="'+code+'">'+card.title+'</a>');
+			list.push('&minus;'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card" data-index="'+code+'">'+card.name+'</a>');
 		});
 	} else {
 		list.push("First version");
@@ -754,7 +754,7 @@ function build_div(record) {
 				+ '</div></td><td><a class="card" href="'
 				+ Routing.generate('cards_zoom', {card_code:record.code})
 				+ '" data-target="#cardModal" data-remote="false" data-toggle="modal">'
-				+ record.title + '</a></td><td class="influence-' + faction
+				+ record.name + '</a></td><td class="influence-' + faction
 				+ '">' + influ + '</td><td class="type" title="' + record.type
 				+ '"><img src="/web/bundles/app/images/types/'
 				+ record.type_code + '.png" alt="'+record.type+'">'
@@ -770,12 +770,12 @@ function build_div(record) {
 				+ '<div class="media"><div class="media-left">'
 				+ '<img class="media-object" src="/web/bundles/netrunnerdbcards/images/cards/en/'
 				+ record.code
-				+ '.png" alt="'+record.title+'">'
+				+ '.png" alt="'+record.name+'">'
 				+ '</div><div class="media-body">'
 				+ '    <h4 class="media-heading"><a class="card" href="'
 				+ Routing.generate('cards_zoom', {card_code:record.code})
 				+ '" data-target="#cardModal" data-remote="false" data-toggle="modal">'
-				+ record.title + '</a></h4>'
+				+ record.name + '</a></h4>'
 				+ '    <div class="btn-group" data-toggle="buttons">' + radios
 				+ '</div>' + '    <span class="influence-' + faction + '">'
 				+ influ + '</span>' + '</div>' + '</div>' + '</div>');
@@ -789,12 +789,12 @@ function build_div(record) {
 				+ '<div class="media"><div class="media-left">'
 				+ '<img class="media-object" src="/web/bundles/netrunnerdbcards/images/cards/en/'
 				+ record.code
-				+ '.png" alt="'+record.title+'">'
+				+ '.png" alt="'+record.name+'">'
 				+ '</div><div class="media-body">'
 				+ '    <h5 class="media-heading"><a class="card" href="'
 				+ Routing.generate('cards_zoom', {card_code:record.code})
 				+ '" data-target="#cardModal" data-remote="false" data-toggle="modal">'
-				+ record.title + '</a></h5>'
+				+ record.name + '</a></h5>'
 				+ '    <div class="btn-group" data-toggle="buttons">' + radios
 				+ '</div>' + '    <span class="influence-' + faction + '">'
 				+ influ + '</span>' + '</div>' + '</div>' + '</div>');
@@ -824,7 +824,7 @@ function update_filtered() {
 	var counter = 0, container = $('#collection-table');
 	var SmartFilterQuery = NRDB.smart_filter.get_query(FilterQuery);
 	NRDB.data.cards.apply(window, SmartFilterQuery)
-			.order(Sort + (Order > 0 ? " intl" : " intldesc") + ',title')
+			.order(Sort + (Order > 0 ? " intl" : " intldesc") + ',name')
 			.each(
 					function(record) {
 

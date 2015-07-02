@@ -19,20 +19,20 @@ class DefaultController extends Controller
     
     	$dbh = $this->get('doctrine')->getConnection();
     
-    	$list_packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findBy(array(), array("released" => "ASC", "number" => "ASC"));
+    	$list_packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findBy(array(), array("released" => "ASC", "position" => "ASC"));
     	$packs = array();
     	foreach($list_packs as $pack) {
     		$packs[] = array(
-    				"name" => $pack->getName($this->getRequest()->getLocale()),
+    				"name" => $pack->getName(),
     				"code" => $pack->getCode(),
     		);
     	}
     
-    	$list_cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findBy(array(), array("number" => "ASC"));
+    	$list_cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findBy(array(), array("position" => "ASC"));
     	$cycles = array();
     	foreach($list_cycles as $cycle) {
     		$cycles[] = array(
-    				"name" => $cycle->getName($this->getRequest()->getLocale()),
+    				"name" => $cycle->getName(),
     				"code" => $cycle->getCode(),
     		);
     	}
@@ -42,16 +42,16 @@ class DefaultController extends Controller
     		return $type->getName();
     	}, $list_types);
     
-    		$list_keywords = $dbh->executeQuery("SELECT DISTINCT c.keywords FROM card c WHERE c.keywords != ''")->fetchAll();
-    		$keywords = array();
-    		foreach($list_keywords as $keyword) {
-    			$subs = explode(' - ', $keyword["keywords"]);
+    		$list_traits = $dbh->executeQuery("SELECT DISTINCT c.traits FROM card c WHERE c.traits != ''")->fetchAll();
+    		$traits = array();
+    		foreach($list_traits as $keyword) {
+    			$subs = explode(' - ', $keyword["traits"]);
     			foreach($subs as $sub) {
-    				$keywords[$sub] = 1;
+    				$traits[$sub] = 1;
     			}
     		}
-    		$keywords = array_keys($keywords);
-    		sort($keywords);
+    		$traits = array_keys($traits);
+    		sort($traits);
     
     		$list_illustrators = $dbh->executeQuery("SELECT DISTINCT c.illustrator FROM card c WHERE c.illustrator != '' ORDER BY c.illustrator")->fetchAll();
     		$illustrators = array_map(function ($elt) {
@@ -64,12 +64,11 @@ class DefaultController extends Controller
     					"packs" => $packs,
     					"cycles" => $cycles,
     					"types" => $types,
-    					"keywords" => $keywords,
+    					"traits" => $traits,
     					"illustrators" => $illustrators,
     					"allsets" => $this->renderView('AppBundle:Default:allsets.html.twig', array(
     							"data" => $this->get('cards_data')->allsetsdata(),
     					)),
-    					'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
     			), $response);
     }
     
@@ -146,7 +145,7 @@ class DefaultController extends Controller
     			'mr--li' => 'mr-li',
     	);
     	 
-    	$cycles = $em->getRepository('AppBundle:Cycle')->findBy(array(), array('number' => 'asc'));
+    	$cycles = $em->getRepository('AppBundle:Cycle')->findBy(array(), array('position' => 'asc'));
     	/* @var $cycle Cycle */
     	foreach ($cycles as $cycle) {
     		if(!isset($segments[$cycle->getCode()])) {
@@ -172,7 +171,7 @@ class DefaultController extends Controller
     				$ffg = str_replace('.', '-', $ffg);
     				$ffg = str_replace('&', '-', $ffg);
     				$ffg = str_replace('\'', '', $ffg);
-    				if($cycle->getCode() === 'core' || $card->getSide()->getName() === 'Runner' || $card->getKeywords() === 'Division' || $card->getKeywords() === 'Corp') {
+    				if($cycle->getCode() === 'core' || $card->getSide()->getName() === 'Runner' || $card->getTraits() === 'Division' || $card->getTraits() === 'Corp') {
     					$ffg = preg_replace('/:.*/', '', $ffg);
     				} else {
     					$ffg = str_replace(':', '', $ffg);

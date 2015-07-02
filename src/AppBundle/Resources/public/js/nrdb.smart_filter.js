@@ -26,7 +26,7 @@ NRDB.smart_filter = {};
 				add_string_sf('set_code', operator, values);
 				break;
 			case "c":
-				add_integer_sf('cyclenumber', operator, values);
+				add_integer_sf('cycleposition', operator, values);
 				break;
 			case "f":
 				add_string_sf('faction_letter', operator, values);
@@ -35,7 +35,7 @@ NRDB.smart_filter = {};
 				add_string_sf('type', operator, values);
 				break;
 			case "":
-				add_string_sf('title', operator, values);
+				add_string_sf('name', operator, values);
 				break;
 			case "x":
 				add_string_sf('text', operator, values);

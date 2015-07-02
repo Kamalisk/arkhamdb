@@ -1,7 +1,6 @@
 if (typeof NRDB != "object")
 	var NRDB = { 
-		data_loaded: jQuery.Callbacks(), 
-		locale: 'en'
+		data_loaded: jQuery.Callbacks()
 	};
 NRDB.diff = {};
 (function(diff, $) {

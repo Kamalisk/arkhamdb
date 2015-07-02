@@ -63,11 +63,11 @@ NRDB.user = {};
 	user.update = function() {
 		user.store();
 		$('#login').addClass('dropdown').append('<ul class="dropdown-menu"><li><a href="'
-				+ Routing.generate('user_profile',{_locale:user.data.locale}) 
+				+ Routing.generate('user_profile') 
 				+ '">Edit account</a></li><li><a href="'
 				+ user.data.public_profile_url 
 				+ '">Public profile</a></li><li><a href="'
-				+ Routing.generate('user_comments',{_locale:user.data.locale})
+				+ Routing.generate('user_comments')
 				+ '">Comments</a></li><li><a href="'
 				+ Routing.generate('fos_user_security_logout') 
 				+ '" onclick="NRDB.user.wipe()">Jack out</a></li></ul>');

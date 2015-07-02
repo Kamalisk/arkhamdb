@@ -90,7 +90,7 @@ $(function () {
     <article>
 	<h4>
 		<small class="pull-right social">
-			<span class="glyphicon glyphicon-heart social-icon-like"></span> {{ decklist.nbvotes }}
+			<span class="glyphicon glyphicon-heart social-icon-like"></span> {{ decklist.nbVotes }}
 			<span class="glyphicon glyphicon-star social-icon-favorite"></span> {{ decklist.nbfavorites }}
 			<span class="glyphicon glyphicon-comment social-icon-comment"></span> {{ decklist.nbcomments }}
 		</small>
@@ -100,7 +100,7 @@ $(function () {
 		<time class="pull-right" datetime="{{ decklist.creation|date('c') }}">{{ decklist.creation|date('M d') }}</time>
 		<span class="username">
     		<a href="{{ path('user_profile_view', {user_id:decklist.user_id,user_name:decklist.username|e('url')}) }}" class="{{ decklist.usercolor }}">{{ decklist.username }}</a>
-    		{% if decklist.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="NetrunnerDB Gracious Donator"></span>{% endif %}
+    		{% if decklist.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="AGoT2db Gracious Donator"></span>{% endif %}
     		<small class="reputation">{{ decklist.reputation }}</small>
 		</span>
         {% if decklist.tournament %}

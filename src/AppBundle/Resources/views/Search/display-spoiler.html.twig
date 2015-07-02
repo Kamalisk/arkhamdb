@@ -8,24 +8,13 @@
 {% if row*3+col < cards|length %}
 {% set card = cards[row*3+col] %}
 <div class="col-sm-4 icon-bg icon-{{ card.faction_code }}" style="margin-bottom:1.5em">
-		<h4>{% if card.uniqueness == true %}
-			&diams;
-		{% endif %}
-		<a href="{{ card.url }}" class="card-title{% if card.available == false %} card-preview{% endif %}">{{ card.title }}</a>
+		<h4><a href="{{ card.url }}" class="card-name{% if card.available == false %} card-preview{% endif %}">{{ card.name }}</a>
 		</h4>
 	<div class="card-info">
 	<p>
-		<span class="card-type">{{ card.type }}</span><span class="card-keywords">{% if card.subtype %}: {{ card.subtype }}{% endif %}</span>
+		<span class="card-type">{{ card.type_name }}. </span><span class="card-traits">{{ card.traits }}</span>
 	</p>
 	<p class="card-props">
-		{% if card.type_code == "agenda" %} Adv: {{ card.advancementcost }} &bull; Score: {{ card.agendapoints }} {% endif %}
-		{% if card.type_code == "identity" and card.side_code == "corp" %}Deck: {{ card.minimumdecksize }} &bull; Influence: {% if card.influencelimit is null %} &#8734; {% else %} {{ card.influencelimit }} {% endif %} {% endif %}
-		{% if card.type_code == "identity" and card.side_code == "runner" %}Link: {{ card.baselink }} &bull; Deck: {{ card.minimumdecksize }} &bull; Influence: {% if card.influencelimit is null %} &#8734; {% else %} {{ card.influencelimit }} {% endif %} {% endif %}
-		{% if card.type_code == "operation" or card.type_code == "event" %}Cost: {{ card.cost }} &bull; Influence: {{ card.factioncost }}{% endif %}
-		{% if card.type_code == "resource" or card.type_code == "hardware" %}Install: {{ card.cost }} &bull; Influence: {{ card.factioncost }}{% endif %}
-		{% if card.type_code == "program" %}Install: {{ card.cost }} &bull; Memory: {{ card.memoryunits }} {% if card.strength %}&bull; Strength: {{ card.strength }}{% endif %} &bull; Influence: {{ card.factioncost }}{% endif %}
-		{% if card.type_code == "asset" or card.type_code == "upgrade" %}Rez: {{ card.cost }} &bull; Trash: {{ card.trash }} &bull; Influence: {{ card.factioncost }}{% endif %}
-		{% if card.type_code == "ice" %}Rez: {{ card.cost }} &bull; Strength: {{ card.strength }} &bull; Influence: {{ card.factioncost }}{% endif %}
 	</p>
 	</div>
 	<div class="card-text">
@@ -38,7 +27,7 @@
 		{{ card.illustrator }}
 	</p>
 	<p>
-		{{ card.setname }} #{{ card.number }} &bull; {{ card.faction }}
+		{{ card.pack_name }} #{{ card.position }} &bull; {{ card.faction_name }}
 	</p>
 </div>
 {% endif %}

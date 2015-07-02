@@ -37,13 +37,12 @@ class BuilderController extends Controller
                 "type" => $type
         ), array(
                 "faction" => "ASC",
-                "title" => "ASC"
+                "name" => "ASC"
         ));
         
         return $this->render('AppBundle:Builder:initbuild.html.twig',
                 array(
                         'pagetitle' => "New deck",
-                        'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
                         "identities" => $identities
                 ), $response);
     
@@ -71,7 +70,6 @@ class BuilderController extends Controller
         return $this->render('AppBundle:Builder:deck.html.twig',
                 array(
                         'pagetitle' => "Deckbuilder",
-                        'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
                         'deck' => array(
                                 'side_name' => mb_strtolower($card->getSide()
                                     ->getName()),
@@ -98,7 +96,6 @@ class BuilderController extends Controller
         return $this->render('AppBundle:Builder:directimport.html.twig',
                 array(
                         'pagetitle' => "Import a deck",
-                        'locales' => $this->renderView('AppBundle:Default:langs.html.twig')
                 ), $response);
     
     }
@@ -164,7 +161,7 @@ class BuilderController extends Controller
                         continue;
                     }
             $card = $em->getRepository('AppBundle:Card')->findOneBy(array(
-                    'title' => $name
+                    'name' => $name
             ));
             if ($card) {
                 $content[$card->getCode()] = $quantity;
@@ -214,113 +211,6 @@ class BuilderController extends Controller
                 "content" => $content,
                 "description" => implode("\n", $description)
         );
-    
-    }
-
-    public function meteorimportAction (Request $request)
-    {
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
-        
-        // first build an array to match meteor card names with our card codes
-        $glossary = array();
-        $cards = $em->getRepository('AppBundle:Card')->findAll();
-        /* @var $card Card */
-        foreach ($cards as $card) {
-            $title = $card->getName();
-            $replacements = array(
-                    'Alix T4LB07' => 'Alix T4LBO7',
-                    'Planned Assault' => 'Planned Attack',
-                    'Security Testing' => 'Security Check',
-                    'Mental Health Clinic' => 'Psychiatric Clinic',
-                    'Shi.Kyū' => 'Shi Kyu',
-                    'NeoTokyo Grid' => 'NeoTokyo City Grid',
-                    'Push Your Luck' => 'Double or Nothing'
-            );
-            if (isset($replacements[$title])) {
-                $title = $replacements[$title];
-            }
-            // rule to cut the subtitle of an identity
-            if ($card->getPack()
-                ->getCycle()
-                ->getNumber() < 2 || ($card->getPack()
-                ->getCycle()
-                ->getNumber() == 2 && $card->getSide()->getName() == "Runner")) {
-                $title = preg_replace('~:.*~', '', $title);
-            }
-            
-            $pack = $card->getPack()->getName();
-            if ($pack == "Core Set") {
-                $pack = "Core";
-            }
-            
-            $str = $title . " " . $pack;
-            
-            $str = str_replace('\'', '', $str);
-            $str = strtr(utf8_decode($str), utf8_decode('ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿō'),
-                    'SOZsozYYuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyyo');
-            $str = strtolower($str);
-            $str = preg_replace('~\W+~', '-', $str);
-            $glossary[$str] = $card->getCode();
-        }
-        
-        $url = $request->request->get('urlmeteor');
-		$matches = array();
-        if (! preg_match('~http://netrunner.meteor.com/users/([^/]+)~', $url, $matches)) {
-            $this->get('session')
-                ->getFlashBag()
-                ->set('error', "Wrong URL. Please go to \"Your decks\" on Meteor Decks and copy the content of the address bar into the required field.");
-            return $this->redirect($this->generateUrl('decks_list'));
-        }
-        $meteor_id = $matches[1];
-        $meteor_json = file_get_contents("http://netrunner.meteor.com/api/decks/$meteor_id");
-        $meteor_data = json_decode($meteor_json, true);
-        
-        // check to see if the user has enough available deck slots
-        $user = $this->getUser();
-        $slots_left = $user->getMaxNbDecks() - count($user->getDecks());
-        $slots_required = count($meteor_data);
-        if ($slots_required > $slots_left) {
-            $this->get('session')
-                ->getFlashBag()
-                ->set('error',
-                    "You don't have enough available deck slots to import the $slots_required decks from Meteor (only $slots_left slots left). You must either delete some decks here or on Meteor Decks.");
-            return $this->redirect($this->generateUrl('decks_list'));
-        }
-        
-        foreach ($meteor_data as $meteor_deck) {
-            // add a tag for side and faction of deck
-            $identity_code = $glossary[$meteor_deck['identity']];
-            /* @var $identity \AppBundle\Entity\Card */
-            $identity = $em->getRepository('AppBundle:Card')->findOneBy(array('code' => $identity_code));
-            if(!$identity) continue;
-            $faction_code = $identity->getFaction()->getCode();
-            $side_code = strtolower($identity->getSide()->getName());
-            $tags = array($faction_code, $side_code);
-
-            $content = array(
-                    $identity_code => 1
-            );
-            foreach ($meteor_deck['entries'] as $entry => $qty) {
-                if (! isset($glossary[$entry])) {
-                    $this->get('session')
-                        ->getFlashBag()
-                        ->set('error', "Error importing a deck. The name \"$entry\" doesn't match any known card. Please contact the administrator.");
-                    return $this->redirect($this->generateUrl('decks_list'));
-                }
-                $content[$glossary[$entry]] = $qty;
-            }
-            
-            /* @var $deck Deck */
-            $deck = new Deck();
-            $this->get('decks')->saveDeck($this->getUser(), $deck, null, $meteor_deck['name'], "", $tags, $content);
-        }
-        
-        $this->get('session')
-            ->getFlashBag()
-            ->set('notice', "Successfully imported $slots_required decks from Meteor Decks.");
-        
-        return $this->redirect($this->generateUrl('decks_list'));
     
     }
 
@@ -679,7 +569,7 @@ class BuilderController extends Controller
 					d.id,
 					d.name,
 					d.prettyname,
-					d.nbvotes,
+					d.nbVotes,
 					d.nbfavorites,
 					d.nbcomments
 					from decklist d
@@ -691,7 +581,6 @@ class BuilderController extends Controller
         return $this->render('AppBundle:Builder:deck.html.twig',
                 array(
                         'pagetitle' => "Deckbuilder",
-                        'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
                         'deck' => $deck,
                         'published_decklists' => $published_decklists
                 ));
@@ -753,7 +642,7 @@ class BuilderController extends Controller
 					d.id,
 					d.name,
 					d.prettyname,
-					d.nbvotes,
+					d.nbVotes,
 					d.nbfavorites,
 					d.nbcomments
 					from decklist d
@@ -775,7 +664,6 @@ class BuilderController extends Controller
         return $this->render('AppBundle:Builder:deckview.html.twig',
                 array(
                         'pagetitle' => "Deckbuilder",
-                        'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
                         'deck' => $deck,
                         'published_decklists' => $published_decklists,
                         'is_owner' => $is_owner,
@@ -802,7 +690,6 @@ class BuilderController extends Controller
                 array(
                         'pagetitle' => "My Decks",
                         'pagedescription' => "Create custom decks with the help of a powerful deckbuilder.",
-                        'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
                         'decks' => $decks,
                         'nbmax' => $user->getMaxNbDecks(),
                         'nbdecks' => count($decks),
@@ -879,11 +766,11 @@ class BuilderController extends Controller
                 {
                     $card = $em->getRepository('AppBundle:Card')->findOneBy(array('code' => $slot['card_code']));
                     if(!$card) continue;
-                    $cardtitle = $card->getName();
+                    $cardname = $card->getName();
                     $packname = $card->getPack()->getName();
                     if($packname == 'Core Set') $packname = 'Core';
                     $qty = $slot['qty'];
-                    $content[] = "$cardtitle ($packname) x$qty";
+                    $content[] = "$cardname ($packname) x$qty";
                 }
                 $filename = str_replace('/', ' ', $deck['name']).'.txt';
                 $zip->addFromString($filename, implode("\r\n", $content));

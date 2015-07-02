@@ -1,6 +1,6 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
-{% block title %}{% trans %}Card Search{% endtrans %}{% endblock %}
+{% block title %}Card Search{% endblock %}
 
 {% block body %}
 <div class="container">
@@ -21,11 +21,11 @@
 <form method="GET" action="{{ path('cards_processSearchForm') }}" role="form" style="margin-bottom:2em">
 
 <fieldset>
-<legend>Title and texts</legend>
+<legend>Name and texts</legend>
 <div class="row">
     <div class="col-sm-12">
         <div class="form-group">
-			<label for="q">{% trans %}Title{% endtrans %}</label>
+			<label for="q">Name</label>
 			<div>
 				<input class="form-control" size="30" id="q" name="q" value="">
 			</div>
@@ -35,7 +35,7 @@
 <div class="row">
     <div class="col-sm-6">
 		<div class="form-group">
-			<label for="x">{% trans %}Text{% endtrans %}</label>
+			<label for="x">Text</label>
 			<div>
 				<input class="form-control" size="40" id="x" name="x" value="">
 			</div>
@@ -43,7 +43,7 @@
     </div>
     <div class="col-sm-6">
 		<div class="form-group">
-			<label for="a">{% trans %}Flavor Text{% endtrans %}</label>
+			<label for="a">Flavor Text</label>
 			<div>
 				<input class="form-control" size="30" id="a" name="a" value="">
 			</div>
@@ -56,17 +56,17 @@
 <div class="row">
     <div class="col-sm-4">
         <div class="form-group">
-			<label>{% trans %}Side{% endtrans %}</label>
+			<label>Side</label>
 			<div class="btn-group btn-group-justified" data-toggle="buttons">
-				<label class="btn btn-default active"><input type="radio" name="d" checked value="">{% trans %}Either{% endtrans %}</label>
-				<label class="btn btn-default"><input type="radio" name="d" value="c">{% trans %}Corp{% endtrans %}</label>
-				<label class="btn btn-default"><input type="radio" name="d" value="r">{% trans %}Runner{% endtrans %}</label>
+				<label class="btn btn-default active"><input type="radio" name="d" checked value="">Either</label>
+				<label class="btn btn-default"><input type="radio" name="d" value="c">Corp</label>
+				<label class="btn btn-default"><input type="radio" name="d" value="r">Runner</label>
 			</div>
 		</div>
     </div>
     <div class="col-sm-8">
         <div class="form-group">
-			<label>{% trans %}Faction{% endtrans %}</label>
+			<label>Faction</label>
 			<div class="btn-group" data-toggle="buttons">
 				<label class="btn btn-default active"><input type="checkbox" name="f[]" checked value="a"><span class="icon icon-anarch anarch"></span></label>
 				<label class="btn btn-default active"><input type="checkbox" name="f[]" checked value="c"><span class="icon icon-criminal criminal"></span></label>
@@ -75,7 +75,7 @@
 				<label class="btn btn-default active"><input type="checkbox" name="f[]" checked value="j"><span class="icon icon-jinteki jinteki"></span></label>
 				<label class="btn btn-default active"><input type="checkbox" name="f[]" checked value="n"><span class="icon icon-nbn nbn"></span></label>
 				<label class="btn btn-default active"><input type="checkbox" name="f[]" checked value="w"><span class="icon icon-weyland-consortium weyland-consortium"></span></label>
-				<label class="btn btn-default active"><input type="checkbox" name="f[]" checked value="-">{% trans %}Neutral{% endtrans %}</label>
+				<label class="btn btn-default active"><input type="checkbox" name="f[]" checked value="-">Neutral</label>
 			</div>
 		</div>
     </div>
@@ -86,17 +86,17 @@
 <div class="row">
     <div class="col-sm-6">
         <div class="form-group">
-			<label for="e">{% trans %}Set{% endtrans %}</label>
+			<label for="e">Set</label>
 			<div>
-				<select class="form-control" name="e" id="e"><option value="">{% trans %}any{% endtrans %}</option>{% for pack in packs %}<option value="{{ pack.code }}">{{ pack.name }}</option>{% endfor %}</select>
+				<select class="form-control" name="e" id="e"><option value="">any</option>{% for pack in packs %}<option value="{{ pack.code }}">{{ pack.name }}</option>{% endfor %}</select>
 			</div>
 		</div>
     </div>
     <div class="col-sm-6">
         <div class="form-group">
-			<label for="t">{% trans %}Type{% endtrans %}</label>
+			<label for="t">Type</label>
 			<div>
-				<select class="form-control" name="t" id="t"><option value="">{% trans %}any{% endtrans %}</option>{% for type in types %}<option value="{{ type }}">{{ type }}</option>{% endfor %}</select>
+				<select class="form-control" name="t" id="t"><option value="">any</option>{% for type in types %}<option value="{{ type }}">{{ type }}</option>{% endfor %}</select>
 			</div>
 		</div>
     </div>
@@ -104,21 +104,21 @@
 <div class="row">
     <div class="col-sm-6">
         <div class="form-group">
-			<label for="u">{% trans %}Unique{% endtrans %}</label>
+			<label for="u">Unique</label>
 			<div>
 				<select class="form-control" name="u" id="u">
-					<option value="">{% trans %}any{% endtrans %}</option>
-					<option value="0">{% trans %}No{% endtrans %}</option>
-					<option value="1">{% trans %}Yes{% endtrans %}</option>
+					<option value="">any</option>
+					<option value="0">No</option>
+					<option value="1">Yes</option>
 				</select>
 			</div>
 		</div>
     </div>
     <div class="col-sm-6">
         <div class="form-group">
-			<label for="s">{% trans %}Subtype{% endtrans %}</label>
+			<label for="s">Subtype</label>
 			<div>
-				<select class="form-control" name="s" id="s"><option value="">{% trans %}any{% endtrans %}</option>{% for keyword in keywords %}<option value="{{ keyword }}">{{ keyword }}</option>{% endfor %}</select>
+				<select class="form-control" name="s" id="s"><option value="">any</option>{% for keyword in traits %}<option value="{{ keyword }}">{{ keyword }}</option>{% endfor %}</select>
 			</div>
 		</div>
     </div>
@@ -129,7 +129,7 @@
 <div class="row">
     <div class="col-sm-6">
         <div class="form-group">
-			<label for="o">{% trans %}Cost{% endtrans %}</label>
+			<label for="o">Cost</label>
 			<div class="row">
                 <div class="col-xs-4">
                     <select name="oo" id="oo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
@@ -142,7 +142,7 @@
     </div>
     <div class="col-sm-6">
         <div class="form-group">
-			<label for="n">{% trans %}Influence{% endtrans %}</label>
+			<label for="n">Influence</label>
 			<div class="row">
                 <div class="col-xs-4">
                     <select name="no" id="no" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
@@ -157,7 +157,7 @@
 <div class="row">
     <div class="col-sm-6">
         <div class="form-group">
-			<label for="p">{% trans %}Strength{% endtrans %}</label>
+			<label for="p">Strength</label>
 			<div class="row">
                 <div class="col-xs-4">
                     <select name="po" id="po" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
@@ -170,7 +170,7 @@
     </div>
     <div class="col-sm-6">
         <div class="form-group">
-			<label for="y">{% trans %}Quantity{% endtrans %}</label>
+			<label for="y">Quantity</label>
 			<div class="row">
                 <div class="col-xs-4">
                     <select name="yo" id="yo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
@@ -188,19 +188,19 @@
 <div class="row">
     <div class="col-sm-6">
         <div class="form-group">
-			<label>{% trans %}Previews{% endtrans %}</label>
+			<label>Previews</label>
 			<div class="btn-group btn-group-justified" data-toggle="buttons">
-				<label class="btn btn-default active"><input type="radio" name="r" checked value="">{% trans %}Yes{% endtrans %}</label>
-				<label class="btn btn-default"><input type="radio" name="r" value="<now">{% trans %}No{% endtrans %}</label>
-				<label class="btn btn-default"><input type="radio" name="r" value=">now">{% trans %}Only{% endtrans %}</label>
+				<label class="btn btn-default active"><input type="radio" name="r" checked value="">Yes</label>
+				<label class="btn btn-default"><input type="radio" name="r" value="<now">No</label>
+				<label class="btn btn-default"><input type="radio" name="r" value=">now">Only</label>
 			</div>
 		</div>
     </div>
     <div class="col-sm-6">
         <div class="form-group">
-			<label for="i">{% trans %}Illustrator{% endtrans %}</label>
+			<label for="i">Illustrator</label>
 			<div>
-				<select class="form-control" name="i" id="i"><option value="">{% trans %}any{% endtrans %}</option>{% for illustrator in illustrators %}<option value="{{ illustrator }}">{{ illustrator }}</option>{% endfor %}</select>
+				<select class="form-control" name="i" id="i"><option value="">any</option>{% for illustrator in illustrators %}<option value="{{ illustrator }}">{{ illustrator }}</option>{% endfor %}</select>
 			</div>
 		</div>
     </div>
@@ -213,7 +213,7 @@
         <div class="form-group">
 	       {% include 'AppBundle:Search:searchoptions.html.twig' %}
 	       <div class="col-sm-4">
-		      <button class="btn btn-primary" type="submit">{% trans %}Search{% endtrans %}</button>
+		      <button class="btn btn-primary" type="submit">Search</button>
 	       </div>
         </div>
      </div>

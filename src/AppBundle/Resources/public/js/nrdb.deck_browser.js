@@ -55,7 +55,7 @@ NRDB.deck_browser = {};
 			type_code : {
 				'!is' : 'identity'
 			}
-		}).order('type_code,title').each(function(record) {
+		}).order('type_code,name').each(function(record) {
 			for (var i = 0; i < record.indeck; i++) {
 				images.push(record.imagesrc);
 			}

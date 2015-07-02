@@ -31,14 +31,14 @@ class Judge
 			$type = $card->getType()->getName();
 			if($type == "Identity") continue;
 			if($type == "ICE") {
-				$keywords = explode(" - ", $card->getKeywords());
-				if(in_array("Barrier", $keywords)) $type = "Barrier";
-				if(in_array("Code Gate", $keywords)) $type = "Code Gate";
-				if(in_array("Sentry", $keywords)) $type = "Sentry";
+				$traits = explode(" - ", $card->getTraits());
+				if(in_array("Barrier", $traits)) $type = "Barrier";
+				if(in_array("Code Gate", $traits)) $type = "Code Gate";
+				if(in_array("Sentry", $traits)) $type = "Sentry";
 			}
 			if($type == "Program") {
-				$keywords = explode(" - ", $card->getKeywords());
-				if(in_array("Icebreaker", $keywords)) $type = "Icebreaker";
+				$traits = explode(" - ", $card->getTraits());
+				if(in_array("Icebreaker", $traits)) $type = "Icebreaker";
 			}
 			$influence = 0;
 			$qty_influence = $qty;

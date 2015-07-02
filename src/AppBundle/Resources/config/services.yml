@@ -32,6 +32,6 @@ services:
         arguments: ["@doctrine.orm.entity_manager"]
     cards_data:
         class: "%cards_data.class%"
-        arguments: ["@doctrine", "@request_stack", "@router"]
+        arguments: ["@doctrine", "@request_stack", "@router", "@templating.helper.assets"]
 
 

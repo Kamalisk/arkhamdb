@@ -17,24 +17,17 @@ NRDB.user.params.card_id = {{ cards[0].id|json_encode|raw }};
         		<div>
         			<div class="panel panel-default">
         				<div class="panel-heading">
-        					<h3 class="panel-title card-title">
-        						{% if card.uniqueness == true %}&diams;{% endif %}
-        						<a href="{{ card.url }}" class="card-title{% if card.available == false %} card-preview{% endif %}">{{ card.title }}</a>
+        					<h3 class="panel-title card-name">
+        						{% if card.is_unique == true %}&diams;{% endif %}
+        						<a href="{{ card.url }}" class="card-name{% if card.available == false %} card-preview{% endif %}">
+        							{{ card.name }}
+        						</a>
         					</h3>
         	  			</div>
         				<div class="panel-body">
         					<div class="card-info">
-        						<span class="card-type">{{ card.type }}</span>{% if card.subtype %}<span class="card-keywords">: {{ card.subtype }}</span>{% endif %}
-        						<span class="card-prop">&bull;
-        						{% if card.type_code == "agenda" %} Adv: {{ card.advancementcost }} &bull; Score: {{ card.agendapoints }} {% endif %}
-        						{% if card.type_code == "identity" and card.side_code == "corp" %}Deck: {{ card.minimumdecksize }} &bull; Influence: {% if card.influencelimit is null %} &#8734; {% else %} {{ card.influencelimit }} {% endif %} {% endif %}
-        						{% if card.type_code == "identity" and card.side_code == "runner" %}Link: {{ card.baselink }} &bull; Deck: {{ card.minimumdecksize }} &bull; Influence: {% if card.influencelimit is null %} &#8734; {% else %} {{ card.influencelimit }} {% endif %} {% endif %}
-        						{% if card.type_code == "operation" or card.type_code == "event" %}Cost: {{ card.cost }} &bull; Influence: {{ card.factioncost }}{% endif %}
-        						{% if card.type_code == "resource" or card.type_code == "hardware" %}Install: {{ card.cost }} &bull; Influence: {{ card.factioncost }}{% endif %}
-        						{% if card.type_code == "program" %}Install: {{ card.cost }} &bull; Memory: {{ card.memoryunits }} {% if card.strength is not null %}&bull; Strength: {{ card.strength }}{% endif %} &bull; Influence: {{ card.factioncost }}{% endif %}
-        						{% if card.type_code == "asset" or card.type_code == "upgrade" %}Rez: {{ card.cost }} &bull; Trash: {{ card.trash }} &bull; Influence: {{ card.factioncost }}{% endif %}
-        						{% if card.type_code == "ice" %}Rez: {{ card.cost }} &bull; Strength: {{ card.strength }} &bull; Influence: {{ card.factioncost }}{% endif %}
-        						</span>
+        						<span class="card-type">{{ card.type_name }}</span>
+        						{% if card.traits %}<span class="card-traits">: {{ card.traits }}</span>{% endif %}
         					</div>
         					<div class="card-text">
         						{{ card.text|raw }}
@@ -44,19 +37,19 @@ NRDB.user.params.card_id = {{ cards[0].id|json_encode|raw }};
         					</div>
         					<div class="card-illustrator">
         						<small>
-        						{{ card.faction }} &bull;
-        						{% if card.illustrator %}{{ card.illustrator }} &bull; {% endif %}{{ card.setname }} #{{ card.number }}
+        						{{ card.faction_name }} &bull;
+        						{% if card.illustrator %}{{ card.illustrator }} &bull; {% endif %}{{ card.pack_name }} #{{ card.position }}
         						</small>
         					</div>
         				</div>
         			</div>
-        			Links: <a href="{{ path('decklists_list',{type:'find',_locale:app.request.locale,'cards[]':card.code}) }}">Decklists</a> | <a href="{{ card.ancurLink }}">ANCUR</a>
+        			Links: <a href="{{ path('decklists_list',{type:'find','cards[]':card.code}) }}">Decklists</a>
         		</div>
         	</div>
         	<div class="col-sm-5">
         		<div class="card-image">
         			{% if card.imagesrc %}
-        			   <img src="{{ card.imagesrc }}" alt="{{ card.title }}" class="img-responsive" style="margin:auto">
+        			   <img src="{{ card.imagesrc }}" class="img-responsive" style="margin:auto">
         			{% else %}
         			   <div class="no-image" style="margin:auto"><div class="no-image-text">No image</div></div>
         			{% endif %}
@@ -77,7 +70,7 @@ NRDB.user.params.card_id = {{ cards[0].id|json_encode|raw }};
         	   
         	       <div class="review-like">
         	           <a id="review-social-icon-like" href="#" class="social-icon-like" data-toggle="tooltip" data-placement="bottom" title="Like that review">
-                    	   <span class="glyphicon glyphicon-heart"></span> <span class="num">{{ review.nbvotes }}</span>
+                    	   <span class="glyphicon glyphicon-heart"></span> <span class="num">{{ review.nbVotes }}</span>
                 	   </a>
         	       </div>
         	       <div class="review-content">
@@ -89,7 +82,7 @@ NRDB.user.params.card_id = {{ cards[0].id|json_encode|raw }};
             	   </div>
             	   <div class="review-author">
             	       <a href="{{ path('user_profile_view', {user_id:review.author_id,user_name:review.author_name|e('url')}) }}" rel="author" class="username {{ review.author_color }}">{{ review.author_name }}</a>
-            	       {% if review.author_donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="NetrunnerDB Gracious Donator"></span>{% endif %}
+            	       {% if review.author_donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="AGoT2db Gracious Donator"></span>{% endif %}
                 	   <small class="reputation">{{ review.author_reputation }}</small>
             	   </div>
             	   
@@ -99,7 +92,7 @@ NRDB.user.params.card_id = {{ cards[0].id|json_encode|raw }};
             	   <div class="review-comment text-muted small">{{ comment.text }}
             	   &mdash;
             	   <a title="{{ comment.author.reputation }} reputation" href="{{ path('user_profile_view', {user_id:comment.author.id,user_name:comment.author.username|e('url')}) }}" rel="author" class="username {{ comment.author.faction }}">{{ comment.author.username }}</a>
-            	       {% if comment.author.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="NetrunnerDB Gracious Donator"></span>{% endif %}
+            	       {% if comment.author.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="AGoT2db Gracious Donator"></span>{% endif %}
                	   <time datetime="{{ comment.datecreation|date('c') }}" title="{{ comment.datecreation|date('F jS, Y') }}">{{ comment.datecreation|date('n/j/y') }}</time>
                 </div>
             	   {% endfor %}

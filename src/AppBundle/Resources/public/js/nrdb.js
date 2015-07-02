@@ -131,8 +131,8 @@ function getDisplayDescriptions(sort) {
                     label: 'Neutral'
                 }, ]
             ],
-            'number': [],
-            'title': [
+            'position': [],
+            'name': [
                 [{
                     id: 'cards',
                     label: 'Cards'
@@ -151,7 +151,7 @@ function process_deck_by_type() {
 		return;
 	}
 
-	NRDB.data.cards({indeck:{'gt':0},type_code:{'!is':'identity'}}).order("type,title").each(function(record) {
+	NRDB.data.cards({indeck:{'gt':0},type_code:{'!is':'identity'}}).order("type,name").each(function(record) {
 		var type = record.type_code, subtypes = record.subtype_code ? record.subtype_code.split(" - ") : [];
 		if(type == "ice") {
 			var ice_type = [];
@@ -222,7 +222,7 @@ function update_deck(options) {
 			}
 		}
 	}
-	if(DisplaySort === 'number' && displayDescription.length === 0) {
+	if(DisplaySort === 'position' && displayDescription.length === 0) {
 		var rows = [];
 		NRDB.data.sets().each(function (record) {
 			rows.push({id: record.code, label: record.name});
@@ -253,7 +253,7 @@ function update_deck(options) {
 	
 	InfluenceLimit = 0;
 	var cabinet = {};
-	var parts = Identity.title.split(/: /);
+	var parts = Identity.name.split(/: /);
 	$('#identity').html('<a href="'+Routing.generate('cards_zoom', {card_code:Identity.code})+'" data-target="#cardModal" data-remote="false" class="card" data-toggle="modal" data-index="'+Identity.code+'">'+parts[0]+' <small>'+parts[1]+'</small></a>');
 	$('#img_identity').prop('src', Identity.imagesrc);
 	InfluenceLimit = Identity.influencelimit;
@@ -261,9 +261,9 @@ function update_deck(options) {
 	MinimumDeckSize = Identity.minimumdecksize;
 
 	var latestpack = NRDB.data.sets({name:Identity.setname}).first();
-	NRDB.data.cards({indeck:{'gt':0},type_code:{'!is':'identity'}}).order(DisplaySort === 'number' ? 'code' : 'title').each(function(record) {
+	NRDB.data.cards({indeck:{'gt':0},type_code:{'!is':'identity'}}).order(DisplaySort === 'position' ? 'code' : 'name').each(function(record) {
 		var pack = NRDB.data.sets({name:record.setname}).first();
-		if(latestpack.cyclenumber < pack.cyclenumber || (latestpack.cyclenumber == pack.cyclenumber && latestpack.number < pack.number)) latestpack = pack;
+		if(latestpack.cycleposition < pack.cycleposition || (latestpack.cycleposition == pack.cycleposition && latestpack.position < pack.position)) latestpack = pack;
 		
 		var influence = '';
 		if(record.faction != Identity.faction) {
@@ -296,16 +296,16 @@ function update_deck(options) {
 			}
 		} else if(DisplaySort === 'faction') {
 			criteria = record.faction_code;
-		} else if(DisplaySort === 'number') {
+		} else if(DisplaySort === 'position') {
 			criteria = record.set_code;
 			var number_of_sets = Math.ceil(record.indeck / record.quantity);
 			var alert_number_of_sets = number_of_sets > 1 ? '<small class="text-warning">'+number_of_sets+' sets needed</small> ' : '';
 			additional_info = '(#' + record.number + ') ' + alert_number_of_sets + influence;
-		} else if(DisplaySort === 'title') {
+		} else if(DisplaySort === 'name') {
 			criteria = 'cards';
 		}
 
-		var item = $('<div>'+record.indeck+'x <a href="'+Routing.generate('cards_zoom', {card_code:record.code})+'" class="card" data-toggle="modal" data-remote="false" data-target="#cardModal" data-index="'+record.code+'">'+record.title+'</a> '+additional_info+'</div>');
+		var item = $('<div>'+record.indeck+'x <a href="'+Routing.generate('cards_zoom', {card_code:record.code})+'" class="card" data-toggle="modal" data-remote="false" data-target="#cardModal" data-index="'+record.code+'">'+record.name+'</a> '+additional_info+'</div>');
 		item.appendTo($('#deck-content .deck-'+criteria));
 		
 		cabinet[criteria] |= 0;
@@ -433,10 +433,10 @@ function build_bbcode(deck) {
 	var lines = [];
 	lines.push("[b]"+SelectedDeck.name+"[/b]");
 	lines.push("");
-	lines.push('[url=http://netrunnerdb.com/'+NRDB.locale+'/card/'
+	lines.push('[url=http://netrunnerdb.com/card/'
 			 + Identity.code
 			 + ']'
-			 + Identity.title
+			 + Identity.name
 			 + '[/url] ('
 			 + Identity.setname
 			 + ")");
@@ -451,10 +451,10 @@ function build_bbcode(deck) {
 			var qty = $(line).ignore("a, span, small").text().trim().replace(/x.*/, "x");
 			var inf = $(line).find("span").text().trim();
 			var card = NRDB.data.get_card_by_code($(line).find('a.card').data('index'));
-			lines.push(qty + ' [url=http://netrunnerdb.com/'+NRDB.locale+'/card/'
+			lines.push(qty + ' [url=http://netrunnerdb.com/card/'
 					 + card.code
 					 + ']'
-					 + card.title
+					 + card.name
 					 + '[/url] [i]('
 					 + card.setname
 					 + ")[/i] "
@@ -471,9 +471,9 @@ function build_bbcode(deck) {
 	lines.push($('#latestpack').text());
 	lines.push("");
 	if(typeof Decklist != "undefined" && Decklist != null) {
-		lines.push("Decklist [url="+location.href+"]published on NetrunnerDB[/url].");
+		lines.push("Decklist [url="+location.href+"]published on AGoT2db[/url].");
 	} else {
-		lines.push("Deck built on [url=http://netrunnerdb.com]NetrunnerDB[/url].");
+		lines.push("Deck built on [url=http://netrunnerdb.com]AGoT2db[/url].");
 	}
 	return lines;
 }
@@ -489,8 +489,8 @@ function build_markdown(deck) {
 	lines.push("## "+SelectedDeck.name);
 	lines.push("");
 	lines.push('['
-			 + Identity.title
-			 + '](http://netrunnerdb.com/'+NRDB.locale+'/card/'
+			 + Identity.name
+			 + '](http://netrunnerdb.com/card/'
 			 + Identity.code
 			 + ') _('
 			 + Identity.setname
@@ -507,8 +507,8 @@ function build_markdown(deck) {
 			var inf = $(line).find("span").text().trim();
 			var card = NRDB.data.get_card_by_code($(line).find('a.card').data('index'));
 			lines.push('* '+ qty + ' ['
-				 + card.title 
-				 + '](http://netrunnerdb.com/'+NRDB.locale+'/card/'
+				 + card.name 
+				 + '](http://netrunnerdb.com/card/'
 				 + card.code
 				 + ') _('
 				 + card.setname
@@ -527,9 +527,9 @@ function build_markdown(deck) {
 	lines.push($('#latestpack').text() + "  ");
 	lines.push("");
 	if(typeof Decklist != "undefined" && Decklist != null) {
-		lines.push("Decklist [published on NetrunnerDB]("+location.href+").");
+		lines.push("Decklist [published on AGoT2db]("+location.href+").");
 	} else {
-		lines.push("Deck built on [NetrunnerDB](http://netrunnerdb.com).");
+		lines.push("Deck built on [AGoT2db](http://netrunnerdb.com).");
 	}
 	return lines;
 }
@@ -544,7 +544,7 @@ function build_plaintext(deck) {
 	var lines = [];
 	lines.push(SelectedDeck.name);
 	lines.push("");
-	lines.push(Identity.title);
+	lines.push(Identity.name);
 
 	$('#deck-content > div > h5:visible, #deck-content > div > div > div').each(function (i, line) {
 		switch($(line).prop("tagName")) {
