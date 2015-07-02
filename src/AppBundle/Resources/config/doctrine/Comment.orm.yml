@@ -1,0 +1,36 @@
+AppBundle\Entity\Comment:
+    type: entity
+    table: comment
+    manyToOne:
+        user:
+            targetEntity: User
+            nullable: false
+            inversedBy: comments
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+        decklist:
+            targetEntity: Decklist
+            nullable: false
+            inversedBy: comments
+            joinColumn:
+                name: decklist_id
+                referencedColumnName: id
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        text:
+            type: text
+        dateCreation:
+            type: datetime
+            nullable: false
+            column: date_creation
+            gedmo:
+                timestampable:
+                    on: create
+        isHidden:
+            type: boolean
+            column: is_hidden

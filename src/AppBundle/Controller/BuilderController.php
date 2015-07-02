@@ -227,7 +227,7 @@ class BuilderController extends Controller
         $cards = $em->getRepository('AppBundle:Card')->findAll();
         /* @var $card Card */
         foreach ($cards as $card) {
-            $title = $card->getTitle();
+            $title = $card->getName();
             $replacements = array(
                     'Alix T4LB07' => 'Alix T4LBO7',
                     'Planned Assault' => 'Planned Attack',
@@ -355,7 +355,7 @@ class BuilderController extends Controller
                 "ICE"
         );
         
-        $lines[] = $deck->getIdentity()->getTitle() . " (" . $deck->getIdentity()
+        $lines[] = $deck->getIdentity()->getName() . " (" . $deck->getIdentity()
             ->getPack()
             ->getName() . ")";
         foreach ($types as $type) {
@@ -369,7 +369,7 @@ class BuilderController extends Controller
                             $inf .= " ";
                         $inf .= "•";
                     }
-                    $lines[] = $slot['qty'] . "x " . $slot['card']->getTitle() . " (" . $slot['card']->getPack()->getName() . ") " . $inf;
+                    $lines[] = $slot['qty'] . "x " . $slot['card']->getName() . " (" . $slot['card']->getPack()->getName() . ") " . $inf;
                 }
             }
         }
@@ -416,12 +416,12 @@ class BuilderController extends Controller
                 ->getName() == "Identity") {
                 $identity = array(
                         "index" => $slot->getCard()->getCode(),
-                        "name" => $slot->getCard()->getTitle()
+                        "name" => $slot->getCard()->getName()
                 );
             } else {
                 $rd[] = array(
                         "index" => $slot->getCard()->getCode(),
-                        "name" => $slot->getCard()->getTitle(),
+                        "name" => $slot->getCard()->getName(),
                         "qty" => $slot->getQuantity()
                 );
             }
@@ -879,7 +879,7 @@ class BuilderController extends Controller
                 {
                     $card = $em->getRepository('AppBundle:Card')->findOneBy(array('code' => $slot['card_code']));
                     if(!$card) continue;
-                    $cardtitle = $card->getTitle();
+                    $cardtitle = $card->getName();
                     $packname = $card->getPack()->getName();
                     if($packname == 'Core Set') $packname = 'Core';
                     $qty = $slot['qty'];

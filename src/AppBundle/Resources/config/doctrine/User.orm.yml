@@ -1,8 +1,116 @@
 AppBundle\Entity\User:
     type:  entity
     table: fos_user
-    id:
+    oneToMany:
+        decks:
+            targetEntity: Deck
+            orderBy: {'dateUpdate':'DESC'}
+            mappedBy: user
+            cascade: ["remove"]
+        decklists:
+            targetEntity: Decklist
+            mappedBy: user
+        comments:
+            targetEntity: Comment
+            orderBy: {'dateCreation':'DESC'}
+            mappedBy: user
+        reviews:
+            targetEntity: Review
+            orderBy: {'dateCreation':'DESC'}
+            mappedBy: user
+    manyToMany:
+        favorites:
+            targetEntity: Decklist
+            mappedBy: favorites
+            cascade: ["remove"]
+        votes:
+            targetEntity: Decklist
+            mappedBy: votes
+            cascade: ["remove"]
+        reviewvotes:
+            targetEntity: Review
+            mappedBy: votes
+            cascade: ["remove"]
+#        following:
+#            targetEntity: User
+#            mappedBy: followers
+#        followers:
+#            targetEntity: User
+#            inversedBy: following
+#            joinTable:
+#                name: follow
+#                joinColumns:
+#                    user_id:
+#                        referencedColumnName: id
+#                inverseJoinColumns:
+#                    follower_id:
+#                        referencedColumnName: id
+    fields:
         id:
             type: integer
+            id: true
             generator:
                 strategy: AUTO
+        dateCreation:
+            type: datetime
+            nullable: false
+            column: date_creation
+            gedmo:
+                timestampable:
+                    on: create
+        dateUpdate:
+            type: datetime
+            nullable: false
+            column: date_update
+            gedmo:
+                timestampable:
+                    on: update
+        reputation:
+            type: integer
+            nullable: false
+        resume:
+            type: text
+            nullable: true
+        color:
+            type: string
+            length: 255
+            nullable: true
+        donation:
+            type: integer
+            nullable: false
+        isNotifAuthor:
+            type: boolean
+            nullable: false
+            column: is_notif_author
+            options:
+                default: true
+        isNotifCommenter:
+            type: boolean
+            nullable: false
+            column: is_notif_commenter
+            options:
+                default: true
+        isNotifMention:
+            type: boolean
+            nullable: false
+            column: is_notif_mention
+            options:
+                default: true
+        isNotifFollow:
+            type: boolean
+            nullable: false
+            column: is_notif_follow
+            options:
+                default: true
+        isNotifSuccessor:
+            type: boolean
+            nullable: false
+            column: is_notif_successor
+            options:
+                default: true
+        isShareDecks:
+            type: boolean
+            nullable: false
+            column: is_share_decks
+            options:
+                default: false

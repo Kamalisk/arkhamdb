@@ -2,12 +2,49 @@
 
 namespace AppBundle\Entity;
 
-use Alsciende\DeckbuilderBundle\Entity\Card as BaseCard;
-use Alsciende\DeckbuilderBundle\Model\CardInterface;
-
-class Card extends BaseCard implements CardInterface
+class Card
 {
 	
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @var integer
+     */
+    private $position;
+
+    /**
+     * @var string
+     */
+    private $code;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var integer
+     */
+    private $cost;
+
+    /**
+     * @var string
+     */
+    private $text;
+
+    /**
+     * @var \DateTime
+     */
+    private $dateCreation;
+
+    /**
+     * @var \DateTime
+     */
+    private $dateUpdate;
+
     /**
      * @var integer
      */
@@ -83,11 +120,217 @@ class Card extends BaseCard implements CardInterface
      */
     private $is_power;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $reviews;
+
+    /**
+     * @var \AppBundle\Entity\Pack
+     */
+    private $pack;
+
+    /**
+     * @var \AppBundle\Entity\Type
+     */
+    private $type;
+
+    /**
+     * @var \AppBundle\Entity\Faction
+     */
+    private $faction;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->reviews = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set position
+     *
+     * @param integer $position
+     *
+     * @return Card
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * Get position
+     *
+     * @return integer
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * Set code
+     *
+     * @param string $code
+     *
+     * @return Card
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Card
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set cost
+     *
+     * @param integer $cost
+     *
+     * @return Card
+     */
+    public function setCost($cost)
+    {
+        $this->cost = $cost;
+
+        return $this;
+    }
+
+    /**
+     * Get cost
+     *
+     * @return integer
+     */
+    public function getCost()
+    {
+        return $this->cost;
+    }
+
+    /**
+     * Set text
+     *
+     * @param string $text
+     *
+     * @return Card
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
+
+        return $this;
+    }
+
+    /**
+     * Get text
+     *
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * Set dateCreation
+     *
+     * @param \DateTime $dateCreation
+     *
+     * @return Card
+     */
+    public function setDateCreation($dateCreation)
+    {
+        $this->dateCreation = $dateCreation;
+
+        return $this;
+    }
+
+    /**
+     * Get dateCreation
+     *
+     * @return \DateTime
+     */
+    public function getDateCreation()
+    {
+        return $this->dateCreation;
+    }
+
+    /**
+     * Set dateUpdate
+     *
+     * @param \DateTime $dateUpdate
+     *
+     * @return Card
+     */
+    public function setDateUpdate($dateUpdate)
+    {
+        $this->dateUpdate = $dateUpdate;
+
+        return $this;
+    }
+
+    /**
+     * Get dateUpdate
+     *
+     * @return \DateTime
+     */
+    public function getDateUpdate()
+    {
+        return $this->dateUpdate;
+    }
 
     /**
      * Set quantity
      *
      * @param integer $quantity
+     *
      * @return Card
      */
     public function setQuantity($quantity)
@@ -100,7 +343,7 @@ class Card extends BaseCard implements CardInterface
     /**
      * Get quantity
      *
-     * @return integer 
+     * @return integer
      */
     public function getQuantity()
     {
@@ -111,6 +354,7 @@ class Card extends BaseCard implements CardInterface
      * Set gold
      *
      * @param integer $gold
+     *
      * @return Card
      */
     public function setGold($gold)
@@ -123,7 +367,7 @@ class Card extends BaseCard implements CardInterface
     /**
      * Get gold
      *
-     * @return integer 
+     * @return integer
      */
     public function getGold()
     {
@@ -134,6 +378,7 @@ class Card extends BaseCard implements CardInterface
      * Set claim
      *
      * @param integer $claim
+     *
      * @return Card
      */
     public function setClaim($claim)
@@ -146,7 +391,7 @@ class Card extends BaseCard implements CardInterface
     /**
      * Get claim
      *
-     * @return integer 
+     * @return integer
      */
     public function getClaim()
     {
@@ -157,6 +402,7 @@ class Card extends BaseCard implements CardInterface
      * Set initiative
      *
      * @param integer $initiative
+     *
      * @return Card
      */
     public function setInitiative($initiative)
@@ -169,7 +415,7 @@ class Card extends BaseCard implements CardInterface
     /**
      * Get initiative
      *
-     * @return integer 
+     * @return integer
      */
     public function getInitiative()
     {
@@ -180,6 +426,7 @@ class Card extends BaseCard implements CardInterface
      * Set reserve
      *
      * @param integer $reserve
+     *
      * @return Card
      */
     public function setReserve($reserve)
@@ -192,7 +439,7 @@ class Card extends BaseCard implements CardInterface
     /**
      * Get reserve
      *
-     * @return integer 
+     * @return integer
      */
     public function getReserve()
     {
@@ -203,6 +450,7 @@ class Card extends BaseCard implements CardInterface
      * Set strength
      *
      * @param integer $strength
+     *
      * @return Card
      */
     public function setStrength($strength)
@@ -215,7 +463,7 @@ class Card extends BaseCard implements CardInterface
     /**
      * Get strength
      *
-     * @return integer 
+     * @return integer
      */
     public function getStrength()
     {
@@ -226,6 +474,7 @@ class Card extends BaseCard implements CardInterface
      * Set keywords
      *
      * @param string $keywords
+     *
      * @return Card
      */
     public function setKeywords($keywords)
@@ -238,7 +487,7 @@ class Card extends BaseCard implements CardInterface
     /**
      * Get keywords
      *
-     * @return string 
+     * @return string
      */
     public function getKeywords()
     {
@@ -249,6 +498,7 @@ class Card extends BaseCard implements CardInterface
      * Set flavor
      *
      * @param string $flavor
+     *
      * @return Card
      */
     public function setFlavor($flavor)
@@ -261,7 +511,7 @@ class Card extends BaseCard implements CardInterface
     /**
      * Get flavor
      *
-     * @return string 
+     * @return string
      */
     public function getFlavor()
     {
@@ -272,6 +522,7 @@ class Card extends BaseCard implements CardInterface
      * Set illustrator
      *
      * @param string $illustrator
+     *
      * @return Card
      */
     public function setIllustrator($illustrator)
@@ -284,7 +535,7 @@ class Card extends BaseCard implements CardInterface
     /**
      * Get illustrator
      *
-     * @return string 
+     * @return string
      */
     public function getIllustrator()
     {
@@ -292,9 +543,10 @@ class Card extends BaseCard implements CardInterface
     }
 
     /**
-     * Set is_unique
+     * Set isUnique
      *
      * @param boolean $isUnique
+     *
      * @return Card
      */
     public function setIsUnique($isUnique)
@@ -305,9 +557,9 @@ class Card extends BaseCard implements CardInterface
     }
 
     /**
-     * Get is_unique
+     * Get isUnique
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsUnique()
     {
@@ -315,9 +567,10 @@ class Card extends BaseCard implements CardInterface
     }
 
     /**
-     * Set is_limited
+     * Set isLimited
      *
      * @param boolean $isLimited
+     *
      * @return Card
      */
     public function setIsLimited($isLimited)
@@ -328,9 +581,9 @@ class Card extends BaseCard implements CardInterface
     }
 
     /**
-     * Get is_limited
+     * Get isLimited
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsLimited()
     {
@@ -338,9 +591,10 @@ class Card extends BaseCard implements CardInterface
     }
 
     /**
-     * Set is_loyal
+     * Set isLoyal
      *
      * @param boolean $isLoyal
+     *
      * @return Card
      */
     public function setIsLoyal($isLoyal)
@@ -351,9 +605,9 @@ class Card extends BaseCard implements CardInterface
     }
 
     /**
-     * Get is_loyal
+     * Get isLoyal
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsLoyal()
     {
@@ -361,9 +615,10 @@ class Card extends BaseCard implements CardInterface
     }
 
     /**
-     * Set is_military
+     * Set isMilitary
      *
      * @param boolean $isMilitary
+     *
      * @return Card
      */
     public function setIsMilitary($isMilitary)
@@ -374,9 +629,9 @@ class Card extends BaseCard implements CardInterface
     }
 
     /**
-     * Get is_military
+     * Get isMilitary
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsMilitary()
     {
@@ -384,9 +639,10 @@ class Card extends BaseCard implements CardInterface
     }
 
     /**
-     * Set is_intrigue
+     * Set isIntrigue
      *
      * @param boolean $isIntrigue
+     *
      * @return Card
      */
     public function setIsIntrigue($isIntrigue)
@@ -397,9 +653,9 @@ class Card extends BaseCard implements CardInterface
     }
 
     /**
-     * Get is_intrigue
+     * Get isIntrigue
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsIntrigue()
     {
@@ -407,9 +663,10 @@ class Card extends BaseCard implements CardInterface
     }
 
     /**
-     * Set is_power
+     * Set isPower
      *
      * @param boolean $isPower
+     *
      * @return Card
      */
     public function setIsPower($isPower)
@@ -420,12 +677,118 @@ class Card extends BaseCard implements CardInterface
     }
 
     /**
-     * Get is_power
+     * Get isPower
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsPower()
     {
         return $this->is_power;
+    }
+
+    /**
+     * Add review
+     *
+     * @param \AppBundle\Entity\Review $review
+     *
+     * @return Card
+     */
+    public function addReview(\AppBundle\Entity\Review $review)
+    {
+        $this->reviews[] = $review;
+
+        return $this;
+    }
+
+    /**
+     * Remove review
+     *
+     * @param \AppBundle\Entity\Review $review
+     */
+    public function removeReview(\AppBundle\Entity\Review $review)
+    {
+        $this->reviews->removeElement($review);
+    }
+
+    /**
+     * Get reviews
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getReviews()
+    {
+        return $this->reviews;
+    }
+
+    /**
+     * Set pack
+     *
+     * @param \AppBundle\Entity\Pack $pack
+     *
+     * @return Card
+     */
+    public function setPack(\AppBundle\Entity\Pack $pack = null)
+    {
+        $this->pack = $pack;
+
+        return $this;
+    }
+
+    /**
+     * Get pack
+     *
+     * @return \AppBundle\Entity\Pack
+     */
+    public function getPack()
+    {
+        return $this->pack;
+    }
+
+    /**
+     * Set type
+     *
+     * @param \AppBundle\Entity\Type $type
+     *
+     * @return Card
+     */
+    public function setType(\AppBundle\Entity\Type $type = null)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return \AppBundle\Entity\Type
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set faction
+     *
+     * @param \AppBundle\Entity\Faction $faction
+     *
+     * @return Card
+     */
+    public function setFaction(\AppBundle\Entity\Faction $faction = null)
+    {
+        $this->faction = $faction;
+
+        return $this;
+    }
+
+    /**
+     * Get faction
+     *
+     * @return \AppBundle\Entity\Faction
+     */
+    public function getFaction()
+    {
+        return $this->faction;
     }
 }

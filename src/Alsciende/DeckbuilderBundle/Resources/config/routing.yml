@@ -1,3 +1,0 @@
-alsciende_deckbuilder_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: \AlsciendeDeckbuilderBundle:Default:index }

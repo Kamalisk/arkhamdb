@@ -824,7 +824,7 @@ class SocialController extends Controller
                 "ICE"
         );
         
-        $lines[] = $decklist->getIdentity()->getTitle() . " (" . $decklist->getIdentity()
+        $lines[] = $decklist->getIdentity()->getName() . " (" . $decklist->getIdentity()
             ->getPack()
             ->getName() . ")";
         foreach ($types as $type) {
@@ -838,7 +838,7 @@ class SocialController extends Controller
                             $inf .= " ";
                         $inf .= "•";
                     }
-                    $lines[] = $slot['qty'] . "x " . $slot['card']->getTitle() . " (" . $slot['card']->getPack()->getName() . ") " . $inf;
+                    $lines[] = $slot['qty'] . "x " . $slot['card']->getName() . " (" . $slot['card']->getPack()->getName() . ") " . $inf;
                 }
             }
         }
@@ -882,12 +882,12 @@ class SocialController extends Controller
                 ->getName() == "Identity") {
                 $identity = array(
                         "index" => $slot->getCard()->getCode(),
-                        "name" => $slot->getCard()->getTitle()
+                        "name" => $slot->getCard()->getName()
                 );
             } else {
                 $rd[] = array(
                         "index" => $slot->getCard()->getCode(),
-                        "name" => $slot->getCard()->getTitle(),
+                        "name" => $slot->getCard()->getName(),
                         "qty" => $slot->getQuantity()
                 );
             }

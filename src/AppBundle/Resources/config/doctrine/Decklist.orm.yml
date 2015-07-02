@@ -1,3 +1,131 @@
 AppBundle\Entity\Decklist:
     type: entity
     table: decklist
+    manyToOne:
+        user:
+            targetEntity: User
+            nullable: false
+            inversedBy: decklists
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+        faction:
+            targetEntity: Faction
+            nullable: false
+            joinColumn:
+                name: faction_id
+                referencedColumnName: id
+        lastPack:
+            targetEntity: Pack
+            nullable: false
+            joinColumn:
+                name: last_pack_id
+                referencedColumnName: id
+        parent:
+            targetEntity: Deck
+            nullable: true
+            inversedBy: children
+            joinColumn:
+                name: parent_deck_id
+                referencedColumnName: id
+        precedent:
+            targetEntity: Decklist
+            nullable: true
+            inversedBy: successors
+            joinColumn:
+                name: precedent_decklist_id
+                referencedColumnName: id
+        tournament:
+            targetEntity: Tournament
+            nullable: true
+            inversedBy: decklists
+            joinColumn:
+                name: tournament_id
+                referencedColumnName: id
+    oneToMany:
+        slots:
+            targetEntity: Decklistslot
+            mappedBy: decklist
+            cascade: ["persist","remove"]
+        comments:
+            targetEntity: Comment
+            mappedBy: decklist
+            cascade: ["persist"]
+        successors:
+            targetEntity: Decklist
+            mappedBy: precedent
+        children:
+            targetEntity: Deck
+            mappedBy: parent
+    manyToMany:
+        favorites:
+            targetEntity: User
+            inversedBy: favorites
+            joinTable:
+                name: favorite
+                joinColumns:
+                    decklist_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    user_id:
+                        referencedColumnName: id
+            cascade: ["persist"]
+        votes:
+            targetEntity: User
+            inversedBy: votes
+            joinTable:
+                name: vote
+                joinColumns:
+                    decklist_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    user_id:
+                        referencedColumnName: id
+            cascade: ["persist"]
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        name:
+            type: string
+            length: 255
+        nameCanonical:
+            type: string
+            length: 255
+            column: name_canonical
+        dateCreation:
+            type: datetime
+            nullable: false
+            column: date_creation
+            gedmo:
+                timestampable:
+                    on: create
+        dateUpdate:
+            type: datetime
+            nullable: false
+            column: date_update
+            gedmo:
+                timestampable:
+                    on: update
+        descriptionMd:
+            type: text
+            nullable: true
+            column: description_md
+        descriptionHtml:
+            type: text
+            nullable: true
+            column: description_html
+        signature:
+            type: string
+            length: 32
+        nbVotes:
+            type: integer
+            column: nb_votes
+        nbFavorites:
+            type: integer
+            column: nb_favorites
+        nbComments:
+            type: integer
+            column: nb_comments

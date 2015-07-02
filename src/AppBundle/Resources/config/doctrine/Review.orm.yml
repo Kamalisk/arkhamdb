@@ -1,0 +1,67 @@
+AppBundle\Entity\Review:
+    type: entity
+    table: review
+    manyToOne:
+        card:
+            targetEntity: Card
+            inversedBy: reviews
+            joinColumn:
+                name: card_id
+                referencedColumnName: id
+        user:
+            targetEntity: User
+            inversedBy: reviews
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+    oneToMany:
+        comments:
+            targetEntity: Reviewcomment
+            mappedBy: review
+            cascade: ["persist"]
+    manyToMany:
+        votes:
+            targetEntity: User
+            inversedBy: reviewvotes
+            joinTable:
+                name: reviewvote
+                joinColumns:
+                    review_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    user_id:
+                        referencedColumnName: id
+            cascade: ["persist"]
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        dateCreation:
+            type: datetime
+            nullable: false
+            column: date_creation
+            gedmo:
+                timestampable:
+                    on: create
+        dateUpdate:
+            type: datetime
+            nullable: false
+            column: date_update
+            gedmo:
+                timestampable:
+                    on: update
+        textMd:
+            type: text
+            nullable: false
+            column: text_md
+        textHtml:
+            type: text
+            nullable: false
+            column: text_html
+        nbVotes:
+            type: smallint
+            nullable: false
+            column: nb_votes
+

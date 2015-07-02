@@ -12,7 +12,7 @@ cards_zoom:
     defaults:
         _controller: AppBundle:Search:zoom
     requirements:
-        card_code: \d+
+        card_code: \d+.?
 
 cards_cycle:
     pattern: /cycle/{cycle_code}/{view}/{sort}/{page}

@@ -1,4 +1,40 @@
 AppBundle\Entity\Cycle:
     type: entity
     table: cycle
+    oneToMany:
+        packs:
+            targetEntity: Pack
+            orderBy: {'position':'ASC'}
+            mappedBy: cycle
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        code:
+            type: string
+            length: 255
+            nullable: false
+        name:
+            type: string
+            length: 1024
+            nullable: false
+        position:
+            type: smallint
+            nullable: false
+        dateCreation:
+            type: datetime
+            nullable: false
+            column: date_creation
+            gedmo:
+                timestampable:
+                    on: create
+        dateUpdate:
+            type: datetime
+            nullable: false
+            column: date_update
+            gedmo:
+                timestampable:
+                    on: update
         

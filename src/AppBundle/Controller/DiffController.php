@@ -42,7 +42,7 @@ class DiffController extends Controller
         foreach($listings[0] as $code => $qty) {
             $card = $em->getRepository('AppBundle:Card')->findOneBy(array('code' => $code));
             if($card) $content1[] = array(
-                    'title' => $card->getTitle($locale),
+                    'title' => $card->getName(),
                     'code' => $code,
                     'qty' => $qty
                     );
@@ -52,7 +52,7 @@ class DiffController extends Controller
         foreach($listings[1] as $code => $qty) {
             $card = $em->getRepository('AppBundle:Card')->findOneBy(array('code' => $code));
             if($card) $content2[] = array(
-                    'title' => $card->getTitle($locale),
+                    'title' => $card->getName(),
                     'code' => $code,
                     'qty' => $qty
             );
@@ -62,7 +62,7 @@ class DiffController extends Controller
         foreach($intersect as $code => $qty) {
             $card = $em->getRepository('AppBundle:Card')->findOneBy(array('code' => $code));
             if($card) $shared[] = array(
-                    'title' => $card->getTitle($locale),
+                    'title' => $card->getName(),
                     'code' => $code,
                     'qty' => $qty
             );

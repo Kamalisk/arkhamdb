@@ -1,0 +1,30 @@
+AppBundle\Entity\Deckchange:
+    type: entity
+    table: deckchange
+    manyToOne:
+        deck:
+            targetEntity: Deck
+            nullable: false
+            inversedBy: changes
+            joinColumn:
+                name: deck_id
+                referencedColumnName: id
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        dateCreation:
+            type: datetime
+            nullable: false
+            column: date_creation
+            gedmo:
+                timestampable:
+                    on: create
+        variation:
+            type: string
+            length: 1024
+        isSaved:
+            type: boolean
+            column: is_saved

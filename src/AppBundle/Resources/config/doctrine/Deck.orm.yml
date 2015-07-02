@@ -1,3 +1,80 @@
 AppBundle\Entity\Deck:
     type: entity
     table: deck
+    manyToOne:
+        user:
+            targetEntity: User
+            nullable: false
+            inversedBy: decks
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+        faction:
+            targetEntity: Faction
+            nullable: false
+            joinColumn:
+                name: faction_id
+                referencedColumnName: id
+        lastPack:
+            targetEntity: Pack
+            nullable: false
+            joinColumn:
+                name: last_pack_id
+                referencedColumnName: id
+        parent:
+            targetEntity: Decklist
+            nullable: true
+            inversedBy: children
+            joinColumn:
+                name: parent_decklist_id
+                referencedColumnName: id
+    oneToMany:
+        slots:
+            targetEntity: Deckslot
+            mappedBy: deck
+            cascade: ["persist","remove"]
+        children:
+            targetEntity: Decklist
+            orderBy: { 'dateCreation': 'DESC' }
+            mappedBy: parent
+        changes:
+            targetEntity: Deckchange
+            orderBy: {'dateCreation':'DESC'}
+            mappedBy: deck
+            cascade: ["persist","remove"]
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        name:
+            type: string
+            length: 255
+        dateCreation:
+            type: datetime
+            nullable: false
+            column: date_creation
+            gedmo:
+                timestampable:
+                    on: create
+        dateUpdate:
+            type: datetime
+            nullable: false
+            column: date_update
+            gedmo:
+                timestampable:
+                    on: update
+        descriptionMd:
+            type: text
+            nullable: true
+            column: description_md
+        problem:
+            type: string
+            length: 255
+            nullable: true
+        tags:
+            type: string
+            length: 4000
+            nullable: true
+    

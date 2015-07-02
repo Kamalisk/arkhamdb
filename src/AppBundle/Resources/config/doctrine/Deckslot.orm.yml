@@ -1,0 +1,25 @@
+AppBundle\Entity\Deckslot:
+    type: entity
+    table: deckslot
+    manyToOne:
+        deck:
+            targetEntity: Deck
+            nullable: false
+            inversedBy: slots
+            joinColumn:
+                name: deck_id
+                referencedColumnName: id
+        card:
+            targetEntity: Card
+            nullable: false
+            joinColumn:
+                name: card_id
+                referencedColumnName: id
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        quantity:
+            type: smallint

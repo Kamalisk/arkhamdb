@@ -72,15 +72,6 @@ doctrine:
         auto_generate_proxy_classes: "%kernel.debug%"
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
-        resolve_target_entities:
-            Alsciende\DeckbuilderBundle\Model\CardInterface: AppBundle\Entity\Card
-            Alsciende\DeckbuilderBundle\Model\PackInterface: AppBundle\Entity\Pack
-            Alsciende\DeckbuilderBundle\Model\CycleInterface: AppBundle\Entity\Cycle
-            Alsciende\DeckbuilderBundle\Model\FactionInterface: AppBundle\Entity\Faction
-            Alsciende\DeckbuilderBundle\Model\TypeInterface: AppBundle\Entity\Type
-            Alsciende\DeckbuilderBundle\Model\UserInterface: AppBundle\Entity\User
-            Alsciende\DeckbuilderBundle\Model\DeckInterface: AppBundle\Entity\Deck
-            Alsciende\DeckbuilderBundle\Model\DecklistInterface: AppBundle\Entity\Decklist
 
 # Swiftmailer Configuration
 swiftmailer:

@@ -1,6 +1,6 @@
 
 api_decklist:
-    pattern: /api/decklist/{decklist_id}.{_format}
+    pattern: /decklist/{decklist_id}.{_format}
     defaults:
         _controller: AppBundle:Api:decklist
         _format: json
@@ -9,7 +9,7 @@ api_decklist:
         decklist_id: \d+
 
 api_decklists:
-    pattern: /api/decklists/by_date/{date}.{_format}
+    pattern: /decklists/by_date/{date}.{_format}
     defaults:
         _controller: AppBundle:Api:decklists
         _format: json
@@ -18,17 +18,17 @@ api_decklists:
         date: \d\d\d\d-\d\d-\d\d
 
 api_decks:
-    pattern: /api/decks
+    pattern: /decks
     defaults:
         _controller: AppBundle:Api:decks
 
 api_cards:
-    pattern: /api/cards/
+    pattern: /cards/
     defaults:
         _controller: AppBundle:Api:cards
 
 api_card:
-    pattern: /api/card/{card_code}.{_format}
+    pattern: /card/{card_code}.{_format}
     defaults:
         _controller: AppBundle:Api:card
         _format: json
@@ -37,12 +37,12 @@ api_card:
         card_code: \d+
 
 api_sets:
-    pattern: /api/sets/
+    pattern: /sets/
     defaults:
         _controller: AppBundle:Api:sets
 
 api_set:
-    pattern: /api/set/{pack_code}.{_format}
+    pattern: /set/{pack_code}.{_format}
     defaults:
         _controller: AppBundle:Api:set
         _format: json

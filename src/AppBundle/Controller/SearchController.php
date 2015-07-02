@@ -16,7 +16,7 @@ class SearchController extends Controller
 	{
 		$card = $this->getDoctrine()->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
 		if(!$card) throw $this->createNotFoundException('Sorry, this card is not in the database (yet?)');
-		$meta = $card->getTitle().", a ".$card->getFaction()->getName()." ".$card->getType()->getName()." card for Android:Netrunner from the set ".$card->getPack()->getName()." published by Fantasy Flight Games.";
+		$meta = $card->getName().", a ".$card->getFaction()->getName()." ".$card->getType()->getName()." card for A Game of Thrones 2nd Edition from the set ".$card->getPack()->getName()." published by Fantasy Flight Games.";
 		return $this->forward(
 			'AppBundle:Search:display',
 			array(
@@ -25,7 +25,7 @@ class SearchController extends Controller
 			    'q' => $card->getCode(),
 				'view' => 'card',
 				'sort' => 'set',
-				'title' => $card->getTitle(),
+				'title' => $card->getName(),
 				'meta' => $meta,
 				'locale' => $request->getLocale(),
 				'locales' => $this->renderView('AppBundle:Default:langs.html.twig'),
@@ -37,7 +37,7 @@ class SearchController extends Controller
 	{
 		$pack = $this->getDoctrine()->getRepository('AppBundle:Pack')->findOneBy(array("code" => $pack_code));
 		if(!$pack) throw $this->createNotFoundException('This pack does not exist');
-		$meta = $pack->getName($request->getLocale()).", a set of cards for Android:Netrunner"
+		$meta = $pack->getName($request->getLocale()).", a set of cards for A Game of Thrones 2nd Edition"
 				.($pack->getReleased() ? " published on ".$pack->getReleased()->format('Y/m/d') : "")
 				." by Fantasy Flight Games.";
 		return $this->forward(
@@ -61,7 +61,7 @@ class SearchController extends Controller
 	{
 		$cycle = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findOneBy(array("code" => $cycle_code));
 		if(!$cycle) throw $this->createNotFoundException('This cycle does not exist');
-		$meta = $cycle->getName($request->getLocale()).", a cycle of datapack for Android:Netrunner published by Fantasy Flight Games.";
+		$meta = $cycle->getName($request->getLocale()).", a cycle of datapack for A Game of Thrones 2nd Edition published by Fantasy Flight Games.";
 		return $this->forward(
 			'AppBundle:Search:display',
 			array(
@@ -310,9 +310,9 @@ class SearchController extends Controller
 	    $prev = $em->getRepository('AppBundle:Card')->findOneBy(array("pack" => $card->getPack(), "number" => $card->getNumber()-1));
 	    $next = $em->getRepository('AppBundle:Card')->findOneBy(array("pack" => $card->getPack(), "number" => $card->getNumber()+1));
 	    return $this->renderView('AppBundle:Search:setnavigation.html.twig', array(
-	            "prevtitle" => $prev ? $prev->getTitle($locale) : "",
+	            "prevtitle" => $prev ? $prev->getName() : "",
 	            "prevhref" => $prev ? $this->get('router')->generate('cards_zoom', array('card_code' => $prev->getCode(), "_locale" => $locale)) : "",
-	            "nexttitle" => $next ? $next->getTitle($locale) : "",
+	            "nexttitle" => $next ? $next->getName() : "",
 	            "nexthref" => $next ? $this->get('router')->generate('cards_zoom', array('card_code' => $next->getCode(), "_locale" => $locale)) : "",
 	            "settitle" => $card->getPack()->getName(),
 	            "sethref" => $this->get('router')->generate('cards_list', array('pack_code' => $card->getPack()->getCode(), "_locale" => $locale)),

@@ -1,7 +1,70 @@
 AppBundle\Entity\Card:
     type: entity
     table: card
+    manyToOne:
+        pack:
+            targetEntity: Pack
+            inversedBy: cards
+            joinColumn:
+                name: pack_id
+                referencedColumnName: id
+        type:
+            targetEntity: Type
+            inversedBy: cards
+            joinColumn:
+                name: type_id
+                referencedColumnName: id
+        faction:
+            targetEntity: Faction
+            inversedBy: cards
+            joinColumn:
+                name: faction_id
+                referencedColumnName: id
+    oneToMany:
+        reviews:
+            targetEntity: Review
+            orderBy: {'dateCreation':'DESC'}
+            mappedBy: card
     fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        position:
+            type: smallint
+            nullable: false
+        code:
+            type: string
+            length: 255
+            nullable: false
+        name:
+            type: string
+            length: 1024
+            nullable: false
+        cost:
+            type: smallint
+            nullable: true
+        text:
+            type: text
+            nullable: true
+        text:
+            type: smallint
+            nullable: true
+        dateCreation:
+            type: datetime
+            nullable: false
+            column: date_creation
+            gedmo:
+                timestampable:
+                    on: create
+        dateUpdate:
+            type: datetime
+            nullable: false
+            column: date_update
+            gedmo:
+                timestampable:
+                    on: update
         quantity:
             type: smallint
             nullable: false

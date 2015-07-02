@@ -52,8 +52,6 @@ class ApiController extends Controller
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 	
 		$jsonp = $this->getRequest()->query->get('jsonp');
-		$locale = $this->getRequest()->query->get('_locale');
-		if(isset($locale)) $this->getRequest()->setLocale($locale);
 	
 		$conditions = $this->get('cards_data')->syntax($card_code);
 		$this->get('cards_data')->validateConditions($conditions);
@@ -64,7 +62,7 @@ class ApiController extends Controller
 		if($query && $rows = $this->get('cards_data')->get_search_rows($conditions, "set"))
 		{
 			for($rowindex = 0; $rowindex < count($rows); $rowindex++) {
-				if(empty($last_modified) || $last_modified < $rows[$rowindex]->getTs()) $last_modified = $rows[$rowindex]->getTs();
+				if(empty($last_modified) || $last_modified < $rows[$rowindex]->getDateUpdate()) $last_modified = $rows[$rowindex]->getDateUpdate();
 			}
 			$response->setLastModified($last_modified);
 			if ($response->isNotModified($this->getRequest())) {
@@ -104,7 +102,7 @@ class ApiController extends Controller
 		if($rows = $this->get('cards_data')->get_search_rows(array(), "set", true))
 		{
 			for($rowindex = 0; $rowindex < count($rows); $rowindex++) {
-				if(empty($last_modified) || $last_modified < $rows[$rowindex]->getTs()) $last_modified = $rows[$rowindex]->getTs();
+				if(empty($last_modified) || $last_modified < $rows[$rowindex]->getDateUpdate()) $last_modified = $rows[$rowindex]->getDateUpdate();
 			}
 			$response->setLastModified($last_modified);
 			if ($response->isNotModified($this->getRequest())) {
@@ -155,7 +153,7 @@ class ApiController extends Controller
 		if($query && $rows = $this->get('cards_data')->get_search_rows($conditions, "set"))
 		{
 			for($rowindex = 0; $rowindex < count($rows); $rowindex++) {
-				if(empty($last_modified) || $last_modified < $rows[$rowindex]->getTs()) $last_modified = $rows[$rowindex]->getTs();
+				if(empty($last_modified) || $last_modified < $rows[$rowindex]->getDateUpdate()) $last_modified = $rows[$rowindex]->getDateUpdate();
 			}
 			$response->setLastModified($last_modified);
 			if ($response->isNotModified($this->getRequest())) {

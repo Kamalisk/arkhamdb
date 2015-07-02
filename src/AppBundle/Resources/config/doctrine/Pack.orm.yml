@@ -1,4 +1,54 @@
 AppBundle\Entity\Pack:
     type: entity
     table: pack
+    manyToOne:
+        cycle:
+            targetEntity: Cycle
+            inversedBy: packs
+            joinColumn:
+                name: cycle_id
+                referencedColumnName: id
+    oneToMany:
+        cards:
+            targetEntity: Card
+            orderBy: {'position':'ASC'}
+            mappedBy: pack
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        code:
+            type: string
+            length: 255
+            nullable: false
+        name:
+            type: string
+            length: 1024
+            nullable: false
+        position:
+            type: smallint
+            nullable: false
+        size:
+            type: smallint
+            nullable: false
+        dateCreation:
+            type: datetime
+            nullable: false
+            column: date_creation
+            gedmo:
+                timestampable:
+                    on: create
+        dateUpdate:
+            type: datetime
+            nullable: false
+            column: date_update
+            gedmo:
+                timestampable:
+                    on: update
+        dateRelease:
+            type: date
+            nullable: true
+            column: date_release
         

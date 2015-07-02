@@ -1,0 +1,40 @@
+AppBundle\Entity\Reviewcomment:
+    type: entity
+    table: reviewcomment
+    manyToOne:
+        author:
+            targetEntity: User
+            nullable: false
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+        review:
+            targetEntity: Review
+            nullable: false
+            inversedBy: comments
+            joinColumn:
+                name: review_id
+                referencedColumnName: id
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        dateCreation:
+            type: datetime
+            nullable: false
+            column: date_creation
+            gedmo:
+                timestampable:
+                    on: create
+        dateUpdate:
+            type: datetime
+            nullable: false
+            column: date_update
+            gedmo:
+                timestampable:
+                    on: update
+        text:
+            type: text
+            nullable: false

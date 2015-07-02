@@ -1,4 +1,0 @@
-services:
-#    alsciende_deckbuilder.example:
-#        class: \Alsciende\DeckbuilderBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]

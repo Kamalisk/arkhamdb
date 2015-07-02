@@ -19,7 +19,6 @@ class AppKernel extends Kernel
         	new FOS\UserBundle\FOSUserBundle(),
 			new Liuggio\ExcelBundle\LiuggioExcelBundle(),
         	new AppBundle\AppBundle(),
-            new Alsciende\DeckbuilderBundle\AlsciendeDeckbuilderBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

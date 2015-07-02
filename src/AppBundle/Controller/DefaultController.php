@@ -167,7 +167,7 @@ class DefaultController extends Controller
     					continue;
     				}
     				 
-    				$ffg = $card->getTitle();
+    				$ffg = $card->getName();
     				$ffg = str_replace(' ', '-', $ffg);
     				$ffg = str_replace('.', '-', $ffg);
     				$ffg = str_replace('&', '-', $ffg);

@@ -1,0 +1,17 @@
+AppBundle\Entity\Tournament:
+    type: entity
+    table: tournament
+    oneToMany:
+        decklists:
+            targetEntity: Decklist
+            mappedBy: tournament
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        description:
+            type: string
+            length: 60
