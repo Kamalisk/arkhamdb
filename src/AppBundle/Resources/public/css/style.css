@@ -23,6 +23,24 @@ body {
 .card-flavor {
 	font-style: italic;
 }
+.card-unique {
+	font-weight: 400;
+}
+.card-unique::after {
+	/* circled plus followed by thin space */
+	content: "\2295\2009";
+}
+
+.card-flavor cite {
+	white-space: nowrap;
+}
+.card-flavor cite::before {
+	/* en dash followed by non-breaking zero-width space */
+	content: "\2013\FEFF";
+}
+
+
+
 .color-military {
 	color: #c8232a;
 }
@@ -53,11 +71,36 @@ body {
 .color-tyrell {
 	color: #0b2b17;
 }
-
-.card-flavor cite {
-	white-space: nowrap;
+.border-neutral {
+	border-color: #30150f;
 }
-.card-flavor cite::before {
-	/* ndash followed by non-breaking zero-with space */
-	content: "\2013\FEFF";
+.border-baratheon {
+	border-color: #6c4e1e;
+}
+.border-lannister {
+	border-color: #630707;
+}
+.border-nightswatch {
+	border-color: #070707;
+}
+.border-stark {
+	border-color: #3d3d3d;
+}
+.border-targaryen {
+	border-color: #080404;
+}
+.border-tyrell {
+	border-color: #0b2b17;
+}
+
+.display-spoiler-card {
+	margin-bottom: 1em;
+}
+.display-spoiler-card h4 {
+	border-bottom: 1px solid #ddd;
+}
+.qtip-agot2db{
+	min-width: 310px;
+	max-width: 350px;
+	font-size: 85.7%;
 }

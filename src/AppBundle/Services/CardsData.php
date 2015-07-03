@@ -329,13 +329,8 @@ class CardsData
 	    		$associationEntity = $card->$getter();
 	    		if(!$associationEntity) continue;
 	    		
-	    		if($api) {
-	    			$cardinfo[$fieldName] = $associationEntity->getCode();
-	    		} else {
-	    			$cardinfo[$fieldName.'_id'] = $associationEntity->getId();
-	    			$cardinfo[$fieldName.'_code'] = $associationEntity->getCode();
-	    			$cardinfo[$fieldName.'_name'] = $associationEntity->getName();
-	    		}
+    			$cardinfo[$fieldName.'_code'] = $associationEntity->getCode();
+    			$cardinfo[$fieldName.'_name'] = $associationEntity->getName();
 	    	}
 	    }
 	    

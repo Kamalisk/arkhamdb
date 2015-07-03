@@ -3,30 +3,50 @@ if (typeof app != "object")
 app.format = {};
 (function(format, $) {
 	
-	format.type = function(card) {
-		var type = '<span class="card-type">'+card.type+'</span>';
-		if(card.subtype) type += '<span class="card-traits">: '+card.subtype+'</span>';
-		if(card.type_code == "agenda") type += ' &middot; <span class="card-prop">'+card.advancementcost+'/'+card.agendapoints+'</span>';
-		if(card.type_code == "identity" && card.side_code == "corp") type += ' &middot; <span class="card-prop">'+card.minimumdecksize+'/'+card.influencelimit+'</span>';
-		if(card.type_code == "identity" && card.side_code == "runner") type += ' &middot; <span class="card-prop">'+card.minimumdecksize+'/'+card.influencelimit+' '+card.baselink+'<span class="icon icon-link"></span></span>';
-		if(card.type_code == "operation" || card.type_code == "event") type += ' &middot; <span class="card-prop">'+card.cost+'<span class="icon icon-credit"></span></span>';
-		if(card.type_code == "resource" || card.type_code == "hardware") type += ' &middot; <span class="card-prop">'+card.cost+'<span class="icon icon-credit"></span></span>';
-		if(card.type_code == "program") type += ' &middot; <span class="card-prop">'+card.cost+'<span class="icon icon-credit"></span> '+card.memoryunits+'<span class="icon icon-mu"></span></span>';
-		if(card.type_code == "asset" || card.type_code == "upgrade") type += ' &middot; <span class="card-prop">'+card.cost+'<span class="icon icon-credit"></span> '+card.trash+'<span class="icon icon-trash"></span></span>';
-		if(card.type_code == "ice") type += ' &middot; <span class="card-prop">'+card.cost+'<span class="icon icon-credit"></span></span>';
-		return type;
+	format.traits = function(card) {
+		return card.traits || '';
+	};
+	
+	format.name = function(card) {
+		return (card.is_unique ? '<span class="card-unique"></span>' : "") + card.name;
+	}
+	
+	format.pack_faction = function(card) {
+		var text = card.pack_name + ' #' + card.position + '. ';
+		text += card.faction_name + '. ';
+		if(card.is_loyal) text += 'Loyal. ';
+		if(card.is_limited) text += 'Limited. ';
+		return text;
+	}
+	
+	format.info = function(card) {
+		var text = '<span class="card-type">'+card.type_name+'. </span>';
+		switch(card.type_code) {
+		case 'character':
+			text += 'Cost: '+(card.cost != null ? card.cost : 'X')+'. ';
+			text += 'STR: '+(card.strength != null ? card.strength : 'X')+'. '
+			if(card.is_military) text += '<span class="color-military">[military]</span>';
+			if(card.is_intrigue) text += '<span class="color-intrigue">[intrigue]</span>';
+			if(card.is_power) text += '<span class="color-power">[power]</span>';
+			break;
+		case 'attachment':
+		case 'location':
+		case 'event':
+			text += 'Cost: '+(card.cost != null ? card.cost : 'X')+'. ';
+			break;
+		case 'plot':
+			text += 'Income: '+card.income+'. ';
+			text += 'Claim: '+card.claim+'. ';
+			text += 'Initiative: '+card.initiative+'. ';
+			text += 'Reserve: '+card.reserve+'. ';
+			break;
+		}
+		return text;
 	};
 
 	format.text = function(card) {
 		var text = card.text;
 		
-		text = text.replace(/\[Subroutine\]/g, '<span class="icon icon-subroutine"></span>');
-		text = text.replace(/\[Credits\]/g, '<span class="icon icon-credit"></span>');
-		text = text.replace(/\[Trash\]/g, '<span class="icon icon-trash"></span>');
-		text = text.replace(/\[Click\]/g, '<span class="icon icon-click"></span>');
-		text = text.replace(/\[Recurring Credits\]/g, '<span class="icon icon-recurring-credit"></span>');
-		text = text.replace(/\[Memory Unit\]/g, '<span class="icon icon-mu"></span>');
-		text = text.replace(/\[Link\]/g, '<span class="icon icon-link"></span>');
 		text = text.split("\n").join('</p><p>');
 		return '<p>'+text+'</p>';
 	};

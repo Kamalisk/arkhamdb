@@ -7,7 +7,7 @@
 {% for col in 0..2 %}
 {% if row*3+col < cards|length %}
 {% set card = cards[row*3+col] %}
-<div class="col-sm-4 icon-bg icon-{{ card.faction_code }}" style="margin-bottom:1.5em">
+<div class="col-sm-4 icon-bg icon-{{ card.faction_code }} display-spoiler-card">
 	<h4>
 		{% include 'AppBundle:Search:card-name.html.twig' %}
 	</h4>

@@ -1,2 +1,2 @@
-{% if card.is_unique == true %}&oplus;{% endif %}
+{% if card.is_unique == true %}<span class="card-unique"></span>{% endif %}
 <a href="{{ card.url }}" class="card-tooltip card-name{% if card.available == false %} card-preview{% endif %}" data-code="{{ card.code }}">{{ card.name }}</a>
