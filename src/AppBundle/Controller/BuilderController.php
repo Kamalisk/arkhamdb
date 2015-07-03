@@ -20,7 +20,7 @@ class BuilderController extends Controller
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('long_cache'));
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
         
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
@@ -52,7 +52,7 @@ class BuilderController extends Controller
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('long_cache'));
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
         
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
@@ -91,7 +91,7 @@ class BuilderController extends Controller
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('long_cache'));
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
         
         return $this->render('AppBundle:Builder:directimport.html.twig',
                 array(

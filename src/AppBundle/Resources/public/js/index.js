@@ -1,7 +1,7 @@
-NRDB.data_loaded.add(function() {
+app.data_loaded.add(function() {
 	for (var i = 0; i < Decklist.cards.length; i++) {
 		var slot = Decklist.cards[i];
-		NRDB.data.cards({
+		app.data.cards({
 			code : slot.card_code
 		}).update({
 			indeck : parseInt(slot.qty, 10)
@@ -12,11 +12,11 @@ NRDB.data_loaded.add(function() {
 
 function update_cardsearch_result() {
 	$('#card_search_results').empty();
-	var query = NRDB.smart_filter.get_query();
+	var query = app.smart_filter.get_query();
 	if ($.isEmptyObject(query))
 		return;
 	var tabindex = 2;
-	NRDB.data.cards.apply(window, query).order("name intl").each(
+	app.data.cards.apply(window, query).order("name intl").each(
 			function(record) {
 				$('#card_search_results').append(
 						'<tr><td><span class="icon icon-' + record.faction_code
@@ -33,7 +33,7 @@ function update_cardsearch_result() {
 }
 
 function handle_input_change(event) {
-	NRDB.smart_filter.handler($(this).val(), update_cardsearch_result);
+	app.smart_filter.handler($(this).val(), update_cardsearch_result);
 }
 
 $(function() {

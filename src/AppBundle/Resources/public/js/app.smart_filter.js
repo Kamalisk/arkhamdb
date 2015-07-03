@@ -1,7 +1,7 @@
-if (typeof NRDB != "object")
-	var NRDB = { data_loaded: jQuery.Callbacks() };
+if (typeof app != "object")
+	var app = { data_loaded: jQuery.Callbacks() };
 
-NRDB.smart_filter = {};
+app.smart_filter = {};
 (function(smart_filter, $) {
 	var SmartFilterQuery = [];
 	
@@ -210,4 +210,4 @@ NRDB.smart_filter = {};
 	}
 
 	
-})(NRDB.smart_filter, jQuery);
+})(app.smart_filter, jQuery);

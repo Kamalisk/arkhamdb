@@ -1,7 +1,7 @@
-if (typeof NRDB != "object")
-	var NRDB = { data_loaded: jQuery.Callbacks() };
+if (typeof app != "object")
+	var app = { data_loaded: jQuery.Callbacks() };
 
-NRDB.deck_gallery = {};
+app.deck_gallery = {};
 (function(deck_gallery, $) {
 	var images = null;
 
@@ -9,7 +9,7 @@ NRDB.deck_gallery = {};
 
 		images = [ Identity.imagesrc ];
 		qtys = [ 1 ];
-		NRDB.data.cards({
+		app.data.cards({
 			indeck : {
 				'gt' : 0
 			},
@@ -26,4 +26,4 @@ NRDB.deck_gallery = {};
 		}
 	};
 
-})(NRDB.deck_gallery, jQuery);
+})(app.deck_gallery, jQuery);

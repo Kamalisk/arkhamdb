@@ -16,7 +16,7 @@ class FactionController extends Controller
     {
     	$response = new Response();
     	$response->setPublic();
-    	$response->setMaxAge($this->container->getParameter('long_cache'));
+    	$response->setMaxAge($this->container->getParameter('cache_expiration'));
     	
     	$em = $this->getDoctrine()->getManager();
         

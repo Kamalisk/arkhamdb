@@ -1,9 +1,9 @@
-NRDB.data_loaded.add(function() {
+app.data_loaded.add(function() {
 	$(this).closest('tr').siblings().removeClass('active');
 	$(this).closest('tr').addClass('active');
 	for (var i = 0; i < Decklist.cards.length; i++) {
 		var slot = Decklist.cards[i];
-		NRDB.data.get_cards_by_code(slot.card_code).update({indeck : parseInt(slot.qty, 10)});
+		app.data.get_cards_by_code(slot.card_code).update({indeck : parseInt(slot.qty, 10)});
 	}
 	update_deck();
 });
@@ -52,7 +52,7 @@ function setup_comment_form() {
 					{
 						match : /\B#([\-+\w]*)$/,
 						search : function(term, callback) {
-							callback(NRDB.data.cards({
+							callback(app.data.cards({
 								name : {
 									likenocase : term
 								},
@@ -107,15 +107,15 @@ function setup_comment_form() {
 
 function setup_social_icons() {
 	
-	if(!NRDB.user.data || NRDB.user.data.is_author || NRDB.user.data.is_liked) {
+	if(!app.user.data || app.user.data.is_author || app.user.data.is_liked) {
 		var element = $('#social-icon-like');
 		element.replaceWith($('<span class="social-icon-like"></span').html(element.html()));
 	}
 	
-	if(!NRDB.user.data) {
+	if(!app.user.data) {
 		var element = $('#social-icon-favorite');
 		element.replaceWith($('<span class="social-icon-favorite"></span').html(element.html()));
-	} else if(NRDB.user.data.is_favorite) {
+	} else if(app.user.data.is_favorite) {
 		var element = $('#social-icon-favorite');
 		element.attr('title', "Remove from favorites");
 	} else {
@@ -123,7 +123,7 @@ function setup_social_icons() {
 		element.attr('title', "Add to favorites");
 	}
 	
-	if(!NRDB.user.data) {
+	if(!app.user.data) {
 		var element = $('#social-icon-comment');
 		element.replaceWith($('<span class="social-icon-comment"></span').html(element.html()));
 	}
@@ -132,16 +132,16 @@ function setup_social_icons() {
 
 function setup_title() {
 	var title = $('h1.decklist-name');
-	if(NRDB.user.data && NRDB.user.data.is_author && NRDB.user.data.can_delete) {
+	if(app.user.data && app.user.data.is_author && app.user.data.can_delete) {
 		title.prepend('<a href="#" title="Delete decklist" id="decklist-delete"><span class="glyphicon glyphicon-trash pull-right text-danger"></span></a>');
 	}
-	if(NRDB.user.data && NRDB.user.data.is_author) {
+	if(app.user.data && app.user.data.is_author) {
 		title.prepend('<a href="#" title="Edit decklist name / description" id="decklist-edit"><span class="glyphicon glyphicon-pencil pull-right"></span></a>');
 	}
 }
 
 function setup_comment_hide() {
-	if(NRDB.user.data && NRDB.user.data.is_author) {
+	if(app.user.data && app.user.data.is_author) {
 		$('.comment-hide-button').remove();
 		$('<a href="#" class="comment-hide-button"><span class="text-danger glyphicon glyphicon-remove" style="margin-left:.5em"></span></a>').appendTo('.collapse.in > .comment-date').on('click', function (event) {
 			if(confirm('Do you really want to hide this comment for everybody?')) {
@@ -204,8 +204,8 @@ function unhide_comment(element) {
 
 $(function() {
 
-	$.when(NRDB.user.deferred).then(function() {
-		if(NRDB.user.data) {
+	$.when(app.user.deferred).then(function() {
+		if(app.user.data) {
 			setup_comment_form();
 			setup_title();
 			setup_comment_hide();

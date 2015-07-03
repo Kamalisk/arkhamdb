@@ -3,7 +3,7 @@
 {% block head %}
 <script src="{{ asset('/bundles/netrunnerdbcards/js/reviews.js') }}"></script>
 <script type="text/javascript">
-NRDB.user.params.card_id = {{ cards[0].id|json_encode|raw }};
+app.user.params.card_id = {{ cards[0].id|json_encode|raw }};
 </script>
 {% endblock %}
 

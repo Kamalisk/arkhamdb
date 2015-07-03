@@ -99,7 +99,6 @@
     <li><a href="{{ path('about') }}">About</a></li>
     <li><a href="{{ path('apidoc') }}">API</a></li>
     <li><a href="{{ path('donators') }}">Donators</a> <span class="glyphicon glyphicon-gift donator" title="The Gracious Donator"></span></li>
-    <li><a href="javascript:localStorage.clear()">Clear data</a></li>
     </ul>
     
     <p>
@@ -107,7 +106,7 @@
     </p>
     
     <p>
-    Bug reports and Feature Requests on <a href="https://github.com/Alsciende/agot2db/issues">BitBucket</a>
+    Bug reports and Feature Requests on <a href="https://github.com/Alsciende/agot2db/issues">GitHub</a>
     </p>
 
     <p>
@@ -133,38 +132,36 @@
     </div>
     </footer>
 
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script src="{{ asset('/bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     
-    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.9/highcharts.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/pagedown/1.0/Markdown.Converter.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.textcomplete/0.2.2/jquery.textcomplete.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment-with-locales.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/taffydb/2.7.2/taffy-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.9/highcharts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pagedown/1.0/Markdown.Converter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.textcomplete/0.2.2/jquery.textcomplete.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment-with-locales.min.js"></script>
+    <script src="{{ asset('/bundles/app/libs/forerunnerdb.min.js') }}"></script>
     <script src="{{ asset('/bundles/app/libs/moment-timezone-with-data-2010-2020.min.js') }}"></script>
     <script type="text/javascript">
 	var app = {
-		data_loaded: $.Callbacks(),
-		api_url: {
-			sets: '{{ path('api_sets')|raw }}',
-			cards: '{{ path('api_cards')|raw }}'
-		}
+		data_loaded: $.Callbacks()
 	};
 	moment.locale(window.navigator.language);
-
-{% if app.environment == 'prod' %}{%include 'appbundle::google-analytics.html.twig' %}{% endif %}
     </script>
-{#    <script src="{{ asset('/bundles/app/js/nrdb.js') }}"></script>
-    <script src="{{ asset('/bundles/app/js/nrdb.user.js') }}"></script>
-    <script src="{{ asset('/bundles/app/js/nrdb.data.js') }}"></script>
-    <script src="{{ asset('/bundles/app/js/nrdb.format.js') }}"></script>
-    <script src="{{ asset('/bundles/app/js/nrdb.tip.js') }}"></script>
+	{% if app.environment == 'prod' %}
+		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		{% include 'appbundle::google-analytics.html.twig' %}
+	{% endif %}
+	<script src="{{ asset('/bundles/app/js/app.data.js') }}"></script>
+{#    <script src="{{ asset('/bundles/app/js/app.js') }}"></script>
+    <script src="{{ asset('/bundles/app/js/app.user.js') }}"></script>
+    
+    <script src="{{ asset('/bundles/app/js/app.format.js') }}"></script>
+    <script src="{{ asset('/bundles/app/js/app.tip.js') }}"></script>
 #}
     </body>
 </html>

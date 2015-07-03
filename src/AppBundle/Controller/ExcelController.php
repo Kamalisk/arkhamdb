@@ -175,9 +175,13 @@ class ExcelController extends Controller
         			continue;
         		}
         	}
-        
+        	
+        	$changed = FALSE;
+        	echo("<h4>".$card['name']."</h4>");
+        	
         	foreach($card as $colName => $value)
         	{
+        		$getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$colName")));
         		$setter = str_replace(' ', '', ucwords(str_replace('_', ' ', "set_$colName")));
         		
         		if(key_exists($colName, $associationMappings))
@@ -189,7 +193,12 @@ class ExcelController extends Controller
         			if(!$associationEntity) {
         				throw new \Exception("cannot find entity [$colName] of name [$value]");
         			}
-        			$entity->$setter($associationEntity);
+        			if(!$entity->$getter() || $entity->$getter()->getId() !== $associationEntity->getId()) {
+        				$changed = TRUE;
+        				echo("<p>association [$colName] changed</p>");
+        				
+        				$entity->$setter($associationEntity);
+        			}
         		}
         		else if(in_array($colName, $fieldNames))
         		{
@@ -197,16 +206,28 @@ class ExcelController extends Controller
         			if($type === 'boolean') {
         				$value = (boolean) $value;
         			}
-        			$entity->$setter($value);
+        			if($entity->$getter() != $value) {
+        				$changed = TRUE;
+        				echo("<p>field changed</p>");
+        				var_dump($entity->$getter());
+        				echo("<br>");
+        				var_dump($value);
+
+        				$entity->$setter($value);
+        			}
         		}
         	}
         	
-        	$em->persist($entity);
-        	$counter++;
+        	if($changed) {
+        		$em->persist($entity);
+        		$counter++;
+        	} else {
+        		echo("<p>no change</p>");
+        	}
         }
         
         $em->flush();
         
-        return new Response($counter." card changed or added");
+        return new Response($counter." cards changed or added");
     }
 }

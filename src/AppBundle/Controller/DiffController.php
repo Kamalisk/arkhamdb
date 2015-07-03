@@ -19,7 +19,7 @@ class DiffController extends Controller
         }
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('short_cache'));
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
         
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();

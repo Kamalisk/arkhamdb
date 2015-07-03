@@ -1,19 +1,14 @@
-if (typeof NRDB != "object")
-	var NRDB = { data_loaded: jQuery.Callbacks() };
+if (typeof app != "object")
+	var app = { data_loaded: jQuery.Callbacks() };
 
-NRDB.tip = {};
+app.tip = {};
 (function(tip, $) {
 	
 	tip.display = function(event) {
-		if($(this).hasClass('no-popup')) return;
-		var code = $(this).data('index')
-				|| $(this).closest('.card-container').data('index')
-				|| ($(this).attr('href') && $(this).attr('href').replace(
-						/.*\/card\/(\d\d\d\d\d).*/,
-						"$1"));
-		var card = NRDB.data.get_card_by_code(code);
+		var code = $(this).data('code');
+		var card = app.data.get_card_by_code(code);
 		if (!card) return;
-		var type = '<p class="card-info">' + NRDB.format.type(card) + '</p>';
+		var type = '<p class="card-info">' + app.format.type(card) + '</p>';
 		var influence = '';
 		for (var i = 0; i < card.factioncost; i++)
 			influence += "&bull;";
@@ -32,7 +27,7 @@ NRDB.tip = {};
 								+ '<h4 class="card-name">'
 								+ (card.uniqueness ? "&diams; " : "")
 								+ card.name + '</h4>' + type
-								+ '<div class="card-text">' + NRDB.format.text(card) + '</div>'
+								+ '<div class="card-text">' + app.format.text(card) + '</div>'
 								+ '<p class="card-faction" style="text-align:right;clear:right">' + influence
 								+ ' ' + card.faction + ' &ndash; ' + card.setname + '</p>'
 					},
@@ -57,14 +52,14 @@ NRDB.tip = {};
 
 	$(function() {
 
-		if(NRDB.api_url && (typeof Modernizr === 'undefined' || !Modernizr.touch )) {
+		if(app.api_url && (typeof Modernizr === 'undefined' || !Modernizr.touch )) {
 			$('body').on({
 				mouseover : tip.display,
 				focus : tip.display
-			}, 'a');
+			}, 'a.card-tooltip');
 		}
 
 	});
 
-})(NRDB.tip, jQuery);
+})(app.tip, jQuery);
 

@@ -1,7 +1,7 @@
-NRDB.data_loaded.add(function() {
+app.data_loaded.add(function() {
 	function findMatches(q, cb) {
 		if(q.match(/^\w:/)) return;
-		var matches = NRDB.data.cards({name: {likenocase: q}}).map(function (record) {
+		var matches = app.data.cards({name: {likenocase: q}}).map(function (record) {
 			return { value: record.name };
 		});
 		cb(matches);
@@ -26,7 +26,7 @@ function handle_checkbox_change() {
 $(function() {
 	$('#card').on('typeahead:selected typeahead:autocompleted', function(event, data) {
 		console.log(data);
-		var card = NRDB.data.cards({
+		var card = app.data.cards({
 			name : data.value
 		}).first();
 		var line = $('<p class="background-'+card.faction_code+'-20" style="padding: 3px 5px;border-radius: 3px;border: 1px solid silver"><button type="button" class="close" aria-hidden="true">&times;</button><input type="hidden" name="cards[]" value="'+card.code+'">'+

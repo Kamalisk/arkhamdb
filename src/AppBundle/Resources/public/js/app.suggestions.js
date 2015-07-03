@@ -1,8 +1,8 @@
-if (typeof NRDB != "object")
-	var NRDB = { 
+if (typeof app != "object")
+	var app = { 
 		data_loaded: jQuery.Callbacks()
 	};
-NRDB.suggestions = {};
+app.suggestions = {};
 (function(suggestions, $) {
 	suggestions.codesFromindex = [];
 	suggestions.matrix = [];
@@ -46,7 +46,7 @@ NRDB.suggestions = {};
 				};
 			});
 			// find used cards
-			var indexes = NRDB.data.cards({indeck:{'gt':0}}).select('code').map(function (code) {
+			var indexes = app.data.cards({indeck:{'gt':0}}).select('code').map(function (code) {
 				return suggestions.indexFromCodes[code];
 			});
 			// add suggestions of all used cards
@@ -62,7 +62,7 @@ NRDB.suggestions = {};
 				if(suggestions.current[i]) suggestions.current[i].proba = 0;
 			});
 			// remove suggestions of identity 
-			NRDB.data.cards({type_code:'identity'}).select('code').map(function (code) {
+			app.data.cards({type_code:'identity'}).select('code').map(function (code) {
 				return suggestions.indexFromCodes[code];
 			}).forEach(function (i) {
 				if(suggestions.current[i]) suggestions.current[i].proba = 0;
@@ -93,7 +93,7 @@ NRDB.suggestions = {};
 		}
 		var nb = 0;
 		for(var i=0; i<suggestions.current.length; i++) {
-			var card = NRDB.data.get_card_by_code(suggestions.current[i].code);
+			var card = app.data.get_card_by_code(suggestions.current[i].code);
 			if(is_card_usable(card) && Filters.set_code.indexOf(card.set_code) > -1) {
 				var div = suggestions.div(card);
 				div.on('click', 'button.close', suggestions.exclude.bind(this, card.code));
@@ -162,6 +162,6 @@ NRDB.suggestions = {};
 
 	});
 
-})(NRDB.suggestions, jQuery);
+})(app.suggestions, jQuery);
 
 

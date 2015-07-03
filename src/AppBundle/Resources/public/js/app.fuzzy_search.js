@@ -1,7 +1,7 @@
-if (typeof NRDB != "object")
-	var NRDB = { data_loaded: jQuery.Callbacks() };
+if (typeof app != "object")
+	var app = { data_loaded: jQuery.Callbacks() };
 
-NRDB.fuzzy_search = {};
+app.fuzzy_search = {};
 (function(fuzzy_search, $) {
 	var types = ['agenda','asset','operation','upgrade','operation','barrier','code gate','sentry','other','event','hardware','resource','icebreaker','program'];
     // takes a card name and fuzzy-searches it in the card db
@@ -21,7 +21,7 @@ NRDB.fuzzy_search = {};
     	if(types.indexOf(name) > -1) return;
     	
     	var options = [];
-    	var query = NRDB.data.cards({token: {likenocase:name}});
+    	var query = app.data.cards({token: {likenocase:name}});
     	if(query.count()) {
     		query.each(function (record,recordnumber) {
     			options.push(record);
@@ -46,11 +46,11 @@ NRDB.fuzzy_search = {};
     };
     
     var dict = [];
-    NRDB.data_loaded.add(function() {
-    	NRDB.data.cards().each(function (record, recordnumber) {
+    app.data_loaded.add(function() {
+    	app.data.cards().each(function (record, recordnumber) {
             record.token = record.title.replace(/[^0-9\.\-A-Za-z\u00C0-\u017F]+/g, ' ').trim().toLowerCase();
     		dict.push(record);
     	});
     });
 	
-})(NRDB.fuzzy_search, jQuery);
+})(app.fuzzy_search, jQuery);

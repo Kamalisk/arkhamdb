@@ -224,7 +224,7 @@ class SocialController extends Controller
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('short_cache'));
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
         
         $limit = 30;
         if ($page < 1)
@@ -359,7 +359,7 @@ class SocialController extends Controller
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('short_cache'));
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
         
         $dbh = $this->get('doctrine')->getConnection();
         $rows = $dbh->executeQuery(
@@ -783,7 +783,7 @@ class SocialController extends Controller
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('long_cache'));
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
         
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
@@ -853,7 +853,7 @@ class SocialController extends Controller
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('long_cache'));
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
         
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
@@ -1024,7 +1024,7 @@ class SocialController extends Controller
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('short_cache'));
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
         
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
@@ -1129,7 +1129,7 @@ class SocialController extends Controller
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('short_cache'));
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
         
         $limit = 100;
         if ($page < 1)
@@ -1199,7 +1199,7 @@ class SocialController extends Controller
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('long_cache'));
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
         
         $dbh = $this->get('doctrine')->getConnection();
         $factions = $dbh->executeQuery(
@@ -1257,7 +1257,7 @@ class SocialController extends Controller
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('short_cache'));
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
         
         /* @var $dbh \Doctrine\DBAL\Driver\PDOConnection */
         $dbh = $this->get('doctrine')->getConnection();

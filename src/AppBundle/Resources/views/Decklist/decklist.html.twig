@@ -2,8 +2,8 @@
 
 {% block hexagon %}{{ decklist.faction_code }}{% endblock %}
 {% block head %}
-<script src="{{ asset('/bundles/app/js/nrdb.draw_simulator.js') }}"></script>
-<script src="{{ asset('/bundles/app/js/nrdb.card_modal.js') }}"></script>
+<script src="{{ asset('/bundles/app/js/app.draw_simulator.js') }}"></script>
+<script src="{{ asset('/bundles/app/js/app.card_modal.js') }}"></script>
 <script src="{{ asset('/bundles/app/js/decklist.js') }}"></script>
 <script type="text/javascript">
 
@@ -14,7 +14,7 @@ var Identity = null,
 	SelectedDeck = DeckDB().first(),
 	DisplaySort = 'type';
 
-NRDB.user.params.decklist_id = Decklist.id;
+app.user.params.decklist_id = Decklist.id;
 	
 </script>
 {% endblock %}

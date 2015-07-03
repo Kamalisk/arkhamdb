@@ -75,7 +75,7 @@ function do_diff(ids) {
 		names.push(deck.name);
 	}
 	
-	var diff = NRDB.diff.compute_simple(contents);
+	var diff = app.diff.compute_simple(contents);
 	var listings = diff[0];
 	var intersect = diff[1];
 	
@@ -85,7 +85,7 @@ function do_diff(ids) {
 	container.append("<h4>Cards in all decks</h4>");
 	var list = $('<ul></ul>').appendTo(container);
 	var cards = $.map(intersect, function(qty, card_code) {
-		var card = NRDB.data.get_card_by_code(card_code);
+		var card = app.data.get_card_by_code(card_code);
 		if(card) return { name: card.name, qty: qty };
 	}).sort(function (a, b) { return collator.compare(a.name,b.name); });
 	$.each(cards, function (index, card) {
@@ -96,7 +96,7 @@ function do_diff(ids) {
 		container.append("<h4>Cards only in <b>"+names[i]+"</b></h4>");
 		var list = $('<ul></ul>').appendTo(container);
 		var cards = $.map(listings[i], function(qty, card_code) {
-			var card = NRDB.data.get_card_by_code(card_code);
+			var card = app.data.get_card_by_code(card_code);
 			if(card) return { name: card.name, qty: qty };
 		}).sort(function (a, b) { return collator.compare(a.name,b.name); });
 		$.each(cards, function (index, card) {
@@ -167,7 +167,7 @@ function do_diff_collection(ids) {
 	container.append("<h4>Cards in all decks</h4>");
 	var list = $('<ul></ul>').appendTo(container);
 	$.each(intersect, function (card_code, qty) {
-		var card = NRDB.data.get_card_by_code(card_code);
+		var card = app.data.get_card_by_code(card_code);
 		if(card) list.append('<li>'+card.name+' x'+qty+'</li>');
 	});
 
@@ -175,7 +175,7 @@ function do_diff_collection(ids) {
 		container.append("<h4>Cards only in <b>"+names[i]+"</b></h4>");
 		var list = $('<ul></ul>').appendTo(container);
 		$.each(listings[i], function (card_code, qty) {
-			var card = NRDB.data.get_card_by_code(card_code);
+			var card = app.data.get_card_by_code(card_code);
 			if(card) list.append('<li>'+card.name+' x'+qty+'</li>');
 		});
 	}
@@ -490,10 +490,10 @@ function show_deck() {
 	$(this).closest('tr').siblings().removeClass('active');
 	$(this).closest('tr').addClass('active');
 	
-	NRDB.data.cards().update({indeck:0});
+	app.data.cards().update({indeck:0});
 	for(var i=0; i<deck.cards.length; i++) {
 		var slot = deck.cards[i];
-		NRDB.data.get_cards_by_code(slot.card_code).update({indeck:parseInt(slot.qty,10)});
+		app.data.get_cards_by_code(slot.card_code).update({indeck:parseInt(slot.qty,10)});
 	}
 	$('#deck-name').text(deck.name);
 	$('#btn-view').attr('href', Routing.generate('deck_view', {deck_id:deck.id}));

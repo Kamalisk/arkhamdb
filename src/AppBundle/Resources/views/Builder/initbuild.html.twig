@@ -2,29 +2,6 @@
 
 {% block body %}
 
-<script type="text/javascript">
-$(function() {
-	$('.list-group').on('mouseenter touchstart', 'a', function(event) {
-		var card_code = $(this).data('code');
-		var card = NRDB.data.get_card_by_code(card_code);
-		$('#cardimg').prop('src', card.imagesrc);
-	});
-    $(window).scroll(function() {
-        var scrollingDiv = $("#initIdentity");
-        if(!scrollingDiv.is(':visible')) return;
-        var y = $(this).scrollTop(),
-            maxY = $('footer').offset().top,
-            scrollHeight = scrollingDiv.height(),
-            scrollTop = $(window).scrollTop();
-
-        if(y < maxY - scrollHeight - 200) {
-            scrollingDiv.stop().animate({"marginTop": scrollTop + "px"}, "slow");
-        }
-    });
-});
-    
-</script>
-
 <div class="container">
 
 <div class="row">

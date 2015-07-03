@@ -1,4 +1,4 @@
-NRDB.data_loaded.add(function() {
+app.data_loaded.add(function() {
 	$('#btn-import').prop('disabled', false);
 });
 
@@ -27,7 +27,7 @@ function do_import() {
 	update_stats();
 }
 function import_one_line(line, lineNumber) {
-    var result = NRDB.fuzzy_search.lookup(line);
+    var result = app.fuzzy_search.lookup(line);
     if(!result) return;
 	var options = result.cards, qty = result.qty;
 	var qty_text = "", qty_int = qty;
@@ -71,7 +71,7 @@ function update_stats() {
 		var card = $(element).val().split(':');
 		var code = card[0], qty = parseInt(card[1], 10);
 		deck[code] = qty;
-		var record = NRDB.data.get_card_by_code(code);
+		var record = app.data.get_card_by_code(code);
 		types[record.type] = types[record.type] || 0;
 		types[record.type]+=qty;
 	});

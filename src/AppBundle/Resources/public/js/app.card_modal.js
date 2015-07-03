@@ -1,7 +1,7 @@
-if (typeof NRDB != "object")
-	var NRDB = { data_loaded: jQuery.Callbacks() };
+if (typeof app != "object")
+	var app = { data_loaded: jQuery.Callbacks() };
 
-NRDB.card_modal = {};
+app.card_modal = {};
 (function(card_modal, $) {
 	var modal = null;
 	
@@ -18,22 +18,22 @@ NRDB.card_modal = {};
 	};
 
 	card_modal.typeahead = function (event, data) {
-		var card = NRDB.data.cards({name:data.value}).first();
+		var card = app.data.cards({name:data.value}).first();
 		fill_modal(card.code);
 		$('#cardModal').modal('show');
 		InputByTitle = true;
 	};
 
 	function fill_modal (code) {
-		var card = NRDB.data.get_card_by_code(code);
+		var card = app.data.get_card_by_code(code);
 		modal.data('index', code);
 		modal.find('.card-modal-link').attr('href', card.url);
 		modal.find('h3.modal-title').html((card.uniqueness ? "&diams; " : "")+card.name);
 		modal.find('.modal-image').html('<img class="img-responsive" src="'+card.imagesrc+'">');
 		modal.find('.modal-info').html(
-		  '<div class="card-info">'+NRDB.format.type(card)+'</div>'
+		  '<div class="card-info">'+app.format.type(card)+'</div>'
 		  +'<div><small>' + card.faction + ' &bull; '+ card.setname + '</small></div>'
-		  +'<div class="card-text"><small>'+NRDB.format.text(card)+'</small></div>'
+		  +'<div class="card-text"><small>'+app.format.text(card)+'</small></div>'
 		);
 
 		var qtyelt = modal.find('.modal-qty');
@@ -69,4 +69,4 @@ NRDB.card_modal = {};
 		card_modal.create_element();
 	});
 	
-})(NRDB.card_modal, jQuery);
+})(app.card_modal, jQuery);

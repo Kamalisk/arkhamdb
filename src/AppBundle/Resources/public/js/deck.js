@@ -8,7 +8,7 @@ var Deck_changed_since_last_autosave = false;
 var Autosave_running = false;
 var Autosave_period = 60;
 
-NRDB.data_loaded.add(function() {
+app.data_loaded.add(function() {
 	var localStorageDisplayColumns;
 	if (localStorage
 			&& (localStorageDisplayColumns = parseInt(localStorage
@@ -33,9 +33,9 @@ NRDB.data_loaded.add(function() {
 			&& (localStorageSuggestions = parseInt(localStorage
 					.getItem('show_suggestions'), 10)) !== null
 			&& [ 0, 3, 10 ].indexOf(localStorageSuggestions) > -1) {
-		NRDB.suggestions.number = localStorageSuggestions;
+		app.suggestions.number = localStorageSuggestions;
 	}
-	$('input[name=show-suggestions-' + NRDB.suggestions.number + ']').prop('checked', true);
+	$('input[name=show-suggestions-' + app.suggestions.number + ']').prop('checked', true);
 
 	var localStorageButtonsBehavior;
 	if (localStorage
@@ -45,25 +45,25 @@ NRDB.data_loaded.add(function() {
 	}
 	$('input[name=buttons-behavior-' + Buttons_Behavior + ']').prop('checked', true);
 
-	NRDB.data.cards({
+	app.data.cards({
 		side_code : {
 			"!is" : Side
 		}
 	}).remove();
 	var sets_in_deck = {};
-	NRDB.data.cards().each(function(record) {
+	app.data.cards().each(function(record) {
 		var indeck = 0;
 		if (Deck[record.code]) {
 			indeck = parseInt(Deck[record.code], 10);
 			sets_in_deck[record.set_code] = 1;
 		}
-		NRDB.data.cards(record.___id).update({
+		app.data.cards(record.___id).update({
 			indeck : indeck,
 			factioncost : record.factioncost || 0
 		});
 	});
 	update_deck();
-	NRDB.data.cards().each(function(record) {
+	app.data.cards().each(function(record) {
 		var max_qty = 3;
 		if (record.set_code == 'core')
 			max_qty = Math.min(record.quantity * CoreSets, 3);
@@ -72,7 +72,7 @@ NRDB.data_loaded.add(function() {
 		if(Identity.faction_code == "neutral") {
 			max_qty = 9;
 		}
-		NRDB.data.cards(record.___id).update({
+		app.data.cards(record.___id).update({
 			maxqty : max_qty
 		});
 	});
@@ -82,12 +82,12 @@ NRDB.data_loaded.add(function() {
 		$('#faction_code, #type_code').addClass('btn-group');
 	}
 	$('#faction_code').empty();
-	$.each(NRDB.data.cards().distinct("faction_code").sort(
+	$.each(app.data.cards().distinct("faction_code").sort(
 			function(a, b) {
 				return b === "neutral" ? -1 : a === "neutral" ? 1 : a < b ? -1
 						: a > b ? 1 : 0;
 			}), function(index, record) {
-		var example = NRDB.data.cards({"faction_code": record}).first();
+		var example = app.data.cards({"faction_code": record}).first();
 		var faction = example.faction.replace(/.*Weyland.*/, 'Weyland');
 		var label = $('<label class="btn btn-default btn-sm" data-code="' + record
 				+ '" title="'+faction+'"><input type="checkbox" name="' + record
@@ -108,8 +108,8 @@ NRDB.data_loaded.add(function() {
 	});
 
 	$('#type_code').empty();
-	$.each(NRDB.data.cards().distinct("type_code").sort(), function(index, record) {
-		var example = NRDB.data.cards({"type_code": record}).first();
+	$.each(app.data.cards().distinct("type_code").sort(), function(index, record) {
+		var example = app.data.cards({"type_code": record}).first();
 		var label = $('<label class="btn btn-default btn-sm" data-code="'
 				+ record + '" title="'+example.type+'"><input type="checkbox" name="' + record
 				+ '"><img src="' + Url_TypeImage.replace('xxx', record)
@@ -128,7 +128,7 @@ NRDB.data_loaded.add(function() {
 	});
 
 	$('#set_code').empty();
-	NRDB.data.sets().each(
+	app.data.sets().each(
 			function(record) {
 				var checked = record.available === ""
 						&& sets_in_deck[record.code] == null ? ''
@@ -177,7 +177,7 @@ NRDB.data_loaded.add(function() {
 
 	function findMatches(q, cb) {
 		if(q.match(/^\w:/)) return;
-		var matches = NRDB.data.cards({name: {likenocase: q}}).map(function (record) {
+		var matches = app.data.cards({name: {likenocase: q}}).map(function (record) {
 			return { value: record.name };
 		});
 		cb(matches);
@@ -222,7 +222,7 @@ $(function() {
 	$('html,body').css('height', '100%');
 
 	$('#filter-text').on('typeahead:selected typeahead:autocompleted',
-			NRDB.card_modal.typeahead);
+			app.card_modal.typeahead);
 	
 	$(document).on('hidden.bs.modal', function (event) {
 		if(InputByTitle) {
@@ -261,8 +261,8 @@ $(function() {
 	$('#filter-text').on({
 		input : function (event) {
 			var q = $(this).val();
-			if(q.match(/^\w[:<>!]/)) NRDB.smart_filter.handler(q, refresh_collection);
-			else NRDB.smart_filter.handler('', refresh_collection);
+			if(q.match(/^\w[:<>!]/)) app.smart_filter.handler(q, refresh_collection);
+			else app.smart_filter.handler('', refresh_collection);
 		}
 	});
 
@@ -374,30 +374,30 @@ $(function() {
 		change : function(event) {
 			$('input[name=show-suggestions-3]').prop('checked', false);
 			$('input[name=show-suggestions-10]').prop('checked', false);
-			NRDB.suggestions.number = 0;
+			app.suggestions.number = 0;
 			if (localStorage)
-				localStorage.setItem('show_suggestions', NRDB.suggestions.number);
-			NRDB.suggestions.show();
+				localStorage.setItem('show_suggestions', app.suggestions.number);
+			app.suggestions.show();
 		}
 	});
 	$('input[name=show-suggestions-3]').on({
 		change : function(event) {
 			$('input[name=show-suggestions-0]').prop('checked', false);
 			$('input[name=show-suggestions-10]').prop('checked', false);
-			NRDB.suggestions.number = 3;
+			app.suggestions.number = 3;
 			if (localStorage)
-				localStorage.setItem('show_suggestions', NRDB.suggestions.number);
-			NRDB.suggestions.show();
+				localStorage.setItem('show_suggestions', app.suggestions.number);
+			app.suggestions.show();
 		}
 	});
 	$('input[name=show-suggestions-10]').on({
 		change : function(event) {
 			$('input[name=show-suggestions-0]').prop('checked', false);
 			$('input[name=show-suggestions-3]').prop('checked', false);
-			NRDB.suggestions.number = 10;
+			app.suggestions.number = 10;
 			if (localStorage)
-				localStorage.setItem('show_suggestions', NRDB.suggestions.number);
-			NRDB.suggestions.show();
+				localStorage.setItem('show_suggestions', app.suggestions.number);
+			app.suggestions.show();
 		}
 	});
 	$('input[name=buttons-behavior-cumulative]').on({
@@ -450,7 +450,7 @@ $(function() {
 					{
 						match : /\B#([\-+\w]*)$/,
 						search : function(term, callback) {
-							callback(NRDB.data.cards({
+							callback(app.data.cards({
 								name : {
 									likenocase : term
 								},
@@ -511,12 +511,12 @@ function add_snapshot(snapshot) {
 	var list = [];
 	if(snapshot.variation) {
 		$.each(snapshot.variation[0], function (code, qty) {
-			var card = NRDB.data.get_card_by_code(code);
+			var card = app.data.get_card_by_code(code);
 			if(!card) return; 
 			list.push('+'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card" data-code="'+code+'">'+card.name+'</a>');
 		});
 		$.each(snapshot.variation[1], function (code, qty) {
-			var card = NRDB.data.get_card_by_code(code);
+			var card = app.data.get_card_by_code(code);
 			if(!card) return; 
 			list.push('&minus;'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card" data-code="'+code+'">'+card.name+'</a>');
 		});
@@ -533,18 +533,18 @@ function load_snapshot(event) {
 	var snapshot = Snapshots[index];
 	if(!snapshot) return;
 	
-	NRDB.data.cards().each(function(record) {
+	app.data.cards().each(function(record) {
 		var indeck = 0;
 		if (snapshot.content[record.code]) {
 			indeck = parseInt(snapshot.content[record.code], 10);
 		}
-		NRDB.data.cards(record.___id).update({
+		app.data.cards(record.___id).update({
 			indeck : indeck
 		});
 	});
 	update_deck();
 	refresh_collection();
-	NRDB.suggestions.compute();
+	app.suggestions.compute();
 	Deck_changed_since_last_autosave = true;
 	return false;
 }
@@ -555,7 +555,7 @@ function deck_autosave() {
 	var last_snapshot = Snapshots[Snapshots.length-1].content;
 	var current_deck = get_deck_content();
 	Deck_changed_since_last_autosave = false;
-	var r = NRDB.diff.compute_simple([current_deck, last_snapshot]);
+	var r = app.diff.compute_simple([current_deck, last_snapshot]);
 	if(!r) return;
 	var diff = JSON.stringify(r[0]);
 	if(diff == '[{},{}]') return;
@@ -617,7 +617,7 @@ function handle_input_change(event) {
 }
 function get_deck_content() {
 	var deck_content = {};
-	NRDB.data.cards({
+	app.data.cards({
 		indeck : {
 			'gt' : 0
 		}
@@ -639,13 +639,13 @@ function handle_quantity_change(event) {
 	var in_collection = $(this).closest('#collection').size();
 	var quantity = parseInt($(this).val(), 10);
 	$(this).closest('.card-container')[quantity ? "addClass" : "removeClass"]('in-deck');
-	var cards = NRDB.data.get_cards_by_code(index);
+	var cards = app.data.get_cards_by_code(index);
 	cards.update({indeck : quantity});
 	var card = cards.first();
 	if (card.type_code == "identity") {
 		if (Identity.faction != card.faction) {
 			// change of faction, reset agendas
-			NRDB.data.cards({
+			app.data.cards({
 				indeck : {
 					'gt' : 0
 				},
@@ -660,7 +660,7 @@ function handle_quantity_change(event) {
 					}).join(' ')
 			);
 		}
-		NRDB.data.cards({
+		app.data.cards({
 			indeck : {
 				'gt' : 0
 			},
@@ -674,7 +674,7 @@ function handle_quantity_change(event) {
 	}
 	update_deck();
 	if (card.type_code == "identity") {
-		NRDB.draw_simulator.reset();
+		app.draw_simulator.reset();
 		$.each(CardDivs, function(nbcols, rows) {
 			if (rows)
 				$.each(rows, function(index, row) {
@@ -706,21 +706,21 @@ function handle_quantity_change(event) {
 		});
 	}
 	$('div.modal').modal('hide');
-	NRDB.suggestions.compute();
+	app.suggestions.compute();
 	
 	Deck_changed_since_last_autosave = true;
 }
 
 function update_core_sets() {
 	CardDivs = [ null, {}, {}, {} ];
-	NRDB.data.cards({
+	app.data.cards({
 		set_code : 'core'
 	}).each(function(record) {
 		var max_qty = Math.min(record.quantity * CoreSets, 3);
 		if (record.type_code == "identity" || record.limited)
 			max_qty = 1;
 		if(Identity.faction_code == "neutral") max_qty = 9;
-		NRDB.data.cards(record.___id).update({
+		app.data.cards(record.___id).update({
 			maxqty : max_qty
 		});
 	});
@@ -822,8 +822,8 @@ function update_filtered() {
 	$('#collection-grid').empty();
 	
 	var counter = 0, container = $('#collection-table');
-	var SmartFilterQuery = NRDB.smart_filter.get_query(FilterQuery);
-	NRDB.data.cards.apply(window, SmartFilterQuery)
+	var SmartFilterQuery = app.smart_filter.get_query(FilterQuery);
+	app.data.cards.apply(window, SmartFilterQuery)
 			.order(Sort + (Order > 0 ? " intl" : " intldesc") + ',name')
 			.each(
 					function(record) {

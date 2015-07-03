@@ -191,7 +191,7 @@ class ReviewController extends Controller
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('short_cache'));
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
         
         $limit = 5;
         if ($page < 1)
@@ -259,7 +259,7 @@ class ReviewController extends Controller
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('short_cache'));
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
     
         $limit = 5;
         if ($page < 1)

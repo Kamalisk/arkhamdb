@@ -85,3 +85,7 @@ fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
     user_class: AppBundle\Entity\User
+
+# FOSJsRoutingBundle Configuration
+fos_js_routing:
+    routes_to_expose: [ 'api_sets', 'api_cards' ]

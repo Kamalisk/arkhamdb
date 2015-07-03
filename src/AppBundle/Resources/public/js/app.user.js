@@ -1,7 +1,7 @@
-if (typeof NRDB != "object")
-	var NRDB = { data_loaded: jQuery.Callbacks() };
+if (typeof app != "object")
+	var app = { data_loaded: jQuery.Callbacks() };
 
-NRDB.user = {};
+app.user = {};
 (function(user, $) {
 
 	user.params = {};
@@ -70,7 +70,7 @@ NRDB.user = {};
 				+ Routing.generate('user_comments')
 				+ '">Comments</a></li><li><a href="'
 				+ Routing.generate('fos_user_security_logout') 
-				+ '" onclick="NRDB.user.wipe()">Jack out</a></li></ul>');
+				+ '" onclick="app.user.wipe()">Jack out</a></li></ul>');
 	};
 	
 	user.always = function() {
@@ -86,7 +86,7 @@ NRDB.user = {};
 	
 		if($('ins.adsbygoogle').filter(':visible').length === 0) {
 			$('div.ad').each(function (index, element) {
-				$(element).addClass('ad-blocked').html("No ad,<br>no <span class=\"icon icon-credit\"></span>.<br>Like NRDB?<br>Whitelist us<br>or <a href=\""+Routing.generate('donators')+"\">donate</a>.");
+				$(element).addClass('ad-blocked').html("No ad,<br>no <span class=\"icon icon-credit\"></span>.<br>Like app?<br>Whitelist us<br>or <a href=\""+Routing.generate('donators')+"\">donate</a>.");
 			});
 		}
 	}
@@ -99,5 +99,5 @@ NRDB.user = {};
 		}
 	});
 	
-})(NRDB.user, jQuery);
+})(app.user, jQuery);
 

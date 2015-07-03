@@ -1,7 +1,7 @@
-if (typeof NRDB != "object")
-	var NRDB = { data_loaded: jQuery.Callbacks() };
+if (typeof app != "object")
+	var app = { data_loaded: jQuery.Callbacks() };
 
-NRDB.draw_simulator = {};
+app.draw_simulator = {};
 (function(draw_simulator, $) {
 	var deck = null, initial_size = 0, draw_count = 0, container = null;
 	
@@ -17,7 +17,7 @@ NRDB.draw_simulator = {};
 		container = $('#table-draw-simulator-content');
 		deck = [];
 		check_draw_type();
-		NRDB.data.cards({indeck:{'gt':0},type_code:{'!is':'identity'}}).each(function (record) {
+		app.data.cards({indeck:{'gt':0},type_code:{'!is':'identity'}}).each(function (record) {
 			for(var ex = 0; ex < record.indeck; ex++) {
 				deck.push(record);
 			}
@@ -33,7 +33,7 @@ NRDB.draw_simulator = {};
 	}
 
 	function check_draw_type() {
-		identity = NRDB.data.cards({indeck:{'gt':0},type_code:{'is':'identity'}}).first();
+		identity = app.data.cards({indeck:{'gt':0},type_code:{'is':'identity'}}).first();
 		var special_button = $("#draw-simulator-special");
 		var special_draw = false;
 		switch (identity.code) {
@@ -127,7 +127,7 @@ NRDB.draw_simulator = {};
 		$('#table-draw-simulator').on({click: draw_simulator.handle_click}, 'button.btn');
 		$('#table-draw-simulator').on({click: draw_simulator.toggle_opacity}, 'img.card-image, div.card-proxy');
 	});
-})(NRDB.draw_simulator, jQuery);
+})(app.draw_simulator, jQuery);
 $(function(){
-	NRDB.draw_simulator.init();
+	app.draw_simulator.init();
 });

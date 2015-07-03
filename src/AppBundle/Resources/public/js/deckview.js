@@ -1,19 +1,19 @@
 
-NRDB.data_loaded.add(function() {
+app.data_loaded.add(function() {
 	var sets_in_deck = {};
-	NRDB.data.cards().each(function(record) {
+	app.data.cards().each(function(record) {
 		var indeck = 0;
 		if (SelectedDeck.slots[record.code]) {
 			indeck = parseInt(SelectedDeck.slots[record.code], 10);
 			sets_in_deck[record.set_code] = 1;
 		}
-		NRDB.data.cards(record.___id).update({
+		app.data.cards(record.___id).update({
 			indeck : indeck,
 			factioncost : record.factioncost || 0
 		});
 	});
 	update_deck();
-	NRDB.deck_gallery.update();
+	app.deck_gallery.update();
 	
 	$('html,body').css('height', 'auto');
 	$('.container').show();

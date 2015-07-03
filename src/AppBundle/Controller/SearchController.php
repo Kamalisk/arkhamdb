@@ -17,7 +17,7 @@ class SearchController extends Controller
 	{
 		$response = new Response();
 		$response->setPublic();
-		$response->setMaxAge($this->container->getParameter('long_cache'));
+		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 	
 		$dbh = $this->get('doctrine')->getConnection();
 	
@@ -213,7 +213,7 @@ class SearchController extends Controller
 	{
 		$response = new Response();
 		$response->setPublic();
-		$response->setMaxAge($this->container->getParameter('short_cache'));
+		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 		
 	    static $availability = array();
 

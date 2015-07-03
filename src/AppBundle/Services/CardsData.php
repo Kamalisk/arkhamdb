@@ -33,27 +33,6 @@ class CardsData
 		return str_replace(array_keys($map), array_values($map), $text);
 	}
 	
-	public function allsetsnocycledata()
-	{
-		$list_packs = $this->doctrine->getRepository('AppBundle:Pack')->findBy(array(), array("dateRelease" => "ASC", "position" => "ASC"));
-		$packs = array();
-		foreach($list_packs as $pack) {
-			$real = count($pack->getCards());
-			$max = $pack->getSize();
-			$packs[] = array(
-					"name" => $pack->getName(),
-					"code" => $pack->getCode(),
-					"position" => $pack->getPosition(),
-					"cycleposition" => $pack->getCycle()->getPosition(),
-					"available" => $pack->getDateRelease() ? $pack->getDateRelease()->format('Y-m-d') : '',
-					"known" => intval($real),
-					"total" => $max,
-					"url" => $this->router->generate('cards_list', array('pack_code' => $pack->getCode()), true),
-			);
-		}
-		return $packs;
-	}
-
 	public function allsetsdata()
 	{
 		$list_cycles = $this->doctrine->getRepository('AppBundle:Cycle')->findBy(array(), array("position" => "ASC"));
