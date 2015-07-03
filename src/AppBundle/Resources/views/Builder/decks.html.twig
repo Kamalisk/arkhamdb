@@ -1,15 +1,15 @@
 {% extends 'AppBundle::layout.html.twig' %}
 {% block head %}
-<script src="{{ asset('/web/bundles/app/js/nrdb.card_modal.js') }}"></script>
-<script src="{{ asset('/web/bundles/app/js/nrdb.diff.js') }}"></script>
-<script src="{{ asset('/web/bundles/app/js/decks.js') }}"></script>
+<script src="{{ asset('/bundles/app/js/nrdb.card_modal.js') }}"></script>
+<script src="{{ asset('/bundles/app/js/nrdb.diff.js') }}"></script>
+<script src="{{ asset('/bundles/app/js/decks.js') }}"></script>
 <script type="text/javascript">
 var Identity = null,
 	LastClickedDeck = null,
 	SelectedDeck = null,
 	Decks = {{ decks|json_encode|raw }},
 	DeckDB = TAFFY(Decks),
-	Url_FactionImage = '{{  asset('/web/bundles/app/images/factions/16px/xxx.png') }}',
+	Url_FactionImage = '{{  asset('/bundles/app/images/factions/16px/xxx.png') }}',
 	DisplaySort = 'type';
 	
 </script>
@@ -109,7 +109,7 @@ var Identity = null,
 <div class="list-group" id="decks" data-sort-type="dateupdate" data-sort-order="1">
 {% for deck in decks %}
 <a href="#" class="list-group-item deck-list-group-item" id="deck_{{ deck.id }}" data-id="{{ deck.id }}" data-problem="{{ deck.problem }}" data-faction="{{ deck.faction_code }}">
-    <div class="deck-list-identity-image hidden-xs" title="{{ deck.identity_name }}" style="background-image:url({{ asset('/web/bundles/netrunnerdbcards/images/cards/en/'~deck.identity_code~'.png') }})"></div>
+    <div class="deck-list-identity-image hidden-xs" title="{{ deck.identity_name }}" style="background-image:url({{ asset('/bundles/netrunnerdbcards/images/cards/en/'~deck.identity_code~'.png') }})"></div>
     <h4 class="decklist-name">{{ deck.name }}{% if deck.message %} <span class="glyphicon glyphicon-exclamation-sign text-danger" title="{{ deck.message }}"></span>{% endif %}</h4>
     <div>
         {% if deck.identity_title %}{{ deck.identity_name }}{% else %}No Identity{% endif %}

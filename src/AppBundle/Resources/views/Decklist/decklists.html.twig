@@ -1,7 +1,7 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
 {% block head %}
-<script src="{{ asset('/web/bundles/app/js/search.js') }}"></script>
+<script src="{{ asset('/bundles/app/js/search.js') }}"></script>
 <script type="text/javascript">
 $(function () {
 	var type = {{ type|json_encode|raw }};
@@ -84,7 +84,7 @@ $(function () {
 
 <tr>
 <td class="decklist-identity-image hidden-xs">
-	<img src="/web/bundles/netrunnerdbcards/images/cards/en/{{ decklist.code }}.png" alt="{{ decklist.identity }}" class="card img-responsive" data-index="{{ decklist.code }}">
+	<img src="/web/bundles/netrunnerdbcards/images/cards/en/{{ decklist.code }}.png" alt="{{ decklist.identity }}" class="card img-responsive" data-code="{{ decklist.code }}">
 </td>
 <td>
     <article>

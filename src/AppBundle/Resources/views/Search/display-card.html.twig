@@ -10,26 +10,16 @@
         		<div>
         			<div class="panel panel-default">
         				<div class="panel-heading">
-        					<h3 class="panel-title card-name">
-        						<a href="{{ card.url }}" class="card-name{% if card.available == false %} card-preview{% endif %}">{{ card.name }}</a>
+        					<h3 class="panel-title">
+        						{% include 'AppBundle:Search:card-name.html.twig' %}
         					</h3>
         	  			</div>
         				<div class="panel-body">
-        					<div class="card-info">
-        						<span class="card-type">{{ card.type_name }}. </span><span class="card-traits">{{ card.traits }}</span>
-        					</div>
-        					<div class="card-text">
-        						{{ card.text|raw }}
-        					</div>
-        					<div class="card-flavor">
-        						<small>{{ card.flavor|raw|nl2br }}</small>
-        					</div>
-        					<div class="card-illustrator">
-        						<small>
-        						{{ card.faction_name }} &bull;
-        						{% if card.illustrator %}{{ card.illustrator }} &bull; {% endif %}{{ card.pack_name }} #{{ card.position }}
-        						</small>
-        					</div>
+        					{% include 'AppBundle:Search:card-info.html.twig' %}
+        					{% include 'AppBundle:Search:card-text.html.twig' %}
+        					{% include 'AppBundle:Search:card-flavor.html.twig' %}
+        					{% include 'AppBundle:Search:card-illustrator.html.twig' %}
+							{% include 'AppBundle:Search:card-pack-faction.html.twig' %}
         				</div>
         			</div>
         		</div>

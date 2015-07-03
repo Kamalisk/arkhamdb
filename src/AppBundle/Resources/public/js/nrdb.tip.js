@@ -9,7 +9,7 @@ NRDB.tip = {};
 		var code = $(this).data('index')
 				|| $(this).closest('.card-container').data('index')
 				|| ($(this).attr('href') && $(this).attr('href').replace(
-						/.*\/card\/(\d\d\d\d\d.?).*/,
+						/.*\/card\/(\d\d\d\d\d).*/,
 						"$1"));
 		var card = NRDB.data.get_card_by_code(code);
 		if (!card) return;

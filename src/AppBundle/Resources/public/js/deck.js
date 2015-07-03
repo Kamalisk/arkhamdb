@@ -513,18 +513,18 @@ function add_snapshot(snapshot) {
 		$.each(snapshot.variation[0], function (code, qty) {
 			var card = NRDB.data.get_card_by_code(code);
 			if(!card) return; 
-			list.push('+'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card" data-index="'+code+'">'+card.name+'</a>');
+			list.push('+'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card" data-code="'+code+'">'+card.name+'</a>');
 		});
 		$.each(snapshot.variation[1], function (code, qty) {
 			var card = NRDB.data.get_card_by_code(code);
 			if(!card) return; 
-			list.push('&minus;'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card" data-index="'+code+'">'+card.name+'</a>');
+			list.push('&minus;'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card" data-code="'+code+'">'+card.name+'</a>');
 		});
 	} else {
 		list.push("First version");
 	}
 	
-	$('#tbody-history').prepend('<tr'+(snapshot.saved ? '' : ' class="warning"')+'><td>'+snapshot.datecreation.calendar()+(snapshot.saved ? '' : ' (unsaved)')+'</td><td>'+list.join('<br>')+'</td><td><a role="button" href="#" data-index="'+(Snapshots.length-1)+'"">Revert</a></td></tr>');
+	$('#tbody-history').prepend('<tr'+(snapshot.saved ? '' : ' class="warning"')+'><td>'+snapshot.datecreation.calendar()+(snapshot.saved ? '' : ' (unsaved)')+'</td><td>'+list.join('<br>')+'</td><td><a role="button" href="#" data-code="'+(Snapshots.length-1)+'"">Revert</a></td></tr>');
 	
 	Autosave_timer = -1; // start timer
 }
@@ -747,7 +747,7 @@ function build_div(record) {
 		var imgsrc = record.faction_code == "neutral" ? "" : '<img src="'
 				+ Url_FactionImage.replace('xxx', record.faction_code)
 				+ '.png" alt="'+record.faction+'">';
-		div = $('<tr class="card-container" data-index="'
+		div = $('<tr class="card-container" data-code="'
 				+ record.code
 				+ '"><td><div class="btn-group" data-toggle="buttons">'
 				+ radios
@@ -764,7 +764,7 @@ function build_div(record) {
 
 	case 2:
 
-		div = $('<div class="col-sm-6 card-container" data-index="'
+		div = $('<div class="col-sm-6 card-container" data-code="'
 				+ record.code
 				+ '">'
 				+ '<div class="media"><div class="media-left">'
@@ -783,7 +783,7 @@ function build_div(record) {
 
 	case 3:
 
-		div = $('<div class="col-sm-4 card-container" data-index="'
+		div = $('<div class="col-sm-4 card-container" data-code="'
 				+ record.code
 				+ '">'
 				+ '<div class="media"><div class="media-left">'

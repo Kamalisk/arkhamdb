@@ -8,27 +8,14 @@
 {% if row*3+col < cards|length %}
 {% set card = cards[row*3+col] %}
 <div class="col-sm-4 icon-bg icon-{{ card.faction_code }}" style="margin-bottom:1.5em">
-		<h4><a href="{{ card.url }}" class="card-name{% if card.available == false %} card-preview{% endif %}">{{ card.name }}</a>
-		</h4>
-	<div class="card-info">
-	<p>
-		<span class="card-type">{{ card.type_name }}. </span><span class="card-traits">{{ card.traits }}</span>
-	</p>
-	<p class="card-props">
-	</p>
-	</div>
-	<div class="card-text">
-		{{ card.text|raw }}
-	</div>
-	<p class="card-flavor" style="font-size:86.5%">
-		{{ card.flavor|raw|nl2br }}
-	</p>
-	<p style="font-size:86.5%">
-		{{ card.illustrator }}
-	</p>
-	<p>
-		{{ card.pack_name }} #{{ card.position }} &bull; {{ card.faction_name }}
-	</p>
+	<h4>
+		{% include 'AppBundle:Search:card-name.html.twig' %}
+	</h4>
+	{% include 'AppBundle:Search:card-info.html.twig' %}
+	{% include 'AppBundle:Search:card-text.html.twig' %}
+	{% include 'AppBundle:Search:card-flavor.html.twig' %}
+	{% include 'AppBundle:Search:card-illustrator.html.twig' %}
+	{% include 'AppBundle:Search:card-pack-faction.html.twig' %}
 </div>
 {% endif %}
 {% endfor %}

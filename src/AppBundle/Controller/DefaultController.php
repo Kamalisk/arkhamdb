@@ -11,67 +11,6 @@ class DefaultController extends Controller
         return $this->render('AppBundle:Default:index.html.twig', array('name' => $name));
     }
 
-    public function searchAction()
-    {
-    	$response = new Response();
-    	$response->setPublic();
-    	$response->setMaxAge($this->container->getParameter('long_cache'));
-    
-    	$dbh = $this->get('doctrine')->getConnection();
-    
-    	$list_packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findBy(array(), array("released" => "ASC", "position" => "ASC"));
-    	$packs = array();
-    	foreach($list_packs as $pack) {
-    		$packs[] = array(
-    				"name" => $pack->getName(),
-    				"code" => $pack->getCode(),
-    		);
-    	}
-    
-    	$list_cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findBy(array(), array("position" => "ASC"));
-    	$cycles = array();
-    	foreach($list_cycles as $cycle) {
-    		$cycles[] = array(
-    				"name" => $cycle->getName(),
-    				"code" => $cycle->getCode(),
-    		);
-    	}
-    
-    	$list_types = $this->getDoctrine()->getRepository('AppBundle:Type')->findBy(array(), array("name" => "ASC"));
-    	$types = array_map(function ($type) {
-    		return $type->getName();
-    	}, $list_types);
-    
-    		$list_traits = $dbh->executeQuery("SELECT DISTINCT c.traits FROM card c WHERE c.traits != ''")->fetchAll();
-    		$traits = array();
-    		foreach($list_traits as $keyword) {
-    			$subs = explode(' - ', $keyword["traits"]);
-    			foreach($subs as $sub) {
-    				$traits[$sub] = 1;
-    			}
-    		}
-    		$traits = array_keys($traits);
-    		sort($traits);
-    
-    		$list_illustrators = $dbh->executeQuery("SELECT DISTINCT c.illustrator FROM card c WHERE c.illustrator != '' ORDER BY c.illustrator")->fetchAll();
-    		$illustrators = array_map(function ($elt) {
-    			return $elt["illustrator"];
-    		}, $list_illustrators);
-    
-    			return $this->render('AppBundle:Search:searchform.html.twig', array(
-    					"pagetitle" => "Card Search",
-    					"pagedescription" => "Find all the cards of the game, easily searchable.",
-    					"packs" => $packs,
-    					"cycles" => $cycles,
-    					"types" => $types,
-    					"traits" => $traits,
-    					"illustrators" => $illustrators,
-    					"allsets" => $this->renderView('AppBundle:Default:allsets.html.twig', array(
-    							"data" => $this->get('cards_data')->allsetsdata(),
-    					)),
-    			), $response);
-    }
-    
     function rulesAction()
     {
     

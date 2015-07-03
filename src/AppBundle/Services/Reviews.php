@@ -39,7 +39,7 @@ class Reviews
                 join card c on r.card_id=c.id
                 join pack p on c.pack_id=p.id
                 where r.datecreation > DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
-        		and p.released is not null
+        		and p.dateRelease is not null
                 order by r.datecreation desc
                 limit $start, $limit")->fetchAll(\PDO::FETCH_ASSOC);
     
@@ -78,7 +78,7 @@ class Reviews
                 join card c on r.card_id=c.id
                 join pack p on c.pack_id=p.id
                 where r.user_id=?
-        		and p.released is not null
+        		and p.dateRelease is not null
         		order by c.code asc
                 limit $start, $limit", array(
                         $user_id

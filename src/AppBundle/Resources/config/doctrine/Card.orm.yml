@@ -68,7 +68,7 @@ AppBundle\Entity\Card:
         quantity:
             type: smallint
             nullable: false
-        gold:
+        income:
             type: smallint
             nullable: true
         claim:

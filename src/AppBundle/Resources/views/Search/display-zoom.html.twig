@@ -1,7 +1,7 @@
 {% extends 'AppBundle:Search:display.html.twig' %}
 
 {% block head %}
-<script src="{{ asset('/web/bundles/netrunnerdbcards/js/reviews.js') }}"></script>
+<script src="{{ asset('/bundles/netrunnerdbcards/js/reviews.js') }}"></script>
 <script type="text/javascript">
 NRDB.user.params.card_id = {{ cards[0].id|json_encode|raw }};
 </script>
@@ -17,30 +17,16 @@ NRDB.user.params.card_id = {{ cards[0].id|json_encode|raw }};
         		<div>
         			<div class="panel panel-default">
         				<div class="panel-heading">
-        					<h3 class="panel-title card-name">
-        						{% if card.is_unique == true %}&diams;{% endif %}
-        						<a href="{{ card.url }}" class="card-name{% if card.available == false %} card-preview{% endif %}">
-        							{{ card.name }}
-        						</a>
+        					<h3 class="panel-title">
+        						{% include 'AppBundle:Search:card-name.html.twig' %}
         					</h3>
         	  			</div>
         				<div class="panel-body">
-        					<div class="card-info">
-        						<span class="card-type">{{ card.type_name }}</span>
-        						{% if card.traits %}<span class="card-traits">: {{ card.traits }}</span>{% endif %}
-        					</div>
-        					<div class="card-text">
-        						{{ card.text|raw }}
-        					</div>
-        					<div class="card-flavor">
-        						<small>{{ card.flavor|raw|nl2br }}</small>
-        					</div>
-        					<div class="card-illustrator">
-        						<small>
-        						{{ card.faction_name }} &bull;
-        						{% if card.illustrator %}{{ card.illustrator }} &bull; {% endif %}{{ card.pack_name }} #{{ card.position }}
-        						</small>
-        					</div>
+        					{% include 'AppBundle:Search:card-info.html.twig' %}
+        					{% include 'AppBundle:Search:card-text.html.twig' %}
+        					{% include 'AppBundle:Search:card-flavor.html.twig' %}
+        					{% include 'AppBundle:Search:card-illustrator.html.twig' %}
+							{% include 'AppBundle:Search:card-pack-faction.html.twig' %}
         				</div>
         			</div>
         			Links: <a href="{{ path('decklists_list',{type:'find','cards[]':card.code}) }}">Decklists</a>
@@ -66,7 +52,7 @@ NRDB.user.params.card_id = {{ cards[0].id|json_encode|raw }};
                </form>
         	   {% if card.reviews|length %}
         	   {% for review in card.reviews %}
-        	   <article class="review" data-index="{{ review.id }}" id="review-{{ review.id }}">
+        	   <article class="review" data-code="{{ review.id }}" id="review-{{ review.id }}">
         	   
         	       <div class="review-like">
         	           <a id="review-social-icon-like" href="#" class="social-icon-like" data-toggle="tooltip" data-placement="bottom" title="Like that review">

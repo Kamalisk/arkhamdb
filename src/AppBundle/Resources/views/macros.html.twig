@@ -1,0 +1,3 @@
+{% macro integer_or_x(value) %}
+    {% if value is null %}X{% else %}{{ value }}{% endif %}
+{% endmacro %}

@@ -53,7 +53,7 @@ class Card
     /**
      * @var integer
      */
-    private $gold;
+    private $income;
 
     /**
      * @var integer
@@ -351,27 +351,27 @@ class Card
     }
 
     /**
-     * Set gold
+     * Set income
      *
-     * @param integer $gold
+     * @param integer $income
      *
      * @return Card
      */
-    public function setGold($gold)
+    public function setIncome($income)
     {
-        $this->gold = $gold;
+        $this->income = $income;
 
         return $this;
     }
 
     /**
-     * Get gold
+     * Get income
      *
      * @return integer
      */
-    public function getGold()
+    public function getIncome()
     {
-        return $this->gold;
+        return $this->income;
     }
 
     /**

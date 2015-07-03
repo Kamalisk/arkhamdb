@@ -186,9 +186,10 @@ class ExcelController extends Controller
         			
         			$associationRepository = $em->getRepository($associationMapping['targetEntity']);
         			$associationEntity = $associationRepository->findOneBy(['name' => $value]);
-        			if($associationEntity) {
-        				$entity->$setter($associationEntity);
+        			if(!$associationEntity) {
+        				throw new \Exception("cannot find entity [$colName] of name [$value]");
         			}
+        			$entity->$setter($associationEntity);
         		}
         		else if(in_array($colName, $fieldNames))
         		{

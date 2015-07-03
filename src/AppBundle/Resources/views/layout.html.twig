@@ -11,44 +11,16 @@
     {% if pagedescription is defined %}<meta name="description" content="{{ pagedescription }}">{% endif %}
     
     <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Amiri:400italic,700italic,400,700|Julius+Sans+One' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <!--[if lt IE 9]>
       <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.js"></script>
       <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
     <![endif]-->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.css">
+    <link rel="stylesheet" href="{{ asset('/bundles/app/css/style.css') }}">
 
-    <script src="{{ asset('/web/bundles/fosjsrouting/js/router.js') }}"></script>
-    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-    
-    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.9/highcharts.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/pagedown/1.0/Markdown.Converter.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.textcomplete/0.2.2/jquery.textcomplete.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment-with-locales.min.js"></script>
-    <script src="{{ asset('/web/bundles/app/libs/taffy.js') }}"></script>
-    <script src="{{ asset('/web/bundles/app/libs/moment-timezone-with-data-2010-2020.min.js') }}"></script>
-    <script type="text/javascript">
-	var app = {
-		data_loaded: $.Callbacks(),
-		api_url: {
-			sets: '{{ path('api_sets')|raw }}',
-			cards: '{{ path('api_cards')|raw }}'
-		}
-	};
-	moment.locale(window.navigator.language);
-
-{% if app.environment == 'prod' %}{%include 'appbundle::google-analytics.html.twig' %}{% endif %}
-    </script>
-{#    <script src="{{ asset('/web/bundles/app/js/nrdb.js') }}"></script>
-    <script src="{{ asset('/web/bundles/app/js/nrdb.user.js') }}"></script>
-    <script src="{{ asset('/web/bundles/app/js/nrdb.data.js') }}"></script>
-    <script src="{{ asset('/web/bundles/app/js/nrdb.format.js') }}"></script>
-    <script src="{{ asset('/web/bundles/app/js/nrdb.tip.js') }}"></script>
-#}{% block head %}{% endblock %}
+{% block head %}{% endblock %}
 
   </head>
   <body>
@@ -89,7 +61,6 @@
               </ul>
             </li>
             <li class="hidden-sm"><a href="{{ path('card_reviews_list') }}">Reviews</a></li>
-            <li><a href="{{ path('rules') }}">Rules</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown hidden-xs hidden-lg">
@@ -163,6 +134,37 @@
     </footer>
 
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script src="{{ asset('/bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     
+    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.9/highcharts.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/pagedown/1.0/Markdown.Converter.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.textcomplete/0.2.2/jquery.textcomplete.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment-with-locales.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/taffydb/2.7.2/taffy-min.js"></script>
+    <script src="{{ asset('/bundles/app/libs/moment-timezone-with-data-2010-2020.min.js') }}"></script>
+    <script type="text/javascript">
+	var app = {
+		data_loaded: $.Callbacks(),
+		api_url: {
+			sets: '{{ path('api_sets')|raw }}',
+			cards: '{{ path('api_cards')|raw }}'
+		}
+	};
+	moment.locale(window.navigator.language);
+
+{% if app.environment == 'prod' %}{%include 'appbundle::google-analytics.html.twig' %}{% endif %}
+    </script>
+{#    <script src="{{ asset('/bundles/app/js/nrdb.js') }}"></script>
+    <script src="{{ asset('/bundles/app/js/nrdb.user.js') }}"></script>
+    <script src="{{ asset('/bundles/app/js/nrdb.data.js') }}"></script>
+    <script src="{{ asset('/bundles/app/js/nrdb.format.js') }}"></script>
+    <script src="{{ asset('/bundles/app/js/nrdb.tip.js') }}"></script>
+#}
     </body>
 </html>

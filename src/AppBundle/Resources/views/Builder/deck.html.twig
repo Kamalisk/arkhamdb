@@ -2,12 +2,12 @@
 
 {% block head %}
 
-<script src="{{ asset('/web/bundles/app/js/nrdb.draw_simulator.js') }}"></script>
-<script src="{{ asset('/web/bundles/app/js/nrdb.card_modal.js') }}"></script>
-<script src="{{ asset('/web/bundles/app/js/nrdb.smart_filter.js') }}"></script>
-<script src="{{ asset('/web/bundles/app/js/nrdb.suggestions.js') }}"></script>
-<script src="{{ asset('/web/bundles/app/js/nrdb.diff.js') }}"></script>
-<script src="{{ asset('/web/bundles/app/js/deck.js') }}"></script>
+<script src="{{ asset('/bundles/app/js/nrdb.draw_simulator.js') }}"></script>
+<script src="{{ asset('/bundles/app/js/nrdb.card_modal.js') }}"></script>
+<script src="{{ asset('/bundles/app/js/nrdb.smart_filter.js') }}"></script>
+<script src="{{ asset('/bundles/app/js/nrdb.suggestions.js') }}"></script>
+<script src="{{ asset('/bundles/app/js/nrdb.diff.js') }}"></script>
+<script src="{{ asset('/bundles/app/js/deck.js') }}"></script>
 <script type="text/javascript">
 
 var Filters = {},
@@ -24,8 +24,8 @@ var Filters = {},
 	Side = {{ deck.side_name|json_encode|raw }},
 	Deck_id = {{ deck.id|json_encode|raw }},
 	History = {{ deck.history|json_encode|raw }},
-	Url_FactionImage = '{{  asset('/web/bundles/app/images/factions/16px/xxx.png') }}',
-	Url_TypeImage = '{{ asset('/web/bundles/app/images/types/xxx.png') }}',
+	Url_FactionImage = '{{  asset('/bundles/app/images/factions/16px/xxx.png') }}',
+	Url_TypeImage = '{{ asset('/bundles/app/images/types/xxx.png') }}',
 	DisplaySort = 'type',
 	HideDisabled = true,
 	ShowOnlyDeck = false;

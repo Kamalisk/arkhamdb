@@ -12,6 +12,59 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SearchController extends Controller
 {
+
+	public function formAction()
+	{
+		$response = new Response();
+		$response->setPublic();
+		$response->setMaxAge($this->container->getParameter('long_cache'));
+	
+		$dbh = $this->get('doctrine')->getConnection();
+	
+		$list_packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findBy(array(), array("dateRelease" => "ASC", "position" => "ASC"));
+		$packs = array();
+		foreach($list_packs as $pack) {
+			$packs[] = array(
+					"name" => $pack->getName(),
+					"code" => $pack->getCode(),
+			);
+		}
+	
+		$cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findBy(array(), array("position" => "ASC"));
+		$types = $this->getDoctrine()->getRepository('AppBundle:Type')->findBy(array(), array("name" => "ASC"));
+		$factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findBy(array(), array("id" => "ASC"));
+		
+		$list_traits = $dbh->executeQuery("SELECT DISTINCT c.traits FROM card c WHERE c.traits != ''")->fetchAll();
+		$traits = array();
+		foreach($list_traits as $card) {
+			$subs = explode('.', $card["traits"]);
+			foreach($subs as $sub) {
+				$traits[trim($sub)] = 1;
+			}
+		}
+		$traits = array_filter(array_keys($traits));
+		sort($traits);
+
+		$list_illustrators = $dbh->executeQuery("SELECT DISTINCT c.illustrator FROM card c WHERE c.illustrator != '' ORDER BY c.illustrator")->fetchAll();
+		$illustrators = array_map(function ($card) {
+			return $card["illustrator"];
+		}, $list_illustrators);
+
+		return $this->render('AppBundle:Search:searchform.html.twig', array(
+				"pagetitle" => "Card Search",
+				"pagedescription" => "Find all the cards of the game, easily searchable.",
+				"packs" => $packs,
+				"cycles" => $cycles,
+				"types" => $types,
+				"factions" => $factions,
+				"traits" => $traits,
+				"illustrators" => $illustrators,
+				"allsets" => $this->renderView('AppBundle:Default:allsets.html.twig', array(
+						"data" => $this->get('cards_data')->allsetsdata(),
+				)),
+		), $response);
+	}
+	
 	public function zoomAction($card_code, Request $request)
 	{
 		$card = $this->getDoctrine()->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));

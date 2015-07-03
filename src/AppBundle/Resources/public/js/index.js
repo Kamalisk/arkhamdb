@@ -25,7 +25,7 @@ function update_cardsearch_result() {
 								+ (tabindex++)
 								+ '" href="'
 								+ Routing.generate('cards_zoom', {card_code:record.code})
-								+ '" class="card" data-index="' + record.code
+								+ '" class="card" data-code="' + record.code
 								+ '">' + record.name
 								+ '</a></td><td class="small">'
 								+ record.setname + '</td></tr>');

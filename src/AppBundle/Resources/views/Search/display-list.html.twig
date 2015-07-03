@@ -9,7 +9,7 @@
 <th>Faction</th>
 <th>Cost</th>
 <th>Type</th>
-<th>Strength</th>
+<th>STR</th>
 <th>Traits</th>
 <th>Set</th>
 </tr>
@@ -18,12 +18,12 @@
 <tr class="{% if i%2==0 %}even{% else %}odd{% endif %}">
    {% set card = cards[i] %}
 	<td data-th="Name">
-		<a href="{{ card.url }}" class="card{% if card.available == false %} card-preview{% endif %}" data-index="{{ card.code }}">{{ card.name }}</a>
+		<a href="{{ card.url }}" class="card-tooltip{% if card.available == false %} card-preview{% endif %}" data-code="{{ card.code }}">{{ card.name }}</a>
 	</td>
 	<td data-th="Faction">{{ card.faction_name }}</td>
 	<td data-th="Cost">{{ card.cost }}</td>
 	<td data-th="Type" >{{ card.type_name }}</td>
-	<td data-th="&hellip;">{{ card.strength }}</td>
+	<td data-th="STR">{{ card.strength }}</td>
 	<td data-th="Traits">{{ card.traits }}</td>
 	<td data-th="Set">{{ card.pack_name }} {{ card.position }}</td>
 </tr>

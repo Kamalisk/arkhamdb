@@ -1,0 +1,18 @@
+{% import "AppBundle::macros.html.twig" as macros %}
+<span class="card-props">
+{% if card.type_code == 'character' or card.type_code == 'attachment' or card.type_code == 'event' or card.type_code == 'location' %}
+	Cost: {{ macros.integer_or_x(card.cost) }}.
+{% endif %}
+{% if card.type_code == 'character' %}
+	STR: {{ macros.integer_or_x(card.strength) }}.
+	{% if card.is_military %}<span class="color-military">[military]</span>{% endif %}
+	{% if card.is_intrigue %}<span class="color-intrigue">[intrigue]</span>{% endif %}
+	{% if card.is_power %}<span class="color-power">[power]</span>{% endif %}
+{% endif %}
+{% if card.type_code == 'plot' %}
+	Income: {{ macros.integer_or_x(card.income) }}.
+	Claim: {{ macros.integer_or_x(card.claim) }}.
+	Initiative: {{ macros.integer_or_x(card.initiative) }}.
+	Reserve: {{ macros.integer_or_x(card.reserve) }}.
+{% endif %}
+</span>

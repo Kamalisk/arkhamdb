@@ -1,7 +1,7 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
 {% block head %}
-<script src="{{ asset('/web/bundles/netrunnerdbcards/js/reviews.js') }}"></script>
+<script src="{{ asset('/bundles/netrunnerdbcards/js/reviews.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -36,9 +36,9 @@
 <div class="row" style="margin-bottom:1em;padding-bottom:1em;border-bottom:1px solid #ddd"><div class="col-lg-12">
     <div class="review-header">
         <img src="/web/bundles/netrunnerdbcards/images/cards/en/{{ review.card.code }}.png" alt="{{ review.card.name }}" class="pull-right" style="width:100px;margin:0 0 10px 10px">
-        <h4 style="text-align:right"><a href="{{ path('cards_zoom',{card_code:review.card.code}) }}#review-{{ review.id }}" data-index="{{ review.card.code }}" class="card card-name">{{ review.card.name }}</a></h4>
+        <h4 style="text-align:right"><a href="{{ path('cards_zoom',{card_code:review.card.code}) }}#review-{{ review.id }}" data-code="{{ review.card.code }}" class="card card-name">{{ review.card.name }}</a></h4>
     </div>
-    <article class="review" data-index="{{ review.id }}" id="review-{{ review.id }}">
+    <article class="review" data-code="{{ review.id }}" id="review-{{ review.id }}">
        <div class="review-like">
            <a id="review-social-icon-like" href="#" class="social-icon-like" data-toggle="tooltip" data-placement="bottom" title="Like that review">
         	   <span class="glyphicon glyphicon-heart"></span> <span class="num">{{ review.nbVotes }}</span>

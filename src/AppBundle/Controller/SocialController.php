@@ -300,8 +300,8 @@ class SocialController extends Controller
 				p.name,
 				p.code
 				from pack p
-				where p.released is not null
-				order by p.released desc
+				where p.dateRelease is not null
+				order by p.dateRelease desc
 				limit 0,5")
             ->fetchAll();
         

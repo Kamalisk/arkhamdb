@@ -120,7 +120,7 @@ class CardsData
 				case '': // name or index
 					$or = array();
 					foreach($condition as $arg) {
-						$code = preg_match('/^\d\d\d\d\d.?$/u', $arg);
+						$code = preg_match('/^\d\d\d\d\d$/u', $arg);
 						$acronym = preg_match('/^[A-Z]{2,}$/', $arg);
 						if($code) {
 							$or[] = "(c.code = ?$i)";
@@ -384,7 +384,7 @@ class CardsData
 			$cardinfo = array_filter($cardinfo, function ($var) { return isset($var); });
 		} else {
 			$cardinfo['text'] = $this->replaceSymbols($cardinfo['text']);
-			$cardinfo['text'] = implode(array_map(function ($l) { return "<p>$l</p>"; }, explode("\r\n", $cardinfo['text'])));
+			$cardinfo['text'] = implode(array_map(function ($l) { return "<p>$l</p>"; }, preg_split('/[\r\n]+/', $cardinfo['text'])));
 			$cardinfo['flavor'] = $this->replaceSymbols($cardinfo['flavor']);
 		}
 		
