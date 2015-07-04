@@ -1,6 +1,8 @@
 /* fonts */
 
 body {
+}
+.card-content {
 	font: 16px/20px 'Amiri', serif
 }
 .card-name {
@@ -102,5 +104,5 @@ body {
 .qtip-agot2db{
 	min-width: 310px;
 	max-width: 350px;
-	font-size: 85.7%;
+	font-size: 15px;
 }

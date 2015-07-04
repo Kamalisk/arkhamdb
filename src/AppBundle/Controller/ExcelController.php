@@ -206,9 +206,9 @@ class ExcelController extends Controller
         			if($type === 'boolean') {
         				$value = (boolean) $value;
         			}
-        			if($entity->$getter() != $value) {
+        			if($entity->$getter() != $value || ($entity->$getter() === NULL && $entity->$getter() !== $value)) {
         				$changed = TRUE;
-        				echo("<p>field changed</p>");
+        				echo("<p>field [$colName] changed</p>");
         				var_dump($entity->$getter());
         				echo("<br>");
         				var_dump($value);

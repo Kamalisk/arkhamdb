@@ -28,7 +28,7 @@ app.tip = {};
 						text : content
 					},
 					style : {
-						classes : 'qtip-bootstrap qtip-agot2db'
+						classes : 'qtip-bootstrap qtip-agot2db card-content'
 					},
 					position : {
 						my : 'left center',
