@@ -36,44 +36,44 @@ class CardsData
 	public function allsetsdata()
 	{
 		$list_cycles = $this->doctrine->getRepository('AppBundle:Cycle')->findBy(array(), array("position" => "ASC"));
-		$cycles = array();
+		$lines = array();
 		foreach($list_cycles as $cycle) {
-			$packs = array();
-			$sreal=0; $smax = 0;
-			foreach($cycle->getPacks() as $pack) {
-				$real = count($pack->getCards());
-				$sreal += $real;
-				$max = $pack->getSize();
-				$smax += $max;
-				$packs[] = array(
-						"name" => $pack->getName(),
-						"code" => $pack->getCode(),
-				        "cycleposition" => $cycle->getPosition(),
-						"available" => $pack->getDateRelease() ? $pack->getDateRelease()->format('Y-m-d') : '',
-						"known" => intval($real),
-						"total" => $max,
-						"url" => $this->router->generate('cards_list', array('pack_code' => $pack->getCode()), true),
-						"search" => "e:".$pack->getCode(),
-						"packs" => '',
+			$packs = $cycle->getPacks();
+			if(count($packs) > 1) {
+				$lines[] = array(
+						"label" => $cycle->getName(),
+						"available" => true,
+						"url" => $this->router->generate('cards_cycle', array('cycle_code' => $cycle->getCode()), true),
 				);
 			}
-			if(count($packs) == 1 && $packs[0]["name"] == $cycle->getName()) {
-				$cycles[] = $packs[0];
-			}
-			else {
-				$cycles[] = array(
-						"name" => $cycle->getName(),
-						"code" => $cycle->getCode(),
-				        "cycleposition" => $cycle->getPosition(),
-						"known" => intval($sreal),
-						"total" => $smax,
-						"url" => $this->router->generate('cards_cycle', array('cycle_code' => $cycle->getCode()), true),
-						"search" => 'c:'.$cycle->getCode(),
-						"packs" => $packs,
+			foreach($packs as $pack) {
+				$known = count($pack->getCards());
+				$max = $pack->getSize();
+				
+				if(count($packs) > 1) {
+					$label = $pack->getPosition() . '. ' . $pack->getName();
+				} else {
+					$label = $pack->getName();
+				}
+				if($known < $max) {
+					$label = sprintf("%s (%d/%d)", $label,$known, $max);
+				}
+				
+				$lines[] = array(
+						"label" => $label,
+						"available" => $pack->getDateRelease() ? true : false,
+						"url" => $this->router->generate('cards_list', array('pack_code' => $pack->getCode()), true),
 				);
 			}
 		}
-		return $cycles;
+		return $lines;
+	}
+	
+	public function getAllPacks()
+	{
+		$packs = $this->doctrine->getRepository('AppBundle:Pack')->findBy(array(), array("dateRelease" => "DESC", 
+				"position" => "DESC"));
+		return $packs;
 	}
     
 	

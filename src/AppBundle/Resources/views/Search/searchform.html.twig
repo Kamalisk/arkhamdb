@@ -7,13 +7,7 @@
 
 <div class="row">
 
-<div class="col-md-4">
-    <h2>Browse by set</h2>
-	{{ allsets|raw }}
-
-</div>
-
-<div class="col-md-8">
+<div class="col-md-12">
 
 <h1>{{ block('title') }}</h1>
 <form method="GET" action="{{ path('cards_processSearchForm') }}" role="form" style="margin-bottom:2em">
@@ -54,12 +48,11 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="form-group">
-			<label>Faction</label>
 			<div class="btn-group" data-toggle="buttons">
 			{% for faction in factions %}
 				<label class="btn btn-default active">
 					<input type="checkbox" name="f[]" checked value="{{ faction.code }}">
-					{{ faction.name }}
+					[{{ faction.code }}]
 				</label>
 			{% endfor %}
 			</div>
@@ -70,7 +63,7 @@
 <fieldset>
 <legend>Attributes</legend>
 <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-4">
         <div class="form-group">
 			<label for="e">Set</label>
 			<div>
@@ -83,7 +76,33 @@
 			</div>
 		</div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-4">
+        <div class="form-group">
+			<label for="l">Loyal</label>
+			<div>
+				<select class="form-control" name="l" id="l">
+					<option value="">any</option>
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</select>
+			</div>
+		</div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+			<label for="m">Military</label>
+			<div>
+				<select class="form-control" name="m" id="m">
+					<option value="">any</option>
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</select>
+			</div>
+		</div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-4">
         <div class="form-group">
 			<label for="t">Type</label>
 			<div>
@@ -95,10 +114,36 @@
 				</select>
 			</div>
 		</div>
+	</div>
+    <div class="col-sm-4">
+        <div class="form-group">
+			<label for="k">Traits</label>
+			<div>
+				<select class="form-control" name="s" id="s">
+					<option value="">any</option>
+					{% for trait in traits %}
+					<option value="{{ trait }}">{{ trait }}</option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
     </div>
 </div>
 <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-4">
+        <div class="form-group">
+			<label for="k">Traits</label>
+			<div>
+				<select class="form-control" name="s" id="s">
+					<option value="">any</option>
+					{% for trait in traits %}
+					<option value="{{ trait }}">{{ trait }}</option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
+    </div>
+    <div class="col-sm-4">
         <div class="form-group">
 			<label for="u">Unique</label>
 			<div>
@@ -106,19 +151,6 @@
 					<option value="">any</option>
 					<option value="0">No</option>
 					<option value="1">Yes</option>
-				</select>
-			</div>
-		</div>
-    </div>
-    <div class="col-sm-6">
-        <div class="form-group">
-			<label for="s">Subtype</label>
-			<div>
-				<select class="form-control" name="s" id="s">
-					<option value="">any</option>
-					{% for trait in traits %}
-					<option value="{{ trait }}">{{ trait }}</option>
-					{% endfor %}
 				</select>
 			</div>
 		</div>
@@ -142,12 +174,23 @@
 		</div>
     </div>
     <div class="col-sm-6">
+        <div class="form-group">
+			<label for="n">Income</label>
+			<div class="row">
+                <div class="col-xs-4">
+                    <select name="no" id="no" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
+                </div>
+                <div class="col-xs-8">
+                    <input id="n" name="n" value="" class="form-control">
+                </div>
+			</div>
+		</div>
     </div>
 </div>
 <div class="row">
     <div class="col-sm-6">
         <div class="form-group">
-			<label for="p">Strength</label>
+			<label for="s">Strength</label>
 			<div class="row">
                 <div class="col-xs-4">
                     <select name="po" id="po" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
@@ -160,6 +203,21 @@
     </div>
     <div class="col-sm-6">
         <div class="form-group">
+			<label for="v">Initiative</label>
+			<div class="row">
+                <div class="col-xs-4">
+                    <select name="vo" id="vo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
+                </div>
+                <div class="col-xs-8">
+                    <input id="v" name="v" value="" class="form-control">
+                </div>
+			</div>
+		</div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="form-group">
 			<label for="y">Quantity</label>
 			<div class="row">
                 <div class="col-xs-4">
@@ -167,6 +225,36 @@
                 </div>
                 <div class="col-xs-8">
                     <input id="y" name="y" value="" class="form-control">
+                </div>
+			</div>
+		</div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+			<label for="b">Claim</label>
+			<div class="row">
+                <div class="col-xs-4">
+                    <select name="bo" id="bo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
+                </div>
+                <div class="col-xs-8">
+                    <input id="b" name="b" value="" class="form-control">
+                </div>
+			</div>
+		</div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+			<label for="h">Reserve</label>
+			<div class="row">
+                <div class="col-xs-4">
+                    <select name="ho" id="ho" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
+                </div>
+                <div class="col-xs-8">
+                    <input id="h" name="h" value="" class="form-control">
                 </div>
 			</div>
 		</div>

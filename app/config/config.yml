@@ -36,6 +36,8 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    globals:
+        cards_data: "@cards_data"
 
 # Assetic Configuration
 assetic:

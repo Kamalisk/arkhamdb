@@ -48,9 +48,6 @@ AppBundle\Entity\Card:
         text:
             type: text
             nullable: true
-        text:
-            type: smallint
-            nullable: true
         dateCreation:
             type: datetime
             nullable: false

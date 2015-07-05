@@ -13,6 +13,31 @@ use Symfony\Component\HttpFoundation\Request;
 class SearchController extends Controller
 {
 
+	public $searchKeys = array(
+			'a' => 'flavor',
+			'b' => 'claim',
+			'c' => 'cycle',
+			'd' => 'is_limited',
+			'e' => 'pack',
+			'f' => 'faction',
+			'g' => 'is_intrigue',
+			'h' => 'reserve',
+			'i' => 'illustrator',
+			'k' => 'traits',
+			'l' => 'is_loyal',
+			'm' => 'is_military',
+			'n' => 'income',
+			'o' => 'cost',
+			'p' => 'is_power',
+			'r' => 'date_release',
+			's' => 'strength',
+			't' => 'type',
+			'u' => 'is_unique',
+			'v' => 'initiative',
+			'x' => 'text',
+			'y' => 'quantity',
+	);
+	
 	public function formAction()
 	{
 		$response = new Response();
@@ -59,9 +84,6 @@ class SearchController extends Controller
 				"factions" => $factions,
 				"traits" => $traits,
 				"illustrators" => $illustrators,
-				"allsets" => $this->renderView('AppBundle:Default:allsets.html.twig', array(
-						"data" => $this->get('cards_data')->allsetsdata(),
-				)),
 		), $response);
 	}
 	
@@ -95,12 +117,14 @@ class SearchController extends Controller
 				.($pack->getDateRelease() ? " published on ".$pack->getDateRelease()->format('Y/m/d') : "")
 				." by Fantasy Flight Games.";
 		
+		$key = array_search('pack', $this->searchKeys);
+		
 		return $this->forward(
 			'AppBundle:Search:display',
 			array(
 			    '_route' => $request->attributes->get('_route'),
 			    '_route_params' => $request->attributes->get('_route_params'),
-    	        'q' => 'e:'.$pack_code,
+    	        'q' => $key.':'.$pack_code,
 				'view' => $view,
 				'sort' => $sort,
 			    'page' => $page,
@@ -116,13 +140,15 @@ class SearchController extends Controller
 		if(!$cycle) throw $this->createNotFoundException('This cycle does not exist');
 		
 		$meta = $cycle->getName().", a cycle of datapack for A Game of Thrones 2nd Edition published by Fantasy Flight Games.";
+
+		$key = array_search('cycle', $this->searchKeys);
 		
 		return $this->forward(
 			'AppBundle:Search:display',
 			array(
 			    '_route' => $request->attributes->get('_route'),
 			    '_route_params' => $request->attributes->get('_route_params'),
-			    'q' => 'c:'.$cycle->getPosition(),
+			    'q' => $key.':'.$cycle->getPosition(),
 				'view' => $view,
 				'sort' => $sort,
 			    'page' => $page,
@@ -139,17 +165,17 @@ class SearchController extends Controller
 		$sort = $request->query->get('sort') ?: 'name';
 		
 		$operators = array(":","!","<",">");
+		$factions = $this->get('doctrine')->getRepository('AppBundle:Faction')->findAll();
 		
 		$params = array();
 		if($request->query->get('q') != "") {
 			$params[] = $request->query->get('q');
 		}
-		$keys = array("e","t","f","s","x","p","o","n","d","r","i","l","y","a","u");
-		foreach($keys as $key) {
+		foreach($this->searchKeys as $key => $searchName) {
 			$val = $request->query->get($key);
 			if(isset($val) && $val != "") {
 				if(is_array($val)) {
-					if($key == "f" && count($val) == 8) continue;
+					if($searchName == "faction" && count($val) == count($factions)) continue;
 					$params[] = $key.":".implode("|", array_map(function ($s) { return strstr($s, " ") !== FALSE ? "\"$s\"" : $s; }, $val));
 				} else {
 					if(strstr($val, " ") != FALSE) {
@@ -159,7 +185,7 @@ class SearchController extends Controller
 					if(!in_array($op, $operators)) {
 						$op = ":";
 					}
-					if($key == "r") {
+					if($key == "date_release") {
 						$op = "";
 					}
 					$params[] = "$key$op$val";
@@ -183,11 +209,11 @@ class SearchController extends Controller
 		// we may be able to redirect to a better url if the search is on a single set
 		$conditions = $this->get('cards_data')->syntax($q);
 		if(count($conditions) == 1 && count($conditions[0]) == 3 && $conditions[0][1] == ":") {
-		    if($conditions[0][0] == "e") {
+		    if($conditions[0][0] == array_search('pack', $this->searchKeys)) {
 		        $url = $this->get('router')->generate('cards_list', array('pack_code' => $conditions[0][2], 'view' => $view, 'sort' => $sort, 'page' => $page));
 		        return $this->redirect($url);
 		    }
-		    if($conditions[0][0] == "c") {
+		    if($conditions[0][0] == array_search('cycle', $this->searchKeys)) {
 		        $cycle_position = $conditions[0][2];
 		        $cycle = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findOneBy(array('position' => $cycle_position));
 		        if($cycle) {

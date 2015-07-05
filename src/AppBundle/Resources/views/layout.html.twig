@@ -44,7 +44,15 @@
           <ul class="nav navbar-nav">
             <li><a href="{{ path('decks_list') }}">My Decks</a></li>
             <li><a href="{{ path('decklists_list', {type:'popular'}) }}">Decklists</a></li>
-            <li><a href="{{ path('cards_search') }}">Cards</a></li>
+            <li class="hidden-sm dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Sets <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+              {% for line in cards_data.allsetsdata() %}
+                <li><a href="{{ line['url'] }}">{{ line['label'] }}</a></li>
+              {% endfor %}
+              </ul>
+            </li>
+            <li><a href="{{ path('cards_search') }}">Card Search</a></li>
             <li class="hidden-sm dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Factions <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
