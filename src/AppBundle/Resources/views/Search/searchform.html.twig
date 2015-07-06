@@ -82,8 +82,8 @@
 			<div>
 				<select class="form-control" name="l" id="l">
 					<option value="">any</option>
-					<option value="0">No</option>
 					<option value="1">Yes</option>
+					<option value="0">No</option>
 				</select>
 			</div>
 		</div>
@@ -94,8 +94,8 @@
 			<div>
 				<select class="form-control" name="m" id="m">
 					<option value="">any</option>
-					<option value="0">No</option>
 					<option value="1">Yes</option>
+					<option value="0">No</option>
 				</select>
 			</div>
 		</div>
@@ -128,13 +128,25 @@
 			</div>
 		</div>
     </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+			<label for="g">Intrigue</label>
+			<div>
+				<select class="form-control" name="g" id="g">
+					<option value="">any</option>
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</select>
+			</div>
+		</div>
+    </div>
 </div>
 <div class="row">
     <div class="col-sm-4">
         <div class="form-group">
 			<label for="k">Traits</label>
 			<div>
-				<select class="form-control" name="s" id="s">
+				<select class="form-control" name="k" id="k">
 					<option value="">any</option>
 					{% for trait in traits %}
 					<option value="{{ trait }}">{{ trait }}</option>
@@ -149,8 +161,20 @@
 			<div>
 				<select class="form-control" name="u" id="u">
 					<option value="">any</option>
-					<option value="0">No</option>
 					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</select>
+			</div>
+		</div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+			<label for="p">Power</label>
+			<div>
+				<select class="form-control" name="p" id="p">
+					<option value="">any</option>
+					<option value="1">Yes</option>
+					<option value="0">No</option>
 				</select>
 			</div>
 		</div>

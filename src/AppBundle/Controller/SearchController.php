@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SearchController extends Controller
 {
 
-	public $searchKeys = array(
+	public static $searchKeys = array(
 			'a' => 'flavor',
 			'b' => 'claim',
 			'c' => 'cycle',
@@ -36,6 +36,31 @@ class SearchController extends Controller
 			'v' => 'initiative',
 			'x' => 'text',
 			'y' => 'quantity',
+	);
+	
+	public static $searchTypes = array(
+			't' => 'code',
+			'e' => 'code',
+			'f' => 'code',
+			'a' => 'string',
+			'i' => 'string',
+			'k' => 'string',
+			'r' => 'string',
+			'x' => 'string',
+			'b' => 'integer',
+			'c' => 'integer',
+			'h' => 'integer',
+			'n' => 'integer',
+			'o' => 'integer',
+			's' => 'integer',
+			'v' => 'integer',
+			'y' => 'integer',
+			'd' => 'boolean',
+			'g' => 'boolean',
+			'l' => 'boolean',
+			'm' => 'boolean',
+			'p' => 'boolean',
+			'u' => 'boolean',
 	);
 	
 	public function formAction()
@@ -117,7 +142,7 @@ class SearchController extends Controller
 				.($pack->getDateRelease() ? " published on ".$pack->getDateRelease()->format('Y/m/d') : "")
 				." by Fantasy Flight Games.";
 		
-		$key = array_search('pack', $this->searchKeys);
+		$key = array_search('pack', SearchController::$searchKeys);
 		
 		return $this->forward(
 			'AppBundle:Search:display',
@@ -141,7 +166,7 @@ class SearchController extends Controller
 		
 		$meta = $cycle->getName().", a cycle of datapack for A Game of Thrones 2nd Edition published by Fantasy Flight Games.";
 
-		$key = array_search('cycle', $this->searchKeys);
+		$key = array_search('cycle', SearchController::$searchKeys);
 		
 		return $this->forward(
 			'AppBundle:Search:display',
@@ -171,7 +196,7 @@ class SearchController extends Controller
 		if($request->query->get('q') != "") {
 			$params[] = $request->query->get('q');
 		}
-		foreach($this->searchKeys as $key => $searchName) {
+		foreach(SearchController::$searchKeys as $key => $searchName) {
 			$val = $request->query->get($key);
 			if(isset($val) && $val != "") {
 				if(is_array($val)) {
@@ -209,11 +234,11 @@ class SearchController extends Controller
 		// we may be able to redirect to a better url if the search is on a single set
 		$conditions = $this->get('cards_data')->syntax($q);
 		if(count($conditions) == 1 && count($conditions[0]) == 3 && $conditions[0][1] == ":") {
-		    if($conditions[0][0] == array_search('pack', $this->searchKeys)) {
+		    if($conditions[0][0] == array_search('pack', SearchController::$searchKeys)) {
 		        $url = $this->get('router')->generate('cards_list', array('pack_code' => $conditions[0][2], 'view' => $view, 'sort' => $sort, 'page' => $page));
 		        return $this->redirect($url);
 		    }
-		    if($conditions[0][0] == array_search('cycle', $this->searchKeys)) {
+		    if($conditions[0][0] == array_search('cycle', SearchController::$searchKeys)) {
 		        $cycle_position = $conditions[0][2];
 		        $cycle = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findOneBy(array('position' => $cycle_position));
 		        if($cycle) {
