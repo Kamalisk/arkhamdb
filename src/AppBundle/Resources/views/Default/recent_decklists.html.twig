@@ -7,7 +7,7 @@
 	</td>
 	<td class="decklists">
 	<div>
-			<a class="decklist-name" href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.prettyname|e('url') }) }}">{{ decklist.name }}</a>
+			<a class="decklist-name" href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.name_canonical|e('url') }) }}">{{ decklist.name }}</a>
 	</div>
 	<div class="small">
 			<i>{{ decklist.lastpack }}</i>

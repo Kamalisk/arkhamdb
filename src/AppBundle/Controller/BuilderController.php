@@ -455,12 +455,12 @@ class BuilderController extends Controller
         $rows = $dbh->executeQuery("SELECT
 				d.id,
 				d.name,
-				DATE_FORMAT(d.datecreation, '%Y-%m-%dT%TZ') datecreation,
-                DATE_FORMAT(d.dateupdate, '%Y-%m-%dT%TZ') dateupdate,
-                d.description,
+				DATE_FORMAT(d.date_creation, '%Y-%m-%dT%TZ') datecreation,
+                DATE_FORMAT(d.date_update, '%Y-%m-%dT%TZ') dateupdate,
+                d.description_md,
                 d.tags,
                 u.id user_id,
-                (select count(*) from deckchange c where c.deck_id=d.id and c.saved=0) unsaved,
+                (select count(*) from deckchange c where c.deck_id=d.id and c.is_saved=0) unsaved,
                 s.name side_name
 				from deck d
                 join user u on d.user_id=u.id
@@ -495,11 +495,11 @@ class BuilderController extends Controller
         $snapshots = array();
         
         $rows = $dbh->executeQuery("SELECT
-				DATE_FORMAT(c.datecreation, '%Y-%m-%dT%TZ') datecreation,
+				DATE_FORMAT(c.date_creation, '%Y-%m-%dT%TZ') datecreation,
 				c.variation,
-                c.saved
+                c.is_saved
 				from deckchange c
-				where c.deck_id=? and c.saved=1
+				where c.deck_id=? and c.is_saved=1
                 order by datecreation desc", array($deck_id))->fetchAll();
         
         // recreating the versions with the variation info, starting from $preversion
@@ -531,11 +531,11 @@ class BuilderController extends Controller
         array_unshift($snapshots, $row);
         
         $rows = $dbh->executeQuery("SELECT
-				DATE_FORMAT(c.datecreation, '%Y-%m-%dT%TZ') datecreation,
+				DATE_FORMAT(c.date_creation, '%Y-%m-%dT%TZ') datecreation,
 				c.variation,
-                c.saved
+                c.is_saved
 				from deckchange c
-				where c.deck_id=? and c.saved=0
+				where c.deck_id=? and c.is_saved=0
                 order by datecreation asc", array($deck_id))->fetchAll();
         
         // recreating the snapshots with the variation info, starting from $postversion
@@ -568,13 +568,13 @@ class BuilderController extends Controller
                 "SELECT
 					d.id,
 					d.name,
-					d.prettyname,
-					d.nbVotes,
-					d.nbfavorites,
-					d.nbcomments
+					d.name_canonical,
+					d.nb_votes,
+					d.nb_favorites,
+					d.nb_comments
 					from decklist d
 					where d.parent_deck_id=?
-					order by d.creation asc", array(
+					order by d.date_creation asc", array(
                         $deck_id
                 ))->fetchAll();
         
@@ -594,17 +594,15 @@ class BuilderController extends Controller
         $rows = $dbh->executeQuery("SELECT
 				d.id,
 				d.name,
-				d.description,
+				d.description_md,
                 d.problem,
                 u.id user_id,
                 u.share_decks shared,
 				s.name side_name,
-				c.code identity_code,
 				f.code faction_code
                 from deck d
                 join user u on d.user_id=u.id
 				join side s on d.side_id=s.id
-				join card c on d.identity_id=c.id
 				join faction f on c.faction_id=f.id
                 where d.id=?
 				", array(
@@ -641,13 +639,13 @@ class BuilderController extends Controller
                 "SELECT
 					d.id,
 					d.name,
-					d.prettyname,
-					d.nbVotes,
-					d.nbfavorites,
-					d.nbcomments
+					d.name_canonical,
+					d.nb_votes,
+					d.nb_favorites,
+					d.nb_comments
 					from decklist d
 					where d.parent_deck_id=?
-					order by d.creation asc", array(
+					order by d.date_creation asc", array(
                         $deck_id
                 ))->fetchAll();
 

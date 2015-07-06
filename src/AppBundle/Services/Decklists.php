@@ -30,27 +30,24 @@ class Decklists
                 "SELECT SQL_CALC_FOUND_ROWS
                 d.id,
                 d.name,
-                d.prettyname,
-                d.creation,
+                d.name_canonical,
+                d.date_creation,
                 d.user_id,
                 d.tournament_id,
                 t.description tournament,
                 u.username,
-                u.faction usercolor,
+                u.color usercolor,
                 u.reputation,
                 u.donation,
-                c.code,
-                c.name identity,
-                d.nbVotes,
-                d.nbfavorites,
-                d.nbcomments
+                d.nb_votes,
+                d.nb_favorites,
+                d.nb_comments
                 from decklist d
                 join user u on d.user_id=u.id
-                join card c on d.identity_id=c.id
                 join favorite f on f.decklist_id=d.id
                 left join tournament t on d.tournament_id=t.id
                 where f.user_id=?
-                order by creation desc
+                order by date_creation desc
                 limit $start, $limit", array(
                         $user_id
                 ))
@@ -80,26 +77,23 @@ class Decklists
                 "SELECT SQL_CALC_FOUND_ROWS
                 d.id,
                 d.name,
-                d.prettyname,
-                d.creation,
+                d.name_canonical,
+                d.date_creation,
                 d.user_id,
                 d.tournament_id,
                 t.description tournament,
                 u.username,
-                u.faction usercolor,
+                u.color usercolor,
                 u.reputation,
                 u.donation,
-                c.code,
-                c.name identity,
-                d.nbVotes,
-                d.nbfavorites,
-                d.nbcomments
+                d.nb_votes,
+                d.nb_favorites,
+                d.nb_comments
                 from decklist d
                 join user u on d.user_id=u.id
-                join card c on d.identity_id=c.id
                 left join tournament t on d.tournament_id=t.id
                 where d.user_id=?
-                order by creation desc
+                order by date_creation desc
                 limit $start, $limit", array(
                         $user_id
                 ))->fetchAll(\PDO::FETCH_ASSOC);
@@ -127,26 +121,23 @@ class Decklists
                 "SELECT SQL_CALC_FOUND_ROWS
                 d.id,
                 d.name,
-                d.prettyname,
-                d.creation,
+                d.name_canonical,
+                d.date_creation,
                 d.user_id,
                 d.tournament_id,
                 t.description tournament,
                 u.username,
-                u.faction usercolor,
+                u.color usercolor,
                 u.reputation,
                 u.donation,
-                c.code,
-                c.name identity,
-                d.nbVotes,
-                d.nbfavorites,
-                d.nbcomments,
-                DATEDIFF(CURRENT_DATE, d.creation) nbjours
+                d.nb_votes,
+                d.nb_favorites,
+                d.nb_comments,
+                DATEDIFF(CURRENT_DATE, d.date_creation) nbjours
                 from decklist d
                 join user u on d.user_id=u.id
-                join card c on d.identity_id=c.id
                 left join tournament t on d.tournament_id=t.id
-                where d.creation > DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
+                where d.date_creation > DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
                 order by 2*nbVotes/(1+nbjours*nbjours) DESC, nbVotes desc, nbcomments desc
                 limit $start, $limit")->fetchAll(\PDO::FETCH_ASSOC);
     
@@ -173,23 +164,20 @@ class Decklists
                 "SELECT SQL_CALC_FOUND_ROWS
                 d.id,
                 d.name,
-                d.prettyname,
-                d.creation,
+                d.name_canonical,
+                d.date_creation,
                 d.user_id,
                 d.tournament_id,
                 t.description tournament,
                 u.username,
-                u.faction usercolor,
+                u.color usercolor,
                 u.reputation,
                 u.donation,
-                c.code,
-                c.name identity,
-                d.nbVotes,
-                d.nbfavorites,
-                d.nbcomments
+                d.nb_votes,
+                d.nb_favorites,
+                d.nb_comments
                 from decklist d
                 join user u on d.user_id=u.id
-                join card c on d.identity_id=c.id
                 left join tournament t on d.tournament_id=t.id
                 where nbVotes > 10
                 order by nbVotes desc, creation desc
@@ -218,26 +206,23 @@ class Decklists
                 "SELECT SQL_CALC_FOUND_ROWS
                 d.id,
                 d.name,
-                d.prettyname,
-                d.creation,
+                d.name_canonical,
+                d.date_creation,
                 d.user_id,
                 d.tournament_id,
                 t.description tournament,
                 u.username,
-                u.faction usercolor,
+                u.color usercolor,
                 u.reputation,
                 u.donation,
-                c.code,
-                c.name identity,
-                d.nbVotes,
-                d.nbfavorites,
-                d.nbcomments,
+                d.nb_votes,
+                d.nb_favorites,
+                d.nb_comments,
                 (select count(*) from comment where comment.decklist_id=d.id and DATEDIFF(CURRENT_DATE, comment.creation)<1) nbrecentcomments
                 from decklist d
                 join user u on d.user_id=u.id
-                join card c on d.identity_id=c.id
                 left join tournament t on d.tournament_id=t.id
-                where d.nbcomments > 1
+                where d.nb_comments > 1
                 order by nbrecentcomments desc, creation desc
                 limit $start, $limit")->fetchAll(\PDO::FETCH_ASSOC);
     
@@ -264,26 +249,23 @@ class Decklists
                 "SELECT SQL_CALC_FOUND_ROWS
                 d.id,
                 d.name,
-                d.prettyname,
-                d.creation,
+                d.name_canonical,
+                d.date_creation,
                 d.user_id,
                 d.tournament_id,
                 t.description tournament,
                 u.username,
-                u.faction usercolor,
+                u.color usercolor,
                 u.reputation,
                 u.donation,
-                c.code,
-                c.name identity,
-                d.nbVotes,
-                d.nbfavorites,
-                d.nbcomments
+                d.nb_votes,
+                d.nb_favorites,
+                d.nb_comments
                 from decklist d
                 join user u on d.user_id=u.id
-                join card c on d.identity_id=c.id
                 left join tournament t on d.tournament_id=t.id
                 where d.tournament_id is not null
-                order by creation desc
+                order by date_creation desc
                 limit $start, $limit")->fetchAll(\PDO::FETCH_ASSOC);
     
         $count = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];
@@ -309,27 +291,24 @@ class Decklists
                 "SELECT SQL_CALC_FOUND_ROWS
                 d.id,
                 d.name,
-                d.prettyname,
-                d.creation,
+                d.name_canonical,
+                d.date_creation,
                 d.user_id,
                 d.tournament_id,
                 t.description tournament,
                 u.username,
-                u.faction usercolor,
+                u.color usercolor,
                 u.reputation,
                 u.donation,
-                c.code,
-                c.name identity,
-                d.nbVotes,
-                d.nbfavorites,
-                d.nbcomments
+                d.nb_votes,
+                d.nb_favorites,
+                d.nb_comments
                 from decklist d
                 join user u on d.user_id=u.id
-                join card c on d.identity_id=c.id
                 join faction f on d.faction_id=f.id
                 left join tournament t on d.tournament_id=t.id
                 where f.code=?
-                order by creation desc
+                order by date_creation desc
                 limit $start, $limit", array(
                         $faction_code
                 ))->fetchAll(\PDO::FETCH_ASSOC);
@@ -357,27 +336,24 @@ class Decklists
                 "SELECT SQL_CALC_FOUND_ROWS
                 d.id,
                 d.name,
-                d.prettyname,
-                d.creation,
+                d.name_canonical,
+                d.date_creation,
                 d.user_id,
                 d.tournament_id,
                 t.description tournament,
                 u.username,
-                u.faction usercolor,
+                u.color usercolor,
                 u.reputation,
                 u.donation,
-                c.code,
-                c.name identity,
-                d.nbVotes,
-                d.nbfavorites,
-                d.nbcomments
+                d.nb_votes,
+                d.nb_favorites,
+                d.nb_comments
                 from decklist d
                 join user u on d.user_id=u.id
-                join card c on d.identity_id=c.id
                 join pack p on d.last_pack_id=p.id
                 left join tournament t on d.tournament_id=t.id
                 where p.code=?
-                order by creation desc
+                order by date_creation desc
                 limit $start, $limit", array(
                         $pack_code
                 ))->fetchAll(\PDO::FETCH_ASSOC);
@@ -401,35 +377,32 @@ class Decklists
         /* @var $dbh \Doctrine\DBAL\Driver\PDOConnection */
         $dbh = $this->doctrine->getConnection();
     
-        $additional_clause = $includeEmptyDesc ? "" : "and d.rawdescription!=''";
+        $additional_clause = $includeEmptyDesc ? "" : "and d.description_md!=''";
         
         $rows = $dbh->executeQuery(
                 "SELECT SQL_CALC_FOUND_ROWS
                 d.id,
                 d.name,
-                d.prettyname,
-                d.creation,
+                d.name_canonical,
+                d.date_creation,
                 d.user_id,
                 d.tournament_id,
                 t.description tournament,
                 u.username,
-                u.faction usercolor,
+                u.color usercolor,
                 u.reputation,
                 u.donation,
-                c.code,
-                c.name identity,
                 p.name lastpack,
-                d.nbVotes,
-                d.nbfavorites,
-                d.nbcomments
+                d.nb_votes,
+                d.nb_favorites,
+                d.nb_comments
                 from decklist d
                 join user u on d.user_id=u.id
-                join card c on d.identity_id=c.id
                 join pack p on d.last_pack_id=p.id
                 left join tournament t on d.tournament_id=t.id
-                where d.creation > DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
+                where d.date_creation > DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
                 $additional_clause
-                order by creation desc
+                order by date_creation desc
                 limit $start, $limit")->fetchAll(\PDO::FETCH_ASSOC);
     
         $count = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];
@@ -518,7 +491,7 @@ class Decklists
         }
         
         if (empty($wheres)) {
-            $where = "d.creation > DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)";
+            $where = "d.date_creation > DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)";
             $params = array();
             $types = array();
         } else {
@@ -540,7 +513,7 @@ class Decklists
         	case 'popularity':
             default:
         	    $order = 'popularity';
-        		$extra_select = '(d.nbVotes/(1+DATEDIFF(CURRENT_TIMESTAMP(),d.creation)/10)) as popularity,';
+        		$extra_select = '(d.nb_votes/(1+DATEDIFF(CURRENT_TIMESTAMP(),d.date_creation)/10)) as popularity,';
         		break;
         }
     
@@ -548,25 +521,22 @@ class Decklists
                 "SELECT SQL_CALC_FOUND_ROWS
                 d.id,
                 d.name,
-                d.prettyname,
-                d.creation,
+                d.name_canonical,
+                d.date_creation,
                 d.user_id,
                 d.tournament_id,
                 t.description tournament,
                 $extra_select
                 u.username,
-                u.faction usercolor,
+                u.color usercolor,
                 u.reputation,
                 u.donation,
-                c.code,
-                c.name identity,
-                d.nbVotes,
-                d.nbfavorites,
-                d.nbcomments
+                d.nb_votes,
+                d.nb_favorites,
+                d.nb_comments
                 from decklist d
                 join user u on d.user_id=u.id
                 join side s on d.side_id=s.id
-                join card c on d.identity_id=c.id
                 join pack p on d.last_pack_id=p.id
                 join faction f on d.faction_id=f.id
                 left join tournament t on d.tournament_id=t.id

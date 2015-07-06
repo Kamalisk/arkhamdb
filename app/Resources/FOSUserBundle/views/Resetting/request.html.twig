@@ -1,0 +1,18 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% block fos_user_content %}
+<div class="row">
+<div class="col-md-6 col-md-push-3">
+<div class="panel panel-default">
+<div class="panel-heading">
+Reset password
+</div>
+<div class="panel-body">
+
+{% include "FOSUserBundle:Resetting:request_content.html.twig" %}
+
+</div>
+</div>
+</div>
+</div>
+{% endblock fos_user_content %}

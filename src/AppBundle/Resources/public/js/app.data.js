@@ -3,6 +3,7 @@ app.data = {};
 
 	/*
 	 * loads the database from local
+	 * sets up a Promise on all data loading/updating
 	 */
 	data.load = function() {
 		var fdb = new ForerunnerDB();
@@ -54,7 +55,10 @@ app.data = {};
 		});
 	};
 
-	// deferred returns true if data has been updated
+	/*
+	 * called if all operations (load+update) succeed
+	 * deferred returns true if data has been updated
+	 */
 	data.update_done = function(sets_updated, cards_updated) {
 		if(sets_updated || cards_updated) {
 			var message = "A new version of the data is available. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
@@ -63,7 +67,10 @@ app.data = {};
 		}
 	};
 
-	// deferred returns true if data has been loaded
+	/*
+	 * called if an operation (load+update) fails
+	 * deferred returns true if data has been loaded
+	 */
 	data.update_fail = function(sets_loaded, sets_loaded) {
 		if(!sets_loaded || !cards_loaded) {
 			var message = "Unable to load the data. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
@@ -76,9 +83,14 @@ app.data = {};
 		}
 	};
 	
+	/*
+	 * updates the database if necessary, from fetched data
+	 */
 	data.update_collection = function(data, collection, lastModified, deferred) {
-		//  we search for a row with last_modified equal or greater than lastModified
-		// if we find one, then the database is up-to-date
+		/*
+		 * we look for a row with last_modified equal or greater than lastModified
+		 * if we find one, then the database is up-to-date
+		 */
 		var newerRecords = collection.find({
 			last_modified: {
 				'$gte': lastModified
@@ -102,11 +114,17 @@ app.data = {};
 		});
 	}
 
+	/*
+	 * handles the response to the ajax query for sets data
+	 */
 	data.parse_sets = function(response, textStatus, jqXHR) {
 		var lastModified = new Date(jqXHR.getResponseHeader('Last-Modified')).toISOString();
 		data.update_collection(response, data.sets, lastModified, data.dfd.sets);
 	};
 
+	/*
+	 * handles the response to the ajax query for the cards data
+	 */
 	data.parse_cards = function(response, textStatus, jqXHR) {
 		var lastModified = new Date(jqXHR.getResponseHeader('Last-Modified')).toISOString();
 		data.update_collection(response, data.cards, lastModified, data.dfd.cards);

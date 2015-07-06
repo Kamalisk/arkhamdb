@@ -300,8 +300,8 @@ class SocialController extends Controller
 				p.name,
 				p.code
 				from pack p
-				where p.dateRelease is not null
-				order by p.dateRelease desc
+				where p.date_release is not null
+				order by p.date_release desc
 				limit 0,5")
             ->fetchAll();
         
@@ -367,26 +367,24 @@ class SocialController extends Controller
 				d.id,
 				d.ts,
 				d.name,
-				d.prettyname,
-				d.creation,
-				d.rawdescription,
-				d.description,
+				d.name_canonical,
+				d.date_creation,
+				d.description_md,
+				d.description_html,
 				d.precedent_decklist_id precedent,
                 d.tournament_id,
                 t.description tournament,
 				u.id user_id,
 				u.username,
-				u.faction usercolor,
+				u.color usercolor,
 				u.reputation,
 				u.donation,
-				c.code identity_code,
 				f.code faction_code,
-				d.nbVotes,
-				d.nbfavorites,
-				d.nbcomments
+				d.nb_votes,
+				d.nb_favorites,
+				d.nb_comments
 				from decklist d
 				join user u on d.user_id=u.id
-				join card c on d.identity_id=c.id
 				join faction f on d.faction_id=f.id
                 left join tournament t on d.tournament_id=t.id
 				where d.id=?
@@ -406,14 +404,14 @@ class SocialController extends Controller
 				c.creation,
 				c.user_id,
 				u.username author,
-				u.faction authorcolor,
+				u.color authorcolor,
                 u.donation,
 				c.text,
                 c.hidden
 				from comment c
 				join user u on c.user_id=u.id
 				where c.decklist_id=?
-				order by creation asc", array(
+				order by date_creation asc", array(
                         $decklist_id
                 ))->fetchAll();
         
@@ -439,13 +437,13 @@ class SocialController extends Controller
                 "SELECT
 					d.id,
 					d.name,
-					d.prettyname,
-					d.nbVotes,
-					d.nbfavorites,
-					d.nbcomments
+					d.name_canonical,
+					d.nb_votes,
+					d.nb_favorites,
+					d.nb_comments
 					from decklist d
 					where d.id=?
-					order by d.creation asc", array(
+					order by d.date_creation asc", array(
                         $decklist['precedent']
                 ))->fetchAll();
         
@@ -453,13 +451,13 @@ class SocialController extends Controller
                 "SELECT
 					d.id,
 					d.name,
-					d.prettyname,
-					d.nbVotes,
-					d.nbfavorites,
-					d.nbcomments
+					d.name_canonical,
+					d.nb_votes,
+					d.nb_favorites,
+					d.nb_comments
 					from decklist d
 					where d.precedent_decklist_id=?
-					order by d.creation asc", array(
+					order by d.date_creation asc", array(
                         $decklist_id
                 ))->fetchAll();
 
@@ -759,10 +757,10 @@ class SocialController extends Controller
             $rows = $dbh->executeQuery("SELECT
 					d.id,
 					d.name,
-					d.prettyname,
-					d.nbVotes,
-					d.nbfavorites,
-					d.nbcomments
+					d.name_canonical,
+					d.nb_votes,
+					d.nb_favorites,
+					d.nb_comments
 					from decklist d
 					where d.id=?
 					", array(
@@ -1074,11 +1072,11 @@ class SocialController extends Controller
 				c.creation,
 				d.id decklist_id,
 				d.name decklist_name,
-				d.prettyname decklist_prettyname
+				d.name_canonical decklist_name_canonical
 				from comment c
 				join decklist d on c.decklist_id=d.id
 				where c.user_id=?
-				order by creation desc
+				order by date_creation desc
 				limit $start, $limit", array(
                         $user->getId()
                 ))
@@ -1146,13 +1144,13 @@ class SocialController extends Controller
 				c.creation,
 				d.id decklist_id,
 				d.name decklist_name,
-				d.prettyname decklist_prettyname,
+				d.name_canonical decklist_name_canonical,
 				u.id user_id,
 				u.username author
 				from comment c
 				join decklist d on c.decklist_id=d.id
 				join user u on c.user_id=u.id
-				order by creation desc
+				order by date_creation desc
 				limit $start, $limit", array())->fetchAll(\PDO::FETCH_ASSOC);
         
         $maxcount = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];

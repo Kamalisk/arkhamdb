@@ -1,6 +1,3 @@
-if (typeof app != "object")
-	var app = { data_loaded: jQuery.Callbacks() };
-
 app.user = {};
 (function(user, $) {
 

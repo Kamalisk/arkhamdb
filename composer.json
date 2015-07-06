@@ -24,7 +24,9 @@
         "doctrine/doctrine-bundle": "^1.5",
         "liuggio/ExcelBundle": "^2.0",
         "friendsofsymfony/jsrouting-bundle": "^1.5",
-        "twig/extensions": "^1.2"
+        "twig/extensions": "^1.2",
+        "ezyang/htmlpurifier": "^4.6",
+        "michelf/php-markdown": "^1.5"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

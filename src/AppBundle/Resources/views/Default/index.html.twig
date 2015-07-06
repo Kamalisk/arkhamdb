@@ -7,7 +7,7 @@
 <script type="text/javascript">
 
 var Identity = null,
-	Decklist = {{ decklist|json_encode|raw }},
+	{#Decklist = {{ decklist|json_encode|raw }},#}
 	DeckDB = TAFFY([Decklist]),
 	SelectedDeck = DeckDB().first(),
 	DisplaySort = 'type';
@@ -32,7 +32,7 @@ var Identity = null,
 	{% include 'AppBundle:Default:navbar-factions.html.twig' %}
     <div class="row">
         <div class="col-md-8 col-lg-6">
-            {% include 'AppBundle:Default:decklist_of_the_week.html.twig' %}
+{#            {% include 'AppBundle:Default:decklist_of_the_week.html.twig' %}#}
         </div>
         <div class="col-md-4 col-lg-6">
             <div class="row">

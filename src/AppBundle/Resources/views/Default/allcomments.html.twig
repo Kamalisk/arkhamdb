@@ -16,7 +16,7 @@
 
 <tr>
 <td>
-<div>{{ comment.creation|date('M d, Y') }} on <a href="{{ path('decklist_detail', {decklist_id:comment.decklist_id,decklist_name:comment.decklist_prettyname}) }}#{{ comment.id }}">{{ comment.decklist_name }}</a>, by <a href="{{ path('user_profile_view', {user_id:comment.user_id,user_name:comment.author|e('url')}) }}" class="comment-author username">{{ comment.author }}</a>:</div>
+<div>{{ comment.creation|date('M d, Y') }} on <a href="{{ path('decklist_detail', {decklist_id:comment.decklist_id,decklist_name:comment.decklist_name_canonical}) }}#{{ comment.id }}">{{ comment.decklist_name }}</a>, by <a href="{{ path('user_profile_view', {user_id:comment.user_id,user_name:comment.author|e('url')}) }}" class="comment-author username">{{ comment.author }}</a>:</div>
 {{ comment.text|raw }}
 </td>
 </tr>

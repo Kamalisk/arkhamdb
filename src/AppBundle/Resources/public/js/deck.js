@@ -276,7 +276,7 @@ $(function() {
 			return snapshot.saved === false;
 		});
 		if(edits.length) {
-			var confirmation = confirm("This operation will revert the changes made to the deck since "+edits[edits.length-1].datecreation.calendar()+". The last "+(edits.length > 1 ? edits.length+" edits" : "edit")+" will be lost. Do you confirm?");
+			var confirmation = confirm("This operation will revert the changes made to the deck since "+edits[edits.length-1].date_creation.calendar()+". The last "+(edits.length > 1 ? edits.length+" edits" : "edit")+" will be lost. Do you confirm?");
 			if(!confirmation) return false;
 		}
 		$('#deck-cancel-edits').val(1);
@@ -505,7 +505,7 @@ function autosave_interval() {
 }
 // if diff is undefined, consider it is the content at load
 function add_snapshot(snapshot) {
-	snapshot.datecreation = snapshot.datecreation ? moment(snapshot.datecreation) : moment();
+	snapshot.date_creation = snapshot.date_creation ? moment(snapshot.date_creation) : moment();
 	Snapshots.push(snapshot);
 	
 	var list = [];
@@ -524,7 +524,7 @@ function add_snapshot(snapshot) {
 		list.push("First version");
 	}
 	
-	$('#tbody-history').prepend('<tr'+(snapshot.saved ? '' : ' class="warning"')+'><td>'+snapshot.datecreation.calendar()+(snapshot.saved ? '' : ' (unsaved)')+'</td><td>'+list.join('<br>')+'</td><td><a role="button" href="#" data-code="'+(Snapshots.length-1)+'"">Revert</a></td></tr>');
+	$('#tbody-history').prepend('<tr'+(snapshot.saved ? '' : ' class="warning"')+'><td>'+snapshot.date_creation.calendar()+(snapshot.saved ? '' : ' (unsaved)')+'</td><td>'+list.join('<br>')+'</td><td><a role="button" href="#" data-code="'+(Snapshots.length-1)+'"">Revert</a></td></tr>');
 	
 	Autosave_timer = -1; // start timer
 }

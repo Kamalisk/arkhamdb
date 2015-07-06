@@ -501,7 +501,7 @@ function show_deck() {
 	
 	update_deck();
 	// convert date from UTC to local
-	$('#datecreation').html('<small>Creation: '+moment(deck.datecreation).format('LLLL')+'</small>');
+	$('#datecreation').html('<small>Creation: '+moment(deck.date_creation).format('LLLL')+'</small>');
 	$('#dateupdate').html('<small>Last update: '+moment(deck.dateupdate).format('LLLL')+'</small>');
 	$('#btn-publish').prop('disabled', deck.problem || deck.unsaved);
 }

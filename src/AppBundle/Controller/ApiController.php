@@ -443,8 +443,8 @@ class ApiController extends Controller
 				d.id,
 				d.ts,
 				d.name,
-				d.creation,
-				d.description,
+				d.date_creation,
+				d.description_html,
 				u.username
 				from decklist d
 				join user u on d.user_id=u.id
@@ -513,12 +513,12 @@ class ApiController extends Controller
 				d.id,
 				d.ts,
 				d.name,
-				d.creation,
-				d.description,
+				d.date_creation,
+				d.description_html,
 				u.username
 				from decklist d
 				join user u on d.user_id=u.id
-				where substring(d.creation,1,10)=?
+				where substring(d.date_creation,1,10)=?
 				", array(
                         $date
                 ))->fetchAll();

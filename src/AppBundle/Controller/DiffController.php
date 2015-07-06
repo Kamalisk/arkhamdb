@@ -72,14 +72,14 @@ class DiffController extends Controller
                         'faction_code' => $d1->getFaction()->getCode(),
                         'name' => $d1->getName(),
                         'id' => $d1->getId(),
-                        'prettyname' => $d1->getPrettyname(),
+                        'name_canonical' => $d1->getPrettyname(),
                         'content' => $content1
                         ),
                 'decklist2' => array(
                         'faction_code' => $d2->getFaction()->getCode(),
                         'name' => $d2->getName(),
                         'id' => $d2->getId(),
-                        'prettyname' => $d2->getPrettyname(),
+                        'name_canonical' => $d2->getPrettyname(),
                         'content' => $content2
                         ),
                 'shared' => $shared

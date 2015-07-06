@@ -93,7 +93,7 @@ class UserController extends Controller
                     'public_profile_url' => $public_profile_url,
                     'id' => $user_id,
                     'name' => $user->getUsername(),
-                    'faction' => $user->getFaction(),
+                    'faction' => $user->getColor(),
                     'donation' => $user->getDonation(),
             );
             
@@ -163,4 +163,23 @@ class UserController extends Controller
         return $response;
         
     }
+
+    public function remindAction($username)
+    {
+    	$user = $this->get('fos_user.user_manager')->findUserByUsername($username);
+    	if(!$user) {
+    		throw new NotFoundHttpException("Cannot find user from username [$username]");
+    	}
+    	if(!$user->getConfirmationToken()) {
+    		return $this->render('AppBundle:User:remind-no-token.html.twig');
+    	}
+    
+    	$this->get('fos_user.mailer')->sendConfirmationEmailMessage($user);
+    
+    	$this->get('session')->set('fos_user_send_confirmation_email/email', $user->getEmail());
+    
+    	$url = $this->get('router')->generate('fos_user_registration_check_email');
+    	return $this->redirect($url);
+    }
+    
 }

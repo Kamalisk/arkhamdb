@@ -51,7 +51,7 @@ class FactionController extends Controller
         foreach($identities as $identity) {
         	
         	$qb = $em->createQueryBuilder();
-        	$qb->select('d, (d.nbVotes/(1+DATE_DIFF(CURRENT_TIMESTAMP(),d.creation)/10)) as points')
+        	$qb->select('d, (d.nb_votes/(1+DATE_DIFF(CURRENT_TIMESTAMP(),d.date_creation)/10)) as points')
         	->from('AppBundle:Decklist', 'd')
         	->where('d.identity=:identity')
         	->setParameter('identity', $identity)

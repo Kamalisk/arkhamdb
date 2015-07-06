@@ -268,7 +268,7 @@ var Filters = {},
 	{% if published_decklists|length %}
 	{% for decklist in published_decklists %}
 		<tr>
-			<td class="decklist-name"><a href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.prettyname|e('url') }) }}">{{ decklist.name }}</a></td>
+			<td class="decklist-name"><a href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.name_canonical|e('url') }) }}">{{ decklist.name }}</a></td>
 			<td class="social"><span class="glyphicon glyphicon-heart social-icon-like"></span> {{ decklist.nbVotes }}</td>
 			<td class="social"><span class="glyphicon glyphicon-star social-icon-favorite"></span> {{ decklist.nbfavorites }}</td>
 			<td class="social"><span class="glyphicon glyphicon-comment social-icon-comment"></span> {{ decklist.nbcomments }}</td>

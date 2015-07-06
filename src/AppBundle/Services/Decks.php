@@ -27,22 +27,17 @@ class Decks
                 "SELECT
 				d.id,
 				d.name,
-				DATE_FORMAT(d.datecreation, '%Y-%m-%dT%TZ') datecreation,
-                DATE_FORMAT(d.dateupdate, '%Y-%m-%dT%TZ') dateupdate,
-				d.description,
+				DATE_FORMAT(d.date_creation, '%Y-%m-%dT%TZ') datecreation,
+                DATE_FORMAT(d.date_update, '%Y-%m-%dT%TZ') dateupdate,
+				d.description_md,
                 d.tags,
-                (select count(*) from deckchange c where c.deck_id=d.id and c.saved=0) unsaved,
+                (select count(*) from deckchange c where c.deck_id=d.id and c.is_saved=0) unsaved,
                 d.problem,
-				c.name identity_name,
-                c.code identity_code,
 				f.code faction_code,
                 p.cycle_id cycle_id,
-                p.position pack_position,
-				s.name side
+                p.position pack_position
 				from deck d
-				left join card c on d.identity_id=c.id
-				left join faction f on c.faction_id=f.id
-				left join side s on d.side_id=s.id
+				left join faction f on d.faction_id=f.id
                 left join pack p on d.last_pack_id=p.id
 				where d.user_id=?
 				order by dateupdate desc", array(
@@ -84,12 +79,12 @@ class Decks
         
         $rows = $dbh->executeQuery(
                 "SELECT
-                DATE_FORMAT(c.datecreation, '%Y-%m-%dT%TZ') datecreation,
+                DATE_FORMAT(c.date_creation, '%Y-%m-%dT%TZ') datecreation,
 				c.variation,
                 c.deck_id
 				from deckchange c
 				join deck d on c.deck_id=d.id
-				where d.user_id=? and c.saved=1", array(
+				where d.user_id=? and c.is_saved=1", array(
 			        $user->getId()
 			))
 			->fetchAll();
@@ -133,20 +128,15 @@ class Decks
                 "SELECT
 				d.id,
 				d.name,
-				DATE_FORMAT(d.datecreation, '%Y-%m-%dT%TZ') datecreation,
-				DATE_FORMAT(d.dateupdate, '%Y-%m-%dT%TZ') dateupdate,
-				d.description,
+				DATE_FORMAT(d.date_creation, '%Y-%m-%dT%TZ') datecreation,
+				DATE_FORMAT(d.date_update, '%Y-%m-%dT%TZ') dateupdate,
+				d.description_md,
                 d.tags,
-                (select count(*) from deckchange c where c.deck_id=d.id and c.saved=0) unsaved,
+                (select count(*) from deckchange c where c.deck_id=d.id and c.is_saved=0) unsaved,
                 d.problem,
-				c.name identity_name,
-                c.code identity_code,
-				f.code faction_code,
-				s.name side
+				f.code faction_code
 				from deck d
-				left join card c on d.identity_id=c.id
-				left join faction f on c.faction_id=f.id
-				left join side s on d.side_id=s.id
+				left join faction f on d.faction_id=f.id
 				where d.id=?", array(
                         $deck_id
                 ))
@@ -175,10 +165,10 @@ class Decks
         
         $rows = $dbh->executeQuery(
                 "SELECT
-				DATE_FORMAT(c.datecreation, '%Y-%m-%dT%TZ') datecreation,
+				DATE_FORMAT(c.date_creation, '%Y-%m-%dT%TZ') datecreation,
 				c.variation
 				from deckchange c
-				where c.deck_id=? and c.saved=1
+				where c.deck_id=? and c.is_saved=1
                 order by datecreation desc", array(
         				        $deck_id
         				))

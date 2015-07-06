@@ -49,7 +49,7 @@
     	   {{ review.text|raw }}
        </div>
        <div class="review-date">
-           <time datetime="{{ review.datecreation|date('c') }}" title="{{ review.datecreation|date('F jS, Y') }}">{{ review.datecreation|date('n/j/y') }}</time>
+           <time datetime="{{ review.date_creation|date('c') }}" title="{{ review.date_creation|date('F jS, Y') }}">{{ review.date_creation|date('n/j/y') }}</time>
        </div>
        <div class="review-author">
            <a href="{{ path('user_profile_view', {user_id:review.user.id,user_name:review.user.username|e('url')}) }}" rel="author" class="username {{ review.user.faction }}">{{ review.user.username }}</a>
@@ -64,7 +64,7 @@
        &mdash;
        <a title="{{ comment.author.reputation }} reputation" href="{{ path('user_profile_view', {user_id:comment.author.id,user_name:comment.author.username|e('url')}) }}" rel="author" class="username {{ comment.author.faction }}">{{ comment.author.username }}</a>
            {% if comment.author.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="AGoT2db Gracious Donator"></span>{% endif %}
-       <time datetime="{{ comment.datecreation|date('c') }}" title="{{ comment.datecreation|date('F jS, Y') }}">{{ comment.datecreation|date('n/j/y') }}</time>
+       <time datetime="{{ comment.date_creation|date('c') }}" title="{{ comment.date_creation|date('F jS, Y') }}">{{ comment.date_creation|date('n/j/y') }}</time>
     </div>
        {% endfor %}
        

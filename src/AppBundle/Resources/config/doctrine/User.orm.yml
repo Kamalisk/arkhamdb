@@ -1,6 +1,6 @@
 AppBundle\Entity\User:
     type:  entity
-    table: fos_user
+    table: user
     oneToMany:
         decks:
             targetEntity: Deck

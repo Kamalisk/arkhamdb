@@ -1,0 +1,8 @@
+{% extends "AgfaWebBundle::security.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block form %}
+<p>Your account is not awaiting confirmation.</p>
+<p>If you forgot your password, <a href="{{ path('fos_user_resetting_request') }}">click here</a>, otherwise log in <a href="{{ path('fos_user_security_login') }}">here</a>.</p> 
+{% endblock %}

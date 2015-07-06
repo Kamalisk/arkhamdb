@@ -1,0 +1,21 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+
+{% block body %}
+<div class="container">
+
+{% if app.request.hasPreviousSession %}
+	{% for type, messages in app.session.flashbag.all() %}
+		{% for message in messages %}
+			<div class="alert alert-{{ type }}">
+				{{ message }}
+			</div>
+		{% endfor %}
+	{% endfor %}
+{% endif %}
+
+{% block fos_user_content %}
+{% endblock fos_user_content %}
+
+</div>
+{% endblock %}

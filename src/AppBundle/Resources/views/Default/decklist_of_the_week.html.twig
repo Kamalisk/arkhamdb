@@ -2,7 +2,7 @@
 <div id="highlight" class="decklist">
 
 <h2 class="section">Decklist of the week </h2>
-<h3><a class="decklist-name" href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.prettyname|e('url') }) }}">{{ decklist.name }}</a></h3>
+<h3><a class="decklist-name" href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.name_canonical|e('url') }) }}">{{ decklist.name }}</a></h3>
 	
 <!-- Identity and Stats -->
 <div class="row">

@@ -9,6 +9,10 @@ use FOS\UserBundle\Model\User as BaseUser;
  */
 class User extends BaseUser
 {
+	public function getMaxNbDecks()
+	{
+		return 2*(100+floor($this->reputation/ 10));
+	}
 	
     /**
      * @var \DateTime
@@ -105,7 +109,14 @@ class User extends BaseUser
      */
     private $reviewvotes;
 
-
+	public function __construct()
+	{
+		parent::__construct();
+		
+		$this->reputation = 1;
+		$this->donation = 0;
+	}
+    
     /**
      * Set dateCreation
      *

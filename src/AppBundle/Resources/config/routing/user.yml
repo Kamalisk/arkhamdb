@@ -1,3 +1,7 @@
+remind_email:
+    path:     /remind/{username}
+    defaults:
+        _controller: AppBundle:User:remind
 
 card_reviews_list_byauthor:
     pattern: /reviews/{user_id}/{page}
@@ -56,5 +60,5 @@ user_profile_save:
 user_info:
     pattern: /info
     defaults:
-        _controller: AppBundle:Default:info
+        _controller: AppBundle:User:info
         

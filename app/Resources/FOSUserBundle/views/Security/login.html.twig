@@ -1,0 +1,54 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block fos_user_content %}
+<div class="row">
+<div class="col-md-6 col-md-push-3">
+<div class="panel panel-default">
+<div class="panel-heading">
+Login
+</div>
+<div class="panel-body">
+
+{% if error %}
+    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+{% endif %}
+
+<form action="{{ path("fos_user_security_check") }}" method="post" class="">
+	<input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+
+    <div class="form-group">
+		<label for="username">{{ 'security.login.username'|trans }}</label>
+	    <input type="text" id="username" name="_username" class="form-control" value="{{ last_username }}" required="required" />
+	</div>
+    
+    <div class="form-group">
+		<label for="password">{{ 'security.login.password'|trans }}</label>
+	    <input type="password" id="password" name="_password" class="form-control" required="required" />
+	</div>
+    
+    <div class="checkbox">
+    	<label>
+    		<input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+    		{{ 'security.login.remember_me'|trans }}
+	    </label>
+	</div>
+    
+    {% if error and error.messageKey == 'Account is disabled.' %}
+    <p>
+    	Never got the registration email? <a href="{{ path('remind_email',{username:last_username}) }}">Click here</a>.</p>
+    </p>
+    {% endif %}
+    
+    <input type="submit" id="_submit" name="_submit" class="btn btn-primary" value="{{ 'security.login.submit'|trans }}" />
+    <a href="{{ path('fos_user_registration_register') }}" class="btn btn-link">Register</button>
+    <a href="{{ path('fos_user_resetting_request') }}" class="btn btn-link">Forgot your password?</button>
+    
+</form>
+
+</div>
+</div>
+</div>
+</div>
+{% endblock fos_user_content %}

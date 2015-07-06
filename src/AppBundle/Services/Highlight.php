@@ -22,26 +22,24 @@ class Highlight
 				d.id,
 				d.ts,
 				d.name,
-				d.prettyname,
-				d.creation,
-				d.rawdescription,
-				d.description,
+				d.name_canonical,
+				d.date_creation,
+				d.description_md,
+				d.description_html,
 				d.precedent_decklist_id precedent,
 				u.id user_id,
 				u.username,
-				u.faction usercolor,
+				u.color usercolor,
 				u.reputation,
 	            u.donation,
-				c.code identity_code,
 				f.code faction_code,
-				d.nbVotes,
-				d.nbfavorites,
-				d.nbcomments
+				d.nb_votes,
+				d.nb_favorites,
+				d.nb_comments
 				from decklist d
 				join user u on d.user_id=u.id
-				join card c on d.identity_id=c.id
 				join faction f on d.faction_id=f.id
-				where d.creation > date_sub( current_date, interval 7 day )
+				where d.date_creation > date_sub( current_date, interval 7 day )
                 order by nbVotes desc , nbcomments desc
                 limit 0,1
 				", array())->fetchAll();
