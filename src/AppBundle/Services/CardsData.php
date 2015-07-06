@@ -37,28 +37,30 @@ class CardsData
 	{
 		$list_cycles = $this->doctrine->getRepository('AppBundle:Cycle')->findBy(array(), array("position" => "ASC"));
 		$lines = array();
+		/* @var $cycle \AppBundle\Entity\Cycle */
 		foreach($list_cycles as $cycle) {
-			$packs = $cycle->getPacks();
-			if(count($packs) > 1) {
+			if(!$cycle->getIsBox()) {
 				$lines[] = array(
 						"label" => $cycle->getName(),
 						"available" => true,
 						"url" => $this->router->generate('cards_cycle', array('cycle_code' => $cycle->getCode()), true),
 				);
 			}
+			$packs = $cycle->getPacks();
+			/* @var $pack \AppBundle\Entity\Pack */
 			foreach($packs as $pack) {
 				$known = count($pack->getCards());
 				$max = $pack->getSize();
-				
-				if(count($packs) > 1) {
-					$label = $pack->getPosition() . '. ' . $pack->getName();
-				} else {
+			
+				if($cycle->getIsBox()) {
 					$label = $pack->getName();
+				} else {
+					$label = $pack->getPosition() . '. ' . $pack->getName();
 				}
 				if($known < $max) {
 					$label = sprintf("%s (%d/%d)", $label,$known, $max);
 				}
-				
+			
 				$lines[] = array(
 						"label" => $label,
 						"available" => $pack->getDateRelease() ? true : false,
@@ -69,13 +71,11 @@ class CardsData
 		return $lines;
 	}
 	
-	public function getAllPacks()
+	public function allfactionsdata()
 	{
-		$packs = $this->doctrine->getRepository('AppBundle:Pack')->findBy(array(), array("dateRelease" => "DESC", 
-				"position" => "DESC"));
-		return $packs;
+		$factions = $this->doctrine->getRepository('AppBundle:Faction')->findBy(array(), array("name" => "ASC"));
+		return $factions;
 	}
-    
 	
 	public function get_search_rows($conditions, $sortorder, $forceempty = false)
 	{

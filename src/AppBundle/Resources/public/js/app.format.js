@@ -8,7 +8,7 @@ app.format = {};
 	};
 	
 	format.name = function(card) {
-		return (card.is_unique ? '<span class="card-unique"></span>' : "") + card.name;
+		return (card.is_unique ? '<span class="card-unique"></span> ' : "") + card.name;
 	}
 	
 	format.pack_faction = function(card) {

@@ -14,6 +14,7 @@ class CycleType extends AbstractType
             ->add('code')
             ->add('name')
             ->add('position')
+            ->add('isBox', 'checkbox', array('required'  => false))
         ;
     }
 

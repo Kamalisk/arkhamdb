@@ -29,8 +29,8 @@ body {
 	font-weight: 400;
 }
 .card-unique::after {
-	/* circled plus followed by thin space */
-	content: "\2295\2009";
+	/* circled plus */
+	content: "\2295";
 }
 
 .card-flavor cite {

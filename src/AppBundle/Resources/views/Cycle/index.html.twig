@@ -10,6 +10,7 @@
                 <th>Code</th>
                 <th>Name</th>
                 <th>Position</th>
+                <th>Box</th>
                 <th>Creation</th>
                 <th>Update</th>
                 <th>Actions</th>
@@ -22,6 +23,7 @@
                 <td>{{ entity.code }}</td>
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.position }}</td>
+                <td>{{ entity.isBox }}</td>
                 <td>{% if entity.dateCreation %}{{ entity.dateCreation|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{% if entity.dateUpdate %}{{ entity.dateUpdate|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>

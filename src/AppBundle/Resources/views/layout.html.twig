@@ -45,27 +45,21 @@
             <li><a href="{{ path('decks_list') }}">My Decks</a></li>
             <li><a href="{{ path('decklists_list', {type:'popular'}) }}">Decklists</a></li>
             <li class="hidden-sm dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Sets <span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Cards <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
+                <li><a href="{{ path('cards_search') }}">Advanced Search</a></li>
+                <li class="divider"></li>
               {% for line in cards_data.allsetsdata() %}
                 <li><a href="{{ line['url'] }}">{{ line['label'] }}</a></li>
               {% endfor %}
               </ul>
             </li>
-            <li><a href="{{ path('cards_search') }}">Card Search</a></li>
             <li class="hidden-sm dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Factions <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li role="presentation" class="dropdown-header">Runner</li>
-                <li><a href="{{ path('faction_page',{faction_code:'anarch'}) }}"><span class="icon icon-anarch influence-anarch"></span> Anarch</a></li>
-                <li><a href="{{ path('faction_page',{faction_code:'criminal'}) }}"><span class="icon icon-criminal influence-criminal"></span> Criminal</a></li>
-                <li><a href="{{ path('faction_page',{faction_code:'shaper'}) }}"><span class="icon icon-shaper influence-shaper"></span> Shaper</a></li>
-                <li class="divider"></li>
-                <li role="presentation" class="dropdown-header">Corp</li>
-                <li><a href="{{ path('faction_page',{faction_code:'haas-bioroid'}) }}"><span class="icon icon-haas-bioroid influence-haas-bioroid"></span> Haas-Bioroid</a></li>
-                <li><a href="{{ path('faction_page',{faction_code:'jinteki'}) }}"><span class="icon icon-jinteki influence-jinteki"></span> Jinteki</a></li>
-                <li><a href="{{ path('faction_page',{faction_code:'nbn'}) }}"><span class="icon icon-nbn influence-nbn"></span> NBN</a></li>
-                <li><a href="{{ path('faction_page',{faction_code:'weyland-consortium'}) }}"><span class="icon icon-weyland-consortium influence-weyland-consortium"></span> Weyland Consortium</a></li>
+              {% for faction in cards_data.allfactionsdata() %}
+                <li><a href="{{ path('faction_page',{faction_code:faction.code}) }}"><span class="icon icon-{{ faction.code }} color-{{ faction.code }}"></span> {{ faction.name }}</a></li>
+              {% endfor %}
               </ul>
             </li>
             <li class="hidden-sm"><a href="{{ path('card_reviews_list') }}">Reviews</a></li>

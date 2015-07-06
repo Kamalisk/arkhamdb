@@ -26,6 +26,11 @@ class Cycle
     private $position;
 
     /**
+     * @var boolean
+     */
+    private $isBox;
+
+    /**
      * @var \DateTime
      */
     private $dateCreation;
@@ -128,6 +133,30 @@ class Cycle
     public function getPosition()
     {
         return $this->position;
+    }
+
+    /**
+     * Set isBox
+     *
+     * @param boolean $isBox
+     *
+     * @return Cycle
+     */
+    public function setIsBox($isBox)
+    {
+        $this->isBox = $isBox;
+
+        return $this;
+    }
+
+    /**
+     * Get isBox
+     *
+     * @return boolean
+     */
+    public function getIsBox()
+    {
+        return $this->isBox;
     }
 
     /**
