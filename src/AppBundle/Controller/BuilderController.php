@@ -224,7 +224,7 @@ class BuilderController extends Controller
         if (! $this->getUser() || $this->getUser()->getId() != $deck->getUser()->getId())
             throw new UnauthorizedHttpException("You don't have access to this deck.");
             
-            /* @var $judge \Netrunnerdb\SocialBundle\Services\Judge */
+            /* @var $judge \AppBundle\Services\Judge */
         $judge = $this->get('judge');
         $classement = $judge->classe($deck->getCards(), $deck->getIdentity());
         

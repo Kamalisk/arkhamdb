@@ -1,7 +1,5 @@
 <?php
 
-# src/Netrunnerdb/UserBundle/Controller/SecurityController.php
-
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

@@ -366,7 +366,7 @@ class CardsData
 	    }
 	    
 		$cardinfo['url'] = $this->router->generate('cards_zoom', array('card_code' => $card->getCode()), true);
-		$cardinfo['imagesrc'] = $this->assets_helper->getUrl('bundles/app/images/cards/'.$card->getCode().'.png');
+		$cardinfo['imagesrc'] = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'.png');
 		
 		if($api) {
 			unset($cardinfo['id']);

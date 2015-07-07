@@ -6,9 +6,9 @@ function display_notification()
 {
 	if(!localStorage) return;
 	var Notification = {
-			version: 16,
+			version: 1,
 			type: 'success',
-			message: "New tournament type <b>2015 ANRPC</b> for the <a href=\"http://anrprocircuit.com/\">ANR Pro Circuit - Competitive Fan-run Netrunner Tournaments</a>."
+			message: ""
 	};
 	if(Notification.message) {
 	    var localStorageNotification = parseInt(localStorage.getItem('notification'));

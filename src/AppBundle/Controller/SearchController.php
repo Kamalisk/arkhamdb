@@ -14,6 +14,7 @@ class SearchController extends Controller
 {
 
 	public static $searchKeys = array(
+			''  => 'code',
 			'a' => 'flavor',
 			'b' => 'claim',
 			'c' => 'cycle',
@@ -42,6 +43,7 @@ class SearchController extends Controller
 			't' => 'code',
 			'e' => 'code',
 			'f' => 'code',
+			''  => 'string',
 			'a' => 'string',
 			'i' => 'string',
 			'k' => 'string',
@@ -117,7 +119,7 @@ class SearchController extends Controller
 		$card = $this->getDoctrine()->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
 		if(!$card) throw $this->createNotFoundException('Sorry, this card is not in the database (yet?)');
 		
-		$meta = $card->getName().", a ".$card->getFaction()->getName()." ".$card->getType()->getName()." card for A Game of Thrones 2nd Edition from the set ".$card->getPack()->getName()." published by Fantasy Flight Games.";
+		$meta = $card->getName().", a ".$card->getFaction()->getName()." ".$card->getType()->getName()." card for A Game of Thrones: The Card Game Second Edition from the set ".$card->getPack()->getName()." published by Fantasy Flight Games.";
 		
 		return $this->forward(
 			'AppBundle:Search:display',
@@ -138,7 +140,7 @@ class SearchController extends Controller
 		$pack = $this->getDoctrine()->getRepository('AppBundle:Pack')->findOneBy(array("code" => $pack_code));
 		if(!$pack) throw $this->createNotFoundException('This pack does not exist');
 		
-		$meta = $pack->getName().", a set of cards for A Game of Thrones 2nd Edition"
+		$meta = $pack->getName().", a set of cards for A Game of Thrones: The Card Game Second Edition"
 				.($pack->getDateRelease() ? " published on ".$pack->getDateRelease()->format('Y/m/d') : "")
 				." by Fantasy Flight Games.";
 		
@@ -164,7 +166,7 @@ class SearchController extends Controller
 		$cycle = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findOneBy(array("code" => $cycle_code));
 		if(!$cycle) throw $this->createNotFoundException('This cycle does not exist');
 		
-		$meta = $cycle->getName().", a cycle of datapack for A Game of Thrones 2nd Edition published by Fantasy Flight Games.";
+		$meta = $cycle->getName().", a cycle of datapack for A Game of Thrones: The Card Game Second Edition published by Fantasy Flight Games.";
 
 		$key = array_search('cycle', SearchController::$searchKeys);
 		

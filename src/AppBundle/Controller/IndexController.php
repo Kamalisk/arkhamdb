@@ -28,8 +28,8 @@ class IndexController extends Controller
         
         return $this->render('AppBundle:Default:index.html.twig',
                 array(
-                        'pagetitle' => "Android:Netrunner Cards and Deckbuilder",
-                        'pagedescription' => "Build your deck for Android:Netrunner, the LCG by Fantasy Flight Games. Browse the cards and the thousand of decklists submitted by the community. Publish your own decks and get feedback.",
+                        'pagetitle' => "A Game of Thrones: The Card Game Second Edition Deckbuilder",
+                        'pagedescription' => "Build your deck for A Game of Thrones: The Card Game Second Edition by Fantasy Flight Games. Browse the cards and the thousand of decklists submitted by the community. Publish your own decks and get feedback.",
                         'decklists' => $decklists_recent,
           //              'decklist' => $decklist,
                         'reviews' => $reviews_recent,

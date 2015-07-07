@@ -80,6 +80,7 @@ class ExcelController extends Controller
 				
 				$getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
 				$value = $card->$getter() ?: '';
+				$type = $em->getClassMetadata('AppBundle:Card')->getTypeOfField($fieldName);
 
 				$phpCell = $phpActiveSheet->getCellByColumnAndRow($col_index++, $row_index+2);
 				if($fieldName == 'code')
@@ -88,7 +89,14 @@ class ExcelController extends Controller
 				}
 				else
 				{
-					$phpCell->setValue($value);
+					if($type == 'boolean')
+					{
+						$phpCell->setValue($value ? "1" : "");
+					}
+					else
+					{
+						$phpCell->setValue($value);
+					}
 				}
 			}
 		}

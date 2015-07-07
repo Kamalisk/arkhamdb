@@ -791,7 +791,7 @@ class SocialController extends Controller
         if (! $decklist)
             throw new NotFoundHttpException("Unable to find decklist.");
             
-            /* @var $judge \Netrunnerdb\SocialBundle\Services\Judge */
+            /* @var $judge \AppBundle\Services\Judge */
         $judge = $this->get('judge');
         $classement = $judge->classe($decklist->getCards(), $decklist->getIdentity());
         
