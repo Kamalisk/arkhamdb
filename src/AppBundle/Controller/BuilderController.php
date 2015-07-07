@@ -12,43 +12,29 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Deckchange;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class BuilderController extends Controller
 {
-
-    public function buildformAction ($side_text, Request $request)
-    {
-        $response = new Response();
-        $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
-        
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
-        
-        $side = $em->getRepository('AppBundle:Side')->findOneBy(array(
-                "name" => $side_text
-        ));
-        $type = $em->getRepository('AppBundle:Type')->findOneBy(array(
-                "name" => "Identity"
-        ));
-        
-        $identities = $em->getRepository('AppBundle:Card')->findBy(array(
-                "side" => $side,
-                "type" => $type
-        ), array(
-                "faction" => "ASC",
-                "name" => "ASC"
-        ));
-        
-        return $this->render('AppBundle:Builder:initbuild.html.twig',
-                array(
-                        'pagetitle' => "New deck",
-                        "identities" => $identities
-                ), $response);
-    
+	
+	public function buildformAction (Request $request)
+	{
+		$response = new Response();
+		$response->setPublic();
+		$response->setMaxAge($this->container->getParameter('cache_expiration'));
+		
+		/* @var $em \Doctrine\ORM\EntityManager */
+		$em = $this->get('doctrine')->getManager();
+		
+		$factions = $em->getRepository('AppBundle:Faction')->findBy(["is_primary" => TRUE]);
+		
+		return $this->render('AppBundle:Builder:initbuild.html.twig', [
+				'pagetitle' => "New deck",
+				'factions' => $factions,
+		], $response);
     }
 
-    public function initbuildAction ($card_code)
+    public function initbuildAction ($faction_code)
     {
         $response = new Response();
         $response->setPublic();
@@ -57,32 +43,25 @@ class BuilderController extends Controller
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
         
-        /* @var $card Card */
-        $card = $em->getRepository('AppBundle:Card')->findOneBy(array(
-                "code" => $card_code
+        $faction = $em->getRepository('AppBundle:Faction')->findOneBy(array(
+                "code" => $faction_code
         ));
-        if (! $card)
-            return new Response('card not found.');
+        if (! $faction) throw new HttpException(404);
         
-        $arr = array(
-                $card_code => 1
-        );
         return $this->render('AppBundle:Builder:deck.html.twig',
                 array(
                         'pagetitle' => "Deckbuilder",
                         'deck' => array(
-                                'side_name' => mb_strtolower($card->getSide()
-                                    ->getName()),
-                                "slots" => $arr,
-                                "name" => "New " . $card->getSide()
-                                    ->getName() . " Deck",
+                                "name" => "New Deck " . $faction()->getName(),
                                 "description" => "",
-                                "tags" => $card->getFaction()->getCode(),
+                        		"faction" => $faction,
+                                "slots" => [],
+                        		"tags" => $faction()->getCode(),
                                 "id" => "",
-                                "history" => array(),
+                                "history" => [],
                                 "unsaved" => 0,
                         ),
-                        "published_decklists" => array()
+                        "published_decklists" => []
                 ), $response);
     
     }
@@ -140,11 +119,11 @@ class BuilderController extends Controller
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
         
-        $content = array();
+        $content = [];
         $lines = explode("\n", $text);
         $identity = null;
         foreach ($lines as $line) {
-            $matches = array();
+            $matches = [];
             if (preg_match('/^\s*(\d)x?([\pLl\pLu\pN\-\.\'\!\: ]+)/u', $line, $matches)) {
                 $quantity = intval($matches[1]);
                 $name = trim($matches[2]);
@@ -179,16 +158,16 @@ class BuilderController extends Controller
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
         
-        $content = array();
+        $content = [];
         
         $crawler = new Crawler();
         $crawler->addXmlContent($octgn);
         $cardcrawler = $crawler->filter('deck > section > card');
         
-        $content = array();
+        $content = [];
         foreach ($cardcrawler as $domElement) {
             $quantity = intval($domElement->getAttribute('qty'));
-			$matches = array();
+			$matches = [];
             if (preg_match('/bc0f047c-01b1-427f-a439-d451eda(\d{5})/', $domElement->getAttribute('id'), $matches)) {
                 $card_code = $matches[1];
             } else {
@@ -203,7 +182,7 @@ class BuilderController extends Controller
         }
         
         $desccrawler = $crawler->filter('deck > notes');
-        $description = array();
+        $description = [];
         foreach ($desccrawler as $domElement) {
             $description[] = $domElement->nodeValue;
         }
@@ -228,7 +207,7 @@ class BuilderController extends Controller
         $judge = $this->get('judge');
         $classement = $judge->classe($deck->getCards(), $deck->getIdentity());
         
-        $lines = array();
+        $lines = [];
         $types = array(
                 "Event",
                 "Hardware",
@@ -297,7 +276,7 @@ class BuilderController extends Controller
         if (! $this->getUser() || $this->getUser()->getId() != $deck->getUser()->getId())
             throw new UnauthorizedHttpException("You don't have access to this deck.");
         
-        $rd = array();
+        $rd = [];
         $identity = null;
         /** @var $slot Deckslot */
         foreach ($deck->getSlots() as $slot) {
@@ -487,12 +466,12 @@ class BuilderController extends Controller
                 $deck_id
         ))->fetchAll();
         
-        $cards = array();
+        $cards = [];
         foreach ($rows as $row) {
             $cards[$row['code']] = intval($row['quantity']);
         }
 
-        $snapshots = array();
+        $snapshots = [];
         
         $rows = $dbh->executeQuery("SELECT
 				DATE_FORMAT(c.date_creation, '%Y-%m-%dT%TZ') datecreation,
@@ -629,7 +608,7 @@ class BuilderController extends Controller
                 $deck_id
         ))->fetchAll();
         
-        $cards = array();
+        $cards = [];
         foreach ($rows as $row) {
             $cards[$row['code']] = $row['quantity'];
         }
@@ -684,17 +663,30 @@ class BuilderController extends Controller
                 FROM tournament t
                 ORDER BY t.description desc")->fetchAll();
         
-        return $this->render('AppBundle:Builder:decks.html.twig',
-                array(
-                        'pagetitle' => "My Decks",
-                        'pagedescription' => "Create custom decks with the help of a powerful deckbuilder.",
-                        'decks' => $decks,
-                        'nbmax' => $user->getMaxNbDecks(),
-                        'nbdecks' => count($decks),
-                        'cannotcreate' => $user->getMaxNbDecks() <= count($decks),
-                        'tournaments' => $tournaments,
-                ));
-    
+        if(count($decks)) 
+        {
+        	return $this->render('AppBundle:Builder:decks.html.twig',
+        			array(
+        					'pagetitle' => "My Decks",
+        					'pagedescription' => "Create custom decks with the help of a powerful deckbuilder.",
+        					'decks' => $decks,
+        					'nbmax' => $user->getMaxNbDecks(),
+        					'nbdecks' => count($decks),
+        					'cannotcreate' => $user->getMaxNbDecks() <= count($decks),
+        					'tournaments' => $tournaments,
+        			));
+        	 
+        }
+        else 
+        {
+        	return $this->render('AppBundle:Builder:no-decks.html.twig',
+        			array(
+        					'pagetitle' => "My Decks",
+        					'pagedescription' => "Create custom decks with the help of a powerful deckbuilder.",
+        					'nbmax' => $user->getMaxNbDecks(),
+        					'tournaments' => $tournaments,
+        			));
+        }
     }
 
     public function copyAction ($decklist_id)
@@ -705,7 +697,7 @@ class BuilderController extends Controller
         /* @var $decklist \AppBundle\Entity\Decklist */
         $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
         
-        $content = array();
+        $content = [];
         foreach ($decklist->getSlots() as $slot) {
             $content[$slot->getCard()->getCode()] = $slot->getQuantity();
         }
@@ -730,7 +722,7 @@ class BuilderController extends Controller
             throw new UnauthorizedHttpException("You are not allowed to view this deck.");
         }
         
-        $content = array();
+        $content = [];
         foreach ($deck->getSlots() as $slot) {
             $content[$slot->getCard()->getCode()] = $slot->getQuantity();
         }
@@ -759,7 +751,7 @@ class BuilderController extends Controller
         {
             foreach($decks as $deck)
             {
-                $content = array();
+                $content = [];
                 foreach($deck['cards'] as $slot)
                 {
                     $card = $em->getRepository('AppBundle:Card')->findOneBy(array('code' => $slot['card_code']));

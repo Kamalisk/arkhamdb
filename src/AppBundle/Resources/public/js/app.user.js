@@ -1,4 +1,3 @@
-app.user = {};
 (function(user, $) {
 
 	user.params = {};
@@ -96,5 +95,4 @@ app.user = {};
 		}
 	});
 	
-})(app.user, jQuery);
-
+})(app.user = {}, jQuery);

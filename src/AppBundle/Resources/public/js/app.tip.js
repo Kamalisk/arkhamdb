@@ -1,4 +1,3 @@
-app.tip = {};
 (function(tip, $) {
 	
 	tip.display = function(event) {
@@ -57,5 +56,4 @@ app.tip = {};
 
 	});
 
-})(app.tip, jQuery);
-
+})(app.tip = {}, jQuery);

@@ -17,9 +17,9 @@ class Diff
     {
 
         // n flat lists of the cards of each decklist
-        $ensembles = array();
+        $ensembles = [];
         foreach($decks as $deck) {
-            $cards = array();
+            $cards = [];
             foreach($deck as $code => $qty) {
                 for($i=0; $i<$qty; $i++) $cards[] = $code;
             }
@@ -27,7 +27,7 @@ class Diff
         }
         
         // 1 flat list of the cards seen in every decklist
-        $conjunction = array();
+        $conjunction = [];
         for($i=0; $i<count($ensembles[0]); $i++) {
             $code = $ensembles[0][$i];
             $indexes = array($i);
@@ -47,7 +47,7 @@ class Diff
             }
         }
         
-        $listings = array();
+        $listings = [];
         for($i=0; $i<count($ensembles); $i++) {
             $listings[$i] = array_count_values($ensembles[$i]);
         }

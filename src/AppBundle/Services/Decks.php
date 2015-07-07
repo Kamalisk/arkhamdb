@@ -64,13 +64,13 @@ class Decks
                 ))
             ->fetchAll();
         
-        $cards = array();
+        $cards = [];
         foreach ($rows as $row) {
             $deck_id = intval($row['deck_id']);
             unset($row['deck_id']);
             $row['qty'] = intval($row['qty']);
             if (! isset($cards[$deck_id])) {
-                $cards[$deck_id] = array();
+                $cards[$deck_id] = [];
             }
             $cards[$deck_id][] = $row;
         }
@@ -89,22 +89,22 @@ class Decks
 			))
 			->fetchAll();
         
-        $changes = array();
+        $changes = [];
         foreach ($rows as $row) {
             $deck_id = intval($row['deck_id']);
             unset($row['deck_id']);
             if($decode_variation) $row['variation'] = json_decode($row['variation'], TRUE);
             if (! isset($changes[$deck_id])) {
-                $changes[$deck_id] = array();
+                $changes[$deck_id] = [];
             }
             $changes[$deck_id][] = $row;
         }
         
         foreach ($decks as $i => $deck) {
             $decks[$i]['cards'] = $cards[$deck['id']];
-            $decks[$i]['history'] = isset($changes[$deck['id']]) ? $changes[$deck['id']] : array();
+            $decks[$i]['history'] = isset($changes[$deck['id']]) ? $changes[$deck['id']] : [];
             $decks[$i]['unsaved'] = intval($decks[$i]['unsaved']);
-            $decks[$i]['tags'] = $deck['tags'] ? explode(' ', $deck['tags']) : array();
+            $decks[$i]['tags'] = $deck['tags'] ? explode(' ', $deck['tags']) : [];
             
             $problem_message = '';
             if(isset($deck['problem'])) {
@@ -156,7 +156,7 @@ class Decks
                 ))
             ->fetchAll();
         
-        $cards = array();
+        $cards = [];
         foreach ($rows as $row) {
             $row['qty'] = intval($row['qty']);
             $cards[] = $row;
@@ -174,14 +174,14 @@ class Decks
         				))
         				->fetchAll();
         
-        $changes = array();
+        $changes = [];
         foreach ($rows as $row) {
             if($decode_variation) $row['variation'] = json_decode($row['variation'], TRUE);
             $changes[] = $row;
         }
         $deck['history'] = $changes;
         
-        $deck['tags'] = $deck['tags'] ? explode(' ', $deck['tags']) : array();
+        $deck['tags'] = $deck['tags'] ? explode(' ', $deck['tags']) : [];
         $problem = $deck['problem'];
         $deck['message'] = isset($problem) ? $this->judge->problem($problem) : '';
         
@@ -191,7 +191,7 @@ class Decks
 
     public function saveDeck ($user, $deck, $decklist_id, $name, $description, $tags, $content, $source_deck)
     {
-        $deck_content = array();
+        $deck_content = [];
         
         if ($decklist_id) {
             $decklist = $this->doctrine->getRepository('AppBundle:Decklist')->find($decklist_id);
@@ -203,7 +203,7 @@ class Decks
         $deck->setDescription($description);
         $deck->setUser($user);
         $identity = null;
-        $cards = array();
+        $cards = [];
         /* @var $latestPack \AppBundle\Entity\Pack */
         $latestPack = null;
         foreach ($content as $card_code => $qty) {

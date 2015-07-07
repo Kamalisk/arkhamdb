@@ -21,6 +21,11 @@ class Faction
     private $name;
 
     /**
+     * @var boolean
+     */
+    private $is_primary;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $cards;
@@ -89,6 +94,30 @@ class Faction
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set isPrimary
+     *
+     * @param boolean $isPrimary
+     *
+     * @return Faction
+     */
+    public function setIsPrimary($isPrimary)
+    {
+        $this->is_primary = $isPrimary;
+
+        return $this;
+    }
+
+    /**
+     * Get isPrimary
+     *
+     * @return boolean
+     */
+    public function getIsPrimary()
+    {
+        return $this->is_primary;
     }
 
     /**

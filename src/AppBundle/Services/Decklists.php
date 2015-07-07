@@ -431,7 +431,7 @@ class Decklists
     
         $cards_code = $request->query->get('cards');
         if(!is_array($cards_code)) {
-            $cards_code = array();
+            $cards_code = [];
         }
         $faction_code = filter_var($request->query->get('faction'), FILTER_SANITIZE_STRING);
         $author_name = filter_var($request->query->get('author'), FILTER_SANITIZE_STRING);
@@ -448,9 +448,9 @@ class Decklists
             unset($faction_code);
         }
     
-        $wheres = array();
-        $params = array();
-        $types = array();
+        $wheres = [];
+        $params = [];
+        $types = [];
         if (! empty($side_code)) {
             $wheres[] = 's.name=?';
             $params[] = $side_code;
@@ -492,8 +492,8 @@ class Decklists
         
         if (empty($wheres)) {
             $where = "d.date_creation > DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)";
-            $params = array();
-            $types = array();
+            $params = [];
+            $types = [];
         } else {
             $where = implode(" AND ", $wheres);
         }

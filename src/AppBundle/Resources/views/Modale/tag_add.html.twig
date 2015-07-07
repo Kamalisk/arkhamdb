@@ -1,0 +1,29 @@
+<!-- Modal -->
+<div class="modal fade" id="tagAddModal" tabindex="-1" role="dialog" aria-labelledby="tagAddModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 class="modal-title" id="tagAddModalLabel">Add one or more tags</h3>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<form>
+						<div class="form-group">
+							<label for="tag_add_tags">Please enter the list of tags, separated by spaces</label>
+							<input class="form-control" type="text" name="tags" id="tag_add_tags" placeholder="a-tag another">
+						</div>
+						<div class="pull-right">
+							<input type="hidden" name="ids" id="tag_add_ids">
+							<button type="submit" class="btn btn-success" onclick="$('#tagAddModal').modal('hide');tag_add_process(event)">Add</button>
+							<button type="button" class="btn btn-default" onclick="$('#tagAddModal').modal('hide')">Cancel</button>
+						</div>
+						</form>
+					</div><!-- /#modal-info -->
+				</div><!-- /.row -->
+			</div><!-- /.modal-body -->
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Modal -->

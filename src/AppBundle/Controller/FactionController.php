@@ -47,7 +47,7 @@ class FactionController extends Controller
         // build the list of the top $nb_decklists_per_id decklists per id
         // also, compute the total points of those decks per id
         
-        $decklists = array();
+        $decklists = [];
         foreach($identities as $identity) {
         	
         	$qb = $em->createQueryBuilder();
@@ -60,7 +60,7 @@ class FactionController extends Controller
         	$results = $qb->getQuery()->getResult();
 
         	$points = 0;
-        	$list = array();
+        	$list = [];
         	foreach($results as $row) {
         		$list[] = $row[0];
         		$points += intval($row['points']);

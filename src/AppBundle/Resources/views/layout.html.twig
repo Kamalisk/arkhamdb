@@ -19,9 +19,7 @@
     <![endif]-->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.css">
     <link rel="stylesheet" href="{{ asset('/bundles/app/css/style.css') }}">
-
-{% block head %}{% endblock %}
-
+	{% block stylesheets %}{% endblock %}
   </head>
   <body>
   <div id="wrapper">
@@ -57,7 +55,7 @@
             <li class="hidden-sm dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Factions <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-              {% for faction in cards_data.allfactionsdata() %}
+              {% for faction in cards_data.getPrimaryFactions() %}
                 <li><a href="{{ path('faction_page',{faction_code:faction.code}) }}"><span class="icon icon-{{ faction.code }} color-{{ faction.code }}"></span> {{ faction.name }}</a></li>
               {% endfor %}
               </ul>
@@ -162,11 +160,7 @@
 	<script src="{{ asset('/bundles/app/js/app.format.js') }}"></script>
 	<script src="{{ asset('/bundles/app/js/app.tip.js') }}"></script>
 	<script src="{{ asset('/bundles/app/js/app.user.js') }}"></script>
-{#    <script src="{{ asset('/bundles/app/js/app.js') }}"></script>
-    
-    
-    
-    
-#}
+{#    <script src="{{ asset('/bundles/app/js/app.js') }}"></script> #}
+	{% block javascripts %}{% endblock %}
     </body>
 </html>

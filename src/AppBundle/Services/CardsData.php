@@ -35,8 +35,8 @@ class CardsData
 	
 	public function allsetsdata()
 	{
-		$list_cycles = $this->doctrine->getRepository('AppBundle:Cycle')->findBy(array(), array("position" => "ASC"));
-		$lines = array();
+		$list_cycles = $this->doctrine->getRepository('AppBundle:Cycle')->findBy([], array("position" => "ASC"));
+		$lines = [];
 		/* @var $cycle \AppBundle\Entity\Cycle */
 		foreach($list_cycles as $cycle) {
 			if(!$cycle->getIsBox()) {
@@ -71,9 +71,9 @@ class CardsData
 		return $lines;
 	}
 	
-	public function allfactionsdata()
+	public function getPrimaryFactions()
 	{
-		$factions = $this->doctrine->getRepository('AppBundle:Faction')->findBy(array(), array("name" => "ASC"));
+		$factions = $this->doctrine->getRepository('AppBundle:Faction')->findBy(array("is_primary" => TRUE), array("name" => "ASC"));
 		return $factions;
 	}
 	
@@ -122,7 +122,7 @@ class CardsData
 					{
 						case 'c': // cycle
 						{
-							$or = array();
+							$or = [];
 							foreach($condition as $arg) {
 								switch($operator) {
 									case ':': $or[] = "(y.position = ?$i)"; break;
@@ -135,7 +135,7 @@ class CardsData
 						}
 						default: 
 						{
-							$or = array();
+							$or = [];
 							foreach($condition as $arg) {
 								switch($operator) {
 									case ':': $or[] = "(c.$searchName = ?$i)"; break;
@@ -157,7 +157,7 @@ class CardsData
 					{
 						case 'e':
 						{
-							$or = array();
+							$or = [];
 							foreach($condition as $arg) {
 								switch($operator) {
 									case ':': $or[] = "(p.code = ?$i)"; break;
@@ -182,7 +182,7 @@ class CardsData
 						}
 						default: // type and faction
 						{
-							$or = array();
+							$or = [];
 							foreach($condition as $arg) {
 								switch($operator) {
 									case ':': $or[] = "($searchCode.code = ?$i)"; break;
@@ -201,7 +201,7 @@ class CardsData
 					{
 						case '': // name or index
 						{
-							$or = array();
+							$or = [];
 							foreach($condition as $arg) {
 								$code = preg_match('/^\d\d\d\d\d$/u', $arg);
 								$acronym = preg_match('/^[A-Z]{2,}$/', $arg);
@@ -224,7 +224,7 @@ class CardsData
 						}
 						case 'x': // text
 						{
-							$or = array();
+							$or = [];
 							foreach($condition as $arg) {
 								switch($operator) {
 									case ':': $or[] = "(c.text like ?$i)"; break;
@@ -237,7 +237,7 @@ class CardsData
 						}
 						case 'a': // flavor
 						{
-							$or = array();
+							$or = [];
 							foreach($condition as $arg) {
 								switch($operator) {
 									case ':': $or[] = "(c.flavor like ?$i)"; break;
@@ -250,7 +250,7 @@ class CardsData
 						}
 						case 'k': // subtype (traits)
 						{
-							$or = array();
+							$or = [];
 							foreach($condition as $arg) {
 								switch($operator) {
 									case ':':
@@ -274,7 +274,7 @@ class CardsData
 						}
 						case 'i': // illustrator
 						{
-							$or = array();
+							$or = [];
 							foreach($condition as $arg) {
 								switch($operator) {
 									case ':': $or[] = "(c.illustrator = ?$i)"; break;
@@ -287,7 +287,7 @@ class CardsData
 						}
 						case 'r': // release
 						{
-							$or = array();
+							$or = [];
 							foreach($condition as $arg) {
 								switch($operator) {
 									case '<': $or[] = "(p.dateRelease <= ?$i)"; break;
@@ -389,7 +389,7 @@ class CardsData
 		
 		$query = preg_replace('/\s+/u', ' ', trim($query));
 
-		$list = array();
+		$list = [];
 		$cond = null;
 		// l'automate a 3 états :
 		// 1:recherche de type
@@ -404,7 +404,7 @@ class CardsData
 					$list[] = $cond;
 				}
 				// on commence par rechercher un type de condition
-				$match = array();
+				$match = [];
 				if(preg_match('/^(\p{L})([:<>!])(.*)/u', $query, $match)) { // jeton "condition:"
 					$cond = array(mb_strtolower($match[1]), $match[2]);
 					$query = $match[3];
@@ -489,7 +489,7 @@ class CardsData
     {
         $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(array('card' => $card), array('nbVotes' => 'DESC'));
         
-        $response = array();
+        $response = [];
         foreach($reviews as $review) {
             /* @var $review \AppBundle\Entity\Review */
             $user = $review->getUser();

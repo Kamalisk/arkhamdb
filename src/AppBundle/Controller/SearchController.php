@@ -73,8 +73,8 @@ class SearchController extends Controller
 	
 		$dbh = $this->get('doctrine')->getConnection();
 	
-		$list_packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findBy(array(), array("dateRelease" => "ASC", "position" => "ASC"));
-		$packs = array();
+		$list_packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findBy([], array("dateRelease" => "ASC", "position" => "ASC"));
+		$packs = [];
 		foreach($list_packs as $pack) {
 			$packs[] = array(
 					"name" => $pack->getName(),
@@ -82,12 +82,12 @@ class SearchController extends Controller
 			);
 		}
 	
-		$cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findBy(array(), array("position" => "ASC"));
-		$types = $this->getDoctrine()->getRepository('AppBundle:Type')->findBy(array(), array("name" => "ASC"));
-		$factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findBy(array(), array("id" => "ASC"));
+		$cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findBy([], array("position" => "ASC"));
+		$types = $this->getDoctrine()->getRepository('AppBundle:Type')->findBy([], array("name" => "ASC"));
+		$factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findBy([], array("id" => "ASC"));
 		
 		$list_traits = $dbh->executeQuery("SELECT DISTINCT c.traits FROM card c WHERE c.traits != ''")->fetchAll();
-		$traits = array();
+		$traits = [];
 		foreach($list_traits as $card) {
 			$subs = explode('.', $card["traits"]);
 			foreach($subs as $sub) {
@@ -194,7 +194,7 @@ class SearchController extends Controller
 		$operators = array(":","!","<",">");
 		$factions = $this->get('doctrine')->getRepository('AppBundle:Faction')->findAll();
 		
-		$params = array();
+		$params = [];
 		if($request->query->get('q') != "") {
 			$params[] = $request->query->get('q');
 		}
@@ -268,9 +268,9 @@ class SearchController extends Controller
 		$response->setPublic();
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 		
-	    static $availability = array();
+	    static $availability = [];
 
-		$cards = array();
+		$cards = [];
 		$first = 0;
 		$last = 0;
 		$pagination = '';
@@ -364,11 +364,11 @@ class SearchController extends Controller
 					'strength' => 'strength',
 				);
 				
-				$brokenlist = array();
+				$brokenlist = [];
 				for($i=0; $i<count($cards); $i++) {
 					$val = $cards[$i][$sortfields[$sort]];
 					if($sort == "name") $val = substr($val, 0, 1);
-					if(!isset($brokenlist[$val])) $brokenlist[$val] = array();
+					if(!isset($brokenlist[$val])) $brokenlist[$val] = [];
 					array_push($brokenlist[$val], $cards[$i]);
 				}
 				$cards = $brokenlist;

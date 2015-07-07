@@ -1,7 +1,3 @@
-if (typeof app != "object")
-	var app = { data_loaded: jQuery.Callbacks() };
-
-app.draw_simulator = {};
 (function(draw_simulator, $) {
 	var deck = null, initial_size = 0, draw_count = 0, container = null;
 	
@@ -126,8 +122,6 @@ app.draw_simulator = {};
 	$(function () {
 		$('#table-draw-simulator').on({click: draw_simulator.handle_click}, 'button.btn');
 		$('#table-draw-simulator').on({click: draw_simulator.toggle_opacity}, 'img.card-image, div.card-proxy');
+		app.draw_simulator.init();
 	});
-})(app.draw_simulator, jQuery);
-$(function(){
-	app.draw_simulator.init();
-});
+})(app.draw_simulator = {}, jQuery);

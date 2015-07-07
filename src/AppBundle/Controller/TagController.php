@@ -77,7 +77,7 @@ class TagController extends Controller
             $deck = $em->getRepository('AppBundle:Deck')->find($id);
             if(!$deck) continue;
             if ($this->getUser()->getId() != $deck->getUser()->getId()) continue;
-            $response['tags'][$deck->getId()] = array();
+            $response['tags'][$deck->getId()] = [];
             $deck->setTags('');
         }
         $em->flush();

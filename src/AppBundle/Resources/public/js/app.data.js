@@ -1,4 +1,3 @@
-app.data = {};
 (function(data, $) {
 
 	/*
@@ -65,6 +64,7 @@ app.data = {};
 			var alert = $('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
 			$('#wrapper>div.container').prepend(alert);
 		}
+		app.data_loaded.fire();
 	};
 
 	/*
@@ -134,4 +134,4 @@ app.data = {};
 		data.load();
 	});
 
-})(app.data, jQuery);
+})(app.data = {}, jQuery);

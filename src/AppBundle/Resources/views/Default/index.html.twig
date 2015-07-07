@@ -1,51 +1,26 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
-{% block head %}
+{% block body %}
+
+<div class="container">
+
+</div> <!-- .container -->
+
+{% endblock %}
+
+{% block javascripts %}
 <script src="{{ asset('/bundles/app/js/app.smart_filter.js') }}"></script>
-<script src="{{ asset('/bundles/app/js/index.js') }}"></script>
 
-<script type="text/javascript">
-
-var Identity = null,
-	{#Decklist = {{ decklist|json_encode|raw }},#}
-	DeckDB = TAFFY([Decklist]),
-	SelectedDeck = DeckDB().first(),
-	DisplaySort = 'type';
-
-</script>
 <script type="application/ld+json">
 {
    "@context": "http://schema.org",
    "@type": "WebSite",
-   "url": "https://netrunnerdb.com/",
+   "url": "https://agot2db.com/",
    "potentialAction": {
      "@type": "SearchAction",
-     "target": "http://netrunnerdb.com/find/?q={search_term_string}",
+     "target": "http://agot2db.com/find/?q={search_term_string}",
      "query-input": "required name=search_term_string"
    }
 }
 </script>
-{% endblock %}
-{% block body %}
-
-<div class="container" id="index_page">
-	{% include 'AppBundle:Default:navbar-factions.html.twig' %}
-    <div class="row">
-        <div class="col-md-8 col-lg-6">
-{#            {% include 'AppBundle:Default:decklist_of_the_week.html.twig' %}#}
-        </div>
-        <div class="col-md-4 col-lg-6">
-            <div class="row">
-                <div class="col-lg-6" id="recent_decklists">
-                    {% include 'AppBundle:Default:recent_decklists.html.twig' %}
-                </div>
-                <div class="col-lg-6" id="recent_reviews">
-                    {% include 'AppBundle:Default:recent_reviews.html.twig' %}
-                </div>
-            </div>
-            {% include 'AppBundle:Default:google_adaptable_ad.html.twig' %}
-        </div>
-    </div>
-</div> <!-- .container -->
-
 {% endblock %}

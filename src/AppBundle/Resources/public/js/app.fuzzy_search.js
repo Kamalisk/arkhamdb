@@ -1,7 +1,3 @@
-if (typeof app != "object")
-	var app = { data_loaded: jQuery.Callbacks() };
-
-app.fuzzy_search = {};
 (function(fuzzy_search, $) {
 	var types = ['agenda','asset','operation','upgrade','operation','barrier','code gate','sentry','other','event','hardware','resource','icebreaker','program'];
     // takes a card name and fuzzy-searches it in the card db
@@ -53,4 +49,4 @@ app.fuzzy_search = {};
     	});
     });
 	
-})(app.fuzzy_search, jQuery);
+})(app.fuzzy_search = {}, jQuery);

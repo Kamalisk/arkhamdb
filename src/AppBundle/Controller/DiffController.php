@@ -36,7 +36,7 @@ class DiffController extends Controller
         
         list($listings, $intersect) = $this->get('diff')->diffContents($decks);
         
-        $content1 = array();
+        $content1 = [];
         foreach($listings[0] as $code => $qty) {
             $card = $em->getRepository('AppBundle:Card')->findOneBy(array('code' => $code));
             if($card) $content1[] = array(
@@ -46,7 +46,7 @@ class DiffController extends Controller
                     );
         }
         
-        $content2 = array();
+        $content2 = [];
         foreach($listings[1] as $code => $qty) {
             $card = $em->getRepository('AppBundle:Card')->findOneBy(array('code' => $code));
             if($card) $content2[] = array(
@@ -56,7 +56,7 @@ class DiffController extends Controller
             );
         }
         
-        $shared = array();
+        $shared = [];
         foreach($intersect as $code => $qty) {
             $card = $em->getRepository('AppBundle:Card')->findOneBy(array('code' => $code));
             if($card) $shared[] = array(

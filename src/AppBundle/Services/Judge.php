@@ -22,7 +22,7 @@ class Judge
 	{
 		$analyse = $this->analyse($cards);
 		
-		$classeur = array();
+		$classeur = [];
 		/* @var $slot \AppBundle\Entity\Deckslot */
 		foreach($cards as $elt) {
 			/* @var $card \AppBundle\Entity\Card */
@@ -47,7 +47,7 @@ class Judge
 			$elt['influence'] = $influence;
 			$elt['faction'] = str_replace(' ', '-', mb_strtolower($card->getFaction()->getName()));
 			
-			if(!isset($classeur[$type])) $classeur[$type] = array("qty" => 0, "slots" => array());
+			if(!isset($classeur[$type])) $classeur[$type] = array("qty" => 0, "slots" => []);
 			$classeur[$type]["slots"][] = $elt;
 			$classeur[$type]["qty"] += $qty;
 		}
@@ -68,7 +68,7 @@ class Judge
 	public function analyse($cards)
 	{
 		$identity = null;
-		$deck = array();
+		$deck = [];
 		$deckSize = 0;
 		$influenceSpent = 0;
 		$agendaPoints = 0;

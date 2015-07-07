@@ -1,6 +1,3 @@
-if (typeof app != "object")
-	var app = { data_loaded: jQuery.Callbacks() };
-app.format = {};
 (function(format, $) {
 	
 	format.traits = function(card) {
@@ -51,4 +48,4 @@ app.format = {};
 		return '<p>'+text+'</p>';
 	};
 
-})(app.format, jQuery);
+})(app.format = {}, jQuery);

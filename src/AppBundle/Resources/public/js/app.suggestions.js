@@ -1,8 +1,3 @@
-if (typeof app != "object")
-	var app = { 
-		data_loaded: jQuery.Callbacks()
-	};
-app.suggestions = {};
 (function(suggestions, $) {
 	suggestions.codesFromindex = [];
 	suggestions.matrix = [];
@@ -162,6 +157,4 @@ app.suggestions = {};
 
 	});
 
-})(app.suggestions, jQuery);
-
-
+})(app.suggestions = {}, jQuery);

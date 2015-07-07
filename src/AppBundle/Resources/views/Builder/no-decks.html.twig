@@ -1,0 +1,28 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block body %}
+
+<div class="jumbotron" id="no-deck-available">
+  <div class="container">
+    <h1>What, no deck?</h1>
+    <p>Decks are awesome. You can <span class="fake-inline-button text-primary"><span class="glyphicon glyphicon-pencil"></span> Edit</span> them until you're satisfied,
+    	then <span class="fake-inline-button text-primary"><span class="glyphicon glyphicon-share"></span> Publish</span> them for others to discuss.
+    	And if you want to keep to yourself, you can still <span class="fake-inline-button text-primary"><span class="glyphicon glyphicon-download"></span> Download</span> them,
+    	<span class="fake-inline-button text-primary"><span class="glyphicon glyphicon-export"></span> Export</span> them
+    	or even <span class="fake-inline-button text-primary"><span class="glyphicon glyphicon-envelope"></span> Email</span> them.</p>
+    <p>So what are you waiting for? To create your first deck, you can either <span class="fake-inline-button text-primary"><span class="glyphicon glyphicon-plus"></span> Build</span> one from scratch using the Deckbuilder,
+    	<span class="fake-inline-button text-primary"><span class="glyphicon glyphicon-import"></span> Import</span> one from the web,
+    	or <span class="fake-inline-button text-primary"><span class="glyphicon glyphicon-upload"></span> Upload</span> a deck file in Octgn or simple text format.</p>
+  </div>
+</div>
+<div style="text-align:center">
+		<a href="{{ path('deck_buildform') }}" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-plus"></span> Build New Deck</a>
+		<a href="{{ path('deck_import') }}" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-import"></span> Import</a>
+		<button type="button" class="btn btn-default btn-lg" onclick="$('#fileModal').modal('show')"><span class="glyphicon glyphicon-upload"></span> Upload</button>
+		<button type="button" class="btn btn-default btn-lg" onclick="$('#archiveModal').modal('show')"><span class="glyphicon glyphicon-upload"></span> Upload archive</a>
+</div>
+
+{% include 'AppBundle:Modale:file.html.twig' %}
+{% include 'AppBundle:Modale:archive.html.twig' %}
+
+{% endblock %}

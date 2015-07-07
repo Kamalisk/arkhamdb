@@ -1,7 +1,3 @@
-if (typeof app != "object")
-	var app = { data_loaded: jQuery.Callbacks() };
-
-app.deck_gallery = {};
 (function(deck_gallery, $) {
 	var images = null;
 
@@ -26,4 +22,4 @@ app.deck_gallery = {};
 		}
 	};
 
-})(app.deck_gallery, jQuery);
+})(app.deck_gallery = {}, jQuery);

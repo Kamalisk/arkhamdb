@@ -1,8 +1,3 @@
-if (typeof app != "object")
-	var app = { 
-		data_loaded: jQuery.Callbacks()
-	};
-app.diff = {};
 (function(diff, $) {
 	
 
@@ -65,6 +60,4 @@ app.diff = {};
 		return [ listings, intersect ];
 	};
 	
-})(app.diff, jQuery);
-
-
+})(app.diff = {}, jQuery);

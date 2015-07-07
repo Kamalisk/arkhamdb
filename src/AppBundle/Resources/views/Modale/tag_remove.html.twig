@@ -1,0 +1,29 @@
+<!-- Modal -->
+<div class="modal fade" id="tagRemoveModal" tabindex="-1" role="dialog" aria-labelledby="tagRemoveModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 class="modal-title" id="tagRemoveModalLabel">Delete one or more tags</h3>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<form>
+						<div class="form-group">
+							<label for="tag_remove_tags">Please enter the list of tags you want to remove, separated by spaces</label>
+							<input class="form-control" type="text" name="tags" id="tag_remove_tags" placeholder="a-tag another">
+						</div>
+						<div class="pull-right">
+							<input type="hidden" name="ids" id="tag_remove_ids">
+							<button type="submit" class="btn btn-success" onclick="$('#tagRemoveModal').modal('hide');tag_remove_process(event)">Remove</button>
+							<button type="button" class="btn btn-default" onclick="$('#tagRemoveModal').modal('hide')">Cancel</button>
+						</div>
+						</form>
+					</div><!-- /#modal-info -->
+				</div><!-- /.row -->
+			</div><!-- /.modal-body -->
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Modal -->

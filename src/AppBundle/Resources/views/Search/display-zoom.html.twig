@@ -1,6 +1,6 @@
 {% extends 'AppBundle:Search:display.html.twig' %}
 
-{% block head %}
+{% block javascript %}
 <script src="{{ asset('/bundles/netrunnerdbcards/js/reviews.js') }}"></script>
 <script type="text/javascript">
 app.user.params.card_id = {{ cards[0].id|json_encode|raw }};

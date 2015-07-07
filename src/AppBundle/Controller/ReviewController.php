@@ -209,7 +209,7 @@ class ReviewController extends Controller
         $paginator = new Paginator($query, false);
         $maxcount = count($paginator);
         
-        $reviews = array();
+        $reviews = [];
         foreach ($paginator as $review) {
             $reviews[] = $review;
         }
@@ -226,7 +226,7 @@ class ReviewController extends Controller
         
         $params = $request->query->all();
         
-        $pages = array();
+        $pages = [];
         for ($page = 1; $page <= $nbpages; $page ++) {
             $pages[] = array(
                     "numero" => $page,
@@ -279,7 +279,7 @@ class ReviewController extends Controller
         $paginator = new Paginator($query, false);
         $maxcount = count($paginator);
     
-        $reviews = array();
+        $reviews = [];
         foreach ($paginator as $review) {
             $reviews[] = $review;
         }
@@ -296,7 +296,7 @@ class ReviewController extends Controller
     
         $params = $request->query->all();
     
-        $pages = array();
+        $pages = [];
         for ($page = 1; $page <= $nbpages; $page ++) {
             $pages[] = array(
                     "numero" => $page,

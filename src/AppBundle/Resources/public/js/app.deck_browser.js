@@ -1,7 +1,3 @@
-if (typeof app != "object")
-	var app = { data_loaded: jQuery.Callbacks() };
-
-app.deck_browser = {};
 (function(deck_browser, $) {
 	var images = null;
 
@@ -72,4 +68,4 @@ app.deck_browser = {};
 		focus_index(0);
 	};
 
-})(app.deck_browser, jQuery);
+})(app.deck_browser = {}, jQuery);

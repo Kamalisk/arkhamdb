@@ -42,7 +42,7 @@ class Highlight
 				where d.date_creation > date_sub( current_date, interval 7 day )
                 order by nbVotes desc , nbcomments desc
                 limit 0,1
-				", array())->fetchAll();
+				", [])->fetchAll();
     
         if (empty($rows)) {
             return null;

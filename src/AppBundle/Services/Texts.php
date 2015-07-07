@@ -30,7 +30,7 @@ class Texts
         while(strlen($token.$string) > 0 && strlen($response.$token) < $max_length)
         {
             $response = $response.$token;
-            $matches = array();
+            $matches = [];
             
             if(preg_match('/^(<.+?>)(.*)/', $string, $matches))
             {

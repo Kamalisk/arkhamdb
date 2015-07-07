@@ -1,7 +1,3 @@
-if (typeof app != "object")
-	var app = { data_loaded: jQuery.Callbacks() };
-
-app.card_modal = {};
 (function(card_modal, $) {
 	var modal = null;
 	
@@ -69,4 +65,4 @@ app.card_modal = {};
 		card_modal.create_element();
 	});
 	
-})(app.card_modal, jQuery);
+})(app.card_modal = {}, jQuery);

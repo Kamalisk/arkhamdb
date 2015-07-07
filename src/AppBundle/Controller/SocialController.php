@@ -160,10 +160,10 @@ class SocialController extends Controller
             $packs = $dbh->executeQuery("select id from pack")->fetchAll(\PDO::FETCH_COLUMN);
         }
         
-        $categories = array();
+        $categories = [];
         $on = 0; $off = 0;
-        $categories[] = array("label" => "Core / Deluxe", "packs" => array());
-        $list_cycles = $this->get('doctrine')->getRepository('AppBundle:Cycle')->findBy(array(), array("position" => "ASC"));
+        $categories[] = array("label" => "Core / Deluxe", "packs" => []);
+        $list_cycles = $this->get('doctrine')->getRepository('AppBundle:Cycle')->findBy([], array("position" => "ASC"));
         foreach($list_cycles as $cycle) {
             $size = count($cycle->getPacks());
             if($cycle->getPosition() == 0 || $size == 0) continue;
@@ -174,7 +174,7 @@ class SocialController extends Controller
                 else $off++;
                 $categories[0]["packs"][] = array("id" => $first_pack->getId(), "label" => $first_pack->getName(), "checked" => $checked, "future" => $first_pack->getDateRelease() === NULL);
             } else {
-                $category = array("label" => $cycle->getName(), "packs" => array());
+                $category = array("label" => $cycle->getName(), "packs" => []);
                 foreach($cycle->getPacks() as $pack) {
                     $checked = count($packs) ? in_array($pack->getId(), $packs) : true;
                     if($checked) $on++;
@@ -244,7 +244,7 @@ class SocialController extends Controller
                 $response->setPrivate();
                 $user = $this->getUser();
                 if (! $user) {
-                    $result = array('decklists' => array(), 'count' => 0);
+                    $result = array('decklists' => [], 'count' => 0);
                 } else {
                     $result = $this->get('decklists')->favorites($user->getId(), $start, $limit);
                 }
@@ -254,7 +254,7 @@ class SocialController extends Controller
                 $response->setPrivate();
                 $user = $this->getUser();
                 if (! $user) {
-                    $result = array('decklists' => array(), 'count' => 0);
+                    $result = array('decklists' => [], 'count' => 0);
                 } else {
                     $result = $this->get('decklists')->by_author($user->getId(), $start, $limit);
                 }
@@ -318,7 +318,7 @@ class SocialController extends Controller
         $params = $request->query->all();
         $params['type'] = $type;
         
-        $pages = array();
+        $pages = [];
         for ($page = 1; $page <= $nbpages; $page ++) {
             $pages[] = array(
                     "numero" => $page,
@@ -430,7 +430,7 @@ class SocialController extends Controller
         $decklist['comments'] = $comments;
         $decklist['cards'] = $cards;
         
-        $similar_decklists = array(); // $this->findSimilarDecklists($decklist_id,
+        $similar_decklists = []; // $this->findSimilarDecklists($decklist_id,
                                       // 5);
         
         $precedent_decklists = $dbh->executeQuery(
@@ -557,8 +557,8 @@ class SocialController extends Controller
                     '%(?<!\()\b(?:(?:https?|ftp)://)(?:((?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))(?::\d+)?)(?:[^\s]*)?%iu',
                     '[$1]($0)', $comment_text);
             
-            $mentionned_usernames = array();
-            $matches = array();
+            $mentionned_usernames = [];
+            $matches = [];
             if(preg_match_all('/`@([\w_]+)`/', $comment_text, $matches, PREG_PATTERN_ORDER)) {
                 $mentionned_usernames = array_unique($matches[1]);
             }
@@ -585,7 +585,7 @@ class SocialController extends Controller
             ->flush();
             
             // send emails
-            $spool = array();
+            $spool = [];
             if($decklist->getUser()->getNotifAuthor()) {
                 if(!isset($spool[$decklist->getUser()->getEmail()])) {
                     $spool[$decklist->getUser()->getEmail()] = 'AppBundle:Emails:newcomment_author.html.twig';
@@ -616,7 +616,7 @@ class SocialController extends Controller
                 'decklist_name' => $decklist->getName(),
                 'url' => $this->generateUrl('decklist_detail', array('decklist_id' => $decklist->getId(), 'decklist_name' => $decklist->getPrettyname()), TRUE) . '#' . $comment->getId(),
                 'comment' => $comment_html,
-                'profile' => $this->generateUrl('user_profile', array(), TRUE)
+                'profile' => $this->generateUrl('user_profile', [], TRUE)
             );
             foreach($spool as $email => $view) {
                 $message = \Swift_Message::newInstance()
@@ -750,7 +750,7 @@ class SocialController extends Controller
                         $decklist_id
                 ))->fetchAll();
         
-        $arr = array();
+        $arr = [];
         foreach ($list as $item) {
             
             $dbh = $this->get('doctrine')->getConnection();
@@ -795,7 +795,7 @@ class SocialController extends Controller
         $judge = $this->get('judge');
         $classement = $judge->classe($decklist->getCards(), $decklist->getIdentity());
         
-        $lines = array();
+        $lines = [];
         $types = array(
                 "Event",
                 "Hardware",
@@ -861,7 +861,7 @@ class SocialController extends Controller
         if (! $decklist)
             throw new NotFoundHttpException("Unable to find decklist.");
         
-        $rd = array();
+        $rd = [];
         $identity = null;
         /** @var $slot Decklistslot */
         foreach ($decklist->getSlots() as $slot) {
@@ -937,7 +937,7 @@ class SocialController extends Controller
         $tournament = $em->getRepository('AppBundle:Tournament')->find($tournament_id);
         
         $derived_from = $request->request->get('derived');
-        $matches = array();
+        $matches = [];
         if(preg_match('/^(\d+)$/', $derived_from, $matches)) {
             
         } else if(preg_match('/decklist\/(\d+)\//', $derived_from, $matches)) {
@@ -1094,7 +1094,7 @@ class SocialController extends Controller
         
         $route = $this->getRequest()->get('_route');
         
-        $pages = array();
+        $pages = [];
         for ($page = 1; $page <= $nbpages; $page ++) {
             $pages[] = array(
                     "numero" => $page,
@@ -1151,7 +1151,7 @@ class SocialController extends Controller
 				join decklist d on c.decklist_id=d.id
 				join user u on c.user_id=u.id
 				order by date_creation desc
-				limit $start, $limit", array())->fetchAll(\PDO::FETCH_ASSOC);
+				limit $start, $limit", [])->fetchAll(\PDO::FETCH_ASSOC);
         
         $maxcount = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];
         
@@ -1165,7 +1165,7 @@ class SocialController extends Controller
         
         $route = $this->getRequest()->get('_route');
         
-        $pages = array();
+        $pages = [];
         for ($page = 1; $page <= $nbpages; $page ++) {
             $pages[] = array(
                     "numero" => $page,
@@ -1208,9 +1208,9 @@ class SocialController extends Controller
 				order by f.side_id asc, f.name asc")
             ->fetchAll();
         
-        $categories = array(); $on = 0; $off = 0;
-        $categories[] = array("label" => "Core / Deluxe", "packs" => array());
-        $list_cycles = $this->get('doctrine')->getRepository('AppBundle:Cycle')->findBy(array(), array("position" => "ASC"));
+        $categories = []; $on = 0; $off = 0;
+        $categories[] = array("label" => "Core / Deluxe", "packs" => []);
+        $list_cycles = $this->get('doctrine')->getRepository('AppBundle:Cycle')->findBy([], array("position" => "ASC"));
         foreach($list_cycles as $cycle) {
             $size = count($cycle->getPacks());
             if($cycle->getPosition() == 0 || $size == 0) continue;
@@ -1221,7 +1221,7 @@ class SocialController extends Controller
                 else $off++;
                 $categories[0]["packs"][] = array("id" => $first_pack->getId(), "label" => $first_pack->getName(), "checked" => $checked, "future" => $first_pack->getDateRelease() === NULL);
             } else {
-                $category = array("label" => $cycle->getName(), "packs" => array());
+                $category = array("label" => $cycle->getName(), "packs" => []);
                 foreach($cycle->getPacks() as $pack) {
                     $checked = $pack->getDateRelease() !== NULL;
                     if($checked) $on++;
@@ -1260,7 +1260,7 @@ class SocialController extends Controller
         /* @var $dbh \Doctrine\DBAL\Driver\PDOConnection */
         $dbh = $this->get('doctrine')->getConnection();
         
-        $users = $dbh->executeQuery("SELECT * FROM user WHERE donation>0 ORDER BY donation DESC, username", array())->fetchAll(\PDO::FETCH_ASSOC);
+        $users = $dbh->executeQuery("SELECT * FROM user WHERE donation>0 ORDER BY donation DESC, username", [])->fetchAll(\PDO::FETCH_ASSOC);
         
         return $this->render('AppBundle:Default:donators.html.twig',
                 array(

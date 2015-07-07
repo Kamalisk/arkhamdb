@@ -1,7 +1,3 @@
-if (typeof app != "object")
-	var app = { data_loaded: jQuery.Callbacks() };
-
-app.smart_filter = {};
 (function(smart_filter, $) {
 	var SmartFilterQuery = [];
 	
@@ -210,4 +206,4 @@ app.smart_filter = {};
 	}
 
 	
-})(app.smart_filter, jQuery);
+})(app.smart_filter = {}, jQuery);

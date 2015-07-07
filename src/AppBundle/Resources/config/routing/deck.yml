@@ -1,12 +1,12 @@
 
 deck_buildform:
-    pattern:  /new/{side_text}
+    pattern:  /new
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:buildform
 
 deck_initbuild:
-    pattern: /build/{card_code}
+    pattern: /build/{faction_code}
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:initbuild

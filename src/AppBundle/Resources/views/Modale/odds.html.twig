@@ -1,0 +1,50 @@
+<!-- Modal -->
+<div class="modal" id="oddsModal" tabindex="-1" role="dialog" aria-labelledby="oddsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title" id="oddsModalLabel">Odds Calculator</h3>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+						<form class="form-horizontal" role="form">
+						    <div class="form-group">
+						        <label for="odds-calculator-N" class="col-xs-7 control-label">Number of cards in deck</label>
+						        <div class="col-xs-2">
+						            <input type="number" class="form-control" id="odds-calculator-N" value="0">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="odds-calculator-K" class="col-xs-7 control-label">Number of <em>desired</em> cards in deck</label>
+								<div class="col-xs-2">
+									<input type="number" class="form-control" id="odds-calculator-K" value="0">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="odds-calculator-n" class="col-xs-7 control-label">Number of cards drawn</label>
+								<div class="col-xs-2">
+									<input type="number" class="form-control" id="odds-calculator-n" value="0">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="odds-calculator-k" class="col-xs-7 control-label">Number of <em>desired</em> cards in draw (at least)</label>
+								<div class="col-xs-2">
+									<input type="number" class="form-control" id="odds-calculator-k" value="0">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-7 control-label">Probability of such an outcome</label>
+								<div class="col-xs-2">
+									 <p class="form-control-static"><span id="odds-calculator-p"></span>%</p>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal -->
