@@ -24,13 +24,16 @@ security:
                 default_target_path: index
             logout:       true
             anonymous:    true
-#
-#    access_control:
-#        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/remind, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: /api/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/js/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/.*, role: ROLE_USER }
+
+    access_control:
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/remind, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: /api/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/js/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/deck/view/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/deck/, role: ROLE_USER }
+        - { path: ^/decks, role: ROLE_USER }
+        - { path: ^/user/, role: ROLE_USER }
