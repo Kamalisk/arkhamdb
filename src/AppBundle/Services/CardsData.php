@@ -13,11 +13,13 @@ use Symfony\Bundle\FrameworkBundle\Templating\Helper\AssetsHelper;
  */
 class CardsData
 {
-	public function __construct(Registry $doctrine, RequestStack $request_stack, Router $router, AssetsHelper $assets_helper) {
+	public function __construct(Registry $doctrine, RequestStack $request_stack, Router $router, AssetsHelper $assets_helper, $rootDir) {
 		$this->doctrine = $doctrine;
         $this->request_stack = $request_stack;
         $this->router = $router;
         $this->assets_helper = $assets_helper;
+				$this->rootDir = $rootDir;
+
 	}
 
 	/**
@@ -32,7 +34,7 @@ class CardsData
 
 		return str_replace(array_keys($map), array_values($map), $text);
 	}
-	
+
 	public function allsetsdata()
 	{
 		$list_cycles = $this->doctrine->getRepository('AppBundle:Cycle')->findBy([], array("position" => "ASC"));
@@ -51,7 +53,7 @@ class CardsData
 			foreach($packs as $pack) {
 				$known = count($pack->getCards());
 				$max = $pack->getSize();
-			
+
 				if($cycle->getIsBox()) {
 					$label = $pack->getName();
 				} else {
@@ -60,7 +62,7 @@ class CardsData
 				if($known < $max) {
 					$label = sprintf("%s (%d/%d)", $label,$known, $max);
 				}
-			
+
 				$lines[] = array(
 						"label" => $label,
 						"available" => $pack->getDateRelease() ? true : false,
@@ -76,11 +78,11 @@ class CardsData
 		$factions = $this->doctrine->getRepository('AppBundle:Faction')->findBy(array("is_primary" => TRUE), array("name" => "ASC"));
 		return $factions;
 	}
-	
+
 	public function get_search_rows($conditions, $sortorder, $forceempty = false)
 	{
 		$i=0;
-		
+
 		// construction de la requete sql
 		$qb = $this->doctrine->getRepository('AppBundle:Card')->createQueryBuilder('c');
 		$qb->leftJoin('c.pack', 'p')
@@ -89,21 +91,21 @@ class CardsData
 			->leftJoin('c.faction', 'f');
 		$qb2 = null;
 		$qb3 = null;
-		
+
 		foreach($conditions as $condition)
 		{
 			$searchCode = array_shift($condition);
 			$searchName = \AppBundle\Controller\SearchController::$searchKeys[$searchCode];
 			$searchType = \AppBundle\Controller\SearchController::$searchTypes[$searchCode];
 			$operator = array_shift($condition);
-			
+
 			switch($searchType)
 			{
-				case 'boolean': 
+				case 'boolean':
 				{
 					switch($searchCode)
 					{
-						default: 
+						default:
 						{
 							if(($operator == ':' && $condition[0]) || ($operator == '!' && !$condition[0])) {
 								$qb->andWhere("(c.$searchName = 1)");
@@ -116,7 +118,7 @@ class CardsData
 					}
 					break;
 				}
-				case 'integer': 
+				case 'integer':
 				{
 					switch($searchCode)
 					{
@@ -133,7 +135,7 @@ class CardsData
 							$qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
 							break;
 						}
-						default: 
+						default:
 						{
 							$or = [];
 							foreach($condition as $arg) {
@@ -304,7 +306,7 @@ class CardsData
 				}
 			}
 		}
-		
+
 		if(!$i && !$forceempty) {
 			return;
 		}
@@ -319,10 +321,10 @@ class CardsData
 		$qb->addOrderBy('c.code');
 		$query = $qb->getQuery();
 		$rows = $query->getResult();
-		
+
 		return $rows;
 	}
-	
+
 	/**
 	 *
 	 * @param \AppBundle\Entity\Card $card
@@ -332,23 +334,23 @@ class CardsData
 	public function getCardInfo($card, $api = false)
 	{
 	    $cardinfo = [];
-	    
+
 	    $metadata = $this->doctrine->getManager()->getClassMetadata('AppBundle:Card');
 	    $fieldNames = $metadata->getFieldNames();
 	    $associationMappings = $metadata->getAssociationMappings();
-	    
+
 	    foreach($associationMappings as $fieldName => $associationMapping)
 	    {
 	    	if($associationMapping['isOwningSide']) {
 	    		$getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
 	    		$associationEntity = $card->$getter();
 	    		if(!$associationEntity) continue;
-	    		
+
     			$cardinfo[$fieldName.'_code'] = $associationEntity->getCode();
     			$cardinfo[$fieldName.'_name'] = $associationEntity->getName();
 	    	}
 	    }
-	    
+
 	    foreach($fieldNames as $fieldName)
 	    {
 	    	$getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
@@ -364,10 +366,16 @@ class CardsData
 			}
 	    	$cardinfo[$fieldName] = $value;
 	    }
-	    
+
 		$cardinfo['url'] = $this->router->generate('cards_zoom', array('card_code' => $card->getCode()), true);
-		$cardinfo['imagesrc'] = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'.png');
-		
+		$imageurl = $this->assets_helper->getUrl('bundles/app/images/cards/'.$card->getCode().'.png');
+		$imagepath= $this->rootDir . '/../web/' . $imageurl;
+		if(file_exists($imagepath)) {
+			$cardinfo['imagesrc'] = $imageurl;
+		} else {
+			$cardinfo['imagesrc'] = null;
+		}
+
 		if($api) {
 			unset($cardinfo['id']);
 			$cardinfo = array_filter($cardinfo, function ($var) { return isset($var); });
@@ -376,17 +384,17 @@ class CardsData
 			$cardinfo['text'] = implode(array_map(function ($l) { return "<p>$l</p>"; }, preg_split('/[\r\n]+/', $cardinfo['text'])));
 			$cardinfo['flavor'] = $this->replaceSymbols($cardinfo['flavor']);
 		}
-		
+
 		return $cardinfo;
 	}
-	
+
 	public function syntax($query)
 	{
 		// renvoie une liste de conditions (array)
 		// chaque condition est un tableau à n>1 éléments
 		// le premier est le type de condition (0 ou 1 caractère)
 		// les suivants sont les arguments, en OR
-		
+
 		$query = preg_replace('/\s+/u', ' ', trim($query));
 
 		$list = [];
@@ -449,18 +457,18 @@ class CardsData
 		}
 		return $list;
 	}
-	
+
 	public function validateConditions(&$conditions)
 	{
 		// suppression des conditions invalides
 		$numeric = array('<', '>');
-		
+
 		foreach($conditions as $i => $l)
 		{
 			$searchCode = $l[0];
 			$searchOp = $l[1];
-			
-			if(in_array($searchOp, $numeric) && \AppBundle\Controller\SearchController::$searchTypes[$searchCode] !== 'integer') 
+
+			if(in_array($searchOp, $numeric) && \AppBundle\Controller\SearchController::$searchTypes[$searchCode] !== 'integer')
 			{
 				// operator is numeric but searched property is not
 				unset($conditions[$i]);
@@ -484,12 +492,13 @@ class CardsData
 				$conditions
 		));
 	}
-	
+
     public function get_reviews($card)
     {
         $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(array('card' => $card), array('nbVotes' => 'DESC'));
         
         $response = [];
+        
         foreach($reviews as $review) {
             /* @var $review \AppBundle\Entity\Review */
             $user = $review->getUser();
@@ -507,7 +516,7 @@ class CardsData
                     'comments' => $review->getComments(),
             );
         }
-        
+
         return $response;
     }
 }

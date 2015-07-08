@@ -38,7 +38,7 @@ class SearchController extends Controller
 			'x' => 'text',
 			'y' => 'quantity',
 	);
-	
+
 	public static $searchTypes = array(
 			't' => 'code',
 			'e' => 'code',
@@ -64,15 +64,15 @@ class SearchController extends Controller
 			'p' => 'boolean',
 			'u' => 'boolean',
 	);
-	
+
 	public function formAction()
 	{
 		$response = new Response();
 		$response->setPublic();
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
-	
+
 		$dbh = $this->get('doctrine')->getConnection();
-	
+
 		$list_packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findBy([], array("dateRelease" => "ASC", "position" => "ASC"));
 		$packs = [];
 		foreach($list_packs as $pack) {
@@ -81,11 +81,11 @@ class SearchController extends Controller
 					"code" => $pack->getCode(),
 			);
 		}
-	
+
 		$cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findBy([], array("position" => "ASC"));
 		$types = $this->getDoctrine()->getRepository('AppBundle:Type')->findBy([], array("name" => "ASC"));
 		$factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findBy([], array("id" => "ASC"));
-		
+
 		$list_traits = $dbh->executeQuery("SELECT DISTINCT c.traits FROM card c WHERE c.traits != ''")->fetchAll();
 		$traits = [];
 		foreach($list_traits as $card) {
@@ -113,14 +113,14 @@ class SearchController extends Controller
 				"illustrators" => $illustrators,
 		), $response);
 	}
-	
+
 	public function zoomAction($card_code, Request $request)
 	{
 		$card = $this->getDoctrine()->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
 		if(!$card) throw $this->createNotFoundException('Sorry, this card is not in the database (yet?)');
-		
+
 		$meta = $card->getName().", a ".$card->getFaction()->getName()." ".$card->getType()->getName()." card for A Game of Thrones: The Card Game Second Edition from the set ".$card->getPack()->getName()." published by Fantasy Flight Games.";
-		
+
 		return $this->forward(
 			'AppBundle:Search:display',
 			array(
@@ -134,18 +134,18 @@ class SearchController extends Controller
 			)
 		);
 	}
-	
+
 	public function listAction($pack_code, $view, $sort, $page, Request $request)
 	{
 		$pack = $this->getDoctrine()->getRepository('AppBundle:Pack')->findOneBy(array("code" => $pack_code));
 		if(!$pack) throw $this->createNotFoundException('This pack does not exist');
-		
+
 		$meta = $pack->getName().", a set of cards for A Game of Thrones: The Card Game Second Edition"
 				.($pack->getDateRelease() ? " published on ".$pack->getDateRelease()->format('Y/m/d') : "")
 				." by Fantasy Flight Games.";
-		
+
 		$key = array_search('pack', SearchController::$searchKeys);
-		
+
 		return $this->forward(
 			'AppBundle:Search:display',
 			array(
@@ -165,11 +165,11 @@ class SearchController extends Controller
 	{
 		$cycle = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findOneBy(array("code" => $cycle_code));
 		if(!$cycle) throw $this->createNotFoundException('This cycle does not exist');
-		
+
 		$meta = $cycle->getName().", a cycle of datapack for A Game of Thrones: The Card Game Second Edition published by Fantasy Flight Games.";
 
 		$key = array_search('cycle', SearchController::$searchKeys);
-		
+
 		return $this->forward(
 			'AppBundle:Search:display',
 			array(
@@ -184,16 +184,16 @@ class SearchController extends Controller
 			)
 		);
 	}
-	
+
 	// target of the search form
 	public function processAction(Request $request)
 	{
 		$view = $request->query->get('view') ?: 'list';
 		$sort = $request->query->get('sort') ?: 'name';
-		
+
 		$operators = array(":","!","<",">");
 		$factions = $this->get('doctrine')->getRepository('AppBundle:Faction')->findAll();
-		
+
 		$params = [];
 		if($request->query->get('q') != "") {
 			$params[] = $request->query->get('q');
@@ -249,7 +249,7 @@ class SearchController extends Controller
 		        }
 		    }
 		}
-	     
+
 		return $this->forward(
 			'AppBundle:Search:display',
 			array(
@@ -261,20 +261,20 @@ class SearchController extends Controller
 			)
 		);
 	}
-	
+
 	public function displayAction($q, $view="card", $sort, $page=1, $pagetitle="", $meta="", Request $request)
 	{
 		$response = new Response();
 		$response->setPublic();
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
-		
+
 	    static $availability = [];
 
 		$cards = [];
 		$first = 0;
 		$last = 0;
 		$pagination = '';
-		
+
 		$pagesizes = array(
 			'list' => 200,
 			'spoiler' => 200,
@@ -283,12 +283,12 @@ class SearchController extends Controller
 			'short' => 1000,
 		    'zoom' => 1,
 		);
-		
+
 		if(!array_key_exists($view, $pagesizes))
 		{
 			$view = 'list';
 		}
-		
+
 		$conditions = $this->get('cards_data')->syntax($q);
 
 		$this->get('cards_data')->validateConditions($conditions);
@@ -301,7 +301,7 @@ class SearchController extends Controller
 			{
 				$view = 'zoom';
 			}
-			
+
 			if($pagetitle == "") {
         		if(count($conditions) == 1 && count($conditions[0]) == 3 && $conditions[0][1] == ":") {
         			if($conditions[0][0] == "e") {
@@ -314,8 +314,8 @@ class SearchController extends Controller
         			}
         		}
 			}
-			
-			
+
+
 			// calcul de la pagination
 			$nb_per_page = $pagesizes[$view];
 			$first = $nb_per_page * ($page - 1);
@@ -324,7 +324,7 @@ class SearchController extends Controller
 				$first = 0;
 			}
 			$last = $first + $nb_per_page;
-			
+
 			// data à passer à la view
 			for($rowindex = $first; $rowindex < $last && $rowindex < count($rows); $rowindex++) {
 				$card = $rows[$rowindex];
@@ -351,10 +351,10 @@ class SearchController extends Controller
 					$pagination = $this->pagination($nb_per_page, count($rows), $first, $q, $view, $sort);
 				}
 			}
-			
+
 			// si on est en vue "short" on casse la liste par tri
 			if(count($cards) && $view == "short") {
-				
+
 				$sortfields = array(
 					'set' => 'pack_name',
 					'name' => 'name',
@@ -363,7 +363,7 @@ class SearchController extends Controller
 					'cost' => 'cost',
 					'strength' => 'strength',
 				);
-				
+
 				$brokenlist = [];
 				for($i=0; $i<count($cards); $i++) {
 					$val = $cards[$i][$sortfields[$sort]];
@@ -374,13 +374,13 @@ class SearchController extends Controller
 				$cards = $brokenlist;
 			}
 		}
-		
+
 		$searchbar = $this->renderView('AppBundle:Search:searchbar.html.twig', array(
 			"q" => $q,
 			"view" => $view,
 			"sort" => $sort,
 		));
-		
+
 		if(empty($pagetitle)) {
 			$pagetitle = $q;
 		}
@@ -413,7 +413,7 @@ class SearchController extends Controller
 	            "sethref" => $this->get('router')->generate('cards_list', array('pack_code' => $card->getPack()->getCode())),
 	    ));
 	}
-	
+
 	public function paginationItem($q = null, $v, $s, $ps, $pi, $total)
 	{
 		return $this->renderView('AppBundle:Search:paginationitem.html.twig', array(
@@ -424,16 +424,16 @@ class SearchController extends Controller
 			"e" => min($ps*$pi, $total),
 		));
 	}
-	
+
 	public function pagination($pagesize, $total, $current, $q, $view, $sort)
 	{
 		if($total < $pagesize) {
 			$pagesize = $total;
 		}
-	
+
 		$pagecount = ceil($total / $pagesize);
 		$pageindex = ceil($current / $pagesize); #1-based
-		
+
 		$first = "";
 		if($pageindex > 2) {
 			$first = $this->paginationItem($q, $view, $sort, $pagesize, 1, $total);
@@ -443,19 +443,19 @@ class SearchController extends Controller
 		if($pageindex > 1) {
 			$prev = $this->paginationItem($q, $view, $sort, $pagesize, $pageindex - 1, $total);
 		}
-		
+
 		$current = $this->paginationItem(null, $view, $sort, $pagesize, $pageindex, $total);
 
 		$next = "";
 		if($pageindex < $pagecount) {
 			$next = $this->paginationItem($q, $view, $sort, $pagesize, $pageindex + 1, $total);
 		}
-		
+
 		$last = "";
 		if($pageindex < $pagecount - 1) {
 			$last = $this->paginationItem($q, $view, $sort, $pagesize, $pagecount, $total);
 		}
-		
+
 		return $this->renderView('AppBundle:Search:pagination.html.twig', array(
 			"first" => $first,
 			"prev" => $prev,
