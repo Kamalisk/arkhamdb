@@ -768,7 +768,7 @@ function build_div(record) {
 				+ record.code
 				+ '">'
 				+ '<div class="media"><div class="media-left">'
-				+ '<img class="media-object" src="/web/bundles/netrunnerdbcards/images/cards/en/'
+				+ '<img class="media-object" src="/web/bundles/cards/'
 				+ record.code
 				+ '.png" alt="'+record.name+'">'
 				+ '</div><div class="media-body">'
@@ -787,7 +787,7 @@ function build_div(record) {
 				+ record.code
 				+ '">'
 				+ '<div class="media"><div class="media-left">'
-				+ '<img class="media-object" src="/web/bundles/netrunnerdbcards/images/cards/en/'
+				+ '<img class="media-object" src="/web/bundles/cards/'
 				+ record.code
 				+ '.png" alt="'+record.name+'">'
 				+ '</div><div class="media-body">'

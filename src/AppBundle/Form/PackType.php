@@ -29,6 +29,6 @@ class PackType extends AbstractType
 
     public function getName()
     {
-        return 'netrunnerdb_cardsbundle_packtype';
+        return 'agot2db_cardsbundle_packtype';
     }
 }

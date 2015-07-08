@@ -10,24 +10,24 @@
 <div class="col-md-6 col-md-offset-3">
 <div class="panel panel-default">
 <div class="panel-heading">
-<h3 class="panel-title" style="line-height:2em"><img src="/apple-touch-icon.png" alt="Logo" style="height:2em"> AGoT2db Authentication</h3>
+<h3 class="panel-title" style="line-height:2em"><img src="/apple-touch-icon.png" alt="Logo" style="height:2em"> agot2db Authentication</h3>
 </div>
 <div class="panel-body">
   <div class="form">
 	  
 	<p>
-		Welcome on AGoT2db. Please log in to proceed. Your password will remain confidential.
+		Welcome on agot2db. Please log in to proceed. Your password will remain confidential.
 	  </p>
       <form id="login" class="vertical" action="{{ path('oauth_server_auth_login_check') }}" method="post">
           {% if(error) %}
           <div class='form_error'>{{ error }}</div>
           {% endif %}
           <div class="form-group">
-              <label for="username">AGoT2db Username</label>
+              <label for="username">agot2db Username</label>
               <p><input type="text" class="form-control" id="username" name="_username" /></p>
           </div>
           <div class="form-group">
-              <label for="password">AGoT2db Password</label>
+              <label for="password">agot2db Password</label>
               <p><input type="password" class="form-control" id="password" name="_password" /></p>
           </div>
           <div>

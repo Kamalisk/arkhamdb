@@ -46,6 +46,6 @@ class CardType extends AbstractType
 
     public function getName()
     {
-        return 'netrunnerdb_cardsbundle_cardtype';
+        return 'agot2db_cardsbundle_cardtype';
     }
 }

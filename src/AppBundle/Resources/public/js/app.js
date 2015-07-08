@@ -430,7 +430,7 @@ function build_bbcode(deck) {
 	var lines = [];
 	lines.push("[b]"+SelectedDeck.name+"[/b]");
 	lines.push("");
-	lines.push('[url=http://netrunnerdb.com/card/'
+	lines.push('[url=http://agot2db.com/card/'
 			 + Identity.code
 			 + ']'
 			 + Identity.name
@@ -448,7 +448,7 @@ function build_bbcode(deck) {
 			var qty = $(line).ignore("a, span, small").text().trim().replace(/x.*/, "x");
 			var inf = $(line).find("span").text().trim();
 			var card = app.data.get_card_by_code($(line).find('a.card').data('index'));
-			lines.push(qty + ' [url=http://netrunnerdb.com/card/'
+			lines.push(qty + ' [url=http://agot2db.com/card/'
 					 + card.code
 					 + ']'
 					 + card.name
@@ -468,9 +468,9 @@ function build_bbcode(deck) {
 	lines.push($('#latestpack').text());
 	lines.push("");
 	if(typeof Decklist != "undefined" && Decklist != null) {
-		lines.push("Decklist [url="+location.href+"]published on AGoT2db[/url].");
+		lines.push("Decklist [url="+location.href+"]published on agot2db[/url].");
 	} else {
-		lines.push("Deck built on [url=http://netrunnerdb.com]AGoT2db[/url].");
+		lines.push("Deck built on [url=http://agot2db.com]agot2db[/url].");
 	}
 	return lines;
 }
@@ -487,7 +487,7 @@ function build_markdown(deck) {
 	lines.push("");
 	lines.push('['
 			 + Identity.name
-			 + '](http://netrunnerdb.com/card/'
+			 + '](http://agot2db.com/card/'
 			 + Identity.code
 			 + ') _('
 			 + Identity.setname
@@ -505,7 +505,7 @@ function build_markdown(deck) {
 			var card = app.data.get_card_by_code($(line).find('a.card').data('index'));
 			lines.push('* '+ qty + ' ['
 				 + card.name 
-				 + '](http://netrunnerdb.com/card/'
+				 + '](http://agot2db.com/card/'
 				 + card.code
 				 + ') _('
 				 + card.setname
@@ -524,9 +524,9 @@ function build_markdown(deck) {
 	lines.push($('#latestpack').text() + "  ");
 	lines.push("");
 	if(typeof Decklist != "undefined" && Decklist != null) {
-		lines.push("Decklist [published on AGoT2db]("+location.href+").");
+		lines.push("Decklist [published on agot2db]("+location.href+").");
 	} else {
-		lines.push("Deck built on [AGoT2db](http://netrunnerdb.com).");
+		lines.push("Deck built on [agot2db](http://agot2db.com).");
 	}
 	return lines;
 }
@@ -563,9 +563,9 @@ function build_plaintext(deck) {
 	lines.push($('#latestpack').text());
 	lines.push("");
 	if(typeof Decklist != "undefined" && Decklist != null) {
-		lines.push("Decklist published on http://netrunnerdb.com.");
+		lines.push("Decklist published on http://agot2db.com.");
 	} else {
-		lines.push("Deck built on http://netrunnerdb.com.");
+		lines.push("Deck built on http://agot2db.com.");
 	}
 	return lines;
 }

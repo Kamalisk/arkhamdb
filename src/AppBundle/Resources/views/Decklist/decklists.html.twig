@@ -84,7 +84,7 @@ $(function () {
 
 <tr>
 <td class="decklist-identity-image hidden-xs">
-	<img src="/web/bundles/netrunnerdbcards/images/cards/en/{{ decklist.code }}.png" alt="{{ decklist.identity }}" class="card img-responsive" data-code="{{ decklist.code }}">
+	<img src="/web/bundles/cards/{{ decklist.code }}.png" alt="{{ decklist.identity }}" class="card img-responsive" data-code="{{ decklist.code }}">
 </td>
 <td>
     <article>
@@ -100,7 +100,7 @@ $(function () {
 		<time class="pull-right" datetime="{{ decklist.creation|date('c') }}">{{ decklist.creation|date('M d') }}</time>
 		<span class="username">
     		<a href="{{ path('user_profile_view', {user_id:decklist.user_id,user_name:decklist.username|e('url')}) }}" class="{{ decklist.usercolor }}">{{ decklist.username }}</a>
-    		{% if decklist.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="AGoT2db Gracious Donator"></span>{% endif %}
+    		{% if decklist.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="agot2db Gracious Donator"></span>{% endif %}
     		<small class="reputation">{{ decklist.reputation }}</small>
 		</span>
         {% if decklist.tournament %}

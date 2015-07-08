@@ -9,7 +9,7 @@
 		</h4>
 		<div class="username small">
     		by <a href="{{ path('user_profile_view', {user_id:review.user_id,user_name:review.username|e('url')}) }}" class="{{ review.usercolor }}">{{ review.username }}</a>
-    		{% if review.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="AGoT2db Gracious Donator"></span>{% endif %}
+    		{% if review.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="agot2db Gracious Donator"></span>{% endif %}
     		<small class="reputation">{{ review.reputation }}</small>
     	</div>
 		<p><small>{{ review.rawtext|raw }}</small></p>
