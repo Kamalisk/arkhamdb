@@ -18,7 +18,7 @@
 <tr class="{% if i%2==0 %}even{% else %}odd{% endif %}">
    {% set card = cards[i] %}
 	<td data-th="Name">
-		{% if card.is_unique == true %}<span class="card-unique"></span>{% endif %}
+		{% if card.isUnique == true %}<span class="card-unique"></span>{% endif %}
 		<a href="{{ card.url }}" class="card-tooltip{% if card.available == false %} card-preview{% endif %}" data-code="{{ card.code }}">{{ card.name }}</a>
 	</td>
 	<td data-th="Faction">{{ card.faction_name }}</td>

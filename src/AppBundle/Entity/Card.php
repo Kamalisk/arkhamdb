@@ -73,6 +73,11 @@ class Card
     /**
      * @var integer
      */
+    private $plotLimit;
+
+    /**
+     * @var integer
+     */
     private $strength;
 
     /**
@@ -93,32 +98,32 @@ class Card
     /**
      * @var boolean
      */
-    private $is_unique;
+    private $isUnique;
 
     /**
      * @var boolean
      */
-    private $is_limited;
+    private $isLimited;
 
     /**
      * @var boolean
      */
-    private $is_loyal;
+    private $isLoyal;
 
     /**
      * @var boolean
      */
-    private $is_military;
+    private $isMilitary;
 
     /**
      * @var boolean
      */
-    private $is_intrigue;
+    private $isIntrigue;
 
     /**
      * @var boolean
      */
-    private $is_power;
+    private $isPower;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -447,6 +452,30 @@ class Card
     }
 
     /**
+     * Set plotLimit
+     *
+     * @param integer $plotLimit
+     *
+     * @return Card
+     */
+    public function setPlotLimit($plotLimit)
+    {
+        $this->plotLimit = $plotLimit;
+
+        return $this;
+    }
+
+    /**
+     * Get plotLimit
+     *
+     * @return integer
+     */
+    public function getPlotLimit()
+    {
+        return $this->plotLimit;
+    }
+
+    /**
      * Set strength
      *
      * @param integer $strength
@@ -551,7 +580,7 @@ class Card
      */
     public function setIsUnique($isUnique)
     {
-        $this->is_unique = $isUnique;
+        $this->isUnique = $isUnique;
 
         return $this;
     }
@@ -563,7 +592,7 @@ class Card
      */
     public function getIsUnique()
     {
-        return $this->is_unique;
+        return $this->isUnique;
     }
 
     /**
@@ -575,7 +604,7 @@ class Card
      */
     public function setIsLimited($isLimited)
     {
-        $this->is_limited = $isLimited;
+        $this->isLimited = $isLimited;
 
         return $this;
     }
@@ -587,7 +616,7 @@ class Card
      */
     public function getIsLimited()
     {
-        return $this->is_limited;
+        return $this->isLimited;
     }
 
     /**
@@ -599,7 +628,7 @@ class Card
      */
     public function setIsLoyal($isLoyal)
     {
-        $this->is_loyal = $isLoyal;
+        $this->isLoyal = $isLoyal;
 
         return $this;
     }
@@ -611,7 +640,7 @@ class Card
      */
     public function getIsLoyal()
     {
-        return $this->is_loyal;
+        return $this->isLoyal;
     }
 
     /**
@@ -623,7 +652,7 @@ class Card
      */
     public function setIsMilitary($isMilitary)
     {
-        $this->is_military = $isMilitary;
+        $this->isMilitary = $isMilitary;
 
         return $this;
     }
@@ -635,7 +664,7 @@ class Card
      */
     public function getIsMilitary()
     {
-        return $this->is_military;
+        return $this->isMilitary;
     }
 
     /**
@@ -647,7 +676,7 @@ class Card
      */
     public function setIsIntrigue($isIntrigue)
     {
-        $this->is_intrigue = $isIntrigue;
+        $this->isIntrigue = $isIntrigue;
 
         return $this;
     }
@@ -659,7 +688,7 @@ class Card
      */
     public function getIsIntrigue()
     {
-        return $this->is_intrigue;
+        return $this->isIntrigue;
     }
 
     /**
@@ -671,7 +700,7 @@ class Card
      */
     public function setIsPower($isPower)
     {
-        $this->is_power = $isPower;
+        $this->isPower = $isPower;
 
         return $this;
     }
@@ -683,7 +712,7 @@ class Card
      */
     public function getIsPower()
     {
-        return $this->is_power;
+        return $this->isPower;
     }
 
     /**

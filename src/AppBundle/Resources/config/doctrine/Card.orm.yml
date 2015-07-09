@@ -77,6 +77,10 @@ AppBundle\Entity\Card:
         reserve:
             type: smallint
             nullable: true
+        plotLimit:
+            type: smallint
+            nullable: true
+            column: plot_limit
         strength:
             type: smallint
             nullable: true
@@ -91,22 +95,28 @@ AppBundle\Entity\Card:
             type: string
             length: 255
             nullable: true
-        is_unique:
+        isUnique:
             type: boolean
             nullable: false
-        is_limited:
+            column: is_unique
+        isLimited:
             type: boolean
             nullable: false
-        is_loyal:
+            column: is_limited
+        isLoyal:
             type: boolean
             nullable: false
-        is_military:
+            column: is_loyal
+        isMilitary:
             type: boolean
             nullable: false
-        is_intrigue:
+            column: is_military
+        isIntrigue:
             type: boolean
             nullable: false
-        is_power:
+            column: is_intrigue
+        isPower:
             type: boolean
             nullable: false
+            column: is_power
     

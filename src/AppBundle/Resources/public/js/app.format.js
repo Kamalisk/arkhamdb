@@ -36,6 +36,7 @@
 			text += 'Initiative: '+card.initiative+'. ';
 			text += 'Claim: '+card.claim+'. ';
 			text += 'Reserve: '+card.reserve+'. ';
+			text += 'Plot deck limit: '+card.plotLimit+'. ';
 			break;
 		}
 		return text;
