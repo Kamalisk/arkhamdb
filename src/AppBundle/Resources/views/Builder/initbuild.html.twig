@@ -1,19 +1,43 @@
 {% extends 'AppBundle::layout.html.twig' %}
+{% import "AppBundle::macros.html.twig" as macros %}
 
 {% block body %}
 
 <div class="container">
 
-<h1>Choose your faction</h1>
 
 <div class="row">
-{% for faction in factions %}
-	<div class="col-md-3 col-sm-4 col-xs-6">
-		<a href="{{ path('deck_initbuild', {faction_code:faction.code}) }}">
-			<img src="{{ asset('bundles/app/images/factions/' ~ faction.code ~ '.png') }}" class="img-responsive">
-		</a>
+	<div class="col-md-6">
+		<h1>Choose your faction</h1>
+		<ul class="list-group">
+		{% for faction in factions %}
+			<li class="list-group-item radio">
+				<label>
+					<input type="radio" name="faction" value="{{ faction.code }}"> [{{ faction.code }}] {{ faction.name }}
+				</label>
+			</li>
+		{% endfor %}
+		</ul>
 	</div>
-{% endfor %}
+	<div class="col-md-6">
+		<h2>Choose an agenda</h2>
+		<ul class="list-group">
+			<li class="list-group-item radio">
+				<label>
+					<input type="radio" name="agenda" value="" checked="checked">
+					No agenda
+				</label>
+			</li>
+		{% for agenda in agendas %}
+			<li class="list-group-item radio">
+				<label>
+					<input type="radio" name="agenda" value="{{ agenda.code }}">
+					{{ macros.card_name_with_pack_no_link(agenda) }}
+				</label>
+			</li>
+		{% endfor %}
+		</ul>
+	</div>
 </div>
 
 </div>

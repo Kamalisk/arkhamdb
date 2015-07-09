@@ -1,3 +1,7 @@
 {% macro integer_or_x(value) %}
     {% if value is null %}X{% else %}{{ value }}{% endif %}
 {% endmacro %}
+
+{% macro card_name_with_pack_no_link(card) %}
+<a class="card-tooltip" data-code="{{ card.code }}">{{ card.name }} <i>({{ card.pack.name }})</i></a>
+{% endmacro %}

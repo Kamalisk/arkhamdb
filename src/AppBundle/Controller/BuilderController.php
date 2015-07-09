@@ -27,10 +27,13 @@ class BuilderController extends Controller
 		$em = $this->get('doctrine')->getManager();
 		
 		$factions = $em->getRepository('AppBundle:Faction')->findBy(["is_primary" => TRUE]);
+		$agenda = $em->getRepository('AppBundle:Type')->findOneBy(['code' => 'agenda']);
+		$agendas = $em->getRepository('AppBundle:Card')->findBy(['type' => $agenda]);
 		
 		return $this->render('AppBundle:Builder:initbuild.html.twig', [
 				'pagetitle' => "New deck",
 				'factions' => $factions,
+				'agendas' => $agendas,
 		], $response);
     }
 
