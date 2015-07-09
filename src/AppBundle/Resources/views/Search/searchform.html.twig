@@ -117,13 +117,12 @@
 	</div>
     <div class="col-sm-4">
         <div class="form-group">
-			<label for="k">Traits</label>
+			<label for="d">Limited</label>
 			<div>
-				<select class="form-control" name="s" id="s">
+				<select class="form-control" name="d" id="d">
 					<option value="">any</option>
-					{% for trait in traits %}
-					<option value="{{ trait }}">{{ trait }}</option>
-					{% endfor %}
+					<option value="1">Yes</option>
+					<option value="0">No</option>
 				</select>
 			</div>
 		</div>
