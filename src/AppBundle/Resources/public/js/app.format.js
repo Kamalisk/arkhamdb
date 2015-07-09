@@ -33,8 +33,8 @@
 			break;
 		case 'plot':
 			text += 'Income: '+card.income+'. ';
-			text += 'Claim: '+card.claim+'. ';
 			text += 'Initiative: '+card.initiative+'. ';
+			text += 'Claim: '+card.claim+'. ';
 			text += 'Reserve: '+card.reserve+'. ';
 			break;
 		}
