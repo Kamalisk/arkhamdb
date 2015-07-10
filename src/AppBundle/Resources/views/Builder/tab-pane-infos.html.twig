@@ -1,0 +1,18 @@
+
+<!-- Notes Form -->
+<div class="row">
+	<div class="col-sm-12">
+		<div class="form-group">
+			<label for="tags_">Tags</label>
+			<input type="text" class="form-control" name="tags_" value="{{ deck.tags }}"></input>
+			<span class="help-block">Tags are for easy filtering in your list of decks, e.g. <i>tournament</i> or <i>glacier</i>.</span>
+		</div>
+		<div class="form-group">
+			<label for="description_">Notes</label>
+			<textarea class="form-control" rows="20" name="description_" id="description" placeholder="Type # to enter a card name. Type $ to enter a symbol.">{{ deck.description_md }}</textarea>
+		</div>
+		<div class="well text-muted" id="description-preview"><small>Preview. Look <a href="http://daringfireball.net/projects/markdown/dingus">here</a> for a Markdown syntax reference.</small></div>
+	</div><!-- /.col-sm-12 -->
+</div><!-- /.row -->
+<!-- Notes Form -->
+    

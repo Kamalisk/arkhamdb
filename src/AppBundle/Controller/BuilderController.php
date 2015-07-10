@@ -37,36 +37,61 @@ class BuilderController extends Controller
 		], $response);
     }
 
-    public function initbuildAction ($faction_code)
+    public function initbuildAction (Request $request)
     {
-        $response = new Response();
-        $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
-        
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
         
-        $faction = $em->getRepository('AppBundle:Faction')->findOneBy(array(
-                "code" => $faction_code
-        ));
-        if (! $faction) throw new HttpException(404);
+        $faction_code = $request->request->get('faction');
+        $agenda_code = $request->request->get('agenda');
         
-        return $this->render('AppBundle:Builder:deck.html.twig',
-                array(
-                        'pagetitle' => "Deckbuilder",
-                        'deck' => array(
-                                "name" => "New Deck " . $faction()->getName(),
-                                "description" => "",
-                        		"faction" => $faction,
-                                "slots" => [],
-                        		"tags" => $faction()->getCode(),
-                                "id" => "",
-                                "history" => [],
-                                "unsaved" => 0,
-                        ),
-                        "published_decklists" => []
-                ), $response);
-    
+        if(!$faction_code)
+        {
+        	$this->get('session')->getFlashBag()->set('error', "A faction is required.");
+        	return $this->redirect($this->generateUrl('deck_buildform'));
+        }
+        
+        $faction = $em->getRepository('AppBundle:Faction')->findOneBy(array("code" => $faction_code));
+        if(!$faction)
+        {
+        	$this->get('session')->getFlashBag()->set('error', "A faction is required.");
+        	return $this->redirect($this->generateUrl('deck_buildform'));
+        }
+
+        if(!$agenda_code)
+        {
+        	$agenda = NULL;
+        	$name = sprintf("New Deck - %s", $faction->getName());
+        	$pack = $em->getRepository('AppBundle:Pack')->findOneBy(array("code" => "core"));
+        }
+        else
+        {
+        	$agenda = $em->getRepository('AppBundle:Card')->findOneBy(array("code" => $agenda_code));
+        	$name = sprintf("New Deck - %s - %s", $faction->getName(), $agenda->getName());
+        	$pack = $agenda->getPack();
+        }
+        
+        $deck = new Deck();
+        $deck->setDescriptionMd("");
+        $deck->setFaction($faction);
+        $deck->setLastPack($pack);
+        $deck->setName($name);
+        $deck->setProblem('deckSize');
+        $deck->setTags($faction_code);
+        $deck->setUser($this->getUser());
+        
+        if($agenda)
+        {
+        	$slot = new Deckslot();
+        	$slot->setCard($agenda);
+        	$slot->setQuantity(1);
+        	$deck->addSlot($slot);
+        }
+        
+        $em->persist($deck);
+        $em->flush();
+        
+        return $this->redirect($this->get('router')->generate('deck_edit', ['deck_id' => $deck->getId()]));
     }
 
     public function importAction ()
@@ -437,16 +462,13 @@ class BuilderController extends Controller
         $rows = $dbh->executeQuery("SELECT
 				d.id,
 				d.name,
-				DATE_FORMAT(d.date_creation, '%Y-%m-%dT%TZ') datecreation,
-                DATE_FORMAT(d.date_update, '%Y-%m-%dT%TZ') dateupdate,
+				DATE_FORMAT(d.date_creation, '%Y-%m-%dT%TZ') date_creation,
+                DATE_FORMAT(d.date_update, '%Y-%m-%dT%TZ') date_update,
                 d.description_md,
                 d.tags,
-                u.id user_id,
-                (select count(*) from deckchange c where c.deck_id=d.id and c.is_saved=0) unsaved,
-                s.name side_name
+                d.user_id,
+                (select count(*) from deckchange c where c.deck_id=d.id and c.is_saved=0) unsaved
 				from deck d
-                join user u on d.user_id=u.id
-				left join side s on d.side_id=s.id
 				where d.id=?
 				", array(
                 $deck_id
@@ -457,8 +479,6 @@ class BuilderController extends Controller
         if($this->getUser()->getId() != $deck['user_id']) {
             throw new UnauthorizedHttpException("You are not allowed to view this deck.");
         }
-        
-        $deck['side_name'] = mb_strtolower($deck['side_name']);
         
         $rows = $dbh->executeQuery("SELECT
 				c.code,
@@ -477,12 +497,12 @@ class BuilderController extends Controller
         $snapshots = [];
         
         $rows = $dbh->executeQuery("SELECT
-				DATE_FORMAT(c.date_creation, '%Y-%m-%dT%TZ') datecreation,
+				DATE_FORMAT(c.date_creation, '%Y-%m-%dT%TZ') date_creation,
 				c.variation,
                 c.is_saved
 				from deckchange c
 				where c.deck_id=? and c.is_saved=1
-                order by datecreation desc", array($deck_id))->fetchAll();
+                order by date_creation desc", array($deck_id))->fetchAll();
         
         // recreating the versions with the variation info, starting from $preversion
         $preversion = $cards;
@@ -507,18 +527,18 @@ class BuilderController extends Controller
         
         // add last know version with empty diff
         $row['content'] = $preversion;
-        $row['datecreation'] = $deck['datecreation'];
+        $row['date_creation'] = $deck['date_creation'];
         $row['saved'] = TRUE;
         $row['variation'] = null;
         array_unshift($snapshots, $row);
         
         $rows = $dbh->executeQuery("SELECT
-				DATE_FORMAT(c.date_creation, '%Y-%m-%dT%TZ') datecreation,
+				DATE_FORMAT(c.date_creation, '%Y-%m-%dT%TZ') date_creation,
 				c.variation,
                 c.is_saved
 				from deckchange c
 				where c.deck_id=? and c.is_saved=0
-                order by datecreation asc", array($deck_id))->fetchAll();
+                order by date_creation asc", array($deck_id))->fetchAll();
         
         // recreating the snapshots with the variation info, starting from $postversion
         $postversion = $cards;

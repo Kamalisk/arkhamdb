@@ -6,8 +6,8 @@ deck_buildform:
         _controller: AppBundle:Builder:buildform
 
 deck_initbuild:
-    pattern: /build/{faction_code}
-    methods: [GET]
+    pattern: /build
+    methods: [POST]
     defaults:
         _controller: AppBundle:Builder:initbuild
 

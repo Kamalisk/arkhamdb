@@ -1,6 +1,6 @@
 imports:
     - { resource: config.yml }
-
+    
 framework:
     router:
         resource: "%kernel.root_dir%/config/routing_dev.yml"
@@ -42,7 +42,7 @@ monolog:
         #    level:  info
 
 assetic:
-    use_controller: true
+    use_controller: false
 
 #swiftmailer:
 #    delivery_address: me@example.com

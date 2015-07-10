@@ -1,0 +1,49 @@
+
+    
+
+<!-- History -->
+<div class="row">
+	<div class="col-sm-12">
+	   <div class="progress">
+	       <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="60" style="width:0%" id="history-timer-bar"><span class="sr-only">Time remaining</span></div>
+	   </div>
+		<table class="table">
+		  <thead>
+		      <tr>
+		          <th>Time</th>
+		          <th>Change</th>
+		          <th>Action</th>
+		      </tr>
+		  </thead>
+		  <tbody id="tbody-history">
+		  </tbody>
+		</table>
+	</div><!-- /.col-sm-12 -->
+</div><!-- /.row -->
+<!-- History -->
+    
+<!-- Published decklists Table -->
+<table class="table table-condensed" id="table-predecessor">
+	<thead>
+		<tr><th colspan="{% if published_decklists|length %}4{% else %}1{% endif %}"><span class="glyphicon glyphicon-share"></span> Published versions</th></tr>
+	</thead>
+	<tbody>
+	{% if published_decklists|length %}
+	{% for decklist in published_decklists %}
+		<tr>
+			<td class="decklist-name"><a href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.name_canonical|e('url') }) }}">{{ decklist.name }}</a></td>
+			<td class="social"><span class="glyphicon glyphicon-heart social-icon-like"></span> {{ decklist.nbVotes }}</td>
+			<td class="social"><span class="glyphicon glyphicon-star social-icon-favorite"></span> {{ decklist.nbfavorites }}</td>
+			<td class="social"><span class="glyphicon glyphicon-comment social-icon-comment"></span> {{ decklist.nbcomments }}</td>
+		</tr>
+	{% endfor %}
+	{% else %}
+		<tr><td>None.</td></tr>
+	{% endif %}
+	</tbody>
+</table>
+<!-- Published decklists Table -->
+    
+    
+    
+    

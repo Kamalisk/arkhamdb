@@ -144,23 +144,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pagedown/1.0/Markdown.Converter.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.textcomplete/0.2.2/jquery.textcomplete.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment-with-locales.min.js"></script>
-    <script src="{{ asset('/bundles/app/libs/forerunnerdb.min.js') }}"></script>
-    <script src="{{ asset('/bundles/app/libs/moment-timezone-with-data-2010-2020.min.js') }}"></script>
     <script type="text/javascript">
 	var app = {
 		data_loaded: $.Callbacks()
 	};
 	moment.locale(window.navigator.language);
     </script>
+    
 	{% if app.environment == 'prod' %}
 		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 		{% include 'AppBundle::google-analytics.html.twig' %}
 	{% endif %}
-	<script src="{{ asset('/bundles/app/js/app.data.js') }}"></script>
-	<script src="{{ asset('/bundles/app/js/app.format.js') }}"></script>
-	<script src="{{ asset('/bundles/app/js/app.tip.js') }}"></script>
-	<script src="{{ asset('/bundles/app/js/app.user.js') }}"></script>
-{#    <script src="{{ asset('/bundles/app/js/app.js') }}"></script> #}
+	
+	{% javascripts 
+		'@AppBundle/Resources/public/libs/forerunnerdb.min.js'
+		'@AppBundle/Resources/public/libs/moment-timezone-with-data-2010-2020.min.js'
+		'@AppBundle/Resources/public/js/app.data.js'
+		'@AppBundle/Resources/public/js/app.format.js'
+		'@AppBundle/Resources/public/js/app.tip.js'
+		'@AppBundle/Resources/public/js/app.user.js' %}
+	<script src="{{ asset_url }}"></script>
+	{% endjavascripts %}
+		
 	{% block javascripts %}{% endblock %}
     </body>
 </html>

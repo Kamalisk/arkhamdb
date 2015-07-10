@@ -1,0 +1,66 @@
+
+<div class="row">
+	<div class="col-md-12 text-right" style="margin-bottom:10px">
+        <button class="btn btn-default btn-xs" type="button" id="filter-text-button">Filter help</button>
+        <div class="btn-group">
+			<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">Sets <span class="caret"></span></button>
+			<ul class="dropdown-menu filter pull-right" id="set_code" title="Shift+Click to select only one option ; Alt+Shift+Click to select all other options"></ul>
+		</div>
+		<div class="btn-group">
+			<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">Options <span class="caret"></span></button>
+			<ul class="dropdown-menu pull-right">
+			    <li><a href="#"><label><input type="checkbox" name="show-disabled"> Show unusable cards</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="only-deck"> Show only used cards</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="display-column-1"> Display on 1 column</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="display-column-2"> Display on 2 columns</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="display-column-3"> Display on 3 columns</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="core-set-1"> Use 1 Core Set</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="core-set-2"> Use 2 Core Sets</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="core-set-3"> Use 3 Core Sets</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="show-suggestions-0"> Show no suggestion</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="show-suggestions-3"> Show 3 suggestions</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="show-suggestions-10"> Show 10 suggestions</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="buttons-behavior-cumulative"> Faction/type cumulative</label></a></li>
+				<li><a href="#"><label><input type="checkbox" name="buttons-behavior-exclusive"> Faction/type exclusive</label></a></li>
+			</ul>
+		</div><!-- /.btn-group -->
+	</div><!-- /.col-sm-6 -->
+</div><!-- /.row -->
+
+<!-- Search Bar -->
+<div class="row">
+	<div class="col-sm-12" style="margin-bottom:10px">
+		<input type="text" class="form-control" id="filter-text" placeholder="Find a card or filter the list" tabindex="1">
+	</div>
+</div>
+<!-- Search Bar -->
+
+<div class="row search-buttons" style="margin-bottom:10px">
+    <div class="col-xs-6">
+        <div id="faction_code" class="filter" data-toggle="buttons"></div>
+    </div>
+    <div class="col-xs-6 text-right">
+        <div id="type_code" class="filter" data-toggle="buttons"></div>
+    </div>
+</div>
+
+<!-- Collection Table -->
+<div class="row" id="collection">
+	<div class="col-sm-12">
+		<table class="table table-condensed table-hover" style="margin-bottom:10px">
+			<thead>
+				<tr>
+					<th style="min-width:85px"><a href="#" data-sort="indeck">Quantity</a></th>
+					<th><a href="#" data-sort="name">Name</a></th>
+					<th><a href="#" data-sort="factioncost" title="Influence">I.</a></th>
+					<th class="type"><a href="#" data-sort="type" title="Type">T.</a><span class="caret"></span></th>
+					<th class="faction"><a href="#" data-sort="faction" title="Faction">F.</a></th>
+				</tr>
+			</thead>
+			<tbody id="collection-table" class="collection"></tbody>
+		</table>
+	</div><!-- /.col-sm-12 -->
+	<div id="collection-grid" class="col-sm-12"></div>
+</div><!-- /.row -->
+<!-- Collection Table -->
+	

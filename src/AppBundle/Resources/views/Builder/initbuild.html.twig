@@ -5,7 +5,7 @@
 
 <div class="container">
 
-
+<form action="{{ path('deck_initbuild') }}" method="post" enctype="application/x-www-form-urlencoded">
 <div class="row">
 	<div class="col-md-6">
 		<h1>Choose your faction</h1>
@@ -39,6 +39,12 @@
 		</ul>
 	</div>
 </div>
+<div class="row">
+	<div class="col-md-12">
+		<button type="submit" class="btn btn-primary btn-block">Create the deck and start building</button>
+	</div>
+</div>
+</form>
 
 </div>
 

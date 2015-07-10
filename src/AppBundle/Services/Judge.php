@@ -1,8 +1,6 @@
 <?php
 
-
 namespace AppBundle\Services;
-
 
 /*
  *
