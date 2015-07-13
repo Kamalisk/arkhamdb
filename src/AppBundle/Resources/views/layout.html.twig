@@ -137,6 +137,7 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.jquery.min.js"></script>
@@ -145,9 +146,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.textcomplete/0.2.2/jquery.textcomplete.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment-with-locales.min.js"></script>
     <script type="text/javascript">
-	var app = {
-		data_loaded: $.Callbacks()
-	};
+	var app = {};
 	moment.locale(window.navigator.language);
     </script>
     
@@ -162,7 +161,8 @@
 		'@AppBundle/Resources/public/js/app.data.js'
 		'@AppBundle/Resources/public/js/app.format.js'
 		'@AppBundle/Resources/public/js/app.tip.js'
-		'@AppBundle/Resources/public/js/app.user.js' %}
+		'@AppBundle/Resources/public/js/app.user.js'
+		'@AppBundle/Resources/public/js/app.ui.js' %}
 	<script src="{{ asset_url }}"></script>
 	{% endjavascripts %}
 		

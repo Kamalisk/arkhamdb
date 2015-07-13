@@ -27,12 +27,13 @@ class Decks
                 "SELECT
 				d.id,
 				d.name,
-				DATE_FORMAT(d.date_creation, '%Y-%m-%dT%TZ') datecreation,
-                DATE_FORMAT(d.date_update, '%Y-%m-%dT%TZ') dateupdate,
+				DATE_FORMAT(d.date_creation, '%Y-%m-%dT%TZ') date_creation,
+                DATE_FORMAT(d.date_update, '%Y-%m-%dT%TZ') date_update,
 				d.description_md,
                 d.tags,
                 (select count(*) from deckchange c where c.deck_id=d.id and c.is_saved=0) unsaved,
                 d.problem,
+        		f.name faction_name,
 				f.code faction_code,
                 p.cycle_id cycle_id,
                 p.position pack_position
@@ -40,7 +41,7 @@ class Decks
 				left join faction f on d.faction_id=f.id
                 left join pack p on d.last_pack_id=p.id
 				where d.user_id=?
-				order by dateupdate desc", array(
+				order by date_update desc", array(
                         $user->getId()
                 ))
             ->fetchAll();
@@ -79,7 +80,7 @@ class Decks
         
         $rows = $dbh->executeQuery(
                 "SELECT
-                DATE_FORMAT(c.date_creation, '%Y-%m-%dT%TZ') datecreation,
+                DATE_FORMAT(c.date_creation, '%Y-%m-%dT%TZ') date_creation,
 				c.variation,
                 c.deck_id
 				from deckchange c
@@ -101,7 +102,7 @@ class Decks
         }
         
         foreach ($decks as $i => $deck) {
-            $decks[$i]['cards'] = $cards[$deck['id']];
+            $decks[$i]['cards'] = key_exists($deck['id'], $cards) ? $cards[$deck['id']] : [];
             $decks[$i]['history'] = isset($changes[$deck['id']]) ? $changes[$deck['id']] : [];
             $decks[$i]['unsaved'] = intval($decks[$i]['unsaved']);
             $decks[$i]['tags'] = $deck['tags'] ? explode(' ', $deck['tags']) : [];

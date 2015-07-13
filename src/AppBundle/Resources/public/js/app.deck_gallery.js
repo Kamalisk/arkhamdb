@@ -3,7 +3,7 @@
 var images = null;
 
 /**
- * @memberOf app_deck_gallery
+ * @memberOf deck_gallery
  */
 deck_gallery.update = function update() {
 

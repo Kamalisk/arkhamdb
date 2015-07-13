@@ -3,7 +3,7 @@
 var deck = null, initial_size = 0, draw_count = 0, container = null;
 
 /**
- * @memberOf app_draw_simulator
+ * @memberOf draw_simulator
  */
 draw_simulator.reset = function reset() {
 	if(container) container.empty();
@@ -15,7 +15,7 @@ draw_simulator.reset = function reset() {
 };
 
 /**
- * @memberOf app_draw_simulator
+ * @memberOf draw_simulator
  */
 draw_simulator.init = function init() {
 	container = $('#table-draw-simulator-content');
@@ -85,7 +85,7 @@ function do_draw(draw, draw_type) {
 }
 
 /**
- * @memberOf app_draw_simulator
+ * @memberOf draw_simulator
  */
 draw_simulator.handle_click = function handle_click(event) {
 
@@ -127,7 +127,7 @@ draw_simulator.handle_click = function handle_click(event) {
 };
 
 /**
- * @memberOf app_draw_simulator
+ * @memberOf draw_simulator
  */
 draw_simulator.toggle_opacity = function toggle_opacity(event) {
 	$(this).css('opacity', 1.5 - parseFloat($(this).css('opacity')));

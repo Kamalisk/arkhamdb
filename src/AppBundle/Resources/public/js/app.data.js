@@ -3,7 +3,7 @@
 /** 
  * loads the database from local
  * sets up a Promise on all data loading/updating
- * @memberOf app_data
+ * @memberOf data
  */
 data.load = function load() {
 
@@ -30,6 +30,9 @@ data.load = function load() {
 				data.dfd.cards.reject(false);
 				return;
 			}
+			// data has been fetched from local store, triggering event
+			$(document).trigger('data.app');
+			// then we ask the server if new data is available
 			data.query();
 		});
 	});		
@@ -37,7 +40,7 @@ data.load = function load() {
 
 /**
  * queries the server to update data
- * @memberOf app_data
+ * @memberOf data
  */
 data.query = function query() {
 	$.ajax({
@@ -60,7 +63,7 @@ data.query = function query() {
 /**
  * called if all operations (load+update) succeed
  * deferred returns true if data has been updated
- * @memberOf app_data
+ * @memberOf data
  */
 data.update_done = function update_done(sets_updated, cards_updated) {
 	if(sets_updated || cards_updated) {
@@ -68,13 +71,12 @@ data.update_done = function update_done(sets_updated, cards_updated) {
 		var alert = $('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
 		$('#wrapper>div.container').prepend(alert);
 	}
-	app.data_loaded.fire();
 };
 
 /**
  * called if an operation (load+update) fails
  * deferred returns true if data has been loaded
- * @memberOf app_data
+ * @memberOf data
  */
 data.update_fail = function update_fail(sets_loaded, sets_loaded) {
 	if(!sets_loaded || !cards_loaded) {
@@ -90,7 +92,7 @@ data.update_fail = function update_fail(sets_loaded, sets_loaded) {
 
 /**
  * updates the database if necessary, from fetched data
- * @memberOf app_data
+ * @memberOf data
  */
 data.update_collection = function update_collection(data, collection, lastModified, deferred) {
 	/*
@@ -122,7 +124,7 @@ data.update_collection = function update_collection(data, collection, lastModifi
 
 /**
  * handles the response to the ajax query for sets data
- * @memberOf app_data
+ * @memberOf data
  */
 data.parse_sets = function parse_sets(response, textStatus, jqXHR) {
 	var lastModified = new Date(jqXHR.getResponseHeader('Last-Modified')).toISOString();
@@ -131,7 +133,7 @@ data.parse_sets = function parse_sets(response, textStatus, jqXHR) {
 
 /**
  * handles the response to the ajax query for the cards data
- * @memberOf app_data
+ * @memberOf data
  */
 data.parse_cards = function parse_cards(response, textStatus, jqXHR) {
 	var lastModified = new Date(jqXHR.getResponseHeader('Last-Modified')).toISOString();

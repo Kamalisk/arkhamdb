@@ -18,7 +18,7 @@ function array_count(list) {
 /**
  * contents is an array of content
  * content is a hash of pairs code-qty
- * @memberOf app_diff
+ * @memberOf diff
  */
 diff.compute_simple = function compute_simple(contents) {
 	

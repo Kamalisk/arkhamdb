@@ -108,10 +108,10 @@ var Identity = null,
 <div class="list-group" id="decks" data-sort-type="dateupdate" data-sort-order="1">
 {% for deck in decks %}
 <a href="#" class="list-group-item deck-list-group-item" id="deck_{{ deck.id }}" data-id="{{ deck.id }}" data-problem="{{ deck.problem }}" data-faction="{{ deck.faction_code }}">
-    <div class="deck-list-identity-image hidden-xs" title="{{ deck.identity_name }}" style="background-image:url({{ asset('/bundles/agot2dbcards/images/cards/en/'~deck.identity_code~'.png') }})"></div>
+    <div class="deck-list-identity-image hidden-xs" title="{{ deck.faction_name }}" style="background-image:url({{ asset('/bundles/app/images/factions/'~deck.faction_code~'.png') }})"></div>
     <h4 class="decklist-name">{{ deck.name }}{% if deck.message %} <span class="glyphicon glyphicon-exclamation-sign text-danger" title="{{ deck.message }}"></span>{% endif %}</h4>
     <div>
-        {% if deck.identity_title %}{{ deck.identity_name }}{% else %}No Identity{% endif %}
+        Faction + Agenda
     </div><div class="deck-list-tags">
         {% for tag in deck.tags %}<span class="label label-default tag-{{ tag }}">{{ tag }}</span>{% endfor %}
     </div>

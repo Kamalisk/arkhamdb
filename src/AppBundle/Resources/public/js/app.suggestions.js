@@ -8,7 +8,7 @@ suggestions.exclusions = [];
 suggestions.number = 3;
 
 /**
- * @memberOf app_suggestions
+ * @memberOf suggestions
  */
 suggestions.query = function query(side) {
 	suggestions.promise = $.ajax('/web/'+side+'.json', {
@@ -34,7 +34,7 @@ suggestions.query = function query(side) {
 };
 
 /**
- * @memberOf app_suggestions
+ * @memberOf suggestions
  */
 suggestions.compute = function compute() {
 	if(suggestions.number) 
@@ -83,7 +83,7 @@ suggestions.compute = function compute() {
 };
 
 /**
- * @memberOf app_suggestions
+ * @memberOf suggestions
  */
 suggestions.show = function show() {
 	var table = $('#table-suggestions');
@@ -109,7 +109,7 @@ suggestions.show = function show() {
 };
 
 /**
- * @memberOf app_suggestions
+ * @memberOf suggestions
  */
 suggestions.div = function div(record) {
 	var faction = record.faction_code;
@@ -147,7 +147,7 @@ suggestions.div = function div(record) {
 };
 
 /**
- * @memberOf app_suggestions
+ * @memberOf suggestions
  */
 suggestions.exclude = function exclude(code) {
 	suggestions.exclusions.push(suggestions.indexFromCodes[code]);
@@ -155,7 +155,7 @@ suggestions.exclude = function exclude(code) {
 };
 
 /**
- * @memberOf app_suggestions
+ * @memberOf suggestions
  */
 suggestions.pick = function pick(event) {
 	InputByTitle = false;

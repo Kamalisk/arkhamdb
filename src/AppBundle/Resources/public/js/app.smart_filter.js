@@ -3,18 +3,20 @@
 var SmartFilterQuery = [];
 
 /**
- * @memberOf app_smart_filter
+ * @memberOf smart_filter
  */
-smart_filter.get_query =  function get_query(FilterQuery) {
+smart_filter.get_query =  function get_query(query) {
+	/*
 	var query = $.merge([], SmartFilterQuery);
 	if(FilterQuery) query.push(FilterQuery);
+	*/
 	return query;
 };
 
 /**
- * @memberOf app_smart_filter
+ * @memberOf smart_filter
  */
-smart_filter.handler =  function handler(value, callback) {
+smart_filter.handler =  function handler(value) {
 	var conditions = filterSyntax(value);
 	SmartFilterQuery = [];
 
@@ -75,8 +77,6 @@ smart_filter.handler =  function handler(value, callback) {
 			break;
 		}
 	}
-
-	callback();
 };
 
 function add_integer_sf(key, operator, values) {

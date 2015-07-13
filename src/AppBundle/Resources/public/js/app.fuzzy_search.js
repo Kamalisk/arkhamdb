@@ -7,7 +7,7 @@ var dict = [];
  * takes a card name and fuzzy-searches it in the card db
  * the input can include a qty indicator like 3x
  * returns an array of objects Card with an additional key "qty"
- * @memberOf app_fuzzy_search
+ * @memberOf fuzzy_search
  */
 fuzzy_search.lookup = function lookup(input, max_results) {
     if(max_results == null) max_results = 5;
@@ -48,7 +48,7 @@ fuzzy_search.lookup = function lookup(input, max_results) {
 };
 
 /**
- * @memberOf app_fuzzy_search
+ * @memberOf fuzzy_search
  */
 app.data_loaded.add(function() {
 	app.data.cards().each(function (record, recordnumber) {

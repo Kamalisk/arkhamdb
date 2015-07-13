@@ -4,7 +4,7 @@
         <button class="btn btn-default btn-xs" type="button" id="filter-text-button">Filter help</button>
         <div class="btn-group">
 			<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">Sets <span class="caret"></span></button>
-			<ul class="dropdown-menu filter pull-right" id="set_code" title="Shift+Click to select only one option ; Alt+Shift+Click to select all other options"></ul>
+			<ul class="dropdown-menu pull-right" data-filter="pack_code" title="Shift+Click to select only one option ; Alt+Shift+Click to select all other options"></ul>
 		</div>
 		<div class="btn-group">
 			<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">Options <span class="caret"></span></button>
@@ -35,12 +35,12 @@
 </div>
 <!-- Search Bar -->
 
-<div class="row search-buttons" style="margin-bottom:10px">
+<div class="row" style="margin-bottom:10px">
     <div class="col-xs-6">
-        <div id="faction_code" class="filter" data-toggle="buttons"></div>
+        <div id="faction_code" data-filter="faction_code" data-toggle="buttons"></div>
     </div>
     <div class="col-xs-6 text-right">
-        <div id="type_code" class="filter" data-toggle="buttons"></div>
+        <div id="type_code" data-filter="type_code" data-toggle="buttons"></div>
     </div>
 </div>
 
@@ -52,9 +52,8 @@
 				<tr>
 					<th style="min-width:85px"><a href="#" data-sort="indeck">Quantity</a></th>
 					<th><a href="#" data-sort="name">Name</a></th>
-					<th><a href="#" data-sort="factioncost" title="Influence">I.</a></th>
-					<th class="type"><a href="#" data-sort="type" title="Type">T.</a><span class="caret"></span></th>
-					<th class="faction"><a href="#" data-sort="faction" title="Faction">F.</a></th>
+					<th class="type"><a href="#" data-sort="type_code" title="Type">T.</a><span class="caret"></span></th>
+					<th class="faction"><a href="#" data-sort="faction_code" title="Faction">F.</a></th>
 				</tr>
 			</thead>
 			<tbody id="collection-table" class="collection"></tbody>

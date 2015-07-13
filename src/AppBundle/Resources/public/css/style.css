@@ -106,3 +106,28 @@ body {
 	max-width: 350px;
 	font-size: 15px;
 }
+
+
+#deck {
+	padding: 50px 0;
+}
+.deck-loading {
+	text-align: center;
+}
+
+.dropdown-menu label {
+  margin: 0;
+}
+.dropdown-menu input[type=checkbox] {
+  margin: -4px 8px 0 -6px;
+}
+
+body {
+	background: #FAF7F5;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+	background: #FAF7F5;
+}
+.nav-tabs {
+  margin-bottom: 15px;
+}

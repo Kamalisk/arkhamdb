@@ -85,6 +85,7 @@ class BuilderController extends Controller
         	$slot = new Deckslot();
         	$slot->setCard($agenda);
         	$slot->setQuantity(1);
+        	$slot->setDeck($deck);
         	$deck->addSlot($slot);
         }
         
@@ -467,8 +468,11 @@ class BuilderController extends Controller
                 d.description_md,
                 d.tags,
                 d.user_id,
+        		f.code faction_code,
+        		f.name faction_name,
                 (select count(*) from deckchange c where c.deck_id=d.id and c.is_saved=0) unsaved
 				from deck d
+        		join faction f on d.faction_id=f.id
 				where d.id=?
 				", array(
                 $deck_id

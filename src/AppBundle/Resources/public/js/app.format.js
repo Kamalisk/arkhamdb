@@ -1,21 +1,21 @@
 (function app_format(format, $) {
 	
 /**
- * @memberOf app_format
+ * @memberOf format
  */
 format.traits = function traits(card) {
 	return card.traits || '';
 };
 
 /**
- * @memberOf app_format
+ * @memberOf format
  */
 format.name = function name(card) {
 	return (card.is_unique ? '<span class="card-unique"></span> ' : "") + card.name;
 }
 
 /**
- * @memberOf app_format
+ * @memberOf format
  */
 format.pack_faction = function pack_faction(card) {
 	var text = card.pack_name + ' #' + card.position + '. ';
@@ -26,7 +26,7 @@ format.pack_faction = function pack_faction(card) {
 }
 
 /**
- * @memberOf app_format
+ * @memberOf format
  */
 format.info = function info(card) {
 	var text = '<span class="card-type">'+card.type_name+'. </span>';
@@ -55,10 +55,10 @@ format.info = function info(card) {
 };
 
 /**
- * @memberOf app_format
+ * @memberOf format
  */
 format.text = function text(card) {
-	var text = card.text;
+	var text = card.text || '';
 	
 	text = text.split("\n").join('</p><p>');
 	return '<p>'+text+'</p>';

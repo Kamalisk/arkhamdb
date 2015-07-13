@@ -43,7 +43,7 @@ function focus_index(index) {
 }
 
 /**
- * @memberOf app_deck_browser
+ * @memberOf deck_browser
  */
 deck_browser.update = function update() {
 

@@ -1,19 +1,16 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
 {% block javascripts %}
-{% javascripts 
-	'@AppBundle/Resources/public/js/app.draw_simulator.js'
-	'@AppBundle/Resources/public/js/app.card_modal.js'
-	'@AppBundle/Resources/public/js/app.smart_filter.js'
-	'@AppBundle/Resources/public/js/app.suggestions.js'
-	'@AppBundle/Resources/public/js/app.diff.js'
-	'@AppBundle/Resources/public/js/app.deck.js' %}
-	<script src="{{ asset_url }}"></script>
-{% endjavascripts %}
-<script type="text/javascript">
-var deck_json = {{ deck|json_encode|raw }};
-console.log(deck_json);
-</script>
+{# <script src="{{ asset('/bundles/app/js/app.draw_simulator.js') }}"></script> #}
+{# <script src="{{ asset('/bundles/app/js/app.card_modal.js') }}"></script> #}
+{# <script src="{{ asset('/bundles/app/js/app.suggestions.js') }}"></script> #}
+{# <script src="{{ asset('/bundles/app/js/app.diff.js') }}"></script> #}
+	<script src="{{ asset('/bundles/app/js/app.smart_filter.js') }}"></script>
+	<script src="{{ asset('/bundles/app/js/app.deck.js') }}"></script>
+	<script src="{{ asset('/bundles/app/js/ui.deck.js') }}"></script>
+	<script type="text/javascript">
+	app.deck.json = {{ deck|json_encode|raw }};
+	</script>
 {% endblock %}
 
 {% block body %}
@@ -28,26 +25,8 @@ console.log(deck_json);
 <!-- Left-side Column -->
 <div class="col-md-6">
 
-<div id="deck">
-<!-- Identity and Stats -->
-<div class="row">
-	<div class="col-sm-3 hidden-xs">
-		<img id="img_identity" src="#empty" alt="Identity" class="img-responsive">
-	</div><!-- /.col-sm-3 -->
-	<div class="col-sm-9">
-		<h4 id="identity">Identity</h4>
-		<div id="influence"></div>
-		<div id="agendapoints"></div>
-		<div id="cardcount"></div>
-		<div id="latestpack"></div>
-	</div><!-- /.col-sm-9 -->
-</div><!-- /.row -->
-<!-- Identity and Stats -->
-
-<!-- Deck Content -->
-<div class="row" id="deck-content" style="margin-bottom:1em;min-height:300px">
-</div><!-- /#deck-content -->
-<!-- Deck Content -->
+<div id="deck" class="deck-loading">
+	<i class="fa fa-spinner fa-spin fa-5x"></i>
 </div>
 
 {% include 'AppBundle:Builder:table-suggestions.html.twig' %}
@@ -68,7 +47,7 @@ console.log(deck_json);
 	<button type="submit" id="btn-cancel-edits" class="btn btn-link">Cancel edits</button>
 </form>
 
-</div><!-- /#deck -->
+</div>
 <!-- Left-side Column -->
 
 <!-- Right-side Column -->

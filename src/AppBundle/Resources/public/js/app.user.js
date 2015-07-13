@@ -11,7 +11,7 @@ user.deferred = $.Deferred().always(function() {
 });
 
 /**
- * @memberOf app_user
+ * @memberOf user
  */
 user.query = function query() {
 	$.ajax(Routing.generate('user_info', user.params), {
@@ -29,7 +29,7 @@ user.query = function query() {
 };
 
 /**
- * @memberOf app_user
+ * @memberOf user
  */
 user.retrieve = function retrieve() {
 	if(localStorage) {
@@ -48,7 +48,7 @@ user.retrieve = function retrieve() {
 };
 
 /**
- * @memberOf app_user
+ * @memberOf user
  */
 user.wipe = function wipe() {
 	localStorage.removeItem('user');
@@ -56,7 +56,7 @@ user.wipe = function wipe() {
 };
 
 /**
- * @memberOf app_user
+ * @memberOf user
  */
 user.store = function store() {
 	localStorage.setItem('user', JSON.stringify(user.data));
@@ -64,7 +64,7 @@ user.store = function store() {
 };
 
 /**
- * @memberOf app_user
+ * @memberOf user
  */
 user.anonymous = function anonymous() {
 	user.wipe();
@@ -72,7 +72,7 @@ user.anonymous = function anonymous() {
 };
 
 /**
- * @memberOf app_user
+ * @memberOf user
  */
 user.update = function update() {
 	user.store();
@@ -88,7 +88,7 @@ user.update = function update() {
 };
 
 /**
- * @memberOf app_user
+ * @memberOf user
  */
 user.always = function always() {
 	// show ads if not donator

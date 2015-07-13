@@ -1,7 +1,7 @@
 (function app_tip(tip, $) {
 
 /**
- * @memberOf app_tip
+ * @memberOf tip
  */
 tip.display = function display(event) {
 	var code = $(this).data('code');
