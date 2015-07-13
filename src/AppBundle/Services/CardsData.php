@@ -30,6 +30,18 @@ class CardsData
 	public function replaceSymbols($text)
 	{
 		$map = array(
+			'[baratheon]' => '<span class="icon-baratheon"></span>',
+			'[intrigue]' => '<span class="icon-intrigue"></span>',
+			'[greyjoy]' => '<span class="icon-greyjoy"></span>',
+			'[lannister]' => '<span class="icon-lannister"></span>',
+			'[martell]' => '<span class="icon-martell"></span>',
+			'[military]' => '<span class="icon-military"></span>',
+			'[nightswatch]' => '<span class="icon-nightswatch"></span>',
+			'[power]' => '<span class="icon-power"></span>',
+			'[stark]' => '<span class="icon-stark"></span>',
+			'[targaryen]' => '<span class="icon-targaryen"></span>',
+			'[tyrell]' => '<span class="icon-tyrell"></span>',
+			'[unique]' => '<span class="icon-unique"></span>',
 		);
 
 		return str_replace(array_keys($map), array_values($map), $text);
@@ -72,7 +84,7 @@ class CardsData
 		}
 		return $lines;
 	}
-	
+
 	public function getPrimaryFactions()
 	{
 		$factions = $this->doctrine->getRepository('AppBundle:Faction')->findBy(array("is_primary" => TRUE), array("name" => "ASC"));
@@ -496,9 +508,9 @@ class CardsData
     public function get_reviews($card)
     {
         $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(array('card' => $card), array('nbVotes' => 'DESC'));
-        
+
         $response = [];
-        
+
         foreach($reviews as $review) {
             /* @var $review \AppBundle\Entity\Review */
             $user = $review->getUser();

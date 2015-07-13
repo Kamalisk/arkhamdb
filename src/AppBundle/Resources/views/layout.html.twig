@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
     {% if pagedescription is defined %}<meta name="description" content="{{ pagedescription }}">{% endif %}
-    
+
     <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Amiri:400italic,700italic,400,700|Julius+Sans+One' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -19,6 +19,7 @@
     <![endif]-->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.css">
     <link rel="stylesheet" href="{{ asset('/bundles/app/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('/bundles/app/css/icons.css') }}">
 	{% block stylesheets %}{% endblock %}
   </head>
   <body>
@@ -84,7 +85,7 @@
         {% endblock %}
       </div>
     </nav>
-  
+
 {% block body %}{% endblock %}
     <div id="push"></div>
   </div>
@@ -94,17 +95,17 @@
 {% block footer %}
 <div class="row">
     <div class="col-xs-12">
-    
+
     <ul class="list-inline">
     <li><a href="{{ path('about') }}">About</a></li>
     <li><a href="{{ path('apidoc') }}">API</a></li>
     <li><a href="{{ path('donators') }}">Donators</a> <span class="glyphicon glyphicon-gift donator" title="The Gracious Donator"></span></li>
     </ul>
-    
+
     <p>
     Designed and built by <a href="//twitter.com/alsciende">@alsciende</a>
     </p>
-    
+
     <p>
     Bug reports and Feature Requests on <a href="https://github.com/Alsciende/agot2db/issues">GitHub</a>
     </p>
@@ -112,19 +113,19 @@
     <p>
     Contribute by giving money on <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=4SB7QHB5XRN7Y">Paypal (€)</a> or <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=HHBUW2QYG6ZUC">Paypal ($)</a> or directly to <i>alsciende</i> (at) <i>icloud.com</i>.
     </p>
-    
+
     <p style="color:#333">
     The information presented on this site about A Game of Thrones: The Card Game Second Edition, both literal and graphical, is copyrighted by Fantasy Flight Games.
     This website is not produced, endorsed, supported, or affiliated with Fantasy Flight Games.
     </p>
-    
+
     <svg width="0" height="0" viewBox="0 0 677 601" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="nrdb_svg_hex">
  		<defs>
 			<symbol id="hex"><polygon points="623,302.91412353515625 480,550.5973510742188 194,550.5973510742188 51,302.91412353515625 194,55.23085021972656 480,55.23085021972656 623,302.91412353515625 "/></symbol>
 			<symbol id="rect"><rect x="0" y="0" width="677" height="601" fill="white" /></symbol>
 		</defs>
     </svg>
-    
+
     </div>
 </div>
 {% endblock %}
@@ -134,7 +135,7 @@
 
     <script src="{{ asset('/bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
@@ -149,13 +150,13 @@
 	var app = {};
 	moment.locale(window.navigator.language);
     </script>
-    
+
 	{% if app.environment == 'prod' %}
 		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 		{% include 'AppBundle::google-analytics.html.twig' %}
 	{% endif %}
-	
-	{% javascripts 
+
+	{% javascripts
 		'@AppBundle/Resources/public/libs/forerunnerdb.min.js'
 		'@AppBundle/Resources/public/libs/moment-timezone-with-data-2010-2020.min.js'
 		'@AppBundle/Resources/public/js/app.data.js'
@@ -165,7 +166,7 @@
 		'@AppBundle/Resources/public/js/app.ui.js' %}
 	<script src="{{ asset_url }}"></script>
 	{% endjavascripts %}
-		
+
 	{% block javascripts %}{% endblock %}
     </body>
 </html>
