@@ -49,3 +49,8 @@ api_set:
     requirements:
         _format: json|xml|xlsx|xls
         
+user_info:
+    pattern: /user_info
+    defaults:
+        _controller: AppBundle:User:info
+        

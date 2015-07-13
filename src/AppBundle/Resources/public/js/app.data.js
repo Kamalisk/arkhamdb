@@ -1,10 +1,12 @@
 (function app_data(data, $) {
 
-/*
+/** 
  * loads the database from local
  * sets up a Promise on all data loading/updating
+ * @memberOf app_data
  */
-this.load = function() {
+data.load = function load() {
+
 	var fdb = new ForerunnerDB();
 	data.db = fdb.db('agot2db');
 	
@@ -33,10 +35,11 @@ this.load = function() {
 	});		
 }
 
-/*
+/**
  * queries the server to update data
+ * @memberOf app_data
  */
-this.query = function() {
+data.query = function query() {
 	$.ajax({
 		url: Routing.generate('api_sets'),
 		success: data.parse_sets,
@@ -54,11 +57,12 @@ this.query = function() {
 	});
 };
 
-/*
+/**
  * called if all operations (load+update) succeed
  * deferred returns true if data has been updated
+ * @memberOf app_data
  */
-this.update_done = function(sets_updated, cards_updated) {
+data.update_done = function update_done(sets_updated, cards_updated) {
 	if(sets_updated || cards_updated) {
 		var message = "A new version of the data is available. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
 		var alert = $('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
@@ -67,11 +71,12 @@ this.update_done = function(sets_updated, cards_updated) {
 	app.data_loaded.fire();
 };
 
-/*
+/**
  * called if an operation (load+update) fails
  * deferred returns true if data has been loaded
+ * @memberOf app_data
  */
-this.update_fail = function(sets_loaded, sets_loaded) {
+data.update_fail = function update_fail(sets_loaded, sets_loaded) {
 	if(!sets_loaded || !cards_loaded) {
 		var message = "Unable to load the data. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
 		var alert = $('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
@@ -83,10 +88,11 @@ this.update_fail = function(sets_loaded, sets_loaded) {
 	}
 };
 
-/*
+/**
  * updates the database if necessary, from fetched data
+ * @memberOf app_data
  */
-this.update_collection = function(data, collection, lastModified, deferred) {
+data.update_collection = function update_collection(data, collection, lastModified, deferred) {
 	/*
 	 * we look for a row with last_modified equal or greater than lastModified
 	 * if we find one, then the database is up-to-date
@@ -114,18 +120,20 @@ this.update_collection = function(data, collection, lastModified, deferred) {
 	});
 }
 
-/*
+/**
  * handles the response to the ajax query for sets data
+ * @memberOf app_data
  */
-this.parse_sets = function(response, textStatus, jqXHR) {
+data.parse_sets = function parse_sets(response, textStatus, jqXHR) {
 	var lastModified = new Date(jqXHR.getResponseHeader('Last-Modified')).toISOString();
 	data.update_collection(response, data.sets, lastModified, data.dfd.sets);
 };
 
-/*
+/**
  * handles the response to the ajax query for the cards data
+ * @memberOf app_data
  */
-this.parse_cards = function(response, textStatus, jqXHR) {
+data.parse_cards = function parse_cards(response, textStatus, jqXHR) {
 	var lastModified = new Date(jqXHR.getResponseHeader('Last-Modified')).toISOString();
 	data.update_collection(response, data.cards, lastModified, data.dfd.cards);
 };

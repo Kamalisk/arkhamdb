@@ -1,6 +1,5 @@
 (function app_diff(diff, $) {
 
-
 // takes an array of strings and returns an object where each string of the array
 // is a key of the object and the value is the number of occurences of the string in the array
 function array_count(list) {
@@ -19,8 +18,9 @@ function array_count(list) {
 /**
  * contents is an array of content
  * content is a hash of pairs code-qty
+ * @memberOf app_diff
  */
-this.compute_simple = function (contents) {
+diff.compute_simple = function compute_simple(contents) {
 	
 	var ensembles = [];
 	for(var decknum=0; decknum<contents.length; decknum++) {

@@ -1,7 +1,7 @@
 (function app_user(user, $) {
 
-this.params = {};
-this.deferred = $.Deferred().always(function() {
+user.params = {};
+user.deferred = $.Deferred().always(function() {
 	if(user.data) {
 		user.update();
 	} else {
@@ -10,7 +10,10 @@ this.deferred = $.Deferred().always(function() {
 	user.always();
 });
 
-this.query = function () {
+/**
+ * @memberOf app_user
+ */
+user.query = function query() {
 	$.ajax(Routing.generate('user_info', user.params), {
 		cache: false,
 		dataType: 'json',
@@ -25,7 +28,10 @@ this.query = function () {
 	});
 };
 
-this.retrieve = function () {
+/**
+ * @memberOf app_user
+ */
+user.retrieve = function retrieve() {
 	if(localStorage) {
 		var timestamp = new Date(parseInt(localStorage.getItem('user_timestamp'),10));
 		var now = new Date();
@@ -41,22 +47,34 @@ this.retrieve = function () {
 	user.query();
 };
 
-this.wipe = function () {
+/**
+ * @memberOf app_user
+ */
+user.wipe = function wipe() {
 	localStorage.removeItem('user');
 	localStorage.removeItem('user_timestamp');
 };
 
-this.store = function () {
+/**
+ * @memberOf app_user
+ */
+user.store = function store() {
 	localStorage.setItem('user', JSON.stringify(user.data));
 	localStorage.setItem('user_timestamp', new Date().getTime());
 };
 
-this.anonymous = function() {
+/**
+ * @memberOf app_user
+ */
+user.anonymous = function anonymous() {
 	user.wipe();
 	$('#login').append('<ul class="dropdown-menu"><li><a href="'+Routing.generate('fos_user_security_login')+'">Login or Register</a></li></ul>');
 };
 
-this.update = function() {
+/**
+ * @memberOf app_user
+ */
+user.update = function update() {
 	user.store();
 	$('#login').addClass('dropdown').append('<ul class="dropdown-menu"><li><a href="'
 			+ Routing.generate('user_profile') 
@@ -69,7 +87,10 @@ this.update = function() {
 			+ '" onclick="app.user.wipe()">Jack out</a></li></ul>');
 };
 
-this.always = function() {
+/**
+ * @memberOf app_user
+ */
+user.always = function always() {
 	// show ads if not donator
 	if(user.data && user.data.donation > 0) return;
 

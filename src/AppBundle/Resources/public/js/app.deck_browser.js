@@ -1,5 +1,5 @@
 (function app_deck_browser(deck_browser, $) {
-	
+
 var images = null;
 
 function switch_left() {
@@ -42,7 +42,10 @@ function focus_index(index) {
 	});
 }
 
-this.update = function() {
+/**
+ * @memberOf app_deck_browser
+ */
+deck_browser.update = function update() {
 
 	images = [ Identity.imagesrc ];
 	app.data.cards({

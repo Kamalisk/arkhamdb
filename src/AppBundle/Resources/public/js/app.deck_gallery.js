@@ -1,8 +1,11 @@
 (function app_deck_gallery(deck_gallery, $) {
-	
+
 var images = null;
 
-this.update = function() {
+/**
+ * @memberOf app_deck_gallery
+ */
+deck_gallery.update = function update() {
 
 	images = [ Identity.imagesrc ];
 	qtys = [ 1 ];

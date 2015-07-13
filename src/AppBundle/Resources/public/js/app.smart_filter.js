@@ -2,13 +2,19 @@
 
 var SmartFilterQuery = [];
 
-this.get_query = function(FilterQuery) {
+/**
+ * @memberOf app_smart_filter
+ */
+smart_filter.get_query =  function get_query(FilterQuery) {
 	var query = $.merge([], SmartFilterQuery);
 	if(FilterQuery) query.push(FilterQuery);
 	return query;
 };
 
-this.handler = function (value, callback) {
+/**
+ * @memberOf app_smart_filter
+ */
+smart_filter.handler =  function handler(value, callback) {
 	var conditions = filterSyntax(value);
 	SmartFilterQuery = [];
 

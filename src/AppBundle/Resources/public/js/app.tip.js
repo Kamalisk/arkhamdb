@@ -1,6 +1,9 @@
 (function app_tip(tip, $) {
-	
-this.display = function(event) {
+
+/**
+ * @memberOf app_tip
+ */
+tip.display = function display(event) {
 	var code = $(this).data('code');
 	var card = app.data.cards.findById(code);
 	if (!card) return;

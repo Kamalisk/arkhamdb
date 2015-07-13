@@ -2,19 +2,28 @@
 	
 var modal = null;
 
-this.create_element = function() {
+/**
+ * @memberOf app_card_modal
+ */
+card_modal.create_element = function create_element() {
 	modal = $('<div class="modal" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3 class="modal-title card-name">Modal title</h3><div class="row"><div class="col-sm-12 text-center"><div class="btn-group modal-qty" data-toggle="buttons"></div></div></div></div><div class="modal-body"><div class="row"><div class="col-sm-6 modal-image"></div><div class="col-sm-6 modal-info"></div></div></div><div class="modal-footer"><a role="button" href="#" class="btn btn-default card-modal-link">Go to card page</a><button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div></div></div></div>');
 	modal.appendTo('body');
 };
 
-this.display_modal = function(event, element) {
+/**
+ * @memberOf app_card_modal
+ */
+card_modal.display_modal = function display_modal(event, element) {
 	event.preventDefault();
 	$(element).qtip('hide');
 	var code = $(element).data('index') || $(element).closest('.card-container').data('index');
 	fill_modal(code);
 };
 
-this.typeahead = function (event, data) {
+/**
+ * @memberOf app_card_modal
+ */
+card_modal.typeahead = function typeahead(event, data) {
 	var card = app.data.cards({name:data.value}).first();
 	fill_modal(card.code);
 	$('#cardModal').modal('show');

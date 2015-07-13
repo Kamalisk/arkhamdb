@@ -1,13 +1,16 @@
 (function app_suggestions(suggestions, $) {
 	
-this.codesFromindex = [];
-this.matrix = [];
-this.indexFromCodes = {};
-this.current = [];
-this.exclusions = [];
-this.number = 3;
+suggestions.codesFromindex = [];
+suggestions.matrix = [];
+suggestions.indexFromCodes = {};
+suggestions.current = [];
+suggestions.exclusions = [];
+suggestions.number = 3;
 
-this.query = function(side) {
+/**
+ * @memberOf app_suggestions
+ */
+suggestions.query = function query(side) {
 	suggestions.promise = $.ajax('/web/'+side+'.json', {
 		dataTYpe: 'json',
 		success: function (data) {
@@ -30,7 +33,10 @@ this.query = function(side) {
 	suggestions.promise.done(suggestions.compute);
 };
 
-this.compute = function() {
+/**
+ * @memberOf app_suggestions
+ */
+suggestions.compute = function compute() {
 	if(suggestions.number) 
 	{
 	
@@ -76,7 +82,10 @@ this.compute = function() {
 	suggestions.show();
 };
 
-this.show = function() {
+/**
+ * @memberOf app_suggestions
+ */
+suggestions.show = function show() {
 	var table = $('#table-suggestions');
 	var tbody = table.children('tbody');
 	tbody.empty();
@@ -99,7 +108,10 @@ this.show = function() {
 	}
 };
 
-this.div = function(record) {
+/**
+ * @memberOf app_suggestions
+ */
+suggestions.div = function div(record) {
 	var faction = record.faction_code;
 	var influ = "";
 	for (var i = 0; i < record.factioncost; i++)
@@ -134,12 +146,18 @@ this.div = function(record) {
 	return div;
 };
 
-this.exclude = function(code) {
+/**
+ * @memberOf app_suggestions
+ */
+suggestions.exclude = function exclude(code) {
 	suggestions.exclusions.push(suggestions.indexFromCodes[code]);
 	suggestions.compute();
 };
 
-this.pick = function(event) {
+/**
+ * @memberOf app_suggestions
+ */
+suggestions.pick = function pick(event) {
 	InputByTitle = false;
 	var input = this;
 	$(input).closest('tr').animate({

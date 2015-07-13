@@ -1,10 +1,15 @@
 (function app_fuzzy_search(fuzzy_search, $) {
-	
+
 var types = ['agenda','asset','operation','upgrade','operation','barrier','code gate','sentry','other','event','hardware','resource','icebreaker','program'];
-// takes a card name and fuzzy-searches it in the card db
-// the input can include a qty indicator like 3x
-// returns an array of objects Card with an additional key "qty"
-this.lookup = function(input, max_results) {
+var dict = [];
+
+/**
+ * takes a card name and fuzzy-searches it in the card db
+ * the input can include a qty indicator like 3x
+ * returns an array of objects Card with an additional key "qty"
+ * @memberOf app_fuzzy_search
+ */
+fuzzy_search.lookup = function lookup(input, max_results) {
     if(max_results == null) max_results = 5;
     var qty = null, name = input.replace(/\(.*\)/, '').replace(/[^0-9\.\-A-Za-z\u00C0-\u024F]+/g, ' ').replace(/\s+/, ' ').trim().toLowerCase();
 	if(name.match(/^(\d+)x?\s*(.*)/)) {
@@ -42,7 +47,9 @@ this.lookup = function(input, max_results) {
     return { qty: qty, cards: options };
 };
 
-var dict = [];
+/**
+ * @memberOf app_fuzzy_search
+ */
 app.data_loaded.add(function() {
 	app.data.cards().each(function (record, recordnumber) {
         record.token = record.title.replace(/[^0-9\.\-A-Za-z\u00C0-\u017F]+/g, ' ').trim().toLowerCase();

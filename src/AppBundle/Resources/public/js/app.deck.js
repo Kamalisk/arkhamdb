@@ -1,30 +1,51 @@
 (function app_deck(deck, $) {
 
-this.init = function (deck_json) {
+/**
+ * @memberOf app_deck
+ */
+deck.init = function init(deck_json) {
 	
 }
 
-this.display = function (container, sort, nb_columns) {
+/**
+ * @memberOf app_deck
+ */
+deck.display = function display(container, sort, nb_columns) {
 	
 }
 
-this.set_card_copies = function (card_code, nb_copies) {
+/**
+ * @memberOf app_deck
+ */
+deck.set_card_copies = function set_card_copies(card_code, nb_copies) {
 	
 }
 
-this.get_export = function (format) {
+/**
+ * @memberOf app_deck
+ */
+deck.get_export = function get_export(format) {
 	
 }
 
-this.get_problem = function () {
+/**
+ * @memberOf app_deck
+ */
+deck.get_problem = function get_problem() {
 	
 }
 
-this.autosave = function () {
+/**
+ * @memberOf app_deck
+ */
+deck.autosave = function autosave() {
 	
 }
 
-this.load_snapshot = function () {
+/**
+ * @memberOf app_deck
+ */
+deck.load_snapshot = function load_snapshot() {
 	
 }
 	

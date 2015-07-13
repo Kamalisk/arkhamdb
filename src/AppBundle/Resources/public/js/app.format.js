@@ -1,14 +1,23 @@
 (function app_format(format, $) {
 	
-this.traits = function(card) {
+/**
+ * @memberOf app_format
+ */
+format.traits = function traits(card) {
 	return card.traits || '';
 };
 
-this.name = function(card) {
+/**
+ * @memberOf app_format
+ */
+format.name = function name(card) {
 	return (card.is_unique ? '<span class="card-unique"></span> ' : "") + card.name;
 }
 
-this.pack_faction = function(card) {
+/**
+ * @memberOf app_format
+ */
+format.pack_faction = function pack_faction(card) {
 	var text = card.pack_name + ' #' + card.position + '. ';
 	text += card.faction_name + '. ';
 	if(card.is_loyal) text += 'Loyal. ';
@@ -16,7 +25,10 @@ this.pack_faction = function(card) {
 	return text;
 }
 
-this.info = function(card) {
+/**
+ * @memberOf app_format
+ */
+format.info = function info(card) {
 	var text = '<span class="card-type">'+card.type_name+'. </span>';
 	switch(card.type_code) {
 	case 'character':
@@ -42,7 +54,10 @@ this.info = function(card) {
 	return text;
 };
 
-this.text = function(card) {
+/**
+ * @memberOf app_format
+ */
+format.text = function text(card) {
 	var text = card.text;
 	
 	text = text.split("\n").join('</p><p>');

@@ -2,7 +2,10 @@
 	
 var deck = null, initial_size = 0, draw_count = 0, container = null;
 
-this.reset = function() {
+/**
+ * @memberOf app_draw_simulator
+ */
+draw_simulator.reset = function reset() {
 	if(container) container.empty();
 	deck = null;
 	initial_size = draw_count = 0;
@@ -10,7 +13,11 @@ this.reset = function() {
 	check_draw_type();
 	$('#draw-simulator-clear').attr('disabled', true);
 };
-this.init = function() {
+
+/**
+ * @memberOf app_draw_simulator
+ */
+draw_simulator.init = function init() {
 	container = $('#table-draw-simulator-content');
 	deck = [];
 	check_draw_type();
@@ -77,7 +84,10 @@ function do_draw(draw, draw_type) {
 	update_odds();
 }
 
-this.handle_click = function(event) {
+/**
+ * @memberOf app_draw_simulator
+ */
+draw_simulator.handle_click = function handle_click(event) {
 
 	event.preventDefault();
 	var draw_type = false;
@@ -116,7 +126,10 @@ this.handle_click = function(event) {
 
 };
 
-this.toggle_opacity = function(event) {
+/**
+ * @memberOf app_draw_simulator
+ */
+draw_simulator.toggle_opacity = function toggle_opacity(event) {
 	$(this).css('opacity', 1.5 - parseFloat($(this).css('opacity')));
 };
 
