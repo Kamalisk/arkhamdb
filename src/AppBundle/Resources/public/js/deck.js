@@ -1,7 +1,3 @@
-var InputByTitle = false;
-var DisplayColumns = 1;
-var CoreSets = 3;
-var Buttons_Behavior = 'cumulative';
 var Snapshots = []; // deck contents autosaved
 var Autosave_timer = null;
 var Deck_changed_since_last_autosave = false;
@@ -76,9 +72,7 @@ $(function() {
 
 
 	
-	$('thead').on({
-		click : handle_header_click
-	}, 'a[data-sort]');
+	
 	$('#cardModal').on({
 		keypress : function(event) {
 			var num = parseInt(event.which, 10) - 48;
@@ -236,21 +230,6 @@ function deck_autosave() {
 		}
 	});
 }
-function handle_header_click(event) {
-	event.preventDefault();
-	var new_sort = $(this).data('sort');
-	if (Sort == new_sort) {
-		Order *= -1;
-	} else {
-		Sort = new_sort;
-		Order = 1;
-	}
-	$(this).closest('tr').find('th').removeClass('dropup').find('span.caret')
-			.remove();
-	$(this).after('<span class="caret"></span>').closest('th').addClass(
-			Order > 0 ? '' : 'dropup');
-	refresh_collection();
-}
 function get_deck_content() {
 	var deck_content = {};
 	app.data.cards({
@@ -261,96 +240,4 @@ function get_deck_content() {
 		deck_content[record.code] = record.indeck;
 	});
 	return deck_content;
-}
-function handle_quantity_change(event) {
-	var index = $(this).closest('.card-container').data('index')
-			|| $(this).closest('div.modal').data('index');
-	var in_collection = $(this).closest('#collection').size();
-	var quantity = parseInt($(this).val(), 10);
-	$(this).closest('.card-container')[quantity ? "addClass" : "removeClass"]('in-deck');
-	var cards = app.data.get_cards_by_code(index);
-	cards.update({indeck : quantity});
-	var card = cards.first();
-	if (card.type_code == "identity") {
-		if (Identity.faction != card.faction) {
-			// change of faction, reset agendas
-			app.data.cards({
-				indeck : {
-					'gt' : 0
-				},
-				type_code : 'agenda'
-			}).update({
-				indeck : 0
-			});
-			// also automatically change tag of deck
-			$('input[name=tags_]').val(
-					$('input[name=tags_]').val().split(' ').map(function (tag) {
-						return tag === Identity.faction_code ? card.faction_code : tag;
-					}).join(' ')
-			);
-		}
-		app.data.cards({
-			indeck : {
-				'gt' : 0
-			},
-			type_code : 'identity',
-			code : {
-				'!==' : index
-			}
-		}).update({
-			indeck : 0
-		});
-	}
-	update_deck();
-	if (card.type_code == "identity") {
-		app.draw_simulator.reset();
-		$.each(CardDivs, function(nbcols, rows) {
-			if (rows)
-				$.each(rows, function(index, row) {
-					row.removeClass("disabled").find('label').removeClass(
-							"disabled").find('input[type=radio]').attr(
-							"disabled", false);
-				});
-		});
-		refresh_collection();
-	} else {
-		$.each(CardDivs, function(nbcols, rows) {
-			// rows is an array of card rows
-			if (rows && rows[index]) {
-				// rows[index] is the card row of our card
-				rows[index].find('input[name="qty-' + index + '"]').each(
-					function(i, element) {
-						if ($(element).val() != quantity) {
-							$(element).prop('checked', false).closest(
-							'label').removeClass('active');
-						} else {
-							if(!in_collection) {
-								$(element).prop('checked', true).closest(
-								'label').addClass('active');
-							}
-						}
-					}
-				);
-			}
-		});
-	}
-	$('div.modal').modal('hide');
-	app.suggestions.compute();
-
-	Deck_changed_since_last_autosave = true;
-}
-
-function update_core_sets() {
-	CardDivs = [ null, {}, {}, {} ];
-	app.data.cards({
-		set_code : 'core'
-	}).each(function(record) {
-		var max_qty = Math.min(record.quantity * CoreSets, 3);
-		if (record.type_code == "identity" || record.limited)
-			max_qty = 1;
-		if(Identity.faction_code == "neutral") max_qty = 9;
-		app.data.cards(record.___id).update({
-			maxqty : max_qty
-		});
-	});
 }

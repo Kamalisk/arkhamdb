@@ -57,8 +57,8 @@ ui.remove_melee_titles = function remove_melee_titles() {
 ui.set_max_qty = function set_max_qty() {
 	app.data.cards.find().forEach(function(record) {
 		var max_qty = 3;
-		if (record.set_code == 'core')
-			max_qty = Math.min(record.quantity * CoreSets, 3);
+		if (record.pack_code == 'core')
+			max_qty = Math.min(record.quantity * Config['core-set'], 3);
 		if (record.type_code == "plot")
 			max_qty = record.plotLimit;
 		if (record.type_code == "agenda")
@@ -323,6 +323,7 @@ ui.build_pack_selector = function build_pack_selector() {
 			'$exists': true
 		}
 	}).forEach(function(record) {
+		console.log(record);
 		// checked or unchecked ? checked by default
 		var checked = true;
 		// if not yet available, uncheck pack
@@ -502,8 +503,11 @@ ui.refresh_deck = function refresh_deck() {
  * @memberOf ui
  */
 ui.on_dom_loaded = function on_dom_loaded() {
+	console.log('ui.init_config_buttons');
 	ui.init_config_buttons();
+	console.log('ui.setup_event_handlers');
 	ui.setup_event_handlers();
+	console.log('ui.on_dom_loaded end')
 };
 
 /**
@@ -511,9 +515,13 @@ ui.on_dom_loaded = function on_dom_loaded() {
  * @memberOf ui
  */
 ui.on_data_loaded = function on_data_loaded() {
+	console.log('ui.remove_melee_titles')
 	ui.remove_melee_titles();
+	console.log('app.deck.init')
 	app.deck.init();
+	console.log('ui.set_max_qty')
 	ui.set_max_qty();
+	console.log('ui.on_data_loaded end')
 };
 
 /**
@@ -521,12 +529,19 @@ ui.on_data_loaded = function on_data_loaded() {
  * @memberOf ui
  */
 ui.on_all_loaded = function on_all_loaded() {
+	console.log('ui.update_list_template')
 	ui.update_list_template();
+	console.log('ui.build_faction_selector')
 	ui.build_faction_selector();
+	console.log('ui.build_type_selector')
 	ui.build_type_selector();
+	console.log('ui.build_pack_selector')
 	ui.build_pack_selector();
+	console.log('ui.refresh_deck')
 	ui.refresh_deck();
+	console.log('ui.refresh_list')
 	ui.refresh_list();
+	console.log('ui.on_all_loaded end')
 };
 
 ui.read_from_storage();

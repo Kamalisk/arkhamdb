@@ -13,7 +13,8 @@ var date_creation,
 	faction_code,
 	faction_name,
 	unsaved,
-	user_id;
+	user_id,
+	card_line_tpl = _.template('<div><%= card.indeck %>x <a href="<%= card.url %>" class="card card-tooltip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a> <i>(<%= card.pack_name %>)</i></div>');
 	
 /**
  * @memberOf deck
@@ -95,7 +96,7 @@ deck.display = function display(container, sort, nb_columns) {
 
 		$('<h5>').text(cards[0][displayLabel]).appendTo(deck_content);
 		cards.forEach(function (card) {
-			$('<a>').text(card.name).appendTo(deck_content);
+			$(card_line_tpl({card:card})).appendTo(deck_content);
 		})
 	})
 	
