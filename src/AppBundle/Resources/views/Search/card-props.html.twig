@@ -5,9 +5,9 @@
 {% endif %}
 {% if card.type_code == 'character' %}
 	STR: {{ macros.integer_or_x(card.strength) }}.
-	{% if card.isMilitary %}<span class="color-military">[military]</span>{% endif %}
-	{% if card.isIntrigue %}<span class="color-intrigue">[intrigue]</span>{% endif %}
-	{% if card.isPower %}<span class="color-power">[power]</span>{% endif %}
+	{% if card.isMilitary %}<span class="color-military icon-military" title="Military"></span>{% endif %}
+	{% if card.isIntrigue %}<span class="color-intrigue icon-intrigue" title="Intrigue"></span>{% endif %}
+	{% if card.isPower %}<span class="color-power icon-power" title="Power"></span>{% endif %}
 {% endif %}
 {% if card.type_code == 'plot' %}
 	Income: {{ macros.integer_or_x(card.income) }}.

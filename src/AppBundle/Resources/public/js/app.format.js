@@ -1,5 +1,5 @@
 (function app_format(format, $) {
-	
+
 /**
  * @memberOf format
  */
@@ -11,7 +11,7 @@ format.traits = function traits(card) {
  * @memberOf format
  */
 format.name = function name(card) {
-	return (card.is_unique ? '<span class="card-unique"></span> ' : "") + card.name;
+	return (card.isUnique ? '<span class="icon-unique"></span> ' : "") + card.name;
 }
 
 /**
@@ -34,9 +34,9 @@ format.info = function info(card) {
 	case 'character':
 		text += 'Cost: '+(card.cost != null ? card.cost : 'X')+'. ';
 		text += 'STR: '+(card.strength != null ? card.strength : 'X')+'. '
-		if(card.is_military) text += '<span class="color-military">[military]</span>';
-		if(card.is_intrigue) text += '<span class="color-intrigue">[intrigue]</span>';
-		if(card.is_power) text += '<span class="color-power">[power]</span>';
+		if(card.isMilitary) text += '<span class="color-military icon-military" title="Military"></span> ';
+		if(card.isIntrigue) text += '<span class="color-intrigue icon-intrigue" title="Intrigue"></span> ';
+		if(card.isPower) text += '<span class="color-power icon-power" title="Power"></span> ';
 		break;
 	case 'attachment':
 	case 'location':
@@ -59,7 +59,7 @@ format.info = function info(card) {
  */
 format.text = function text(card) {
 	var text = card.text || '';
-	
+
 	text = text.split("\n").join('</p><p>');
 	return '<p>'+text+'</p>';
 };

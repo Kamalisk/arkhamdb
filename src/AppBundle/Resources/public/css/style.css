@@ -25,14 +25,6 @@ body {
 .card-flavor {
 	font-style: italic;
 }
-.card-unique {
-	font-weight: 400;
-}
-.card-unique::after {
-	/* circled plus */
-	content: "\2295";
-}
-
 .card-flavor cite {
 	white-space: nowrap;
 }
@@ -40,8 +32,6 @@ body {
 	/* en dash followed by non-breaking zero-width space */
 	content: "\2013\FEFF";
 }
-
-
 
 .color-military {
 	color: #c8232a;
