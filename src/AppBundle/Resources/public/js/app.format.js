@@ -59,7 +59,7 @@ format.info = function info(card) {
  */
 format.text = function text(card) {
 	var text = card.text || '';
-
+	text = text.replace(/\[(\w+)\]/, '<span class="icon-$1"></span>')
 	text = text.split("\n").join('</p><p>');
 	return '<p>'+text+'</p>';
 };
