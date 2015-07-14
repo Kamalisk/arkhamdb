@@ -74,22 +74,19 @@ ui.set_max_qty = function set_max_qty() {
  * @memberOf ui
  */
 ui.build_faction_selector = function build_faction_selector() {
-	/*
-	 $('[data-filter=faction_code]').empty();
-	$.each(app.data.cards().distinct("faction_code").sort(
-			function(a, b) {
-				return b === "neutral" ? -1 : a === "neutral" ? 1 : a < b ? -1
-						: a > b ? 1 : 0;
-			}), function(index, record) {
-		var example = app.data.cards({"faction_code": record}).first();
-		var faction = example.faction;
-		var label = $('<label class="btn btn-default btn-sm" data-code="' + record
-				+ '" title="'+faction+'"><input type="checkbox" name="' + record
-				+ '"><img src="'
-				+ Url_FactionImage.replace('xxx', record)
-				+ '" style="height:12px" alt="'+record+'"></label>');
+	$('[data-filter=faction_code]').empty();
+	var faction_codes = app.data.cards.distinct('faction_code').sort();
+	var neutral_index = faction_codes.indexOf('neutral');
+	faction_codes.splice(neutral_index, 1);
+	faction_codes.unshift('neutral');
+	
+	faction_codes.forEach(function(faction_code) {
+		var example = app.data.cards.find({"faction_code": faction_code})[0];
+		var label = $('<label class="btn btn-default btn-sm" data-code="'
+				+ faction_code + '" title="'+example.faction_name+'"><input type="checkbox" name="' + faction_code
+				+ '"><span class="icon-' + faction_code + '"></span></label>');
 		if(Modernizr.touch) {
-			label.append(' '+faction);
+			label.append(' '+example.faction_name);
 			label.addClass('btn-block');
 		} else {
 			label.tooltip({container: 'body'});
@@ -97,10 +94,6 @@ ui.build_faction_selector = function build_faction_selector() {
 		$('[data-filter=faction_code]').append(label);
 	});
 	$('[data-filter=faction_code]').button();
-	$('[data-filter=faction_code]').children('label[data-code='+Identity.faction_code+']').each(function(index, elt) {
-		$(elt).button('toggle');
-	});
-	 */
 }
 
 /**
@@ -108,16 +101,14 @@ ui.build_faction_selector = function build_faction_selector() {
  * @memberOf ui
  */
 ui.build_type_selector = function build_type_selector() {
-	/*
-	 $('[data-filter=type_code]').empty();
-	$.each(app.data.cards().distinct("type_code").sort(), function(index, record) {
-		var example = app.data.cards({"type_code": record}).first();
+	$('[data-filter=type_code]').empty();
+	app.data.cards.distinct('type_code').sort().forEach(function(type_code) {
+		var example = app.data.cards.find({"type_code": type_code})[0];
 		var label = $('<label class="btn btn-default btn-sm" data-code="'
-				+ record + '" title="'+example.type+'"><input type="checkbox" name="' + record
-				+ '"><img src="' + Url_TypeImage.replace('xxx', record)
-				+ '" style="height:12px" alt="'+record+'"></label>');
+				+ type_code + '" title="'+example.type_name+'"><input type="checkbox" name="' + type_code
+				+ '"><span class="icon-' + type_code + '"></span></label>');
 		if(Modernizr.touch) {
-			label.append(' '+example.type);
+			label.append(' '+example.type_name);
 			label.addClass('btn-block');
 		} else {
 			label.tooltip({container: 'body'});
@@ -125,10 +116,67 @@ ui.build_type_selector = function build_type_selector() {
 		$('[data-filter=type_code]').append(label);
 	});
 	$('[data-filter=type_code]').button();
-	$('[data-filter=type_code]').children('label:first-child').each(function(index, elt) {
-		$(elt).button('toggle');
+}
+
+/**
+ * builds the pack selector
+ * @memberOf ui
+ */
+ui.build_pack_selector = function build_pack_selector() {
+	$('[data-filter=pack_code]').empty();
+	app.data.sets.find({
+		name: {
+			'$exists': true
+		}
+	}).forEach(function(record) {
+		console.log(record);
+		// checked or unchecked ? checked by default
+		var checked = true;
+		// if not yet available, uncheck pack
+		if(record.available === "") checked = false;
+		// if user checked it previously, check pack
+		if(localStorage && localStorage.getItem('set_code_' + record.code) !== null) checked = true;
+		// if pack used by cards in deck, check pack
+		var cards = app.data.cards.find({
+			pack_code: record.code,
+			indeck: {
+				'$gt': 0
+			}
+		});
+		if(cards.length) checked = true;
+
+		$('<li><a href="#"><label><input type="checkbox" name="' + record.code + '"' + (checked ? ' checked="checked"' : '') + '>' + record.name + '</label></a></li>').appendTo('[data-filter=pack_code]');
 	});
-	 */
+}
+
+/**
+ * @memberOf ui
+ */
+ui.init_selectors = function init_selectors() {
+	$('[data-filter=faction_code]').find('input[name=neutral]').prop("checked", true).parent().addClass('active');
+	$('[data-filter=faction_code]').find('input[name='+app.deck.get_faction_code()+']').prop("checked", true).parent().addClass('active');
+	var minor_faction_code = app.deck.get_minor_faction_code();
+	if(minor_faction_code) $('[data-filter=faction_code]').find('input[name='+minor_faction_code+']').prop("checked", true).parent().addClass('active');
+	
+	$('[data-filter=type_code]').find('input[name=character]').prop("checked", true).parent().addClass('active');
+}
+
+function uncheck_all_others() {
+	$(this).closest('[data-filter]').find("input[type=checkbox]").prop("checked",false);
+	$(this).children('input[type=checkbox]').prop("checked", true).trigger('change');
+}
+
+function check_all_others() {
+	$(this).closest('[data-filter]').find("input[type=checkbox]").prop("checked",true);
+	$(this).children('input[type=checkbox]').prop("checked", false);
+}
+
+function uncheck_all_active() {
+	$(this).closest('[data-filter]').find("label.active").button('toggle');
+}
+
+function check_all_inactive() {
+	$(this).closest('[data-filter]').find("label:not(.active)").button('toggle');
 }
 
 /**
@@ -147,7 +195,7 @@ ui.on_click_filter = function on_click_filter(event) {
 		}
 		event.stopPropagation();
 	} else {
-		if (!event.shiftKey && Buttons_Behavior === 'exclusive' || event.shiftKey && Buttons_Behavior === 'cumulative') {
+		if (!event.shiftKey && Config['buttons-behavior'] === 'exclusive' || event.shiftKey && Config['buttons-behavior'] === 'cumulative') {
 			if (!event.altKey) {
 				uncheck_all_active.call(this);
 			} else {
@@ -184,7 +232,6 @@ ui.on_submit_form = function on_submit_form(event) {
  * @param event
  */
 ui.on_config_change = function on_config_change(event) {
-
 	var name = $(this).attr('name');
 	var type = $(this).prop('type');
 	switch(type) {
@@ -198,7 +245,6 @@ ui.on_config_change = function on_config_change(event) {
 		break;
 	}
 	ui.refresh_list();
-
 }
 
 /**
@@ -219,43 +265,6 @@ ui.on_table_sort_click = function on_table_sort_click(event) {
 	$(this).after('<span class="caret"></span>').closest('th').addClass(SortOrder > 0 ? '' : 'dropup');
 
 	ui.refresh_list();
-}
-
-/**
- * sets up event handlers ; dataloaded not fired yet
- * @memberOf ui
- */
-ui.setup_event_handlers = function setup_event_handlers() {
-
-	$('[data-filter]').on({
-		change : ui.refresh_list,
-		click : ui.on_click_filter
-	}, 'label');
-
-	$('#filter-text').on('input', ui.on_input_smartfilter);
-
-	$('#save_form').on('submit', ui.on_submit_form);
-
-	$('#btn-save-as-copy').on('click', function(event) {
-		$('#deck-save-as-copy').val(1);
-	});
-
-	$('#btn-cancel-edits').on('click', function(event) {
-		var edits = $.grep(Snapshots, function (snapshot) {
-			return snapshot.saved === false;
-		});
-		if(edits.length) {
-			var confirmation = confirm("This operation will revert the changes made to the deck since "+edits[edits.length-1].date_creation.calendar()+". The last "+(edits.length > 1 ? edits.length+" edits" : "edit")+" will be lost. Do you confirm?");
-			if(!confirmation) return false;
-		}
-		$('#deck-cancel-edits').val(1);
-	});
-	
-	$('#config-options').on('change', 'input', ui.on_config_change);
-	$('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
-	$('#cardModal').on('change', 'input[type=radio]', ui.on_modal_quantity_change);
-	
-	$('thead').on('click', 'a[data-sort]', ui.on_table_sort_click);
 }
 
 /**
@@ -313,34 +322,40 @@ ui.on_quantity_change = function on_quantity_change(code, quantity) {
 
 
 /**
- * builds the pack selector
+ * sets up event handlers ; dataloaded not fired yet
  * @memberOf ui
  */
-ui.build_pack_selector = function build_pack_selector() {
-	$('[data-filter=pack_code]').empty();
-	app.data.sets.find({
-		name: {
-			'$exists': true
-		}
-	}).forEach(function(record) {
-		console.log(record);
-		// checked or unchecked ? checked by default
-		var checked = true;
-		// if not yet available, uncheck pack
-		if(record.available === "") checked = false;
-		// if user checked it previously, check pack
-		if(localStorage && localStorage.getItem('set_code_' + record.code) !== null) checked = true;
-		// if pack used by cards in deck, check pack
-		var cards = app.data.cards.find({
-			pack_code: record.code,
-			indeck: {
-				'$gt': 0
-			}
-		});
-		if(cards.length) checked = true;
+ui.setup_event_handlers = function setup_event_handlers() {
 
-		$('<li><a href="#"><label><input type="checkbox" name="' + record.code + '"' + (checked ? ' checked="checked"' : '') + '>' + record.name + '</label></a></li>').appendTo('[data-filter=pack_code]');
+	$('[data-filter]').on({
+		change : ui.refresh_list,
+		click : ui.on_click_filter
+	}, 'label');
+
+	$('#filter-text').on('input', ui.on_input_smartfilter);
+
+	$('#save_form').on('submit', ui.on_submit_form);
+
+	$('#btn-save-as-copy').on('click', function(event) {
+		$('#deck-save-as-copy').val(1);
 	});
+
+	$('#btn-cancel-edits').on('click', function(event) {
+		var edits = $.grep(Snapshots, function (snapshot) {
+			return snapshot.saved === false;
+		});
+		if(edits.length) {
+			var confirmation = confirm("This operation will revert the changes made to the deck since "+edits[edits.length-1].date_creation.calendar()+". The last "+(edits.length > 1 ? edits.length+" edits" : "edit")+" will be lost. Do you confirm?");
+			if(!confirmation) return false;
+		}
+		$('#deck-cancel-edits').val(1);
+	});
+	
+	$('#config-options').on('change', 'input', ui.on_config_change);
+	$('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
+	$('#cardModal').on('change', 'input[type=radio]', ui.on_modal_quantity_change);
+	
+	$('thead').on('click', 'a[data-sort]', ui.on_table_sort_click);
 }
 
 /**
@@ -537,6 +552,8 @@ ui.on_all_loaded = function on_all_loaded() {
 	ui.build_type_selector();
 	console.log('ui.build_pack_selector')
 	ui.build_pack_selector();
+	console.log('ui.init_selectors')
+	ui.init_selectors();
 	console.log('ui.refresh_deck')
 	ui.refresh_deck();
 	console.log('ui.refresh_list')

@@ -12,7 +12,6 @@ var date_creation,
 	tags,
 	faction_code,
 	faction_name,
-	agenda_code,
 	unsaved,
 	user_id,
 	header_tpl = _.template('<h5><%= name %> (<%= quantity %>)</h5>'),
@@ -44,7 +43,14 @@ deck.init = function init() {
 			app.data.cards.updateById(code, {indeck: slots[code]});
 		}
 	}
-	agenda = deck.get_agenda();
+}
+
+/**
+ * @memberOf deck
+ * @returns
+ */
+deck.get_faction_code = function get_faction_code() {
+	return faction_code;
 }
 
 /**
@@ -54,11 +60,8 @@ deck.get_agenda = function get_agenda() {
 	var result = app.data.cards.find({
 		indeck: {
 			'$gt': 0
-		}
-	}, {
-		'$elemMatch': {
-			type_code: 'agenda'
-		}
+		},
+		type_code: 'agenda'
 	});
 	return result.length ? result[0] : null;
 }
@@ -148,17 +151,11 @@ deck.load_snapshot = function load_snapshot() {
 }
 
 /**
- * returns true if the deck can include the card as parameter
  * @memberOf deck
+ * @returns
  */
-deck.can_include_card = function can_include_card(card) {
-	// neutral card => yes
-	if(card.faction_code === 'neutral') return true;
-	// in-house card => yes
-	if(card.faction_code === faction_code) return true;
-	// out-of-house and loyal => no
-	if(card.isLoyal) return false;
-	
+deck.get_minor_faction_code = function get_minor_faction_code() {
+	var agenda = deck.get_agenda();
 	// special case for the Core Set Banners
 	var banners_core_set = {
 		'01198': 'baratheon',
@@ -170,9 +167,28 @@ deck.can_include_card = function can_include_card(card) {
 		'01204': 'targaryen',
 		'01205': 'tyrell'
 	};
-	if(banners_core_set[agenda.code] && banners_core_set[agenda.code] === card.faction_code) return true;
+	return banners_core_set[agenda.code];
+}
+
+/**
+ * returns true if the deck can include the card as parameter
+ * @memberOf deck
+ */
+deck.can_include_card = function can_include_card(card) {
+	// neutral card => yes
+	if(card.faction_code === 'neutral') return true;
 	
-	// default case => no
+	// in-house card => yes
+	if(card.faction_code === faction_code) return true;
+	
+	// out-of-house and loyal => no
+	if(card.isLoyal) return false;
+	
+	// minor faction => yes
+	var minor_faction_code = deck.get_minor_faction_code();
+	if(minor_faction_code && minor_faction_code === card.faction_code) return true;
+	
+	// if none above => no
 	return false;
 }
 	
