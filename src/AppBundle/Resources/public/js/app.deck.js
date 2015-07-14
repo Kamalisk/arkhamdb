@@ -12,8 +12,10 @@ var date_creation,
 	tags,
 	faction_code,
 	faction_name,
+	agenda_code,
 	unsaved,
 	user_id,
+	header_tpl = _.template('<h5><%= name %> (<%= quantity %>)</h5>'),
 	card_line_tpl = _.template('<div><%= card.indeck %>x <a href="<%= card.url %>" class="card card-tooltip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a> <i>(<%= card.pack_name %>)</i></div>');
 	
 /**
@@ -42,6 +44,7 @@ deck.init = function init() {
 			app.data.cards.updateById(code, {indeck: slots[code]});
 		}
 	}
+	agenda = deck.get_agenda();
 }
 
 /**
@@ -94,7 +97,7 @@ deck.display = function display(container, sort, nb_columns) {
 		});
 		if(!cards.length) return;
 
-		$('<h5>').text(cards[0][displayLabel]).appendTo(deck_content);
+		$(header_tpl({name:cards[0][displayLabel], quantity: cards.length})).appendTo(deck_content);
 		cards.forEach(function (card) {
 			$(card_line_tpl({card:card})).appendTo(deck_content);
 		})
@@ -148,8 +151,29 @@ deck.load_snapshot = function load_snapshot() {
  * returns true if the deck can include the card as parameter
  * @memberOf deck
  */
-deck.can_include_card = function can_include_card() {
-	return true;
+deck.can_include_card = function can_include_card(card) {
+	// neutral card => yes
+	if(card.faction_code === 'neutral') return true;
+	// in-house card => yes
+	if(card.faction_code === faction_code) return true;
+	// out-of-house and loyal => no
+	if(card.isLoyal) return false;
+	
+	// special case for the Core Set Banners
+	var banners_core_set = {
+		'01198': 'baratheon',
+		'01199': 'greyjoy',
+		'01200': 'lannister',
+		'01201': 'martell',
+		'01202': 'nightswatch',
+		'01203': 'stark',
+		'01204': 'targaryen',
+		'01205': 'tyrell'
+	};
+	if(banners_core_set[agenda.code] && banners_core_set[agenda.code] === card.faction_code) return true;
+	
+	// default case => no
+	return false;
 }
 	
 })(app.deck = {}, jQuery);

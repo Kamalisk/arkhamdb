@@ -18,8 +18,8 @@ ui.read_from_storage = function read_from_storage() {
 		}
 	}
 	Config = _.extend({
-		'show-disabled': false,
-		'only-deck': false,
+		'show-unusable': false,
+		'show-only-deck': false,
 		'display-column': 1,
 		'core-set': 1,
 		'show-suggestions': 3,
@@ -459,7 +459,7 @@ ui.refresh_list = _.debounce(function refresh_list() {
 	cards.forEach(function (card) {
 		if (Config['show-only-deck'] && !card.indeck) return;
 		var unusable = !app.deck.can_include_card(card);
-		if (Config['hide-disabled'] && unusable) return;
+		if (!Config['show-unusable'] && unusable) return;
 
 		var row = CardDivs[Config['display-column']][card.code];
 		if(!row) row = CardDivs[Config['display-column']][card.code] = ui.build_row(card);
