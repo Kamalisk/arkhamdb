@@ -121,3 +121,6 @@ body {
 .nav-tabs {
   margin-bottom: 15px;
 }
+td.type, td.faction {
+	text-align:center;
+}

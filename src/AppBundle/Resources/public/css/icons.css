@@ -72,3 +72,24 @@
 .icon-unique:before {
 	content: "\e60b";
 }
+.icon-plot:before {
+	content: "\e60c";
+}
+.icon-attachment:before {
+	content: "\e60d";
+}
+.icon-location:before {
+	content: "\e60e";
+}
+.icon-character:before {
+	content: "\e60f";
+}
+.icon-event:before {
+	content: "\e610";
+}
+.icon-agenda:before {
+	content: "\e611";
+}
+.icon-neutral:before {
+	content: "\e612";
+}

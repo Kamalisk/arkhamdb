@@ -217,7 +217,7 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	$('#btn-save-as-copy').on('click', function(event) {
 		$('#deck-save-as-copy').val(1);
 	});
-	
+
 	$('#btn-cancel-edits').on('click', function(event) {
 		var edits = $.grep(Snapshots, function (snapshot) {
 			return snapshot.saved === false;
@@ -261,7 +261,7 @@ ui.on_modal_quantity_change = function on_modal_quantity_change(event) {
  * @memberOf ui
  */
 ui.on_quantity_change = function on_quantity_change(code, quantity) {
-	
+
 	app.deck.set_card_copies(code, quantity);
 	ui.refresh_deck();
 
@@ -269,11 +269,11 @@ ui.on_quantity_change = function on_quantity_change(code, quantity) {
 	$.each(CardDivs, function(nbcols, rows) {
 		var row = rows[code];
 		if(!row) return;
-		
+
 		// rows[code] is the card row of our card
 		// for each "quantity switch" on that row
 		rows[code].find('input[name="qty-' + code + '"]').each(function(i, element) {
-			
+
 			// if that switch is NOT the one with the new quantity, uncheck it
 			// else, check it
 			if($(element).val() != quantity) {
@@ -306,7 +306,7 @@ ui.build_pack_selector = function build_pack_selector() {
 		if(localStorage && localStorage.getItem('set_code_' + record.code) !== null) checked = true;
 		// if pack used by cards in deck, check pack
 		var cards = app.data.cards.find({
-			pack_code: record.code, 
+			pack_code: record.code,
 			indeck: {
 				'$gt': 0
 			}
@@ -353,8 +353,8 @@ ui.update_list_template = function update_list_template() {
 			'<tr>'
 				+ '<td><div class="btn-group" data-toggle="buttons"><%= radios %></div></td>'
 				+ '<td><a class="card card-tooltip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></td>'
-				+ '<td><%= card.type_name %></td>'
-				+ '<td><%= card.faction_name %></td>'
+				+ '<td class="type"><span class="icon-<%= card.type_code %>" title="<%= card.type_name %>"></span></td>'
+				+ '<td class="faction"><span class="icon-<%= card.faction_code %>" title="<%= card.faction_name %>"></span></td>'
 			+ '</tr>'
 		);
 		break;
@@ -365,9 +365,9 @@ ui.update_list_template = function update_list_template() {
 					+ '<div class="media-left"><img class="media-object" src="/bundles/cards/<%= card.code %>.png" alt="<%= card.name %>"></div>'
 					+ '<div class="media-body">'
 						+ '<h4 class="media-heading"><a class="card" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></h4>'
-						+ '<div class="btn-group" data-toggle="buttons"><%= radios %></div>' 
-					+ '</div>' 
-				+ '</div>' 
+						+ '<div class="btn-group" data-toggle="buttons"><%= radios %></div>'
+					+ '</div>'
+				+ '</div>'
 			+ '</div>'
 		);
 		break;
@@ -379,8 +379,8 @@ ui.update_list_template = function update_list_template() {
 					+ '<div class="media-body">'
 						+ '<h5 class="media-heading"><a class="card" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal">>%= card.name %></a></h5>'
 						+ '<div class="btn-group" data-toggle="buttons"><%= radios %></div>'
-					+ '</div>' 
-				+ '</div>' 
+					+ '</div>'
+				+ '</div>'
 			+ '</div>'
 		);
 	}
@@ -394,7 +394,7 @@ ui.build_row = function build_row(card) {
 	var radios = '', radioTpl = _.template(
 		'<label class="btn btn-xs btn-default <%= active %>"><input type="radio" name="qty-<% card.code %>" value="<%= i %>"><%= i %></label>'
 	);
-	
+
 	for (var i = 0; i <= card.maxqty; i++) {
 		radios += radioTpl({
 			i: i,
@@ -419,13 +419,13 @@ ui.build_row = function build_row(card) {
 ui.refresh_list = _.debounce(function refresh_list() {
 	$('#collection-table').empty();
 	$('#collection-grid').empty();
-	
+
 	var counter = 0,
 		container = $('#collection-table'),
 		filters = ui.get_filters(),
 		query = app.smart_filter.get_query(filters),
 		orderBy = {};
-	
+
 	orderBy[SortKey] = SortOrder;
 	orderBy['name'] = 1;
 	var cards = app.data.cards.find(query, {'$orderBy': orderBy});
@@ -437,9 +437,9 @@ ui.refresh_list = _.debounce(function refresh_list() {
 
 		var row = CardDivs[DisplayColumns][card.code];
 		if(!row) row = CardDivs[DisplayColumns][card.code] = ui.build_row(card);
-		
+
 		row.data("code", card.code).addClass('card-container');
-		
+
 		row.find('input[name="qty-' + card.code + '"]').each(
 			function(i, element) {
 				if($(element).val() == card.indeck) {
@@ -457,7 +457,7 @@ ui.refresh_list = _.debounce(function refresh_list() {
 		if (DisplayColumns > 1 && (counter % DisplayColumns === 0)) {
 			container = $('<div class="row"></div>').appendTo($('#collection-grid'));
 		}
-		
+
 		container.append(row);
 		counter++;
 	});

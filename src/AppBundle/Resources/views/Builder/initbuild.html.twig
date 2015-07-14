@@ -13,7 +13,7 @@
 		{% for faction in factions %}
 			<li class="list-group-item radio">
 				<label>
-					<input type="radio" name="faction" value="{{ faction.code }}"> [{{ faction.code }}] {{ faction.name }}
+					<input type="radio" name="faction" value="{{ faction.code }}"> <span class="icon-{{ faction.code }}"></span> {{ faction.name }}
 				</label>
 			</li>
 		{% endfor %}

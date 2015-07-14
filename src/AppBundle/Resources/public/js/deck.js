@@ -23,7 +23,7 @@ app.data_loaded.add(function() {
 		});
 		cb(matches);
 	}
-	
+
 	$('#filter-text').typeahead({
 		  hint: true,
 		  highlight: true,
@@ -33,12 +33,12 @@ app.data_loaded.add(function() {
 		displayKey: 'value',
 		source: findMatches
 	});
-	
+
 	make_cost_graph();
 	make_strength_graph();
-	
+
 	$('html,body').css('height', 'auto');
-	
+
 });
 
 function uncheck_all_others() {
@@ -64,7 +64,7 @@ $(function() {
 
 	$('#filter-text').on('typeahead:selected typeahead:autocompleted',
 			app.card_modal.typeahead);
-	
+
 	$(document).on('hidden.bs.modal', function (event) {
 		if(InputByTitle) {
 			setTimeout(function () {
@@ -72,15 +72,10 @@ $(function() {
 			}, 100);
 		}
 	});
-	
 
-	
 
-	$('#collection').on({
-		click : function(event) {
-			InputByTitle = false;
-		}
-	}, 'a.card');
+
+
 	$('.modal').on({
 		change : handle_quantity_change
 	}, 'input[type=radio]');
@@ -225,7 +220,7 @@ $(function() {
 						trigger : 'click',
 						title : "<h5>Smart filter syntax</h5><ul style=\"text-align:left\"><li>x: filters on text</li><li>a: flavor text</li><li>s: subtype</li><li>o: cost</li><li>v: agenda points</li><li>n: faction cost</li><li>p: strength</li><li>g: advancement cost</li><li>h: trash cost</li><li>u: uniqueness</li><li>y: quantity in pack</li></ul><code>s:\"code gate\" x:trace</code> to find code gates with trace"
 					});
-	
+
 	var converter = new Markdown.Converter();
 	$('#description').on(
 			'keyup',
@@ -261,7 +256,7 @@ $(function() {
 						match : /\$([\-+\w]*)$/,
 						search : function(term, callback) {
 							var regexp = new RegExp('^' + term);
-							callback($.grep(['credit', 'recurring-credit', 'click', 'link', 'trash', 'subroutine', 'mu', '1mu', '2mu', '3mu', 
+							callback($.grep(['credit', 'recurring-credit', 'click', 'link', 'trash', 'subroutine', 'mu', '1mu', '2mu', '3mu',
 								'anarch', 'criminal', 'shaper', 'haas-bioroid', 'weyland-consortium', 'jinteki', 'nbn'],
 								function(symbol) { return regexp.test(symbol); }
 							));
@@ -275,7 +270,7 @@ $(function() {
 						index : 1
 					}
 			]);
-	
+
 	$('#tbody-history').on('click', 'a[role=button]', load_snapshot);
 	$.each(History, function (index, snapshot) {
 		add_snapshot(snapshot);
@@ -296,32 +291,32 @@ function autosave_interval() {
 function add_snapshot(snapshot) {
 	snapshot.date_creation = snapshot.date_creation ? moment(snapshot.date_creation) : moment();
 	Snapshots.push(snapshot);
-	
+
 	var list = [];
 	if(snapshot.variation) {
 		$.each(snapshot.variation[0], function (code, qty) {
 			var card = app.data.get_card_by_code(code);
-			if(!card) return; 
+			if(!card) return;
 			list.push('+'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card" data-code="'+code+'">'+card.name+'</a>');
 		});
 		$.each(snapshot.variation[1], function (code, qty) {
 			var card = app.data.get_card_by_code(code);
-			if(!card) return; 
+			if(!card) return;
 			list.push('&minus;'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card" data-code="'+code+'">'+card.name+'</a>');
 		});
 	} else {
 		list.push("First version");
 	}
-	
+
 	$('#tbody-history').prepend('<tr'+(snapshot.saved ? '' : ' class="warning"')+'><td>'+snapshot.date_creation.calendar()+(snapshot.saved ? '' : ' (unsaved)')+'</td><td>'+list.join('<br>')+'</td><td><a role="button" href="#" data-code="'+(Snapshots.length-1)+'"">Revert</a></td></tr>');
-	
+
 	Autosave_timer = -1; // start timer
 }
 function load_snapshot(event) {
 	var index = $(this).data('index');
 	var snapshot = Snapshots[index];
 	if(!snapshot) return;
-	
+
 	app.data.cards().each(function(record) {
 		var indeck = 0;
 		if (snapshot.content[record.code]) {
@@ -467,7 +462,7 @@ function handle_quantity_change(event) {
 	}
 	$('div.modal').modal('hide');
 	app.suggestions.compute();
-	
+
 	Deck_changed_since_last_autosave = true;
 }
 
