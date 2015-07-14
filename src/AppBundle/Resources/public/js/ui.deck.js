@@ -1,52 +1,30 @@
 (function ui_deck(ui, $) {
 
-var DisplayColumns = 1,
-	DisplayColumnsTpl = '',
-	CoreSets = 1,
-	Buttons_Behavior = 'cumulative',
+var DisplayColumnsTpl = '',
 	SortKey = 'type_code',
 	SortOrder = 1,
 	CardDivs = [[],[],[]],
-	ShowOnlyDeck  = false,
-	HideDisabled = false;
+	Config = null;
 
 /**
  * reads ui configuration from localStorage
  * @memberOf ui
  */
 ui.read_from_storage = function read_from_storage() {
-	var localStorageDisplayColumns;
-	if (localStorage
-			&& (localStorageDisplayColumns = parseInt(localStorage
-					.getItem('display_columns'), 10)) !== null
-			&& [ 1, 2, 3 ].indexOf(localStorageDisplayColumns) > -1) {
-		DisplayColumns = localStorageDisplayColumns;
-	}
-
-	var localStorageCoreSets;
-	if (localStorage
-			&& (localStorageCoreSets = parseInt(localStorage
-					.getItem('core_sets'), 10)) !== null
-			&& [ 1, 2, 3 ].indexOf(localStorageCoreSets) > -1) {
-		CoreSets = localStorageCoreSets;
-	}
-
-	if(app.suggestions) {
-		var localStorageSuggestions;
-		if (localStorage
-				&& (localStorageSuggestions = parseInt(localStorage
-						.getItem('show_suggestions'), 10)) !== null
-				&& [ 0, 3, 10 ].indexOf(localStorageSuggestions) > -1) {
-			app.suggestions.number = localStorageSuggestions;
+	if (localStorage) {
+		var stored = localStorage.getItem('ui.deck.config');
+		if(stored) {
+			Config = JSON.parse(stored);
 		}
 	}
-
-	var localStorageButtonsBehavior;
-	if (localStorage
-			&& (localStorageButtonsBehavior = localStorage.getItem('buttons_behavior')) !== null
-			&& [ 'cumulative', 'exclusive' ].indexOf(localStorageButtonsBehavior) > -1) {
-		Buttons_Behavior = localStorageButtonsBehavior;
-	}
+	Config = _.extend({
+		'show-disabled': false,
+		'only-deck': false,
+		'display-column': 1,
+		'core-set': 1,
+		'show-suggestions': 3,
+		'buttons-behavior': 'cumulative'
+	}, Config || {});
 }
 
 /**
@@ -54,10 +32,12 @@ ui.read_from_storage = function read_from_storage() {
  * @memberOf ui
  */
 ui.init_config_buttons = function init_config_buttons() {
-	$('input[name=display-column-' + DisplayColumns + ']').prop('checked', true);
-	$('input[name=core-set-' + CoreSets + ']').prop('checked', true);
-	if(app.suggestions) $('input[name=show-suggestions-' + app.suggestions.number + ']').prop('checked', true);
-	$('input[name=buttons-behavior-' + Buttons_Behavior + ']').prop('checked', true);
+	['display-column', 'core-set', 'show-suggestions', 'buttons-behavior'].forEach(function (radio) {
+		$('input[name='+radio+'][value='+Config[radio]+']').prop('checked', true);
+	});
+	['show-disabled', 'only-deck'].forEach(function (checkbox) {
+		if(Config[checkbox]) $('input[name='+checkbox+']').prop('checked', true);
+	})
 }
 
 /**
@@ -200,6 +180,48 @@ ui.on_submit_form = function on_submit_form(event) {
 }
 
 /**
+ * @memberOf ui
+ * @param event
+ */
+ui.on_config_change = function on_config_change(event) {
+
+	var name = $(this).attr('name');
+	var type = $(this).prop('type');
+	switch(type) {
+	case 'radio':
+		var value = $(this).val();
+		if(!isNaN(parseInt(value, 10))) value = parseInt(value, 10);
+		Config[name] = value;
+		break;
+	case 'checkbox':
+		Config[name] = $(this).prop('checked');
+		break;
+	}
+	ui.refresh_list();
+
+}
+
+/**
+ * @memberOf ui
+ * @param event
+ */
+ui.on_table_sort_click = function on_table_sort_click(event) {
+	event.preventDefault();
+	var new_sort = $(this).data('sort');
+	if (SortKey == new_sort) {
+		SortOrder *= -1;
+	} else {
+		SortKey = new_sort;
+		SortOrder = 1;
+	}
+	
+	$(this).closest('tr').find('th').removeClass('dropup').find('span.caret').remove();
+	$(this).after('<span class="caret"></span>').closest('th').addClass(SortOrder > 0 ? '' : 'dropup');
+
+	ui.refresh_list();
+}
+
+/**
  * sets up event handlers ; dataloaded not fired yet
  * @memberOf ui
  */
@@ -228,9 +250,12 @@ ui.setup_event_handlers = function setup_event_handlers() {
 		}
 		$('#deck-cancel-edits').val(1);
 	});
-
+	
+	$('#config-options').on('change', 'input', ui.on_config_change);
 	$('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 	$('#cardModal').on('change', 'input[type=radio]', ui.on_modal_quantity_change);
+	
+	$('thead').on('click', 'a[data-sort]', ui.on_table_sort_click);
 }
 
 /**
@@ -347,7 +372,7 @@ ui.get_filters = function get_filters() {
  * @memberOf ui
  */
 ui.update_list_template = function update_list_template() {
-	switch (DisplayColumns) {
+	switch (Config['display-column']) {
 	case 1:
 		DisplayColumnsTpl = _.template(
 			'<tr>'
@@ -431,12 +456,12 @@ ui.refresh_list = _.debounce(function refresh_list() {
 	var cards = app.data.cards.find(query, {'$orderBy': orderBy});
 
 	cards.forEach(function (card) {
-		if (ShowOnlyDeck && !card.indeck) return;
+		if (Config['show-only-deck'] && !card.indeck) return;
 		var unusable = !app.deck.can_include_card(card);
-		if (HideDisabled && unusable) return;
+		if (Config['hide-disabled'] && unusable) return;
 
-		var row = CardDivs[DisplayColumns][card.code];
-		if(!row) row = CardDivs[DisplayColumns][card.code] = ui.build_row(card);
+		var row = CardDivs[Config['display-column']][card.code];
+		if(!row) row = CardDivs[Config['display-column']][card.code] = ui.build_row(card);
 
 		row.data("code", card.code).addClass('card-container');
 
@@ -454,7 +479,7 @@ ui.refresh_list = _.debounce(function refresh_list() {
 			row.find('label').addClass("disabled").find('input[type=radio]').attr("disabled", true);
 		}
 
-		if (DisplayColumns > 1 && (counter % DisplayColumns === 0)) {
+		if (Config['display-column'] > 1 && (counter % Config['display-column'] === 0)) {
 			container = $('<div class="row"></div>').appendTo($('#collection-grid'));
 		}
 

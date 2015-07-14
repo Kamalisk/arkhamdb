@@ -108,7 +108,7 @@ body {
 .dropdown-menu label {
   margin: 0;
 }
-.dropdown-menu input[type=checkbox] {
+.dropdown-menu input[type=checkbox], .dropdown-menu input[type=radio] {
   margin: -4px 8px 0 -6px;
 }
 
