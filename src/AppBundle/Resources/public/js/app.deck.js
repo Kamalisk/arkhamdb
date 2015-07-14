@@ -21,7 +21,6 @@ var date_creation,
  * @memberOf deck
  */
 deck.init = function init() {
-	console.log('deck.init', deck.json);
 	date_creation = deck.json.date_creation;
 	date_update = deck.json.date_update;
 	description_md = deck.json.description_md;
@@ -70,8 +69,6 @@ deck.get_agenda = function get_agenda() {
  * @memberOf deck
  */
 deck.display = function display(container, sort, nb_columns) {
-	console.log('deck.display start');
-	
 	var deck_content = $('<div class="deck_content">');
 	
 	/* to sort cards, we need: 
@@ -120,6 +117,24 @@ deck.set_card_copies = function set_card_copies(card_code, nb_copies) {
 	app.data.cards.updateById(card_code, {
 		indeck: nb_copies
 	});
+}
+
+/**
+ * @memberOf deck
+ */
+deck.get_json = function get_json() {
+	var cards = app.data.cards.find({
+		indeck: {
+			'$gt': 0
+		}
+	}, {
+		'$orderBy': { code: 1 }
+	});
+	var content = {};
+	cards.forEach(function (card) {
+		content[card.code] = card.indeck;
+	});
+	return JSON.stringify(content);
 }
 
 /**

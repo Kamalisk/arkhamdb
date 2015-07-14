@@ -221,7 +221,8 @@ ui.on_input_smartfilter = function on_input_smartfilter(event) {
  * @param event
  */
 ui.on_submit_form = function on_submit_form(event) {
-	var deck_json = JSON.stringify(get_deck_content());
+	var deck_json = app.deck.get_json();
+	console.log(deck_json);
 	$('input[name=content]').val(deck_json);
 	$('input[name=description]').val($('textarea[name=description_]').val());
 	$('input[name=tags]').val($('input[name=tags_]').val());

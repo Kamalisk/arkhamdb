@@ -19,6 +19,15 @@ class Decks
         $this->logger = $logger;
 	}
     
+	public function getDeckContent ($deck)
+	{
+		$arr = array();
+		foreach($deck->getSlots() as $slot) {
+			$arr[$slot->getCard()->getCode()] = $slot->getQuantity();
+		}
+		ksort($arr);
+		return $arr;
+	}
 
     public function getByUser ($user, $decode_variation = FALSE)
     {
@@ -201,9 +210,8 @@ class Decks
         }
         
         $deck->setName($name);
-        $deck->setDescription($description);
+        $deck->setDescriptionMd($description);
         $deck->setUser($user);
-        $identity = null;
         $cards = [];
         /* @var $latestPack \AppBundle\Entity\Pack */
         $latestPack = null;
@@ -215,34 +223,21 @@ class Decks
             $pack = $card->getPack();
             if (! $latestPack) {
                 $latestPack = $pack;
-            } else
-                if ($latestPack->getCycle()->getPosition() < $pack->getCycle()->getPosition()) {
-                    $latestPack = $pack;
-                } else
-                    if ($latestPack->getCycle()->getPosition() == $pack->getCycle()->getPosition() && $latestPack->getPosition() < $pack->getPosition()) {
-                        $latestPack = $pack;
-                    }
-            if ($card->getType()->getName() == "Identity") {
-                $identity = $card;
+            } else {
+            	if ($latestPack->getCycle()->getPosition() < $pack->getCycle()->getPosition()) {
+            		$latestPack = $pack;
+            	} else {
+            		if ($latestPack->getCycle()->getPosition() == $pack->getCycle()->getPosition() && $latestPack->getPosition() < $pack->getPosition()) {
+            			$latestPack = $pack;
+            		}
+            	}
             }
             $cards[$card_code] = $card;
         }
         $deck->setLastPack($latestPack);
-        if ($identity) {
-            $deck->setSide($identity->getSide());
-            $deck->setIdentity($identity);
-        } else {
-            $deck->setSide(current($cards)->getSide());
-            $identity = $this->doctrine->getRepository('AppBundle:Card')->findOneBy(array(
-                    "side" => $deck->getSide()
-            ));
-            $cards[$identity->getCode()] = $identity;
-            $content[$identity->getCode()] = 1;
-            $deck->setIdentity($identity);
-        }
         if(empty($tags)) {
             // tags can never be empty. if it is we put faction in
-            $faction_code = $identity->getFaction()->getCode();
+            $faction_code = $deck->getFaction()->getCode();
             $tags = array($faction_code);
         }
         if(is_array($tags)) {
@@ -255,7 +250,7 @@ class Decks
         
         if($source_deck) {
             // compute diff between current content and saved content
-            list($listings) = $this->diff->diffContents(array($content, $source_deck->getContent()));
+            list($listings) = $this->diff->diffContents(array($content, $this->getDeckContent($source_deck)));
             // remove all change (autosave) since last deck update (changes are sorted)
             $changes = $this->getUnsavedChanges($deck);
             foreach($changes as $change) {
@@ -267,7 +262,7 @@ class Decks
                 $change = new Deckchange();
                 $change->setDeck($deck);
                 $change->setVariation(json_encode($listings));
-                $change->setSaved(TRUE);
+                $change->setIsSaved(TRUE);
                 $this->doctrine->persist($change);
                 $this->doctrine->flush();
             }
@@ -279,9 +274,6 @@ class Decks
        
         foreach ($content as $card_code => $qty) {
             $card = $cards[$card_code];
-            if ($card->getSide()->getId() != $deck->getSide()->getId())
-                continue;
-            $card = $cards[$card_code];
             $slot = new Deckslot();
             $slot->setQuantity($qty);
             $slot->setCard($card);
@@ -292,6 +284,7 @@ class Decks
                     'qty' => $qty
             );
         }
+        /*
         $analyse = $this->judge->analyse($deck_content);
         if (is_string($analyse)) {
             $deck->setProblem($analyse);
@@ -301,7 +294,7 @@ class Decks
             $deck->setInfluenceSpent($analyse['influenceSpent']);
             $deck->setAgendaPoints($analyse['agendaPoints']);
         }
-        $deck->setDateupdate(new \DateTime());
+        */
         $this->doctrine->flush();
         
         return $deck->getId();
@@ -318,7 +311,7 @@ class Decks
     
     public function getUnsavedChanges($deck)
     {
-        return $this->doctrine->getRepository('AppBundle:Deckchange')->findBy(array('deck' => $deck, 'saved' => FALSE));
+        return $this->doctrine->getRepository('AppBundle:Deckchange')->findBy(array('deck' => $deck, 'isSaved' => FALSE));
     }
     
 }
