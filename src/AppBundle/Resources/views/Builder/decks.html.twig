@@ -1,19 +1,13 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
 {% block javascripts %}
-<script src="{{ asset('/bundles/app/js/app.card_modal.js') }}"></script>
-<script src="{{ asset('/bundles/app/js/app.diff.js') }}"></script>
-<script src="{{ asset('/bundles/app/js/decks.js') }}"></script>
-<script type="text/javascript">
-var Identity = null,
-	LastClickedDeck = null,
-	SelectedDeck = null,
-	Decks = {{ decks|json_encode|raw }},
-	DeckDB = TAFFY(Decks),
-	Url_FactionImage = '{{  asset('/bundles/app/images/factions/16px/xxx.png') }}',
-	DisplaySort = 'type';
-	
-</script>
+	{# <script src="{{ asset('/bundles/app/js/app.card_modal.js') }}"></script> #}
+	{# <script src="{{ asset('/bundles/app/js/app.diff.js') }}"></script> #}
+	<script src="{{ asset('/bundles/app/js/app.deck.js') }}"></script>
+	<script src="{{ asset('/bundles/app/js/ui.decks.js') }}"></script>
+	<script type="text/javascript">
+	app.ui.decks = {{ decks|json_encode|raw }};
+	</script>
 {% endblock %}
 
 {% block body %}
@@ -34,8 +28,7 @@ var Identity = null,
 
 <div class="row" style="margin-bottom:10px">
 <div class="col-md-12">
-	<a href="{{ path('deck_buildform', {side_text:'corp'}) }}" class="btn btn-default btn-sm"{% if cannotcreate %} disabled="disabled"{% endif %}><span class="glyphicon glyphicon-plus color-corp"></span> New Corp Deck</a>
-	<a href="{{ path('deck_buildform', {side_text:'runner'}) }}" class="btn btn-default btn-sm"{% if cannotcreate %} disabled="disabled"{% endif %}><span class="glyphicon glyphicon-plus color-runner"></span> New Runner Deck</a>
+	<a href="{{ path('deck_buildform') }}" class="btn btn-default btn-sm"{% if cannotcreate %} disabled="disabled"{% endif %}><span class="glyphicon glyphicon-plus"></span> New Deck</a>
 	<div class="btn-group">
 		<button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown"{% if cannotcreate %} disabled="disabled"{% endif %}>
 			<span class="glyphicon glyphicon-import"></span> Import Deck <span class="caret"></span>
@@ -103,66 +96,37 @@ var Identity = null,
 
 <h1>My private decks <small style="font-size:16px"{% if cannotcreate %} class="text-danger"{% endif %}>({{ nbdecks }}/{{ nbmax }} slots)</small></h1>
 
-<div class="row">
-<div class="col-md-12">
-<div class="list-group" id="decks" data-sort-type="dateupdate" data-sort-order="1">
+<table class="table">
+<thead>
+	<tr>
+		<th>Select</th>
+		<th>Name</th>
+		<th>Faction</th>
+	</tr>
+</thead>
+<tbody id="decks">
 {% for deck in decks %}
-<a href="#" class="list-group-item deck-list-group-item" id="deck_{{ deck.id }}" data-id="{{ deck.id }}" data-problem="{{ deck.problem }}" data-faction="{{ deck.faction_code }}">
-    <div class="deck-list-identity-image hidden-xs" title="{{ deck.faction_name }}" style="background-image:url({{ asset('/bundles/app/images/factions/'~deck.faction_code~'.png') }})"></div>
-    <h4 class="decklist-name">{{ deck.name }}{% if deck.message %} <span class="glyphicon glyphicon-exclamation-sign text-danger" title="{{ deck.message }}"></span>{% endif %}</h4>
-    <div>
-        Faction + Agenda
-    </div><div class="deck-list-tags">
-        {% for tag in deck.tags %}<span class="label label-default tag-{{ tag }}">{{ tag }}</span>{% endfor %}
-    </div>
-</a>
+	<tr data-id="{{ deck.id }}">
+		<td><input type="checkbox"></td>
+		<td>
+			<a href="{{ path('deck_view',{deck_id:deck.id}) }}">{{ deck.name }}</a><br>
+			{% for tag in deck.tags|split(' ') %}
+			<span class="label label-default">{{ tag }}</span>
+			{% endfor %}
+		</td>
+		<td><img src="{{ asset('/bundles/app/images/factions/' ~ deck.faction_code ~ '.png') }}"></td>
+	</tr>
 {% endfor %}
-</div>
+</tbody>
+</table>
 
-<p><small><kbd>Shift</kbd> to select multiple decks. <kbd>Enter</kbd> to open the last selected deck. <kbd>Esc</kbd> to close it.</small></p>
-
-</div>
-</div>
+<div id="deck"></div>
 
 </div>
 <!-- / Left-side column -->
 
 </div>
 </div><!-- /.container -->
-
-<div id="deck" style="display:none;margin-top:10px">
-	
-	<!-- Identity and Stats -->
-	<div id="influence"></div>
-	<div id="agendapoints"></div>
-	<div id="cardcount"></div>
-	<div id="latestpack"></div>
-	<!-- Identity and Stats -->
-	
-	<!-- Deck Content -->
-	<div class="row" id="deck-content" style="margin-bottom:10px">
-	</div><!-- /#deck-content -->
-	<!-- Deck Content -->
-	
-	<div id="btn-group-deck">
-	<div style="margin-bottom:10px">
-		<a role="button" id="btn-view" class="btn btn-info btn-sm" href="#"><span class="glyphicon glyphicon-fullscreen"></span> View</a>
-		<a role="button" id="btn-edit" class="btn btn-primary btn-sm" href="#"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-		<button type="button" id="btn-publish" disabled="disabled" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-share"></span> Publish</button>
-		<button type="button" id="btn-duplicate" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-plus"></span> Duplicate</button>
-		<button type="button" id="btn-delete" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span> Delete</button>
-	</div>
-	<div style="margin-bottom:10px">
-		<button type="button" class="btn btn-default btn-xs" id="btn-download-text">Text file</button>
-		<button type="button" class="btn btn-default btn-xs" id="btn-download-octgn">Octgn file</button>
-		<button type="button" class="btn btn-default btn-xs" id="btn-export-bbcode">bbCode</button>
-		<button type="button" class="btn btn-default btn-xs" id="btn-export-markdown">Markdown (Reddit)</button>
-		<button type="button" class="btn btn-default btn-xs" id="btn-export-plaintext">plain text</button>
-	</div>
-	</div>
-	<div id="datecreation"></div>
-	<div id="dateupdate"></div>
-</div><!-- /#deck -->
 
 {% include 'AppBundle:Modale:file.html.twig' %}
 {% include 'AppBundle:Modale:delete.html.twig' %}

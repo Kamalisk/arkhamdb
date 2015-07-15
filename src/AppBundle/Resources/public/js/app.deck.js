@@ -15,12 +15,13 @@ var date_creation,
 	unsaved,
 	user_id,
 	header_tpl = _.template('<h5><%= name %> (<%= quantity %>)</h5>'),
-	card_line_tpl = _.template('<div><%= card.indeck %>x <a href="<%= card.url %>" class="card card-tooltip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a> <i>(<%= card.pack_name %>)</i></div>');
+	card_line_tpl = _.template('<div><%= card.indeck %>x <a href="<%= card.url %>" class="card card-tooltip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a></div>');
 	
 /**
  * @memberOf deck
  */
-deck.init = function init() {
+deck.init = function init(json) {
+	if(json) deck.json = json;
 	date_creation = deck.json.date_creation;
 	date_update = deck.json.date_update;
 	description_md = deck.json.description_md;
@@ -46,10 +47,18 @@ deck.init = function init() {
 
 /**
  * @memberOf deck
- * @returns
+ * @returns string
  */
 deck.get_faction_code = function get_faction_code() {
 	return faction_code;
+}
+
+/**
+ * @memberOf deck
+ * @returns string
+ */
+deck.get_description_md = function get_description_md() {
+	return description_md;
 }
 
 /**
@@ -68,8 +77,99 @@ deck.get_agenda = function get_agenda() {
 /**
  * @memberOf deck
  */
+deck.get_cards = function get_cards(sort) {
+	sort = sort || {};
+	sort['code'] = 1;
+	
+	return app.data.cards.find({
+		indeck: {
+			'$gt': 0
+		}
+	}, {
+		'$orderBy': sort
+	});
+}
+
+
+/**
+ * @memberOf deck
+ */
+deck.get_draw_deck = function get_draw_deck(sort) {
+	sort = sort || {};
+	sort['code'] = 1;
+	
+	return app.data.cards.find({
+		indeck: {
+			'$gt': 0
+		},
+		type_code: {
+			'$nin' : ['agenda','plot']
+		}
+	}, {
+		'$orderBy': sort
+	});
+}
+
+/**
+ * @memberOf deck
+ */
+deck.get_draw_deck_size = function get_draw_deck_size(sort) {
+	var draw_deck = deck.get_draw_deck();
+	var quantities = _.pluck(draw_deck, 'indeck');
+	return _.reduce(quantities, function(memo, num) { return memo + num; }, 0);
+}
+
+/**
+ * @memberOf deck
+ */
+deck.get_plot_deck = function get_plot_deck(sort) {
+	sort = sort || {};
+	sort['code'] = 1;
+	
+	return app.data.cards.find({
+		indeck: {
+			'$gt': 0
+		},
+		type_code: {
+			'$in' : ['plot']
+		}
+	}, {
+		'$orderBy': sort
+	});
+}
+
+/**
+ * @memberOf deck
+ */
+deck.get_plot_deck_size = function get_plot_deck_size(sort) {
+	var plot_deck = deck.get_plot_deck();
+	var quantities = _.pluck(plot_deck, 'indeck');
+	return _.reduce(quantities, function(memo, num) { return memo + num; }, 0);
+}
+
+/**
+ * @memberOf deck
+ */
+deck.get_included_packs = function get_included_packs() {
+	var cards = deck.get_cards();
+	var pack_codes = _.uniq(_.pluck(cards, 'pack_code'));
+	var packs = app.data.packs.find({
+		'code': {
+			'$in': pack_codes
+		}
+	}, {
+		'$orderBy': {
+			'available': 1
+		}
+	});
+	return packs;
+}
+
+/**
+ * @memberOf deck
+ */
 deck.display = function display(container, sort, nb_columns) {
-	var deck_content = $('<div class="deck_content">');
+	var deck_content = $('<div class="deck-content">');
 	
 	/* to sort cards, we need: 
 	 * name of the key to sort upon
@@ -103,9 +203,18 @@ deck.display = function display(container, sort, nb_columns) {
 		})
 	})
 	
+	var deck_intro = $('<div class="deck-intro"><div class="media"><div class="media-left"></div><div class="media-body"></div></div>');
+	$(deck_intro).find('.media-left').append('<span class="icon-'+deck.get_faction_code()+'"></span>');
+	$(deck_intro).find('.media-body').append('<h4>'+faction_name+'</h4>');
+	$(deck_intro).find('.media-body').append('<div>Draw deck: '+deck.get_draw_deck_size()+' cards.</div>');
+	$(deck_intro).find('.media-body').append('<div>Plot deck: '+deck.get_plot_deck_size()+' cards.</div>');
+	$(deck_intro).find('.media-body').append('<div>Included packs: ' + _.pluck(deck.get_included_packs(), 'name').join(', ') + '.</div>');
+	
+	
 	$(container)
 		.removeClass('deck-loading')
 		.empty()
+		.append(deck_intro)
 		.append(deck_content);
 	
 }
@@ -123,13 +232,7 @@ deck.set_card_copies = function set_card_copies(card_code, nb_copies) {
  * @memberOf deck
  */
 deck.get_json = function get_json() {
-	var cards = app.data.cards.find({
-		indeck: {
-			'$gt': 0
-		}
-	}, {
-		'$orderBy': { code: 1 }
-	});
+	var cards = deck.get_cards();
 	var content = {};
 	cards.forEach(function (card) {
 		content[card.code] = card.indeck;

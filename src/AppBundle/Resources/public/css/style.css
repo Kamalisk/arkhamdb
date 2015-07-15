@@ -99,9 +99,9 @@ body {
 
 
 #deck {
-	padding: 50px 0;
 }
 .deck-loading {
+	padding: 50px 0;
 	text-align: center;
 }
 
@@ -124,3 +124,27 @@ body {
 td.type, td.faction {
 	text-align:center;
 }
+
+/********* ONE DECK *********/
+
+.deck-intro .media-left {
+	font-size: 96px;
+}
+.deck-content {
+	margin-bottom: 15px;
+}
+
+/********* LIST OF DECKS ************/
+#decks td {
+	vertical-align: middle;
+}
+#decks img {
+	height: 50px;
+}
+
+/************ DECK GALLERY **********/
+#deck-gallery table { width: 100%; table-layout: fixed; border-collapse: collapse; overflow: hidden }
+#deck-gallery table td { padding: 0 }
+#deck-gallery table td > div { height: 100px; overflow: visible; position: relative }
+#deck-gallery table td > div > img { height: 100% ; border: 1px solid white; border-radius: 10px;}
+#deck-gallery table td > div > div { background: rgba(0, 0, 0, 0.5); position: absolute; left: 1px; bottom: 1px; color: white; width: 24px; height: 24px; line-height: 24px; font-size: 16px; font-weight: bold; text-align: center; border-radius: 15px; font-family: monospace }

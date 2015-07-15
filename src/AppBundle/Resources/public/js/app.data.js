@@ -10,19 +10,19 @@ data.load = function load() {
 	var fdb = new ForerunnerDB();
 	data.db = fdb.db('agot2db');
 	
-	data.sets = data.db.collection('set', {primaryKey:'code'});
+	data.packs = data.db.collection('pack', {primaryKey:'code'});
 	data.cards = data.db.collection('card', {primaryKey:'code'});
 	
 	data.dfd = {
-		sets: new $.Deferred(),
+		packs: new $.Deferred(),
 		cards: new $.Deferred()
 	};
 	
-	$.when(data.dfd.sets, data.dfd.cards).done(data.update_done).fail(data.update_fail);
+	$.when(data.dfd.packs, data.dfd.cards).done(data.update_done).fail(data.update_fail);
 
-	data.sets.load(function (err) {
+	data.packs.load(function (err) {
 		if(err) {
-			data.dfd.sets.reject(false);
+			data.dfd.packs.reject(false);
 			return;
 		}
 		data.cards.load(function (err) {
@@ -44,10 +44,10 @@ data.load = function load() {
  */
 data.query = function query() {
 	$.ajax({
-		url: Routing.generate('api_sets'),
-		success: data.parse_sets,
+		url: Routing.generate('api_packs'),
+		success: data.parse_packs,
 		error: function () {
-			data.dfd.sets.reject(true);
+			data.dfd.packs.reject(true);
 		}
 	});
 	
@@ -65,8 +65,8 @@ data.query = function query() {
  * deferred returns true if data has been updated
  * @memberOf data
  */
-data.update_done = function update_done(sets_updated, cards_updated) {
-	if(sets_updated || cards_updated) {
+data.update_done = function update_done(packs_updated, cards_updated) {
+	if(packs_updated || cards_updated) {
 		var message = "A new version of the data is available. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
 		var alert = $('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
 		$('#wrapper>div.container').prepend(alert);
@@ -78,8 +78,8 @@ data.update_done = function update_done(sets_updated, cards_updated) {
  * deferred returns true if data has been loaded
  * @memberOf data
  */
-data.update_fail = function update_fail(sets_loaded, sets_loaded) {
-	if(!sets_loaded || !cards_loaded) {
+data.update_fail = function update_fail(packs_loaded, cards_loaded) {
+	if(!packs_loaded || !cards_loaded) {
 		var message = "Unable to load the data. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
 		var alert = $('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
 		$('#wrapper>div.container').prepend(alert);
@@ -123,12 +123,12 @@ data.update_collection = function update_collection(data, collection, lastModifi
 }
 
 /**
- * handles the response to the ajax query for sets data
+ * handles the response to the ajax query for packs data
  * @memberOf data
  */
-data.parse_sets = function parse_sets(response, textStatus, jqXHR) {
+data.parse_packs = function parse_packs(response, textStatus, jqXHR) {
 	var lastModified = new Date(jqXHR.getResponseHeader('Last-Modified')).toISOString();
-	data.update_collection(response, data.sets, lastModified, data.dfd.sets);
+	data.update_collection(response, data.packs, lastModified, data.dfd.packs);
 };
 
 /**

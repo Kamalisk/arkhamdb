@@ -1,29 +1,17 @@
 (function app_deck_gallery(deck_gallery, $) {
 
-var images = null;
-
 /**
  * @memberOf deck_gallery
  */
-deck_gallery.update = function update() {
-
-	images = [ Identity.imagesrc ];
-	qtys = [ 1 ];
-	app.data.cards({
-		indeck : {
-			'gt' : 0
-		},
-		type_code : {
-			'!is' : 'identity'
-		}
-	}).order('type_code,name').each(function(record) {
-		images.push(record.imagesrc);
-		qtys.push(record.indeck);
-	});
-	for (var i = 0; i < images.length; i++) {
-		var cell = $('<td><div><img src="' + images[i] + '" alt="Card Image"><div>'+qtys[i]+'</div></div></td>');
-		$('#deck_gallery tr').append(cell.data('index', i));
-	}
+deck_gallery.display = function display(container) {
+	var table = $('<table>').appendTo(container),
+		row = $('<tr>').appendTo(table),
+		cards = app.deck.get_cards({'type_code':1});
+	
+	cards.forEach(function (card) {
+		var cell = $('<td><div><img src="' + card.imagesrc + '" alt="Card Image"><div>' + card.indeck + '</div></div></td>');
+		cell.appendTo(row);
+	})
 };
 
 })(app.deck_gallery = {}, jQuery);

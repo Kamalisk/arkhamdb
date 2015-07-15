@@ -124,7 +124,7 @@ ui.build_type_selector = function build_type_selector() {
  */
 ui.build_pack_selector = function build_pack_selector() {
 	$('[data-filter=pack_code]').empty();
-	app.data.sets.find({
+	app.data.packs.find({
 		name: {
 			'$exists': true
 		}

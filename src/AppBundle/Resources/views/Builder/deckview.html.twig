@@ -1,35 +1,22 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
 {% block javascripts %}
-
-<script src="{{ asset('/bundles/app/js/app.deck_gallery.js') }}"></script>
-<script src="{{ asset('/bundles/app/js/app.draw_simulator.js') }}"></script>
-<script src="{{ asset('/bundles/app/js/app.card_modal.js') }}"></script>
-<script src="{{ asset('/bundles/app/js/deckview.js') }}"></script>
-<script type="text/javascript">
-
-var Identity = null,
-Deck = {{ deck|json_encode|raw }},
-DeckDB = TAFFY([Deck]),
-SelectedDeck = DeckDB().first(),
-DisplaySort = 'type',
-	Order = 1,
-	Identity = null,
-	InfluenceSpent = 0,
-	InfluenceLimit = 0,
-	MinimumDeckSize = 0,
-	DeckSize = 0,
-	DisplaySort = 'type';
-	
-</script>
+	<script src="{{ asset('/bundles/app/js/app.deck_gallery.js') }}"></script>
+{#	<script src="{{ asset('/bundles/app/js/app.draw_simulator.js') }}"></script> #}
+{#	<script src="{{ asset('/bundles/app/js/app.card_modal.js') }}"></script> #}
+	<script src="{{ asset('/bundles/app/js/app.deck.js') }}"></script>
+	<script src="{{ asset('/bundles/app/js/ui.deckview.js') }}"></script>
+	<script type="text/javascript">
+	app.deck.json = {{ deck|json_encode|raw }}
+	</script>
 {% endblock %}
 
 {% block body %}
-<div class="container deck" style="display:none">
+<div class="container">
 
 <div class="row">
     <div class="col-md-12">
-        <h1 style="border-bottom:1px solid lightgray"><span class="icon icon-{{ deck.faction_code }} {{ deck.faction_code }}"></span> {{ deck.name }}</h1>
+        <h1 style="border-bottom:1px solid lightgray">{{ deck.name }}</h1>
         {% if deck.problem %}
         <div class="alert alert-danger" role="alert">{{ deck.message }}</div>
         {% endif %}
@@ -37,36 +24,13 @@ DisplaySort = 'type',
 </div>
 
 <div class="row hidden-xs" style="margin-bottom: 20px">
-    <div class="col-sm-12" >
-        <table id="deck_gallery">
-            <tr>
-            </tr>
-        </table>
-    </div>
+    <div class="col-sm-12" id="deck-gallery"></div>
 </div>
 
 <div class="row">
 
 <!-- Left-side Column -->
 <div class="col-md-6" id="deck">
-
-<!-- Identity and Stats -->
-<div class="row">
-	<div class="col-sm-12">
-		<h3 id="identity">Identity</h3>
-		<div id="influence"></div>
-		<div id="agendapoints"></div>
-		<div id="cardcount"></div>
-		<div id="latestpack"></div>
-	</div><!-- /.col-sm-9 -->
-</div><!-- /.row -->
-<!-- Identity and Stats -->
-
-<!-- Deck Content -->
-<div class="row" id="deck-content" style="margin-bottom:10px">
-</div><!-- /#deck-content -->
-<!-- Deck Content -->
-
 </div><!-- /#deck -->
 <!-- Left-side Column -->
 
@@ -76,14 +40,10 @@ DisplaySort = 'type',
 <div style="margin-bottom:20px" id="btn-group-deck">
 {% if is_owner %}
 <div style="margin-bottom:5px">
-    <button type="button" id="btn-print" class="btn btn-info"><span class="glyphicon glyphicon-print"></span> Print</button>
-    
-	<button type="button" id="btn-edit" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Edit</button>
-	
+    <button type="button" id="btn-print" class="btn btn-default"><span class="glyphicon glyphicon-print"></span> Print</button>
+	<a href="{{ path('deck_edit', {deck_id:deck_id}) }}" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
 	<button type="button" id="btn-publish" disabled="disabled" class="btn btn-success"><span class="glyphicon glyphicon-share"></span> Publish</button>
-	
 	<button type="button" id="btn-delete" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Delete</button>
-	
 </div>
 {% endif %}
 <div>
@@ -111,8 +71,8 @@ DisplaySort = 'type',
 			<span class="glyphicon glyphicon-download"></span> Download <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#" id="btn-download-text">Text file</a></li>
-			<li><a href="#" id="btn-download-octgn">Octgn file</a></li>
+			<li><a href="{{ path('deck_export_text', {deck_id:deck_id}) }}">Text file</a></li>
+			<li><a href="{{ path('deck_export_octgn', {deck_id:deck_id}) }}">Octgn file</a></li>
 		</ul>
 	</div>
 </div>

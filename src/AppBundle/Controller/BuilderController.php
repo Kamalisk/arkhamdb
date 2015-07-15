@@ -460,118 +460,14 @@ class BuilderController extends Controller
     {
 
         $dbh = $this->get('doctrine')->getConnection();
-        $rows = $dbh->executeQuery("SELECT
-				d.id,
-				d.name,
-				DATE_FORMAT(d.date_creation, '%Y-%m-%dT%TZ') date_creation,
-                DATE_FORMAT(d.date_update, '%Y-%m-%dT%TZ') date_update,
-                d.description_md,
-                d.tags,
-                d.user_id,
-        		f.code faction_code,
-        		f.name faction_name,
-                (select count(*) from deckchange c where c.deck_id=d.id and c.is_saved=0) unsaved
-				from deck d
-        		join faction f on d.faction_id=f.id
-				where d.id=?
-				", array(
-                $deck_id
-        ))->fetchAll();
         
-        $deck = $rows[0];
+        $deck = $this->get('decks')->getDeckInfo($deck_id);
 
-        if($this->getUser()->getId() != $deck['user_id']) {
-            throw new UnauthorizedHttpException("You are not allowed to view this deck.");
-        }
-        
-        $rows = $dbh->executeQuery("SELECT
-				c.code,
-				s.quantity
-				from deckslot s
-				join card c on s.card_id=c.id
-				where s.deck_id=?", array(
-                $deck_id
-        ))->fetchAll();
-        
-        $cards = [];
-        foreach ($rows as $row) {
-            $cards[$row['code']] = intval($row['quantity']);
+        if ($this->getUser ()->getId () != $deck ['user_id']) {
+        	throw new UnauthorizedHttpException ( "You are not allowed to view this deck." );
         }
 
-        $snapshots = [];
-        
-        $rows = $dbh->executeQuery("SELECT
-				DATE_FORMAT(c.date_creation, '%Y-%m-%dT%TZ') date_creation,
-				c.variation,
-                c.is_saved
-				from deckchange c
-				where c.deck_id=? and c.is_saved=1
-                order by date_creation desc", array($deck_id))->fetchAll();
-        
-        // recreating the versions with the variation info, starting from $preversion
-        $preversion = $cards;
-        foreach ($rows as $row) {
-            $row['variation'] = $variation = json_decode($row['variation'], TRUE);
-            $row['is_saved'] = (boolean) $row['is_saved'];
-            // add preversion with variation that lead to it
-            $row['content'] = $preversion;
-            array_unshift($snapshots, $row);
-            
-            // applying variation to create 'next' (older) preversion
-            foreach($variation[0] as $code => $qty) {
-                $preversion[$code] = $preversion[$code] - $qty;
-                if($preversion[$code] == 0) unset($preversion[$code]);
-            }
-            foreach($variation[1] as $code => $qty) {
-                if(!isset($preversion[$code])) $preversion[$code] = 0;
-                $preversion[$code] = $preversion[$code] + $qty;
-            }
-            ksort($preversion);
-        }
-        
-        // add last know version with empty diff
-        $row['content'] = $preversion;
-        $row['date_creation'] = $deck['date_creation'];
-        $row['saved'] = TRUE;
-        $row['variation'] = null;
-        array_unshift($snapshots, $row);
-        
-        $rows = $dbh->executeQuery("SELECT
-				DATE_FORMAT(c.date_creation, '%Y-%m-%dT%TZ') date_creation,
-				c.variation,
-                c.is_saved
-				from deckchange c
-				where c.deck_id=? and c.is_saved=0
-                order by date_creation asc", array($deck_id))->fetchAll();
-        
-        // recreating the snapshots with the variation info, starting from $postversion
-        $postversion = $cards;
-        foreach ($rows as $row) {
-            $row['variation'] = $variation = json_decode($row['variation'], TRUE);
-            $row['saved'] = (boolean) $row['saved'];
-            // applying variation to postversion
-            foreach($variation[0] as $code => $qty) {
-                if(!isset($postversion[$code])) $postversion[$code] = 0;
-                $postversion[$code] = $postversion[$code] + $qty;
-            }
-            foreach($variation[1] as $code => $qty) {
-                $postversion[$code] = $postversion[$code] - $qty;
-                if($postversion[$code] == 0) unset($postversion[$code]);
-            }
-            ksort($postversion);
-            
-            // add postversion with variation that lead to it
-            $row['content'] = $postversion;
-            array_push($snapshots, $row);
-        }
-        
-        // current deck is newest snapshot
-        $deck['slots'] = $postversion;
-        
-        $deck['history'] = $snapshots;
-        
-        $published_decklists = $dbh->executeQuery(
-                "SELECT
+        $published_decklists = $dbh->executeQuery ( "SELECT
 					d.id,
 					d.name,
 					d.name_canonical,
@@ -580,11 +476,11 @@ class BuilderController extends Controller
 					d.nb_comments
 					from decklist d
 					where d.parent_deck_id=?
-					order by d.date_creation asc", array(
-                        $deck_id
-                ))->fetchAll();
+					order by d.date_creation asc", array (
+        							$deck_id
+        					) )->fetchAll ();
         
-        return $this->render('AppBundle:Builder:deck.html.twig',
+        return $this->render('AppBundle:Builder:deckedit.html.twig',
                 array(
                         'pagetitle' => "Deckbuilder",
                         'deck' => $deck,
@@ -595,25 +491,19 @@ class BuilderController extends Controller
 
     public function viewAction ($deck_id)
     {
-
-        $dbh = $this->get('doctrine')->getConnection();
+		$dbh = $this->getDoctrine()->getConnection();
+        
         $rows = $dbh->executeQuery("SELECT
 				d.id,
-				d.name,
-				d.description_md,
-                d.problem,
                 u.id user_id,
-                u.share_decks shared,
-				s.name side_name,
-				f.code faction_code
+                u.is_share_decks shared
                 from deck d
                 join user u on d.user_id=u.id
-				join side s on d.side_id=s.id
-				join faction f on c.faction_id=f.id
                 where d.id=?
 				", array(
                 $deck_id
         ))->fetchAll();
+				
         if(!count($rows)) {
             throw new NotFoundHttpException("Deck doesn't exist");
         }
@@ -624,22 +514,7 @@ class BuilderController extends Controller
             throw new UnauthorizedHttpException("You are not allowed to view this deck.");
         }
         
-        $deck['side_name'] = mb_strtolower($deck['side_name']);
-        
-        $rows = $dbh->executeQuery("SELECT
-				c.code,
-				s.quantity
-				from deckslot s
-				join card c on s.card_id=c.id
-				where s.deck_id=?", array(
-                $deck_id
-        ))->fetchAll();
-        
-        $cards = [];
-        foreach ($rows as $row) {
-            $cards[$row['code']] = $row['quantity'];
-        }
-        $deck['slots'] = $cards;
+        $deck = $this->get('decks')->getDeckInfo($deck_id);
         
         $published_decklists = $dbh->executeQuery(
                 "SELECT
@@ -662,13 +537,16 @@ class BuilderController extends Controller
                 FROM tournament t
                 ORDER BY t.description desc")->fetchAll();
 						
+        /*
 		$problem = $deck['problem'];
 		$deck['message'] = isset($problem) ? $this->get('judge')->problem($problem) : '';
-		
+		*/
+        
         return $this->render('AppBundle:Builder:deckview.html.twig',
                 array(
                         'pagetitle' => "Deckbuilder",
                         'deck' => $deck,
+                		'deck_id' => $deck_id,
                         'published_decklists' => $published_decklists,
                         'is_owner' => $is_owner,
                         'tournaments' => $tournaments,
