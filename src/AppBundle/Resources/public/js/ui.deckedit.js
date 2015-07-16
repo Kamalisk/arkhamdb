@@ -129,7 +129,6 @@ ui.build_pack_selector = function build_pack_selector() {
 			'$exists': true
 		}
 	}).forEach(function(record) {
-		console.log(record);
 		// checked or unchecked ? checked by default
 		var checked = true;
 		// if not yet available, uncheck pack
@@ -222,7 +221,6 @@ ui.on_input_smartfilter = function on_input_smartfilter(event) {
  */
 ui.on_submit_form = function on_submit_form(event) {
 	var deck_json = app.deck.get_json();
-	console.log(deck_json);
 	$('input[name=content]').val(deck_json);
 	$('input[name=description]').val($('textarea[name=description_]').val());
 	$('input[name=tags]').val($('input[name=tags_]').val());
@@ -394,7 +392,7 @@ ui.update_list_template = function update_list_template() {
 		DisplayColumnsTpl = _.template(
 			'<tr>'
 				+ '<td><div class="btn-group" data-toggle="buttons"><%= radios %></div></td>'
-				+ '<td><a class="card card-tooltip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></td>'
+				+ '<td><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></td>'
 				+ '<td class="type"><span class="icon-<%= card.type_code %>" title="<%= card.type_name %>"></span></td>'
 				+ '<td class="faction"><span class="icon-<%= card.faction_code %>" title="<%= card.faction_name %>"></span></td>'
 			+ '</tr>'
@@ -519,11 +517,10 @@ ui.refresh_deck = function refresh_deck() {
  * @memberOf ui
  */
 ui.on_dom_loaded = function on_dom_loaded() {
-	console.log('ui.init_config_buttons');
 	ui.init_config_buttons();
-	console.log('ui.setup_event_handlers');
 	ui.setup_event_handlers();
-	console.log('ui.on_dom_loaded end')
+	app.textcomplete.setup('#description');
+	app.markdown.setup('#description', '#description-preview')
 };
 
 /**
@@ -531,13 +528,9 @@ ui.on_dom_loaded = function on_dom_loaded() {
  * @memberOf ui
  */
 ui.on_data_loaded = function on_data_loaded() {
-	console.log('ui.remove_melee_titles')
 	ui.remove_melee_titles();
-	console.log('app.deck.init')
 	app.deck.init();
-	console.log('ui.set_max_qty')
 	ui.set_max_qty();
-	console.log('ui.on_data_loaded end')
 };
 
 /**
@@ -545,21 +538,13 @@ ui.on_data_loaded = function on_data_loaded() {
  * @memberOf ui
  */
 ui.on_all_loaded = function on_all_loaded() {
-	console.log('ui.update_list_template')
 	ui.update_list_template();
-	console.log('ui.build_faction_selector')
 	ui.build_faction_selector();
-	console.log('ui.build_type_selector')
 	ui.build_type_selector();
-	console.log('ui.build_pack_selector')
 	ui.build_pack_selector();
-	console.log('ui.init_selectors')
 	ui.init_selectors();
-	console.log('ui.refresh_deck')
 	ui.refresh_deck();
-	console.log('ui.refresh_list')
 	ui.refresh_list();
-	console.log('ui.on_all_loaded end')
 };
 
 ui.read_from_storage();

@@ -20,8 +20,8 @@ format.name = function name(card) {
 format.pack_faction = function pack_faction(card) {
 	var text = card.pack_name + ' #' + card.position + '. ';
 	text += card.faction_name + '. ';
-	if(card.is_loyal) text += 'Loyal. ';
-	if(card.is_limited) text += 'Limited. ';
+	if(card.isLoyal) text += 'Loyal. ';
+	if(card.isLimited) text += 'Limited. ';
 	return text;
 }
 
@@ -59,7 +59,7 @@ format.info = function info(card) {
  */
 format.text = function text(card) {
 	var text = card.text || '';
-	text = text.replace(/\[(\w+)\]/, '<span class="icon-$1"></span>')
+	text = text.replace(/\[(\w+)\]/g, '<span class="icon-$1"></span>')
 	text = text.split("\n").join('</p><p>');
 	return '<p>'+text+'</p>';
 };

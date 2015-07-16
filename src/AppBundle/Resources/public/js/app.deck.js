@@ -15,7 +15,7 @@ var date_creation,
 	unsaved,
 	user_id,
 	header_tpl = _.template('<h5><%= name %> (<%= quantity %>)</h5>'),
-	card_line_tpl = _.template('<div><%= card.indeck %>x <a href="<%= card.url %>" class="card card-tooltip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a></div>');
+	card_line_tpl = _.template('<div><%= card.indeck %>x <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a></div>');
 	
 /**
  * @memberOf deck

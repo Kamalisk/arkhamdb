@@ -97,48 +97,6 @@ $(function() {
 						converter.makeHtml($('#description').val()));
 			});
 
-	$('#description').textcomplete(
-			[
-					{
-						match : /\B#([\-+\w]*)$/,
-						search : function(term, callback) {
-							callback(app.data.cards({
-								name : {
-									likenocase : term
-								},
-								cycleposition : {
-									'!=': 0
-								}
-							}).get());
-						},
-						template : function(value) {
-							return value.name;
-						},
-						replace : function(value) {
-							return '[' + value.name + ']('
-									+ Routing.generate('cards_zoom', {card_code:value.code})
-									+ ')';
-						},
-						index : 1
-					}, {
-						match : /\$([\-+\w]*)$/,
-						search : function(term, callback) {
-							var regexp = new RegExp('^' + term);
-							callback($.grep(['credit', 'recurring-credit', 'click', 'link', 'trash', 'subroutine', 'mu', '1mu', '2mu', '3mu',
-								'anarch', 'criminal', 'shaper', 'haas-bioroid', 'weyland-consortium', 'jinteki', 'nbn'],
-								function(symbol) { return regexp.test(symbol); }
-							));
-						},
-						template : function(value) {
-							return value;
-						},
-						replace : function(value) {
-							return '<span class="icon icon-' + value + '"></span>';
-						},
-						index : 1
-					}
-			]);
-
 	$('#tbody-history').on('click', 'a[role=button]', load_snapshot);
 	$.each(History, function (index, snapshot) {
 		add_snapshot(snapshot);
