@@ -5,45 +5,38 @@ var modal = null;
 /**
  * @memberOf card_modal
  */
-card_modal.create_element = function create_element() {
-	modal = $('<div class="modal" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3 class="modal-title card-name">Modal title</h3><div class="row"><div class="col-sm-12 text-center"><div class="btn-group modal-qty" data-toggle="buttons"></div></div></div></div><div class="modal-body"><div class="row"><div class="col-sm-6 modal-image"></div><div class="col-sm-6 modal-info"></div></div></div><div class="modal-footer"><a role="button" href="#" class="btn btn-default card-modal-link">Go to card page</a><button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div></div></div></div>');
-	modal.appendTo('body');
-};
-
-/**
- * @memberOf card_modal
- */
 card_modal.display_modal = function display_modal(event, element) {
 	event.preventDefault();
-	$(element).qtip('hide');
-	var code = $(element).data('index') || $(element).closest('.card-container').data('index');
-	fill_modal(code);
+	$(element).qtip('destroy');
+	fill_modal($(element).data('code'));
 };
 
 /**
  * @memberOf card_modal
  */
-card_modal.typeahead = function typeahead(event, data) {
-	var card = app.data.cards({name:data.value}).first();
+card_modal.typeahead = function typeahead(event, card) {
 	fill_modal(card.code);
 	$('#cardModal').modal('show');
-	InputByTitle = true;
 };
 
 function fill_modal (code) {
-	var card = app.data.get_card_by_code(code);
-	modal.data('index', code);
+	var card = app.data.cards.findById(code),
+		modal = $('#cardModal');
+	
+	if(!card) return;
+	
+	modal.data('code', code);
 	modal.find('.card-modal-link').attr('href', card.url);
-	modal.find('h3.modal-title').html((card.uniqueness ? "&diams; " : "")+card.name);
+	modal.find('h3.modal-title').html(app.format.name(card));
 	modal.find('.modal-image').html('<img class="img-responsive" src="'+card.imagesrc+'">');
 	modal.find('.modal-info').html(
-	  '<div class="card-info">'+app.format.type(card)+'</div>'
-	  +'<div><small>' + card.faction + ' &bull; '+ card.setname + '</small></div>'
-	  +'<div class="card-text"><small>'+app.format.text(card)+'</small></div>'
+	  '<div class="card-info">' + app.format.info(card) + '</div>'
+	  +'<div><small>' + app.format.pack_faction(card) + '</small></div>'
+	  +'<div class="card-text"><small>' + app.format.text(card) + '</small></div>'
 	);
 
 	var qtyelt = modal.find('.modal-qty');
-	if(qtyelt && typeof Filters != "undefined") {
+	if(qtyelt) {
 
 		var qty = '';
 	  	for(var i=0; i<=card.maxqty; i++) {
@@ -55,24 +48,23 @@ function fill_modal (code) {
 			if(index == card.indeck) $(element).addClass('active');
 			else $(element).removeClass('active');
 		});
-		if(card.type_code == "agenda" && card.faction_code != "neutral" && Identity.faction_code != "neutral" && card.faction_code != Identity.faction_code) {
-			var slice = 0; // disable all inputs by default
-			if(card.indeck > 0) slice = 1; // enable only first input to allow user to remove invalid agendas if they wish
-			qtyelt.find('label').slice(slice).addClass("disabled").find('input[type=radio]').attr("disabled", true);
-		}
-		if(card.code == Identity.code) {
-			qtyelt.find('label').addClass("disabled").find('input[type=radio]').attr("disabled", true);
-		}
-
 		
 	} else {
 		if(qtyelt) qtyelt.closest('.row').remove();
 	}
 }
 
-
 $(function () {
-	card_modal.create_element();
-});
+	
+	$('body').on({click: function (event) {
+		var element = $(this);
+		if(event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) {
+			event.stopPropagation();
+			return;
+		}
+		if(app.card_modal) app.card_modal.display_modal(event, element);
+	}}, '.card');
+	
+})
 	
 })(app.card_modal = {}, jQuery);

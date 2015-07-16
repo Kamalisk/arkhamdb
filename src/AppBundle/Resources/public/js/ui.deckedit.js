@@ -274,7 +274,7 @@ ui.on_list_quantity_change = function on_list_quantity_change(event) {
 	var row = $(this).closest('.card-container');
 	var code = row.data('code');
 	var quantity = parseInt($(this).val(), 10);
-	row[quantity ? "addClass" : "removeClass"]('in-deck');
+//	row[quantity ? "addClass" : "removeClass"]('in-deck');
 	ui.on_quantity_change(code, quantity);
 }
 
@@ -283,30 +283,32 @@ ui.on_list_quantity_change = function on_list_quantity_change(event) {
  * @param event
  */
 ui.on_modal_quantity_change = function on_modal_quantity_change(event) {
-	var modal = $(this).closest('div.modal');
+	var modal = $('#cardModal');
 	var code =  modal.data('code');
 	var quantity = parseInt($(this).val(), 10);
 	modal.modal('hide');
 	ui.on_quantity_change(code, quantity);
+	
+	setTimeout(function () {
+		$('#filter-text').typeahead('val', '').focus();
+	}, 100);
 }
 
 /**
  * @memberOf ui
  */
 ui.on_quantity_change = function on_quantity_change(code, quantity) {
-
 	app.deck.set_card_copies(code, quantity);
 	ui.refresh_deck();
 
 	// for each set of divs (1, 2, 3 columns)
-	$.each(CardDivs, function(nbcols, rows) {
+	CardDivs.forEach(function(rows) {
 		var row = rows[code];
 		if(!row) return;
 
 		// rows[code] is the card row of our card
 		// for each "quantity switch" on that row
-		rows[code].find('input[name="qty-' + code + '"]').each(function(i, element) {
-
+		row.find('input[name="qty-' + code + '"]').each(function(i, element) {
 			// if that switch is NOT the one with the new quantity, uncheck it
 			// else, check it
 			if($(element).val() != quantity) {
@@ -350,9 +352,15 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	
 	$('#config-options').on('change', 'input', ui.on_config_change);
 	$('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
+
+	$('#cardModal').on('keypress', function(event) {
+		var num = parseInt(event.which, 10) - 48;
+		$('#cardModal input[type=radio][value=' + num + ']').trigger('change');
+	});
 	$('#cardModal').on('change', 'input[type=radio]', ui.on_modal_quantity_change);
 	
 	$('thead').on('click', 'a[data-sort]', ui.on_table_sort_click);
+	
 }
 
 /**
@@ -430,7 +438,7 @@ ui.update_list_template = function update_list_template() {
  */
 ui.build_row = function build_row(card) {
 	var radios = '', radioTpl = _.template(
-		'<label class="btn btn-xs btn-default <%= active %>"><input type="radio" name="qty-<% card.code %>" value="<%= i %>"><%= i %></label>'
+		'<label class="btn btn-xs btn-default <%= active %>"><input type="radio" name="qty-<%= card.code %>" value="<%= i %>"><%= i %></label>'
 	);
 
 	for (var i = 0; i <= card.maxqty; i++) {

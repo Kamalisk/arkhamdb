@@ -132,7 +132,35 @@
 
     </div>
     </footer>
-
+    
+	<!--  card modal -->    
+	<div class="modal" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3 class="modal-title card-name">Modal title</h3>
+					<div class="row">
+						<div class="col-sm-12 text-center">
+							<div class="btn-group modal-qty" data-toggle="buttons"></div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-6 modal-image"></div>
+						<div class="col-sm-6 modal-info"></div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<a role="button" href="#" class="btn btn-default card-modal-link">Go to card page</a>
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--  /cardModal -->
+	
     <script src="{{ asset('/bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 
@@ -162,6 +190,7 @@
 		'@AppBundle/Resources/public/js/app.data.js'
 		'@AppBundle/Resources/public/js/app.format.js'
 		'@AppBundle/Resources/public/js/app.tip.js'
+		'@AppBundle/Resources/public/js/app.card_modal.js'
 		'@AppBundle/Resources/public/js/app.user.js'
 		'@AppBundle/Resources/public/js/app.ui.js' %}
 	<script src="{{ asset_url }}"></script>
