@@ -49,6 +49,14 @@ deck.init = function init(json) {
  * @memberOf deck
  * @returns string
  */
+deck.get_id = function get_id() {
+	return id;
+}
+
+/**
+ * @memberOf deck
+ * @returns string
+ */
 deck.get_faction_code = function get_faction_code() {
 	return faction_code;
 }
@@ -72,6 +80,13 @@ deck.get_agenda = function get_agenda() {
 		type_code: 'agenda'
 	});
 	return result.length ? result[0] : null;
+}
+
+/**
+ * @memberOf deck
+ */
+deck.get_history = function get_history() {
+	return history;
 }
 
 /**
@@ -226,18 +241,26 @@ deck.set_card_copies = function set_card_copies(card_code, nb_copies) {
 	app.data.cards.updateById(card_code, {
 		indeck: nb_copies
 	});
+	if(app.deck_history) app.deck_history.notify_change();
+}
+
+/**
+ * @memberOf deck
+ */
+deck.get_content = function get_content() {
+	var cards = deck.get_cards();
+	var content = {};
+	cards.forEach(function (card) {
+		content[card.code] = card.indeck;
+	});
+	return content;
 }
 
 /**
  * @memberOf deck
  */
 deck.get_json = function get_json() {
-	var cards = deck.get_cards();
-	var content = {};
-	cards.forEach(function (card) {
-		content[card.code] = card.indeck;
-	});
-	return JSON.stringify(content);
+	return JSON.stringify(deck.get_content());
 }
 
 /**
@@ -251,20 +274,6 @@ deck.get_export = function get_export(format) {
  * @memberOf deck
  */
 deck.get_problem = function get_problem() {
-	
-}
-
-/**
- * @memberOf deck
- */
-deck.autosave = function autosave() {
-	
-}
-
-/**
- * @memberOf deck
- */
-deck.load_snapshot = function load_snapshot() {
 	
 }
 

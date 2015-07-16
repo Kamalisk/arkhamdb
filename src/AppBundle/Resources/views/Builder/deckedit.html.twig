@@ -1,17 +1,19 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
 {% block javascripts %}
-	<script src="{{ asset('/bundles/app/js/app.binomial.js') }}"></script>
-	<script src="{{ asset('/bundles/app/js/app.hypergeometric.js') }}"></script>
-	<script src="{{ asset('/bundles/app/js/app.draw_simulator.js') }}"></script>
-	{# <script src="{{ asset('/bundles/app/js/app.card_modal.js') }}"></script> #}
-	{# <script src="{{ asset('/bundles/app/js/app.suggestions.js') }}"></script> #}
-	{# <script src="{{ asset('/bundles/app/js/app.diff.js') }}"></script> #}
-	<script src="{{ asset('/bundles/app/js/app.textcomplete.js') }}"></script>
-	<script src="{{ asset('/bundles/app/js/app.markdown.js') }}"></script>
-	<script src="{{ asset('/bundles/app/js/app.smart_filter.js') }}"></script>
-	<script src="{{ asset('/bundles/app/js/app.deck.js') }}"></script>
-	<script src="{{ asset('/bundles/app/js/ui.deckedit.js') }}"></script>
+	{% javascripts
+		'@AppBundle/Resources/public/js/app.binomial.js'
+		'@AppBundle/Resources/public/js/app.hypergeometric.js'
+		'@AppBundle/Resources/public/js/app.draw_simulator.js'
+		'@AppBundle/Resources/public/js/app.diff.js'
+		'@AppBundle/Resources/public/js/app.textcomplete.js'
+		'@AppBundle/Resources/public/js/app.markdown.js'
+		'@AppBundle/Resources/public/js/app.smart_filter.js'
+		'@AppBundle/Resources/public/js/app.deck.js'
+		'@AppBundle/Resources/public/js/app.deck_history.js'
+		'@AppBundle/Resources/public/js/ui.deckedit.js' %}
+	<script src="{{ asset_url }}"></script>
+	{% endjavascripts %}
 	<script type="text/javascript">
 	app.deck.json = {{ deck|json_encode|raw }};
 	</script>

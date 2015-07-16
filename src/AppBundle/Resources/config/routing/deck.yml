@@ -141,7 +141,7 @@ deck_publish:
         deck_id: \d+
 
 deck_autosave:
-    pattern: /autosave/{deck_id}
+    pattern: /autosave
     methods: [POST]
     defaults:
         _controller: AppBundle:Builder:autosave

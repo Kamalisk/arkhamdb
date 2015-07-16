@@ -721,12 +721,14 @@ class BuilderController extends Controller
         return $this->redirect($this->generateUrl('decks_list'));
     }
     
-    public function autosaveAction($deck_id, Request $request)
+    public function autosaveAction(Request $request)
     {
         $user = $this->getUser();
         
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
+        
+        $deck_id = $request->get('deck_id');
         
         $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
         if(!$deck) {
@@ -738,14 +740,15 @@ class BuilderController extends Controller
         
         $diff = (array) json_decode($request->get('diff'));
         if (count($diff) != 2) {
-            throw new BadRequestHttpException("Wrong content ".$diff);
+        	$this->get('logger')->error("cannot use diff", $diff);
+            throw new BadRequestHttpException("Wrong content ".json_encode($diff));
         }
         
         if(count($diff[0]) || count($diff[1])) {
             $change = new Deckchange();
             $change->setDeck($deck);
             $change->setVariation(json_encode($diff));
-            $change->setSaved(FALSE);
+            $change->setIsSaved(FALSE);
             $em->persist($change);
             $em->flush();
         }

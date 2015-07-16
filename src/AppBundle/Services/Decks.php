@@ -148,7 +148,7 @@ class Decks
 		$postversion = $cards;
 		foreach ( $rows as $row ) {
 			$row ['variation'] = $variation = json_decode ( $row ['variation'], TRUE );
-			$row ['saved'] = ( boolean ) $row ['saved'];
+			$row ['is_saved'] = ( boolean ) $row ['is_saved'];
 			// applying variation to postversion
 			foreach ( $variation [0] as $code => $qty ) {
 				if (! isset ( $postversion [$code] ))

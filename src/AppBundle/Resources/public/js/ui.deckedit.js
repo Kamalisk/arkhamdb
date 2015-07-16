@@ -340,11 +340,9 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	});
 
 	$('#btn-cancel-edits').on('click', function(event) {
-		var edits = $.grep(Snapshots, function (snapshot) {
-			return snapshot.saved === false;
-		});
-		if(edits.length) {
-			var confirmation = confirm("This operation will revert the changes made to the deck since "+edits[edits.length-1].date_creation.calendar()+". The last "+(edits.length > 1 ? edits.length+" edits" : "edit")+" will be lost. Do you confirm?");
+		var unsaved_edits = app.deck_history.get_unsaved_edits();
+		if(unsaved_edits.length) {
+			var confirmation = confirm("This operation will revert the changes made to the deck since "+unsaved_edits[0].date_creation.calendar()+". The last "+(unsaved_edits.length > 1 ? unsaved_edits.length+" edits" : "edit")+" will be lost. Do you confirm?");
 			if(!confirmation) return false;
 		}
 		$('#deck-cancel-edits').val(1);
@@ -504,6 +502,17 @@ ui.refresh_list = _.debounce(function refresh_list() {
 }, 250);
 
 /**
+ * called when the deck is modified and we don't know what has changed
+ * @memberOf ui
+ */
+ui.on_deck_modified = function on_deck_modified() {
+	ui.refresh_deck();
+	ui.refresh_list();
+	if(app.suggestions) app.suggestions.compute();
+}
+
+
+/**
  * @memberOf ui
  */
 ui.refresh_deck = function refresh_deck() {
@@ -547,6 +556,7 @@ ui.on_all_loaded = function on_all_loaded() {
 	ui.init_selectors();
 	ui.refresh_deck();
 	ui.refresh_list();
+	app.deck_history.setup('#history');
 };
 
 ui.read_from_storage();
