@@ -508,7 +508,7 @@ ui.refresh_list = _.debounce(function refresh_list() {
  */
 ui.refresh_deck = function refresh_deck() {
 	app.deck.display('#deck', 'type', 1);
-	//app.draw_simulator.reset();
+	app.draw_simulator.reset();
 
 }
 
@@ -521,6 +521,7 @@ ui.on_dom_loaded = function on_dom_loaded() {
 	ui.setup_event_handlers();
 	app.textcomplete.setup('#description');
 	app.markdown.setup('#description', '#description-preview')
+	app.draw_simulator.on_dom_loaded();
 };
 
 /**
@@ -531,6 +532,7 @@ ui.on_data_loaded = function on_data_loaded() {
 	ui.remove_melee_titles();
 	app.deck.init();
 	ui.set_max_qty();
+	app.draw_simulator.on_data_loaded();
 };
 
 /**
