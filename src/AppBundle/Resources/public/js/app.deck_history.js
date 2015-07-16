@@ -6,7 +6,7 @@ var tbody,
 	progressbar,
 	timer,
 	ajax_in_process = false,
-	period = 5,
+	period = 60,
 	changed_since_last_autosave = false;
 
 /**
