@@ -3,22 +3,20 @@
 var SmartFilterQuery = [];
 
 /**
+ * called when the list is refreshed
  * @memberOf smart_filter
  */
 smart_filter.get_query =  function get_query(query) {
-	/*
-	var query = $.merge([], SmartFilterQuery);
-	if(FilterQuery) query.push(FilterQuery);
-	*/
-	return query;
+	return _.extend(query, SmartFilterQuery);
 };
 
 /**
+ * called when the filter input is modified
  * @memberOf smart_filter
  */
-smart_filter.handler =  function handler(value) {
+smart_filter.update =  function update(value) {
 	var conditions = filterSyntax(value);
-	SmartFilterQuery = [];
+	SmartFilterQuery = {};
 
 	for (var i = 0; i < conditions.length; i++) {
 		var condition = conditions[i];
@@ -27,53 +25,71 @@ smart_filter.handler =  function handler(value) {
 		var values = condition;
 
 		switch (type) {
-		case "e":
-			add_string_sf('set_code', operator, values);
-			break;
-		case "c":
-			add_integer_sf('cycleposition', operator, values);
-			break;
-		case "f":
-			add_string_sf('faction_letter', operator, values);
-			break;
-		case "t":
-			add_string_sf('type', operator, values);
-			break;
-		case "":
-			add_string_sf('name', operator, values);
-			break;
-		case "x":
-			add_string_sf('text', operator, values);
-			break;
 		case "a":
 			add_string_sf('flavor', operator, values);
 			break;
-		case "s":
-			add_string_sf('subtype', operator, values);
+		case "b":
+			add_integer_sf('claim', operator, values);
+			break;
+//		case "c":
+//			add_integer_sf('cycle', operator, values);
+//			break;
+		case "d":
+			add_boolean_sf('isLimited', operator, values);
+			break;
+		case "e":
+			add_string_sf('pack_code', operator, values);
+			break;
+		case "f":
+			add_string_sf('faction_code', operator, values);
+			break;
+		case "g":
+			add_boolean_sf('isIntrigue', operator, values);
+			break;
+		case "h":
+			add_integer_sf('reserve', operator, values);
+			break;
+		case "i":
+			add_string_sf('illustrator', operator, values);
+			break;
+		case "k":
+			add_string_sf('traits', operator, values);
+			break;
+		case "l":
+			add_boolean_sf('isLoyal', operator, values);
+			break;
+		case "m":
+			add_boolean_sf('isMilitary', operator, values);
+			break;
+		case "n":
+			add_integer_sf('income', operator, values);
 			break;
 		case "o":
 			add_integer_sf('cost', operator, values);
 			break;
-		case "v":
-			add_integer_sf('agendapoints', operator, values);
-			break;
-		case "n":
-			add_integer_sf('factioncost', operator, values);
-			break;
 		case "p":
+			add_boolean_sf('isPower', operator, values);
+			break;
+//		case "r":
+//			add_string_sf('date_release', operator, values);
+//			break;
+		case "s":
 			add_integer_sf('strength', operator, values);
 			break;
-		case "g":
-			add_integer_sf('advancementcost', operator, values);
+		case "t":
+			add_string_sf('type_code', operator, values);
 			break;
-		case "h":
-			add_integer_sf('trash', operator, values);
+		case "u":
+			add_boolean_sf('isUnique', operator, values);
+			break;
+		case "v":
+			add_integer_sf('initiative', operator, values);
+			break;
+		case "x":
+			add_string_sf('text', operator, values);
 			break;
 		case "y":
 			add_integer_sf('quantity', operator, values);
-			break;
-		case "u":
-			add_boolean_sf('uniqueness', operator, values);
 			break;
 		}
 	}
@@ -83,64 +99,57 @@ function add_integer_sf(key, operator, values) {
 	for (var j = 0; j < values.length; j++) {
 		values[j] = parseInt(values[j], 10);
 	}
-	var condition = {};
 	switch (operator) {
 	case ":":
-		condition[key] = {
-			'is' : values
+		SmartFilterQuery[key] = {
+			'$in' : values
 		};
 		break;
 	case "<":
-		condition[key] = {
-			'lt' : values
+		SmartFilterQuery[key] = {
+			'$lt' : values[0]
 		};
 		break;
 	case ">":
-		condition[key] = {
-			'gt' : values
+		SmartFilterQuery[key] = {
+			'$gt' : values[0]
 		};
 		break;
 	case "!":
-		condition[key] = {
-			'!is' : values
+		SmartFilterQuery[key] = {
+			'$nin' : values
 		};
 		break;
 	}
-	SmartFilterQuery.push(condition);
 }
 function add_string_sf(key, operator, values) {
-	var condition = {};
 	switch (operator) {
 	case ":":
-		condition[key] = {
-			'isNull': false,
-			'likenocase' : values
+		SmartFilterQuery[key] = {
+			'$in' : values
 		};
 		break;
 	case "!":
-		condition[key] = {
-			'isNull': false,
-			'!likenocase' : values
+		SmartFilterQuery[key] = {
+			'$nin' : values
 		};
 		break;
 	}
-	SmartFilterQuery.push(condition);
 }
 function add_boolean_sf(key, operator, values) {
-	var condition = {}, value = values.pop();
+	var value = values.shift(), target = !!value;
 	switch (operator) {
 	case ":":
-		condition[key] = {
-			'is': value ? true : false
+		SmartFilterQuery[key] = {
+			'$eq': target
 		};
 		break;
 	case "!":
-		condition[key] = {
-			'is': value ? false : true
+		SmartFilterQuery[key] = {
+			'$ne': target
 		};
 		break;
 	}
-	SmartFilterQuery.push(condition);
 }
 function filterSyntax(query) {
 	// renvoie une liste de conditions (array)

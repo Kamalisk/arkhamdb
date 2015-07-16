@@ -9,7 +9,14 @@ deck_gallery.display = function display(container) {
 		cards = app.deck.get_cards({'type_code':1});
 	
 	cards.forEach(function (card) {
-		var cell = $('<td><div><img src="' + card.imagesrc + '" alt="Card Image"><div>' + card.indeck + '</div></div></td>');
+		var card_element;
+		if(card.imagesrc) {
+			card_element = '<img src="'+card.imagesrc+'" class="card-image">';
+		} else {
+			card_element = '<div class="card-proxy"><div>'+card.name+'</div></div>';
+		}
+
+		var cell = $('<td><div>'+card_element+'<div>' + card.indeck + '</div></div></td>');
 		cell.appendTo(row);
 	})
 };

@@ -40,9 +40,6 @@ app.data_loaded.add(function() {
 $(function() {
 	$('html,body').css('height', '100%');
 
-	$('#filter-text').on('typeahead:selected typeahead:autocompleted',
-			app.card_modal.typeahead);
-
 	$(document).on('hidden.bs.modal', function (event) {
 		if(InputByTitle) {
 			setTimeout(function () {
@@ -71,35 +68,3 @@ $(function() {
 	
 });
 
-
-function load_snapshot(event) {
-	var index = $(this).data('index');
-	var snapshot = Snapshots[index];
-	if(!snapshot) return;
-
-	app.data.cards().each(function(record) {
-		var indeck = 0;
-		if (snapshot.content[record.code]) {
-			indeck = parseInt(snapshot.content[record.code], 10);
-		}
-		app.data.cards(record.___id).update({
-			indeck : indeck
-		});
-	});
-	update_deck();
-	refresh_collection();
-	app.suggestions.compute();
-	Deck_changed_since_last_autosave = true;
-	return false;
-}
-function get_deck_content() {
-	var deck_content = {};
-	app.data.cards({
-		indeck : {
-			'gt' : 0
-		}
-	}).each(function(record) {
-		deck_content[record.code] = record.indeck;
-	});
-	return deck_content;
-}

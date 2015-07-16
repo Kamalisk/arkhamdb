@@ -381,7 +381,7 @@ class CardsData
 
 		$cardinfo['url'] = $this->router->generate('cards_zoom', array('card_code' => $card->getCode()), true);
 		$imageurl = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'.png');
-		$imagepath= $this->rootDir . '/../web/' . $imageurl;
+		$imagepath= $this->rootDir . '/../web/' . preg_replace('/\?.*/', '', $imageurl);
 		if(file_exists($imagepath)) {
 			$cardinfo['imagesrc'] = $imageurl;
 		} else {

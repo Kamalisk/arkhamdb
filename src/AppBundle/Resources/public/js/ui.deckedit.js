@@ -210,8 +210,8 @@ ui.on_click_filter = function on_click_filter(event) {
  */
 ui.on_input_smartfilter = function on_input_smartfilter(event) {
 	var q = $(this).val();
-	if(q.match(/^\w[:<>!]/)) app.smart_filter.handler(q);
-	else app.smart_filter.handler('');
+	if(q.match(/^\w[:<>!]/)) app.smart_filter.update(q);
+	else app.smart_filter.update('');
 	ui.refresh_list();
 }
 
@@ -360,7 +360,7 @@ ui.setup_event_handlers = function setup_event_handlers() {
  * @memberOf ui
  */
 ui.get_filters = function get_filters() {
-	var filters = [];
+	var filters = {};
 	$('[data-filter]').each(
 		function(index, div) {
 			var columnName = $(div).data('filter');
@@ -508,7 +508,7 @@ ui.refresh_list = _.debounce(function refresh_list() {
 ui.on_deck_modified = function on_deck_modified() {
 	ui.refresh_deck();
 	ui.refresh_list();
-	if(app.suggestions) app.suggestions.compute();
+	app.suggestions && app.suggestions.compute();
 }
 
 
@@ -517,7 +517,30 @@ ui.on_deck_modified = function on_deck_modified() {
  */
 ui.refresh_deck = function refresh_deck() {
 	app.deck.display('#deck', 'type', 1);
-	app.draw_simulator.reset();
+	app.draw_simulator && app.draw_simulator.reset();
+
+}
+
+/**
+ * @memberOf ui
+ */
+ui.setup_typeahead = function setup_typeahead() {
+	
+	function findMatches(q, cb) {
+		if(q.match(/^\w:/)) return;
+		var regexp = new RegExp(q, 'i');
+		cb(app.data.cards.find({name: regexp}));
+	}
+
+	$('#filter-text').typeahead({
+		hint: true,
+		highlight: true,
+		minLength: 2
+	},{
+		name : 'cardnames',
+		displayKey: 'name',
+		source: findMatches
+	});
 
 }
 
@@ -528,9 +551,10 @@ ui.refresh_deck = function refresh_deck() {
 ui.on_dom_loaded = function on_dom_loaded() {
 	ui.init_config_buttons();
 	ui.setup_event_handlers();
-	app.textcomplete.setup('#description');
-	app.markdown.setup('#description', '#description-preview')
-	app.draw_simulator.on_dom_loaded();
+	app.textcomplete && app.textcomplete.setup('#description');
+	app.markdown && app.markdown.setup('#description', '#description-preview')
+	app.draw_simulator && app.draw_simulator.on_dom_loaded();
+	app.card_modal && $('#filter-text').on('typeahead:selected typeahead:autocompleted', app.card_modal.typeahead);
 };
 
 /**
@@ -541,7 +565,7 @@ ui.on_data_loaded = function on_data_loaded() {
 	ui.remove_melee_titles();
 	app.deck.init();
 	ui.set_max_qty();
-	app.draw_simulator.on_data_loaded();
+	app.draw_simulator && app.draw_simulator.on_data_loaded();
 };
 
 /**
@@ -556,7 +580,8 @@ ui.on_all_loaded = function on_all_loaded() {
 	ui.init_selectors();
 	ui.refresh_deck();
 	ui.refresh_list();
-	app.deck_history.setup('#history');
+	ui.setup_typeahead();
+	app.deck_history && app.deck_history.setup('#history');
 };
 
 ui.read_from_storage();
