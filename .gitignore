@@ -11,3 +11,8 @@
 /web/bundles/
 tags
 /web/js/
+/.externalToolBuilders/
+/.settings/
+/.buildpath
+/.project
+/.tags_swap
