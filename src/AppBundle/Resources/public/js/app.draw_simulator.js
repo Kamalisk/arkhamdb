@@ -21,7 +21,7 @@ draw_simulator.reset = function reset() {
  */
 draw_simulator.on_dom_loaded = function on_dom_loaded() {
 	$('#table-draw-simulator').on('click', 'button.btn', draw_simulator.handle_click);
-	$('#table-draw-simulator').on('click', 'img.card-image, div.card-proxy', draw_simulator.toggle_opacity);
+	$('#table-draw-simulator').on('click', 'img, div.card-proxy', draw_simulator.toggle_opacity);
 	container = $('#table-draw-simulator-content');
 }
 
@@ -61,7 +61,7 @@ draw_simulator.do_draw = function do_draw(draw) {
 		var card = spliced[0];
 		var card_element;
 		if(card.imagesrc) {
-			card_element = $('<img src="'+card.imagesrc+'" class="card-image">');
+			card_element = $('<img src="'+card.imagesrc+'">');
 		} else {
 			card_element = $('<div class="card-proxy"><div>'+card.name+'</div></div>');
 		}

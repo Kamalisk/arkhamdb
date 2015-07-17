@@ -11,7 +11,7 @@ deck_gallery.display = function display(container) {
 	cards.forEach(function (card) {
 		var card_element;
 		if(card.imagesrc) {
-			card_element = '<img src="'+card.imagesrc+'" class="card-image">';
+			card_element = '<img src="'+card.imagesrc+'">';
 		} else {
 			card_element = '<div class="card-proxy"><div>'+card.name+'</div></div>';
 		}

@@ -91,12 +91,6 @@ body {
 .display-spoiler-card h4 {
 	border-bottom: 1px solid #ddd;
 }
-.qtip-agot2db{
-	min-width: 310px;
-	max-width: 350px;
-	font-size: 15px;
-}
-
 
 #deck {
 }
@@ -152,9 +146,9 @@ td.type, td.faction {
 
 /********* DRAW SIMULATOR ************/
 
-#table-draw-simulator-content img.card-image {width:99px;float:left;margin:5px;box-shadow: black 0px 0px 5px;border-radius: 5px;}
-#table-draw-simulator-content img.card-image.trashed {opacity: 0.25;box-shadow: none;}
-#table-draw-simulator-content img.card-image.trashed:hover {opacity: 0.75;}
+#table-draw-simulator-content img {width:99px;float:left;margin:5px;box-shadow: black 0px 0px 5px;border-radius: 5px;}
+#table-draw-simulator-content img.trashed {opacity: 0.25;box-shadow: none;}
+#table-draw-simulator-content img.trashed:hover {opacity: 0.75;}
 #table-draw-simulator-content div.card-proxy {background:#888;color:white;width:99px;height:138px;float:left;margin:5px;box-shadow: black 0px 0px 5px;border-radius: 5px;}
 #table-draw-simulator-content img.card-proxy.trashed {opacity: 0.25;box-shadow: none;}
 #table-draw-simulator-content img.card-proxy.trashed:hover {opacity: 0.75;}
@@ -172,3 +166,42 @@ td.type, td.faction {
 .tt-suggestion.tt-cursor a{color:#fff}
 .tt-suggestion p{margin:0}
 
+/************** QTIP ****************/
+
+.qtip-agot2db{min-width:310px;max-width:350px;font-size:15px}
+
+/***************** THUMBNAIL CARD IMAGE **************/
+
+.card-thumbnail{background-attachment:scroll;background-origin:padding-box;background-clip:border-box;background-repeat:no-repeat;margin:0 0 5px 5px;position:relative;border:1px solid #000;float:right}
+.card-thumbnail-1x{width:200px;height:200px;background-size:300px 418px}
+.card-thumbnail-2x{width:100px;height:100px;background-size:150px 209px}
+.card-thumbnail-3x{width:67px;height:67px;background-size:100px 139px}
+.card-thumbnail-4x{width:50px;height:50px;background-size:75px 105px}
+.card-thumbnail-5x{width:40px;height:40px;background-size:60px 84px}
+.card-thumbnail-1x.card-thumbnail-character{background-position:-79px -21px}
+.card-thumbnail-2x.card-thumbnail-character{background-position:-40px -10px}
+.card-thumbnail-3x.card-thumbnail-character{background-position:-26px -7px}
+.card-thumbnail-4x.card-thumbnail-character{background-position:-20px -5px}
+.card-thumbnail-5x.card-thumbnail-character{background-position:-16px -4px}
+.card-thumbnail-1x.card-thumbnail-attachment{background-position:-51px -31px}
+.card-thumbnail-2x.card-thumbnail-attachment{background-position:-25.5px -15.5px}
+.card-thumbnail-3x.card-thumbnail-attachment{background-position:-17px -10.3px}
+.card-thumbnail-4x.card-thumbnail-attachment{background-position:-12.75px -7.75px}
+.card-thumbnail-5x.card-thumbnail-attachment{background-position:-10.2px -6.2px}
+.card-thumbnail-1x.card-thumbnail-agenda{background-position:-50px -52px}
+.card-thumbnail-2x.card-thumbnail-agenda{background-position:-25px -26px}
+.card-thumbnail-3x.card-thumbnail-agenda{background-position:-16.7px -17.3px}
+.card-thumbnail-4x.card-thumbnail-agenda{background-position:-12.5px -13px}
+.card-thumbnail-5x.card-thumbnail-agenda{background-position:-10px -10.4px}
+.card-thumbnail-1x.card-thumbnail-event{background-position:-50px -60px}
+.card-thumbnail-2x.card-thumbnail-event{background-position:-25px -30px}
+.card-thumbnail-3x.card-thumbnail-event{background-position:-16.7px -20px}
+.card-thumbnail-4x.card-thumbnail-event{background-position:-12.5px -15px}
+.card-thumbnail-5x.card-thumbnail-event{background-position:-10px -12px}
+.card-thumbnail-1x.card-thumbnail-location{background-position:-82px -26px}
+.card-thumbnail-2x.card-thumbnail-location{background-position:-41px -13px}
+.card-thumbnail-3x.card-thumbnail-location{background-position:-27.3px -8.7px}
+.card-thumbnail-4x.card-thumbnail-location{background-position:-20.5px -6.5px}
+.card-thumbnail-5x.card-thumbnail-location{background-position:-16.4px -5.2px}
+
+	

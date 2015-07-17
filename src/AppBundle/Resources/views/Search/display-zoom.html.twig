@@ -33,7 +33,7 @@ app.user.params.card_id = {{ cards[0].id|json_encode|raw }};
         		</div>
         	</div>
         	<div class="col-sm-5">
-        		<div class="card-image">
+        		<div>
         			{% if card.imagesrc %}
         			   <img src="{{ card.imagesrc }}" class="img-responsive" style="margin:auto">
         			{% else %}
