@@ -14,6 +14,16 @@ class Decklists
     }
     
 
+    public function getDecklistContent($decklist)
+    {
+    	$arr = array ();
+    	foreach ( $decklist->getSlots () as $slot ) {
+    		$arr [$slot->getCard ()->getCode ()] = $slot->getQuantity ();
+    	}
+    	ksort ( $arr );
+    	return $arr;
+    }
+    
     /**
      * returns the list of decklist favorited by user
      * @param integer $limit

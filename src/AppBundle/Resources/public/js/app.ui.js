@@ -23,6 +23,14 @@ ui.on_all_loaded = function on_all_loaded() {};
 
 $(document).ready(function () {
 	console.log('ui.on_dom_loaded');
+	
+	if(Modernizr.touch) {
+		//$('#svg').remove();
+		//$('form.external').removeAttr('target');
+	} else {
+		$('[data-toggle="tooltip"]').tooltip();
+	}
+
 	if(typeof ui.on_dom_loaded === 'function') ui.on_dom_loaded();
 	dom_loaded.resolve();
 });

@@ -24,7 +24,7 @@
 <div class="row">
 
 <!-- Right-side column -->
-<div class="col-md-5 col-md-push-7">
+<div class="col-md-4 col-md-push-8">
 
 <div class="row" style="margin-bottom:10px">
 <div class="col-md-12">
@@ -92,7 +92,7 @@
 <!-- / Right-side column -->
 
 <!-- Left-side column -->
-<div class="col-md-7 col-md-pull-5">
+<div class="col-md-8 col-md-pull-4">
 
 <h1>My private decks <small style="font-size:16px"{% if cannotcreate %} class="text-danger"{% endif %}>({{ nbdecks }}/{{ nbmax }} slots)</small></h1>
 
@@ -101,6 +101,7 @@
 	<tr>
 		<th>Select</th>
 		<th>Name</th>
+		<th>Actions</th>
 		<th>Faction</th>
 	</tr>
 </thead>
@@ -113,6 +114,12 @@
 			{% for tag in deck.tags|split(' ') %}
 			<span class="label label-default">{{ tag }}</span>
 			{% endfor %}
+		</td>
+		<td>
+			<a href="{{ path('deck_edit',{deck_id:deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+			<button class="btn btn-xs btn-default btn-publish-deck" data-toggle="tooltip" title="Publish"><span class="glyphicon glyphicon-share"></span></button>
+			<a href="{{ path('deck_duplicate',{deck_id:deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Duplicate"><span class="glyphicon glyphicon-plus"></span></a>
+			<button class="btn btn-xs btn-default btn-delete-deck" data-toggle="tooltip" title="Delete"><span class="glyphicon glyphicon-trash"></span></button>
 		</td>
 		<td><img src="{{ asset('/bundles/app/images/factions/' ~ deck.faction_code ~ '.png') }}"></td>
 	</tr>

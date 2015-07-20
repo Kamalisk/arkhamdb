@@ -26,28 +26,35 @@ class SocialController extends Controller
         $em = $this->get('doctrine')->getManager();
         
         $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
+        if(!$deck)
+        	throw new NotFoundHttpException("Deck not found: ".$deck_id);
         
         if ($this->getUser()->getId() != $deck->getUser()->getId())
             throw new UnauthorizedHttpException("You don't have access to this deck.");
         
+        /*
         $judge = $this->get('judge');
         $analyse = $judge->analyse($deck->getCards());
         
         if (is_string($analyse))
             throw new AccessDeniedHttpException($judge->problem($analyse));
+        */
         
-        $new_content = json_encode($deck->getContent());
+        $decklists = $this->get('decklists');
+        
+        $new_content = json_encode($this->get('decks')->getDeckContent($deck));
         $new_signature = md5($new_content);
         $old_decklists = $this->getDoctrine()
             ->getRepository('AppBundle:Decklist')
             ->findBy(array(
                 'signature' => $new_signature
         ));
+        /* @var $decklist \AppBundle\Entity\Decklist */
         foreach ($old_decklists as $decklist) {
-            if (json_encode($decklist->getContent()) == $new_content) {
+            if (json_encode($decklists->getDecklistContent($decklist)) == $new_content) {
                 return new Response($this->generateUrl('decklist_detail', array(
                         'decklist_id' => $decklist->getId(),
-                        'decklist_name' => $decklist->getPrettyName()
+                        'decklist_name' => $decklist->getNameCanonical()
                 )));
             }
         }
