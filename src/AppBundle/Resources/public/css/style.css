@@ -106,6 +106,9 @@ body {
   margin: -4px 8px 0 -6px;
 }
 
+html, body {
+	min-height: 100%;
+}
 body {
 	background: #FAF7F5;
 }
@@ -204,4 +207,31 @@ td.type, td.faction {
 .card-thumbnail-4x.card-thumbnail-location{background-position:-20.5px -6.5px}
 .card-thumbnail-5x.card-thumbnail-location{background-position:-16.4px -5.2px}
 
-	
+/************** INDEX PAGE ***************/
+
+h1.site-title {
+	font-family: 'Allura', cursive;position:relative;font-size:128px;text-align:center;
+	text-shadow: white 0px 2px 1px;
+	margin-top: 0;
+}
+h1.site-title span {
+	position:relative;display:inline-block;width:.4em;font-size: 150%;top:.1em;left:-.1em;
+}
+div.site-slogan {
+	font-family: 'Allura', cursive;position:relative;
+	font-size:40px;
+	text-align:center;
+	text-shadow: white 0px 2px 1px;
+}
+.jumbotron {
+	margin-top: -20px;
+	background: rgba(250,226,210,1);
+	background: -moz-linear-gradient(top, rgba(250,226,210,1) 0%, rgba(250,247,245,1) 100%);
+	background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(250,226,210,1)), color-stop(100%, rgba(250,247,245,1)));
+	background: -webkit-linear-gradient(top, rgba(250,226,210,1) 0%, rgba(250,247,245,1) 100%);
+	background: -o-linear-gradient(top, rgba(250,226,210,1) 0%, rgba(250,247,245,1) 100%);
+	background: -ms-linear-gradient(top, rgba(250,226,210,1) 0%, rgba(250,247,245,1) 100%);
+	background: linear-gradient(to bottom, rgba(250,226,210,1) 0%, rgba(250,247,245,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fae2d2', endColorstr='#faf7f5', GradientType=0 );
+}
+
