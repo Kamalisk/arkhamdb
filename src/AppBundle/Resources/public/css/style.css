@@ -53,7 +53,9 @@ body {
 	padding: 50px 0;
 	text-align: center;
 }
-
+.tab-content {
+	padding-top: 15px;
+}
 .dropdown-menu label {
   margin: 0;
 }
@@ -175,6 +177,7 @@ div.site-slogan {
 	background-color: #fff;
 	border: 1px solid #ddd;
 	padding-top: 20px;
+	padding-bottom: 20px;
 }
 #wrapper {
 	min-height: 800px;
@@ -187,4 +190,55 @@ footer {
 }
 .navbar-default {
 	font-size: 16px;
+}
+
+
+/************** FACTIONS COLORS **************/
+
+.media-left span {
+	padding: 10px;
+}
+.lannister {
+	background-color: #A80B00;
+	color: #EDC76B;
+	text-shadow: white 0px -1px 1px, black 0px 1px 1px;
+}
+.stark {
+	background-color: #E4E5E5;
+	color: #515252;
+	text-shadow: white 0px -1px 1px, black 0px 1px 1px;
+}
+.tyrell {
+	background-color: #3E8235;
+	color: #E5CE1E;
+	text-shadow: white 0px -1px 1px, black 0px 1px 1px;
+}
+.nightswatch {
+	background-color: #879596;
+	color: #000;
+	text-shadow: white 0px -1px 1px, white 0px 1px 1px, black 0px 2px 2px;
+}
+.baratheon {
+	background-color: #F2DC35;
+	color: #000;
+	text-shadow: white 0px -1px 1px, white 0px 1px 1px, black 0px 2px 2px;
+}
+.targaryen {
+	background-color: #0E002E;
+	color: #8C0E0E;
+	text-shadow: white 0px -1px 1px, black 0px 1px 1px;
+}
+.greyjoy {
+	background-color: #00022E;
+	color: #D4AD40;
+	text-shadow: black 0px -1px 1px, black 0px 1px 1px;
+}
+.martell {
+	background-color: #E0AB48;
+	color: #F04626;
+	text-shadow: black 0px -1px 1px, black 0px 1px 1px, white 0px -2px 2px;
+}
+.list-factions li label {
+	font-family: 'Julius Sans One', sans-serif;
+	font-weight: 700;
 }

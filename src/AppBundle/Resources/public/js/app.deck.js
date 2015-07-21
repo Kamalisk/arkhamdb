@@ -219,7 +219,7 @@ deck.display = function display(container, sort, nb_columns) {
 	})
 	
 	var deck_intro = $('<div class="deck-intro"><div class="media"><div class="media-left"></div><div class="media-body"></div></div>');
-	$(deck_intro).find('.media-left').append('<span class="icon-'+deck.get_faction_code()+'"></span>');
+	$(deck_intro).find('.media-left').append('<span class="icon-'+deck.get_faction_code()+' '+deck.get_faction_code()+'"></span>');
 	$(deck_intro).find('.media-body').append('<h4>'+faction_name+'</h4>');
 	$(deck_intro).find('.media-body').append('<div>Draw deck: '+deck.get_draw_deck_size()+' cards.</div>');
 	$(deck_intro).find('.media-body').append('<div>Plot deck: '+deck.get_plot_deck_size()+' cards.</div>');
@@ -283,6 +283,8 @@ deck.get_problem = function get_problem() {
  */
 deck.get_minor_faction_code = function get_minor_faction_code() {
 	var agenda = deck.get_agenda();
+	if(!agenda) return;
+	
 	// special case for the Core Set Banners
 	var banners_core_set = {
 		'01198': 'baratheon',
