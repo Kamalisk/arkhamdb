@@ -133,23 +133,23 @@ function setup_social_icons() {
 function setup_title() {
 	var title = $('h1.decklist-name');
 	if(app.user.data && app.user.data.is_author && app.user.data.can_delete) {
-		title.prepend('<a href="#" title="Delete decklist" id="decklist-delete"><span class="glyphicon glyphicon-trash pull-right text-danger"></span></a>');
+		title.prepend('<a href="#" title="Delete decklist" id="decklist-delete"><span class="fa fa-trash-o pull-right text-danger"></span></a>');
 	}
 	if(app.user.data && app.user.data.is_author) {
-		title.prepend('<a href="#" title="Edit decklist name / description" id="decklist-edit"><span class="glyphicon glyphicon-pencil pull-right"></span></a>');
+		title.prepend('<a href="#" title="Edit decklist name / description" id="decklist-edit"><span class="fa fa-pencil pull-right"></span></a>');
 	}
 }
 
 function setup_comment_hide() {
 	if(app.user.data && app.user.data.is_author) {
 		$('.comment-hide-button').remove();
-		$('<a href="#" class="comment-hide-button"><span class="text-danger glyphicon glyphicon-remove" style="margin-left:.5em"></span></a>').appendTo('.collapse.in > .comment-date').on('click', function (event) {
+		$('<a href="#" class="comment-hide-button"><span class="text-danger fa fa-times" style="margin-left:.5em"></span></a>').appendTo('.collapse.in > .comment-date').on('click', function (event) {
 			if(confirm('Do you really want to hide this comment for everybody?')) {
 				hide_comment($(this).closest('td'));
 			}
 			return false;
 		});
-		$('<a href="#" class="comment-hide-button"><span class="text-success glyphicon glyphicon-ok" style="margin-left:.5em"></span></a>').appendTo('.collapse:not(.in) > .comment-date').on('click', function (event) {
+		$('<a href="#" class="comment-hide-button"><span class="text-success fa fa-check" style="margin-left:.5em"></span></a>').appendTo('.collapse:not(.in) > .comment-date').on('click', function (event) {
 			if(confirm('Do you really want to unhide this comment?')) {
 				unhide_comment($(this).closest('td'));
 			}

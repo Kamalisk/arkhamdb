@@ -54,8 +54,8 @@
     		<div class="checkbox"><label class="{% if pack.future %}pack-future{% endif %}"><input type="checkbox" name="packs[]" value="{{ pack.id }}" {% if pack.checked %}checked="checked" {% endif %}>{{ pack.label }}</label></div>
     	  {% endfor %}
 		{% endfor %}
-		<a href="#" id="select_all"><span class="glyphicon glyphicon-ok"></span> all</a>
-		/ <a href="#" id="select_none"><span class="glyphicon glyphicon-remove"></span> none</a>
+		<a href="#" id="select_all"><span class="fa fa-check"></span> all</a>
+		/ <a href="#" id="select_none"><span class="fa fa-times"></span> none</a>
 		</div>
     	</div>
 	</div>

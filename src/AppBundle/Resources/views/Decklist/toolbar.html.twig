@@ -1,11 +1,11 @@
 <form action="{{ path('deck_copy', {decklist_id:decklist.id}) }}" method="POST" style="display:inline">
 	<button type="submit" id="btn-copy" class="btn btn-default">
-		<span class="glyphicon glyphicon-save"></span> <span class="hidden-xs">Copy</span>
+		<span class="fa fa-save"></span> <span class="hidden-xs">Copy</span>
 	</button>
 </form>
 <div class="btn-group">
 	<button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown">
-		<span class="glyphicon glyphicon-download"></span> <span class="hidden-xs">Download</span> <span class="caret"></span>
+		<span class="fa fa-download"></span> <span class="hidden-xs">Download</span> <span class="caret"></span>
 	</button>
 	<ul class="dropdown-menu" role="menu">
 		<li><a href="#" id="btn-download-text">Text file</a></li>
@@ -14,7 +14,7 @@
 </div>
 <div class="btn-group">
 	<button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown">
-		<span class="glyphicon glyphicon-export"></span> <span class="hidden-xs">Export</span> <span class="caret"></span>
+		<span class="fa fa-clipboard"></span> <span class="hidden-xs">Export</span> <span class="caret"></span>
 	</button>
 	<ul class="dropdown-menu" role="menu">
 		<li><a href="#" id="btn-export-bbcode">bbCode</a></li>
@@ -24,7 +24,7 @@
 </div>
 <div class="btn-group">
 	<button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown">
-		<span class="glyphicon glyphicon-sort"></span> <span class="hidden-xs">Sort</span> <span class="caret"></span>
+		<span class="fa fa-sort"></span> <span class="hidden-xs">Sort</span> <span class="caret"></span>
 	</button>
 	<ul class="dropdown-menu" role="menu" id="menu-sort">
 		<li><a href="#" id="btn-sort-type">by Type</a></li>
@@ -34,5 +34,5 @@
 	</ul>
 </div>
 <button type="button" id="btn-compare" class="btn btn-default">
-	<span class="glyphicon glyphicon-duplicate"></span> <span class="hidden-xs">Compare</span>
+	<span class="fa fa-duplicate"></span> <span class="hidden-xs">Compare</span>
 </button>

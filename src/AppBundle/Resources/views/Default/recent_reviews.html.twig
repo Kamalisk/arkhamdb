@@ -4,12 +4,12 @@
 		{% for review in reviews %}
 		<article class="review">
 		<h4>
-		  <span class="pull-right"><span class="glyphicon glyphicon-heart social-icon-like"></span> {{ review.nbVotes }}</span>
+		  <span class="pull-right"><span class="fa fa-heart social-icon-like"></span> {{ review.nbVotes }}</span>
 		  <a href="{{ path('cards_zoom', {card_code:review.card_code}) }}#review-{{ review.id }}" class="card">{{ review.card_name }}</a>
 		</h4>
 		<div class="username small">
     		by <a href="{{ path('user_profile_view', {user_id:review.user_id,user_name:review.username|e('url')}) }}" class="{{ review.usercolor }}">{{ review.username }}</a>
-    		{% if review.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="agot2db Gracious Donator"></span>{% endif %}
+    		{% if review.donation > 0 %}<span class="fa fa-gift donator" title="agot2db Gracious Donator"></span>{% endif %}
     		<small class="reputation">{{ review.reputation }}</small>
     	</div>
 		<p><small>{{ review.rawtext|raw }}</small></p>

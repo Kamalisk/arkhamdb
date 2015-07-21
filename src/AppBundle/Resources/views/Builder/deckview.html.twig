@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block body %}
-<div class="container">
+<div class="main container">
 
 <div class="row">
     <div class="col-md-12">
@@ -40,10 +40,10 @@
 <div style="margin-bottom:20px" id="btn-group-deck">
 {% if is_owner %}
 <div style="margin-bottom:5px">
-    <button type="button" id="btn-print" class="btn btn-default"><span class="glyphicon glyphicon-print"></span> Print</button>
-	<a href="{{ path('deck_edit', {deck_id:deck_id}) }}" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-	<button type="button" id="btn-publish" disabled="disabled" class="btn btn-success"><span class="glyphicon glyphicon-share"></span> Publish</button>
-	<button type="button" id="btn-delete" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Delete</button>
+    <button type="button" id="btn-print" class="btn btn-default"><span class="fa fa-print"></span> Print</button>
+	<a href="{{ path('deck_edit', {deck_id:deck_id}) }}" class="btn btn-primary"><span class="fa fa-pencil"></span> Edit</a>
+	<button type="button" id="btn-publish" disabled="disabled" class="btn btn-success"><span class="fa fa-share"></span> Publish</button>
+	<button type="button" id="btn-delete" class="btn btn-danger"><span class="fa fa-times"></span> Delete</button>
 </div>
 {% endif %}
 <div>
@@ -68,7 +68,7 @@
 
 	<div class="btn-group">
 		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-			<span class="glyphicon glyphicon-download"></span> Download <span class="caret"></span>
+			<span class="fa fa-download"></span> Download <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu" role="menu">
 			<li><a href="{{ path('deck_export_text', {deck_id:deck_id}) }}">Text file</a></li>
@@ -93,7 +93,7 @@
 <!-- Graphs -->
 <table class="table table-condensed" id="table-graph-costs">
 <thead>
-<tr><th colspan="1"><span class="glyphicon glyphicon-stats"></span> Repartition by Cost</th></tr>
+<tr><th colspan="1"><span class="fa fa-bar-chart"></span> Repartition by Cost</th></tr>
 </thead>
 <tbody>
 <tr>
@@ -104,7 +104,7 @@
 
 <table class="table table-condensed" id="table-graph-strengths">
 <thead>
-<tr><th colspan="1"><span class="glyphicon glyphicon-stats"></span> Repartition by Strength</th></tr>
+<tr><th colspan="1"><span class="fa fa-bar-chart"></span> Repartition by Strength</th></tr>
 </thead>
 <tbody>
 <tr>
@@ -116,16 +116,16 @@
 <!-- Published decklists Table -->
 <table class="table table-condensed" id="table-predecessor">
 	<thead>
-		<tr><th colspan="4"><span class="glyphicon glyphicon-share"></span> Published versions</th></tr>
+		<tr><th colspan="4"><span class="fa fa-share"></span> Published versions</th></tr>
 	</thead>
 	<tbody>
 	{% if published_decklists|length %}
 	{% for decklist in published_decklists %}
 		<tr>
 			<td class="decklist-name"><a href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.name_canonical|e('url') }) }}">{{ decklist.name }}</a></td>
-			<td class="social"><span class="glyphicon glyphicon-heart social-icon-like"></span> {{ decklist.nbVotes }}</td>
-			<td class="social"><span class="glyphicon glyphicon-star social-icon-favorite"></span> {{ decklist.nbfavorites }}</td>
-			<td class="social"><span class="glyphicon glyphicon-comment social-icon-comment"></span> {{ decklist.nbcomments }}</td>
+			<td class="social"><span class="fa fa-heart social-icon-like"></span> {{ decklist.nbVotes }}</td>
+			<td class="social"><span class="fa fa-star social-icon-favorite"></span> {{ decklist.nbfavorites }}</td>
+			<td class="social"><span class="fa fa-comment social-icon-comment"></span> {{ decklist.nbcomments }}</td>
 		</tr>
 	{% endfor %}
 	{% else %}

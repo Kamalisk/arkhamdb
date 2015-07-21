@@ -185,7 +185,7 @@ class ExcelController extends Controller
         	}
         	
         	$changed = FALSE;
-        	echo("<h4>".$card['name']."</h4>");
+        	$output = [ "<h4>".$card['name']."</h4>" ];
         	
         	foreach($card as $colName => $value)
         	{
@@ -203,7 +203,7 @@ class ExcelController extends Controller
         			}
         			if(!$entity->$getter() || $entity->$getter()->getId() !== $associationEntity->getId()) {
         				$changed = TRUE;
-        				echo("<p>association [$colName] changed</p>");
+        				$output[] = "<p>association [$colName] changed</p>";
         				
         				$entity->$setter($associationEntity);
         			}
@@ -216,10 +216,7 @@ class ExcelController extends Controller
         			}
         			if($entity->$getter() != $value || ($entity->$getter() === NULL && $entity->$getter() !== $value)) {
         				$changed = TRUE;
-        				echo("<p>field [$colName] changed</p>");
-        				var_dump($entity->$getter());
-        				echo("<br>");
-        				var_dump($value);
+        				$output[] = "<p>field [$colName] changed</p>";
 
         				$entity->$setter($value);
         			}
@@ -229,8 +226,8 @@ class ExcelController extends Controller
         	if($changed) {
         		$em->persist($entity);
         		$counter++;
-        	} else {
-        		echo("<p>no change</p>");
+        		
+        		echo join("", $output);
         	}
         }
         

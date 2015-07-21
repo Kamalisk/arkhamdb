@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<div class="container decklists">
+<div class="main container">
 	<div class="row">
 		<div class="col-sm-3">
 
@@ -30,7 +30,7 @@
 					href="{{ linkurl }}">My decklists</a></li> {% endif %} {% set
 				linkurl = path('decklists_searchform') %}
 				<li class="{% if url == linkurl %}active{% endif %}"><a
-					href="{{ linkurl }}"><span class="glyphicon glyphicon-search"></span>
+					href="{{ linkurl }}"><span class="fa fa-search"></span>
 						Search</a></li>
 			</ul>
 

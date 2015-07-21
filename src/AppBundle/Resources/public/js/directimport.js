@@ -22,7 +22,7 @@ function do_import() {
 	for(var i=0; i<lines.length; i++) {
 		var a = import_one_line(lines[i], i);
 		if(!a) continue;
-		$('#analyzed').append('<li class="list-group-item">'+a+'<a class="pull-right glyphicon glyphicon-trash"></a></li>');
+		$('#analyzed').append('<li class="list-group-item">'+a+'<a class="pull-right fa fa-trash-o"></a></li>');
 	}
 	update_stats();
 }

@@ -2,7 +2,7 @@
 
 {% block body %}
 
-<div class="container">
+<div class="main container">
 
 	{% include 'AppBundle:Default:navbar-factions.html.twig' %}
 
@@ -29,9 +29,9 @@
 	    <article>
 		<h4>
 			<small class="pull-right social">
-				<span class="glyphicon glyphicon-heart social-icon-like"></span> {{ decklist.nbVotes }}
-				<span class="glyphicon glyphicon-star social-icon-favorite"></span> {{ decklist.nbfavorites }}
-				<span class="glyphicon glyphicon-comment social-icon-comment"></span> {{ decklist.nbcomments }}
+				<span class="fa fa-heart social-icon-like"></span> {{ decklist.nbVotes }}
+				<span class="fa fa-star social-icon-favorite"></span> {{ decklist.nbfavorites }}
+				<span class="fa fa-comment social-icon-comment"></span> {{ decklist.nbcomments }}
 			</small>
 			<a class="decklist-name" href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.name_canonical|e('url') }) }}">{{ decklist.name }}</a>
 		</h4>
@@ -40,7 +40,7 @@
 			<i>{{ decklist.lastPack.name }}</i>
 			{% if decklist.tournament %}
 			<span class="text-success" style="margin-left:1em">
-			 <span class="glyphicon glyphicon-certificate"></span> {{ decklist.tournament.description }}
+			 <span class="fa fa-certificate"></span> {{ decklist.tournament.description }}
 			</span>
 			{% endif %}
 		</h5>
@@ -49,7 +49,7 @@
 	</tr>
 {% endfor %}
 </table>
-<a  class="btn btn-default btn-xs" href="{{ path('decklists_list',{type:'find','cards[]':item['identity'].code,'sort':'popularity'}) }}">Show more <span class="glyphicon glyphicon-menu-right"></span></a>
+<a  class="btn btn-default btn-xs" href="{{ path('decklists_list',{type:'find','cards[]':item['identity'].code,'sort':'popularity'}) }}">Show more <span class="fa fa-menu-right"></span></a>
 </div>
 </div>
 	

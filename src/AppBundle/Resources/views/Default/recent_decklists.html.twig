@@ -14,13 +14,13 @@
 	</div>
 	<div class="username small">
 		<a href="{{ path('user_profile_view', {user_id:decklist.user_id,user_name:decklist.username|e('url')}) }}" class="{{ decklist.usercolor }}">{{ decklist.username }}</a>
-		{% if decklist.donation > 0 %}<span class="glyphicon glyphicon-gift donator" title="agot2db Gracious Donator"></span>{% endif %}
+		{% if decklist.donation > 0 %}<span class="fa fa-gift donator" title="agot2db Gracious Donator"></span>{% endif %}
 		<small class="reputation">{{ decklist.reputation }}</small>
 	</div>
 	<div class="small social">
-		<span class="glyphicon glyphicon-heart social-icon-like"></span> {{ decklist.nbVotes }}
-		<span class="glyphicon glyphicon-star social-icon-favorite"></span> {{ decklist.nbfavorites }}
-		<span class="glyphicon glyphicon-comment social-icon-comment"></span> {{ decklist.nbcomments }}
+		<span class="fa fa-heart social-icon-like"></span> {{ decklist.nbVotes }}
+		<span class="fa fa-star social-icon-favorite"></span> {{ decklist.nbfavorites }}
+		<span class="fa fa-comment social-icon-comment"></span> {{ decklist.nbcomments }}
 	</div>
 	</td>
 	</tr>

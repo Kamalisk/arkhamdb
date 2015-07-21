@@ -20,16 +20,16 @@
 {% endblock %}
 
 {% block body %}
-<div class="container deck">
+<div class="main container">
 
 {% if deck.unsaved %}
-<div class="alert alert-danger" role="alert" id="deck-unsaved-alert"><span class="glyphicon glyphicon-warning-sign"></span> This deck has unsaved changes. Please save the deck or cancel the changes before making further edits.</div>
+<div class="alert alert-danger" role="alert" id="deck-unsaved-alert"><span class="fa-exclamation-triangle "></span> This deck has unsaved changes. Please save the deck or cancel the changes before making further edits.</div>
 {% endif %}
 
 <div class="row">
 
 <!-- Left-side Column -->
-<div class="col-md-6">
+<div class="col-md-5">
 
 <div id="deck" class="deck-loading">
 	<i class="fa fa-spinner fa-spin fa-5x"></i>
@@ -57,7 +57,7 @@
 <!-- Left-side Column -->
 
 <!-- Right-side Column -->
-<div class="col-md-6">
+<div class="col-md-7">
 	<div role="tabpanel">
 	  <ul class="nav nav-tabs" role="tablist">
 	    <li role="presentation" class="active"><a href="#tab-pane-build" aria-controls="tab-pane-build" role="tab" data-toggle="tab">Build</a></li>
