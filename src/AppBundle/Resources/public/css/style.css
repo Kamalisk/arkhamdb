@@ -43,6 +43,11 @@ body {
 	color: #292e5f;
 }
 
+.table-expanded>thead>tr>th, .table-expanded>tbody>tr>th, .table-expanded>tfoot>tr>th, .table-expanded>thead>tr>td, .table-expanded>tbody>tr>td, .table-expanded>tfoot>tr>td {
+	padding: 16px 8px;
+}
+
+
 .display-spoiler-card {
 	margin-bottom: 1em;
 }
@@ -102,6 +107,13 @@ footer {
 
 /********* LIST OF DECKS ************/
 
+.list-decks>tbody>tr>td {
+	vertical-align: middle;
+}
+.list-decks img {
+	height: 63px;
+	width: 45px;
+}
 
 /********** NEW DECK **********/
 

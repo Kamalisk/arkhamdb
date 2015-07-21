@@ -96,7 +96,7 @@
 
 <h1>My private decks <small style="font-size:16px"{% if cannotcreate %} class="text-danger"{% endif %}>({{ nbdecks }}/{{ nbmax }} slots)</small></h1>
 
-<table class="table">
+<table class="table table-expanded list-decks">
 <thead>
 	<tr>
 		<th>Select</th>
@@ -117,7 +117,7 @@
 		</td>
 		<td>
 			<a href="{{ path('deck_edit',{deck_id:deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit"><span class="fa fa-pencil"></span></a>
-			<button class="btn btn-xs btn-default btn-publish-deck" data-toggle="tooltip" title="Publish"><span class="fa fa-share"></span></button>
+			<button class="disabled btn btn-xs btn-default btn-publish-deck" data-toggle="tooltip" title="Publish"><span class="fa fa-share"></span></button>
 			<a href="{{ path('deck_duplicate',{deck_id:deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Duplicate"><span class="fa fa-plus"></span></a>
 			<button class="btn btn-xs btn-default btn-delete-deck" data-toggle="tooltip" title="Delete"><span class="fa fa-trash-o"></span></button>
 		</td>

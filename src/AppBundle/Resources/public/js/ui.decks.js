@@ -3,7 +3,7 @@
 ui.decks = [];
 
 ui.confirm_publish = function confirm_publish(event) {
-
+return;
 	var button = $(this);
 	if($(button).hasClass('processing')) return;
 	$(button).addClass('processing');

@@ -87,7 +87,7 @@ class CardsData
 
 	public function getPrimaryFactions()
 	{
-		$factions = $this->doctrine->getRepository('AppBundle:Faction')->findBy(array("is_primary" => TRUE), array("name" => "ASC"));
+		$factions = $this->doctrine->getRepository('AppBundle:Faction')->findBy(array("is_primary" => TRUE), array("code" => "ASC"));
 		return $factions;
 	}
 

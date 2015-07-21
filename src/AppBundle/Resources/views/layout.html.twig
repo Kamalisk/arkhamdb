@@ -42,7 +42,7 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li><a href="{{ path('decks_list') }}">My Decks</a></li>
-            <li><a href="{{ path('decklists_list', {type:'popular'}) }}">Decklists</a></li>
+            <li class="disabled"><a href="#">Decklists</a></li>
             <li class="hidden-sm dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Cards <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
@@ -53,6 +53,7 @@
               {% endfor %}
               </ul>
             </li>
+            {#
             <li class="hidden-sm dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Factions <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
@@ -61,6 +62,7 @@
               {% endfor %}
               </ul>
             </li>
+            #}
             <li class="hidden-sm"><a href="{{ path('card_reviews_list') }}">Reviews</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
