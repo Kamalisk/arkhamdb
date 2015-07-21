@@ -69,11 +69,32 @@ html, body {
 td.type, td.faction {
 	text-align:center;
 }
+.main.container {
+	background-color: #fff;
+	border: 1px solid #ddd;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+#wrapper {
+	min-height: 800px;
+}
+footer {
+	padding-top: 20px;
+	margin-top: 100px;
+	background-color: #95a5a6;
+	border-top: 10px solid #c0392b;
+}
+.navbar-default {
+	font-size: 16px;
+}
 
 /********* ONE DECK *********/
 
 .deck-intro .media-left {
 	font-size: 96px;
+}
+.deck-intro .media-left span {
+	padding: 10px;
 }
 .deck-content {
 	margin-bottom: 15px;
@@ -81,11 +102,12 @@ td.type, td.faction {
 
 /********* LIST OF DECKS ************/
 
-#decks td {
-	vertical-align: middle;
-}
-#decks img {
-	height: 50px;
+
+/********** NEW DECK **********/
+
+.list-factions li label {
+	font-family: 'Julius Sans One', sans-serif;
+	font-weight: 700;
 }
 
 /************ DECK GALLERY **********/
@@ -173,31 +195,10 @@ div.site-slogan {
 .jumbotron {
 	margin-top: -20px;
 }
-.main.container {
-	background-color: #fff;
-	border: 1px solid #ddd;
-	padding-top: 20px;
-	padding-bottom: 20px;
-}
-#wrapper {
-	min-height: 800px;
-}
-footer {
-	padding-top: 20px;
-	margin-top: 100px;
-	background-color: #95a5a6;
-	border-top: 10px solid #c0392b;
-}
-.navbar-default {
-	font-size: 16px;
-}
 
 
 /************** FACTIONS COLORS **************/
 
-.media-left span {
-	padding: 10px;
-}
 .lannister {
 	background-color: #A80B00;
 	color: #EDC76B;
@@ -237,8 +238,4 @@ footer {
 	background-color: #E0AB48;
 	color: #F04626;
 	text-shadow: black 0px -1px 1px, black 0px 1px 1px, white 0px -2px 2px;
-}
-.list-factions li label {
-	font-family: 'Julius Sans One', sans-serif;
-	font-weight: 700;
 }
