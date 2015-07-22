@@ -21,7 +21,7 @@ format.pack_faction = function pack_faction(card) {
 	var text = card.pack_name + ' #' + card.position + '. ';
 	text += card.faction_name + '. ';
 	if(card.isLoyal) text += 'Loyal. ';
-	if(card.isLimited) text += 'Limited. ';
+	if(card.plotLimit) text += 'Plot deck limit: '+card.plotLimit+'. ';
 	return text;
 }
 
@@ -44,11 +44,10 @@ format.info = function info(card) {
 		text += 'Cost: '+(card.cost != null ? card.cost : 'X')+'. ';
 		break;
 	case 'plot':
-		text += 'Income: '+card.income+'. ';
+		text += 'Gold: '+card.income+'. ';
 		text += 'Initiative: '+card.initiative+'. ';
 		text += 'Claim: '+card.claim+'. ';
 		text += 'Reserve: '+card.reserve+'. ';
-		text += 'Plot deck limit: '+card.plotLimit+'. ';
 		break;
 	}
 	return text;

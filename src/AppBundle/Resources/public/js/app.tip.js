@@ -4,15 +4,15 @@ var cards_zoom_regexp = /card\/(\d\d\d\d\d)$/;
 
 function display_card_on_element(card, element, event) {
 
-	var image = card.imagesrc && card.type_code !== "plot" ? '<div class="card-thumbnail card-thumbnail-3x card-thumbnail-'+card.type_code+'" style="background-image:url('+card.imagesrc+')"></div>' : "";
-	
+	var image = card.imagesrc ? '<div class="card-thumbnail card-thumbnail-'+(card.type_code === 'plot' ? 4 : 3)+'x card-thumbnail-'+card.type_code+'" style="background-image:url('+card.imagesrc+')"></div>' : "";
+
 	var content = image
-	+ '<h4 class="card-name">' + app.format.name(card) + '</h4>' 
-	+ '<div class="card-info">' + app.format.info(card) + '</div>' 
+	+ '<h4 class="card-name">' + app.format.name(card) + '</h4>'
+	+ '<div class="card-info">' + app.format.info(card) + '</div>'
 	+ '<div class="card-traits">' + app.format.traits(card) + '</div>'
 	+ '<div class="card-text">' + app.format.text(card) + '</div>'
 	+ '<p class="card-faction" style="text-align:right;clear:right">' + app.format.pack_faction(card) + '</p>';
-	
+
 	$(element).qtip(
 			{
 				content : {
@@ -36,7 +36,7 @@ function display_card_on_element(card, element, event) {
 				}*/
 			}, event);
 }
-	
+
 /**
  * @memberOf tip
  * @param event
@@ -71,7 +71,7 @@ $(function() {
 			mouseover : tip.display,
 			focus : tip.display
 		}, 'a.card-tip');
-		
+
 		$('body').on({
 			mouseover : tip.guess,
 			focus : tip.guess
