@@ -69,6 +69,7 @@ body {
 }
 
 html, body {
+	height: 100%;
 	min-height: 100%;
 }
 td.type, td.faction {
@@ -79,15 +80,15 @@ td.type, td.faction {
 	border: 1px solid #ddd;
 	padding-top: 20px;
 	padding-bottom: 20px;
+	margin-bottom: 100px;
 }
 #wrapper {
-	min-height: 800px;
+	min-height: 100%;
+	border-bottom: 10px solid #c0392b;
 }
 footer {
 	padding-top: 20px;
-	margin-top: 100px;
 	background-color: #95a5a6;
-	border-top: 10px solid #c0392b;
 }
 .navbar-default {
 	font-size: 16px;

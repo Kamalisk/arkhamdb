@@ -123,6 +123,9 @@ function add_integer_sf(key, operator, values) {
 	}
 }
 function add_string_sf(key, operator, values) {
+	for (var j = 0; j < values.length; j++) {
+		values[j] = new RegExp(values[j], 'i');
+	}
 	switch (operator) {
 	case ":":
 		SmartFilterQuery[key] = {
