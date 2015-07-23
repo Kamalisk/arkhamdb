@@ -1,5 +1,7 @@
 (function app_data(data, $) {
 
+var first_run = false;
+	
 /** 
  * loads the database from local
  * sets up a Promise on all data loading/updating
@@ -10,8 +12,8 @@ data.load = function load() {
 	var fdb = new ForerunnerDB();
 	data.db = fdb.db('agot2db');
 	
-	data.packs = data.db.collection('pack', {primaryKey:'code'});
-	data.cards = data.db.collection('card', {primaryKey:'code'});
+	data.packs = data.db.collection('pack', {primaryKey:'code', changeTimestamp: true});
+	data.cards = data.db.collection('card', {primaryKey:'code', changeTimestamp: true});
 	
 	data.dfd = {
 		packs: new $.Deferred(),
@@ -22,17 +24,30 @@ data.load = function load() {
 
 	data.packs.load(function (err) {
 		if(err) {
+			console.log('packs loading error', err);
 			data.dfd.packs.reject(false);
 			return;
 		}
 		data.cards.load(function (err) {
 			if(err) {
+				console.log('cards loading error', err);
 				data.dfd.cards.reject(false);
 				return;
 			}
-			// data has been fetched from local store, triggering event
-			$(document).trigger('data.app');
-			// then we ask the server if new data is available
+			
+			/*
+			 * data has been fetched from local store, triggering event
+			 * unless we don't have any data yet, in which case we will wait until data is updated before firing the event
+			 */ 
+			if(data.packs.count() === 0 || data.cards.count() === 0) {
+				first_run = true;
+			} else {
+				$(document).trigger('data.app');
+			}
+			
+			/*
+			 * then we ask the server if new data is available
+			 */
 			data.query();
 		});
 	});		
@@ -67,9 +82,13 @@ data.query = function query() {
  */
 data.update_done = function update_done(packs_updated, cards_updated) {
 	if(packs_updated || cards_updated) {
-		var message = "A new version of the data is available. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
-		var alert = $('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
-		$('#wrapper>div.container').prepend(alert);
+		if(first_run) {
+			$(document).trigger('data.app');
+		} else {
+			var message = "A new version of the data is available. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
+			var alert = $('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
+			$('#wrapper>div.container').prepend(alert);
+		}
 	}
 };
 
@@ -95,23 +114,22 @@ data.update_fail = function update_fail(packs_loaded, cards_loaded) {
  * @memberOf data
  */
 data.update_collection = function update_collection(data, collection, lastModified, deferred) {
-	/*
-	 * we look for a row with last_modified equal or greater than lastModified
-	 * if we find one, then the database is up-to-date
-	 */
-	var newerRecords = collection.find({
-		last_modified: {
-			'$gte': lastModified
-		}
-	});
+	var lastChangeDatabase = new Date(collection.metaData().lastChange).getTime();
+	var lastModifiedData = lastModified.getTime();
 	
-	if(newerRecords.length) {
+	/*
+	 * if the database is not older than the data, we don't have to update the database
+	 */
+	if(lastChangeDatabase && lastChangeDatabase >= lastModifiedData) {
 		deferred.resolve(false);
 		return;
 	}
 	
-	collection.setData(data);
-	collection.insert({last_modified: lastModified});
+	// should work with setData, but doesn't. workaround with insert
+	// collection.setData(data);
+	data.forEach(function (record) {
+		collection.insert(record);
+	});
 	
 	collection.save(function (err) {
 		if(!err) {
@@ -127,7 +145,7 @@ data.update_collection = function update_collection(data, collection, lastModifi
  * @memberOf data
  */
 data.parse_packs = function parse_packs(response, textStatus, jqXHR) {
-	var lastModified = new Date(jqXHR.getResponseHeader('Last-Modified')).toISOString();
+	var lastModified = new Date(jqXHR.getResponseHeader('Last-Modified'));
 	data.update_collection(response, data.packs, lastModified, data.dfd.packs);
 };
 
@@ -136,7 +154,7 @@ data.parse_packs = function parse_packs(response, textStatus, jqXHR) {
  * @memberOf data
  */
 data.parse_cards = function parse_cards(response, textStatus, jqXHR) {
-	var lastModified = new Date(jqXHR.getResponseHeader('Last-Modified')).toISOString();
+	var lastModified = new Date(jqXHR.getResponseHeader('Last-Modified'));
 	data.update_collection(response, data.cards, lastModified, data.dfd.cards);
 };
 
