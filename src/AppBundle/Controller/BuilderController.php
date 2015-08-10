@@ -16,20 +16,20 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class BuilderController extends Controller
 {
-	
+
 	public function buildformAction (Request $request)
 	{
 		$response = new Response();
 		$response->setPublic();
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
-		
+
 		/* @var $em \Doctrine\ORM\EntityManager */
 		$em = $this->get('doctrine')->getManager();
-		
+
 		$factions = $em->getRepository('AppBundle:Faction')->findBy(["is_primary" => TRUE]);
 		$agenda = $em->getRepository('AppBundle:Type')->findOneBy(['code' => 'agenda']);
 		$agendas = $em->getRepository('AppBundle:Card')->findBy(['type' => $agenda]);
-		
+
 		return $this->render('AppBundle:Builder:initbuild.html.twig', [
 				'pagetitle' => "New deck",
 				'factions' => $factions,
@@ -41,16 +41,16 @@ class BuilderController extends Controller
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
-        
+
         $faction_code = $request->request->get('faction');
         $agenda_code = $request->request->get('agenda');
-        
+
         if(!$faction_code)
         {
         	$this->get('session')->getFlashBag()->set('error', "A faction is required.");
         	return $this->redirect($this->generateUrl('deck_buildform'));
         }
-        
+
         $faction = $em->getRepository('AppBundle:Faction')->findOneBy(array("code" => $faction_code));
         if(!$faction)
         {
@@ -70,7 +70,7 @@ class BuilderController extends Controller
         	$name = sprintf("New Deck - %s - %s", $faction->getName(), $agenda->getName());
         	$pack = $agenda->getPack();
         }
-        
+
         $deck = new Deck();
         $deck->setDescriptionMd("");
         $deck->setFaction($faction);
@@ -79,7 +79,7 @@ class BuilderController extends Controller
         $deck->setProblem('deckSize');
         $deck->setTags($faction_code);
         $deck->setUser($this->getUser());
-        
+
         if($agenda)
         {
         	$slot = new Deckslot();
@@ -88,10 +88,10 @@ class BuilderController extends Controller
         	$slot->setDeck($deck);
         	$deck->addSlot($slot);
         }
-        
+
         $em->persist($deck);
         $em->flush();
-        
+
         return $this->redirect($this->get('router')->generate('deck_edit', ['deck_id' => $deck->getId()]));
     }
 
@@ -100,12 +100,12 @@ class BuilderController extends Controller
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
-        
+
         return $this->render('AppBundle:Builder:directimport.html.twig',
                 array(
                         'pagetitle' => "Import a deck",
                 ), $response);
-    
+
     }
 
     public function fileimportAction (Request $request)
@@ -118,17 +118,17 @@ class BuilderController extends Controller
         $origname = $uploadedFile->getClientOriginalName();
         $origext = $uploadedFile->getClientOriginalExtension();
         $filename = $uploadedFile->getPathname();
-        
+
         if (function_exists("finfo_open")) {
             // return mime type ala mimetype extension
             $finfo = finfo_open(FILEINFO_MIME);
-            
+
             // check to see if the mime-type starts with 'text'
             $is_text = substr(finfo_file($finfo, $filename), 0, 4) == 'text' || substr(finfo_file($finfo, $filename), 0, 15) == "application/xml";
             if (! $is_text)
                 return new Response('Bad file');
         }
-        
+
         if ($filetype == "octgn" || ($filetype == "auto" && $origext == "o8d")) {
             $parse = $this->parseOctgnImport(file_get_contents($filename));
         } else {
@@ -140,14 +140,14 @@ class BuilderController extends Controller
                         'content' => json_encode($parse['content']),
                         'description' => $parse['description']
                 ));
-    
+
     }
 
     public function parseTextImport ($text)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
-        
+
         $content = [];
         $lines = explode("\n", $text);
         $identity = null;
@@ -179,20 +179,20 @@ class BuilderController extends Controller
                 "content" => $content,
                 "description" => ""
         );
-    
+
     }
 
     public function parseOctgnImport ($octgn)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
-        
+
         $content = [];
-        
+
         $crawler = new Crawler();
         $crawler->addXmlContent($octgn);
         $cardcrawler = $crawler->filter('deck > section > card');
-        
+
         $content = [];
         foreach ($cardcrawler as $domElement) {
             $quantity = intval($domElement->getAttribute('qty'));
@@ -209,7 +209,7 @@ class BuilderController extends Controller
                 $content[$card->getCode()] = $quantity;
             }
         }
-        
+
         $desccrawler = $crawler->filter('deck > notes');
         $description = [];
         foreach ($desccrawler as $domElement) {
@@ -219,23 +219,23 @@ class BuilderController extends Controller
                 "content" => $content,
                 "description" => implode("\n", $description)
         );
-    
+
     }
 
     public function textexportAction ($deck_id)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
-        
+
         /* @var $deck \AppBundle\Entity\Deck */
         $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
         if (! $this->getUser() || $this->getUser()->getId() != $deck->getUser()->getId())
             throw new UnauthorizedHttpException("You don't have access to this deck.");
-            
+
             /* @var $judge \AppBundle\Services\Judge */
         $judge = $this->get('judge');
         $classement = $judge->classe($deck->getCards(), $deck->getIdentity());
-        
+
         $lines = [];
         $types = array(
                 "Event",
@@ -252,7 +252,7 @@ class BuilderController extends Controller
                 "Sentry",
                 "ICE"
         );
-        
+
         $lines[] = $deck->getIdentity()->getName() . " (" . $deck->getIdentity()
             ->getPack()
             ->getName() . ")";
@@ -280,78 +280,44 @@ class BuilderController extends Controller
         $lines[] = $deck->getDeckSize() . " cards (min " . $deck->getIdentity()->getMinimumDeckSize() . ")";
         $lines[] = "Cards up to " . $deck->getLastPack()->getName();
         $content = implode("\r\n", $lines);
-        
+
         $name = mb_strtolower($deck->getName());
         $name = preg_replace('/[^a-zA-Z0-9_\-]/', '-', $name);
         $name = preg_replace('/--+/', '-', $name);
-        
+
         $response = new Response();
-        
+
         $response->headers->set('Content-Type', 'text/plain');
         $response->headers->set('Content-Disposition', 'attachment;filename=' . $name . ".txt");
-        
+
         $response->setContent($content);
         return $response;
-    
+
     }
 
     public function octgnexportAction ($deck_id)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
-        
+
         /* @var $deck \AppBundle\Entity\Deck */
         $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
         if (! $this->getUser() || $this->getUser()->getId() != $deck->getUser()->getId())
             throw new UnauthorizedHttpException("You don't have access to this deck.");
-        
-        $rd = [];
-        $identity = null;
-        /** @var $slot Deckslot */
-        foreach ($deck->getSlots() as $slot) {
-            if ($slot->getCard()
-                ->getType()
-                ->getName() == "Identity") {
-                $identity = array(
-                        "index" => $slot->getCard()->getCode(),
-                        "name" => $slot->getCard()->getName()
-                );
-            } else {
-                $rd[] = array(
-                        "index" => $slot->getCard()->getCode(),
-                        "name" => $slot->getCard()->getName(),
-                        "qty" => $slot->getQuantity()
-                );
-            }
-        }
+
+        $content = $this->get('octgn')->export($deck);
+
         $name = mb_strtolower($deck->getName());
         $name = preg_replace('/[^a-zA-Z0-9_\-]/', '-', $name);
         $name = preg_replace('/--+/', '-', $name);
-        if (empty($identity)) {
-            return new Response('no identity found');
-        }
-        return $this->octgnexport("$name.o8d", $identity, $rd, $deck->getDescription());
-    
-    }
 
-    public function octgnexport ($filename, $identity, $rd, $description)
-    {
+	      $response = new Response();
 
-        $content = $this->renderView('AppBundle::octgn.xml.twig',
-                array(
-                        "identity" => $identity,
-                        "rd" => $rd,
-                        "description" => strip_tags($description)
-                ));
-        
-        $response = new Response();
-        
-        $response->headers->set('Content-Type', 'application/octgn');
-        $response->headers->set('Content-Disposition', 'attachment;filename=' . $filename);
-        
-        $response->setContent($content);
-        return $response;
-    
+	      $response->headers->set('Content-Type', 'application/octgn');
+	      $response->headers->set('Content-Disposition', 'attachment;filename=' . $name . '.o8d');
+
+	      $response->setContent($content);
+	      return $response;
     }
 
     public function saveAction (Request $request)
@@ -359,11 +325,11 @@ class BuilderController extends Controller
 
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
-        
+
         $user = $this->getUser();
         if (count($user->getDecks()) > $user->getMaxNbDecks())
             return new Response('You have reached the maximum number of decks allowed. Delete some decks or increase your reputation.');
-        
+
         $id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
         $deck = null;
         $source_deck = null;
@@ -374,13 +340,13 @@ class BuilderController extends Controller
             }
             $source_deck = $deck;
         }
-        
+
         $cancel_edits = (boolean) filter_var($request->get('cancel_edits'), FILTER_SANITIZE_NUMBER_INT);
         if($cancel_edits) {
             if($deck) $this->get('decks')->revertDeck($deck);
             return $this->redirect($this->generateUrl('decks_list'));
         }
-        
+
         $is_copy = (boolean) filter_var($request->get('copy'), FILTER_SANITIZE_NUMBER_INT);
         if($is_copy || !$id) {
             $deck = new Deck();
@@ -390,49 +356,49 @@ class BuilderController extends Controller
         if (! count($content)) {
             return new Response('Cannot import empty deck');
         }
-        
+
         $name = filter_var($request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $decklist_id = filter_var($request->get('decklist_id'), FILTER_SANITIZE_NUMBER_INT);
         $description = trim($request->get('description'));
         $tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        
+
         $this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $description, $tags, $content, $source_deck ? $source_deck : null);
 
         return $this->redirect($this->generateUrl('decks_list'));
-    
+
     }
 
     public function deleteAction (Request $request)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
-        
+
         $deck_id = filter_var($request->get('deck_id'), FILTER_SANITIZE_NUMBER_INT);
         $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
         if (! $deck)
             return $this->redirect($this->generateUrl('decks_list'));
         if ($this->getUser()->getId() != $deck->getUser()->getId())
             throw new UnauthorizedHttpException("You don't have access to this deck.");
-        
+
         foreach ($deck->getChildren() as $decklist) {
             $decklist->setParent(null);
         }
         $em->remove($deck);
         $em->flush();
-        
+
         $this->get('session')
             ->getFlashBag()
             ->set('notice', "Deck deleted.");
-        
+
         return $this->redirect($this->generateUrl('decks_list'));
-    
+
     }
 
     public function deleteListAction (Request $request)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
-        
+
         $list_id = explode('-', $request->get('ids'));
 
         foreach($list_id as $id)
@@ -441,18 +407,18 @@ class BuilderController extends Controller
             $deck = $em->getRepository('AppBundle:Deck')->find($id);
             if(!$deck) continue;
             if ($this->getUser()->getId() != $deck->getUser()->getId()) continue;
-            
+
             foreach ($deck->getChildren() as $decklist) {
                 $decklist->setParent(null);
             }
             $em->remove($deck);
         }
         $em->flush();
-        
+
         $this->get('session')
             ->getFlashBag()
             ->set('notice', "Decks deleted.");
-        
+
         return $this->redirect($this->generateUrl('decks_list'));
     }
 
@@ -460,7 +426,7 @@ class BuilderController extends Controller
     {
 
         $dbh = $this->get('doctrine')->getConnection();
-        
+
         $deck = $this->get('decks')->getDeckInfo($deck_id);
 
         if ($this->getUser ()->getId () != $deck ['user_id']) {
@@ -479,20 +445,20 @@ class BuilderController extends Controller
 					order by d.date_creation asc", array (
         							$deck_id
         					) )->fetchAll ();
-        
+
         return $this->render('AppBundle:Builder:deckedit.html.twig',
                 array(
                         'pagetitle' => "Deckbuilder",
                         'deck' => $deck,
                         'published_decklists' => $published_decklists
                 ));
-    
+
     }
 
     public function viewAction ($deck_id)
     {
 		$dbh = $this->getDoctrine()->getConnection();
-        
+
         $rows = $dbh->executeQuery("SELECT
 				d.id,
                 u.id user_id,
@@ -503,19 +469,19 @@ class BuilderController extends Controller
 				", array(
                 $deck_id
         ))->fetchAll();
-				
+
         if(!count($rows)) {
             throw new NotFoundHttpException("Deck doesn't exist");
         }
         $deck = $rows[0];
-        
+
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck['user_id'];
         if(!$deck['shared'] && !$is_owner) {
             throw new UnauthorizedHttpException("You are not allowed to view this deck.");
         }
-        
+
         $deck = $this->get('decks')->getDeckInfo($deck_id);
-        
+
         $published_decklists = $dbh->executeQuery(
                 "SELECT
 					d.id,
@@ -536,12 +502,12 @@ class BuilderController extends Controller
 					t.description
                 FROM tournament t
                 ORDER BY t.description desc")->fetchAll();
-						
+
         /*
 		$problem = $deck['problem'];
 		$deck['message'] = isset($problem) ? $this->get('judge')->problem($problem) : '';
 		*/
-        
+
         return $this->render('AppBundle:Builder:deckview.html.twig',
                 array(
                         'pagetitle' => "Deckbuilder",
@@ -551,14 +517,14 @@ class BuilderController extends Controller
                         'is_owner' => $is_owner,
                         'tournaments' => $tournaments,
                 ));
-    
+
     }
 
     public function listAction ()
     {
         /* @var $user \AppBundle\Entity\User */
         $user = $this->getUser();
-        
+
         $decks = $this->get('decks')->getByUser($user, FALSE);
 
         $tournaments = $this->getDoctrine()->getConnection()->executeQuery(
@@ -567,8 +533,8 @@ class BuilderController extends Controller
 					t.description
                 FROM tournament t
                 ORDER BY t.description desc")->fetchAll();
-        
-        if(count($decks)) 
+
+        if(count($decks))
         {
         	return $this->render('AppBundle:Builder:decks.html.twig',
         			array(
@@ -580,9 +546,9 @@ class BuilderController extends Controller
         					'cannotcreate' => $user->getMaxNbDecks() <= count($decks),
         					'tournaments' => $tournaments,
         			));
-        	 
+
         }
-        else 
+        else
         {
         	return $this->render('AppBundle:Builder:no-decks.html.twig',
         			array(
@@ -598,10 +564,10 @@ class BuilderController extends Controller
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
-        
+
         /* @var $decklist \AppBundle\Entity\Decklist */
         $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
-        
+
         $content = [];
         foreach ($decklist->getSlots() as $slot) {
             $content[$slot->getCard()->getCode()] = $slot->getQuantity();
@@ -612,21 +578,21 @@ class BuilderController extends Controller
                         'content' => json_encode($content),
                         'decklist_id' => $decklist_id
                 ));
-    
+
     }
 
     public function duplicateAction ($deck_id)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
-    
+
         /* @var $deck \AppBundle\Entity\Deck */
         $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
 
         if($this->getUser()->getId() != $deck->getUser()->getId()) {
             throw new UnauthorizedHttpException("You are not allowed to view this deck.");
         }
-        
+
         $content = [];
         foreach ($deck->getSlots() as $slot) {
             $content[$slot->getCard()->getCode()] = $slot->getQuantity();
@@ -637,16 +603,16 @@ class BuilderController extends Controller
                         'content' => json_encode($content),
                         'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null
                 ));
-    
+
     }
-    
+
     public function downloadallAction()
     {
         /* @var $user \AppBundle\Entity\User */
         $user = $this->getUser();
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
-        
+
         $decks = $this->get('decks')->getByUser($user, FALSE);
 
         $file = tempnam("tmp", "zip");
@@ -680,34 +646,34 @@ class BuilderController extends Controller
         unlink($file);
         return $response;
     }
-    
+
     public function uploadallAction(Request $request)
     {
         // time-consuming task
         ini_set('max_execution_time', 300);
-        
+
         $uploadedFile = $request->files->get('uparchive');
         if (! isset($uploadedFile))
             return new Response('No file');
-        
+
         $filename = $uploadedFile->getPathname();
-    
+
         if (function_exists("finfo_open")) {
             // return mime type ala mimetype extension
             $finfo = finfo_open(FILEINFO_MIME);
-    
+
             // check to see if the mime-type is 'zip'
             if(substr(finfo_file($finfo, $filename), 0, 15) !== 'application/zip')
                 return new Response('Bad file');
         }
-        
+
         $zip = new \ZipArchive;
         $res = $zip->open($filename);
         if ($res === TRUE) {
             for ($i = 0; $i < $zip->numFiles; $i++) {
                  $name = $zip->getNameIndex($i);
                  $parse = $this->parseTextImport($zip->getFromIndex($i));
-                 
+
                  $deck = new Deck();
                  $this->get('decks')->saveDeck($this->getUser(), $deck, null, $name, '', '', $parse['content']);
             }
@@ -717,19 +683,19 @@ class BuilderController extends Controller
         $this->get('session')
             ->getFlashBag()
             ->set('notice', "Decks imported.");
-        
+
         return $this->redirect($this->generateUrl('decks_list'));
     }
-    
+
     public function autosaveAction(Request $request)
     {
         $user = $this->getUser();
-        
+
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
-        
+
         $deck_id = $request->get('deck_id');
-        
+
         $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
         if(!$deck) {
             throw new BadRequestHttpException("Cannot find deck ".$deck_id);
@@ -737,13 +703,13 @@ class BuilderController extends Controller
         if ($user->getId() != $deck->getUser()->getId()) {
             throw new UnauthorizedHttpException("You don't have access to this deck.");
         }
-        
+
         $diff = (array) json_decode($request->get('diff'));
         if (count($diff) != 2) {
         	$this->get('logger')->error("cannot use diff", $diff);
             throw new BadRequestHttpException("Wrong content ".json_encode($diff));
         }
-        
+
         if(count($diff[0]) || count($diff[1])) {
             $change = new Deckchange();
             $change->setDeck($deck);
@@ -752,8 +718,7 @@ class BuilderController extends Controller
             $em->persist($change);
             $em->flush();
         }
-        
+
         return new Response($change->getDatecreation()->format('c'));
     }
 }
-

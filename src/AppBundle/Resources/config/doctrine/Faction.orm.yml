@@ -23,3 +23,6 @@ AppBundle\Entity\Faction:
         is_primary:
             type: boolean
             nullable: false
+        octgnid:
+            type: string
+            nullable: true

@@ -7,6 +7,7 @@ parameters:
     texts.class: AppBundle\Services\Texts
     diff.class: AppBundle\Services\Diff
     cards_data.class: AppBundle\Services\CardsData
+    octgn.class: AppBundle\Services\Octgn
 
 services:
     judge:
@@ -33,3 +34,6 @@ services:
     cards_data:
         class: "%cards_data.class%"
         arguments: ["@doctrine", "@request_stack", "@router", "@templating.helper.assets", "%kernel.root_dir%"]
+    octgn:
+        class: "%octgn.class%"
+        arguments: ["@doctrine.orm.entity_manager", "@twig"]

@@ -1,10 +1,10 @@
-<?php 
+<?php
 
 namespace AppBundle\Entity;
 
 class Faction
 {
-	
+
     /**
      * @var integer
      */
@@ -24,6 +24,11 @@ class Faction
      * @var boolean
      */
     private $is_primary;
+
+    /**
+     * @var string
+     */
+    private $octgnid;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -118,6 +123,30 @@ class Faction
     public function getIsPrimary()
     {
         return $this->is_primary;
+    }
+
+    /**
+     * Set octgnid
+     *
+     * @param string $octgnid
+     *
+     * @return Faction
+     */
+    public function setOctgnid($octgnid)
+    {
+        $this->octgnid = $octgnid;
+
+        return $this;
+    }
+
+    /**
+     * Get octgnid
+     *
+     * @return string
+     */
+    public function getOctgnid()
+    {
+        return $this->octgnid;
     }
 
     /**

@@ -126,6 +126,11 @@ class Card
     private $isPower;
 
     /**
+     * @var string
+     */
+    private $octgnid;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $reviews;
@@ -713,6 +718,30 @@ class Card
     public function getIsPower()
     {
         return $this->isPower;
+    }
+
+    /**
+     * Set octgnid
+     *
+     * @param boolean $octgnid
+     *
+     * @return Card
+     */
+    public function setOctgnid($octgnid)
+    {
+        $this->octgnid = $octgnid;
+
+        return $this;
+    }
+
+    /**
+     * Get octgnid
+     *
+     * @return boolean
+     */
+    public function getOctgnid()
+    {
+        return $this->octgnid;
     }
 
     /**

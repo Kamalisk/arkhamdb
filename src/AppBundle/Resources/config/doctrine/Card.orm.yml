@@ -119,3 +119,7 @@ AppBundle\Entity\Card:
             type: boolean
             nullable: false
             column: is_power
+        octgnid:
+            type: string
+            nullable: true
+            
