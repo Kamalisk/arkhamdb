@@ -1,8 +1,8 @@
 (function app_data(data, $) {
 
 var first_run = false;
-	
-/** 
+
+/**
  * loads the database from local
  * sets up a Promise on all data loading/updating
  * @memberOf data
@@ -11,46 +11,62 @@ data.load = function load() {
 
 	var fdb = new ForerunnerDB();
 	data.db = fdb.db('agot2db');
-	
-	data.packs = data.db.collection('pack', {primaryKey:'code', changeTimestamp: true});
-	data.cards = data.db.collection('card', {primaryKey:'code', changeTimestamp: true});
-	
+
+	data.masters = {
+		packs: data.db.collection('master_pack', {primaryKey:'code', changeTimestamp: true}),
+		cards: data.db.collection('master_card', {primaryKey:'code', changeTimestamp: true})
+	};
+
 	data.dfd = {
 		packs: new $.Deferred(),
 		cards: new $.Deferred()
 	};
-	
+
 	$.when(data.dfd.packs, data.dfd.cards).done(data.update_done).fail(data.update_fail);
 
-	data.packs.load(function (err) {
+	data.masters.packs.load(function (err) {
 		if(err) {
 			console.log('packs loading error', err);
 			data.dfd.packs.reject(false);
 			return;
 		}
-		data.cards.load(function (err) {
+		data.masters.cards.load(function (err) {
 			if(err) {
 				console.log('cards loading error', err);
 				data.dfd.cards.reject(false);
 				return;
 			}
-			
+
 			/*
 			 * data has been fetched from local store, triggering event
 			 * unless we don't have any data yet, in which case we will wait until data is updated before firing the event
-			 */ 
-			if(data.packs.count() === 0 || data.cards.count() === 0) {
+			 */
+			if(data.masters.packs.count() === 0 || data.masters.cards.count() === 0) {
 				first_run = true;
 			} else {
-				$(document).trigger('data.app');
+				data.release();
 			}
-			
+
 			/*
 			 * then we ask the server if new data is available
 			 */
 			data.query();
 		});
-	});		
+	});
+}
+
+/**
+ * release the data for consumption by other modules
+ * @memberOf data
+ */
+data.release = function release() {
+	data.packs = data.db.collection('pack', {primaryKey:'code', changeTimestamp: false});
+	data.packs.setData(data.masters.packs.find());
+
+	data.cards = data.db.collection('card', {primaryKey:'code', changeTimestamp: false});
+	data.cards.setData(data.masters.cards.find());
+
+	$(document).trigger('data.app');
 }
 
 /**
@@ -65,7 +81,7 @@ data.query = function query() {
 			data.dfd.packs.reject(true);
 		}
 	});
-	
+
 	$.ajax({
 		url: Routing.generate('api_cards'),
 		success: data.parse_cards,
@@ -83,7 +99,7 @@ data.query = function query() {
 data.update_done = function update_done(packs_updated, cards_updated) {
 	if(packs_updated || cards_updated) {
 		if(first_run) {
-			$(document).trigger('data.app');
+			data.release();
 		} else {
 			var message = "A new version of the data is available. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
 			var alert = $('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
@@ -116,7 +132,7 @@ data.update_fail = function update_fail(packs_loaded, cards_loaded) {
 data.update_collection = function update_collection(data, collection, lastModified, deferred) {
 	var lastChangeDatabase = new Date(collection.metaData().lastChange).getTime();
 	var lastModifiedData = lastModified.getTime();
-	
+
 	/*
 	 * if the database is not older than the data, we don't have to update the database
 	 */
@@ -124,13 +140,9 @@ data.update_collection = function update_collection(data, collection, lastModifi
 		deferred.resolve(false);
 		return;
 	}
-	
-	// should work with setData, but doesn't. workaround with insert
-	// collection.setData(data);
-	data.forEach(function (record) {
-		collection.insert(record);
-	});
-	
+
+	collection.setData(data);
+
 	collection.save(function (err) {
 		if(!err) {
 			deferred.resolve(true);
@@ -146,7 +158,7 @@ data.update_collection = function update_collection(data, collection, lastModifi
  */
 data.parse_packs = function parse_packs(response, textStatus, jqXHR) {
 	var lastModified = new Date(jqXHR.getResponseHeader('Last-Modified'));
-	data.update_collection(response, data.packs, lastModified, data.dfd.packs);
+	data.update_collection(response, data.masters.packs, lastModified, data.dfd.packs);
 };
 
 /**
@@ -155,7 +167,7 @@ data.parse_packs = function parse_packs(response, textStatus, jqXHR) {
  */
 data.parse_cards = function parse_cards(response, textStatus, jqXHR) {
 	var lastModified = new Date(jqXHR.getResponseHeader('Last-Modified'));
-	data.update_collection(response, data.cards, lastModified, data.dfd.cards);
+	data.update_collection(response, data.masters.cards, lastModified, data.dfd.cards);
 };
 
 $(function() {
