@@ -11,11 +11,11 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 class DeleteInactiveCommand extends ContainerAwareCommand
 {
-    
+
     protected function configure()
     {
         $this
-        ->setName('adb:inactive-users')
+        ->setName('app:inactive-users')
         ->setDescription('Delete users inactive since 48 hours')
         ;
     }
@@ -26,7 +26,7 @@ class DeleteInactiveCommand extends ContainerAwareCommand
         $limit = new \DateTime();
         $limit->sub(new \DateInterval('PT48H'));
         $count = 0;
-        
+
         $users = $em->getRepository('AppBundle:User')->findBy(array('enabled' => false));
         foreach($users as $user) {
             /* @var $user AppBundle\Entity\User */

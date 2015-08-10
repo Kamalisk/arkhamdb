@@ -15,8 +15,8 @@ class HighlightCommand extends ContainerAwareCommand
     protected function saveHighlight($decklist_id)
     {
         $dbh = $this->getContainer()->get('doctrine')->getConnection();
-        
-        if ($decklist_id) 
+
+        if ($decklist_id)
         {
             $rows = $dbh
         ->executeQuery(
@@ -45,7 +45,7 @@ class HighlightCommand extends ContainerAwareCommand
 				", array($decklist_id))->fetchAll();
 
         } else {
-                
+
             $rows = $dbh
             ->executeQuery(
                     "SELECT
@@ -76,13 +76,13 @@ class HighlightCommand extends ContainerAwareCommand
                     limit 0,1
     				", array())->fetchAll();
         }
-        
+
         if(empty($rows)) {
             return false;
         }
-    
+
         $decklist = $rows[0];
-    
+
         $cards = $dbh
         ->executeQuery(
                 "SELECT
@@ -92,19 +92,19 @@ class HighlightCommand extends ContainerAwareCommand
 				join card c on s.card_id=c.id
 				where s.decklist_id=?
 				order by c.code asc", array($decklist['id']))->fetchAll();
-    
+
         $decklist['cards'] = $cards;
-         
+
         $json = json_encode($decklist);
         $dbh->executeQuery("INSERT INTO highlight (id, decklist) VALUES (?,?) ON DUPLICATE KEY UPDATE decklist=values(decklist)", array(1, $json));
-    
+
         return true;
     }
-    
+
     protected function configure()
     {
         $this
-        ->setName('adb:highlight')
+        ->setName('app:highlight')
         ->setDescription('Save decklist of the week')
         ->addArgument(
             'decklist_id',

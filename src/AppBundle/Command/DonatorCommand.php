@@ -13,11 +13,11 @@ use AppBundle\Entity\Reviewcomment;
 
 class DonatorCommand extends ContainerAwareCommand
 {
-    
+
     protected function configure()
     {
         $this
-        ->setName('adb:donator')
+        ->setName('app:donator')
         ->setDescription('Add a donation to a user by email address or username')
         ->addArgument(
             'email',
@@ -36,7 +36,7 @@ class DonatorCommand extends ContainerAwareCommand
     {
         $email = $input->getArgument('email');
         $donation = $input->getArgument('donation');
-        
+
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getContainer()->get('doctrine')->getManager();
         /* @var $repo \AppBundle\Entity\ReviewRepository */
@@ -46,7 +46,7 @@ class DonatorCommand extends ContainerAwareCommand
         if(!$user) {
         	$user = $repo->findOneBy(array('username' => $email));
         }
-        
+
         if($user) {
             $user->setDonation($donation + $user->getDonation());
             $em->flush();

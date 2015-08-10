@@ -1,10 +1,10 @@
-<?php 
+<?php
 
 namespace AppBundle\Entity;
 
 class Card
 {
-	
+
     /**
      * @var integer
      */
@@ -58,12 +58,12 @@ class Card
     /**
      * @var integer
      */
-    private $claim;
+    private $initiative;
 
     /**
      * @var integer
      */
-    private $initiative;
+    private $claim;
 
     /**
      * @var integer
@@ -380,30 +380,6 @@ class Card
     }
 
     /**
-     * Set claim
-     *
-     * @param integer $claim
-     *
-     * @return Card
-     */
-    public function setClaim($claim)
-    {
-        $this->claim = $claim;
-
-        return $this;
-    }
-
-    /**
-     * Get claim
-     *
-     * @return integer
-     */
-    public function getClaim()
-    {
-        return $this->claim;
-    }
-
-    /**
      * Set initiative
      *
      * @param integer $initiative
@@ -425,6 +401,30 @@ class Card
     public function getInitiative()
     {
         return $this->initiative;
+    }
+
+    /**
+     * Set claim
+     *
+     * @param integer $claim
+     *
+     * @return Card
+     */
+    public function setClaim($claim)
+    {
+        $this->claim = $claim;
+
+        return $this;
+    }
+
+    /**
+     * Get claim
+     *
+     * @return integer
+     */
+    public function getClaim()
+    {
+        return $this->claim;
     }
 
     /**

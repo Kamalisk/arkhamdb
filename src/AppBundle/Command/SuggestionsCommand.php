@@ -15,7 +15,7 @@ class SuggestionsCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-        ->setName('adb:suggestions')
+        ->setName('app:suggestions')
         ->setDescription('Compute and save the suggestions matrix')
         ;
     }
@@ -24,13 +24,13 @@ class SuggestionsCommand extends ContainerAwareCommand
     {
         ini_set('memory_limit', '1G');
         $webdir = $this->getContainer()->get('kernel')->getRootDir() . "/../web";
-        
+
         $runner = $this->getSuggestionsForSide(1);
         file_put_contents($webdir."/runner.json", json_encode($runner));
-        
+
         $corp = $this->getSuggestionsForSide(2);
         file_put_contents($webdir."/corp.json", json_encode($corp));
-        
+
         $output->writeln('done');
     }
 
@@ -44,7 +44,7 @@ class SuggestionsCommand extends ContainerAwareCommand
         }
         return $pairs;
     }
-    
+
     /**
      * returns a matrix where each point x,y is
      * the probability that the cards x and y
@@ -55,10 +55,10 @@ class SuggestionsCommand extends ContainerAwareCommand
     private function getSuggestionsForSide($side_id)
     {
         $matrix = array();
-    
+
         /* @var $dbh \Doctrine\DBAL\Driver\PDOConnection */
         $dbh = $this->getContainer()->get('doctrine')->getConnection();
-    
+
         $cardsByIndex = $dbh->executeQuery(
                 "SELECT
 				c.id,
@@ -80,25 +80,25 @@ class SuggestionsCommand extends ContainerAwareCommand
         foreach($cardsByIndex as $index => $card) {
             $cardCodesByIndex[$index] = $card['code'];
         }
-    
+
         foreach($cardsByIndex as $index => $card) {
             $matrix[$index] = $index ? array_fill(0, $index, 0) : array();
         }
-    
+
         $decks = $dbh->executeQuery(
                 "SELECT
 				d.id
                 from deck d
                 where d.side_id=?
                 order by d.id", array($side_id))->fetchAll();
-    
+
         $stmt = $dbh->prepare(
                 "SELECT
 				d.card_id
                 from deckslot d
                 where d.deck_id=?
                 order by d.card_id");
-    
+
         foreach($decks as $deck_id) {
             $stmt->bindValue(1, $deck_id['id']);
             $stmt->execute();
@@ -114,14 +114,14 @@ class SuggestionsCommand extends ContainerAwareCommand
                 $matrix[$index1][$index2] = $matrix[$index1][$index2] + 1;
             }
         }
-        
-        
+
+
         /*
          * now we have to weight the cards. The numbers in $matrix are the number of decks
          * that include both x and y cards, so they are relative to the commonness of both
          * cards.
          */
-        
+
         for($i=0; $i<count($matrix); $i++) {
             for($j=0; $j<$i; $j++) {
                 //$nbdecks = min($cardsByIndex[$i]['nbdecks'], $cardsByIndex[$j]['nbdecks']);
@@ -133,11 +133,11 @@ class SuggestionsCommand extends ContainerAwareCommand
                 $matrix[$i][$j] = round($matrix[$i][$j] / $nbdecks * 100);
             }
         }
-        
+
         return array(
         	"index" => $cardCodesByIndex,
                 "matrix" => $matrix
         );
     }
-    
+
 }

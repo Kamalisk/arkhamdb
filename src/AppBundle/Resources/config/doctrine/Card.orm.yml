@@ -68,10 +68,10 @@ AppBundle\Entity\Card:
         income:
             type: smallint
             nullable: true
-        claim:
+        initiative:
             type: smallint
             nullable: true
-        initiative:
+        claim:
             type: smallint
             nullable: true
         reserve:
@@ -119,4 +119,3 @@ AppBundle\Entity\Card:
             type: boolean
             nullable: false
             column: is_power
-    
