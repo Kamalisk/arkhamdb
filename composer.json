@@ -1,5 +1,6 @@
 {
     "name": "cedric/agot2db",
+    "description": "A Game of Thrones LCG deckbuilder",
     "license": "proprietary",
     "type": "project",
     "autoload": {
