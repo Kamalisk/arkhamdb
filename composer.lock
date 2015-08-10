@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fdbfe8203ac60f21ecaf000093ac50f2",
+    "hash": "70ba8a70cfdaf28ec8e91463aaa679d1",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -920,7 +920,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/3efbc08a97f218d0a4524dee926fc4381e3d0947",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/3906465fbaa9d71de3404b8c3667e451d07f9984",
                 "reference": "3efbc08a97f218d0a4524dee926fc4381e3d0947",
                 "shasum": ""
             },
@@ -1913,16 +1913,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.7.1",
+            "version": "v2.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "932b6e7499c670f4db6d0b871477a4a3ca161e74"
+                "reference": "a9af4708b4bb650c4897e9b8dfbfbdb2ea5f0486"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/932b6e7499c670f4db6d0b871477a4a3ca161e74",
-                "reference": "932b6e7499c670f4db6d0b871477a4a3ca161e74",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/a9af4708b4bb650c4897e9b8dfbfbdb2ea5f0486",
+                "reference": "a9af4708b4bb650c4897e9b8dfbfbdb2ea5f0486",
                 "shasum": ""
             },
             "require": {
@@ -2031,7 +2031,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2015-06-11 21:15:28"
+            "time": "2015-07-31 13:24:45"
         },
         {
             "name": "twig/extensions",
@@ -2236,7 +2236,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "symfony/symfony": 10,
         "friendsofsymfony/user-bundle": 20
     },
     "prefer-stable": false,
