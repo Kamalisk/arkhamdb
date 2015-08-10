@@ -370,7 +370,7 @@ class CardsData
 			switch($metadata->getTypeOfField($fieldName)) {
 				case 'datetime':
 				case 'date':
-					$value = $value->format('r');
+					continue 2;
 					break;
 				case 'boolean':
 					$value = (boolean) $value;

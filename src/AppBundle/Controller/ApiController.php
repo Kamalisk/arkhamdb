@@ -23,13 +23,13 @@ class ApiController extends Controller
 		$response->setPublic();
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
-	
+
 		$jsonp = $this->getRequest()->query->get('jsonp');
-	
+
 		$list_packs = $this->get('doctrine')->getRepository('AppBundle:Pack')->findBy(array(), array("dateRelease" => "ASC", "position" => "ASC"));
-		
+
 		// check the last-modified-since header
-		
+
 		$lastModified = NULL;
 		/* @var $pack \AppBundle\Entity\Pack */
 		foreach($list_packs as $pack) {
@@ -41,9 +41,9 @@ class ApiController extends Controller
 		if ($response->isNotModified($request)) {
 			return $response;
 		}
-		
+
 		// build the response
-		
+
 		$packs = array();
 		/* @var $pack \AppBundle\Entity\Pack */
 		foreach($list_packs as $pack) {
@@ -60,7 +60,7 @@ class ApiController extends Controller
 					"url" => $this->get('router')->generate('cards_list', array('pack_code' => $pack->getCode()), true),
 			);
 		}
-		
+
 		$content = json_encode($packs);
 		if(isset($jsonp))
 		{
@@ -73,21 +73,21 @@ class ApiController extends Controller
 		$response->setContent($content);
 		return $response;
 	}
-	
+
 	public function cardAction($card_code, Request $request)
 	{
-	
+
 		$response = new Response();
 		$response->setPublic();
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
-	
+
 		$jsonp = $this->getRequest()->query->get('jsonp');
-	
+
 		$card = $this->get('doctrine')->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
 
 		// check the last-modified-since header
-		
+
 		$lastModified = NULL;
 		/* @var $card \AppBundle\Entity\Card */
 		if(!$lastModified || $lastModified < $card->getDateUpdate()) {
@@ -97,12 +97,12 @@ class ApiController extends Controller
 		if ($response->isNotModified($request)) {
 			return $response;
 		}
-		
+
 		// build the response
-		
+
 		/* @var $card \AppBundle\Entity\Card */
 		$card = $this->get('cards_data')->getCardInfo($card, true, "en");
-		
+
 		$content = json_encode($card);
 		if(isset($jsonp))
 		{
@@ -114,23 +114,23 @@ class ApiController extends Controller
 		}
 		$response->setContent($content);
 		return $response;
-	
+
 	}
-	
+
 	public function cardsAction(Request $request)
 	{
-	
+
 		$response = new Response();
 		$response->setPublic();
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
-	
+
 		$jsonp = $this->getRequest()->query->get('jsonp');
-	
+
 		$list_cards = $this->get('doctrine')->getRepository('AppBundle:Card')->findBy(array(), array("code" => "ASC"));
 
 		// check the last-modified-since header
-		
+
 		$lastModified = NULL;
 		/* @var $card \AppBundle\Entity\Card */
 		foreach($list_cards as $card) {
@@ -142,15 +142,15 @@ class ApiController extends Controller
 		if ($response->isNotModified($request)) {
 			return $response;
 		}
-		
+
 		// build the response
-		
+
 		$cards = array();
 		/* @var $card \AppBundle\Entity\Card */
 		foreach($list_cards as $card) {
 			$cards[] = $this->get('cards_data')->getCardInfo($card, true, "en");
 		}
-		
+
 		$content = json_encode($cards);
 		if(isset($jsonp))
 		{
@@ -162,27 +162,27 @@ class ApiController extends Controller
 		}
 		$response->setContent($content);
 		return $response;
-	
+
 	}
-	
+
 	public function setAction($pack_code)
 	{
 		$response = new Response();
 		$response->setPublic();
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
-	
+
 		$jsonp = $this->getRequest()->query->get('jsonp');
-	
+
 		$format = $this->getRequest()->getRequestFormat();
-	
+
 		$pack = $this->getDoctrine()->getRepository('AppBundle:Pack')->findOneBy(array('code' => $pack_code));
 		if(!$pack) die();
-	
+
 		$conditions = $this->get('cards_data')->syntax("e:$pack_code");
 		$this->get('cards_data')->validateConditions($conditions);
 		$query = $this->get('cards_data')->buildQueryFromConditions($conditions);
-	
+
 		$cards = array();
 		$last_modified = null;
 		if($query && $rows = $this->get('cards_data')->get_search_rows($conditions, "set"))
@@ -199,10 +199,10 @@ class ApiController extends Controller
 				$cards[] = $card;
 			}
 		}
-	
+
 		if($format == "json")
 		{
-				
+
 			$content = json_encode($cards);
 			if(isset($jsonp))
 			{
@@ -213,25 +213,25 @@ class ApiController extends Controller
 				$response->headers->set('Content-Type', 'application/json');
 			}
 			$response->setContent($content);
-				
+
 		}
 		else if($format == "xml")
 		{
-				
+
 			$cardsxml = array();
 			foreach($cards as $card) {
 				if(!isset($card['subtype'])) $card['subtype'] = "";
 				if($card['uniqueness']) $card['subtype'] .= empty($card['subtype']) ? "Unique" : " - Unique";
 				$card['subtype'] = str_replace(' - ','-',$card['subtype']);
-	
+
 				$matches = array();
-					
+
 				if(!isset($card['cost'])) {
 					if(isset($card['advancementcost'])) $card['cost'] = $card['advancementcost'];
 					else if(isset($card['baselink'])) $card['cost'] = $card['baselink'];
 					else $card['cost'] = 0;
 				}
-	
+
 				if(!isset($card['strength'])) {
 					if(isset($card['agendapoints'])) $card['strength'] = $card['agendapoints'];
 					else if(isset($card['trash'])) $card['strength'] = $card['trash'];
@@ -239,26 +239,26 @@ class ApiController extends Controller
 					else if($card['type_code'] == "program") $card['strength'] = '-';
 					else $card['strength'] = '';
 				}
-	
+
 				if(!isset($card['memoryunits'])) {
 					if(isset($card['minimumdecksize'])) $card['memoryunits'] = $card['minimumdecksize'];
 					else $card['memoryunits'] = '';
 				}
-	
+
 				if(!isset($card['factioncost'])) {
 					$card['factioncost'] = '';
 				}
-	
+
 				if(!isset($card['flavor'])) {
 					$card['flavor'] = '';
 				}
-	
+
 				if($card['faction'] == "Weyland Consortium") {
 					$card['faction'] = "The Weyland Consortium";
 				}
-	
+
 				$card['side'] = strtolower($card['side']);
-	
+
 				$card['text'] = str_replace("<strong>", '', $card['text']);
 				$card['text'] = str_replace("</strong>", '', $card['text']);
 				$card['text'] = str_replace("<sup>", '', $card['text']);
@@ -267,21 +267,21 @@ class ApiController extends Controller
 				$card['text'] = htmlspecialchars($card['text'], ENT_QUOTES | ENT_XML1);
 				$card['text'] = str_replace("\r", '&#xD;', $card['text']);
 				$card['text'] = str_replace("\n", '&#xA;', $card['text']);
-	
+
 				$card['flavor'] = htmlspecialchars($card['flavor'], ENT_QUOTES | ENT_XML1);
 				$card['flavor'] = str_replace("\r", '&#xD;', $card['flavor']);
 				$card['flavor'] = str_replace("\n", '&#xA;', $card['flavor']);
-	
+
 				$cardsxml[] = $card;
-	
+
 			}
-	
+
 			$response->headers->set('Content-Type', 'application/xml');
 			$response->setContent($this->renderView('AppBundle::apiset.xml.twig', array(
 					"name" => $pack->getName(),
 					"cards" => $cardsxml,
 			)));
-				
+
 		}
 		else if($format == 'xlsx')
 		{
@@ -320,14 +320,14 @@ class ApiController extends Controller
 			->setTraits("android:netrunner ".$pack->getName());
 			$phpActiveSheet = $phpExcelObject->setActiveSheetIndex(0);
 			$phpActiveSheet->setTitle($pack->getName());
-	
+
 			$col_index = 0;
 			foreach($columns as $key => $label)
 			{
 				$phpCell = $phpActiveSheet->getCellByColumnAndRow($col_index++, 1);
 				$phpCell->setValue($label);
 			}
-	
+
 			foreach($cards as $row_index => $card)
 			{
 				$col_index = 0;
@@ -345,7 +345,7 @@ class ApiController extends Controller
 					}
 				}
 			}
-	
+
 			$writer = $this->get('phpexcel')->createWriter($phpExcelObject, 'Excel2007');
 			$response = $this->get('phpexcel')->createStreamedResponse($writer);
 			$response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
@@ -389,14 +389,14 @@ class ApiController extends Controller
 			->setTraits("android:netrunner ".$pack->getName());
 			$phpActiveSheet = $phpExcelObject->setActiveSheetIndex(0);
 			$phpActiveSheet->setTitle($pack->getName());
-	
+
 			$col_index = 0;
 			foreach($columns as $key => $label)
 			{
 				$phpCell = $phpActiveSheet->getCellByColumnAndRow($col_index++, 1);
 				$phpCell->setValue($label);
 			}
-	
+
 			foreach($cards as $row_index => $card)
 			{
 				$col_index = 0;
@@ -414,7 +414,7 @@ class ApiController extends Controller
 					}
 				}
 			}
-	
+
 			$writer = $this->get('phpexcel')->createWriter($phpExcelObject, 'Excel5');
 			$response = $this->get('phpexcel')->createStreamedResponse($writer);
 			$response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
@@ -423,8 +423,8 @@ class ApiController extends Controller
 		}
 		return $response;
 	}
-	
-	
+
+
     public function decklistAction ($decklist_id)
     {
 
@@ -434,9 +434,9 @@ class ApiController extends Controller
         $response->headers->add(array(
                 'Access-Control-Allow-Origin' => '*'
         ));
-        
+
         $jsonp = $this->getRequest()->query->get('jsonp');
-        
+
         $dbh = $this->get('doctrine')->getConnection();
         $rows = $dbh->executeQuery(
                 "SELECT
@@ -452,21 +452,21 @@ class ApiController extends Controller
 				", array(
                         $decklist_id
                 ))->fetchAll();
-        
+
         if (empty($rows)) {
             throw new NotFoundHttpException('Wrong id');
         }
-        
+
         $decklist = $rows[0];
         $decklist['id'] = intval($decklist['id']);
-        
+
         $lastModified = new \DateTime($decklist['ts']);
         $response->setLastModified($lastModified);
         if ($response->isNotModified($this->getRequest())) {
             return $response;
         }
         unset($decklist['ts']);
-        
+
         $cards = $dbh->executeQuery("SELECT
 				c.code card_code,
 				s.quantity qty
@@ -476,12 +476,12 @@ class ApiController extends Controller
 				order by c.code asc", array(
                 $decklist_id
         ))->fetchAll();
-        
+
         $decklist['cards'] = array();
         foreach ($cards as $card) {
             $decklist['cards'][$card['card_code']] = intval($card['qty']);
         }
-        
+
         $content = json_encode($decklist);
         if (isset($jsonp)) {
             $content = "$jsonp($content)";
@@ -489,10 +489,10 @@ class ApiController extends Controller
         } else {
             $response->headers->set('Content-Type', 'application/json');
         }
-        
+
         $response->setContent($content);
         return $response;
-    
+
     }
 
     public function decklistsAction ($date)
@@ -504,9 +504,9 @@ class ApiController extends Controller
         $response->headers->add(array(
                 'Access-Control-Allow-Origin' => '*'
         ));
-        
+
         $jsonp = $this->getRequest()->query->get('jsonp');
-        
+
         $dbh = $this->get('doctrine')->getConnection();
         $decklists = $dbh->executeQuery(
                 "SELECT
@@ -522,7 +522,7 @@ class ApiController extends Controller
 				", array(
                         $date
                 ))->fetchAll();
-        
+
         $lastTS = null;
         foreach ($decklists as $i => $decklist) {
             $lastTS = max($lastTS, $decklist['ts']);
@@ -532,10 +532,10 @@ class ApiController extends Controller
         if ($response->isNotModified($this->getRequest())) {
             return $response;
         }
-        
+
         foreach ($decklists as $i => $decklist) {
             $decklists[$i]['id'] = intval($decklist['id']);
-            
+
             $cards = $dbh->executeQuery("SELECT
 				c.code card_code,
 				s.quantity qty
@@ -545,13 +545,13 @@ class ApiController extends Controller
 				order by c.code asc", array(
                     $decklists[$i]['id']
             ))->fetchAll();
-            
+
             $decklists[$i]['cards'] = array();
             foreach ($cards as $card) {
                 $decklists[$i]['cards'][$card['card_code']] = intval($card['qty']);
             }
         }
-        
+
         $content = json_encode($decklists);
         if (isset($jsonp)) {
             $content = "$jsonp($content)";
@@ -559,10 +559,10 @@ class ApiController extends Controller
         } else {
             $response->headers->set('Content-Type', 'application/json');
         }
-        
+
         $response->setContent($content);
         return $response;
-    
+
     }
 
     public function decksAction ()
@@ -570,18 +570,18 @@ class ApiController extends Controller
         $response = new Response();
         $response->setPrivate();
         $response->headers->set('Content-Type', 'application/json');
-        
+
         /* @var $user \AppBundle\Entity\User */
         $user = $this->getUser();
-        
+
         if (! $user) {
             throw new UnauthorizedHttpException("You are not logged in.");
         }
-        
+
         $response->setContent(json_encode($this->get('decks')->getByUser($user, TRUE)));
         return $response;
     }
- 
+
     public function saveDeckAction($deck_id)
     {
         $response = new Response();
@@ -594,7 +594,7 @@ class ApiController extends Controller
             $response->setContent(json_encode(array('success' => false, 'message' => 'You have reached the maximum number of decks allowed. Delete some decks or increase your reputation.')));
             return $response;
         }
-        
+
         $request = $this->getRequest();
         $name = filter_var($request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $decklist_id = filter_var($request->get('decklist_id'), FILTER_SANITIZE_NUMBER_INT);
@@ -606,9 +606,9 @@ class ApiController extends Controller
             $response->setContent(json_encode(array('success' => false, 'message' => 'Cannot import empty deck')));
             return $response;
         }
-        
+
         $em = $this->getDoctrine()->getManager();
-        
+
         if ($deck_id) {
             $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
             if ($user->getId() != $deck->getUser()->getId())
@@ -619,15 +619,15 @@ class ApiController extends Controller
         } else {
             $deck = new Deck();
         }
-        
+
         // $content is formatted as {card_code,qty}, expected {card_code=>qty}
         $slots = array();
         foreach($content as $arr) {
             $slots[$arr['card_code']] = intval($arr['qty']);
         }
-        
+
         $deck_id = $this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $description, $tags, $slots, $deck_id ? $deck : null);
-        
+
         if(isset($deck_id))
         {
             $response->setContent(json_encode(array('success' => true, 'message' => $this->get('decks')->getById($deck_id, TRUE))));
@@ -639,16 +639,16 @@ class ApiController extends Controller
             return $response;
         }
     }
-    
+
     public function publishAction($deck_id, Request $request)
     {
         $response = new Response();
         $response->setPrivate();
         $response->headers->set('Content-Type', 'application/json');
-        
+
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
-        
+
         /* @var $deck \AppBundle\Entity\Deck */
         $deck = $this->getDoctrine()
         ->getRepository('AppBundle:Deck')
@@ -657,14 +657,14 @@ class ApiController extends Controller
             $response->setContent(json_encode(array('success' => false, 'message' => "You don't have access to this deck.")));
             return $response;
         }
-        
+
         $judge = $this->get('judge');
         $analyse = $judge->analyse($deck->getCards());
         if (is_string($analyse)) {
             $response->setContent(json_encode(array('success' => false, 'message' => $judge->problem($analyse))));
             return $response;
         }
-        
+
         $new_content = json_encode($deck->getContent());
         $new_signature = md5($new_content);
         $old_decklists = $this->getDoctrine()
@@ -678,19 +678,19 @@ class ApiController extends Controller
                 return $response;
             }
         }
-        
+
         $name = filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $name = substr($name, 0, 60);
         if (empty($name)) {
             $name = $deck->getName();
         }
-        
+
         $rawdescription = trim($request->request->get('description'));
         if (empty($rawdescription)) {
             $rawdescription = $deck->getDescription();
         }
         $description = $this->get('texts')->markdown($rawdescription);
-        
+
         $decklist = new Decklist();
         $decklist->setName($name);
         $decklist->setPrettyname(preg_replace('/[^a-z0-9]+/', '-', mb_strtolower($name)));
@@ -723,44 +723,44 @@ class ApiController extends Controller
             $decklist->setPrecedent($deck->getParent());
         }
         $decklist->setParent($deck);
-        
+
         $em->persist($decklist);
         $em->flush();
-        
+
         $response->setContent(json_encode(array('success' => true, 'message' => array("id" => $decklist->getId(), "url" => $this->generateUrl('decklist_detail', array(
                 'decklist_id' => $decklist->getId(),
                 'decklist_name' => $decklist->getPrettyName()
         ))))));
         return $response;
-        
+
     }
-    
+
     public function loadDeckAction($deck_id)
     {
         $response = new Response();
         $response->setPrivate();
         $response->headers->set('Content-Type', 'application/json');
-        
+
         /* @var $user \AppBundle\Entity\User */
         $user = $this->getUser();
-        
+
         if (! $user) {
             throw new UnauthorizedHttpException("You are not logged in.");
         }
-        
+
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
-        
+
         $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
         if ($user->getId() != $deck->getUser()->getId())
         {
             $response->setContent(json_encode(array('success' => false, 'message' => 'Wrong user')));
             return $response;
         }
-        
+
         $deck = $this->get('decks')->getById($deck_id, TRUE);
         $response->setContent(json_encode($deck));
         return $response;
     }
-    
+
 }
