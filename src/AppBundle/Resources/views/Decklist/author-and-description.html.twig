@@ -1,6 +1,6 @@
 <h3 class="username">
     <a href="{{ path('user_profile_view', {user_id:decklist.user_id,user_name:decklist.username|e('url')}) }}" class="{{ decklist.usercolor }}">{{ decklist.username }}</a>
-    {% if decklist.donation > 0 %}<span class="fa fa-gift donator" title="agot2db Gracious Donator"></span>{% endif %}
+    {% if decklist.donation > 0 %}<span class="fa fa-gift donator" title="thronesdb Gracious Donator"></span>{% endif %}
     <small title="User Reputation">{{ decklist.reputation }}</small>
 </h3>
 <div id="deck-description">{{ decklist.description|raw }}</div>

@@ -1,7 +1,7 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
 {% block javascript %}
-<script src="{{ asset('/bundles/agot2dbcards/js/reviews.js') }}"></script>
+<script src="{{ asset('/bundles/thronesdbcards/js/reviews.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -53,7 +53,7 @@
        </div>
        <div class="review-author">
            <a href="{{ path('user_profile_view', {user_id:review.user.id,user_name:review.user.username|e('url')}) }}" rel="author" class="username {{ review.user.faction }}">{{ review.user.username }}</a>
-           {% if review.user.donation > 0 %}<span class="fa fa-gift donator" title="agot2db Gracious Donator"></span>{% endif %}
+           {% if review.user.donation > 0 %}<span class="fa fa-gift donator" title="thronesdb Gracious Donator"></span>{% endif %}
     	   <small class="reputation">{{ review.user.reputation }}</small>
        </div>
        
@@ -63,7 +63,7 @@
        <div class="review-comment text-muted small">{{ comment.text }}
        &mdash;
        <a title="{{ comment.author.reputation }} reputation" href="{{ path('user_profile_view', {user_id:comment.author.id,user_name:comment.author.username|e('url')}) }}" rel="author" class="username {{ comment.author.faction }}">{{ comment.author.username }}</a>
-           {% if comment.author.donation > 0 %}<span class="fa fa-gift donator" title="agot2db Gracious Donator"></span>{% endif %}
+           {% if comment.author.donation > 0 %}<span class="fa fa-gift donator" title="thronesdb Gracious Donator"></span>{% endif %}
        <time datetime="{{ comment.date_creation|date('c') }}" title="{{ comment.date_creation|date('F jS, Y') }}">{{ comment.date_creation|date('n/j/y') }}</time>
     </div>
        {% endfor %}

@@ -10,7 +10,7 @@ var first_run = false;
 data.load = function load() {
 
 	var fdb = new ForerunnerDB();
-	data.db = fdb.db('agot2db');
+	data.db = fdb.db('thronesdb');
 
 	data.masters = {
 		packs: data.db.collection('master_pack', {primaryKey:'code', changeTimestamp: true}),

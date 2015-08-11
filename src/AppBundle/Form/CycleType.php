@@ -27,6 +27,6 @@ class CycleType extends AbstractType
 
     public function getName()
     {
-        return 'agot2db_cardsbundle_cycletype';
+        return 'thronesdb_cardsbundle_cycletype';
     }
 }

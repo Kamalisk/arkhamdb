@@ -19,7 +19,7 @@ function display_card_on_element(card, element, event) {
 					text : content
 				},
 				style : {
-					classes : 'qtip-bootstrap qtip-agot2db card-content'
+					classes : 'qtip-bootstrap qtip-thronesdb card-content'
 				},
 				position : {
 					my : 'left center',

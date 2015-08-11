@@ -1,4 +1,4 @@
-agot2db
+thronesdb
 =======
 
 # Very guide guide on how to install a local copy

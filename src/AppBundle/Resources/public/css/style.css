@@ -166,7 +166,7 @@ div.tags span.tag:not(:first-child)::before {
 
 /************** QTIP ****************/
 
-.qtip-agot2db{min-width:360px;max-width:360px;font-size:15px}
+.qtip-thronesdb{min-width:360px;max-width:360px;font-size:15px}
 
 /***************** THUMBNAIL CARD IMAGE **************/
 
@@ -211,11 +211,11 @@ div.tags span.tag:not(:first-child)::before {
 /************** INDEX PAGE ***************/
 
 h1.site-title {
-	font-family: 'Allura', cursive;position:relative;font-size:128px;text-align:center;
+	font-family: 'Julius Sans One', sans-serif;
+	position:relative;
+	font-size:128px;
+	text-align:center;
 	margin-top: 0;
-}
-h1.site-title span {
-	position:relative;display:inline-block;width:.4em;font-size: 150%;top:.1em;left:-.1em;
 }
 div.site-slogan {
 	font-family: 'Open Sans Condensed', sans-serif;

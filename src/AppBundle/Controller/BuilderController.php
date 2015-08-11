@@ -641,7 +641,7 @@ class BuilderController extends Controller
         $response = new Response();
         $response->headers->set('Content-Type', 'application/zip');
         $response->headers->set('Content-Length', filesize($file));
-        $response->headers->set('Content-Disposition', 'attachment; filename="agot2db.zip"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="thronesdb.zip"');
         $response->setContent(file_get_contents($file));
         unlink($file);
         return $response;

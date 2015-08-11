@@ -29,6 +29,6 @@ class PackType extends AbstractType
 
     public function getName()
     {
-        return 'agot2db_cardsbundle_packtype';
+        return 'thronesdb_cardsbundle_packtype';
     }
 }

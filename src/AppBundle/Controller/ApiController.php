@@ -312,7 +312,7 @@ class ApiController extends Controller
 					"limited" => "Deck limit",
 			);
 			$phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
-			$phpExcelObject->getProperties()->setCreator("agot2db")
+			$phpExcelObject->getProperties()->setCreator("thronesdb")
 			->setLastModifiedBy($last_modified->format('Y-m-d'))
 			->setTitle($pack->getName())
 			->setSubject($pack->getName())
@@ -381,7 +381,7 @@ class ApiController extends Controller
 					"limited" => "Deck limit",
 			);
 			$phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
-			$phpExcelObject->getProperties()->setCreator("agot2db")
+			$phpExcelObject->getProperties()->setCreator("thronesdb")
 			->setLastModifiedBy($last_modified->format('Y-m-d'))
 			->setTitle($pack->getName())
 			->setSubject($pack->getName())
