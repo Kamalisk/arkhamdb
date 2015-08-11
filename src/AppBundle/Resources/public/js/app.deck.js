@@ -73,10 +73,7 @@ deck.get_description_md = function get_description_md() {
  * @memberOf deck
  */
 deck.get_agendas = function get_agendas() {
-	return app.data.cards.find({
-		indeck: {
-			'$gt': 0
-		},
+	return deck.get_cards(null, {
 		type_code: 'agenda'
 	});
 }
@@ -99,36 +96,28 @@ deck.get_history = function get_history() {
 /**
  * @memberOf deck
  */
-deck.get_cards = function get_cards(sort) {
+deck.get_cards = function get_cards(sort, query) {
 	sort = sort || {};
 	sort['code'] = 1;
 
-	return app.data.cards.find({
-		indeck: {
-			'$gt': 0
-		}
-	}, {
+	query = query || {};
+	query.indeck = {
+		'$gt': 0
+	};
+
+	return app.data.cards.find(query, {
 		'$orderBy': sort
 	});
 }
-
 
 /**
  * @memberOf deck
  */
 deck.get_draw_deck = function get_draw_deck(sort) {
-	sort = sort || {};
-	sort['code'] = 1;
-
-	return app.data.cards.find({
-		indeck: {
-			'$gt': 0
-		},
+	return deck.get_cards(sort, {
 		type_code: {
 			'$nin' : ['agenda','plot']
 		}
-	}, {
-		'$orderBy': sort
 	});
 }
 
@@ -145,18 +134,8 @@ deck.get_draw_deck_size = function get_draw_deck_size(sort) {
  * @memberOf deck
  */
 deck.get_plot_deck = function get_plot_deck(sort) {
-	sort = sort || {};
-	sort['code'] = 1;
-
-	return app.data.cards.find({
-		indeck: {
-			'$gt': 0
-		},
-		type_code: {
-			'$in' : ['plot']
-		}
-	}, {
-		'$orderBy': sort
+	return deck.get_cards(sort, {
+		type_code: 'plot'
 	});
 }
 
@@ -347,6 +326,55 @@ deck.get_problem = function get_problem() {
 	}
 
 	// the condition(s) of the agenda must be fulfilled
+	var agenda = deck.get_agenda();
+	if(!agenda) return;
+	switch(agenda.code) {
+		case '01027':
+		if(deck.get_cards(null, { faction_code: 'neutral' }).length > 15) {
+			return 'agenda';
+		}
+		break;
+		case '01198':
+		if(deck.get_cards(null, { faction_code: 'baratheon' }).length < 12) {
+			return 'agenda';
+		}
+		break;
+		case '01199':
+		if(deck.get_cards(null, { faction_code: 'greyjoy' }).length < 12) {
+			return 'agenda';
+		}
+		break;
+		case '01200':
+		if(deck.get_cards(null, { faction_code: 'lannister' }).length < 12) {
+			return 'agenda';
+		}
+		break;
+		case '01201':
+		if(deck.get_cards(null, { faction_code: 'martell' }).length < 12) {
+			return 'agenda';
+		}
+		break;
+		case '01202':
+		if(deck.get_cards(null, { faction_code: 'nightswatch' }).length < 12) {
+			return 'agenda';
+		}
+		break;
+		case '01203':
+		if(deck.get_cards(null, { faction_code: 'stark' }).length < 12) {
+			return 'agenda';
+		}
+		break;
+		case '01204':
+		if(deck.get_cards(null, { faction_code: 'targaryen' }).length < 12) {
+			return 'agenda';
+		}
+		break;
+		case '01205':
+		if(deck.get_cards(null, { faction_code: 'tyrell' }).length < 12) {
+			return 'agenda';
+		}
+		break;
+	}
 }
 
 /**
