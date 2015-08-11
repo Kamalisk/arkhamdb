@@ -94,6 +94,18 @@ footer {
 	font-size: 16px;
 }
 
+div.tags span.tag {
+	font-size: 75%;
+	color: darkgray;
+}
+div.tags span.tag:not(:first-child)::before {
+	content: " - ";
+}
+
+.decks-actions .btn{
+	margin-bottom: 3px;
+}
+
 /********* ONE DECK *********/
 
 .deck-intro .media-left {

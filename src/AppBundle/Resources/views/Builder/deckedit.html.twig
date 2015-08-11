@@ -23,7 +23,7 @@
 <div class="main container">
 
 {% if deck.unsaved %}
-<div class="alert alert-danger" role="alert" id="deck-unsaved-alert"><span class="fa-exclamation-triangle "></span> This deck has unsaved changes. Please save the deck or cancel the changes before making further edits.</div>
+<div class="alert alert-danger" role="alert" id="deck-unsaved-alert"><span class="fa fa-exclamation-triangle"></span> This deck has unsaved changes. Please save the deck or cancel the changes before making further edits.</div>
 {% endif %}
 
 <div class="row">
@@ -49,7 +49,7 @@
 			<input type="text" class="form-control decklist-name" name="name" value="{{ deck.name }}">
 		</div>
 	<button type="submit" class="btn btn-warning">Save</button>
-	<button type="submit" id="btn-save-as-copy" class="btn btn-default">Save as Copy</button>
+{#	<button type="submit" id="btn-save-as-copy" class="btn btn-default">Save as Copy</button> #}
 	<button type="submit" id="btn-cancel-edits" class="btn btn-link">Cancel edits</button>
 </form>
 
@@ -82,7 +82,7 @@
 	</div>
 </div>
 <!-- Right-side Column -->
-	
+
 </div><!-- .row -->
 </div><!-- .container -->
 

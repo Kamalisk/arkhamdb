@@ -10,7 +10,7 @@ var DisplayColumnsTpl = '',
  * reads ui configuration from localStorage
  * @memberOf ui
  */
-ui.read_from_storage = function read_from_storage() {
+ui.read_config_from_storage = function read_config_from_storage() {
 	if (localStorage) {
 		var stored = localStorage.getItem('ui.deck.config');
 		if(stored) {
@@ -22,9 +22,19 @@ ui.read_from_storage = function read_from_storage() {
 		'show-only-deck': false,
 		'display-column': 1,
 		'core-set': 1,
-		'show-suggestions': 3,
+		'show-suggestions': 0,
 		'buttons-behavior': 'cumulative'
 	}, Config || {});
+}
+
+/**
+ * write ui configuration to localStorage
+ * @memberOf ui
+ */
+ui.write_config_to_storage = function write_config_to_storage() {
+	if (localStorage) {
+		localStorage.setItem('ui.deck.config', JSON.stringify(Config));
+	}
 }
 
 /**
@@ -32,9 +42,11 @@ ui.read_from_storage = function read_from_storage() {
  * @memberOf ui
  */
 ui.init_config_buttons = function init_config_buttons() {
+	// radio
 	['display-column', 'core-set', 'show-suggestions', 'buttons-behavior'].forEach(function (radio) {
 		$('input[name='+radio+'][value='+Config[radio]+']').prop('checked', true);
 	});
+	// checkbox
 	['show-disabled', 'only-deck'].forEach(function (checkbox) {
 		if(Config[checkbox]) $('input[name='+checkbox+']').prop('checked', true);
 	})
@@ -79,15 +91,13 @@ ui.build_faction_selector = function build_faction_selector() {
 	var neutral_index = faction_codes.indexOf('neutral');
 	faction_codes.splice(neutral_index, 1);
 	faction_codes.unshift('neutral');
-	
+
 	faction_codes.forEach(function(faction_code) {
 		var example = app.data.cards.find({"faction_code": faction_code})[0];
 		var label = $('<label class="btn btn-default btn-sm" data-code="'
 				+ faction_code + '" title="'+example.faction_name+'"><input type="checkbox" name="' + faction_code
 				+ '"><span class="icon-' + faction_code + '"></span></label>');
 		if(Modernizr.touch) {
-			label.append(' '+example.faction_name);
-			label.addClass('btn-block');
 		} else {
 			label.tooltip({container: 'body'});
 		}
@@ -108,8 +118,6 @@ ui.build_type_selector = function build_type_selector() {
 				+ type_code + '" title="'+example.type_name+'"><input type="checkbox" name="' + type_code
 				+ '"><span class="icon-' + type_code + '"></span></label>');
 		if(Modernizr.touch) {
-			label.append(' '+example.type_name);
-			label.addClass('btn-block');
 		} else {
 			label.tooltip({container: 'body'});
 		}
@@ -156,7 +164,7 @@ ui.init_selectors = function init_selectors() {
 	$('[data-filter=faction_code]').find('input[name='+app.deck.get_faction_code()+']').prop("checked", true).parent().addClass('active');
 	var minor_faction_code = app.deck.get_minor_faction_code();
 	if(minor_faction_code) $('[data-filter=faction_code]').find('input[name='+minor_faction_code+']').prop("checked", true).parent().addClass('active');
-	
+
 	$('[data-filter=type_code]').find('input[name=character]').prop("checked", true).parent().addClass('active');
 }
 
@@ -243,7 +251,28 @@ ui.on_config_change = function on_config_change(event) {
 		Config[name] = $(this).prop('checked');
 		break;
 	}
-	ui.refresh_list();
+	ui.write_config_to_storage();
+	switch(name) {
+		case 'buttons-behavior':
+		break;
+		case 'core-set':
+		ui.set_max_qty();
+		ui.reset_list();
+		break;
+		case 'show-suggestions':
+		ui.toggle_suggestions();
+		default:
+		ui.refresh_list();
+	}
+}
+
+ui.toggle_suggestions = function toggle_suggestions() {
+	if(Config['show-suggestions'] == 0) {
+		$('#table-suggestions').hide();
+	}
+	else {
+		$('#table-suggestions').show();
+	}
 }
 
 /**
@@ -259,7 +288,7 @@ ui.on_table_sort_click = function on_table_sort_click(event) {
 		SortKey = new_sort;
 		SortOrder = 1;
 	}
-	
+
 	$(this).closest('tr').find('th').removeClass('dropup').find('span.caret').remove();
 	$(this).after('<span class="caret"></span>').closest('th').addClass(SortOrder > 0 ? '' : 'dropup');
 
@@ -288,7 +317,7 @@ ui.on_modal_quantity_change = function on_modal_quantity_change(event) {
 	var quantity = parseInt($(this).val(), 10);
 	modal.modal('hide');
 	ui.on_quantity_change(code, quantity);
-	
+
 	setTimeout(function () {
 		$('#filter-text').typeahead('val', '').focus();
 	}, 100);
@@ -347,9 +376,15 @@ ui.setup_event_handlers = function setup_event_handlers() {
 			var confirmation = confirm("This operation will revert the changes made to the deck since "+unsaved_edits[0].date_creation.calendar()+". The last "+(unsaved_edits.length > 1 ? unsaved_edits.length+" edits" : "edit")+" will be lost. Do you confirm?");
 			if(!confirmation) return false;
 		}
+		else {
+			if(app.deck_history.is_changed_since_last_autosave()) {
+				var confirmation = confirm("This operation will revert the changes made to the deck. Do you confirm?");
+				if(!confirmation) return false;
+			}
+		}
 		$('#deck-cancel-edits').val(1);
 	});
-	
+
 	$('#config-options').on('change', 'input', ui.on_config_change);
 	$('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 
@@ -358,9 +393,9 @@ ui.setup_event_handlers = function setup_event_handlers() {
 		$('#cardModal input[type=radio][value=' + num + ']').trigger('change');
 	});
 	$('#cardModal').on('change', 'input[type=radio]', ui.on_modal_quantity_change);
-	
+
 	$('thead').on('click', 'a[data-sort]', ui.on_table_sort_click);
-	
+
 }
 
 /**
@@ -457,6 +492,11 @@ ui.build_row = function build_row(card) {
 	return $(html);
 }
 
+ui.reset_list = function reset_list() {
+	CardDivs = [[],[],[]];
+	ui.refresh_list();
+}
+
 /**
  * destroys and rebuilds the list of available cards
  * don't fire unless 250ms has passed since last invocation
@@ -533,7 +573,7 @@ ui.refresh_deck = function refresh_deck() {
  * @memberOf ui
  */
 ui.setup_typeahead = function setup_typeahead() {
-	
+
 	function findMatches(q, cb) {
 		if(q.match(/^\w:/)) return;
 		var regexp = new RegExp(q, 'i');
@@ -558,6 +598,7 @@ ui.setup_typeahead = function setup_typeahead() {
  */
 ui.on_dom_loaded = function on_dom_loaded() {
 	ui.init_config_buttons();
+	ui.toggle_suggestions();
 	ui.setup_event_handlers();
 	app.textcomplete && app.textcomplete.setup('#description');
 	app.markdown && app.markdown.setup('#description', '#description-preview')
@@ -592,6 +633,6 @@ ui.on_all_loaded = function on_all_loaded() {
 	app.deck_history && app.deck_history.setup('#history');
 };
 
-ui.read_from_storage();
+ui.read_config_from_storage();
 
 })(app.ui, jQuery);

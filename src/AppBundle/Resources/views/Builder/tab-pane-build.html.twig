@@ -36,11 +36,15 @@
 <!-- Search Bar -->
 
 <div class="row" style="margin-bottom:10px">
-    <div class="col-xs-7">
-        <div id="faction_code" class="btn-group" data-filter="faction_code" data-toggle="buttons"></div>
+    <div class="col-md-12 hidden-xs">
+				<div class="btn-group pull-right" data-filter="type_code" data-toggle="buttons"></div>
+        <div class="btn-group" data-filter="faction_code" data-toggle="buttons"></div>
     </div>
-    <div class="col-xs-5 text-right">
-        <div id="type_code" class="btn-group" data-filter="type_code" data-toggle="buttons"></div>
+		<div class="col-xs-12 visible-xs" style="margin-bottom:10px">
+        <div class="btn-group btn-group-justified" data-filter="faction_code" data-toggle="buttons"></div>
+		</div>
+		<div class="col-xs-12 visible-xs">
+				<div class="btn-group btn-group-justified" data-filter="type_code" data-toggle="buttons"></div>
     </div>
 </div>
 
@@ -62,4 +66,3 @@
 	<div id="collection-grid" class="col-sm-12"></div>
 </div><!-- /.row -->
 <!-- Collection Table -->
-	

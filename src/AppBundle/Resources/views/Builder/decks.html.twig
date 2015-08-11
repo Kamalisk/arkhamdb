@@ -36,7 +36,6 @@
 		<ul class="dropdown-menu" role="menu">
 			<li><a href="{{ path('deck_import') }}" id="btn-import-paste">Copy/paste</a></li>
 			<li><a href="#" onclick="$('#fileModal').modal('show')" id="btn-import-file">File</a></li>
-			<li><a href="#" onclick="$('#meteorModal').modal('show')" id="btn-import-meteor">Meteor Decks</a></li>
 		</ul>
 	</div>
 </div>
@@ -49,15 +48,15 @@
 			<span class="fa fa-check-square-o"></span> With Selection <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu" role="menu">
-		    <li class="dropdown-header"><span class="fa fa-compress"></span> Compare</li>
+{#		    <li class="dropdown-header"><span class="fa fa-compress"></span> Compare</li>
 		    <li><a href="#" id="btn-compare">Compare two or more decks</a></li>
 		    <li><a href="#" id="btn-compare-collection">Compare one deck vs the others</a></li>
-		    <li class="dropdown-header"><span class="fa fa-tag"></span> Tags</li>
+#}		    <li class="dropdown-header"><span class="fa fa-tag"></span> Tags</li>
 		    <li><a href="#" id="btn-tag-add">Add one or more tags</a></li>
 			<li><a href="#" id="btn-tag-remove-one">Remove one or more tags</a></li>
 			<li><a href="#" id="btn-tag-remove-all">Clear all tags</a></li>
 			<li class="dropdown-header"><span class="fa fa-trash-o"></span> Delete</li>
-			<li><a href="#" id="btn-delete-selected"><span style="color:red" class="fa-exclamation-triangle "></span> Delete all decks selected</a></li>
+			<li><a href="#" id="btn-delete-selected"><span style="color:red" class="fa fa-exclamation-triangle"></span> Delete all decks selected</a></li>
 		</ul>
 	</div>
 	<div class="btn-group" id="btn-group-sort">
@@ -75,8 +74,8 @@
 	</div>
 </div>
 </div>
- 
-<div class="row" style="margin-bottom:10px">
+
+<div class="row hidden-xs" style="margin-bottom:10px">
 <div class="col-md-12">
     <a role="button" class="btn btn-default btn-sm" href="{{ path('decks_download_all') }}">Download all decks</a>
     <button role="button" class="btn btn-default btn-sm" id="decks_upload_all">Upload all decks</button>
@@ -94,34 +93,36 @@
 <!-- Left-side column -->
 <div class="col-md-8 col-md-pull-4">
 
-<h1>My private decks <small style="font-size:16px"{% if cannotcreate %} class="text-danger"{% endif %}>({{ nbdecks }}/{{ nbmax }} slots)</small></h1>
+<h1>My private decks <small style="font-size:16px" class="hidden-xs {% if cannotcreate %}text-danger{% endif %}">({{ nbdecks }}/{{ nbmax }} slots)</small></h1>
 
 <table class="table table-expanded list-decks">
-<thead>
+<thead class="hidden-xs">
 	<tr>
 		<th>Select</th>
+		<th></th>
 		<th>Name</th>
-		<th>Actions</th>
-		<th>Faction</th>
+		<th class="text-right">Actions</th>
 	</tr>
 </thead>
 <tbody id="decks">
 {% for deck in decks %}
 	<tr data-id="{{ deck.id }}">
 		<td><input type="checkbox"></td>
+		<td class="hidden-xs"><img src="{{ asset('/bundles/app/images/factions/' ~ deck.faction_code ~ '.png') }}"></td>
 		<td>
-			<a href="{{ path('deck_view',{deck_id:deck.id}) }}">{{ deck.name }}</a><br>
+			<a href="{{ path('deck_view',{deck_id:deck.id}) }}">{{ deck.name }}</a>
+			<div class="tags">
 			{% for tag in deck.tags|split(' ') %}
-			<span class="label label-default">{{ tag }}</span>
+			<span class="tag">{{ tag }}</span>
 			{% endfor %}
+			</div>
 		</td>
-		<td>
-			<a href="{{ path('deck_edit',{deck_id:deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit"><span class="fa fa-pencil"></span></a>
-			<button class="disabled btn btn-xs btn-default btn-publish-deck" data-toggle="tooltip" title="Publish"><span class="fa fa-share"></span></button>
-			<a href="{{ path('deck_duplicate',{deck_id:deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Duplicate"><span class="fa fa-plus"></span></a>
-			<button class="btn btn-xs btn-default btn-delete-deck" data-toggle="tooltip" title="Delete"><span class="fa fa-trash-o"></span></button>
+		<td class="decks-actions text-right">
+			<a href="{{ path('deck_edit',{deck_id:deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit"><span class="fa fa-pencil fa-fw"></span></a>
+			<button class="disabled btn btn-xs btn-default btn-publish-deck" data-toggle="tooltip" title="Publish"><span class="fa fa-share fa-fw"></span></button>
+			<a href="{{ path('deck_duplicate',{deck_id:deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Duplicate"><span class="fa fa-code-fork fa-fw"></span></a>
+			<button class="btn btn-xs btn-default btn-delete-deck" data-toggle="tooltip" title="Delete"><span class="fa fa-trash-o fa-fw"></span></button>
 		</td>
-		<td><img src="{{ asset('/bundles/app/images/factions/' ~ deck.faction_code ~ '.png') }}"></td>
 	</tr>
 {% endfor %}
 </tbody>
