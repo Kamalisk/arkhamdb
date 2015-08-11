@@ -236,12 +236,32 @@ deck.display = function display(container, sort, nb_columns) {
 
 /**
  * @memberOf deck
+ * @return boolean true if at least one other card quantity was updated
  */
 deck.set_card_copies = function set_card_copies(card_code, nb_copies) {
+	var card = app.data.cards.findById(card_code);
+	if(!card) return false;
+
+	var updated_other_card = false;
+
+	// card-specific rules
+	switch(card.type_code) {
+		case 'agenda':
+		app.data.cards.update({
+			type_code: 'agenda'
+		}, {
+			indeck: 0
+		});
+		updated_other_card = true;
+		break;
+	}
+
 	app.data.cards.updateById(card_code, {
 		indeck: nb_copies
 	});
 	if(app.deck_history) app.deck_history.notify_change();
+
+	return updated_other_card;
 }
 
 /**

@@ -323,13 +323,7 @@ ui.on_modal_quantity_change = function on_modal_quantity_change(event) {
 	}, 100);
 }
 
-/**
- * @memberOf ui
- */
-ui.on_quantity_change = function on_quantity_change(code, quantity) {
-	app.deck.set_card_copies(code, quantity);
-	ui.refresh_deck();
-
+ui.refresh_row = function refresh_row(card_code, quantity) {
 	// for each set of divs (1, 2, 3 columns)
 	CardDivs.forEach(function(rows) {
 		var row = rows[code];
@@ -347,9 +341,22 @@ ui.on_quantity_change = function on_quantity_change(code, quantity) {
 			}
 		});
 	});
-
 }
 
+/**
+ * @memberOf ui
+ */
+ui.on_quantity_change = function on_quantity_change(card_code, quantity) {
+	var update_all = app.deck.set_card_copies(card_code, quantity);
+	ui.refresh_deck();
+
+	if(update_all) {
+		ui.refresh_list();
+	}
+	else {
+		ui.refresh_row(card_code, quantity);
+	}
+}
 
 /**
  * sets up event handlers ; dataloaded not fired yet
