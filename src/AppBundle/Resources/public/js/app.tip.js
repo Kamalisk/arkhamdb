@@ -11,7 +11,8 @@ function display_card_on_element(card, element, event) {
 	+ '<div class="card-info">' + app.format.info(card) + '</div>'
 	+ '<div class="card-traits">' + app.format.traits(card) + '</div>'
 	+ '<div class="card-text">' + app.format.text(card) + '</div>'
-	+ '<p class="card-faction" style="text-align:right;clear:right">' + app.format.pack_faction(card) + '</p>';
+	+ '<span class="card-pack pull-right" style="clear:right">' + app.format.pack(card) + '</span>'
+	+ '<span class="card-faction">' + app.format.faction(card) + '</span>';
 
 	$(element).qtip(
 			{

@@ -14,6 +14,21 @@ format.name = function name(card) {
 	return (card.isUnique ? '<span class="icon-unique"></span> ' : "") + card.name;
 }
 
+format.faction = function faction(card) {
+	var text = card.faction_name + '. ';
+	if(card.isLoyal) text += 'Loyal. ';
+	if(card.plotLimit) text += 'Plot deck limit: '+card.plotLimit+'. ';
+	return text;
+}
+
+/**
+ * @memberOf format
+ */
+format.pack = function pack(card) {
+	var text = card.pack_name + ' #' + card.position + '. ';
+	return text;
+}
+
 /**
  * @memberOf format
  */
