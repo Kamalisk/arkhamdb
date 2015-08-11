@@ -72,14 +72,21 @@ deck.get_description_md = function get_description_md() {
 /**
  * @memberOf deck
  */
-deck.get_agenda = function get_agenda() {
-	var result = app.data.cards.find({
+deck.get_agendas = function get_agendas() {
+	return app.data.cards.find({
 		indeck: {
 			'$gt': 0
 		},
 		type_code: 'agenda'
 	});
-	return result.length ? result[0] : null;
+}
+
+/**
+ * @memberOf deck
+ */
+deck.get_agenda = function get_agenda() {
+	var agendas = deck.get_agendas();
+	return agendas.length ? agendas[0] : null;
 }
 
 /**
@@ -155,11 +162,21 @@ deck.get_plot_deck = function get_plot_deck(sort) {
 
 /**
  * @memberOf deck
+ * @returns the number of plot cards
  */
 deck.get_plot_deck_size = function get_plot_deck_size(sort) {
 	var plot_deck = deck.get_plot_deck();
 	var quantities = _.pluck(plot_deck, 'indeck');
 	return _.reduce(quantities, function(memo, num) { return memo + num; }, 0);
+}
+
+/**
+ * @memberOf deck
+ * @returns the number of different plot cards
+ */
+deck.get_plot_deck_variety = function get_plot_deck_variety(sort) {
+	var plot_deck = deck.get_plot_deck();
+	return plot_deck.length;
 }
 
 /**
@@ -220,11 +237,17 @@ deck.display = function display(container, sort, nb_columns) {
 
 	var deck_intro = $('<div class="deck-intro"><div class="media"><div class="media-left"></div><div class="media-body"></div></div>');
 	$(deck_intro).find('.media-left').append('<span class="icon-'+deck.get_faction_code()+' '+deck.get_faction_code()+'"></span>');
-	$(deck_intro).find('.media-body').append('<h4>'+faction_name+'</h4>');
-	$(deck_intro).find('.media-body').append('<div>Draw deck: '+deck.get_draw_deck_size()+' cards.</div>');
-	$(deck_intro).find('.media-body').append('<div>Plot deck: '+deck.get_plot_deck_size()+' cards.</div>');
-	$(deck_intro).find('.media-body').append('<div>Included packs: ' + _.pluck(deck.get_included_packs(), 'name').join(', ') + '.</div>');
 
+	var deck_intro_body = $(deck_intro).find('.media-body');
+	deck_intro_body.append('<h4>'+faction_name+'</h4>');
+	deck_intro_body.append('<div>Draw deck: '+deck.get_draw_deck_size()+' cards.</div>');
+	deck_intro_body.append('<div>Plot deck: '+deck.get_plot_deck_size()+' cards.</div>');
+	deck_intro_body.append('<div>Included packs: ' + _.pluck(deck.get_included_packs(), 'name').join(', ') + '.</div>');
+
+	var problem = deck.get_problem();
+	if(problem) {
+		deck_intro_body.append('<div class="text-danger">Problem: ' + problem + '.</div>');
+	}
 
 	$(container)
 		.removeClass('deck-loading')
@@ -290,11 +313,40 @@ deck.get_export = function get_export(format) {
 
 }
 
+
 /**
  * @memberOf deck
  */
 deck.get_problem = function get_problem() {
+	// exactly 7 plots
+	if(deck.get_plot_deck_size() > 7) {
+		return 'too_many_plots';
+	}
+	if(deck.get_plot_deck_size() < 7) {
+		return 'too_few_plots';
+	}
 
+	// at least 6 different plots
+	if(deck.get_plot_deck_variety() < 6) {
+		return 'too_many_different_plots';
+	}
+
+	// no more than 1 agenda
+	if(deck.get_agendas().length > 1) {
+		return 'too_many_agendas';
+	}
+
+	// at least 60 others cards
+	if(deck.get_draw_deck_size() < 60) {
+		return 'too_few_cards';
+	}
+
+	// no invalid card
+	if(deck.get_invalid_cards().length > 0) {
+		return 'invalid_cards';
+	}
+
+	// the condition(s) of the agenda must be fulfilled
 }
 
 /**
@@ -317,6 +369,12 @@ deck.get_minor_faction_code = function get_minor_faction_code() {
 		'01205': 'tyrell'
 	};
 	return banners_core_set[agenda.code];
+}
+
+deck.get_invalid_cards = function get_invalid_cards() {
+	return _.filter(deck.get_cards(), function (card) {
+		return ! deck.can_include_card(card);
+	});
 }
 
 /**
