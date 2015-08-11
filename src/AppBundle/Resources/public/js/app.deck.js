@@ -1,7 +1,7 @@
 (function app_deck(deck, $) {
 
 deck.json = {};
-	
+
 var date_creation,
 	date_update,
 	description_md,
@@ -16,7 +16,7 @@ var date_creation,
 	user_id,
 	header_tpl = _.template('<h5><%= name %> (<%= quantity %>)</h5>'),
 	card_line_tpl = _.template('<div><%= card.indeck %>x <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a></div>');
-	
+
 /**
  * @memberOf deck
  */
@@ -34,7 +34,7 @@ deck.init = function init(json) {
 	faction_name = deck.json.faction_name;
 	unsaved = deck.json.unsaved;
 	user_id = deck.json.user_id;
-	
+
 	app.data.cards.update({}, {
 		indeck: 0
 	});
@@ -95,7 +95,7 @@ deck.get_history = function get_history() {
 deck.get_cards = function get_cards(sort) {
 	sort = sort || {};
 	sort['code'] = 1;
-	
+
 	return app.data.cards.find({
 		indeck: {
 			'$gt': 0
@@ -112,7 +112,7 @@ deck.get_cards = function get_cards(sort) {
 deck.get_draw_deck = function get_draw_deck(sort) {
 	sort = sort || {};
 	sort['code'] = 1;
-	
+
 	return app.data.cards.find({
 		indeck: {
 			'$gt': 0
@@ -140,7 +140,7 @@ deck.get_draw_deck_size = function get_draw_deck_size(sort) {
 deck.get_plot_deck = function get_plot_deck(sort) {
 	sort = sort || {};
 	sort['code'] = 1;
-	
+
 	return app.data.cards.find({
 		indeck: {
 			'$gt': 0
@@ -185,8 +185,8 @@ deck.get_included_packs = function get_included_packs() {
  */
 deck.display = function display(container, sort, nb_columns) {
 	var deck_content = $('<div class="deck-content">');
-	
-	/* to sort cards, we need: 
+
+	/* to sort cards, we need:
 	 * name of the key to sort upon
 	 * label to display for each key
 	 * order of the values
@@ -199,7 +199,7 @@ deck.display = function display(container, sort, nb_columns) {
 		valuesOrder = ['agenda','plot','character','attachment','location','event'];
 		break;
 	}
-	
+
 	valuesOrder.forEach(function (sortValue) {
 		var query = {
 			indeck: {
@@ -214,24 +214,24 @@ deck.display = function display(container, sort, nb_columns) {
 
 		$(header_tpl({name:cards[0][displayLabel], quantity: cards.length})).appendTo(deck_content);
 		cards.forEach(function (card) {
-			$(card_line_tpl({card:card})).appendTo(deck_content);
+			$(card_line_tpl({card:card})).addClass(deck.can_include_card(card) ? '' : 'invalid-card').appendTo(deck_content);
 		})
 	})
-	
+
 	var deck_intro = $('<div class="deck-intro"><div class="media"><div class="media-left"></div><div class="media-body"></div></div>');
 	$(deck_intro).find('.media-left').append('<span class="icon-'+deck.get_faction_code()+' '+deck.get_faction_code()+'"></span>');
 	$(deck_intro).find('.media-body').append('<h4>'+faction_name+'</h4>');
 	$(deck_intro).find('.media-body').append('<div>Draw deck: '+deck.get_draw_deck_size()+' cards.</div>');
 	$(deck_intro).find('.media-body').append('<div>Plot deck: '+deck.get_plot_deck_size()+' cards.</div>');
 	$(deck_intro).find('.media-body').append('<div>Included packs: ' + _.pluck(deck.get_included_packs(), 'name').join(', ') + '.</div>');
-	
-	
+
+
 	$(container)
 		.removeClass('deck-loading')
 		.empty()
 		.append(deck_intro)
 		.append(deck_content);
-	
+
 }
 
 /**
@@ -267,14 +267,14 @@ deck.get_json = function get_json() {
  * @memberOf deck
  */
 deck.get_export = function get_export(format) {
-	
+
 }
 
 /**
  * @memberOf deck
  */
 deck.get_problem = function get_problem() {
-	
+
 }
 
 /**
@@ -284,7 +284,7 @@ deck.get_problem = function get_problem() {
 deck.get_minor_faction_code = function get_minor_faction_code() {
 	var agenda = deck.get_agenda();
 	if(!agenda) return;
-	
+
 	// special case for the Core Set Banners
 	var banners_core_set = {
 		'01198': 'baratheon',
@@ -306,19 +306,19 @@ deck.get_minor_faction_code = function get_minor_faction_code() {
 deck.can_include_card = function can_include_card(card) {
 	// neutral card => yes
 	if(card.faction_code === 'neutral') return true;
-	
+
 	// in-house card => yes
 	if(card.faction_code === faction_code) return true;
-	
+
 	// out-of-house and loyal => no
 	if(card.isLoyal) return false;
-	
+
 	// minor faction => yes
 	var minor_faction_code = deck.get_minor_faction_code();
 	if(minor_faction_code && minor_faction_code === card.faction_code) return true;
-	
+
 	// if none above => no
 	return false;
 }
-	
+
 })(app.deck = {}, jQuery);

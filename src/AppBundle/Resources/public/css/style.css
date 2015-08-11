@@ -117,6 +117,9 @@ div.tags span.tag:not(:first-child)::before {
 .deck-content {
 	margin-bottom: 15px;
 }
+.deck-content .invalid-card {
+	text-decoration: line-through;
+}
 
 /********* LIST OF DECKS ************/
 
