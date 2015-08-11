@@ -335,42 +335,15 @@ deck.get_problem = function get_problem() {
 		}
 		break;
 		case '01198':
-		if(deck.get_cards(null, { faction_code: 'baratheon' }).length < 12) {
-			return 'agenda';
-		}
-		break;
 		case '01199':
-		if(deck.get_cards(null, { faction_code: 'greyjoy' }).length < 12) {
-			return 'agenda';
-		}
-		break;
 		case '01200':
-		if(deck.get_cards(null, { faction_code: 'lannister' }).length < 12) {
-			return 'agenda';
-		}
-		break;
 		case '01201':
-		if(deck.get_cards(null, { faction_code: 'martell' }).length < 12) {
-			return 'agenda';
-		}
-		break;
 		case '01202':
-		if(deck.get_cards(null, { faction_code: 'nightswatch' }).length < 12) {
-			return 'agenda';
-		}
-		break;
 		case '01203':
-		if(deck.get_cards(null, { faction_code: 'stark' }).length < 12) {
-			return 'agenda';
-		}
-		break;
 		case '01204':
-		if(deck.get_cards(null, { faction_code: 'targaryen' }).length < 12) {
-			return 'agenda';
-		}
-		break;
 		case '01205':
-		if(deck.get_cards(null, { faction_code: 'tyrell' }).length < 12) {
+		var minor_faction_code = deck.get_minor_faction_code();
+		if(deck.get_cards(null, { faction_code: minor_faction_code }).length < 12) {
 			return 'agenda';
 		}
 		break;
