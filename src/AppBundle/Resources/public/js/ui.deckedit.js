@@ -288,11 +288,8 @@ ui.on_table_sort_click = function on_table_sort_click(event) {
 		SortKey = new_sort;
 		SortOrder = 1;
 	}
-
-	$(this).closest('tr').find('th').removeClass('dropup').find('span.caret').remove();
-	$(this).after('<span class="caret"></span>').closest('th').addClass(SortOrder > 0 ? '' : 'dropup');
-
 	ui.refresh_list();
+	ui.update_sort_caret();
 }
 
 /**
@@ -441,6 +438,7 @@ ui.update_list_template = function update_list_template() {
 			'<tr>'
 				+ '<td><div class="btn-group" data-toggle="buttons"><%= radios %></div></td>'
 				+ '<td><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></td>'
+				+ '<td class="cost"><%= card.cost %></td>'
 				+ '<td class="type"><span class="icon-<%= card.type_code %>" title="<%= card.type_name %>"></span></td>'
 				+ '<td class="faction"><span class="icon-<%= card.faction_code %>" title="<%= card.faction_name %>"></span></td>'
 			+ '</tr>'
@@ -599,12 +597,19 @@ ui.setup_typeahead = function setup_typeahead() {
 
 }
 
+ui.update_sort_caret = function update_sort_caret() {
+	var elt = $('[data-sort='+SortKey+']');
+	$(elt).closest('tr').find('th').removeClass('dropup').find('span.caret').remove();
+	$(elt).after('<span class="caret"></span>').closest('th').addClass(SortOrder > 0 ? '' : 'dropup');
+}
+
 /**
  * called when the DOM is loaded
  * @memberOf ui
  */
 ui.on_dom_loaded = function on_dom_loaded() {
 	ui.init_config_buttons();
+	ui.update_sort_caret();
 	ui.toggle_suggestions();
 	ui.setup_event_handlers();
 	app.textcomplete && app.textcomplete.setup('#description');
