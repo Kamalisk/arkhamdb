@@ -10,7 +10,7 @@ function confirm_publish() {
 		  if(response == "") {
 			  $('#btn-publish-submit').text("Go").prop('disabled', false);
 		  }
-		  else 
+		  else
 		  {
 			  $('#publish-deck-form').prepend('<div id="publish-form-alert" class="alert alert-danger">That deck cannot be published because <a href="'+response+'">another decklist</a> already has the same composition.</div>');
 			  $('#btn-publish-submit').text("Refused");
@@ -37,7 +37,7 @@ ui.do_action_deck = function do_action_deck(event) {
 
 	var action_id = $(this).attr('id');
 	if(!action_id) return;
-	
+
 	switch(action_id) {
 		case 'btn-publish': confirm_publish(); break;
 		case 'btn-delete': confirm_delete(); break;
@@ -70,8 +70,7 @@ ui.setup_event_handlers = function setup_event_handlers() {
  */
 ui.refresh_deck = function refresh_deck() {
 	app.deck.display('#deck', DisplaySort, 1);
-	//app.draw_simulator.reset();
-
+	app.draw_simulator && app.draw_simulator.reset();
 }
 
 /**
@@ -79,16 +78,15 @@ ui.refresh_deck = function refresh_deck() {
  * @memberOf ui
  */
 ui.on_dom_loaded = function on_dom_loaded() {
-	console.log('ui.setup_event_handlers');
 	ui.setup_event_handlers();
-	console.log('ui.on_dom_loaded end')
-	
+
 	var converter = new Markdown.Converter();
 	var desc = app.deck.get_description_md();
 	$('#description').html(converter.makeHtml(desc || '*No description.*'));
 
-	//$('#btn-publish').prop('disabled', !!SelectedDeck.problem);
+	app.draw_simulator && app.draw_simulator.on_dom_loaded();
 
+	//$('#btn-publish').prop('disabled', !!SelectedDeck.problem);
 };
 
 /**
@@ -96,9 +94,7 @@ ui.on_dom_loaded = function on_dom_loaded() {
  * @memberOf ui
  */
 ui.on_data_loaded = function on_data_loaded() {
-	console.log('app.deck.init')
 	app.deck.init();
-	console.log('ui.on_data_loaded end')
 };
 
 /**
@@ -106,12 +102,7 @@ ui.on_data_loaded = function on_data_loaded() {
  * @memberOf ui
  */
 ui.on_all_loaded = function on_all_loaded() {
-	console.log('ui.refresh_deck')
 	ui.refresh_deck();
-	console.log('app.deck_gallery.update')
-	app.deck_gallery.display('#deck-gallery');
-
-	console.log('ui.on_all_loaded end')
 };
 
 })(app.ui, jQuery);

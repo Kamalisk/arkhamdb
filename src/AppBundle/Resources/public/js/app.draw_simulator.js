@@ -1,8 +1,8 @@
 (function app_draw_simulator(draw_simulator, $) {
-	
-var deck = null, 
-	initial_size = 0, 
-	draw_count = 0, 
+
+var deck = null,
+	initial_size = 0,
+	draw_count = 0,
 	container = null;
 
 /**
@@ -30,7 +30,7 @@ draw_simulator.on_dom_loaded = function on_dom_loaded() {
  */
 draw_simulator.on_data_loaded = function on_data_loaded() {
 	deck = [];
-	
+
 	var cards = app.deck.get_draw_deck();
 	cards.forEach(function (card) {
 		for(var ex = 0; ex < card.indeck; ex++) {
@@ -79,7 +79,6 @@ draw_simulator.handle_click = function handle_click(event) {
 	event.preventDefault();
 
 	var command = $(this).data('command');
-	console.log(command);
 	$('[data-command=clear]').prop('disabled', false);
 	if(command === 'clear') {
 		draw_simulator.reset();
@@ -94,7 +93,7 @@ draw_simulator.handle_click = function handle_click(event) {
 	} else {
 		draw = command;
 	}
-	
+
 	if(isNaN(draw)) return;
 	draw_simulator.do_draw(draw);
 

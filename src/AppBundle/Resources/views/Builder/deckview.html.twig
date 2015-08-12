@@ -1,13 +1,17 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
 {% block javascripts %}
-	<script src="{{ asset('/bundles/app/js/app.deck_gallery.js') }}"></script>
-{#	<script src="{{ asset('/bundles/app/js/app.draw_simulator.js') }}"></script> #}
-{#	<script src="{{ asset('/bundles/app/js/app.card_modal.js') }}"></script> #}
-	<script src="{{ asset('/bundles/app/js/app.deck.js') }}"></script>
-	<script src="{{ asset('/bundles/app/js/ui.deckview.js') }}"></script>
+	{% javascripts
+		'@AppBundle/Resources/public/js/app.binomial.js'
+		'@AppBundle/Resources/public/js/app.hypergeometric.js'
+		'@AppBundle/Resources/public/js/app.draw_simulator.js'
+		'@AppBundle/Resources/public/js/app.markdown.js'
+		'@AppBundle/Resources/public/js/app.deck.js'
+		'@AppBundle/Resources/public/js/ui.deckview.js' %}
+	<script src="{{ asset_url }}"></script>
+	{% endjavascripts %}
 	<script type="text/javascript">
-	app.deck.json = {{ deck|json_encode|raw }}
+	app.deck.json = {{ deck|json_encode|raw }};
 	</script>
 {% endblock %}
 
@@ -23,10 +27,6 @@
     </div>
 </div>
 
-<div class="row hidden-xs" style="margin-bottom: 20px">
-    <div class="col-sm-12" id="deck-gallery"></div>
-</div>
-
 <div class="row">
 
 <!-- Left-side Column -->
@@ -40,12 +40,22 @@
 <div style="margin-bottom:20px" id="btn-group-deck">
 {% if is_owner %}
 <div style="margin-bottom:5px">
-    <button type="button" id="btn-print" class="btn btn-default"><span class="fa fa-print"></span> Print</button>
+{#    <button type="button" id="btn-print" class="btn btn-default"><span class="fa fa-print"></span> Print</button>#}
 	<a href="{{ path('deck_edit', {deck_id:deck_id}) }}" class="btn btn-primary"><span class="fa fa-pencil"></span> Edit</a>
 	<button type="button" id="btn-publish" disabled="disabled" class="btn btn-success"><span class="fa fa-share"></span> Publish</button>
-	<button type="button" id="btn-delete" class="btn btn-danger"><span class="fa fa-times"></span> Delete</button>
+	<button type="button" id="btn-delete" class="btn btn-danger"><span class="fa fa-trash"></span> Delete</button>
+	<div class="btn-group">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			<span class="fa fa-download"></span> Download <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="{{ path('deck_export_text', {deck_id:deck_id}) }}">Text file</a></li>
+			<li><a href="{{ path('deck_export_octgn', {deck_id:deck_id}) }}">Octgn file</a></li>
+		</ul>
+	</div>
 </div>
 {% endif %}
+{#
 <div>
 <div class="btn-group">
   <div class="btn-group">
@@ -65,19 +75,10 @@
   <button type="button" id="btn-display-bbcode" class="btn btn-default">bbCode</button>
   <button type="button" id="btn-display-markdown" class="btn btn-default">Markdown</button>
 </div>
+</div>
+</div>
+#}
 
-	<div class="btn-group">
-		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-			<span class="fa fa-download"></span> Download <span class="caret"></span>
-		</button>
-		<ul class="dropdown-menu" role="menu">
-			<li><a href="{{ path('deck_export_text', {deck_id:deck_id}) }}">Text file</a></li>
-			<li><a href="{{ path('deck_export_octgn', {deck_id:deck_id}) }}">Octgn file</a></li>
-		</ul>
-	</div>
-</div>
-</div>
-	
 <!-- Description -->
 <div class="panel panel-default">
   <div class="panel-heading">

@@ -163,7 +163,7 @@ div.tags span.tag:not(:first-child)::before {
 
 /********* DRAW SIMULATOR ************/
 
-#table-draw-simulator-content img {width:99px;float:left;margin:5px;box-shadow: black 0px 0px 5px;border-radius: 5px;}
+#table-draw-simulator-content img {width:98px;float:left;margin:5px;box-shadow: black 0px 0px 5px;border-radius: 5px;}
 #table-draw-simulator-content img.trashed {opacity: 0.25;box-shadow: none;}
 #table-draw-simulator-content img.trashed:hover {opacity: 0.75;}
 #table-draw-simulator-content div.card-proxy {background:#888;color:white;width:99px;height:138px;float:left;margin:5px;box-shadow: black 0px 0px 5px;border-radius: 5px;}
@@ -265,7 +265,7 @@ div.site-slogan {
 	color: #e60a18;
 }
 .tyrell {
-	color: #509f16; 
+	color: #509f16;
 }
 .nightswatch {
 	color: #6e6e6e;
