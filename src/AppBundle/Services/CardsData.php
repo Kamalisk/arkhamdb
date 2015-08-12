@@ -376,6 +376,7 @@ class CardsData
 					$value = (boolean) $value;
 					break;
 			}
+			$fieldName = ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', $fieldName)), '_');
 	    	$cardinfo[$fieldName] = $value;
 	    }
 

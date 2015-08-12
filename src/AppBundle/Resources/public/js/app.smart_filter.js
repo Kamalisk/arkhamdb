@@ -2,6 +2,29 @@
 
 var SmartFilterQuery = [];
 
+var configuration = {
+	a: [ add_string_sf, 'flavor' ],
+	b: [ add_integer_sf, 'claim' ],
+	d: [ add_boolean_sf, 'is_limited' ],
+	e: [ add_string_sf, 'pack_code' ],
+	f: [ add_string_sf, 'faction_code' ],
+	g: [ add_boolean_sf, 'is_intrigue' ],
+	h: [ add_integer_sf, 'reserve' ],
+	i: [ add_string_sf, 'illustrator' ],
+	k: [ add_string_sf, 'traits' ],
+	l: [ add_boolean_sf, 'is_loyal' ],
+	m: [ add_boolean_sf, 'is_military' ],
+	n: [ add_integer_sf, 'income' ],
+	o: [ add_integer_sf, 'cost' ],
+	p: [ add_boolean_sf, 'is_power' ],
+	s: [ add_integer_sf, 'strength' ],
+	t: [ add_string_sf, 'type_code' ],
+	u: [ add_boolean_sf, 'is_unique' ],
+	v: [ add_integer_sf, 'initiative' ],
+	x: [ add_string_sf, 'text' ],
+	y: [ add_integer_sf, 'quantity' ]
+};
+
 /**
  * called when the list is refreshed
  * @memberOf smart_filter
@@ -24,76 +47,19 @@ smart_filter.update =  function update(value) {
 		var operator = condition.shift();
 		var values = condition;
 
-		switch (type) {
-		case "a":
-			add_string_sf('flavor', operator, values);
-			break;
-		case "b":
-			add_integer_sf('claim', operator, values);
-			break;
-//		case "c":
-//			add_integer_sf('cycle', operator, values);
-//			break;
-		case "d":
-			add_boolean_sf('isLimited', operator, values);
-			break;
-		case "e":
-			add_string_sf('pack_code', operator, values);
-			break;
-		case "f":
-			add_string_sf('faction_code', operator, values);
-			break;
-		case "g":
-			add_boolean_sf('isIntrigue', operator, values);
-			break;
-		case "h":
-			add_integer_sf('reserve', operator, values);
-			break;
-		case "i":
-			add_string_sf('illustrator', operator, values);
-			break;
-		case "k":
-			add_string_sf('traits', operator, values);
-			break;
-		case "l":
-			add_boolean_sf('isLoyal', operator, values);
-			break;
-		case "m":
-			add_boolean_sf('isMilitary', operator, values);
-			break;
-		case "n":
-			add_integer_sf('income', operator, values);
-			break;
-		case "o":
-			add_integer_sf('cost', operator, values);
-			break;
-		case "p":
-			add_boolean_sf('isPower', operator, values);
-			break;
-//		case "r":
-//			add_string_sf('date_release', operator, values);
-//			break;
-		case "s":
-			add_integer_sf('strength', operator, values);
-			break;
-		case "t":
-			add_string_sf('type_code', operator, values);
-			break;
-		case "u":
-			add_boolean_sf('isUnique', operator, values);
-			break;
-		case "v":
-			add_integer_sf('initiative', operator, values);
-			break;
-		case "x":
-			add_string_sf('text', operator, values);
-			break;
-		case "y":
-			add_integer_sf('quantity', operator, values);
-			break;
+		var tools = configuration[type];
+		if(tools) {
+			tools[0].call(this, tools[1], operator, values);
 		}
 	}
 };
+
+smart_filter.get_help = function get_help() {
+	var items = _.map(configuration, function (value, key) {
+		return '<li>'+key+': '+value[1]+'</li>';
+	});
+	return '<ul>'+items.join('')+'</ul>';
+}
 
 function add_integer_sf(key, operator, values) {
 	for (var j = 0; j < values.length; j++) {
@@ -143,9 +109,7 @@ function add_boolean_sf(key, operator, values) {
 	var value = values.shift(), target = !!value;
 	switch (operator) {
 	case ":":
-		SmartFilterQuery[key] = {
-			'$eq': target
-		};
+		SmartFilterQuery[key] = target;
 		break;
 	case "!":
 		SmartFilterQuery[key] = {

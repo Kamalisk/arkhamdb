@@ -470,7 +470,7 @@ deck.can_include_card = function can_include_card(card) {
 	if(card.faction_code === faction_code) return true;
 
 	// out-of-house and loyal => no
-	if(card.isLoyal) return false;
+	if(card.is_loyal) return false;
 
 	// minor faction => yes
 	var minor_faction_code = deck.get_minor_faction_code();

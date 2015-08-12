@@ -416,7 +416,7 @@ ui.get_filters = function get_filters() {
 	var filters = {};
 	$('[data-filter]').each(
 		function(index, div) {
-			var columnName = $(div).data('filter');
+			var column_name = $(div).data('filter');
 			var arr = [];
 			$(div).find("input[type=checkbox]").each(
 				function(index, elt) {
@@ -424,7 +424,7 @@ ui.get_filters = function get_filters() {
 				}
 			);
 			if(arr.length) {
-				filters[columnName] = {
+				filters[column_name] = {
 					'$in': arr
 				};
 			}
@@ -610,12 +610,23 @@ ui.update_sort_caret = function update_sort_caret() {
 	$(elt).after('<span class="caret"></span>').closest('th').addClass(SortOrder > 0 ? '' : 'dropup');
 }
 
+ui.init_filter_help = function init_filter_help() {
+	$('#filter-text-button').popover({
+		container: 'body',
+		content: app.smart_filter.get_help(),
+		html: true,
+		placement: 'bottom',
+		title: 'Smart filter syntax'
+	});
+}
+
 /**
  * called when the DOM is loaded
  * @memberOf ui
  */
 ui.on_dom_loaded = function on_dom_loaded() {
 	ui.init_config_buttons();
+	ui.init_filter_help();
 	ui.update_sort_caret();
 	ui.toggle_suggestions();
 	ui.setup_event_handlers();

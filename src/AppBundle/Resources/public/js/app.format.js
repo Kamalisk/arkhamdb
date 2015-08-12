@@ -11,12 +11,12 @@ format.traits = function traits(card) {
  * @memberOf format
  */
 format.name = function name(card) {
-	return (card.isUnique ? '<span class="icon-unique"></span> ' : "") + card.name;
+	return (card.is_unique ? '<span class="icon-unique"></span> ' : "") + card.name;
 }
 
 format.faction = function faction(card) {
 	var text = card.faction_name + '. ';
-	if(card.isLoyal) text += 'Loyal. ';
+	if(card.is_loyal) text += 'Loyal. ';
 	if(card.plotLimit) text += 'Plot deck limit: '+card.plotLimit+'. ';
 	return text;
 }
@@ -35,7 +35,7 @@ format.pack = function pack(card) {
 format.pack_faction = function pack_faction(card) {
 	var text = card.pack_name + ' #' + card.position + '. ';
 	text += card.faction_name + '. ';
-	if(card.isLoyal) text += 'Loyal. ';
+	if(card.is_loyal) text += 'Loyal. ';
 	if(card.plotLimit) text += 'Plot deck limit: '+card.plotLimit+'. ';
 	return text;
 }
@@ -49,9 +49,9 @@ format.info = function info(card) {
 	case 'character':
 		text += 'Cost: '+(card.cost != null ? card.cost : 'X')+'. ';
 		text += 'STR: '+(card.strength != null ? card.strength : 'X')+'. '
-		if(card.isMilitary) text += '<span class="color-military icon-military" title="Military"></span> ';
-		if(card.isIntrigue) text += '<span class="color-intrigue icon-intrigue" title="Intrigue"></span> ';
-		if(card.isPower) text += '<span class="color-power icon-power" title="Power"></span> ';
+		if(card.is_military) text += '<span class="color-military icon-military" title="Military"></span> ';
+		if(card.is_intrigue) text += '<span class="color-intrigue icon-intrigue" title="Intrigue"></span> ';
+		if(card.is_power) text += '<span class="color-power icon-power" title="Power"></span> ';
 		break;
 	case 'attachment':
 	case 'location':
