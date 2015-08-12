@@ -273,9 +273,6 @@ deck.display_by_type = function display_by_type() {
 
 	var deck_intro_meta = $('<div class="col-sm-4">').appendTo(deck_content_first_row);
 	deck_intro_meta.append('<h4>'+faction_name+'</h4>');
-	if(agenda) {
-		deck_intro_meta.append($(card_line_tpl_no_qty({card:agenda})));
-	}
 	deck_intro_meta.append('<div>Draw deck: '+deck.get_draw_deck_size()+' cards.</div>');
 	deck_intro_meta.append('<div>Plot deck: '+deck.get_plot_deck_size()+' cards.</div>');
 	deck_intro_meta.append('<div>Included packs: ' + _.pluck(deck.get_included_packs(), 'name').join(', ') + '.</div>');
@@ -286,6 +283,9 @@ deck.display_by_type = function display_by_type() {
 	}
 
 	var deck_intro_plots = $('<div class="col-sm-6">').appendTo(deck_content_first_row);
+	if(agenda) {
+		$('<h4>').append($(card_line_tpl_no_qty({card:agenda}))).appendTo(deck_intro_plots);
+	}
 	deck_intro_plots.append(deck.display_one_section('type_code', 'plot', 'type_name'));
 
 	var deck_content_second_row = $('<div class="row">').appendTo(deck_content);
