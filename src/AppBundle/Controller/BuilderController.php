@@ -134,13 +134,15 @@ class BuilderController extends Controller
         } else {
             $parse = $this->parseTextImport(file_get_contents($filename));
         }
-        return $this->forward('AppBundle:Builder:save',
-                array(
-                        'name' => $origname,
-                        'content' => json_encode($parse['content']),
-                        'description' => $parse['description']
-                ));
 
+		$properties = array(
+				'name' => $origname,
+				'faction_code' => $parse['faction_code'],
+				'content' => json_encode($parse['content']),
+				'description' => $parse['description']
+		);
+
+        return $this->forward('AppBundle:Builder:save', $properties);
     }
 
     public function parseTextImport ($text)
@@ -187,37 +189,43 @@ class BuilderController extends Controller
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine')->getManager();
 
-        $content = [];
-
         $crawler = new Crawler();
         $crawler->addXmlContent($octgn);
+		// read octgnid
         $cardcrawler = $crawler->filter('deck > section > card');
+		$octgnids = [];
+		foreach ($cardcrawler as $domElement) {
+			$octgnids[$domElement->getAttribute('id')] = intval($domElement->getAttribute('qty'));
+        }
+		// read desc
+		$desccrawler = $crawler->filter('deck > notes');
+        $descriptions = [];
+        foreach ($desccrawler as $domElement) {
+            $descriptions[] = $domElement->nodeValue;
+        }
 
         $content = [];
-        foreach ($cardcrawler as $domElement) {
-            $quantity = intval($domElement->getAttribute('qty'));
-			$matches = [];
-            if (preg_match('/bc0f047c-01b1-427f-a439-d451eda(\d{5})/', $domElement->getAttribute('id'), $matches)) {
-                $card_code = $matches[1];
-            } else {
-                continue;
-            }
-            $card = $em->getRepository('AppBundle:Card')->findOneBy(array(
-                    'code' => $card_code
+		$faction = null;
+        foreach ($octgnids as $octgnid => $qty) {
+			$card = $em->getRepository('AppBundle:Card')->findOneBy(array(
+                    'octgnid' => $octgnid
             ));
             if ($card) {
-                $content[$card->getCode()] = $quantity;
+                $content[$card->getCode()] = $qty;
             }
+			else {
+				$faction = $faction ?: $em->getRepository('AppBundle:Faction')->findOneBy(array(
+	                    'octgnid' => $octgnid
+	            ));
+			}
         }
 
-        $desccrawler = $crawler->filter('deck > notes');
-        $description = [];
-        foreach ($desccrawler as $domElement) {
-            $description[] = $domElement->nodeValue;
-        }
+		$description = implode("\n", $descriptions);
+
         return array(
+				"faction_code" => $faction ? $faction->getCode() : '',
                 "content" => $content,
-                "description" => implode("\n", $description)
+                "description" => $description
         );
 
     }
@@ -341,6 +349,15 @@ class BuilderController extends Controller
             $source_deck = $deck;
         }
 
+		$faction_code = filter_var($request->get('faction_code'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(!$faction_code) {
+			return new Response('Cannot import deck without faction');
+		}
+		$faction = $em->getRepository('AppBundle:Faction')->findOneBy(['code' => $faction_code]);
+		if(!$faction) {
+			return new Response('Cannot import deck with unknown faction ' . $faction_code);
+		}
+
         $cancel_edits = (boolean) filter_var($request->get('cancel_edits'), FILTER_SANITIZE_NUMBER_INT);
         if($cancel_edits) {
             if($deck) $this->get('decks')->revertDeck($deck);
@@ -362,7 +379,7 @@ class BuilderController extends Controller
         $description = trim($request->get('description'));
         $tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-        $this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $description, $tags, $content, $source_deck ? $source_deck : null);
+        $this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck ? $source_deck : null);
 
         return $this->redirect($this->generateUrl('decks_list'));
 

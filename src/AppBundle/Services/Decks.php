@@ -239,7 +239,7 @@ class Decks
 		return $deck;
 	}
 
-	public function saveDeck($user, $deck, $decklist_id, $name, $description, $tags, $content, $source_deck)
+	public function saveDeck($user, $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck)
 	{
 		$deck_content = [ ];
 
@@ -250,6 +250,7 @@ class Decks
 		}
 
 		$deck->setName ( $name );
+		$deck->setFaction ( $faction );
 		$deck->setDescriptionMd ( $description );
 		$deck->setUser ( $user );
 		$cards = [ ];
@@ -278,9 +279,8 @@ class Decks
 		$deck->setLastPack ( $latestPack );
 		if (empty ( $tags )) {
 			// tags can never be empty. if it is we put faction in
-			$faction_code = $deck->getFaction ()->getCode ();
 			$tags = array (
-					$faction_code
+					$faction->getCode()
 			);
 		}
 		if (is_array ( $tags )) {
