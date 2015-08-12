@@ -121,6 +121,21 @@ div.tags span.tag:not(:first-child)::before {
 	text-decoration: line-through;
 }
 
+/********** DECK EDITOR ************/
+
+#collection-grid .col-sm-6 .media, #collection-grid .col-sm-4 .media {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dotted lightgray;
+    overflow: hidden;
+}
+#collection-grid .col-sm-6 .media-object {
+    height: 100px;
+}
+#collection-grid .col-sm-4 .media-object {
+	height: 70px;
+}
+
 /********* LIST OF DECKS ************/
 
 .list-decks>tbody>tr>td {
@@ -139,6 +154,7 @@ div.tags span.tag:not(:first-child)::before {
 }
 
 /************ DECK GALLERY **********/
+
 #deck-gallery table { width: 100%; table-layout: fixed; border-collapse: collapse; overflow: hidden }
 #deck-gallery table td { padding: 0 }
 #deck-gallery table td > div { height: 100px; overflow: visible; position: relative }

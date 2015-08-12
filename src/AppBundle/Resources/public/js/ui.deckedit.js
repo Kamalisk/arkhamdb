@@ -259,8 +259,14 @@ ui.on_config_change = function on_config_change(event) {
 		ui.set_max_qty();
 		ui.reset_list();
 		break;
+		case 'display-column':
+		ui.update_list_template();
+		ui.refresh_list();
+		break;
 		case 'show-suggestions':
 		ui.toggle_suggestions();
+		ui.refresh_list();
+		break;
 		default:
 		ui.refresh_list();
 	}
@@ -463,7 +469,7 @@ ui.update_list_template = function update_list_template() {
 				+ '<div class="media">'
 					+ '<div class="media-left"><img class="media-object" src="/bundles/cards/<%= card.code %>.png" alt="<%= card.name %>"></div>'
 					+ '<div class="media-body">'
-						+ '<h5 class="media-heading"><a class="card" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal">>%= card.name %></a></h5>'
+						+ '<h5 class="media-heading"><a class="card" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></h5>'
 						+ '<div class="btn-group" data-toggle="buttons"><%= radios %></div>'
 					+ '</div>'
 				+ '</div>'
@@ -520,14 +526,15 @@ ui.refresh_list = _.debounce(function refresh_list() {
 	orderBy[SortKey] = SortOrder;
 	orderBy['name'] = 1;
 	var cards = app.data.cards.find(query, {'$orderBy': orderBy});
+	var divs = CardDivs[ Config['display-column'] - 1 ];
 
 	cards.forEach(function (card) {
 		if (Config['show-only-deck'] && !card.indeck) return;
 		var unusable = !app.deck.can_include_card(card);
 		if (!Config['show-unusable'] && unusable) return;
 
-		var row = CardDivs[Config['display-column']][card.code];
-		if(!row) row = CardDivs[Config['display-column']][card.code] = ui.build_row(card);
+		var row = divs[card.code];
+		if(!row) row = divs[card.code] = ui.build_row(card);
 
 		row.data("code", card.code).addClass('card-container');
 
