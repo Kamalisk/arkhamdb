@@ -15,7 +15,8 @@ var date_creation,
 	unsaved,
 	user_id,
 	header_tpl = _.template('<h5><%= name %> (<%= quantity %>)</h5>'),
-	card_line_tpl = _.template('<div><%= card.indeck %>x <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a></div>');
+	card_line_tpl = _.template('<div><%= card.indeck %>x <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a></div>'),
+	card_line_tpl_no_qty = _.template('<div><a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a></div>');
 
 /**
  * @memberOf deck
@@ -126,8 +127,7 @@ deck.get_draw_deck = function get_draw_deck(sort) {
  */
 deck.get_draw_deck_size = function get_draw_deck_size(sort) {
 	var draw_deck = deck.get_draw_deck();
-	var quantities = _.pluck(draw_deck, 'indeck');
-	return _.reduce(quantities, function(memo, num) { return memo + num; }, 0);
+	return deck.get_nb_cards(draw_deck);
 }
 
 /**
@@ -145,8 +145,7 @@ deck.get_plot_deck = function get_plot_deck(sort) {
  */
 deck.get_plot_deck_size = function get_plot_deck_size(sort) {
 	var plot_deck = deck.get_plot_deck();
-	var quantities = _.pluck(plot_deck, 'indeck');
-	return _.reduce(quantities, function(memo, num) { return memo + num; }, 0);
+	return deck.get_nb_cards(plot_deck);
 }
 
 /**
@@ -156,6 +155,12 @@ deck.get_plot_deck_size = function get_plot_deck_size(sort) {
 deck.get_plot_deck_variety = function get_plot_deck_variety(sort) {
 	var plot_deck = deck.get_plot_deck();
 	return plot_deck.length;
+}
+
+deck.get_nb_cards = function get_nb_cards(cards) {
+	if(!cards) cards = deck.get_cards();
+	var quantities = _.pluck(cards, 'indeck');
+	return _.reduce(quantities, function(memo, num) { return memo + num; }, 0);
 }
 
 /**
@@ -179,9 +184,26 @@ deck.get_included_packs = function get_included_packs() {
 /**
  * @memberOf deck
  */
-deck.display = function display(container, sort, nb_columns) {
-	var deck_content = $('<div class="deck-content">');
+deck.display = function display(container, sort) {
+	var elements;
 
+	if(sort === 'type') {
+		elements = deck.display_by_type();
+	}
+	else {
+		elements = deck.display_by_other();
+	}
+
+	$(container)
+		.removeClass('deck-loading')
+		.empty();
+
+	elements.forEach(function (element) {
+		$(container).append(element);
+	})
+}
+
+deck.display_by_other = function display_by_other() {
 	/* to sort cards, we need:
 	 * name of the key to sort upon
 	 * label to display for each key
@@ -189,12 +211,14 @@ deck.display = function display(container, sort, nb_columns) {
 	 */
 	var sortKey = '', displayLabel = '', valuesOrder = [];
 	switch(sort) {
-	case 'type':
-		sortKey = 'type_code';
-		displayLabel = 'type_name';
-		valuesOrder = ['agenda','plot','character','attachment','location','event'];
+	case 'faction':
+		sortKey = 'faction_code';
+		displayLabel = 'faction_name';
+		valuesOrder = app.data.cards.distinct('faction_code').sort();
 		break;
 	}
+
+	var deck_content = $('<div class="deck-content">');
 
 	valuesOrder.forEach(function (sortValue) {
 		var query = {
@@ -215,7 +239,7 @@ deck.display = function display(container, sort, nb_columns) {
 	})
 
 	var deck_intro = $('<div class="deck-intro"><div class="media"><div class="media-left"></div><div class="media-body"></div></div>');
-	$(deck_intro).find('.media-left').append('<span class="icon-'+deck.get_faction_code()+' '+deck.get_faction_code()+'"></span>');
+	$(deck_intro).find('.media-left').append('<span class="with-bg icon-'+deck.get_faction_code()+' '+deck.get_faction_code()+'"></span>');
 
 	var deck_intro_body = $(deck_intro).find('.media-body');
 	deck_intro_body.append('<h4>'+faction_name+'</h4>');
@@ -225,15 +249,71 @@ deck.display = function display(container, sort, nb_columns) {
 
 	var problem = deck.get_problem();
 	if(problem) {
-		deck_intro_body.append('<div class="text-danger">Problem: ' + problem + '.</div>');
+		deck_intro_body.append('<div class="text-danger">' + problem + '</div>');
 	}
 
-	$(container)
-		.removeClass('deck-loading')
-		.empty()
-		.append(deck_intro)
-		.append(deck_content);
+	return [ deck_intro, deck_content ];
+}
 
+deck.display_by_type = function display_by_type() {
+	var sortKey = '', displayLabel = '', valuesOrder = [];
+	sortKey = 'type_code';
+	displayLabel = 'type_name';
+	valuesOrder = ['agenda','plot','character','attachment','location','event'];
+
+	var deck_content = $('<div class="deck-content">');
+	var deck_content_first_row = $('<div class="row">').appendTo(deck_content);
+	var deck_intro_images = $('<div class="col-sm-2">').appendTo(deck_content_first_row);
+	deck_intro_images.append('<div style="margin-bottom:10px"><img src="/bundles/app/images/factions/'+deck.get_faction_code()+'.png" class="img-responsive">');
+
+	var agenda = deck.get_agenda();
+	if(agenda) {
+		deck_intro_images.append('<div><img src="'+agenda.imagesrc+'" class="img-responsive">');
+	}
+
+	var deck_intro_meta = $('<div class="col-sm-4">').appendTo(deck_content_first_row);
+	deck_intro_meta.append('<h4>'+faction_name+'</h4>');
+	if(agenda) {
+		deck_intro_meta.append($(card_line_tpl_no_qty({card:agenda})));
+	}
+	deck_intro_meta.append('<div>Draw deck: '+deck.get_draw_deck_size()+' cards.</div>');
+	deck_intro_meta.append('<div>Plot deck: '+deck.get_plot_deck_size()+' cards.</div>');
+	deck_intro_meta.append('<div>Included packs: ' + _.pluck(deck.get_included_packs(), 'name').join(', ') + '.</div>');
+
+	var problem = deck.get_problem();
+	if(problem) {
+		deck_intro_meta.append('<div class="text-danger">' + problem + '</div>');
+	}
+
+	var deck_intro_plots = $('<div class="col-sm-6">').appendTo(deck_content_first_row);
+	deck_intro_plots.append(deck.display_one_section('type_code', 'plot', 'type_name'));
+
+	var deck_content_second_row = $('<div class="row">').appendTo(deck_content);
+
+	var deck_draw_deck_left = $('<div class="col-sm-6">').appendTo(deck_content_second_row);
+	deck_draw_deck_left.append(deck.display_one_section('type_code', 'character', 'type_name'));
+
+	var deck_draw_deck_right = $('<div class="col-sm-6">').appendTo(deck_content_second_row);
+	deck_draw_deck_right.append(deck.display_one_section('type_code', 'location', 'type_name'));
+	deck_draw_deck_right.append(deck.display_one_section('type_code', 'attachment', 'type_name'));
+	deck_draw_deck_right.append(deck.display_one_section('type_code', 'event', 'type_name'));
+
+
+	return [ deck_content ];
+}
+
+deck.display_one_section = function display_one_section(sortKey, sortValue, displayLabel) {
+	var section = $('<div>');
+	var query = {};
+	query[sortKey] = sortValue;
+	var cards = deck.get_cards({ name: 1 }, query);
+	if(cards.length) {
+		$(header_tpl({name:cards[0][displayLabel], quantity: deck.get_nb_cards(cards)})).appendTo(section);
+		cards.forEach(function (card) {
+			$(card_line_tpl({card:card})).addClass(deck.can_include_card(card) ? '' : 'invalid-card').appendTo(section);
+		})
+	}
+	return section;
 }
 
 /**

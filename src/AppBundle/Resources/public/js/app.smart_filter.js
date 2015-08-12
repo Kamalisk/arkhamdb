@@ -223,5 +223,5 @@ function filterSyntax(query) {
 	}
 	return list;
 }
-	
+
 })(app.smart_filter = {}, jQuery);

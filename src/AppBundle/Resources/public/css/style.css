@@ -249,42 +249,70 @@ div.site-slogan {
 
 /************** FACTIONS COLORS **************/
 
+.targaryen {
+	color: #e01510;
+}
+.baratheon {
+	color: #e3d852;
+}
+.stark {
+	color: #cfcfcf;
+}
+.greyjoy {
+	color: #1d7893;
+}
 .lannister {
+	color: #e60a18;
+}
+.tyrell {
+	color: #509f16; 
+}
+.nightswatch {
+	color: #6e6e6e;
+}
+.martell {
+	color: #e89521;
+}
+.neutral {
+	color: #a99560;
+}
+
+.with-bg.lannister {
 	background-color: #A80B00;
 	color: #EDC76B;
 	text-shadow: white 0px -1px 1px, black 0px 1px 1px;
 }
-.stark {
+.with-bg.stark {
 	background-color: #E4E5E5;
 	color: #515252;
 	text-shadow: white 0px -1px 1px, black 0px 1px 1px;
 }
-.tyrell {
+.with-bg.tyrell {
 	background-color: #3E8235;
 	color: #E5CE1E;
 	text-shadow: white 0px -1px 1px, black 0px 1px 1px;
 }
-.nightswatch {
+.with-bg.nightswatch {
 	background-color: #879596;
 	color: #000;
 	text-shadow: white 0px -1px 1px, white 0px 1px 1px, black 0px 2px 2px;
 }
-.baratheon {
+.with-bg.baratheon {
 	background-color: #F2DC35;
 	color: #000;
 	text-shadow: white 0px -1px 1px, white 0px 1px 1px, black 0px 2px 2px;
 }
-.targaryen {
+.with-bg.targaryen {
 	background-color: #0E002E;
 	color: #8C0E0E;
 	text-shadow: white 0px -1px 1px, black 0px 1px 1px;
 }
-.greyjoy {
+.with-bg.greyjoy {
 	background-color: #00022E;
 	color: #D4AD40;
 	text-shadow: black 0px -1px 1px, black 0px 1px 1px;
 }
-.martell {
+.with-bg.martell {
 	background-color: #E0AB48;
 	color: #F04626;
 	text-shadow: black 0px -1px 1px, black 0px 1px 1px, white 0px -2px 2px;

@@ -329,12 +329,12 @@ ui.on_modal_quantity_change = function on_modal_quantity_change(event) {
 ui.refresh_row = function refresh_row(card_code, quantity) {
 	// for each set of divs (1, 2, 3 columns)
 	CardDivs.forEach(function(rows) {
-		var row = rows[code];
+		var row = rows[card_code];
 		if(!row) return;
 
-		// rows[code] is the card row of our card
+		// rows[card_code] is the card row of our card
 		// for each "quantity switch" on that row
-		row.find('input[name="qty-' + code + '"]').each(function(i, element) {
+		row.find('input[name="qty-' + card_code + '"]').each(function(i, element) {
 			// if that switch is NOT the one with the new quantity, uncheck it
 			// else, check it
 			if($(element).val() != quantity) {
@@ -446,7 +446,7 @@ ui.update_list_template = function update_list_template() {
 				+ '<td><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></td>'
 				+ '<td class="cost"><%= card.cost %></td>'
 				+ '<td class="type"><span class="icon-<%= card.type_code %>" title="<%= card.type_name %>"></span></td>'
-				+ '<td class="faction"><span class="icon-<%= card.faction_code %>" title="<%= card.faction_name %>"></span></td>'
+				+ '<td class="faction"><span class="icon-<%= card.faction_code %> <%= card.faction_code %>" title="<%= card.faction_name %>"></span></td>'
 			+ '</tr>'
 		);
 		break;
@@ -576,7 +576,7 @@ ui.on_deck_modified = function on_deck_modified() {
  * @memberOf ui
  */
 ui.refresh_deck = function refresh_deck() {
-	app.deck.display('#deck', 'type', 1);
+	app.deck.display('#deck', 'type');
 	app.draw_simulator && app.draw_simulator.reset();
 
 }
