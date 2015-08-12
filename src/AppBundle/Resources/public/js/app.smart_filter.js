@@ -3,26 +3,25 @@
 var SmartFilterQuery = [];
 
 var configuration = {
-	a: [ add_string_sf, 'flavor' ],
-	b: [ add_integer_sf, 'claim' ],
-	d: [ add_boolean_sf, 'is_limited' ],
-	e: [ add_string_sf, 'pack_code' ],
-	f: [ add_string_sf, 'faction_code' ],
-	g: [ add_boolean_sf, 'is_intrigue' ],
-	h: [ add_integer_sf, 'reserve' ],
-	i: [ add_string_sf, 'illustrator' ],
-	k: [ add_string_sf, 'traits' ],
-	l: [ add_boolean_sf, 'is_loyal' ],
-	m: [ add_boolean_sf, 'is_military' ],
-	n: [ add_integer_sf, 'income' ],
-	o: [ add_integer_sf, 'cost' ],
-	p: [ add_boolean_sf, 'is_power' ],
-	s: [ add_integer_sf, 'strength' ],
-	t: [ add_string_sf, 'type_code' ],
-	u: [ add_boolean_sf, 'is_unique' ],
-	v: [ add_integer_sf, 'initiative' ],
-	x: [ add_string_sf, 'text' ],
-	y: [ add_integer_sf, 'quantity' ]
+	a: [ add_string_sf, 'flavor', "Flavor text" ],
+	b: [ add_integer_sf, 'claim', "Claim value" ],
+	e: [ add_string_sf, 'pack_code', "Pack" ],
+	f: [ add_string_sf, 'faction_code', "Faction" ],
+	g: [ add_boolean_sf, 'is_intrigue', "Intrigue icon" ],
+	h: [ add_integer_sf, 'reserve', "Reserve value" ],
+	i: [ add_string_sf, 'illustrator', "Illustrator" ],
+	k: [ add_string_sf, 'traits', "Traits" ],
+	l: [ add_boolean_sf, 'is_loyal', "Loyalty" ],
+	m: [ add_boolean_sf, 'is_military', "Military icon" ],
+	n: [ add_integer_sf, 'income', "Gold value" ],
+	o: [ add_integer_sf, 'cost', "Cost" ],
+	p: [ add_boolean_sf, 'is_power', "Power icon" ],
+	s: [ add_integer_sf, 'strength', "Strength" ],
+	t: [ add_string_sf, 'type_code', "Type" ],
+	u: [ add_boolean_sf, 'is_unique', "Uniqueness" ],
+	v: [ add_integer_sf, 'initiative', "Initiative value" ],
+	x: [ add_string_sf, 'text', "Text" ],
+	y: [ add_integer_sf, 'quantity', "Quantity in pack" ]
 };
 
 /**
@@ -56,9 +55,9 @@ smart_filter.update =  function update(value) {
 
 smart_filter.get_help = function get_help() {
 	var items = _.map(configuration, function (value, key) {
-		return '<li>'+key+': '+value[1]+'</li>';
+		return '<li><tt>'+key+'</tt> &ndash; '+value[2]+'</li>';
 	});
-	return '<ul>'+items.join('')+'</ul>';
+	return '<ul>'+items.join('')+'</ul><p>Example: <tt>m:1 s>3</tt> shows all characters with a Military icon and a STR greater then 3</p>';
 }
 
 function add_integer_sf(key, operator, values) {
@@ -106,7 +105,7 @@ function add_string_sf(key, operator, values) {
 	}
 }
 function add_boolean_sf(key, operator, values) {
-	var value = values.shift(), target = !!value;
+	var value = parseInt(values.shift()), target = !!value;
 	switch (operator) {
 	case ":":
 		SmartFilterQuery[key] = target;

@@ -99,10 +99,6 @@ AppBundle\Entity\Card:
             type: boolean
             nullable: false
             column: is_unique
-        isLimited:
-            type: boolean
-            nullable: false
-            column: is_limited
         isLoyal:
             type: boolean
             nullable: false
@@ -122,4 +118,3 @@ AppBundle\Entity\Card:
         octgnid:
             type: string
             nullable: true
-            

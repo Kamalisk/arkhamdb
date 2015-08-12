@@ -103,11 +103,6 @@ class Card
     /**
      * @var boolean
      */
-    private $isLimited;
-
-    /**
-     * @var boolean
-     */
     private $isLoyal;
 
     /**
@@ -598,30 +593,6 @@ class Card
     public function getIsUnique()
     {
         return $this->isUnique;
-    }
-
-    /**
-     * Set isLimited
-     *
-     * @param boolean $isLimited
-     *
-     * @return Card
-     */
-    public function setIsLimited($isLimited)
-    {
-        $this->isLimited = $isLimited;
-
-        return $this;
-    }
-
-    /**
-     * Get isLimited
-     *
-     * @return boolean
-     */
-    public function getIsLimited()
-    {
-        return $this->isLimited;
     }
 
     /**
