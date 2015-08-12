@@ -61,13 +61,13 @@ class BuilderController extends Controller
         if(!$agenda_code)
         {
         	$agenda = NULL;
-        	$name = sprintf("New Deck - %s", $faction->getName());
+        	$name = sprintf("Unnamed %s", $faction->getName());
         	$pack = $em->getRepository('AppBundle:Pack')->findOneBy(array("code" => "core"));
         }
         else
         {
         	$agenda = $em->getRepository('AppBundle:Card')->findOneBy(array("code" => $agenda_code));
-        	$name = sprintf("New Deck - %s - %s", $faction->getName(), $agenda->getName());
+        	$name = sprintf("Unnamed %s, %s", $faction->getName(), $agenda->getName());
         	$pack = $agenda->getPack();
         }
 
