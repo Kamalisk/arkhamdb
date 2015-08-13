@@ -7,15 +7,14 @@ use Doctrine\ORM\EntityManager;
 
 class Texts
 {
-	public function __construct($cache_dir) 
+	public function __construct($root_dir)
 	{
-		$this->cache_dir = $cache_dir;
-        $config = \HTMLPurifier_Config::create(array('Cache.SerializerPath' => $this->cache_dir));
+        $config = \HTMLPurifier_Config::create(array('Cache.SerializerPath' => $root_dir));
         $this->purifier = new \HTMLPurifier($config);
-        
+
         $this->transformer = new \Michelf\Markdown();
 	}
-	
+
     /**
      * Returns a substring of $string that is $max_length length max and doesn't split
      * a word or a html tag
@@ -24,14 +23,14 @@ class Texts
     {
         $response = '';
         $token = '';
-        
+
         $string = preg_replace('/\s+/', ' ', $string);
-        
+
         while(strlen($token.$string) > 0 && strlen($response.$token) < $max_length)
         {
             $response = $response.$token;
             $matches = [];
-            
+
             if(preg_match('/^(<.+?>)(.*)/', $string, $matches))
             {
                 $token = $matches[1];
@@ -51,10 +50,10 @@ class Texts
         if(strlen($token) > 0) {
             $response = $response . '[&hellip;]';
         }
-        
+
         return $response;
     }
-    
+
     /**
      * Returns the processed version of a markdown text
      */
@@ -72,9 +71,9 @@ class Texts
     {
     	return $this->purifier->purify($string);
     }
-    
+
     /**
-     * turns a Markdown string into a HTML string 
+     * turns a Markdown string into a HTML string
      * @param unknown $string
      * @return string
      */
@@ -82,12 +81,12 @@ class Texts
     {
     	return $this->transformer->transform($string);
     }
-    
+
     /**
      * adds class="img-responsive" to every <img> tag
      * @param unknown $string
      * @return string
-     */ 
+     */
     public function img_responsive($string)
     {
     	return preg_replace('/<img/', '<img class="img-responsive"', $string);
