@@ -1,19 +1,7 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
 {% block javascripts %}
-	{% javascripts
-		'@AppBundle/Resources/public/js/app.binomial.js'
-		'@AppBundle/Resources/public/js/app.hypergeometric.js'
-		'@AppBundle/Resources/public/js/app.draw_simulator.js'
-		'@AppBundle/Resources/public/js/app.diff.js'
-		'@AppBundle/Resources/public/js/app.textcomplete.js'
-		'@AppBundle/Resources/public/js/app.markdown.js'
-		'@AppBundle/Resources/public/js/app.smart_filter.js'
-		'@AppBundle/Resources/public/js/app.deck.js'
-		'@AppBundle/Resources/public/js/app.deck_history.js'
-		'@AppBundle/Resources/public/js/ui.deckedit.js' %}
-	<script src="{{ asset_url }}"></script>
-	{% endjavascripts %}
+	<script src="{{ asset('/bundles/app/js/ui.deckedit.js') }}"></script>
 	<script type="text/javascript">
 	app.deck.json = {{ deck|json_encode|raw }};
 	</script>

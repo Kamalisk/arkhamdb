@@ -3,4 +3,4 @@
     {% if decklist.donation > 0 %}<span class="fa fa-gift donator" title="thronesdb Gracious Donator"></span>{% endif %}
     <small title="User Reputation">{{ decklist.reputation }}</small>
 </h3>
-<div id="deck-description">{{ decklist.description|raw }}</div>
+<div id="deck-description">{{ decklist.description_html|raw }}</div>

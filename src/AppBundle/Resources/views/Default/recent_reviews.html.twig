@@ -4,7 +4,7 @@
 		{% for review in reviews %}
 		<article class="review">
 		<h4>
-		  <span class="pull-right"><span class="fa fa-heart social-icon-like"></span> {{ review.nbVotes }}</span>
+		  <span class="pull-right"><span class="fa fa-heart social-icon-like"></span> {{ review.nb_votes }}</span>
 		  <a href="{{ path('cards_zoom', {card_code:review.card_code}) }}#review-{{ review.id }}" class="card">{{ review.card_name }}</a>
 		</h4>
 		<div class="username small">

@@ -1,16 +1,16 @@
 (function app_textcomplete(textcomplete, $) {
-	
+
 var icons = 'baratheon greyjoy intrigue lannister martell military nightswatch power stark targaryen tyrell unique plot attachment location character event agenda neutral'.split(' ');
 
 /**
  * options: cards, icons, users
  */
 textcomplete.setup = function setup(textarea, options) {
-	
+
 	options = _.extend({cards: true, icons: true, users: false}, options);
-	
+
 	var actions = [];
-	
+
 	if(options.cards) {
 		actions.push({
 			match : /\B#([\-+\w]*)$/,
@@ -32,7 +32,7 @@ textcomplete.setup = function setup(textarea, options) {
 			index : 1
 		})
 	}
-	
+
 	if(options.icons) {
 		actions.push({
 						match : /\$([\-+\w]*)$/,
@@ -51,11 +51,26 @@ textcomplete.setup = function setup(textarea, options) {
 						index : 1
 					});
 	}
-	
+
 	if(options.users) {
-		
+		actions.push({
+					match : /\B@([\-+\w]*)$/,
+					search : function(term, callback) {
+						var regexp = new RegExp('^' + term);
+						callback($.grep(options.users, function(user) {
+							return regexp.test(user);
+						}));
+					},
+					template : function(value) {
+						return value;
+					},
+					replace : function(value) {
+						return '`@' + value + '`';
+					},
+					index : 1
+				});
 	}
-	
+
 	$(textarea).textcomplete(actions);
 
 }

@@ -246,6 +246,11 @@ div.site-slogan {
 	margin-top: -20px;
 }
 
+/************ LIST OF DECKLISTS **************/
+
+.decklist-faction-image img {
+    height: 64px;
+}
 
 /************** FACTIONS COLORS **************/
 

@@ -83,21 +83,21 @@ $(function () {
 {% for decklist in decklists %}
 
 <tr>
-<td class="decklist-identity-image hidden-xs">
-	<img src="/web/bundles/cards/{{ decklist.code }}.png" alt="{{ decklist.identity }}" class="card img-responsive" data-code="{{ decklist.code }}">
+<td class="decklist-faction-image hidden-xs">
+	<img src="/bundles/app/images/factions/{{ decklist.faction_code }}.png" class="card img-responsive">
 </td>
 <td>
     <article>
 	<h4>
 		<small class="pull-right social">
-			<span class="fa fa-heart social-icon-like"></span> {{ decklist.nbVotes }}
-			<span class="fa fa-star social-icon-favorite"></span> {{ decklist.nbfavorites }}
-			<span class="fa fa-comment social-icon-comment"></span> {{ decklist.nbcomments }}
+			<span class="fa fa-heart social-icon-like"></span> {{ decklist.nb_votes }}
+			<span class="fa fa-star social-icon-favorite"></span> {{ decklist.nb_favorites }}
+			<span class="fa fa-comment social-icon-comment"></span> {{ decklist.nb_comments }}
 		</small>
 		<a class="decklist-name" href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.name_canonical|e('url') }) }}">{{ decklist.name }}</a>
 	</h4>
 	<h5>
-		<time class="pull-right" datetime="{{ decklist.creation|date('c') }}">{{ decklist.creation|date('M d') }}</time>
+		<time class="pull-right" datetime="{{ decklist.date_creation|date('c') }}">{{ decklist.date_creation|date('M d') }}</time>
 		<span class="username">
     		<a href="{{ path('user_profile_view', {user_id:decklist.user_id,user_name:decklist.username|e('url')}) }}" class="{{ decklist.usercolor }}">{{ decklist.username }}</a>
     		{% if decklist.donation > 0 %}<span class="fa fa-gift donator" title="thronesdb Gracious Donator"></span>{% endif %}

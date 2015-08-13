@@ -1,77 +1,50 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
 {% block javascripts %}
-<script src="{{ asset('/bundles/app/js/app.draw_simulator.js') }}"></script>
-<script src="{{ asset('/bundles/app/js/app.card_modal.js') }}"></script>
-<script src="{{ asset('/bundles/app/js/decklist.js') }}"></script>
-<script type="text/javascript">
-
-var Identity = null,
-	Decklist = {{ decklist|json_encode|raw }},
-	Commenters = {{ commenters|json_encode|raw }},
-	DeckDB = TAFFY([Decklist]),
-	SelectedDeck = DeckDB().first(),
-	DisplaySort = 'type';
-
-app.user.params.decklist_id = Decklist.id;
-	
-</script>
+	<script src="{{ asset('/bundles/app/js/ui.decklist.js') }}"></script>
+	<script type="text/javascript">
+	var Commenters = {{ commenters|json_encode|raw }};
+	app.deck.json = {{ deck|json_encode|raw }};
+	app.user.params.decklist_id = {{ decklist.id }};
+	</script>
 {% endblock %}
+
 {% block body %}
-<div class="main container">
-	<div class="row">
+<div class="container">
+	<div class="row" style="padding-top:20px;margin-bottom:20px;padding-bottom:10px;background-color:#c0392b;color:#fff">
 		<div class="col-xs-12">
 			<h1 class="decklist-name">
-				<span class="icon icon-{{ decklist.faction_code }} {{ decklist.faction_code }}"></span>
+				<span class="icon icon-{{ decklist.faction_code }}"></span>
 				{{ decklist.name }}
 			</h1>
-			<div class="social">
-				<div class="pull-right" id="social-icons">
-					<span class="hidden-xs">published: </span>
-					<time datetime="{{ decklist.creation|date('c') }}">{{ decklist.creation|date('M d, Y') }}</time>
-					| <a id="social-icon-like" href="#" class="social-icon-like" data-toggle="tooltip" data-placement="bottom" title="Like">
-						<span class="fa fa-heart"></span> <span class="num">{{ decklist.nbVotes }}</span>
-					</a>
-					| <a id="social-icon-favorite" href="#" class="social-icon-favorite" data-toggle="tooltip" data-placement="bottom" title="Favorite">
-						<span class="fa fa-star"></span> <span class="num">{{ decklist.nbfavorites }}</span>
-					</a>
-					| <a id="social-icon-comment" href="#comment-form" class="social-icon-comment" data-toggle="tooltip" data-placement="bottom" title="Comment">
-						<span class="fa fa-comment"></span> <span class="num">{{ decklist.nbcomments }}</span>
-					</a>
-				</div>
-			</div>
+		</div>
+		<div class="col-xs-12">
+			{% include 'AppBundle:Decklist:social-buttons.html.twig' %}
 		</div>
 	</div>
+</div>
+
+<div class="main container">
 	<div class="row">
 		<div class="col-md-6">
-			<div role="tabpanel">
-				<ul class="nav nav-tabs" role="tablist">
-					<li role="presentation" class="active"><a href="#deck" aria-controls="deck" role="tab" data-toggle="tab">Decklist</a></li>
-					<li role="presentation"><a href="#actions" aria-controls="actions" role="tab" data-toggle="tab">Actions</a></li>
-					<li role="presentation"><a href="#extra" aria-controls="extra" role="tab" data-toggle="tab">Extra</a></li>
-				</ul>
-				<div class="tab-content">
-					<div role="tabpanel" class="tab-pane active" id="deck">
-						{% include 'AppBundle:Decklist:identity-and-stats.html.twig' %}
-						{% include 'AppBundle:Decklist:deck-content.html.twig' %}
-						{% include 'AppBundle:Default:google_adaptable_ad.html.twig' %}
-	    			</div>
-	    			<div role="tabpanel" class="tab-pane" id="actions">
-	    				{% include 'AppBundle:Decklist:toolbar.html.twig' %}
-	    			</div>
-	    			<div role="tabpanel" class="tab-pane" id="extra">
-	    				{% include 'AppBundle:Builder:draw-simulator.html.twig' %}
-						{% include 'AppBundle:Decklist:table-graph-costs.html.twig' %}
-						{% include 'AppBundle:Decklist:table-graph-strengths.html.twig' %}
-						{% include 'AppBundle:Decklist:table-predecessor.html.twig' %}
-						{% include 'AppBundle:Decklist:table-successor.html.twig' %}
-	    			</div>
-	  			</div>
-			</div>
+			<div id="deck-content" style="margin-bottom:10px"></div>
+			{% include 'AppBundle:Default:google_adaptable_ad.html.twig' %}
+			{% include 'AppBundle:Builder:draw-simulator.html.twig' %}
+			{% include 'AppBundle:Decklist:table-predecessor.html.twig' %}
+			{% include 'AppBundle:Decklist:table-successor.html.twig' %}
 		</div>
 		<div class="col-md-6">
-			{% include 'AppBundle:Decklist:author-and-description.html.twig' %}
-			{% include 'AppBundle:Decklist:comments.html.twig' %}
+			<div class="row">
+				<div class="col-md-12">
+					<div class="pull-right btn-group" role="group">{% include 'AppBundle:Decklist:toolbar.html.twig' %}</div>
+				</div>
+				<div class="col-md-12">
+					{% include 'AppBundle:Decklist:author-and-description.html.twig' %}
+				</div>
+				<div class="col-md-12">
+					{% include 'AppBundle:Decklist:comments.html.twig' %}
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

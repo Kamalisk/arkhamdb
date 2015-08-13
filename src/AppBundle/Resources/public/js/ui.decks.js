@@ -3,42 +3,40 @@
 ui.decks = [];
 
 ui.confirm_publish = function confirm_publish(event) {
-return;
 	var button = $(this);
 	if($(button).hasClass('processing')) return;
 	$(button).addClass('processing');
 
-	var deck = ui.decks[$(this).closest('tr').data('id')];
-	console.log(deck);
+	var deck_id = $(this).closest('tr').data('id');
+	console.log(deck_id);
 
-	$.ajax(Routing.generate('deck_publish', {deck_id:deck.id}), {
-	  success: function( response ) {
-		  if(response == "") {
+	$.ajax(Routing.generate('deck_publish', {deck_id:deck_id}), {
+		dataType: 'json',
+		success: function( response ) {
+		  if(typeof response === 'object') {
+			  $('#publish-deck-name').val(response.name);
+			  $('#publish-deck-id').val(response.id);
+			  $('#publish-deck-description').val(response.description_md);
 			  $('#btn-publish-submit').text("Go").prop('disabled', false);
 		  }
 		  else
 		  {
 			  $('#publish-deck-form').prepend('<div id="publish-form-alert" class="alert alert-danger">That deck cannot be published because <a href="'+response+'">another decklist</a> already has the same composition.</div>');
-			  $('#btn-publish-submit').text("Refused");
+			  $('#btn-publish-submit').text("Refused").prop('disabled', true);
 		  }
 	  },
 	  error: function( jqXHR, textStatus, errorThrown ) {
 		  console.log('['+moment().format('YYYY-MM-DD HH:mm:ss')+'] Error on '+this.url, textStatus, errorThrown);
 		  $('#publish-deck-form').prepend('<div id="publish-form-alert" class="alert alert-danger">'+jqXHR.responseText+'</div>');
-		  $('#btn-publish-submit').text("Error")
+		  $('#btn-publish-submit').text("Error").prop('disabled', true);
 	  },
 	  complete: function() {
 		  $(button).removeClass('processing');
+		  $('#publish-form-alert').remove();
 		  $('#publishModal').modal('show');
 	  }
 	});
 
-	$('#publish-form-alert').remove();
-	$('#publish-deck-name').val(deck.name);
-	$('#publish-deck-id').val(deck.id);
-	$('#publish-deck-description').val(deck.description);
-	$('#btn-publish-submit').text("Checking...").prop('disabled', true);
-	$('#publishModal').modal('show');
 
 }
 

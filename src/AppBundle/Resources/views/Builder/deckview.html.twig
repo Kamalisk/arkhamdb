@@ -1,15 +1,7 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
 {% block javascripts %}
-	{% javascripts
-		'@AppBundle/Resources/public/js/app.binomial.js'
-		'@AppBundle/Resources/public/js/app.hypergeometric.js'
-		'@AppBundle/Resources/public/js/app.draw_simulator.js'
-		'@AppBundle/Resources/public/js/app.markdown.js'
-		'@AppBundle/Resources/public/js/app.deck.js'
-		'@AppBundle/Resources/public/js/ui.deckview.js' %}
-	<script src="{{ asset_url }}"></script>
-	{% endjavascripts %}
+	<script src="{{ asset('/bundles/app/js/ui.deckview.js') }}"></script>
 	<script type="text/javascript">
 	app.deck.json = {{ deck|json_encode|raw }};
 	</script>
@@ -103,9 +95,9 @@
 				{% for decklist in published_decklists %}
 					<tr>
 						<td class="decklist-name"><a href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.name_canonical|e('url') }) }}">{{ decklist.name }}</a></td>
-						<td class="social"><span class="fa fa-heart social-icon-like"></span> {{ decklist.nbVotes }}</td>
-						<td class="social"><span class="fa fa-star social-icon-favorite"></span> {{ decklist.nbfavorites }}</td>
-						<td class="social"><span class="fa fa-comment social-icon-comment"></span> {{ decklist.nbcomments }}</td>
+						<td class="social"><span class="fa fa-heart social-icon-like"></span> {{ decklist.nb_votes }}</td>
+						<td class="social"><span class="fa fa-star social-icon-favorite"></span> {{ decklist.nb_favorites }}</td>
+						<td class="social"><span class="fa fa-comment social-icon-comment"></span> {{ decklist.nb_comments }}</td>
 					</tr>
 				{% endfor %}
 				{% else %}

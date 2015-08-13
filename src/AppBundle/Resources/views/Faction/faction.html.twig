@@ -29,9 +29,9 @@
 	    <article>
 		<h4>
 			<small class="pull-right social">
-				<span class="fa fa-heart social-icon-like"></span> {{ decklist.nbVotes }}
-				<span class="fa fa-star social-icon-favorite"></span> {{ decklist.nbfavorites }}
-				<span class="fa fa-comment social-icon-comment"></span> {{ decklist.nbcomments }}
+				<span class="fa fa-heart social-icon-like"></span> {{ decklist.nb_votes }}
+				<span class="fa fa-star social-icon-favorite"></span> {{ decklist.nb_favorites }}
+				<span class="fa fa-comment social-icon-comment"></span> {{ decklist.nb_comments }}
 			</small>
 			<a class="decklist-name" href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.name_canonical|e('url') }) }}">{{ decklist.name }}</a>
 		</h4>

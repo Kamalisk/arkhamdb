@@ -1,10 +1,14 @@
-<form action="{{ path('deck_copy', {decklist_id:decklist.id}) }}" method="POST" style="display:inline">
-	<button type="submit" id="btn-copy" class="btn btn-default">
-		<span class="fa fa-save"></span> <span class="hidden-xs">Copy</span>
-	</button>
-</form>
+<a href="#" title="Edit decklist name / description" id="decklist-edit" class="btn btn-sm btn-default" style="display:none">
+	<span class="fa fa-pencil text-primary"></span> Edit
+</a>
+<a href="#" title="Delete decklist" id="decklist-delete" class="btn btn-sm btn-default" style="display:none">
+	<span class="fa fa-trash-o text-danger"></span> Delete
+</a>
+<button class="btn btn-sm btn-default" id="btn-copy">
+	<span class="fa fa-save"></span> <span class="hidden-xs">Copy</span>
+</button>
 <div class="btn-group">
-	<button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown">
+	<button type="button" class="btn btn-sm btn-default dropdown-toggle " data-toggle="dropdown">
 		<span class="fa fa-download"></span> <span class="hidden-xs">Download</span> <span class="caret"></span>
 	</button>
 	<ul class="dropdown-menu" role="menu">
@@ -13,7 +17,7 @@
 	</ul>
 </div>
 <div class="btn-group">
-	<button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown">
+	<button type="button" class="btn btn-sm btn-default dropdown-toggle " data-toggle="dropdown">
 		<span class="fa fa-clipboard"></span> <span class="hidden-xs">Export</span> <span class="caret"></span>
 	</button>
 	<ul class="dropdown-menu" role="menu">
@@ -23,7 +27,7 @@
 	</ul>
 </div>
 <div class="btn-group">
-	<button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown">
+	<button type="button" class="btn btn-sm btn-default dropdown-toggle " data-toggle="dropdown">
 		<span class="fa fa-sort"></span> <span class="hidden-xs">Sort</span> <span class="caret"></span>
 	</button>
 	<ul class="dropdown-menu" role="menu" id="menu-sort">
@@ -33,6 +37,8 @@
 		<li><a href="#" id="btn-sort-name">by Name</a></li>
 	</ul>
 </div>
-<button type="button" id="btn-compare" class="btn btn-default">
+{#
+<button type="button" id="btn-compare" class="btn btn-sm btn-default">
 	<span class="fa fa-duplicate"></span> <span class="hidden-xs">Compare</span>
 </button>
+#}

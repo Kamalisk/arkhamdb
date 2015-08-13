@@ -42,7 +42,7 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li><a href="{{ path('decks_list') }}">My Decks</a></li>
-            <li class="disabled"><a href="#">Decklists</a></li>
+            <li><a href="{{ path('decklists_list') }}">Decklists</a></li>
             <li class="hidden-sm dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Cards <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
@@ -187,6 +187,15 @@
 		'@AppBundle/Resources/public/js/app.tip.js'
 		'@AppBundle/Resources/public/js/app.card_modal.js'
 		'@AppBundle/Resources/public/js/app.user.js'
+        '@AppBundle/Resources/public/js/app.binomial.js'
+        '@AppBundle/Resources/public/js/app.hypergeometric.js'
+        '@AppBundle/Resources/public/js/app.draw_simulator.js'
+        '@AppBundle/Resources/public/js/app.diff.js'
+        '@AppBundle/Resources/public/js/app.textcomplete.js'
+        '@AppBundle/Resources/public/js/app.markdown.js'
+        '@AppBundle/Resources/public/js/app.smart_filter.js'
+        '@AppBundle/Resources/public/js/app.deck.js'
+        '@AppBundle/Resources/public/js/app.deck_history.js'
 		'@AppBundle/Resources/public/js/app.ui.js' %}
 	<script src="{{ asset_url }}"></script>
 	{% endjavascripts %}
