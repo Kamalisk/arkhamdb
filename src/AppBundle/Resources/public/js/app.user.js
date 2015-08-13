@@ -84,7 +84,7 @@ user.update = function update() {
 			+ Routing.generate('user_comments')
 			+ '">Comments</a></li><li><a href="'
 			+ Routing.generate('fos_user_security_logout')
-			+ '" onclick="app.user.wipe()">Logout</a></li></ul>');
+			+ '" onclick="app.user.wipe()">Log out</a></li></ul>');
 };
 
 /**
@@ -92,7 +92,7 @@ user.update = function update() {
  */
 user.always = function always() {
 	return;
-	
+
 	// show ads if not donator
 	if(user.data && user.data.donation > 0) return;
 

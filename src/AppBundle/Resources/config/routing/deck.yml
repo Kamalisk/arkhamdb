@@ -40,7 +40,7 @@ deck_duplicate:
         _controller: AppBundle:Builder:duplicate
     requirements:
         deck_id: \d+
-        
+
 deck_delete:
     pattern: /delete
     methods: [POST]
@@ -76,21 +76,20 @@ deck_meteorimport:
     methods: [POST]
     defaults:
         _controller: AppBundle:Builder:meteorimport
-        
+
 deck_copy:
     pattern: /copy/{decklist_id}
-    methods: [POST]
     defaults:
         _controller: AppBundle:Builder:copy
     requirements:
         decklist_id: \d+
-        
+
 decklist_new:
     pattern: /publish
     methods: [POST]
     defaults:
         _controller: AppBundle:Social:new
-    
+
 
 decks_upload_all:
     pattern: /import/all
@@ -151,4 +150,3 @@ decks_download_all:
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:downloadall
-        

@@ -4,9 +4,9 @@
 <a href="#" title="Delete decklist" id="decklist-delete" class="btn btn-sm btn-default" style="display:none">
 	<span class="fa fa-trash-o text-danger"></span> Delete
 </a>
-<button class="btn btn-sm btn-default" id="btn-copy">
+<a href="{{ path('deck_copy', {decklist_id:decklist.id}) }}" class="btn btn-sm btn-default">
 	<span class="fa fa-save"></span> <span class="hidden-xs">Copy</span>
-</button>
+</a>
 <div class="btn-group">
 	<button type="button" class="btn btn-sm btn-default dropdown-toggle " data-toggle="dropdown">
 		<span class="fa fa-download"></span> <span class="hidden-xs">Download</span> <span class="caret"></span>

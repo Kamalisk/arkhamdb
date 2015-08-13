@@ -1,18 +1,11 @@
 (function ui_decklist(ui, $) {
 
-	ui.copy_decklist = function copy_decklist() {
-		$.ajax({
-			url: Routing.generate('deck_copy', {decklist_id:app.deck.get_id()})
-		})
-	}
-
 	/**
 	 * sets up event handlers ; dataloaded not fired yet
 	 * @memberOf ui
 	 */
 	ui.setup_event_handlers = function setup_event_handlers() {
 
-		$('#decklist-copy').on('click', ui.copy_decklist);
 		$('#decklist-edit').on('click', ui.edit_form);
 		$('#decklist-delete').on('click', ui.delete_form);
 		$('#social-icon-like').on('click', ui.send_like);
