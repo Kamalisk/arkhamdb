@@ -4,17 +4,17 @@
 
 <div class="main container">
 
-<div class="jumbotron background-{{ user.faction }}-10">
-  <h1><span class="{{ user.faction }}">{{ user.username }}</span>
+<div class="jumbotron background-{{ user.color }}-10">
+  <h1><span class="{{ user.color }}">{{ user.username }}</span>
   {% if user.donation > 0 %}<span class="fa fa-gift donator" title="thronesdb Gracious Donator"></span>{% endif %}
     <small>{{ user.reputation }}</small></h1>
 	<p>
-        Member since {{ user.date_creation|date('Y-m-d') }}.
+        Member since {{ user.dateCreation|date('Y-m-d') }}.
         <div>
-        {% if nbdecklists > 1 %}
-            <a href="{{ path('decklists_list',{type:'find',page:1,author:user.username}) }}">{{ nbdecklists }} published decklists.</a>
+        {% if user.decklists|length > 1 %}
+            <a href="{{ path('decklists_list',{type:'find',page:1,author:user.username}) }}">{{ user.decklists|length }} published decklists.</a>
         {% else %}
-            {% if nbdecklists == 1 %}
+            {% if user.decklists|length == 1 %}
                 <a href="{{ path('decklists_list',{type:'find',page:1,author:user.username}) }}">One published decklist.</a>
             {% else %}
                 No published decklist.
@@ -22,10 +22,10 @@
         {% endif %}
         </div>
         <div>
-        {% if nbreviews > 1 %}
-            <a href="{{ path('card_reviews_list_byauthor',{page:1,user_id:user.id}) }}">{{ nbreviews }} published reviews.</a>
+        {% if user.reviews|length > 1 %}
+            <a href="{{ path('card_reviews_list_byauthor',{page:1,user_id:user.id}) }}">{{ user.reviews|length }} published reviews.</a>
         {% else %}
-            {% if nbreviews == 1 %}
+            {% if user.reviews|length == 1 %}
                 <a href="{{ path('card_reviews_list_byauthor',{page:1,user_id:user.id}) }}">One published reviews.</a>
             {% else %}
                 No published reviews.

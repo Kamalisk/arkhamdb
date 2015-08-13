@@ -990,40 +990,6 @@ class SocialController extends Controller
 
     }
 
-    /*
-	 * displays details about a user and the list of decklists he published
-	 */
-    public function profileAction ($user_id, $user_name, $page, Request $request)
-    {
-        $response = new Response();
-        $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
-
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
-
-        /* @var $user \AppBundle\Entity\User */
-        $user = $em->getRepository('AppBundle:User')->find($user_id);
-        if (! $user)
-            throw new NotFoundHttpException("No such user.");
-
-        $decklists = $em->getRepository('AppBundle:Decklist')->findBy(array('user' => $user));
-        $nbdecklists = count($decklists);
-
-        $reviews = $em->getRepository('AppBundle:Review')->findBy(array('user' => $user));
-        $nbreviews = count($reviews);
-
-
-        return $this->render('AppBundle:Default:profile.html.twig',
-                array(
-                        'pagetitle' => $user->getUsername(),
-                        'user' => $user,
-                        'nbdecklists' => $nbdecklists,
-                        'nbreviews' => $nbreviews
-                ), $response);
-
-    }
-
     public function usercommentsAction ($page, Request $request)
     {
         $response = new Response();

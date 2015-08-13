@@ -1,0 +1,94 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block body %}
+
+<div class="container">
+
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
+<div class="panel panel-default">
+<div class="panel-heading">
+<h3 class="panel-title" id="title">Profile</h3>
+</div>
+<div class="panel-body" id="main">
+
+<form role="form" action="{{ path('user_profile_save') }}" method="POST">
+
+	{% for flashMessage in app.session.flashbag.get('error') %}
+	    <div class="alert alert-danger">{{ flashMessage }}</div>
+	{% endfor %}
+	{% for flashMessage in app.session.flashbag.get('notice') %}
+	    <div class="alert alert-success">{{ flashMessage }}</div>
+	{% endfor %}
+
+  <div class="form-group">
+    <label>Reputation</label>
+    <p>{{ user.reputation }}</p>
+  </div>
+
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" name="username" id="username" value="{{ user.username }}" class="form-control">
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="text" name="email" id="email" value="{{ user.email }}" class="form-control">
+  </div>
+
+  <div class="form-group">
+    <label for="resume">Something about you</label>
+    <textarea id="resume" name="resume" class="form-control">{{ user.resume }}</textarea>
+  </div>
+
+  <div class="checkbox">
+    <label>
+        <input type="checkbox" name="notif_author" value="1" {% if user.isNotifAuthor %}checked{% endif %}>
+        Be notified when a user comments one of your decklists
+    </label>
+  </div>
+
+  <div class="checkbox">
+    <label>
+        <input type="checkbox" name="notif_commenter" value="1" {% if user.isNotifCommenter %}checked{% endif %}>
+        Be notified when a user also comments a decklist you commented
+    </label>
+  </div>
+
+  <div class="checkbox">
+    <label>
+        <input type="checkbox" name="notif_mention" value="1" {% if user.isNotifMention %}checked{% endif %}>
+        Be notified when a user mentions you in a comment
+    </label>
+  </div>
+
+  <div class="checkbox">
+    <label>
+        <input type="checkbox" name="share_decks" value="1" {% if user.isShareDecks %}checked{% endif %}>
+        Share your decks.
+    </label>
+    <p class="help-block">If you check this box, the "View" page of your decks will be public instead of private. You can then send the link to your friends. If you uncheck the box, all your decks become private immediately.</p>
+  </div>
+
+  <div class="form-group">
+    <label for="color">Select a faction color for your username</label>
+    {% for faction in factions %}
+    <div class="radio">
+      <label class="{{ faction.code }}">
+        <input type="radio" name="user_faction_code" id="optionsRadios1" value="{{ faction.code }}" {% if user.color == faction.code %}checked{% endif %}>
+          {{ faction.name }}
+	  </label>
+	</div>
+	{% endfor %}
+  </div>
+
+  <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+</div>
+</div>
+</div>
+</div>
+</div> <!-- .container -->
+
+{% endblock %}

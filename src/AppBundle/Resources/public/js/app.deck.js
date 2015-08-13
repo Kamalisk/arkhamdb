@@ -431,7 +431,7 @@ deck.get_problem = function get_problem() {
 		case '01204':
 		case '01205':
 		var minor_faction_code = deck.get_minor_faction_code();
-		if(deck.get_nb_cards(deck.get_cards(null, { faction_code: minor_faction_code })) < 12) {
+		if(deck.get_nb_cards(deck.get_cards(null, { type_code: { $in: [ 'character', 'attachment', 'location', 'event' ] }, faction_code: minor_faction_code })) < 12) {
 			return 'agenda';
 		}
 		break;
