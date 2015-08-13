@@ -30,7 +30,7 @@ class Reviewcomment
     /**
      * @var \AppBundle\Entity\User
      */
-    private $author;
+    private $user;
 
     /**
      * @var \AppBundle\Entity\Review
@@ -121,27 +121,27 @@ class Reviewcomment
     }
 
     /**
-     * Set author
+     * Set user
      *
-     * @param \AppBundle\Entity\User $author
+     * @param \AppBundle\Entity\User $user
      *
      * @return Reviewcomment
      */
-    public function setAuthor(\AppBundle\Entity\User $author = null)
+    public function setUser(\AppBundle\Entity\User $user = null)
     {
-        $this->author = $author;
+        $this->user = $user;
 
         return $this;
     }
 
     /**
-     * Get author
+     * Get user
      *
      * @return \AppBundle\Entity\User
      */
-    public function getAuthor()
+    public function getUser()
     {
-        return $this->author;
+        return $this->user;
     }
 
     /**
@@ -168,4 +168,3 @@ class Reviewcomment
         return $this->review;
     }
 }
-

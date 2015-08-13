@@ -355,7 +355,7 @@ class ReviewController extends Controller
         
         $comment = new Reviewcomment();
         $comment->setReview($review);
-        $comment->setAuthor($user);
+        $comment->setUser($user);
         $comment->setText($comment_text);
         
         $em->persist($comment);

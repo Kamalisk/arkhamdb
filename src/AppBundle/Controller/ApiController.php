@@ -693,12 +693,12 @@ class ApiController extends Controller
 
         $decklist = new Decklist();
         $decklist->setName($name);
-        $decklist->setPrettyname(preg_replace('/[^a-z0-9]+/', '-', mb_strtolower($name)));
+        $decklist->setNameCanonical(preg_replace('/[^a-z0-9]+/', '-', mb_strtolower($name)));
         $decklist->setRawdescription($rawdescription);
         $decklist->setDescription($description);
         $decklist->setUser($this->getUser());
-        $decklist->setCreation(new \DateTime());
-        $decklist->setTs(new \DateTime());
+        $decklist->setDateCreation(new \DateTime());
+        $decklist->setDateUpdate(new \DateTime());
         $decklist->setSignature($new_signature);
         $decklist->setIdentity($deck->getIdentity());
         $decklist->setFaction($deck->getIdentity()
@@ -729,7 +729,7 @@ class ApiController extends Controller
 
         $response->setContent(json_encode(array('success' => true, 'message' => array("id" => $decklist->getId(), "url" => $this->generateUrl('decklist_detail', array(
                 'decklist_id' => $decklist->getId(),
-                'decklist_name' => $decklist->getPrettyName()
+                'decklist_name' => $decklist->getNameCanonical()
         ))))));
         return $response;
 

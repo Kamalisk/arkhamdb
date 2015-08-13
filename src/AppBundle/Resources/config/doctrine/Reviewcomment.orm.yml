@@ -2,7 +2,7 @@ AppBundle\Entity\Reviewcomment:
     type: entity
     table: reviewcomment
     manyToOne:
-        author:
+        user:
             targetEntity: User
             nullable: false
             joinColumn:

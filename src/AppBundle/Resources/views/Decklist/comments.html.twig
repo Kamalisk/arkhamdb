@@ -5,11 +5,11 @@
 <tbody>
 {% for comment in decklist.comments %}
 <tr><td id="comment-{{ comment.id }}">
-    <div class="small comment-toggler" style="{% if not comment.hidden %}display:none{% endif %}">
+    <div class="small comment-toggler" style="{% if not comment.is_hidden %}display:none{% endif %}">
         <a href="#div-comment-{{ comment.id }}" data-toggle="collapse" class="text-muted pull-right" style="margin-left:.5em"><span class="fa fa-eye"></span></a>
     </div>
-    <div class="collapse{% if not comment.hidden %} in{% endif %}" id="div-comment-{{ comment.id }}">
-        <span class="comment-date" title="{{ comment.creation|date('r') }}">{{ comment.creation|date('M d, Y') }}</span>
+    <div class="collapse{% if not comment.is_hidden %} in{% endif %}" id="div-comment-{{ comment.id }}">
+        <span class="comment-date" title="{{ comment.date_creation|date('r') }}">{{ comment.date_creation|date('M d, Y') }}</span>
         <a href="{{ path('user_profile_view', {user_id:comment.user_id,user_name:comment.author|e('url')}) }}" class="comment-author username {{ comment.authorcolor }}">{{ comment.author }}</a>
         {% if comment.donation > 0 %}<span class="fa fa-gift donator" title="thronesdb Gracious Donator"></span>{% endif %}
         <div class="comment-text">{{ comment.text|raw }}</div>

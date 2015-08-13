@@ -279,7 +279,7 @@ class Decklists
                 d.nb_votes,
                 d.nb_favorites,
                 d.nb_comments,
-                (select count(*) from comment where comment.decklist_id=d.id and DATEDIFF(CURRENT_DATE, comment.creation)<1) nbrecentcomments
+                (select count(*) from comment where comment.decklist_id=d.id and DATEDIFF(CURRENT_DATE, comment.date_creation)<1) nbrecentcomments
                 from decklist d
                 join user u on d.user_id=u.id
                 left join tournament t on d.tournament_id=t.id

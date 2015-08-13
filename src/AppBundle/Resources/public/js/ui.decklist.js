@@ -5,6 +5,7 @@
 			url: Routing.generate('deck_copy', {decklist_id:app.deck.get_id()})
 		})
 	}
+
 	/**
 	 * sets up event handlers ; dataloaded not fired yet
 	 * @memberOf ui
@@ -20,6 +21,62 @@
 		$('#btn-compare').on('click', ui.compare_form);
 		$('#btn-compare-submit').on('click', ui.compare_submit);
 
+	}
+
+	ui.edit_form = function edit_form() {
+		$('#editModal').modal('show');
+	}
+
+	ui.delete_form = function delete_form() {
+		$('#deleteModal').modal('show');
+	}
+
+	ui.do_action_decklist = function do_action_decklist(event) {
+		var action_id = $(this).attr('id');
+		if (!action_id || !SelectedDeck)
+			return;
+		switch (action_id) {
+		case 'btn-download-text':
+			location.href = Routing.generate('decklist_export_text', {decklist_id:Decklist.id});
+			break;
+		case 'btn-download-octgn':
+			location.href = Routing.generate('decklist_export_octgn', {decklist_id:Decklist.id});
+			break;
+		case 'btn-export-bbcode':
+			export_bbcode();
+			break;
+		case 'btn-export-markdown':
+			export_markdown();
+			break;
+		case 'btn-export-plaintext':
+			export_plaintext();
+			break;
+		}
+	}
+
+	ui.send_like = function send_like() {
+		var obj = $(this);
+		$.post(Routing.generate('decklist_like'), {
+			id : Decklist.id
+		}, function(data, textStatus, jqXHR) {
+			obj.find('.num').text(data);
+		});
+	}
+
+	ui.send_favorite = function send_favorite() {
+		var obj = $(this);
+		$.post(Routing.generate('decklist_favorite'), {
+			id : Decklist.id
+		}, function(data, textStatus, jqXHR) {
+			obj.find('.num').text(data);
+			var title = obj.data('original-tooltip');
+			obj.data('original-tooltip',
+					title == "Add to favorites" ? "Remove from favorites"
+							: "Add to favorites");
+			obj.attr('title', obj.data('original-tooltip'));
+		});
+
+		send_like.call($('#social-icon-like'));
 	}
 
 	ui.setup_comment_form = function setup_comment_form() {
@@ -100,13 +157,13 @@
 			$('.comment-hide-button').remove();
 			$('<a href="#" class="comment-hide-button"><span class="text-danger fa fa-times" style="margin-left:.5em"></span></a>').appendTo('.collapse.in > .comment-date').on('click', function (event) {
 				if(confirm('Do you really want to hide this comment for everybody?')) {
-					hide_comment($(this).closest('td'));
+					ui.hide_comment($(this).closest('td'));
 				}
 				return false;
 			});
 			$('<a href="#" class="comment-hide-button"><span class="text-success fa fa-check" style="margin-left:.5em"></span></a>').appendTo('.collapse:not(.in) > .comment-date').on('click', function (event) {
 				if(confirm('Do you really want to unhide this comment?')) {
-					unhide_comment($(this).closest('td'));
+					ui.unhide_comment($(this).closest('td'));
 				}
 				return false;
 			});
@@ -122,7 +179,7 @@
 				if(data === true) {
 					$(element).find('.collapse').collapse('hide');
 					$(element).find('.comment-toggler').show().prepend('The comment will be hidden for everyone in a few minutes.');
-					setTimeout(setup_comment_hide, 1000);
+					setTimeout(ui.setup_comment_hide, 1000);
 				} else {
 					alert(data);
 				}

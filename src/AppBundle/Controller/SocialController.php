@@ -514,7 +514,7 @@ class SocialController extends Controller
         } else {
             $decklist->setNbfavorites($decklist->getNbfavorites() + 1);
             $user->addFavorite($decklist);
-            $decklist->setTs(new \DateTime());
+            $decklist->setDateUpdate(new \DateTime());
             if ($author->getId() != $user->getId())
                 $author->setReputation($author->getReputation() + 5);
         }
@@ -560,15 +560,15 @@ class SocialController extends Controller
 
             $comment = new Comment();
             $comment->setText($comment_html);
-            $comment->setCreation($now);
-            $comment->setAuthor($user);
+            $comment->setDateCreation($now);
+            $comment->setUser($user);
             $comment->setDecklist($decklist);
-            $comment->setHidden(FALSE);
+            $comment->setIsHidden(FALSE);
 
             $this->get('doctrine')
                 ->getManager()
                 ->persist($comment);
-            $decklist->setTs($now);
+            $decklist->setDateUpdate($now);
             $decklist->setNbcomments($decklist->getNbcomments() + 1);
 
             $this->get('doctrine')
@@ -577,15 +577,15 @@ class SocialController extends Controller
 
             // send emails
             $spool = [];
-            if($decklist->getUser()->getNotifAuthor()) {
+            if($decklist->getUser()->getIsNotifAuthor()) {
                 if(!isset($spool[$decklist->getUser()->getEmail()])) {
                     $spool[$decklist->getUser()->getEmail()] = 'AppBundle:Emails:newcomment_author.html.twig';
                 }
             }
             foreach($decklist->getComments() as $comment) {
                 /* @var $comment Comment */
-                $commenter = $comment->getAuthor();
-                if($commenter && $commenter->getNotifCommenter()) {
+                $commenter = $comment->getUser();
+                if($commenter && $commenter->getIsNotifCommenter()) {
                     if(!isset($spool[$commenter->getEmail()])) {
                         $spool[$commenter->getEmail()] = 'AppBundle:Emails:newcomment_commenter.html.twig';
                     }
@@ -594,7 +594,7 @@ class SocialController extends Controller
             foreach($mentionned_usernames as $mentionned_username) {
                 /* @var $mentionned_user User */
                 $mentionned_user = $this->getDoctrine()->getRepository('AppBundle:User')->findOneBy(array('username' => $mentionned_username));
-                if($mentionned_user && $mentionned_user->getNotifMention()) {
+                if($mentionned_user && $mentionned_user->getIsNotifMention()) {
                     if(!isset($spool[$mentionned_user->getEmail()])) {
                         $spool[$mentionned_user->getEmail()] = 'AppBundle:Emails:newcomment_mentionned.html.twig';
                     }
@@ -605,7 +605,7 @@ class SocialController extends Controller
             $email_data = array(
                 'username' => $user->getUsername(),
                 'decklist_name' => $decklist->getName(),
-                'url' => $this->generateUrl('decklist_detail', array('decklist_id' => $decklist->getId(), 'decklist_name' => $decklist->getPrettyname()), TRUE) . '#' . $comment->getId(),
+                'url' => $this->generateUrl('decklist_detail', array('decklist_id' => $decklist->getId(), 'decklist_name' => $decklist->getNameCanonical()), TRUE) . '#' . $comment->getId(),
                 'comment' => $comment_html,
                 'profile' => $this->generateUrl('user_profile', [], TRUE)
             );
@@ -622,7 +622,7 @@ class SocialController extends Controller
 
         return $this->redirect($this->generateUrl('decklist_detail', array(
                 'decklist_id' => $decklist_id,
-                'decklist_name' => $decklist->getPrettyName()
+                'decklist_name' => $decklist->getNameCanonical()
         )));
 
     }
@@ -650,7 +650,7 @@ class SocialController extends Controller
             return new Response(json_encode("You don't have permission to edit this comment."));
         }
 
-        $comment->setHidden((boolean) $hidden);
+        $comment->setIsHidden((boolean) $hidden);
         $em->flush();
 
         return new Response(json_encode(TRUE));
@@ -689,7 +689,7 @@ class SocialController extends Controller
                 $user->addVote($decklist);
                 $author = $decklist->getUser();
                 $author->setReputation($author->getReputation() + 1);
-                $decklist->setTs(new \DateTime());
+                $decklist->setDateUpdate(new \DateTime());
                 $decklist->setnbVotes($decklist->getnbVotes() + 1);
                 $this->get('doctrine')
                 ->getManager()
@@ -943,23 +943,23 @@ class SocialController extends Controller
         else {
             /* @var $precedent_decklist Decklist */
             $precedent_decklist = $em->getRepository('AppBundle:Decklist')->find($derived_from);
-            if(!$precedent_decklist || $precedent_decklist->getCreation() > $decklist->getCreation()) {
+            if(!$precedent_decklist || $precedent_decklist->getDateCreation() > $decklist->getDateCreation()) {
                 $precedent_decklist = $decklist->getPrecedent();
             }
         }
 
         $decklist->setName($name);
-        $decklist->setPrettyname(preg_replace('/[^a-z0-9]+/', '-', mb_strtolower($name)));
-        $decklist->setRawdescription($rawdescription);
-        $decklist->setDescription($description);
+        $decklist->setNameCanonical(preg_replace('/[^a-z0-9]+/', '-', mb_strtolower($name)));
+        $decklist->setDescriptionMd($rawdescription);
+        $decklist->setDescriptionHtml($description);
         $decklist->setPrecedent($precedent_decklist);
         $decklist->setTournament($tournament);
-        $decklist->setTs(new \DateTime());
+        $decklist->setDateUpdate(new \DateTime());
         $em->flush();
 
         return $this->redirect($this->generateUrl('decklist_detail', array(
                 'decklist_id' => $decklist_id,
-                'decklist_name' => $decklist->getPrettyName()
+                'decklist_name' => $decklist->getNameCanonical()
         )));
 
     }
@@ -1060,7 +1060,7 @@ class SocialController extends Controller
                 "SELECT SQL_CALC_FOUND_ROWS
 				c.id,
 				c.text,
-				c.creation,
+				c.date_creation,
 				d.id decklist_id,
 				d.name decklist_name,
 				d.name_canonical decklist_name_canonical
@@ -1132,7 +1132,7 @@ class SocialController extends Controller
                 "SELECT SQL_CALC_FOUND_ROWS
 				c.id,
 				c.text,
-				c.creation,
+				c.date_creation,
 				d.id decklist_id,
 				d.name decklist_name,
 				d.name_canonical decklist_name_canonical,
