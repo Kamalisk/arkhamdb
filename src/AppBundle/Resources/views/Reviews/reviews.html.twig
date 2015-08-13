@@ -1,7 +1,7 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
-{% block javascript %}
-<script src="{{ asset('/bundles/thronesdbcards/js/reviews.js') }}"></script>
+{% block javascripts %}
+<script src="{{ asset('/bundles/thronesdbcards/js/ui.reviews.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -56,9 +56,9 @@
            {% if review.user.donation > 0 %}<span class="fa fa-gift donator" title="thronesdb Gracious Donator"></span>{% endif %}
     	   <small class="reputation">{{ review.user.reputation }}</small>
        </div>
-       
+
        {% if review.comments|length %}
-       
+
        {% for comment in review.comments %}
        <div class="review-comment text-muted small">{{ comment.text }}
        &mdash;
@@ -67,7 +67,7 @@
        <time datetime="{{ comment.date_creation|date('c') }}" title="{{ comment.date_creation|date('F jS, Y') }}">{{ comment.date_creation|date('n/j/y') }}</time>
     </div>
        {% endfor %}
-       
+
        {% endif %}
        <form action="{{ path('card_reviewcomment_post') }}" method="POST" class="form-comment">
        <input type="hidden" name="comment_review_id" value="{{ review.id }}">

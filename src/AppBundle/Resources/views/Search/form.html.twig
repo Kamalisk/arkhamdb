@@ -3,18 +3,11 @@
 	<div class="row" style="margin-bottom:1em">
 		<div class="col-sm-4">
 			<div class="form-group">
-				<label for="">Side or Faction</label> <select class="form-control"
-					id="faction" name="faction">
+				<label for="">Faction</label> <select class="form-control" id="faction" name="faction">
 					<option value="">any</option>
-					<option value="Corp"{{ faction_C|default('') }}>Corp</option>
-					<option value="haas-bioroid"{{ faction_h|default('') }}>Haas-Bioroid</option>
-					<option value="jinteki"{{ faction_j|default('') }}>Jinteki</option>
-					<option value="nbn"{{ faction_n|default('') }}>NBN</option>
-					<option value="weyland-consortium"{{ faction_w|default('') }}>Weyland</option>
-					<option value="Runner"{{ faction_R|default('') }}>Runner</option>
-					<option value="anarch"{{ faction_a|default('') }}>Anarch</option>
-					<option value="criminal"{{ faction_c|default('') }}>Criminal</option>
-					<option value="shaper"{{ faction_s|default('') }}>Shaper</option>
+					{% for faction in factions %}
+					<option value="{{ faction.code }}"{% if faction_selected is defined  and faction_selected == faction.code %} selected="selected"{% endif %}>{{ faction.name }}</option>
+					{% endfor %}
 				</select>
 			</div>
             <div class="form-group">

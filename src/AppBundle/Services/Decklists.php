@@ -8,6 +8,23 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Decklists
 {
+    private $fields_for_list = "SQL_CALC_FOUND_ROWS
+    d.id,
+    d.name,
+    d.name_canonical,
+    d.date_creation,
+    d.user_id,
+    f.code faction_code,
+    d.tournament_id,
+    t.description tournament,
+    u.username,
+    u.color usercolor,
+    u.reputation,
+    u.donation,
+    d.nb_votes,
+    d.nb_favorites,
+    d.nb_comments";
+
     public function __construct(EntityManager $doctrine)
     {
         $this->doctrine = $doctrine;
@@ -86,27 +103,14 @@ class Decklists
         $dbh = $this->doctrine->getConnection();
 
         $rows = $dbh->executeQuery(
-                "SELECT SQL_CALC_FOUND_ROWS
-                d.id,
-                d.name,
-                d.name_canonical,
-                d.date_creation,
-                d.user_id,
-                d.tournament_id,
-                t.description tournament,
-                u.username,
-                u.color usercolor,
-                u.reputation,
-                u.donation,
-                d.nb_votes,
-                d.nb_favorites,
-                d.nb_comments
+                "SELECT $this->fields_for_list
                 from decklist d
                 join user u on d.user_id=u.id
-                join favorite f on f.decklist_id=d.id
+                join faction f on d.faction_id=f.id
+                join favorite fav on fav.decklist_id=d.id
                 left join tournament t on d.tournament_id=t.id
-                where f.user_id=?
-                order by date_creation desc
+                where fav.user_id=?
+                order by d.date_creation desc
                 limit $start, $limit", array(
                         $user_id
                 ))
@@ -133,26 +137,13 @@ class Decklists
         $dbh = $this->doctrine->getConnection();
 
         $rows = $dbh->executeQuery(
-                "SELECT SQL_CALC_FOUND_ROWS
-                d.id,
-                d.name,
-                d.name_canonical,
-                d.date_creation,
-                d.user_id,
-                d.tournament_id,
-                t.description tournament,
-                u.username,
-                u.color usercolor,
-                u.reputation,
-                u.donation,
-                d.nb_votes,
-                d.nb_favorites,
-                d.nb_comments
+                "SELECT $this->fields_for_list
                 from decklist d
                 join user u on d.user_id=u.id
+                join faction f on d.faction_id=f.id
                 left join tournament t on d.tournament_id=t.id
                 where d.user_id=?
-                order by date_creation desc
+                order by d.date_creation desc
                 limit $start, $limit", array(
                         $user_id
                 ))->fetchAll(\PDO::FETCH_ASSOC);
@@ -177,29 +168,14 @@ class Decklists
         $dbh = $this->doctrine->getConnection();
 
         $rows = $dbh->executeQuery(
-                "SELECT SQL_CALC_FOUND_ROWS
-                d.id,
-                d.name,
-                d.name_canonical,
-                d.date_creation,
-                d.user_id,
-                d.tournament_id,
-                f.code faction_code,
-                t.description tournament,
-                u.username,
-                u.color usercolor,
-                u.reputation,
-                u.donation,
-                d.nb_votes,
-                d.nb_favorites,
-                d.nb_comments,
+                "SELECT $this->fields_for_list,
                 DATEDIFF(CURRENT_DATE, d.date_creation) nbjours
                 from decklist d
                 join user u on d.user_id=u.id
                 join faction f on d.faction_id=f.id
                 left join tournament t on d.tournament_id=t.id
                 where d.date_creation > DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
-                order by 2*nb_votes/(1+nbjours*nbjours) DESC, nb_votes desc, nb_comments desc
+                order by 2*d.nb_votes/(1+nbjours*nbjours) DESC, d.nb_votes desc, d.nb_comments desc
                 limit $start, $limit")->fetchAll(\PDO::FETCH_ASSOC);
 
         $count = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];
@@ -222,26 +198,13 @@ class Decklists
         $dbh = $this->doctrine->getConnection();
 
         $rows = $dbh->executeQuery(
-                "SELECT SQL_CALC_FOUND_ROWS
-                d.id,
-                d.name,
-                d.name_canonical,
-                d.date_creation,
-                d.user_id,
-                d.tournament_id,
-                t.description tournament,
-                u.username,
-                u.color usercolor,
-                u.reputation,
-                u.donation,
-                d.nb_votes,
-                d.nb_favorites,
-                d.nb_comments
+                "SELECT $this->fields_for_list
                 from decklist d
                 join user u on d.user_id=u.id
+                join faction f on d.faction_id=f.id
                 left join tournament t on d.tournament_id=t.id
-                where nbVotes > 10
-                order by nbVotes desc, creation desc
+                where d.nb_votes > 10
+                order by d.nb_votes desc, d.date_creation desc
                 limit $start, $limit")->fetchAll(\PDO::FETCH_ASSOC);
 
         $count = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];
@@ -264,27 +227,14 @@ class Decklists
         $dbh = $this->doctrine->getConnection();
 
         $rows = $dbh->executeQuery(
-                "SELECT SQL_CALC_FOUND_ROWS
-                d.id,
-                d.name,
-                d.name_canonical,
-                d.date_creation,
-                d.user_id,
-                d.tournament_id,
-                t.description tournament,
-                u.username,
-                u.color usercolor,
-                u.reputation,
-                u.donation,
-                d.nb_votes,
-                d.nb_favorites,
-                d.nb_comments,
+                "SELECT $this->fields_for_list,
                 (select count(*) from comment where comment.decklist_id=d.id and DATEDIFF(CURRENT_DATE, comment.date_creation)<1) nbrecentcomments
                 from decklist d
                 join user u on d.user_id=u.id
+                join faction f on d.faction_id=f.id
                 left join tournament t on d.tournament_id=t.id
                 where d.nb_comments > 1
-                order by nbrecentcomments desc, creation desc
+                order by nbrecentcomments desc, d.date_creation desc
                 limit $start, $limit")->fetchAll(\PDO::FETCH_ASSOC);
 
         $count = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];
@@ -307,26 +257,13 @@ class Decklists
         $dbh = $this->doctrine->getConnection();
 
         $rows = $dbh->executeQuery(
-                "SELECT SQL_CALC_FOUND_ROWS
-                d.id,
-                d.name,
-                d.name_canonical,
-                d.date_creation,
-                d.user_id,
-                d.tournament_id,
-                t.description tournament,
-                u.username,
-                u.color usercolor,
-                u.reputation,
-                u.donation,
-                d.nb_votes,
-                d.nb_favorites,
-                d.nb_comments
+                "SELECT $this->fields_for_list
                 from decklist d
                 join user u on d.user_id=u.id
+                join faction f on d.faction_id=f.id
                 left join tournament t on d.tournament_id=t.id
                 where d.tournament_id is not null
-                order by date_creation desc
+                order by d.date_creation desc
                 limit $start, $limit")->fetchAll(\PDO::FETCH_ASSOC);
 
         $count = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];
@@ -349,27 +286,13 @@ class Decklists
         $dbh = $this->doctrine->getConnection();
 
         $rows = $dbh->executeQuery(
-                "SELECT SQL_CALC_FOUND_ROWS
-                d.id,
-                d.name,
-                d.name_canonical,
-                d.date_creation,
-                d.user_id,
-                d.tournament_id,
-                t.description tournament,
-                u.username,
-                u.color usercolor,
-                u.reputation,
-                u.donation,
-                d.nb_votes,
-                d.nb_favorites,
-                d.nb_comments
+                "SELECT $this->fields_for_list
                 from decklist d
                 join user u on d.user_id=u.id
                 join faction f on d.faction_id=f.id
                 left join tournament t on d.tournament_id=t.id
                 where f.code=?
-                order by date_creation desc
+                order by d.date_creation desc
                 limit $start, $limit", array(
                         $faction_code
                 ))->fetchAll(\PDO::FETCH_ASSOC);
@@ -394,27 +317,14 @@ class Decklists
         $dbh = $this->doctrine->getConnection();
 
         $rows = $dbh->executeQuery(
-                "SELECT SQL_CALC_FOUND_ROWS
-                d.id,
-                d.name,
-                d.name_canonical,
-                d.date_creation,
-                d.user_id,
-                d.tournament_id,
-                t.description tournament,
-                u.username,
-                u.color usercolor,
-                u.reputation,
-                u.donation,
-                d.nb_votes,
-                d.nb_favorites,
-                d.nb_comments
+                "SELECT $this->fields_for_list
                 from decklist d
                 join user u on d.user_id=u.id
+                join faction f on d.faction_id=f.id
                 join pack p on d.last_pack_id=p.id
                 left join tournament t on d.tournament_id=t.id
                 where p.code=?
-                order by date_creation desc
+                order by d.date_creation desc
                 limit $start, $limit", array(
                         $pack_code
                 ))->fetchAll(\PDO::FETCH_ASSOC);
@@ -441,29 +351,15 @@ class Decklists
         $additional_clause = $includeEmptyDesc ? "" : "and d.description_md!=''";
 
         $rows = $dbh->executeQuery(
-                "SELECT SQL_CALC_FOUND_ROWS
-                d.id,
-                d.name,
-                d.name_canonical,
-                d.date_creation,
-                d.user_id,
-                d.tournament_id,
-                t.description tournament,
-                u.username,
-                u.color usercolor,
-                u.reputation,
-                u.donation,
-                p.name lastpack,
-                d.nb_votes,
-                d.nb_favorites,
-                d.nb_comments
+                "SELECT $this->fields_for_list
                 from decklist d
                 join user u on d.user_id=u.id
+                join faction f on d.faction_id=f.id
                 join pack p on d.last_pack_id=p.id
                 left join tournament t on d.tournament_id=t.id
                 where d.date_creation > DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
                 $additional_clause
-                order by date_creation desc
+                order by d.date_creation desc
                 limit $start, $limit")->fetchAll(\PDO::FETCH_ASSOC);
 
         $count = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];
@@ -574,32 +470,17 @@ class Decklists
         	case 'popularity':
             default:
         	    $order = 'popularity';
-        		$extra_select = '(d.nb_votes/(1+DATEDIFF(CURRENT_TIMESTAMP(),d.date_creation)/10)) as popularity,';
+        		$extra_select = '(d.nb_votes/(1+DATEDIFF(CURRENT_TIMESTAMP(),d.date_creation)/10)) as popularity';
         		break;
         }
 
         $rows = $dbh->executeQuery(
-                "SELECT SQL_CALC_FOUND_ROWS
-                d.id,
-                d.name,
-                d.name_canonical,
-                d.date_creation,
-                d.user_id,
-                d.tournament_id,
-                t.description tournament,
+                "SELECT $this->fields_for_list,
                 $extra_select
-                u.username,
-                u.color usercolor,
-                u.reputation,
-                u.donation,
-                d.nb_votes,
-                d.nb_favorites,
-                d.nb_comments
                 from decklist d
                 join user u on d.user_id=u.id
-                join side s on d.side_id=s.id
-                join pack p on d.last_pack_id=p.id
                 join faction f on d.faction_id=f.id
+                join pack p on d.last_pack_id=p.id
                 left join tournament t on d.tournament_id=t.id
                 where $where
                 order by $order desc

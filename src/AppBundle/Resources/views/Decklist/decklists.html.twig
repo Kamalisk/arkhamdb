@@ -1,7 +1,7 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
-{% block javascript %}
-<script src="{{ asset('/bundles/app/js/search.js') }}"></script>
+{% block javascripts %}
+<script src="{{ asset('/bundles/app/js/ui.decklist_search.js') }}"></script>
 <script type="text/javascript">
 $(function () {
 	var type = {{ type|json_encode|raw }};

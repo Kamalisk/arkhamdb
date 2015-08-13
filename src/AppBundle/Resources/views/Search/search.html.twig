@@ -1,7 +1,7 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
-{% block javascript %}
-<script src="{{ asset('/bundles/app/js/search.js') }}"></script>
+{% block javascripts %}
+	<script src="{{ asset('/bundles/app/js/ui.decklist_search.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -35,12 +35,12 @@
 			</ul>
 
 		</div>
-		
+
 		<div class="col-sm-9">
-		
+
 		<h1>Decklist Search</h1>
 		{{ form|raw }}
-		
+
 		</div>
 	</div>
 </div>

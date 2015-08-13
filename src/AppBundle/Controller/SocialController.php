@@ -197,7 +197,14 @@ class SocialController extends Controller
                 'name' => $decklist_name
         );
         $params['sort_'.$sort] = ' selected="selected"';
-        $params['faction_'.substr($faction_code, 0, 1)] = ' selected="selected"';
+        $params['factions'] = $dbh->executeQuery(
+                "SELECT
+                f.name,
+                f.code
+                from faction f
+                order by f.name asc")
+            ->fetchAll();
+        $params['faction_selected'] = $faction_code;
 
         if (! empty($cards_code) && is_array($cards_code)) {
             $cards = $dbh->executeQuery(
@@ -1146,7 +1153,7 @@ class SocialController extends Controller
 				f.name,
 				f.code
 				from faction f
-				order by f.side_id asc, f.name asc")
+				order by f.name asc")
             ->fetchAll();
 
         $categories = []; $on = 0; $off = 0;
@@ -1176,11 +1183,10 @@ class SocialController extends Controller
         return $this->render('AppBundle:Search:search.html.twig',
                 array(
                         'pagetitle' => 'Decklist Search',
-                        'url' => $this->getRequest()
-                            ->getRequestUri(),
-                        'factions' => $factions,
+                        'url' => $this->getRequest()->getRequestUri(),
                         'form' => $this->renderView('AppBundle:Search:form.html.twig',
                             array(
+                                'factions' => $factions,
                                 'allowed' => $categories,
                                 'on' => $on,
                                 'off' => $off,
