@@ -77,14 +77,14 @@ user.anonymous = function anonymous() {
 user.update = function update() {
 	user.store();
 	$('#login').addClass('dropdown').append('<ul class="dropdown-menu"><li><a href="'
-			+ Routing.generate('user_profile') 
+			+ Routing.generate('user_profile')
 			+ '">Edit account</a></li><li><a href="'
-			+ user.data.public_profile_url 
+			+ user.data.public_profile_url
 			+ '">Public profile</a></li><li><a href="'
 			+ Routing.generate('user_comments')
 			+ '">Comments</a></li><li><a href="'
-			+ Routing.generate('fos_user_security_logout') 
-			+ '" onclick="app.user.wipe()">Jack out</a></li></ul>');
+			+ Routing.generate('fos_user_security_logout')
+			+ '" onclick="app.user.wipe()">Logout</a></li></ul>');
 };
 
 /**
@@ -95,7 +95,7 @@ user.always = function always() {
 	if(user.data && user.data.donation > 0) return;
 
 	adsbygoogle = window.adsbygoogle || [];
-	
+
 	$('div.ad').each(function (index, element) {
 		$(element).show();
 		adsbygoogle.push({});
@@ -115,5 +115,5 @@ $(function() {
 		user.query();
 	}
 });
-	
+
 })(app.user = {}, jQuery);
