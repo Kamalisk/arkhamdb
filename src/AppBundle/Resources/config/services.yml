@@ -27,7 +27,7 @@ services:
         arguments: ["@doctrine.orm.entity_manager"]
     texts:
         class: "%texts.class%"
-        arguments: ["%kernel.cache_dir%"]
+        arguments: ["%kernel.root_dir%"]
     diff:
         class: "%diff.class%"
         arguments: ["@doctrine.orm.entity_manager"]
