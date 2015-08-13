@@ -13,7 +13,7 @@
 			<i>{{ decklist.lastpack }}</i>
 	</div>
 	<div class="username small">
-		<a href="{{ path('user_profile_view', {user_id:decklist.user_id,user_name:decklist.username|e('url')}) }}" class="{{ decklist.usercolor }}">{{ decklist.username }}</a>
+		<a href="{{ path('user_profile_public', {user_id:decklist.user_id,user_name:decklist.username|e('url')}) }}" class="{{ decklist.usercolor }}">{{ decklist.username }}</a>
 		{% if decklist.donation > 0 %}<span class="fa fa-gift donator" title="thronesdb Gracious Donator"></span>{% endif %}
 		<small class="reputation">{{ decklist.reputation }}</small>
 	</div>

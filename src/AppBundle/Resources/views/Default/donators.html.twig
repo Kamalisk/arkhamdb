@@ -13,7 +13,7 @@
 <ul>
 {% for donator in donators %}
 <li>
-    <a href="{{ path('user_profile_view', {user_id:donator.id,user_name:donator.username|e('url')}) }}" class="username {{ donator.faction }}">{{ donator.username }}</a>
+    <a href="{{ path('user_profile_public', {user_id:donator.id,user_name:donator.username|e('url')}) }}" class="username {{ donator.faction }}">{{ donator.username }}</a>
     <span class="fa fa-gift donator" title="thronesdb Gracious Donator"></span>
 </li>
 {% endfor %}
