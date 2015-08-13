@@ -69,7 +69,7 @@ ui.setup_event_handlers = function setup_event_handlers() {
  * @memberOf ui
  */
 ui.refresh_deck = function refresh_deck() {
-	app.deck.display('#deck', DisplaySort, 1);
+	app.deck.display('#deck', DisplaySort);
 	app.draw_simulator && app.draw_simulator.reset();
 }
 
@@ -79,13 +79,7 @@ ui.refresh_deck = function refresh_deck() {
  */
 ui.on_dom_loaded = function on_dom_loaded() {
 	ui.setup_event_handlers();
-
-	var converter = new Markdown.Converter();
-	var desc = app.deck.get_description_md();
-	$('#description').html(converter.makeHtml(desc || '*No description.*'));
-
 	app.draw_simulator && app.draw_simulator.on_dom_loaded();
-
 	//$('#btn-publish').prop('disabled', !!SelectedDeck.problem);
 };
 
@@ -102,6 +96,7 @@ ui.on_data_loaded = function on_data_loaded() {
  * @memberOf ui
  */
 ui.on_all_loaded = function on_all_loaded() {
+	app.markdown && app.markdown.update(app.deck.get_description_md() || '*No description.*', '#description');
 	ui.refresh_deck();
 };
 
