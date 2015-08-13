@@ -70,7 +70,7 @@
 			obj.attr('title', obj.data('original-tooltip'));
 		});
 
-		send_like.call($('#social-icon-like'));
+		ui.send_like.call($('#social-icon-like'));
 	}
 
 	ui.setup_comment_form = function setup_comment_form() {

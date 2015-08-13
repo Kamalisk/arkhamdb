@@ -148,8 +148,6 @@ div.tags span.tag:not(:first-child)::before {
 /********** NEW DECK **********/
 
 .list-factions li label {
-	font-family: 'Julius Sans One', sans-serif;
-	font-weight: 700;
 }
 
 /************ DECK GALLERY **********/

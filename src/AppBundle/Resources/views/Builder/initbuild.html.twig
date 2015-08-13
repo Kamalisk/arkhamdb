@@ -7,19 +7,22 @@
 
 <form action="{{ path('deck_initbuild') }}" method="post" enctype="application/x-www-form-urlencoded">
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-8">
 		<h1>Choose your faction</h1>
-		<ul class="list-group list-factions">
-		{% for faction in factions %}
-			<li class="list-group-item radio">
-				<label>
-					<input type="radio" name="faction" value="{{ faction.code }}"> <span class="icon-{{ faction.code }}"></span> {{ faction.name }}
+		<div class="row">
+			{% for faction in factions %}
+			<div class="col-md-3 col-sm-4">
+				<label class="thumbnail">
+					<img src="{{ asset('/bundles/app/images/factions/' ~ faction.code ~ '.png') }}" class="hidden-xs">
+					<div class="caption text-center" style="white-space:nowrap">
+							<input type="radio" name="faction" value="{{ faction.code }}"> <small>{{ faction.name }}</small>
+					</div>
 				</label>
-			</li>
-		{% endfor %}
-		</ul>
+			</div>
+			{% endfor %}
+		</div>
 	</div>
-	<div class="col-md-6">
+	<div class="col-md-4">
 		<h2>Choose an agenda</h2>
 		<ul class="list-group">
 			<li class="list-group-item radio">
