@@ -61,7 +61,7 @@ class UserController extends Controller
     	        ->getFlashBag()
     	        ->set('error', "Username $username is already taken.");
 
-    	        return $this->redirect($this->generateUrl('user_profile'));
+    	        return $this->redirect($this->generateUrl('user_profile_edit'));
     	    }
 
     	    $user->setUsername($username);

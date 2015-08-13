@@ -614,7 +614,7 @@ class SocialController extends Controller
                 'decklist_name' => $decklist->getName(),
                 'url' => $this->generateUrl('decklist_detail', array('decklist_id' => $decklist->getId(), 'decklist_name' => $decklist->getNameCanonical()), TRUE) . '#' . $comment->getId(),
                 'comment' => $comment_html,
-                'profile' => $this->generateUrl('user_profile', [], TRUE)
+                'profile' => $this->generateUrl('user_profile_edit', [], TRUE)
             );
             foreach($spool as $email => $view) {
                 $message = \Swift_Message::newInstance()
