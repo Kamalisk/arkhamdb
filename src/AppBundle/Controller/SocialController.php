@@ -852,33 +852,17 @@ class SocialController extends Controller
         if (! $decklist)
             throw new NotFoundHttpException("Unable to find decklist.");
 
-        $rd = [];
-        $identity = null;
-        /** @var $slot Decklistslot */
-        foreach ($decklist->getSlots() as $slot) {
-            if ($slot->getCard()
-                ->getType()
-                ->getName() == "Identity") {
-                $identity = array(
-                        "index" => $slot->getCard()->getCode(),
-                        "name" => $slot->getCard()->getName()
-                );
-            } else {
-                $rd[] = array(
-                        "index" => $slot->getCard()->getCode(),
-                        "name" => $slot->getCard()->getName(),
-                        "qty" => $slot->getQuantity()
-                );
-            }
-        }
-        $name = mb_strtolower($decklist->getName());
-        $name = preg_replace('/[^a-zA-Z0-9_\-]/', '-', $name);
-        $name = preg_replace('/--+/', '-', $name);
-        if (empty($identity)) {
-            return new Response('no identity found');
-        }
-        return $this->octgnexport("$name.o8d", $identity, $rd, $decklist->getRawdescription(), $response);
+        $content = $this->get('octgn')->export($decklist);
 
+        $name = $decklist->getName();
+
+        $response = new Response();
+
+        $response->headers->set('Content-Type', 'application/octgn');
+        $response->headers->set('Content-Disposition', 'attachment;filename=' . $name . '.o8d');
+
+        $response->setContent($content);
+        return $response;
     }
 
     /*

@@ -112,7 +112,7 @@ ui.build_faction_selector = function build_faction_selector() {
  */
 ui.build_type_selector = function build_type_selector() {
 	$('[data-filter=type_code]').empty();
-	app.data.cards.distinct('type_code').sort().forEach(function(type_code) {
+	['agenda','plot','character','attachment','location','event'].forEach(function(type_code) {
 		var example = app.data.cards.find({"type_code": type_code})[0];
 		var label = $('<label class="btn btn-default btn-sm" data-code="'
 				+ type_code + '" title="'+example.type_name+'"><input type="checkbox" name="' + type_code

@@ -271,6 +271,12 @@ deck.display_by_type = function display_by_type() {
 
 	var deck_content = $('<div class="deck-content">');
 	var deck_content_first_row = $('<div class="row">').appendTo(deck_content);
+	var deck_intro_meta = $('<div class="col-sm-4">').appendTo(deck_content_first_row);
+	deck_intro_meta.append('<h4>'+faction_name+'</h4>');
+	deck_intro_meta.append('<div>Draw deck: '+deck.get_draw_deck_size()+' cards.</div>');
+	deck_intro_meta.append('<div>Plot deck: '+deck.get_plot_deck_size()+' cards.</div>');
+	deck_intro_meta.append('<div>Included packs: ' + _.pluck(deck.get_included_packs(), 'name').join(', ') + '.</div>');
+
 	var deck_intro_images = $('<div class="col-sm-2">').appendTo(deck_content_first_row);
 	deck_intro_images.append('<div style="margin-bottom:10px"><img src="/bundles/app/images/factions/'+deck.get_faction_code()+'.png" class="img-responsive">');
 
@@ -278,12 +284,6 @@ deck.display_by_type = function display_by_type() {
 	if(agenda) {
 		deck_intro_images.append('<div><img src="'+agenda.imagesrc+'" class="img-responsive">');
 	}
-
-	var deck_intro_meta = $('<div class="col-sm-4">').appendTo(deck_content_first_row);
-	deck_intro_meta.append('<h4>'+faction_name+'</h4>');
-	deck_intro_meta.append('<div>Draw deck: '+deck.get_draw_deck_size()+' cards.</div>');
-	deck_intro_meta.append('<div>Plot deck: '+deck.get_plot_deck_size()+' cards.</div>');
-	deck_intro_meta.append('<div>Included packs: ' + _.pluck(deck.get_included_packs(), 'name').join(', ') + '.</div>');
 
 	var problem = deck.get_problem();
 	if(problem) {

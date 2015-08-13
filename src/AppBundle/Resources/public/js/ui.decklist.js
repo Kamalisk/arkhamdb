@@ -33,14 +33,15 @@
 
 	ui.do_action_decklist = function do_action_decklist(event) {
 		var action_id = $(this).attr('id');
-		if (!action_id || !SelectedDeck)
+		if (!action_id) {
 			return;
+		}
 		switch (action_id) {
 		case 'btn-download-text':
-			location.href = Routing.generate('decklist_export_text', {decklist_id:Decklist.id});
+			location.href = Routing.generate('decklist_export_text', {decklist_id:app.deck.get_id()});
 			break;
 		case 'btn-download-octgn':
-			location.href = Routing.generate('decklist_export_octgn', {decklist_id:Decklist.id});
+			location.href = Routing.generate('decklist_export_octgn', {decklist_id:app.deck.get_id()});
 			break;
 		case 'btn-export-bbcode':
 			export_bbcode();
@@ -57,7 +58,7 @@
 	ui.send_like = function send_like() {
 		var obj = $(this);
 		$.post(Routing.generate('decklist_like'), {
-			id : Decklist.id
+			id : app.deck.get_id()
 		}, function(data, textStatus, jqXHR) {
 			obj.find('.num').text(data);
 		});
@@ -66,7 +67,7 @@
 	ui.send_favorite = function send_favorite() {
 		var obj = $(this);
 		$.post(Routing.generate('decklist_favorite'), {
-			id : Decklist.id
+			id : app.deck.get_id()
 		}, function(data, textStatus, jqXHR) {
 			obj.find('.num').text(data);
 			var title = obj.data('original-tooltip');
@@ -148,7 +149,12 @@
 			$('#decklist-edit').show();
 			if(app.user.data.can_delete) {
 				$('#decklist-delete').show();
+			} else {
+				$('#decklist-delete').remove();
 			}
+		} else {
+			$('#decklist-edit').remove();
+			$('#decklist-delete').remove();
 		}
 	}
 

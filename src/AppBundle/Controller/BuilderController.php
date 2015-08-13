@@ -315,17 +315,15 @@ class BuilderController extends Controller
 
         $content = $this->get('octgn')->export($deck);
 
-        $name = mb_strtolower($deck->getName());
-        $name = preg_replace('/[^a-zA-Z0-9_\-]/', '-', $name);
-        $name = preg_replace('/--+/', '-', $name);
+        $name = $deck->getName();
 
-	      $response = new Response();
+		$response = new Response();
 
-	      $response->headers->set('Content-Type', 'application/octgn');
-	      $response->headers->set('Content-Disposition', 'attachment;filename=' . $name . '.o8d');
+		$response->headers->set('Content-Type', 'application/octgn');
+		$response->headers->set('Content-Disposition', 'attachment;filename=' . $name . '.o8d');
 
-	      $response->setContent($content);
-	      return $response;
+		$response->setContent($content);
+		return $response;
     }
 
     public function saveAction (Request $request)

@@ -4,7 +4,6 @@
 namespace AppBundle\Services;
 
 use Doctrine\ORM\EntityManager;
-use AppBundle\Entity\Deck;
 use Twig_Environment;
 
 class Octgn
@@ -16,8 +15,9 @@ class Octgn
 	}
 
     /**
+	 * @param $deck Deck or Decklist
      */
-    public function export(Deck $deck)
+    public function export($deck)
     {
       $types = [
         'Faction' => 'faction',
