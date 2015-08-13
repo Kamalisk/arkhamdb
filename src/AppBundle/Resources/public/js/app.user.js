@@ -91,6 +91,8 @@ user.update = function update() {
  * @memberOf user
  */
 user.always = function always() {
+	return;
+	
 	// show ads if not donator
 	if(user.data && user.data.donation > 0) return;
 

@@ -269,10 +269,15 @@ deck.display_by_type = function display_by_type() {
 	displayLabel = 'type_name';
 	valuesOrder = ['agenda','plot','character','attachment','location','event'];
 
+	var agenda = deck.get_agenda();
+
 	var deck_content = $('<div class="deck-content">');
 	var deck_content_first_row = $('<div class="row">').appendTo(deck_content);
 	var deck_intro_meta = $('<div class="col-sm-4">').appendTo(deck_content_first_row);
 	deck_intro_meta.append('<h4>'+faction_name+'</h4>');
+	if(agenda) {
+		$('<h4>').append($(card_line_tpl_no_qty({card:agenda}))).appendTo(deck_intro_meta);
+	}
 	deck_intro_meta.append('<div>Draw deck: '+deck.get_draw_deck_size()+' cards.</div>');
 	deck_intro_meta.append('<div>Plot deck: '+deck.get_plot_deck_size()+' cards.</div>');
 	deck_intro_meta.append('<div>Included packs: ' + _.pluck(deck.get_included_packs(), 'name').join(', ') + '.</div>');
@@ -280,7 +285,6 @@ deck.display_by_type = function display_by_type() {
 	var deck_intro_images = $('<div class="col-sm-2">').appendTo(deck_content_first_row);
 	deck_intro_images.append('<div style="margin-bottom:10px"><img src="/bundles/app/images/factions/'+deck.get_faction_code()+'.png" class="img-responsive">');
 
-	var agenda = deck.get_agenda();
 	if(agenda) {
 		deck_intro_images.append('<div><img src="'+agenda.imagesrc+'" class="img-responsive">');
 	}
@@ -291,9 +295,6 @@ deck.display_by_type = function display_by_type() {
 	}
 
 	var deck_intro_plots = $('<div class="col-sm-6">').appendTo(deck_content_first_row);
-	if(agenda) {
-		$('<h4>').append($(card_line_tpl_no_qty({card:agenda}))).appendTo(deck_intro_plots);
-	}
 	deck_intro_plots.append(deck.display_one_section('type_code', 'plot', 'type_name'));
 
 	var deck_content_second_row = $('<div class="row">').appendTo(deck_content);
@@ -302,8 +303,8 @@ deck.display_by_type = function display_by_type() {
 	deck_draw_deck_left.append(deck.display_one_section('type_code', 'character', 'type_name'));
 
 	var deck_draw_deck_right = $('<div class="col-sm-6">').appendTo(deck_content_second_row);
-	deck_draw_deck_right.append(deck.display_one_section('type_code', 'location', 'type_name'));
 	deck_draw_deck_right.append(deck.display_one_section('type_code', 'attachment', 'type_name'));
+	deck_draw_deck_right.append(deck.display_one_section('type_code', 'location', 'type_name'));
 	deck_draw_deck_right.append(deck.display_one_section('type_code', 'event', 'type_name'));
 
 
