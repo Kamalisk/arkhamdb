@@ -261,30 +261,58 @@ div.site-slogan {
 
 /************** FACTIONS COLORS **************/
 
-.row.targaryen {
+.bg-targaryen {
 	background-color: #c00106;
 }
-.row.baratheon {
+.bg-baratheon {
 	background-color: #e3d852;
 }
-.row.stark {
+.bg-stark {
 	background-color: #cfcfcf;
 }
-.row.greyjoy {
+.bg-greyjoy {
 	background-color: #1d7893;
 }
-.row.lannister {
+.bg-lannister {
 	background-color: #f02618;
 }
-.row.tyrell {
+.bg-tyrell {
 	background-color: #509f16;
 }
-.row.nightswatch {
+.bg-nightswatch {
 	background-color: #6e6e6e;
 }
-.row.martell {
+.bg-martell {
 	background-color: #e89521;
 }
-.row.neutral {
+.bg-neutral {
 	background-color: #a99560;
+}
+
+.fg-targaryen {
+	color: #c00106;
+}
+.fg-baratheon {
+	color: #e3d852;
+}
+.fg-stark {
+	color: #cfcfcf;
+}
+.fg-greyjoy {
+	color: #1d7893;
+}
+.fg-lannister {
+	color: #f02618;
+}
+.fg-tyrell {
+	color: #509f16;
+}
+.fg-nightswatch {
+	color: #6e6e6e;
+}
+.fg-martell {
+	color: #e89521;
+}
+.fg-neutral {
+	color: #a99560;
 }

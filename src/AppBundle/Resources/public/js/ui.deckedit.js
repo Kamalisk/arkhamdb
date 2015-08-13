@@ -446,7 +446,7 @@ ui.update_list_template = function update_list_template() {
 				+ '<td><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></td>'
 				+ '<td class="cost"><%= card.cost %></td>'
 				+ '<td class="type"><span class="icon-<%= card.type_code %>" title="<%= card.type_name %>"></span></td>'
-				+ '<td class="faction"><span class="icon-<%= card.faction_code %> <%= card.faction_code %>" title="<%= card.faction_name %>"></span></td>'
+				+ '<td class="faction"><span class="icon-<%= card.faction_code %> fg-<%= card.faction_code %>" title="<%= card.faction_name %>"></span></td>'
 			+ '</tr>'
 		);
 		break;
