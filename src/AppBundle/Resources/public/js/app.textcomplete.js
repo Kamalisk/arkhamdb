@@ -15,7 +15,7 @@ textcomplete.setup = function setup(textarea, options) {
 		actions.push({
 			match : /\B#([\-+\w]*)$/,
 			search : function(term, callback) {
-				var regexp = new RegExp(term);
+				var regexp = new RegExp('^' + term, 'i');
 				callback(app.data.cards.find({
 					name : regexp
 				}));
@@ -35,40 +35,40 @@ textcomplete.setup = function setup(textarea, options) {
 
 	if(options.icons) {
 		actions.push({
-						match : /\$([\-+\w]*)$/,
-						search : function(term, callback) {
-							var regexp = new RegExp('^' + term);
-							callback(_.filter(icons,
-								function(symbol) { return regexp.test(symbol); }
-							));
-						},
-						template : function(value) {
-							return value;
-						},
-						replace : function(value) {
-							return '<span class="icon-' + value + '"></span>';
-						},
-						index : 1
-					});
+			match : /\$([\-+\w]*)$/,
+			search : function(term, callback) {
+				var regexp = new RegExp('^' + term, 'i');
+				callback(_.filter(icons,
+					function(symbol) { return regexp.test(symbol); }
+				));
+			},
+			template : function(value) {
+				return value;
+			},
+			replace : function(value) {
+				return '<span class="icon-' + value + '"></span>';
+			},
+			index : 1
+		});
 	}
 
 	if(options.users) {
 		actions.push({
-					match : /\B@([\-+\w]*)$/,
-					search : function(term, callback) {
-						var regexp = new RegExp('^' + term);
-						callback($.grep(options.users, function(user) {
-							return regexp.test(user);
-						}));
-					},
-					template : function(value) {
-						return value;
-					},
-					replace : function(value) {
-						return '`@' + value + '`';
-					},
-					index : 1
-				});
+			match : /\B@([\-+\w]*)$/,
+			search : function(term, callback) {
+				var regexp = new RegExp('^' + term, 'i');
+				callback($.grep(options.users, function(user) {
+					return regexp.test(user);
+				}));
+			},
+			template : function(value) {
+				return value;
+			},
+			replace : function(value) {
+				return '`@' + value + '`';
+			},
+			index : 1
+		});
 	}
 
 	$(textarea).textcomplete(actions);
