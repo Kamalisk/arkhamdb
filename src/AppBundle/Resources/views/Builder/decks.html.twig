@@ -103,7 +103,7 @@
 		<td><input type="checkbox"></td>
 		<td class="hidden-xs"><img src="{{ asset('/bundles/app/images/factions/' ~ deck.faction_code ~ '.png') }}"></td>
 		<td>
-			<a href="{{ path('deck_view',{deck_id:deck.id}) }}">{{ deck.name }}</a>
+			<a href="{{ path('deck_view',{deck_id:deck.id}) }}" class="deck-name">{{ deck.name }}</a>
 			<div class="tags">
 			{% for tag in deck.tags|split(' ') %}
 			<span class="tag">{{ tag }}</span>

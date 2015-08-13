@@ -136,7 +136,7 @@ class BuilderController extends Controller
         }
 
 		$properties = array(
-				'name' => $origname,
+				'name' => str_replace(".$origext", '', $origname),
 				'faction_code' => $parse['faction_code'],
 				'content' => json_encode($parse['content']),
 				'description' => $parse['description']

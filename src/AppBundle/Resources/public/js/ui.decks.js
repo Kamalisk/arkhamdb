@@ -8,7 +8,8 @@ ui.confirm_publish = function confirm_publish(event) {
 	$(button).addClass('processing');
 
 	var deck_id = $(this).closest('tr').data('id');
-	console.log(deck_id);
+
+	$('#publish-form-alert').remove();
 
 	$.ajax(Routing.generate('deck_publish', {deck_id:deck_id}), {
 		dataType: 'json',
@@ -32,7 +33,6 @@ ui.confirm_publish = function confirm_publish(event) {
 	  },
 	  complete: function() {
 		  $(button).removeClass('processing');
-		  $('#publish-form-alert').remove();
 		  $('#publishModal').modal('show');
 	  }
 	});
@@ -41,11 +41,11 @@ ui.confirm_publish = function confirm_publish(event) {
 }
 
 ui.confirm_delete = function confirm_delete(event) {
-	var deck = ui.decks[$(this).closest('tr').data('id')];
-	console.log(deck);
-
-	$('#delete-deck-name').text(deck.name);
-	$('#delete-deck-id').val(deck.id);
+	var tr = $(this).closest('tr');
+	var deck_id = tr.data('id');
+	var deck_name = tr.find('.deck-name').text();
+	$('#delete-deck-name').text(deck_name);
+	$('#delete-deck-id').val(deck_id);
 	$('#deleteModal').modal('show');
 }
 
@@ -53,7 +53,6 @@ ui.confirm_delete_all = function confirm_delete_all(ids) {
 	$('#delete-deck-list-id').val(ids.join('-'));
 	$('#deleteListModal').modal('show');
 }
-
 
 function sort_list(type)
 {

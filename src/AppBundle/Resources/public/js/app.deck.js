@@ -58,6 +58,14 @@ deck.get_id = function get_id() {
  * @memberOf deck
  * @returns string
  */
+deck.get_name = function get_name() {
+	return name;
+}
+
+/**
+ * @memberOf deck
+ * @returns string
+ */
 deck.get_faction_code = function get_faction_code() {
 	return faction_code;
 }
