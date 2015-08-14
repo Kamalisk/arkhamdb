@@ -492,7 +492,11 @@ class BuilderController extends Controller
 
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck['user_id'];
         if(!$deck['shared'] && !$is_owner) {
-            throw new UnauthorizedHttpException("You are not allowed to view this deck.");
+			return $this->render('AppBundle:Default:error.html.twig',
+					array(
+							'pagetitle' => "Error",
+							'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
+					));
         }
 
         $deck = $this->get('decks')->getDeckInfo($deck_id);
