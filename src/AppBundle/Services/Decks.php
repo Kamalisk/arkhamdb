@@ -29,6 +29,15 @@ class Decks
 		return $arr;
 	}
 
+	public function getDeckAgenda($deck)
+	{
+		foreach ( $deck->getSlots () as $slot ) {
+			if($slot->getCard()->getType()->getCode() === 'agenda') {
+				return $slot->getCard();
+			}
+		}
+	}
+
 	public function getByUser($user, $decode_variation = FALSE)
 	{
 		$dbh = $this->doctrine->getConnection ();
@@ -77,12 +86,15 @@ class Decks
 		) )->fetchAll ();
 
 		$deck = $rows [0];
-
+		$deck['agenda_code'] = null;
+		
 		$rows = $dbh->executeQuery ( "SELECT
 				c.code,
+				t.code type_code,
 				s.quantity
 				from deckslot s
 				join card c on s.card_id=c.id
+				join type t on c.type_id=t.id
 				where s.deck_id=?", array (
 				$deck_id
 		) )->fetchAll ();
@@ -90,6 +102,9 @@ class Decks
 		$cards = [ ];
 		foreach ( $rows as $row ) {
 			$cards [$row ['code']] = intval ( $row ['quantity'] );
+			if($row['type_code'] === 'agenda') {
+				$deck['agenda_code'] = $row['code'];
+			}
 		}
 
 		$snapshots = [ ];
@@ -354,7 +369,7 @@ class Decks
 		}
 		// if deck has only one card and it's an agenda, we delete it
 		if(count($deck->getSlots()) === 0 || (
-			count($deck->getSlots()) === 1 && $deck->getSlots()[0]->getCard()->getType()->getCode() === 'agenda'
+			count($deck->getSlots()) === 1 && $this->getDeckAgenda($deck)
 		) ) {
 			$this->doctrine->remove($deck);
 		}

@@ -91,19 +91,16 @@
 <h1>My private decks <small style="font-size:16px" class="hidden-xs {% if cannotcreate %}text-danger{% endif %}">({{ nbdecks }}/{{ nbmax }} slots)</small></h1>
 
 <table class="table table-expanded list-decks">
-<thead class="hidden-xs">
-	<tr>
-		<th>Select</th>
-		<th></th>
-		<th>Name</th>
-		<th class="text-right">Actions</th>
-	</tr>
-</thead>
 <tbody id="decks">
 {% for deck in decks %}
 	<tr data-id="{{ deck.id }}">
 		<td><input type="checkbox"></td>
-		<td class="hidden-xs"><img src="{{ asset('/bundles/app/images/factions/' ~ deck.faction_code ~ '.png') }}"></td>
+		<td class="hidden-xs">
+			<img src="{{ asset('/bundles/app/images/factions/' ~ deck.faction_code ~ '.png') }}">
+			{% if deck.agenda_code is not null %}
+			<img src="{{ asset('/bundles/cards/' ~ deck.agenda_code ~ '.png') }}">
+			{% endif %}
+		</td>
 		<td>
 			<a href="{{ path('deck_view',{deck_id:deck.id}) }}" class="deck-name">{{ deck.name }}</a>
 			<div class="tags">
