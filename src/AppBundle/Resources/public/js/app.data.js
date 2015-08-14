@@ -1,6 +1,6 @@
 (function app_data(data, $) {
 
-var wait_for_request = false;
+var force_update = false;
 
 /**
  * loads the database from local
@@ -37,21 +37,30 @@ data.load = function load() {
 				return;
 			}
 
-			// data has been fetched from local store
+			/*
+			 * data has been fetched from local store
+			 */
 
-			// if database is empty, we will wait for the new data
-			if(data.masters.packs.count() === 0 || data.masters.cards.count() === 0) {
-				wait_for_request = true;
-			}
-
-			// if database is older than 10 days, we ignore it as well
+			/*
+			 * if database is older than 10 days, we assume it's obsolete and delete it
+			 */
 			var age_of_database = new Date() - new Date(data.masters.cards.metaData().lastChange);
 			if(age_of_database > 864000000) {
-				wait_for_request = true;
+				data.masters.packs.setData([]);
+				data.masters.cards.setData([]);
 			}
 
-			// triggering event that data is loaded
-			if(!wait_for_request) {
+			/*
+			 * if database is empty, we will wait for the new data
+			 */
+			if(data.masters.packs.count() === 0 || data.masters.cards.count() === 0) {
+				force_update = true;
+			}
+
+			/*
+			 * triggering event that data is loaded
+			 */
+			if(!force_update) {
 				data.release();
 			}
 
@@ -100,24 +109,25 @@ data.query = function query() {
 };
 
 /**
- * called if all operations (load+update) succeed
+ * called if all operations (load+update) succeed (resolve)
  * deferred returns true if data has been updated
  * @memberOf data
  */
 data.update_done = function update_done(packs_updated, cards_updated) {
+	if(force_update) {
+		data.release();
+		return;
+	}
+
 	if(packs_updated || cards_updated) {
-		if(wait_for_request) {
-			data.release();
-		} else {
-			var message = "A new version of the data is available. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
-			var alert = $('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
-			$('#wrapper>div.container').prepend(alert);
-		}
+		var message = "A new version of the data is available. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
+		var alert = $('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
+		$('#wrapper>div.container').prepend(alert);
 	}
 };
 
 /**
- * called if an operation (load+update) fails
+ * called if an operation (load+update) fails (reject)
  * deferred returns true if data has been loaded
  * @memberOf data
  */
@@ -139,20 +149,22 @@ data.update_fail = function update_fail(packs_loaded, cards_loaded) {
  */
 data.update_collection = function update_collection(data, collection, lastModifiedData, deferred) {
 	var lastChangeDatabase = new Date(collection.metaData().lastChange)
+	var is_collection_updated = false;
 
 	/*
-	 * if the database is not older than the data, we don't have to update the database
+	 * if we decided to force the update,
+	 * or if the database is fresh,
+	 * or if the database is older than the data,
+	 * then we update the database
 	 */
-	if(lastChangeDatabase && lastChangeDatabase >= lastModifiedData) {
-		deferred.resolve(false);
-		return;
+	if(force_update || !lastChangeDatabase || lastChangeDatabase < lastModifiedData) {
+		collection.setData(data);
+		is_collection_updated = true;
 	}
-
-	collection.setData(data);
 
 	collection.save(function (err) {
 		if(!err) {
-			deferred.resolve(true);
+			deferred.resolve(is_collection_updated);
 		} else {
 			deferred.reject(true)
 		}
