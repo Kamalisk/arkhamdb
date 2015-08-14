@@ -1,6 +1,6 @@
 (function app_data(data, $) {
 
-var first_run = false;
+var wait_for_request = false;
 
 /**
  * loads the database from local
@@ -37,13 +37,21 @@ data.load = function load() {
 				return;
 			}
 
-			/*
-			 * data has been fetched from local store, triggering event
-			 * unless we don't have any data yet, in which case we will wait until data is updated before firing the event
-			 */
+			// data has been fetched from local store
+
+			// if database is empty, we will wait for the new data
 			if(data.masters.packs.count() === 0 || data.masters.cards.count() === 0) {
-				first_run = true;
-			} else {
+				wait_for_request = true;
+			}
+
+			// if database is older than 10 days, we ignore it as well
+			var age_of_database = new Date() - new Date(data.masters.cards.metaData().lastChange);
+			if(age_of_database > 864000000) {
+				wait_for_request = true;
+			}
+
+			// triggering event that data is loaded
+			if(!wait_for_request) {
 				data.release();
 			}
 
@@ -98,7 +106,7 @@ data.query = function query() {
  */
 data.update_done = function update_done(packs_updated, cards_updated) {
 	if(packs_updated || cards_updated) {
-		if(first_run) {
+		if(wait_for_request) {
 			data.release();
 		} else {
 			var message = "A new version of the data is available. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
@@ -129,9 +137,8 @@ data.update_fail = function update_fail(packs_loaded, cards_loaded) {
  * updates the database if necessary, from fetched data
  * @memberOf data
  */
-data.update_collection = function update_collection(data, collection, lastModified, deferred) {
-	var lastChangeDatabase = new Date(collection.metaData().lastChange).getTime();
-	var lastModifiedData = lastModified.getTime();
+data.update_collection = function update_collection(data, collection, lastModifiedData, deferred) {
+	var lastChangeDatabase = new Date(collection.metaData().lastChange)
 
 	/*
 	 * if the database is not older than the data, we don't have to update the database
