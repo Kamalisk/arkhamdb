@@ -471,7 +471,7 @@ class CardsData
 		return $list;
 	}
 
-	public function validateConditions(&$conditions)
+	public function validateConditions($conditions)
 	{
 		// suppression des conditions invalides
 		$numeric = array('<', '>');
@@ -487,6 +487,8 @@ class CardsData
 				unset($conditions[$i]);
 			}
 		}
+		
+		return array_values($conditions);
 	}
 
 	public function buildQueryFromConditions($conditions)

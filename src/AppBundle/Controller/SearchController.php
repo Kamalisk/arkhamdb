@@ -20,19 +20,19 @@ class SearchController extends Controller
 			'c' => 'cycle',
 			'e' => 'pack',
 			'f' => 'faction',
-			'g' => 'is_intrigue',
+			'g' => 'isIntrigue',
 			'h' => 'reserve',
 			'i' => 'illustrator',
 			'k' => 'traits',
-			'l' => 'is_loyal',
-			'm' => 'is_military',
+			'l' => 'isLoyal',
+			'm' => 'isMilitary',
 			'n' => 'income',
 			'o' => 'cost',
-			'p' => 'is_power',
+			'p' => 'isPower',
 			'r' => 'date_release',
 			's' => 'strength',
 			't' => 'type',
-			'u' => 'is_unique',
+			'u' => 'isUnique',
 			'v' => 'initiative',
 			'x' => 'text',
 			'y' => 'quantity',
@@ -288,8 +288,7 @@ class SearchController extends Controller
 		}
 
 		$conditions = $this->get('cards_data')->syntax($q);
-
-		$this->get('cards_data')->validateConditions($conditions);
+		$conditions = $this->get('cards_data')->validateConditions($conditions);
 
 		// reconstruction de la bonne chaine de recherche pour affichage
 		$q = $this->get('cards_data')->buildQueryFromConditions($conditions);
