@@ -15,6 +15,7 @@ class Decklists
     d.date_creation,
     d.user_id,
     f.code faction_code,
+    (select sc.code from card sc join decklistslot sds on sc.id=sds.card_id join type st on sc.type_id=st.id where sds.decklist_id=d.id and st.code='agenda') agenda_code,
     d.tournament_id,
     t.description tournament,
     u.username,
@@ -71,9 +72,11 @@ class Decklists
 
 		$rows = $dbh->executeQuery ( "SELECT
 				c.code,
+                t.code type_code,
 				s.quantity
 				from decklistslot s
 				join card c on s.card_id=c.id
+                join type t on c.type_id=t.id
 				where s.decklist_id=?", array (
 				$decklist_id
 		) )->fetchAll ();
@@ -81,6 +84,9 @@ class Decklists
 		$cards = [ ];
 		foreach ( $rows as $row ) {
 			$cards [$row ['code']] = intval ( $row ['quantity'] );
+            if($row['type_code'] === 'agenda') {
+				$deck['agenda_code'] = $row['code'];
+			}
 		}
 
 		$deck['slots'] = $cards;
