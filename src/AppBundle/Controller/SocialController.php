@@ -29,16 +29,14 @@ class SocialController extends Controller
         if(!$deck)
         	throw new NotFoundHttpException("Deck not found: ".$deck_id);
 
-        if ($this->getUser()->getId() != $deck->getUser()->getId())
+        if ($this->getUser()->getId() != $deck->getUser()->getId()) {
             throw new UnauthorizedHttpException("You don't have access to this deck.");
+        }
 
-        /*
-        $judge = $this->get('judge');
-        $analyse = $judge->analyse($deck->getCards());
-
-        if (is_string($analyse))
-            throw new AccessDeniedHttpException($judge->problem($analyse));
-        */
+        $problem = $this->get('deck_interface')->getProblem($deck);
+        if ($problem) {
+            return new Response($this->get('deck_interface')->getProblemLabel($problem));
+        }
 
         $decklists = $this->get('decklists');
 
@@ -61,7 +59,7 @@ class SocialController extends Controller
             }
         }
 
-        return new Response(json_encode($this->get('deck_interface')->getArray($deck)));
+        return new Response(json_encode($this->get('decks')->getArray($deck)));
 
     }
 
@@ -81,13 +79,13 @@ class SocialController extends Controller
             throw new UnauthorizedHttpException("You don't have access to this deck.");
         }
 
-/*
-        $judge = $this->get('judge');
-        $analyse = $judge->analyse($deck->getCards());
-        if (is_string($analyse)) {
-            throw new AccessDeniedHttpException($judge->problem($analyse));
+        $problem = $this->get('deck_interface')->getProblem($deck);
+        if($problem) {
+            return $this->render('AppBundle:Default:error.html.twig', [
+				'pagetitle' => "Error",
+				'error' => 'You cannot publish this deck because it is invalid: "'.$this->get('deck_interface')->getProblemLabel($problem).'".'
+			]);
         }
-*/
 
         $new_content = json_encode($this->get('deck_interface')->getContent($deck));
         $new_signature = md5($new_content);
@@ -464,7 +462,7 @@ class SocialController extends Controller
                 FROM tournament t
                 ORDER BY t.description desc")->fetchAll();
 
-        $deck = $this->get('deck_interface')->getArray($this->getDoctrine()->getManager()->getRepository('AppBundle:Decklist')->find($decklist_id));
+        $deck = $this->get('decklists')->getArray($this->getDoctrine()->getManager()->getRepository('AppBundle:Decklist')->find($decklist_id));
 
         return $this->render('AppBundle:Decklist:decklist.html.twig',
                 array(
@@ -781,58 +779,7 @@ class SocialController extends Controller
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
-
-        /* @var $decklist \AppBundle\Entity\Decklist */
-        $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
-        if (! $decklist)
-            throw new NotFoundHttpException("Unable to find decklist.");
-
-            /* @var $judge \AppBundle\Services\Judge */
-        $judge = $this->get('judge');
-        $classement = $judge->classe($decklist->getCards(), $decklist->getIdentity());
-
-        $lines = [];
-        $types = array(
-                "Event",
-                "Hardware",
-                "Resource",
-                "Icebreaker",
-                "Program",
-                "Agenda",
-                "Asset",
-                "Upgrade",
-                "Operation",
-                "Barrier",
-                "Code Gate",
-                "Sentry",
-                "ICE"
-        );
-
-        $lines[] = $decklist->getIdentity()->getName() . " (" . $decklist->getIdentity()
-            ->getPack()
-            ->getName() . ")";
-        foreach ($types as $type) {
-            if (isset($classement[$type]) && $classement[$type]['qty']) {
-                $lines[] = "";
-                $lines[] = $type . " (" . $classement[$type]['qty'] . ")";
-                foreach ($classement[$type]['slots'] as $slot) {
-                    $inf = "";
-                    for ($i = 0; $i < $slot['influence']; $i ++) {
-                        if ($i % 5 == 0)
-                            $inf .= " ";
-                        $inf .= "•";
-                    }
-                    $lines[] = $slot['qty'] . "x " . $slot['card']->getName() . " (" . $slot['card']->getPack()->getName() . ") " . $inf;
-                }
-            }
-        }
-        $content = implode("\r\n", $lines);
-
-        $name = mb_strtolower($decklist->getName());
-        $name = preg_replace('/[^a-zA-Z0-9_\-]/', '-', $name);
-        $name = preg_replace('/--+/', '-', $name);
+        $name = $content = '';
 
         $response->headers->set('Content-Type', 'text/plain');
         $response->headers->set('Content-Disposition', 'attachment;filename=' . $name . ".txt");

@@ -3,7 +3,6 @@
 namespace AppBundle\Services;
 
 use Doctrine\ORM\EntityManager;
-use AppBundle\Services\Judge;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Deckslot;
 use Symfony\Bridge\Monolog\Logger;
@@ -21,22 +20,47 @@ class Decks
 
 	public function getByUser($user, $decode_variation = FALSE)
 	{
-		$dbh = $this->doctrine->getConnection ();
-		$ids = $dbh->executeQuery ( "SELECT
-				d.id
-				from deck d
-				where d.user_id=?
-				order by date_update desc", array (
-				$user->getId ()
-		) );
-
-		$decks = [ ];
-		while ( ($id = $ids->fetchColumn ( 0 )) !== FALSE ) {
-			$decks [$id] = $this->getArrayWithSnapshots( $id, $decode_variation );
+		$decks = $user->getDecks();
+		$list = [];
+		foreach($decks as $deck) {
+			$list[] = $this->getArray($deck);
 		}
 
-		return $decks;
+		return $list;
 	}
+
+    /**
+     * outputs an array with the deck info to give to app.deck.js
+     * @param integer $deck_id
+     * @param boolean $decode_variation
+     * @return array
+     */
+    public function getArray($deck)
+    {
+        $array = [
+            'id' => $deck->getId(),
+            'name' => $deck->getName(),
+            'date_creation' => $deck->getDateCreation()->format('r'),
+            'date_update' => $deck->getDateUpdate()->format('r'),
+            'description_md' => $deck->getDescriptionMd(),
+            'user_id' => $deck->getUser()->getId(),
+            'faction_code' => $deck->getFaction()->getCode(),
+            'faction_name' => $deck->getFaction()->getName(),
+			'tags' => $deck->getTags(),
+			'problem' => $deck->getProblem(),
+			'problem_label' => $this->deck_interface->getProblemLabel($deck->getProblem()),
+            'slots' => []
+        ];
+
+        foreach ( $deck->getSlots () as $slot ) {
+            $array['slots'][$slot->getCard()->getCode()] = $slot->getQuantity();
+            if($slot->getCard()->getType()->getCode() === 'agenda') {
+                $array['agenda_code'] = $slot->getCard()->getCode();
+            }
+        }
+
+        return $array;
+    }
 
 	/**
 	 * outputs an array with the deck info to give to app.deck.js
@@ -54,6 +78,7 @@ class Decks
 				DATE_FORMAT(d.date_creation, '%Y-%m-%dT%TZ') date_creation,
                 DATE_FORMAT(d.date_update, '%Y-%m-%dT%TZ') date_update,
                 d.description_md,
+				d.problem,
                 d.tags,
                 d.user_id,
         		f.code faction_code,
@@ -173,68 +198,6 @@ class Decks
 		return $deck;
 	}
 
-	public function getById($deck_id, $decode_variation = FALSE)
-	{
-		$dbh = $this->doctrine->getConnection ();
-		$deck = $dbh->executeQuery ( "SELECT
-				d.id,
-				d.name,
-				DATE_FORMAT(d.date_creation, '%Y-%m-%dT%TZ') datecreation,
-				DATE_FORMAT(d.date_update, '%Y-%m-%dT%TZ') dateupdate,
-				d.description_md,
-                d.tags,
-                (select count(*) from deckchange c where c.deck_id=d.id and c.is_saved=0) unsaved,
-                d.problem,
-				f.code faction_code
-				from deck d
-				left join faction f on d.faction_id=f.id
-				where d.id=?", array (
-				$deck_id
-		) )->fetch ();
-
-		$deck ['id'] = intval ( $deck ['id'] );
-
-		$rows = $dbh->executeQuery ( "SELECT
-				c.code card_code,
-				s.quantity qty
-				from deckslot s
-				join card c on s.card_id=c.id
-				join deck d on s.deck_id=d.id
-				where d.id=?", array (
-				$deck_id
-		) )->fetchAll ();
-
-		$cards = [ ];
-		foreach ( $rows as $row ) {
-			$row ['qty'] = intval ( $row ['qty'] );
-			$cards [] = $row;
-		}
-		$deck ['cards'] = $cards;
-
-		$rows = $dbh->executeQuery ( "SELECT
-				DATE_FORMAT(c.date_creation, '%Y-%m-%dT%TZ') datecreation,
-				c.variation
-				from deckchange c
-				where c.deck_id=? and c.is_saved=1
-                order by datecreation desc", array (
-				$deck_id
-		) )->fetchAll ();
-
-		$changes = [ ];
-		foreach ( $rows as $row ) {
-			if ($decode_variation)
-				$row ['variation'] = json_decode ( $row ['variation'], TRUE );
-			$changes [] = $row;
-		}
-		$deck ['history'] = $changes;
-
-		$deck ['tags'] = $deck ['tags'] ? explode ( ' ', $deck ['tags'] ) : [ ];
-		$problem = $deck ['problem'];
-		$deck ['message'] = isset ( $problem ) ? $this->judge->problem ( $problem ) : '';
-
-		return $deck;
-	}
-
 	public function saveDeck($user, $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck)
 	{
 		$deck_content = [ ];
@@ -326,17 +289,8 @@ class Decks
 					'qty' => $qty
 			);
 		}
-		/*
-		 * $analyse = $this->judge->analyse($deck_content);
-		 * if (is_string($analyse)) {
-		 * $deck->setProblem($analyse);
-		 * } else {
-		 * $deck->setProblem(NULL);
-		 * $deck->setDeckSize($analyse['deckSize']);
-		 * $deck->setInfluenceSpent($analyse['influenceSpent']);
-		 * $deck->setAgendaPoints($analyse['agendaPoints']);
-		 * }
-		 */
+
+		$deck->setProblem($this->deck_interface->getProblem($deck));
 		$this->doctrine->flush ();
 
 		return $deck->getId ();

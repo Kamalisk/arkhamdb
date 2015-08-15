@@ -388,7 +388,7 @@ deck.get_problem = function get_problem() {
 	}
 
 	// no more than 1 agenda
-	if(deck.get_agendas().length > 1) {
+	if(deck.get_nb_cards(deck.get_agendas()) > 1) {
 		return 'too_many_agendas';
 	}
 

@@ -32,6 +32,40 @@ class Decklists
     }
 
     /**
+     * outputs an array with the deck info to give to app.deck.js
+     * @param integer $deck_id
+     * @param boolean $decode_variation
+     * @return array
+     */
+    public function getArray($deck)
+    {
+        $array = [
+            'id' => $deck->getId(),
+            'name' => $deck->getName(),
+            'date_creation' => $deck->getDateCreation()->format('r'),
+            'date_update' => $deck->getDateUpdate()->format('r'),
+            'description_md' => $deck->getDescriptionMd(),
+            'user_id' => $deck->getUser()->getId(),
+            'faction_code' => $deck->getFaction()->getCode(),
+            'faction_name' => $deck->getFaction()->getName(),
+            'slots' => []
+        ];
+
+        foreach ( $deck->getSlots () as $slot ) {
+            $array['slots'][$slot->getCard()->getCode()] = $slot->getQuantity();
+            if($slot->getCard()->getType()->getCode() === 'agenda') {
+                $array['agenda_code'] = $slot->getCard()->getCode();
+            }
+        }
+
+        $problem = $this->getProblem($deck);
+        $array['problem'] = $problem;
+        $array['problem_label'] = $this->getProblemLabel($problem);
+
+        return $array;
+    }
+
+    /**
      * returns the list of decklist favorited by user
      * @param integer $limit
      * @return \Doctrine\DBAL\Driver\PDOStatement

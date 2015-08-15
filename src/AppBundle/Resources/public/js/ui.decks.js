@@ -4,7 +4,7 @@ ui.decks = [];
 
 ui.confirm_publish = function confirm_publish(event) {
 	var button = $(this);
-	if($(button).hasClass('processing')) return;
+	if($(button).hasClass('disabled') || $(button).hasClass('processing')) return;
 	$(button).addClass('processing');
 
 	var deck_id = $(this).closest('tr').data('id');

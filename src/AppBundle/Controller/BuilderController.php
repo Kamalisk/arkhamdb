@@ -232,66 +232,8 @@ class BuilderController extends Controller
 
     public function textexportAction ($deck_id)
     {
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
-
-        /* @var $deck \AppBundle\Entity\Deck */
-        $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
-        if (! $this->getUser() || $this->getUser()->getId() != $deck->getUser()->getId())
-            throw new UnauthorizedHttpException("You don't have access to this deck.");
-
-            /* @var $judge \AppBundle\Services\Judge */
-        $judge = $this->get('judge');
-        $classement = $judge->classe($deck->getCards(), $deck->getIdentity());
-
-        $lines = [];
-        $types = array(
-                "Event",
-                "Hardware",
-                "Resource",
-                "Icebreaker",
-                "Program",
-                "Agenda",
-                "Asset",
-                "Upgrade",
-                "Operation",
-                "Barrier",
-                "Code Gate",
-                "Sentry",
-                "ICE"
-        );
-
-        $lines[] = $deck->getIdentity()->getName() . " (" . $deck->getIdentity()
-            ->getPack()
-            ->getName() . ")";
-        foreach ($types as $type) {
-            if (isset($classement[$type]) && $classement[$type]['qty']) {
-                $lines[] = "";
-                $lines[] = $type . " (" . $classement[$type]['qty'] . ")";
-                foreach ($classement[$type]['slots'] as $slot) {
-                    $inf = "";
-                    for ($i = 0; $i < $slot['influence']; $i ++) {
-                        if ($i % 5 == 0)
-                            $inf .= " ";
-                        $inf .= "•";
-                    }
-                    $lines[] = $slot['qty'] . "x " . $slot['card']->getName() . " (" . $slot['card']->getPack()->getName() . ") " . $inf;
-                }
-            }
-        }
-        $lines[] = "";
-        $lines[] = $deck->getInfluenceSpent() . " influence spent (maximum " . (is_numeric($deck->getIdentity()->getInfluenceLimit()) ? $deck->getIdentity()->getInfluenceLimit() : "infinite") . ")";
-        if ($deck->getSide()->getName() == "Corp") {
-            $minAgendaPoints = floor($deck->getDeckSize() / 5) * 2 + 2;
-            $lines[] = $deck->getAgendaPoints() . " agenda points (between " . $minAgendaPoints . " and " . ($minAgendaPoints + 1) . ")";
-        }
-        $lines[] = $deck->getDeckSize() . " cards (min " . $deck->getIdentity()->getMinimumDeckSize() . ")";
-        $lines[] = "Cards up to " . $deck->getLastPack()->getName();
-        $content = implode("\r\n", $lines);
-
-        $name = mb_strtolower($deck->getName());
-        $name = preg_replace('/[^a-zA-Z0-9_\-]/', '-', $name);
-        $name = preg_replace('/--+/', '-', $name);
+		$name = '';
+		$content = '';
 
         $response = new Response();
 
@@ -500,7 +442,7 @@ class BuilderController extends Controller
         }
 
 		// we're using deck_interface to use what's been saved, not the snapshots
-        $deck = $this->get('deck_interface')->getArray($this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->find($deck_id));
+        $deck = $this->get('decks')->getArray($this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->find($deck_id));
 
         $published_decklists = $dbh->executeQuery(
                 "SELECT
@@ -522,11 +464,6 @@ class BuilderController extends Controller
 					t.description
                 FROM tournament t
                 ORDER BY t.description desc")->fetchAll();
-
-        /*
-		$problem = $deck['problem'];
-		$deck['message'] = isset($problem) ? $this->get('judge')->problem($problem) : '';
-		*/
 
         return $this->render('AppBundle:Builder:deckview.html.twig',
                 array(

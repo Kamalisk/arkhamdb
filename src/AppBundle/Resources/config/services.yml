@@ -1,5 +1,4 @@
 parameters:
-    judge.class: AppBundle\Services\Judge
     decks.class: AppBundle\Services\Decks
     highlight.class: AppBundle\Services\Highlight
     decklists.class: AppBundle\Services\Decklists
@@ -11,9 +10,6 @@ parameters:
     octgn.class: AppBundle\Services\Octgn
 
 services:
-    judge:
-        class: "%judge.class%"
-        arguments: ["@doctrine.orm.entity_manager"]
     decks:
         class: "%decks.class%"
         arguments: ["@doctrine.orm.entity_manager", "@deck_interface", "@diff", "@logger"]
