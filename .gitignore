@@ -16,3 +16,4 @@ tags
 /.buildpath
 /.project
 /.tags_swap
+.DS_Store

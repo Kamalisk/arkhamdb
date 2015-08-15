@@ -42,10 +42,7 @@
 			<span class="fa fa-check-square-o"></span> With Selection <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu" role="menu">
-{#		    <li class="dropdown-header"><span class="fa fa-compress"></span> Compare</li>
-		    <li><a href="#" id="btn-compare">Compare two or more decks</a></li>
-		    <li><a href="#" id="btn-compare-collection">Compare one deck vs the others</a></li>
-#}		    <li class="dropdown-header"><span class="fa fa-tag"></span> Tags</li>
+		    <li class="dropdown-header"><span class="fa fa-tag"></span> Tags</li>
 		    <li><a href="#" id="btn-tag-add">Add one or more tags</a></li>
 			<li><a href="#" id="btn-tag-remove-one">Remove one or more tags</a></li>
 			<li><a href="#" id="btn-tag-remove-all">Clear all tags</a></li>
@@ -53,30 +50,8 @@
 			<li><a href="#" id="btn-delete-selected"><span style="color:red" class="fa fa-exclamation-triangle"></span> Delete all decks selected</a></li>
 		</ul>
 	</div>
-	{#
-	<div class="btn-group" id="btn-group-sort">
-		<button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
-			<span class="fa fa-sort"></span> Sort List <span class="caret"></span>
-		</button>
-		<ul class="dropdown-menu" role="menu">
-			<li><a href="#" id="btn-sort-update">By date of last update</a></li>
-			<li><a href="#" id="btn-sort-creation">By date of creation</a></li>
-			<li><a href="#" id="btn-sort-faction">By faction</a></li>
-			<li><a href="#" id="btn-sort-lastpack">By last pack</a></li>
-			<li><a href="#" id="btn-sort-name">By deck name</a></li>
-		</ul>
-	</div>
-	#}
 </div>
 </div>
-{#
-<div class="row hidden-xs" style="margin-bottom:10px">
-<div class="col-md-12">
-    <a role="button" class="btn btn-default btn-sm" href="{{ path('decks_download_all') }}">Download all decks</a>
-    <button role="button" class="btn btn-default btn-sm" id="decks_upload_all">Upload all decks</button>
-</div>
-</div>
-#}
 <div class="row" style="margin-bottom:10px">
 <div class="col-md-12" id="tag_toggles" title="Click to switch to this tag. Shift-click to toggle this tag."></div>
 </div>

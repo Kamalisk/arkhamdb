@@ -52,29 +52,6 @@ ui.confirm_delete_all = function confirm_delete_all(ids) {
 	$('#deleteListModal').modal('show');
 }
 
-function sort_list(type)
-{
-	var container = $('#decks');
-    var current_sort = container.data('sort-type');
-    var current_order = container.data('sort-order');
-    var order = current_order || 1;
-    if(current_sort && current_sort == type) {
-        order = -order;
-    }
-    container.data('sort-type', type);
-    container.data('sort-order', order);
-    var sort = type.split(/,/).map(function (t) { return t+' '+(order > 0 ? 'desc' : 'asec'); }).join(',');
-	var sorted_list_id = DeckDB().order(sort).select('id');
-	var first_id = sorted_list_id.shift();
-	var deck_elt = $('#deck_'+first_id);
-
-	container.prepend(deck_elt);
-	sorted_list_id.forEach(function (id) {
-		deck_elt = $('#deck_'+id).insertAfter(deck_elt);
-	});
-
-}
-
 ui.set_tags = function set_tags(id, tags) {
 	var elt = $('tr[data-id='+id+']');
 	var div = elt.find('div.tags').empty();
@@ -197,22 +174,6 @@ ui.do_action_selection = function do_action_selection(event) {
 	return false;
 }
 
-ui.do_action_sort = function do_action_sort(event) {
-	event.stopPropagation();
-	var action_id = $(this).attr('id');
-	if(!action_id) return;
-	switch(action_id) {
-		case 'btn-sort-update': sort_list('dateupdate'); break;
-		case 'btn-sort-creation': sort_list('datecreation'); break;
-		case 'btn-sort-identity': sort_list('identity_name,name'); break;
-		case 'btn-sort-faction': sort_list('faction_code,name'); break;
-		case 'btn-sort-lastpack': sort_list('cycle_id,pack_position'); break;
-		case 'btn-sort-name': sort_list('name'); break;
-	}
-	return false;
-}
-
-
 /**
  * called when the DOM is loaded
  * @memberOf ui
@@ -233,7 +194,6 @@ ui.on_dom_loaded = function on_dom_loaded() {
 	});
 
 	$('#btn-group-selection').on('click', 'button[id],a[id]', ui.do_action_selection);
-	$('#btn-group-sort').on('click', 'button[id],a[id]', ui.do_action_sort);
 
 	$('#tag_toggles').on('click', 'button', function (event) {
 		var button = $(this);
