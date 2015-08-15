@@ -78,8 +78,7 @@
 </div>
 #}
 <div class="row" style="margin-bottom:10px">
-<div class="col-md-12" id="tag_toggles" title="Click to switch to this tag. Shift-click to toggle this tag.">
-</div>
+<div class="col-md-12" id="tag_toggles" title="Click to switch to this tag. Shift-click to toggle this tag."></div>
 </div>
 
 </div>
@@ -108,7 +107,7 @@
 			{% endif %}
 			<div class="tags">
 			{% for tag in deck.tags|split(' ') %}
-			<span class="tag">{{ tag }}</span>
+			<span class="tag" data-tag="{{ tag }}">{{ tag }}</span>
 			{% endfor %}
 			</div>
 		</td>

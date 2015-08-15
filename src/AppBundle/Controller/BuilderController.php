@@ -496,11 +496,17 @@ class BuilderController extends Controller
 
         if(count($decks))
         {
+			$tags = [];
+			foreach($decks as $deck) {
+				$tags[] = $deck['tags'];
+			}
+			$tags = array_unique(explode(' ', join(' ', $tags)));
         	return $this->render('AppBundle:Builder:decks.html.twig',
         			array(
         					'pagetitle' => "My Decks",
         					'pagedescription' => "Create custom decks with the help of a powerful deckbuilder.",
         					'decks' => $decks,
+							'tags' => $tags,
         					'nbmax' => $user->getMaxNbDecks(),
         					'nbdecks' => count($decks),
         					'cannotcreate' => $user->getMaxNbDecks() <= count($decks),

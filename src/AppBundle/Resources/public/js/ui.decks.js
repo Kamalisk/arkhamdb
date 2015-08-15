@@ -75,29 +75,6 @@ function sort_list(type)
 
 }
 
-ui.update_tag_toggles = function update_tag_toggles() {
-
-	return;
-
-	// tags is an object where key is tag and value is array of deck ids
-	var tag_dict = Decks.reduce(function (p, c) {
-		c.tags.forEach(function (t) {
-			if(!p[t]) p[t] = [];
-			p[t].push(c.id);
-		});
-		return p;
-	}, {});
-	var tags = [];
-	for(var tag in tag_dict) {
-		tags.push(tag);
-	}
-	var container = $('#tag_toggles').empty();
-	tags.sort().forEach(function (tag) {
-		$('<button type="button" class="btn btn-default btn-xs" data-toggle="button">'+tag+'</button>').data('deck_id', tag_dict[tag].join(' ')).appendTo(container);
-	});
-
-}
-
 ui.set_tags = function set_tags(id, tags) {
 	var elt = $('tr[data-id='+id+']');
 	var div = elt.find('div.tags').empty();
@@ -170,6 +147,36 @@ ui.tag_process_any = function tag_process_any(route, data) {
 	});
 }
 
+ui.update_tag_toggles = function update_tag_toggles() {
+	var tags = [];
+	$('#decks span[data-tag]').each(function (index, elt) {
+		tags.push($(elt).data('tag'));
+	});
+	$('#tag_toggles').empty();
+	_.uniq(tags).forEach(function (tag) {
+		$('<button type="button" class="btn btn-default btn-xs" data-toggle="button" data-tag="'+tag+'">'+tag+'</button>').appendTo('#tag_toggles');
+	});
+}
+
+ui.filter_decks = function filter_decks() {
+	var buttons = $('#tag_toggles button.active');
+	var tags = [];
+	buttons.each(function (index, button) {
+		tags.push($(button).data('tag'));
+	});
+	if(tags.length) {
+		$('#decks tr').hide();
+		tags.forEach(function (tag) {
+			$('#decks span[data-tag="'+tag+'"]').each(function (index, elt) {
+				$(elt).closest('tr').show();
+			});
+		});
+	} else {
+		$('#decks tr').show();
+	}
+}
+
+
 ui.do_action_selection = function do_action_selection(event) {
 	event.stopPropagation();
 	var action_id = $(this).attr('id');
@@ -228,6 +235,16 @@ ui.on_dom_loaded = function on_dom_loaded() {
 	$('#btn-group-selection').on('click', 'button[id],a[id]', ui.do_action_selection);
 	$('#btn-group-sort').on('click', 'button[id],a[id]', ui.do_action_sort);
 
+	$('#tag_toggles').on('click', 'button', function (event) {
+		var button = $(this);
+		if(!event.shiftKey) {
+			$('#tag_toggles button').each(function (index, elt) {
+				if($(elt).text() != button.text()) $(elt).removeClass('active');
+			});
+		}
+		setTimeout(ui.filter_decks, 0);
+	});
+	ui.update_tag_toggles();
 
 };
 
@@ -244,7 +261,6 @@ ui.on_data_loaded = function on_data_loaded() {
  * @memberOf ui
  */
 ui.on_all_loaded = function on_all_loaded() {
-
 };
 
 

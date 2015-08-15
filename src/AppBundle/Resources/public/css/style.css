@@ -144,6 +144,10 @@ div.tags span.tag:not(:first-child)::before {
 	height: 63px;
 	width: 45px;
 }
+#tag_toggles button {
+	margin-bottom: 4px;
+	margin-right: 4px;
+}
 
 /********** NEW DECK **********/
 
