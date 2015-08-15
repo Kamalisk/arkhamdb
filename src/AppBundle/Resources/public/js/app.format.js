@@ -17,7 +17,6 @@ format.name = function name(card) {
 format.faction = function faction(card) {
 	var text = card.faction_name + '. ';
 	if(card.is_loyal) text += 'Loyal. ';
-	if(card.plotLimit) text += 'Plot deck limit: '+card.plotLimit+'. ';
 	return text;
 }
 
@@ -36,7 +35,6 @@ format.pack_faction = function pack_faction(card) {
 	var text = card.pack_name + ' #' + card.position + '. ';
 	text += card.faction_name + '. ';
 	if(card.is_loyal) text += 'Loyal. ';
-	if(card.plotLimit) text += 'Plot deck limit: '+card.plotLimit+'. ';
 	return text;
 }
 
@@ -63,6 +61,7 @@ format.info = function info(card) {
 		text += 'Initiative: '+card.initiative+'. ';
 		text += 'Claim: '+card.claim+'. ';
 		text += 'Reserve: '+card.reserve+'. ';
+		text += 'Plot deck limit: '+card.plot_limit+'. ';
 		break;
 	}
 	return text;
