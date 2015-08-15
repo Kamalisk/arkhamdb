@@ -36,8 +36,6 @@ ui.confirm_publish = function confirm_publish(event) {
 		  $('#publishModal').modal('show');
 	  }
 	});
-
-
 }
 
 ui.confirm_delete = function confirm_delete(event) {

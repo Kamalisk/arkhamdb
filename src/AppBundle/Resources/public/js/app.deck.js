@@ -15,8 +15,7 @@ var date_creation,
 	unsaved,
 	user_id,
 	header_tpl = _.template('<h5><%= name %> (<%= quantity %>)</h5>'),
-	card_line_tpl = _.template('<div><%= card.indeck %>x <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a></div>'),
-	card_line_tpl_no_qty = _.template('<div><a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a></div>');
+	card_line_tpl = _.template('<a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <%= card.name %></a>');
 
 /**
  * @memberOf deck
@@ -242,25 +241,11 @@ deck.display_by_other = function display_by_other() {
 
 		$(header_tpl({name:cards[0][displayLabel], quantity: cards.length})).appendTo(deck_content);
 		cards.forEach(function (card) {
-			$(card_line_tpl({card:card})).addClass(deck.can_include_card(card) ? '' : 'invalid-card').appendTo(deck_content);
+			$('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card').append($(card_line_tpl({card:card}))).prepend(card.indeck+'x ').appendTo(deck_content);
 		})
 	})
 
-	var deck_intro = $('<div class="deck-intro"><div class="media"><div class="media-left"></div><div class="media-body"></div></div>');
-	$(deck_intro).find('.media-left').append('<span class="with-bg icon-'+deck.get_faction_code()+' '+deck.get_faction_code()+'"></span>');
-
-	var deck_intro_body = $(deck_intro).find('.media-body');
-	deck_intro_body.append('<h4>'+faction_name+'</h4>');
-	deck_intro_body.append('<div>Draw deck: '+deck.get_draw_deck_size()+' cards.</div>');
-	deck_intro_body.append('<div>Plot deck: '+deck.get_plot_deck_size()+' cards.</div>');
-	deck_intro_body.append('<div>Included packs: ' + _.pluck(deck.get_included_packs(), 'name').join(', ') + '.</div>');
-
-	var problem = deck.get_problem();
-	if(problem) {
-		deck_intro_body.append('<div class="text-danger">' + problem + '</div>');
-	}
-
-	return [ deck_intro, deck_content ];
+	// TODO
 }
 
 deck.display_by_type = function display_by_type() {
@@ -283,7 +268,7 @@ deck.display_by_type = function display_by_type() {
 	var deck_intro_meta = $('<div class="col-sm-4">').appendTo(deck_content_first_row);
 	deck_intro_meta.append('<h4 style="font-weight:bold">'+faction_name+'</h4>');
 	if(agenda) {
-		$('<h4>').append($(card_line_tpl_no_qty({card:agenda}))).appendTo(deck_intro_meta);
+		$('<h4>').append($(card_line_tpl({card:agenda}))).appendTo(deck_intro_meta);
 	}
 	deck_intro_meta.append('<div>Draw deck: '+deck.get_draw_deck_size()+' cards</div>');
 	deck_intro_meta.append('<div>Plot deck: '+deck.get_plot_deck_size()+' cards</div>');
@@ -318,7 +303,7 @@ deck.display_one_section = function display_one_section(sortKey, sortValue, disp
 	if(cards.length) {
 		$(header_tpl({name:cards[0][displayLabel], quantity: deck.get_nb_cards(cards)})).appendTo(section);
 		cards.forEach(function (card) {
-			$(card_line_tpl({card:card})).addClass(deck.can_include_card(card) ? '' : 'invalid-card').appendTo(section);
+			$('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card').append($(card_line_tpl({card:card}))).prepend(card.indeck+'x ').appendTo(section);
 		})
 	}
 	return section;

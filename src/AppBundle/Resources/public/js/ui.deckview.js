@@ -2,34 +2,43 @@
 
 var DisplaySort = 'type'
 
-function confirm_publish() {
+function confirm_publish(event) {
+	var button = $(this);
+	if($(button).hasClass('processing')) return;
+	$(button).addClass('processing');
+
 	$('#publish-form-alert').remove();
-	$('#btn-publish-submit').text("Checking...").prop('disabled', true);
-	$.ajax(Routing.generate('deck_publish', {deck_id:SelectedDeck.id}), {
-	  success: function( response ) {
-		  if(response == "") {
+
+	$.ajax(Routing.generate('deck_publish', {deck_id:deck_id}), {
+		dataType: 'json',
+		success: function( response ) {
+		  if(typeof response === 'object') {
+			  $('#publish-deck-name').val(response.name);
+			  $('#publish-deck-id').val(response.id);
+			  $('#publish-deck-description').val(response.description_md);
 			  $('#btn-publish-submit').text("Go").prop('disabled', false);
 		  }
 		  else
 		  {
 			  $('#publish-deck-form').prepend('<div id="publish-form-alert" class="alert alert-danger">That deck cannot be published because <a href="'+response+'">another decklist</a> already has the same composition.</div>');
-			  $('#btn-publish-submit').text("Refused");
+			  $('#btn-publish-submit').text("Refused").prop('disabled', true);
 		  }
 	  },
 	  error: function( jqXHR, textStatus, errorThrown ) {
-			console.log('['+moment().format('YYYY-MM-DD HH:mm:ss')+'] Error on '+this.url, textStatus, errorThrown);
-	    $('#publish-deck-form').prepend('<div id="publish-form-alert" class="alert alert-danger">'+jqXHR.responseText+'</div>');
+		  console.log('['+moment().format('YYYY-MM-DD HH:mm:ss')+'] Error on '+this.url, textStatus, errorThrown);
+		  $('#publish-deck-form').prepend('<div id="publish-form-alert" class="alert alert-danger">'+jqXHR.responseText+'</div>');
+		  $('#btn-publish-submit').text("Error").prop('disabled', true);
+	  },
+	  complete: function() {
+		  $(button).removeClass('processing');
+		  $('#publishModal').modal('show');
 	  }
 	});
-	$('#publish-deck-name').val(SelectedDeck.name);
-	$('#publish-deck-id').val(SelectedDeck.id);
-	$('#publish-deck-description').val(SelectedDeck.description);
-	$('#publishModal').modal('show');
 }
 
 function confirm_delete() {
-	$('#delete-deck-name').text(SelectedDeck.name);
-	$('#delete-deck-id').val(SelectedDeck.id);
+	$('#delete-deck-name').text(app.deck.get_name());
+	$('#delete-deck-id').val(app.deck.get_id());
 	$('#deleteModal').modal('show');
 }
 
@@ -80,7 +89,6 @@ ui.refresh_deck = function refresh_deck() {
 ui.on_dom_loaded = function on_dom_loaded() {
 	ui.setup_event_handlers();
 	app.draw_simulator && app.draw_simulator.on_dom_loaded();
-	//$('#btn-publish').prop('disabled', !!SelectedDeck.problem);
 };
 
 /**
@@ -98,6 +106,7 @@ ui.on_data_loaded = function on_data_loaded() {
 ui.on_all_loaded = function on_all_loaded() {
 	app.markdown && app.markdown.update(app.deck.get_description_md() || '*No description.*', '#description');
 	ui.refresh_deck();
+	$('#btn-publish').prop('disabled', !!app.deck.get_problem());
 };
 
 })(app.ui, jQuery);
