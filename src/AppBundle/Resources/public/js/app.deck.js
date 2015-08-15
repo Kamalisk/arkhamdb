@@ -264,7 +264,7 @@ deck.display_by_type = function display_by_type() {
 	var deck_content = $('<div class="deck-content">');
 	var deck_content_first_row = $('<div class="row">').appendTo(deck_content);
 
-	var deck_intro_images = $('<div class="col-sm-2">').appendTo(deck_content_first_row);
+	var deck_intro_images = $('<div class="col-xs-2">').appendTo(deck_content_first_row);
 	deck_intro_images.append('<div style="margin-bottom:10px"><img src="/bundles/app/images/factions/'+deck.get_faction_code()+'.png" class="img-responsive">');
 	if(agenda) {
 		deck_intro_images.append('<div><img src="'+agenda.imagesrc+'" class="img-responsive">');
