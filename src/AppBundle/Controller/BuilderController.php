@@ -442,7 +442,7 @@ class BuilderController extends Controller
 
         $dbh = $this->get('doctrine')->getConnection();
 
-        $deck = $this->get('decks')->getDeckInfo($deck_id);
+        $deck = $this->get('decks')->getArrayWithSnapshots($deck_id);
 
         if ($this->getUser ()->getId () != $deck ['user_id']) {
         	throw new UnauthorizedHttpException ( "You are not allowed to view this deck." );
@@ -499,7 +499,8 @@ class BuilderController extends Controller
 					));
         }
 
-        $deck = $this->get('decks')->getDeckInfo($deck_id);
+		// we're using deck_interface to use what's been saved, not the snapshots
+        $deck = $this->get('deck_interface')->getArray($this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->find($deck_id));
 
         $published_decklists = $dbh->executeQuery(
                 "SELECT

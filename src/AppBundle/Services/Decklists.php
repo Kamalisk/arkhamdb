@@ -31,71 +31,6 @@ class Decklists
         $this->doctrine = $doctrine;
     }
 
-
-    public function getContent($decklist)
-    {
-    	$arr = array ();
-    	foreach ( $decklist->getSlots () as $slot ) {
-    		$arr [$slot->getCard ()->getCode ()] = $slot->getQuantity ();
-    	}
-    	ksort ( $arr );
-    	return $arr;
-    }
-
-	/**
-	 * outputs an array with the deck info to give to app.deck.js
-	 * @param integer $deck_id
-	 * @param boolean $decode_variation
-	 * @return array
-	 */
-	public function getDeckInfo($decklist_id)
-	{
-		$dbh = $this->doctrine->getConnection ();
-
-		$rows = $dbh->executeQuery ( "SELECT
-				d.id,
-				d.name,
-				DATE_FORMAT(d.date_creation, '%Y-%m-%dT%TZ') date_creation,
-                DATE_FORMAT(d.date_update, '%Y-%m-%dT%TZ') date_update,
-                d.description_md,
-                d.user_id,
-        		f.code faction_code,
-        		f.name faction_name
-				from decklist d
-        		join faction f on d.faction_id=f.id
-				where d.id=?
-				", array (
-				$decklist_id
-		) )->fetchAll ();
-
-		$deck = $rows [0];
-
-		$rows = $dbh->executeQuery ( "SELECT
-				c.code,
-                t.code type_code,
-				s.quantity
-				from decklistslot s
-				join card c on s.card_id=c.id
-                join type t on c.type_id=t.id
-				where s.decklist_id=?", array (
-				$decklist_id
-		) )->fetchAll ();
-
-		$cards = [ ];
-		foreach ( $rows as $row ) {
-			$cards [$row ['code']] = intval ( $row ['quantity'] );
-            if($row['type_code'] === 'agenda') {
-				$deck['agenda_code'] = $row['code'];
-			}
-		}
-
-		$deck['slots'] = $cards;
-
-		$deck['problem'] = "";
-
-		return $deck;
-	}
-
     /**
      * returns the list of decklist favorited by user
      * @param integer $limit
@@ -103,8 +38,6 @@ class Decklists
      */
     public function favorites ($user_id, $start = 0, $limit = 30)
     {
-
-
         /* @var $dbh \Doctrine\DBAL\Driver\PDOConnection */
         $dbh = $this->doctrine->getConnection();
 

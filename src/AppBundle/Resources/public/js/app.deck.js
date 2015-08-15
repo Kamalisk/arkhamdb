@@ -14,8 +14,17 @@ var date_creation,
 	faction_name,
 	unsaved,
 	user_id,
-	header_tpl = _.template('<h5><%= name %> (<%= quantity %>)</h5>'),
-	card_line_tpl = _.template('<a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <%= card.name %></a>');
+	problem_labels = {
+		too_many_plots: "Contains too many Plots",
+		too_few_plots: "Contains too few Plots",
+		too_many_different_plots: "Contains more than one duplicated Plot",
+		too_many_agendas: "Contains more than one Agenda",
+		too_few_cards: "Contains too few cards",
+		invalid_cards: "Contains forbidden cards (cards no permitted by Faction or Agenda)",
+		agenda: "Doesn't comply with the Agenda conditions"
+	},
+	header_tpl = _.template('<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'),
+	card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a>');
 
 /**
  * @memberOf deck
@@ -249,12 +258,8 @@ deck.display_by_other = function display_by_other() {
 }
 
 deck.display_by_type = function display_by_type() {
-	var sortKey = '', displayLabel = '', valuesOrder = [];
-	sortKey = 'type_code';
-	displayLabel = 'type_name';
-	valuesOrder = ['agenda','plot','character','attachment','location','event'];
-
 	var agenda = deck.get_agenda();
+	var problem = deck.get_problem();
 
 	var deck_content = $('<div class="deck-content">');
 	var deck_content_first_row = $('<div class="row">').appendTo(deck_content);
@@ -268,14 +273,14 @@ deck.display_by_type = function display_by_type() {
 	var deck_intro_meta = $('<div class="col-sm-4">').appendTo(deck_content_first_row);
 	deck_intro_meta.append('<h4 style="font-weight:bold">'+faction_name+'</h4>');
 	if(agenda) {
-		$('<h4>').append($(card_line_tpl({card:agenda}))).appendTo(deck_intro_meta).find('.icon').remove();
+		$('<h5>').append($(card_line_tpl({card:agenda}))).appendTo(deck_intro_meta).find('.icon').remove();
 	}
-	deck_intro_meta.append('<div>Draw deck: '+deck.get_draw_deck_size()+' cards</div>');
-	deck_intro_meta.append('<div>Plot deck: '+deck.get_plot_deck_size()+' cards</div>');
+	$('<div>Draw deck: '+deck.get_draw_deck_size()+' cards</div>').addClass(deck.get_draw_deck_size() < 60 ? 'text-danger': '').appendTo(deck_intro_meta);
+	$('<div>Plot deck: '+deck.get_plot_deck_size()+' cards</div>').addClass(deck.get_plot_deck_size() != 7 ? 'text-danger': '').appendTo(deck_intro_meta);
 	deck_intro_meta.append('<div>Included packs: ' + _.pluck(deck.get_included_packs(), 'name').join(', ') + '</div>');
-	var problem = deck.get_problem();
 	if(problem) {
-		deck_intro_meta.append('<div class="text-danger">' + problem + '</div>');
+
+		$('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+problem_labels[problem]+'</div>').appendTo(deck_intro_meta);
 	}
 
 	var deck_intro_plots = $('<div class="col-sm-6">').appendTo(deck_content_first_row);
@@ -301,7 +306,7 @@ deck.display_one_section = function display_one_section(sortKey, sortValue, disp
 	query[sortKey] = sortValue;
 	var cards = deck.get_cards({ name: 1 }, query);
 	if(cards.length) {
-		$(header_tpl({name:cards[0][displayLabel], quantity: deck.get_nb_cards(cards)})).appendTo(section);
+		$(header_tpl({code: sortValue, name:cards[0][displayLabel], quantity: deck.get_nb_cards(cards)})).appendTo(section);
 		cards.forEach(function (card) {
 			$('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card').append($(card_line_tpl({card:card}))).prepend(card.indeck+'x ').appendTo(section);
 		})
@@ -364,7 +369,6 @@ deck.get_json = function get_json() {
 deck.get_export = function get_export(format) {
 
 }
-
 
 /**
  * @memberOf deck

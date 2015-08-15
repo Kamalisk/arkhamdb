@@ -3,6 +3,7 @@ parameters:
     decks.class: AppBundle\Services\Decks
     highlight.class: AppBundle\Services\Highlight
     decklists.class: AppBundle\Services\Decklists
+    deck_interface.class: AppBundle\Services\DeckInterface
     reviews.class: AppBundle\Services\Reviews
     texts.class: AppBundle\Services\Texts
     diff.class: AppBundle\Services\Diff
@@ -15,12 +16,15 @@ services:
         arguments: ["@doctrine.orm.entity_manager"]
     decks:
         class: "%decks.class%"
-        arguments: ["@doctrine.orm.entity_manager", "@judge", "@diff", "@logger"]
+        arguments: ["@doctrine.orm.entity_manager", "@deck_interface", "@diff", "@logger"]
     highlight:
         class: "%highlight.class%"
         arguments: ["@doctrine.orm.entity_manager"]
     decklists:
         class: "%decklists.class%"
+        arguments: ["@doctrine.orm.entity_manager", "@deck_interface"]
+    deck_interface:
+        class: "%deck_interface.class%"
         arguments: ["@doctrine.orm.entity_manager"]
     reviews:
         class: "%reviews.class%"

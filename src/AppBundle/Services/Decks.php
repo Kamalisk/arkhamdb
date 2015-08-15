@@ -11,31 +11,12 @@ use AppBundle\Entity\Deckchange;
 
 class Decks
 {
-	public function __construct(EntityManager $doctrine, Judge $judge, Diff $diff, Logger $logger)
+	public function __construct(EntityManager $doctrine, DeckInterface $deck_interface, Diff $diff, Logger $logger)
 	{
 		$this->doctrine = $doctrine;
-		$this->judge = $judge;
+		$this->deck_interface = $deck_interface;
 		$this->diff = $diff;
 		$this->logger = $logger;
-	}
-
-	public function getDeckContent($deck)
-	{
-		$arr = array ();
-		foreach ( $deck->getSlots () as $slot ) {
-			$arr [$slot->getCard ()->getCode ()] = $slot->getQuantity ();
-		}
-		ksort ( $arr );
-		return $arr;
-	}
-
-	public function getDeckAgenda($deck)
-	{
-		foreach ( $deck->getSlots () as $slot ) {
-			if($slot->getCard()->getType()->getCode() === 'agenda') {
-				return $slot->getCard();
-			}
-		}
 	}
 
 	public function getByUser($user, $decode_variation = FALSE)
@@ -51,7 +32,7 @@ class Decks
 
 		$decks = [ ];
 		while ( ($id = $ids->fetchColumn ( 0 )) !== FALSE ) {
-			$decks [$id] = $this->getDeckInfo( $id, $decode_variation );
+			$decks [$id] = $this->getArrayWithSnapshots( $id, $decode_variation );
 		}
 
 		return $decks;
@@ -63,7 +44,7 @@ class Decks
 	 * @param boolean $decode_variation
 	 * @return array
 	 */
-	public function getDeckInfo($deck_id, $decode_variation = FALSE)
+	public function getArrayWithSnapshots($deck_id, $decode_variation = FALSE)
 	{
 		$dbh = $this->doctrine->getConnection ();
 
@@ -87,7 +68,7 @@ class Decks
 
 		$deck = $rows [0];
 		$deck['agenda_code'] = null;
-		
+
 		$rows = $dbh->executeQuery ( "SELECT
 				c.code,
 				t.code type_code,
@@ -310,7 +291,7 @@ class Decks
 			// compute diff between current content and saved content
 			list ( $listings ) = $this->diff->diffContents ( array (
 					$content,
-					$this->getDeckContent ( $source_deck )
+					$this->deck_interface->getContent ( $source_deck )
 			) );
 			// remove all change (autosave) since last deck update (changes are sorted)
 			$changes = $this->getUnsavedChanges ( $deck );
@@ -369,7 +350,7 @@ class Decks
 		}
 		// if deck has only one card and it's an agenda, we delete it
 		if(count($deck->getSlots()) === 0 || (
-			count($deck->getSlots()) === 1 && $this->getDeckAgenda($deck)
+			count($deck->getSlots()) === 1 && $this->deck_interface->getAgenda($deck)
 		) ) {
 			$this->doctrine->remove($deck);
 		}

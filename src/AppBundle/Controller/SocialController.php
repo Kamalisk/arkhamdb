@@ -42,7 +42,7 @@ class SocialController extends Controller
 
         $decklists = $this->get('decklists');
 
-        $new_content = json_encode($this->get('decks')->getDeckContent($deck));
+        $new_content = json_encode($this->get('deck_interface')->getContent($deck));
         $new_signature = md5($new_content);
         $old_decklists = $this->getDoctrine()
             ->getRepository('AppBundle:Decklist')
@@ -52,7 +52,7 @@ class SocialController extends Controller
 
         /* @var $decklist \AppBundle\Entity\Decklist */
         foreach ($old_decklists as $decklist) {
-            if (json_encode($decklists->getContent($decklist)) == $new_content) {
+            if (json_encode($this->get('deck_interface')->getContent($decklist)) == $new_content) {
                 $url = $this->generateUrl('decklist_detail', array(
                         'decklist_id' => $decklist->getId(),
                         'decklist_name' => $decklist->getNameCanonical()
@@ -61,7 +61,7 @@ class SocialController extends Controller
             }
         }
 
-        return new Response(json_encode($this->get('decks')->getDeckInfo($deck_id)));
+        return new Response(json_encode($this->get('deck_interface')->getArray($deck)));
 
     }
 
@@ -89,11 +89,11 @@ class SocialController extends Controller
         }
 */
 
-        $new_content = json_encode($this->get('decks')->getDeckContent($deck));
+        $new_content = json_encode($this->get('deck_interface')->getContent($deck));
         $new_signature = md5($new_content);
         $old_decklists = $this->getDoctrine()->getRepository('AppBundle:Decklist')->findBy(['signature' => $new_signature]);
         foreach ($old_decklists as $decklist) {
-            if (json_encode($this->get('decklists')->getContent($decklist)) == $new_content) {
+            if (json_encode($this->get('deck_interface')->getContent($decklist)) == $new_content) {
                 throw new AccessDeniedHttpException('That decklist already exists.');
             }
         }
@@ -464,7 +464,7 @@ class SocialController extends Controller
                 FROM tournament t
                 ORDER BY t.description desc")->fetchAll();
 
-        $deck = $this->get('decklists')->getDeckInfo($decklist_id);
+        $deck = $this->get('deck_interface')->getArray($this->getDoctrine()->getManager()->getRepository('AppBundle:Decklist')->find($decklist_id));
 
         return $this->render('AppBundle:Decklist:decklist.html.twig',
                 array(
