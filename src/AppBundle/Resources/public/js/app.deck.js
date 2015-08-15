@@ -268,7 +268,7 @@ deck.display_by_type = function display_by_type() {
 	var deck_intro_meta = $('<div class="col-sm-4">').appendTo(deck_content_first_row);
 	deck_intro_meta.append('<h4 style="font-weight:bold">'+faction_name+'</h4>');
 	if(agenda) {
-		$('<h4>').append($(card_line_tpl({card:agenda}))).appendTo(deck_intro_meta);
+		$('<h4>').append($(card_line_tpl({card:agenda}))).appendTo(deck_intro_meta).find('.icon').remove();
 	}
 	deck_intro_meta.append('<div>Draw deck: '+deck.get_draw_deck_size()+' cards</div>');
 	deck_intro_meta.append('<div>Plot deck: '+deck.get_plot_deck_size()+' cards</div>');
@@ -403,7 +403,7 @@ deck.get_problem = function get_problem() {
 	if(!agenda) return;
 	switch(agenda.code) {
 		case '01027':
-		if(deck.get_cards(null, { faction_code: 'neutral' }).length > 15) {
+		if(deck.get_nb_cards(deck.get_cards(null, { type_code: { $in: [ 'character', 'attachment', 'location', 'event' ] }, faction_code: 'neutral' })) > 15) {
 			return 'agenda';
 		}
 		break;
