@@ -58,10 +58,6 @@ class Decklists
             }
         }
 
-        $problem = $this->getProblem($deck);
-        $array['problem'] = $problem;
-        $array['problem_label'] = $this->getProblemLabel($problem);
-
         return $array;
     }
 
