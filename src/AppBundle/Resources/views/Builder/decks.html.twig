@@ -114,7 +114,7 @@
 		</td>
 		<td class="decks-actions text-right">
 			<a href="{{ path('deck_edit',{deck_id:deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit"><span class="fa fa-pencil fa-fw"></span></a>
-			<button class="btn btn-xs btn-default btn-publish-deck disabled" data-toggle="tooltip" title="Publish"><span class="fa fa-share fa-fw"></span></button>
+			<button class="btn btn-xs btn-default btn-publish-deck{% if deck.problem is not null %} disabled{% endif %}" data-toggle="tooltip" title="Publish"><span class="fa fa-share fa-fw"></span></button>
 			<a href="{{ path('deck_duplicate',{deck_id:deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Duplicate"><span class="fa fa-code-fork fa-fw"></span></a>
 			<button class="btn btn-xs btn-default btn-delete-deck" data-toggle="tooltip" title="Delete"><span class="fa fa-trash-o fa-fw"></span></button>
 		</td>
