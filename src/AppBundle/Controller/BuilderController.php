@@ -57,6 +57,7 @@ class BuilderController extends Controller
         	$this->get('session')->getFlashBag()->set('error', "A faction is required.");
         	return $this->redirect($this->generateUrl('deck_buildform'));
         }
+		$tags = [ $faction_code ];
 
         if(!$agenda_code)
         {
@@ -69,7 +70,9 @@ class BuilderController extends Controller
         	$agenda = $em->getRepository('AppBundle:Card')->findOneBy(array("code" => $agenda_code));
         	$name = sprintf("New deck: %s, %s", $faction->getName(), $agenda->getName());
         	$pack = $agenda->getPack();
+			$tags[] = $this->get('deck_interface')->getMinorFactionCode($agenda);
         }
+
 
         $deck = new Deck();
         $deck->setDescriptionMd("");
@@ -77,7 +80,7 @@ class BuilderController extends Controller
         $deck->setLastPack($pack);
         $deck->setName($name);
         $deck->setProblem('deckSize');
-        $deck->setTags($faction_code);
+        $deck->setTags(join(' ', array_unique($tags)));
         $deck->setUser($this->getUser());
 
         if($agenda)

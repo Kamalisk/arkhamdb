@@ -51,9 +51,8 @@ class DeckInterface
     		}
     	}
 
-        public function getMinorFactionCode($deck) {
-            $agenda = $this->getAgenda($deck);
-            if(! $agenda) {
+        public function getMinorFactionCode($agenda) {
+            if(empty($agenda)) {
                 return null;
             }
 
@@ -119,7 +118,7 @@ class DeckInterface
             if($card->getIsLoyal()) {
                 return false;
             }
-            $minorFactionCode = $this->getMinorFactionCode($deck);
+            $minorFactionCode = $this->getMinorFactionCode($this->getAgenda($deck));
             if($minorFactionCode && $minorFactionCode === $card->getFaction()->getCode()) {
                 return true;
             }
