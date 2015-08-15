@@ -48,11 +48,10 @@ class DefaultController extends Controller
                     }
                 }
                 $array['factions'] = join(' / ', $factions);
-                
+
                 $decklists_by_faction[] = $array;
             }
         }
-        dump($decklists_by_faction);
 
         return $this->render('AppBundle:Default:index.html.twig', [
             'pagetitle' => "A Game of Thrones: The Card Game Second Edition Deckbuilder",
