@@ -274,8 +274,8 @@ class SearchController extends Controller
 		$pagination = '';
 
 		$pagesizes = array(
-			'list' => 200,
-			'spoiler' => 200,
+			'list' => 240,
+			'spoiler' => 240,
 			'card' => 20,
 			'scan' => 20,
 			'short' => 1000,

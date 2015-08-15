@@ -3,13 +3,13 @@
 {% block title %}API Documentation{% endblock %}
 
 {% block body %}
-<div class="main container">
+<div class="main white container">
 
 <h1>{{ block('title') }}</h1>
 
 <p><tt>http://thronesdb.com</tt> can be queried via an http API.</p>
 <p>This API is provided for use in deckbuilders, card databases, tournament managers, and other tools that are a complement to playing A Game of Thrones: The Card Game Second Edition.</p>
-<p>Do not use it for any project that allows for playing A Game of Thrones: The Card Game Second Edition online. FFG do not permit this, and I wish to abide by their rules. Additionally, any such project will be shut down by FFG, so probably do not attempt to make it at all.<p>
+<p>Do not use it for any project that allows for playing A Game of Thrones: The Card Game Second Edition online. FFG do not permit this. Additionally, any such project will be shut down by FFG, so probably do not attempt to make it at all.<p>
 <p>All texts are copyrighted by Fantasy Flight Games.</p>
 
 <h3>All Sets</h3>
@@ -26,72 +26,20 @@
 
 <h3>One Card</h3>
 
-<tt>/api/card/{code}</tt> returns card data about the card identified by <tt>code</tt> (01001 for Noise, etc).
-
-<h3>One Decklist</h3>
-
-<tt>/api/decklist/{id}</tt> returns name, author and composition of the decklist identified by <tt>id</tt> (as found in decklist urls).
-
-<h3>All Decklists for One Day</h3>
-
-<tt>/api/decklists/by_date/{Y-m-d}</tt> returns all decklists published at the given date. Example: <tt>/api/decklists/by_date/2013-12-31</tt>.
-
-<h2>OAuth2</h2>
-
-The following API endpoints require a OAuth2 authentication. To get the required credentials and some additional info, contact me via email (alsciende (at) icloud.com) with a description of your application.
-
-<h3>All Decks of authenticated user</h3>
-
-<tt>/api_oauth2/decks</tt> returns all decks created by the authenticated user.
-
-<h3>Load a deck for an authenticated user</h3>
-
-<tt>/api_oauth2/load_deck/{id}</tt> returns the info and history of the deck.
-
-<h3>Save a deck for an authenticated user</h3>
-
-<tt>/api_oauth2/save_deck/{id}</tt> saves the deck and returns its info. Parameters:
-<ul>
-	<li>id: an integer. Mandatory. Set to 0 to create a new deck.</li>
-	<li>name: a string. Optional</li>
-	<li>description: a string. Optional</li>
-	<li>decklist_id: an integer. Optional. If set, saved decklist will be descendant of it.</li>
-	<li>content: a json array of json objects with 2 keys, "card_code" (string) and "qty" (integer). Mandatory</li>
-</ul>
-
-<h3>Publish a decklist for an authenticated user</h3>
-
-<tt>/api_oauth2/publish_deck/{id}</tt> publishes a deck and returns the info of the decklist. Parameters:
-<ul>
-	<li>id: an integer. Mandatory</li>
-	<li>name: a string. Optional. Will fallback to the name of the deck.</li>
-	<li>description: a string. Optional. Will fallback to the description of the deck.</li>
-</ul>
-
-<h3>Returned value</h3>
-
-Data returned is in json format.<br>
-Set and card data include a "url" key giving the absolute url of the page that holds the data.<br>
-Card data include a "imagesrc" key giving the relative url of the image of the card.<br>
+<tt>/api/card/{code}</tt> returns card data about the card identified by <tt>code</tt> (01001 for A Clash of Kings, etc).
 
 <h3>jsonp</h3>
 
-Optional GET parameter "jsonp" for script tags. Unavailable for OAuth2 endpoints.
+Optional GET parameter "jsonp" for script tags.
 
 <h3>Examples</h3>
 
-<a href="/api/card/01001">/api/card/01001</a> returns data for Noise<br>
+<a href="/api/card/01001">/api/card/01001</a> returns data for A Clash of Kings<br>
 <a href="/api/sets/?jsonp=parseSets">/api/sets/?jsonp=parseSets</a> returns data for all sets wrapped in a call to parseSets()<br>
 
 <h3>Encoding</h3>
 
 The response is in ascii encoding. Non-ascii characters are encoded with \uXXXX with XXXX their hexadecimal unicode value.<br>
-To test your application, 3 cards are useful:
-<ul>
-<li><a href="/api/card/02020">02020</a> to test Unicode characters, [Credits] and [Subroutine] tokens, <tt>&lt;strong></tt> and <tt>&lt;sup></tt> markup for traces and traits.</li>
-<li><a href="/api/card/02046">02046</a> to test Unicode characters, :, ", [Memory Unit] token-with-space</li>
-<li><a href="/api/card/01036">01036</a> to test ", ', &</li>
-</ul>
 
 <h3>Caching</h3>
 

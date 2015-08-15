@@ -23,14 +23,16 @@ ui.on_all_loaded = function on_all_loaded() {};
 
 $(document).ready(function () {
 	console.log('ui.on_dom_loaded');
-	
+
 	if(Modernizr.touch) {
-		//$('#svg').remove();
-		//$('form.external').removeAttr('target');
 	} else {
 		$('[data-toggle="tooltip"]').tooltip();
 	}
-
+	$('time').each(function (index, element) {
+		var datetime = moment($(element).attr('datetime'));
+		$(element).html(datetime.fromNow());
+		$(element).attr('title', datetime.format('LLLL'));
+	});
 	if(typeof ui.on_dom_loaded === 'function') ui.on_dom_loaded();
 	dom_loaded.resolve();
 });

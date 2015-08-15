@@ -11,7 +11,7 @@
     <div class="collapse{% if not comment.is_hidden %} in{% endif %}" id="div-comment-{{ comment.id }}">
         <span class="comment-date" title="{{ comment.date_creation|date('r') }}">{{ comment.date_creation|date('M d, Y') }}</span>
         <a href="{{ path('user_profile_public', {user_id:comment.user_id,user_name:comment.author|e('url')}) }}" class="comment-author username {{ comment.authorcolor }}">{{ comment.author }}</a>
-        {% if comment.donation > 0 %}<span class="fa fa-gift donator" title="thronesdb Gracious Donator"></span>{% endif %}
+        {% if comment.donation > 0 %}<span class="fa fa-gift donator" title="ThronesDB Gracious Donator"></span>{% endif %}
         <div class="comment-text">{{ comment.text|raw }}</div>
     </div>
 </td></tr>

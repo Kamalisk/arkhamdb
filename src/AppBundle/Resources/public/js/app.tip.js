@@ -55,7 +55,7 @@ tip.display = function display(event) {
  */
 tip.guess = function guess(event) {
 	var href = $(this).attr('href');
-	if(href.match(cards_zoom_regexp)) {
+	if(href && href.match(cards_zoom_regexp)) {
 		var code = RegExp.$1;
 		var generated_url = Routing.generate('cards_zoom', {card_code:code});
 		var card = app.data.cards.findById(code);

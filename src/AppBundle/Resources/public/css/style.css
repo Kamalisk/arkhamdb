@@ -75,15 +75,18 @@ html, body {
 td.type, td.faction {
 	text-align:center;
 }
-.main.container {
-	background-color: #fff;
+.container.main {
+	margin-bottom: 20px;
 	padding-top: 20px;
 	padding-bottom: 20px;
-	margin-bottom: 100px;
+}
+.container.main.white {
+	background-color: #fff;
 }
 #wrapper {
 	min-height: 100%;
 	border-bottom: 10px solid #c0392b;
+	padding-bottom: 100px;
 }
 footer {
 	padding-top: 20px;
@@ -103,6 +106,25 @@ div.tags span.tag:not(:first-child)::before {
 
 .decks-actions .btn{
 	margin-bottom: 3px;
+}
+
+.social-icon-like{color:red}
+.social-icon-favorite{color:orange}
+.social-icon-comment{color:green}
+
+/********** icon-bg ***********/
+
+.icon-bg:before {
+	width: 100%;
+	height: 100%;
+	font-size: 5em;
+	text-align: center;
+	display: block;
+	position: absolute;
+	line-height:4em;
+	left: 0;
+	opacity: 0.1;
+    z-index: 0;
 }
 
 /********* ONE DECK *********/
@@ -243,9 +265,6 @@ div.site-slogan {
 	font-size:40px;
 	text-align:center;
 }
-.jumbotron {
-	margin-top: -20px;
-}
 
 /************ LIST OF DECKLISTS **************/
 
@@ -257,12 +276,11 @@ div.site-slogan {
 
 .row.title {
 	padding-top:20px;
-	margin-bottom:20px;
 	padding-bottom:10px
 }
 
 /************** FACTIONS COLORS **************/
-.bg-faction a {
+.bg-faction a, .bg-faction span {
 	color: inherit !important;
 }
 .bg-targaryen {

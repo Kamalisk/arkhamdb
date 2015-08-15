@@ -68,7 +68,7 @@ app.user.params.card_id = {{ cards[0].id|json_encode|raw }};
             	   </div>
             	   <div class="review-author">
             	       <a href="{{ path('user_profile_public', {user_id:review.author_id,user_name:review.author_name|e('url')}) }}" rel="author" class="username {{ review.author_color }}">{{ review.author_name }}</a>
-            	       {% if review.author_donation > 0 %}<span class="fa fa-gift donator" title="thronesdb Gracious Donator"></span>{% endif %}
+            	       {% if review.author_donation > 0 %}<span class="fa fa-gift donator" title="ThronesDB Gracious Donator"></span>{% endif %}
                 	   <small class="reputation">{{ review.author_reputation }}</small>
             	   </div>
 
@@ -78,7 +78,7 @@ app.user.params.card_id = {{ cards[0].id|json_encode|raw }};
             	   <div class="review-comment text-muted small">{{ comment.text }}
             	   &mdash;
             	   <a title="{{ comment.author.reputation }} reputation" href="{{ path('user_profile_public', {user_id:comment.author.id,user_name:comment.author.username|e('url')}) }}" rel="author" class="username {{ comment.author.faction }}">{{ comment.author.username }}</a>
-            	       {% if comment.author.donation > 0 %}<span class="fa fa-gift donator" title="thronesdb Gracious Donator"></span>{% endif %}
+            	       {% if comment.author.donation > 0 %}<span class="fa fa-gift donator" title="ThronesDB Gracious Donator"></span>{% endif %}
                	   <time datetime="{{ comment.date_creation|date('c') }}" title="{{ comment.date_creation|date('F jS, Y') }}">{{ comment.date_creation|date('n/j/y') }}</time>
                 </div>
             	   {% endfor %}

@@ -2,19 +2,19 @@
 
 {% block body %}
 
-<div class="main container">
+<div class="main white container">
 <div class="row">
 
 <div class="col-md-12">
 <h1>The Gracious Donators</h1>
-<p class="lead">thronesdb wouldn't be the same without them. Many, many thanks.</p>
+<p class="lead">ThronesDB wouldn't be the same without them. Many, many thanks.</p>
 <p>To show our appreciation, the content of the site is free of ads for Donators.</p>
 <p>To become a Donator and help run the site, you can use <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=4SB7QHB5XRN7Y">Paypal (€)</a> or <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=HHBUW2QYG6ZUC">Paypal ($)</a>.</p>
 <ul>
 {% for donator in donators %}
 <li>
     <a href="{{ path('user_profile_public', {user_id:donator.id,user_name:donator.username|e('url')}) }}" class="username {{ donator.faction }}">{{ donator.username }}</a>
-    <span class="fa fa-gift donator" title="thronesdb Gracious Donator"></span>
+    <span class="fa fa-gift donator" title="ThronesDB Gracious Donator"></span>
 </li>
 {% endfor %}
 </ul>

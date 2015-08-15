@@ -38,7 +38,7 @@ index:
     pattern: /
     methods: [GET]
     defaults:
-        _controller: AppBundle:Index:index
+        _controller: AppBundle:Default:index
 
 donators:
     pattern: /donators

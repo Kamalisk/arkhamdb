@@ -17,6 +17,7 @@ format.name = function name(card) {
 format.faction = function faction(card) {
 	var text = card.faction_name + '. ';
 	if(card.is_loyal) text += 'Loyal. ';
+	else text += 'Non-loyal. ';
 	return text;
 }
 
@@ -35,6 +36,7 @@ format.pack_faction = function pack_faction(card) {
 	var text = card.pack_name + ' #' + card.position + '. ';
 	text += card.faction_name + '. ';
 	if(card.is_loyal) text += 'Loyal. ';
+	else text += 'Non-loyal. ';
 	return text;
 }
 

@@ -12,12 +12,27 @@ use Symfony\Bridge\Monolog\Logger;
 class DeckInterface
 {
 
+        public function __construct(EntityManager $doctrine)
+        {
+            $this->doctrine = $doctrine;
+        }
+
         public function countCards($slots) {
             $count = 0;
             foreach($slots as $slot) {
                 $count += $slot->getQuantity();
             }
             return $count;
+        }
+
+        public function getCountByType($deck) {
+            $countByType = [ 'character' => 0, 'location' => 0, 'attachment' => 0, 'event' => 0 ];
+            foreach($deck->getSlots () as $slot) {
+                if(array_key_exists($slot->getCard()->getType()->getCode(), $countByType)) {
+                    $countByType[$slot->getCard()->getType()->getCode()] += $slot->getQuantity();
+                }
+            }
+            return $countByType;
         }
 
         public function getPlotDeck($deck)
@@ -69,6 +84,14 @@ class DeckInterface
         	];
             if(isset($banners_core_set[$agenda->getCode()])) {
                 return $banners_core_set[$agenda->getCode()];
+            }
+            return null;
+        }
+
+        public function getMinorFaction($agenda) {
+            $code = $this->getMinorFactionCode($agenda);
+            if($code) {
+                return $this->doctrine->getRepository('AppBundle:Faction')->findOneBy([ 'code' => $code ]);
             }
             return null;
         }

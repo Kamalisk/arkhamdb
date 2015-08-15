@@ -3,70 +3,12 @@
 {% block title %}About{% endblock %}
 
 {% block body %}
-<div class="main container">
+<div class="main white container">
 
 <h1>{{ block('title') }}</h1>
 
-<p>This website is dedicated to providing a fast, powerful and exhaustive deck builder and search engine for A Game of Thrones: The Card Game Second Edition cards, along with card descriptions and card scans.</p>
-<p>This website is optimized for mobile browsing (WebKit), and I will try to keep it that way.</p>
-
-<h2>Search syntax</h2>
-
-<ul>
-<li>a search string is a conjunction of one or more <b>conditions</b> separated by one or more spaces</li>
-<li>a <b>condition</b> is either:
-<ul>
-<li>a <b>word</b> or <b>expression</b> or <b>disjunction</b></li>
-<li>a <b>criteria</b> followed by an <b>operator</b> followed by a <b>word</b> or <b>expression</b> or <b>disjunction</b>
-</ul>
-</li>
-<li>a <b>word</b> must match <tt>/[\w\-]/</tt>: letters, digits, dash</li>
-<li>an <b>expression</b> is any text between <tt>"</tt></li>
-<li>a <b>disjunction</b> is several <b>words</b> or <b>expressions</b> separated by <tt>|</tt></li>
-<li>a <b>criteria</b> is a single letter:
-<ul>
-<li><tt>x</tt> &ndash; text</li>
-<li><tt>a</tt> &ndash; flavor text</li>
-<li><tt>e</tt> &ndash; set</li>
-<li><tt>c</tt> &ndash; cycle</li>
-<li><tt>t</tt> &ndash; type</li>
-<li><tt>f</tt> &ndash; faction</li>
-<li><tt>s</tt> &ndash; subtype</li>
-<li><tt>d</tt> &ndash; side</li>
-<li><tt>i</tt> &ndash; illustrator</li>
-<li><tt>o</tt> &ndash; cost</li>
-<li><tt>g</tt> &ndash; advancement cost</li>
-<li><tt>n</tt> &ndash; influence (faction cost)</li>
-<li><tt>p</tt> &ndash; strength</li>
-<li><tt>v</tt> &ndash; agenda points</li>
-<li><tt>h</tt> &ndash; trash cost</li>
-<li><tt>r</tt> &ndash; release date</li>
-<li><tt>u</tt> &ndash; unique</li>
-</ul>
-</li>
-<li>an <b>operator</b> is either:
-<ul>
-<li><tt>:</tt> &ndash; equals</li>
-<li><tt>!</tt> &ndash; different from</li>
-<li><tt>&lt;</tt> &ndash; less than</li>
-<li><tt>&gt;</tt> &ndash; more than</li>
-</ul>
-</li>
-<li><b>Special case</b> <tt>r</tt> (release date) uses only the operators <tt>&lt;</tt> (inclusive) and <tt>&gt;</tt> (exclusive) and only understands the arguments <tt>now</tt> or a date YYYY-MM-DD</li>
-</ul>
-
-<h2>Search examples</h2>
-
-<ul>
-<li><span style="border:1px solid #888;font-family:monospace;padding:0 2px">t:asset</span> searches for all Assets</li>
-<li><span style="border:1px solid #888;font-family:monospace;padding:0 2px">t:asset s:ambush</span> searches for every Asset that has the subtype Ambush</li>
-<li><span style="border:1px solid #888;font-family:monospace;padding:0 2px">x:"make a run"</span> searches for all cards with the text "make a run"</li>
-<li><span style="border:1px solid #888;font-family:monospace;padding:0 2px">t:asset|upgrade f:n</span> searches for all Assets and Upgrades from NBN</li>
-<li><span style="border:1px solid #888;font-family:monospace;padding:0 2px">f:a|s n&lt;3</span> searches for all Anarch and Shaper cards with a faction cost less than 3</li>
-<li><span style="border:1px solid #888;font-family:monospace;padding:0 2px">t:ice s!barrier|sentry|"code gate"</span> searches for all ICE that are neither barrier, code gate nor sentry</li>
-<li><span style="border:1px solid #888;font-family:monospace;padding:0 2px">r&lt;2013-01-01</span> searches for all cards released up to Jan 1, 2013</li>
-<li><span style="border:1px solid #888;font-family:monospace;padding:0 2px">d:r|c</span> searches for all Runner and Corp cards</li>
-</ul>
+<p>This website is dedicated to providing a fast, powerful and exhaustive deck builder and search engine for A Game of Thrones: The Card Game Second Edition cards, along with card descriptions and card images.</p>
+<p>This website is optimized for mobile browsing (WebKit).</p>
 
 </div>
 {% endblock %}

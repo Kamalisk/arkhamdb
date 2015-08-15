@@ -62,6 +62,42 @@ class Decklists
     }
 
     /**
+     * returns the list of recent decklists with large number of votes
+     * @param integer $limit
+     * @return \Doctrine\DBAL\Driver\PDOStatement
+     */
+    public function popular_for_one_faction ($faction, $start = 0, $limit = 30)
+    {
+        $query = $this->doctrine->createQuery('SELECT d FROM AppBundle:Decklist d WHERE d.faction = ?1');
+        return $query->setParameter(1, $faction)->getSingleResult();
+
+        /* @var $dbh \Doctrine\DBAL\Driver\PDOConnection */
+        $dbh = $this->doctrine->getConnection();
+
+        $rows = $dbh->executeQuery(
+                "SELECT $this->fields_for_list,
+                DATEDIFF(CURRENT_DATE, d.date_creation) nbjours
+                from decklist d
+                join user u on d.user_id=u.id
+                join faction f on d.faction_id=f.id
+                left join tournament t on d.tournament_id=t.id
+                where d.date_creation > DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
+                and d.faction_id=?
+                order by 2*d.nb_votes/(1+nbjours*nbjours) DESC, d.nb_votes desc, d.nb_comments desc
+                limit $start, $limit",
+                array($faction_id)
+            )->fetchAll(\PDO::FETCH_ASSOC);
+
+        $count = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];
+
+        return array(
+                "count" => $count,
+                "decklists" => $rows
+        );
+
+    }
+
+    /**
      * returns the list of decklist favorited by user
      * @param integer $limit
      * @return \Doctrine\DBAL\Driver\PDOStatement

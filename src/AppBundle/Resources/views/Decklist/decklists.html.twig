@@ -31,14 +31,14 @@ $(function () {
 
 {% block body %}
 
-<div class="main container">
+<div class="main white container">
 <div class="row">
 <div class="col-md-3">
 
 <ul class="nav nav-pills nav-stacked" style="margin-bottom:2em">
 {% set linkurl = path('decklists_list', {type:'popular'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Popular</a></li>
 {% set linkurl = path('decklists_list', {type:'recent'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Recent</a></li>
-{% set linkurl = path('decklists_list', {type:'tournament'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Tournaments <span class="label label-success">new</span></a></li>
+{% set linkurl = path('decklists_list', {type:'tournament'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Tournaments</a></li>
 {% set linkurl = path('decklists_list', {type:'hottopics'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Hot topics</a></li>
 {% set linkurl = path('decklists_list', {type:'halloffame'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Hall of Fame</a></li>
 {% set linkurl = path('decklists_list', {type:'favorites'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">My favorites</a></li>
@@ -101,7 +101,7 @@ $(function () {
 		<time class="pull-right" datetime="{{ decklist.date_creation|date('c') }}">{{ decklist.date_creation|date('M d') }}</time>
 		<span class="username">
     		<a href="{{ path('user_profile_public', {user_id:decklist.user_id,user_name:decklist.username|e('url')}) }}" class="{{ decklist.usercolor }}">{{ decklist.username }}</a>
-    		{% if decklist.donation > 0 %}<span class="fa fa-gift donator" title="thronesdb Gracious Donator"></span>{% endif %}
+    		{% if decklist.donation > 0 %}<span class="fa fa-gift donator" title="ThronesDB Gracious Donator"></span>{% endif %}
     		<small class="reputation">{{ decklist.reputation }}</small>
 		</span>
         {% if decklist.tournament %}

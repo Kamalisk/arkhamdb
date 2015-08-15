@@ -5,3 +5,25 @@
 {% macro card_name_with_pack_no_link(card) %}
 <a class="card-tip" data-code="{{ card.code }}">{{ card.name }} <i>({{ card.pack.name }})</i></a>
 {% endmacro %}
+
+{% macro username_with_reputation(user) %}
+<span class="username">
+    <a href="{{ path('user_profile_public', {user_id:user.id,user_name:user.username|e('url')}) }}" class="{{ user.color }}">{{ user.username }}</a>
+    {% if user.donation > 0 %}<span class="fa fa-gift donator" title="ThronesDB Gracious Donator"></span>{% endif %}
+    <small class="reputation">{{ user.reputation }}</small>
+</span>
+{% endmacro %}
+
+{% macro decklist_social_buttons(decklist) %}
+<span class="social">
+    <a id="social-icon-like" href="#" class="social-icon-like" data-toggle="tooltip" data-placement="bottom" title="Like">
+        <span class="fa fa-heart"></span> <span class="num">{{ decklist.nbVotes }}</span>
+    </a>
+    | <a id="social-icon-favorite" href="#" class="social-icon-favorite" data-toggle="tooltip" data-placement="bottom" title="Favorite">
+        <span class="fa fa-star"></span> <span class="num">{{ decklist.nbFavorites }}</span>
+    </a>
+    | <a id="social-icon-comment" href="#" class="social-icon-comment" data-toggle="tooltip" data-placement="bottom" title="Comment">
+        <span class="fa fa-comment"></span> <span class="num">{{ decklist.nbComments }}</span>
+    </a>
+</span>
+{% endmacro %}
