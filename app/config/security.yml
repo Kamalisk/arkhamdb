@@ -20,7 +20,7 @@ security:
             form_login:
                 provider: fos_userbundle
                 csrf_provider: form.csrf_provider
-                always_use_default_target_path: true
+                always_use_default_target_path: false
                 default_target_path: index
             logout:       true
             anonymous:    true
