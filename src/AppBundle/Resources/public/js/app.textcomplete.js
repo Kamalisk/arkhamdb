@@ -15,7 +15,7 @@ textcomplete.setup = function setup(textarea, options) {
 		actions.push({
 			match : /\B#([\-+\w]*)$/,
 			search : function(term, callback) {
-				var regexp = new RegExp('^' + term, 'i');
+				var regexp = new RegExp('\\b' + term, 'i');
 				callback(app.data.cards.find({
 					name : regexp
 				}));
