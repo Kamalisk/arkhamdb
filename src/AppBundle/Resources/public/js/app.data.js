@@ -122,7 +122,7 @@ data.update_done = function update_done(packs_updated, cards_updated) {
 	if(packs_updated || cards_updated) {
 		var message = "A new version of the data is available. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
 		var alert = $('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
-		$('#wrapper>div.container').prepend(alert);
+		$('#wrapper>div.container:first-child').prepend(alert);
 	}
 };
 
