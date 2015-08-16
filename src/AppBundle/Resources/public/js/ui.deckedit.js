@@ -72,7 +72,7 @@ ui.set_max_qty = function set_max_qty() {
 		if (record.pack_code == 'core')
 			max_qty = Math.min(record.quantity * Config['core-set'], 3);
 		if (record.type_code == "plot")
-			max_qty = record.plot_limit;
+			max_qty = Math.min(max_qty, record.plot_limit);
 		if (record.type_code == "agenda")
 			max_qty = 1;
 		app.data.cards.updateById(record.code, {
