@@ -3,7 +3,6 @@
 var cards_zoom_regexp = /card\/(\d\d\d\d\d)$/;
 
 function display_card_on_element(card, element, event) {
-
 	var image = card.imagesrc ? '<div class="card-thumbnail card-thumbnail-'+(card.type_code === 'plot' ? 4 : 3)+'x card-thumbnail-'+card.type_code+'" style="background-image:url('+card.imagesrc+')"></div>' : "";
 
 	var content = image
@@ -69,13 +68,11 @@ $(function() {
 
 	if(!Modernizr.touch) {
 		$('body').on({
-			mouseover : tip.display,
-			focus : tip.display
+			mouseover : tip.display
 		}, 'a.card-tip');
 
 		$('body').on({
-			mouseover : tip.guess,
-			focus : tip.guess
+			mouseover : tip.guess
 		}, 'a:not(.card-tip)');
 	}
 

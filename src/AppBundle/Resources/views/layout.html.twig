@@ -10,8 +10,7 @@
     {% if pagedescription is defined %}<meta name="description" content="{{ pagedescription }}">{% endif %}
 
     <link href="{{ asset('/bundles/app/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Amiri:400italic,700italic,400,700|Julius+Sans+One' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,700,300,400|Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amiri:400,400italic,700,700italic|Julius+Sans+One|Open+Sans:400,400italic,700,700italic|Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <!--[if lt IE 9]>
       <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.js"></script>
@@ -53,16 +52,6 @@
               {% endfor %}
               </ul>
             </li>
-            {#
-            <li class="hidden-sm dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Factions <span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-              {% for faction in cards_data.getPrimaryFactions() %}
-                <li><a href="{{ path('faction_page',{faction_code:faction.code}) }}"><span class="icon icon-{{ faction.code }} color-{{ faction.code }}"></span> {{ faction.name }}</a></li>
-              {% endfor %}
-              </ul>
-            </li>
-            #}
             {#
             <li class="hidden-sm"><a href="{{ path('card_reviews_list') }}">Reviews</a></li>
             #}
@@ -111,7 +100,7 @@
     </p>
 
     <p>
-    Please post Bug reports and Feature Requests on <a href="https://github.com/Alsciende/thronesdb/issues">GitHub</a>
+    Please post bug reports and feature requests on <a href="https://github.com/Alsciende/thronesdb/issues">GitHub</a>
     </p>
 
     <p>
@@ -129,34 +118,7 @@
 
     </div>
     </footer>
-
-	<!--  card modal -->
-	<div class="modal" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h3 class="modal-title card-name">Modal title</h3>
-					<div class="row">
-						<div class="col-sm-12 text-center">
-							<div class="btn-group modal-qty" data-toggle="buttons"></div>
-						</div>
-					</div>
-				</div>
-				<div class="modal-body">
-					<div class="row">
-						<div class="col-sm-6 modal-image"></div>
-						<div class="col-sm-6 modal-info"></div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<a role="button" href="#" class="btn btn-default card-modal-link">Go to card page</a>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!--  /cardModal -->
+    {% include 'AppBundle:Modale:card.html.twig' %}
 
     <script src="{{ asset('/bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
@@ -182,7 +144,6 @@
 	{% javascripts
 		'@AppBundle/Resources/public/js/bootstrap.min.js'
 		'@AppBundle/Resources/public/js/forerunnerdb.min.js'
-		'@AppBundle/Resources/public/js/moment-timezone-with-data-2010-2020.min.js'
 		'@AppBundle/Resources/public/js/app.data.js'
 		'@AppBundle/Resources/public/js/app.format.js'
 		'@AppBundle/Resources/public/js/app.tip.js'
@@ -191,7 +152,6 @@
         '@AppBundle/Resources/public/js/app.binomial.js'
         '@AppBundle/Resources/public/js/app.hypergeometric.js'
         '@AppBundle/Resources/public/js/app.draw_simulator.js'
-        '@AppBundle/Resources/public/js/app.diff.js'
         '@AppBundle/Resources/public/js/app.textcomplete.js'
         '@AppBundle/Resources/public/js/app.markdown.js'
         '@AppBundle/Resources/public/js/app.smart_filter.js'
