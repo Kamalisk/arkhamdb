@@ -9,7 +9,7 @@ function confirm_publish(event) {
 
 	$('#publish-form-alert').remove();
 
-	$.ajax(Routing.generate('deck_publish', {deck_id:deck_id}), {
+	$.ajax(Routing.generate('deck_publish', {deck_id:app.deck.get_id()}), {
 		dataType: 'json',
 		success: function( response ) {
 		  if(typeof response === 'object') {
