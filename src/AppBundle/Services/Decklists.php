@@ -69,7 +69,8 @@ class Decklists
     public function popular_for_one_faction ($faction, $start = 0, $limit = 30)
     {
         $query = $this->doctrine->createQuery('SELECT d FROM AppBundle:Decklist d WHERE d.faction = ?1');
-        return $query->setParameter(1, $faction)->getOneOrNullResult();
+        $decklists = $query->setParameter(1, $faction)->getResult();
+        if(count($decklists)) return $decklists[0];
     }
 
     /**
