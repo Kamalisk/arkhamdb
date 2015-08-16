@@ -10,6 +10,8 @@ class Texts
 	public function __construct($root_dir)
 	{
         $config = \HTMLPurifier_Config::create(array('Cache.SerializerPath' => $root_dir));
+		$def = $config->getHTMLDefinition(true);
+		$def->addAttribute('a', 'data-code', 'Text');
         $this->purifier = new \HTMLPurifier($config);
 
         $this->transformer = new \Michelf\Markdown();
