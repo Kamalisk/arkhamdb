@@ -52,6 +52,7 @@ class Decks
             'slots' => []
         ];
 
+        $array['agenda_code'] = null;
         foreach ( $deck->getSlots () as $slot ) {
             $array['slots'][$slot->getCard()->getCode()] = $slot->getQuantity();
             if($slot->getCard()->getType()->getCode() === 'agenda') {
