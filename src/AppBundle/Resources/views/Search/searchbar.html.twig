@@ -2,25 +2,7 @@
 	<form method="GET" action="{{ path('cards_find') }}" id="search-form" role="form">
 		<div class="col-sm-4">
 		<div class="input-group" style="margin-bottom:.5em">
-		  <input class="form-control" size="30" name="q" id="search-input" tabindex="1" value="{{ q|default('') }}" title="Search tips:
-   by default, filters on name
-   e: set (acronym or 'core')
-   t: type (word)
-   s: subtype (word)
-   f: faction (letter or '-')
-   x: text (word)
-   p: strength (number)
-   o: cost (number)
-   n: influence (number)
-   d: side (letter)
-   c: cycle (number)
-   a: flavor (word)
-   i: illustrator (word)
-   r: release date (date or 'now')
-   u: unique (number)
-   y: quantity in pack
-
-Example: [ t:asset f:j ] displays all Jinteki assets">
+		  <input type="text" class="form-control smart-filter-help" size="30" name="q" tabindex="1" value="{{ q|default('') }}">
 		  <span class="input-group-btn">
 		      <button class="btn btn-primary" type="submit">Search</button>
 		  </span>
