@@ -512,22 +512,20 @@ class SocialController extends Controller
             ->fetch(\PDO::FETCH_NUM)[0];
 
         if ($is_favorite) {
-            $decklist->setNbfavorites($decklist->getNbfavorites() - 1);
+            $decklist->setNbfavorites($decklist->getNbFavorites() - 1);
             $user->removeFavorite($decklist);
             if ($author->getId() != $user->getId())
                 $author->setReputation($author->getReputation() - 5);
         } else {
-            $decklist->setNbfavorites($decklist->getNbfavorites() + 1);
+            $decklist->setNbfavorites($decklist->getNbFavorites() + 1);
             $user->addFavorite($decklist);
             $decklist->setDateUpdate(new \DateTime());
             if ($author->getId() != $user->getId())
                 $author->setReputation($author->getReputation() + 5);
         }
-        $this->get('doctrine')
-            ->getManager()
-            ->flush();
+        $this->get('doctrine')->getManager()->flush();
 
-        return new Response(count($decklist->getFavorites()));
+        return new Response($decklist->getNbFavorites());
 
     }
 
@@ -699,7 +697,7 @@ class SocialController extends Controller
                 $this->get('doctrine')->getManager()->flush();
             }
         }
-        return new Response(count($decklist->getVotes()));
+        return new Response($decklist->getNbVotes());
 
     }
 

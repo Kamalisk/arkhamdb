@@ -563,6 +563,7 @@ class User extends BaseUser
      */
     public function removeFavorite(\AppBundle\Entity\Decklist $favorite)
     {
+    	$favorite->removeFavorite($this);
         $this->favorites->removeElement($favorite);
     }
 
@@ -598,6 +599,7 @@ class User extends BaseUser
      */
     public function removeVote(\AppBundle\Entity\Decklist $vote)
     {
+    	$vote->removeVote($this);
         $this->votes->removeElement($vote);
     }
 

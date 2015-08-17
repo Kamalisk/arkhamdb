@@ -48,29 +48,36 @@
 		}
 	}
 
-	ui.send_like = function send_like() {
-		var obj = $(this);
+	ui.send_like = function send_like(event) {
+		event.preventDefault();
+		var that = $(this);
+		if($(that).hasClass('processing')) return;
+		$(that).addClass('processing');
 		$.post(Routing.generate('decklist_like'), {
 			id : app.deck.get_id()
 		}, function(data, textStatus, jqXHR) {
-			obj.find('.num').text(data);
+			$(that).find('.num').text(data);
+			$(that).removeClass('processing');
 		});
 	}
 
-	ui.send_favorite = function send_favorite() {
-		var obj = $(this);
+	ui.send_favorite = function send_favorite(event) {
+		event.preventDefault();
+		var that = $(this);
+		if($(that).hasClass('processing')) return;
+		$(that).addClass('processing');
 		$.post(Routing.generate('decklist_favorite'), {
 			id : app.deck.get_id()
 		}, function(data, textStatus, jqXHR) {
-			obj.find('.num').text(data);
-			var title = obj.data('original-tooltip');
-			obj.data('original-tooltip',
+			that.find('.num').text(data);
+			var title = that.data('original-tooltip');
+			that.data('original-tooltip',
 					title == "Add to favorites" ? "Remove from favorites"
 							: "Add to favorites");
-			obj.attr('title', obj.data('original-tooltip'));
+			that.attr('title', that.data('original-tooltip'));
+			$(that).removeClass('processing');
 		});
-
-		ui.send_like.call($('#social-icon-like'));
+		ui.send_like.call($('#social-icon-like'), event);
 	}
 
 	ui.setup_comment_form = function setup_comment_form() {
