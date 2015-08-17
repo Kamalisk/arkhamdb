@@ -64,7 +64,7 @@ tip.guess = function guess(event) {
 	}
 }
 
-$(function() {
+$(document).on('start.app', function () {
 
 	if(!Modernizr.touch) {
 		$('body').on({
