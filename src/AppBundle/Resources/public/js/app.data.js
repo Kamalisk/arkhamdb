@@ -26,13 +26,13 @@ data.load = function load() {
 
 	data.masters.packs.load(function (err) {
 		if(err) {
-			console.log('packs loading error', err);
+			console.log('error when loading packs', err);
 			data.dfd.packs.reject(false);
 			return;
 		}
 		data.masters.cards.load(function (err) {
 			if(err) {
-				console.log('cards loading error', err);
+				console.log('error when loading cards', err);
 				data.dfd.cards.reject(false);
 				return;
 			}
@@ -94,7 +94,8 @@ data.query = function query() {
 	$.ajax({
 		url: Routing.generate('api_packs'),
 		success: data.parse_packs,
-		error: function () {
+		error: function (jqXHR, textStatus, errorThrown) {
+			console.log('error when requesting packs', errorThrown);
 			data.dfd.packs.reject(true);
 		}
 	});
@@ -102,7 +103,8 @@ data.query = function query() {
 	$.ajax({
 		url: Routing.generate('api_cards'),
 		success: data.parse_cards,
-		error: function () {
+		error: function (jqXHR, textStatus, errorThrown) {
+			console.log('error when requesting cards', errorThrown);
 			data.dfd.cards.reject(true);
 		}
 	});
@@ -163,10 +165,11 @@ data.update_collection = function update_collection(data, collection, lastModifi
 	}
 
 	collection.save(function (err) {
-		if(!err) {
-			deferred.resolve(is_collection_updated);
-		} else {
+		if(err) {
+			console.log('error when saving '+collection.name(), err);
 			deferred.reject(true)
+		} else {
+			deferred.resolve(is_collection_updated);
 		}
 	});
 }
