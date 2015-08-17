@@ -11,6 +11,7 @@
 /web/bundles/
 tags
 /web/js/
+/web/css/
 /.externalToolBuilders/
 /.settings/
 /.buildpath
