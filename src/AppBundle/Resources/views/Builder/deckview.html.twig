@@ -1,7 +1,9 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
 {% block javascripts %}
-	<script src="{{ asset('/bundles/app/js/ui.deckview.js') }}"></script>
+	{% javascripts '@AppBundle/Resources/public/js/ui.deckview.js' %}
+	<script src="{{ asset_url }}"></script>
+	{% endjavascripts %}
 	<script type="text/javascript">
 	app.deck.json = {{ deck|json_encode|raw }};
 	</script>

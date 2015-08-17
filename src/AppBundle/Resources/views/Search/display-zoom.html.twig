@@ -1,12 +1,5 @@
 {% extends 'AppBundle:Search:display.html.twig' %}
 
-{% block javascripts %}
-<script src="{{ asset('/bundles/app/js/ui.reviews.js') }}"></script>
-<script type="text/javascript">
-app.user.params.card_id = {{ cards[0].id|json_encode|raw }};
-</script>
-{% endblock %}
-
 {% block main %}
 
 <div class="row">

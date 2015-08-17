@@ -22,7 +22,7 @@ framework:
     #serializer:      { enable_annotations: true }
     templating:
         engines: ['twig']
-        assets_version: 20150817
+        #assets_version: 20150817
     default_locale:  "%locale%"
     trusted_hosts:   ~
     trusted_proxies: ~

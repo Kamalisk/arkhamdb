@@ -9,16 +9,18 @@
     <link rel="apple-touch-icon" sizes="120x120" href="/icon-120.png" />
     {% if pagedescription is defined %}<meta name="description" content="{{ pagedescription }}">{% endif %}
 
-    <link href="{{ asset('/bundles/app/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Amiri:400,400italic,700,700italic|Julius+Sans+One|Open+Sans:400,400italic,700,700italic|Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <!--[if lt IE 9]>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.css">
+    {% stylesheets 
+    	'bundles/app/css/*' 
+    	filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+	{% endstylesheets %}
+	<!--[if lt IE 9]>
       <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.js"></script>
       <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
     <![endif]-->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.css">
-    <link rel="stylesheet" href="{{ asset('/bundles/app/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('/bundles/app/css/icons.css') }}">
 	{% block stylesheets %}{% endblock %}
   </head>
   <body>
