@@ -13,7 +13,7 @@ class User extends BaseUser
 	{
 		return 2*(100+floor($this->reputation/ 10));
 	}
-	
+
     /**
      * @var \DateTime
      */
@@ -112,11 +112,11 @@ class User extends BaseUser
 	public function __construct()
 	{
 		parent::__construct();
-		
+
 		$this->reputation = 1;
 		$this->donation = 0;
 	}
-    
+
     /**
      * Set dateCreation
      *
@@ -550,6 +550,7 @@ class User extends BaseUser
      */
     public function addFavorite(\AppBundle\Entity\Decklist $favorite)
     {
+		$favorite->addFavorite($this);
         $this->favorites[] = $favorite;
 
         return $this;
@@ -584,6 +585,7 @@ class User extends BaseUser
      */
     public function addVote(\AppBundle\Entity\Decklist $vote)
     {
+		$vote->addVote($this);
         $this->votes[] = $vote;
 
         return $this;

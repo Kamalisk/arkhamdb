@@ -695,10 +695,8 @@ class SocialController extends Controller
                 $author = $decklist->getUser();
                 $author->setReputation($author->getReputation() + 1);
                 $decklist->setDateUpdate(new \DateTime());
-                $decklist->setnbVotes($decklist->getnbVotes() + 1);
-                $this->get('doctrine')
-                ->getManager()
-                ->flush();
+                $decklist->setNbVotes($decklist->getNbVotes() + 1);
+                $this->get('doctrine')->getManager()->flush();
             }
         }
         return new Response(count($decklist->getVotes()));
