@@ -1,7 +1,8 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
 {% block body -%}
-    <h1>Card edit</h1>
+<div class="main white container">
+<h1>Card edit</h1>
 
     <form action="{{ path('admin_card_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         <input type="hidden" name="_method" value="PUT" />
@@ -25,4 +26,5 @@
         </form>
     </li>
 </ul>
+</div>
 {% endblock %}
