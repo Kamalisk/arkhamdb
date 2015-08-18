@@ -68,7 +68,18 @@ class Decklists
      */
     public function popular_for_one_faction ($faction, $start = 0, $limit = 30)
     {
-        $query = $this->doctrine->createQuery('SELECT d FROM AppBundle:Decklist d WHERE d.faction = ?1');
+        $query = $this->doctrine->createQuery('
+            SELECT
+                d,
+                d.nbVotes/(1+DATE_DIFF(CURRENT_TIMESTAMP(), d.dateCreation)*DATE_DIFF(CURRENT_TIMESTAMP(), d.dateCreation)) as HIDDEN sortCondition
+            FROM AppBundle:Decklist d
+            WHERE
+                d.faction = ?1
+            ORDER BY
+                sortCondition DESC,
+                d.nbVotes DESC,
+                d.nbComments DESC
+        ');
         $decklists = $query->setParameter(1, $faction)->getResult();
         if(count($decklists)) return $decklists[0];
     }
