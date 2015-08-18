@@ -12,8 +12,8 @@
     <link href='http://fonts.googleapis.com/css?family=Amiri:400,400italic,700,700italic|Julius+Sans+One|Open+Sans:400,400italic,700,700italic|Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.css">
-    {% stylesheets 
-    	'bundles/app/css/*' 
+    {% stylesheets
+    	'bundles/app/css/*'
     	filter='cssrewrite' %}
     <link rel="stylesheet" href="{{ asset_url }}" />
 	{% endstylesheets %}
@@ -133,6 +133,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pagedown/1.0/Markdown.Converter.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.textcomplete/0.2.2/jquery.textcomplete.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.1.7/highcharts.js"></script>
     <script type="text/javascript">
 	var app = {};
     moment.locale('en-US');
@@ -159,6 +160,7 @@
         '@AppBundle/Resources/public/js/app.smart_filter.js'
         '@AppBundle/Resources/public/js/app.deck.js'
         '@AppBundle/Resources/public/js/app.deck_history.js'
+        '@AppBundle/Resources/public/js/app.deck_charts.js'
 		'@AppBundle/Resources/public/js/app.ui.js' %}
 	<script src="{{ asset_url }}"></script>
 	{% endjavascripts %}
