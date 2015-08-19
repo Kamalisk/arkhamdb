@@ -30,7 +30,8 @@ security:
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/remind, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: /api/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/, role: ROLE_ADMIN }
+        - { path: ^/api/, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/js/, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/deck/view/, role: IS_AUTHENTICATED_ANONYMOUSLY }
