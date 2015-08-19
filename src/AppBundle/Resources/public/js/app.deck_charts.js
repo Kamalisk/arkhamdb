@@ -179,7 +179,6 @@ deck_charts.chart_strength = function chart_strength() {
 			}
 		})
 		data = _.flatten(data).map(function (value) { return value || 0; });
-		console.log(data);
 
 		$("#deck-chart-strength").highcharts({
 			chart: {
