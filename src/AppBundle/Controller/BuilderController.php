@@ -549,6 +549,7 @@ class BuilderController extends Controller
         return $this->forward('AppBundle:Builder:save',
                 array(
                         'name' => $decklist->getName(),
+                		'faction_code' => $decklist->getFaction()->getCode(),
                         'content' => json_encode($content),
                         'decklist_id' => $decklist_id
                 ));
@@ -574,6 +575,7 @@ class BuilderController extends Controller
         return $this->forward('AppBundle:Builder:save',
                 array(
                         'name' => $deck->getName().' (copy)',
+                		'faction_code' => $deck->getFaction()->getCode(),
                         'content' => json_encode($content),
                         'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null
                 ));
