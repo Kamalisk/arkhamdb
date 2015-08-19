@@ -104,7 +104,10 @@ class ExcelController extends Controller
 		$writer = $this->get('phpexcel')->createWriter($phpExcelObject, 'Excel2007');
 		$response = $this->get('phpexcel')->createStreamedResponse($writer);
 		$response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
-		$response->headers->set('Content-Disposition', 'attachment;filename='.$pack->getName().'.xlsx');
+		$response->headers->makeDisposition(
+				ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+				$pack->getName() . '.xlsx'
+		);
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 		return $response;
 	}

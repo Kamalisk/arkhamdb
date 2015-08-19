@@ -241,8 +241,11 @@ class BuilderController extends Controller
         $response = new Response();
 
         $response->headers->set('Content-Type', 'text/plain');
-        $response->headers->set('Content-Disposition', 'attachment;filename=' . $name . ".txt");
-
+        $response->headers->makeDisposition(
+        		ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+        		$name . '.txt'
+        );
+        
         $response->setContent($content);
         return $response;
 
@@ -265,7 +268,10 @@ class BuilderController extends Controller
 		$response = new Response();
 
 		$response->headers->set('Content-Type', 'application/octgn');
-		$response->headers->set('Content-Disposition', 'attachment;filename=' . $name . '.o8d');
+		$response->headers->makeDisposition(
+		    ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+		    $name . '.o8d'
+		);
 
 		$response->setContent($content);
 		return $response;
@@ -607,7 +613,11 @@ class BuilderController extends Controller
         $response = new Response();
         $response->headers->set('Content-Type', 'application/zip');
         $response->headers->set('Content-Length', filesize($file));
-        $response->headers->set('Content-Disposition', 'attachment; filename="thronesdb.zip"');
+        $response->headers->makeDisposition(
+        		ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+        		'thronesdb.zip'
+        );
+        
         $response->setContent(file_get_contents($file));
         unlink($file);
         return $response;
