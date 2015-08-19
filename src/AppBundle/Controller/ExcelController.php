@@ -80,7 +80,8 @@ class ExcelController extends Controller
 				if(in_array($fieldName, $ignoredFields)) continue;
 
 				$getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
-				$value = $card->$getter() ?: '';
+				$value = $card->$getter();
+				if(!isset($value)) $value = '';
 				$type = $em->getClassMetadata('AppBundle:Card')->getTypeOfField($fieldName);
 
 				$phpCell = $phpActiveSheet->getCellByColumnAndRow($col_index++, $row_index+2);
