@@ -148,7 +148,7 @@ deck_charts.chart_icon = function chart_icon() {
 			}
 		},
 		tooltip: {
-			headerFormat: '<span style="font-size: 10px">Icon {point.key}</span><br/>'
+			headerFormat: '<span style="font-size: 10px">{point.key} Icon</span><br/>'
 		},
 		series: [{
 			type: "column",
