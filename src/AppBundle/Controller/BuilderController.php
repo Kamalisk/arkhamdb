@@ -1,9 +1,11 @@
 <?php
 namespace AppBundle\Controller;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Deckslot;
 use AppBundle\Entity\Card;
@@ -241,10 +243,10 @@ class BuilderController extends Controller
         $response = new Response();
 
         $response->headers->set('Content-Type', 'text/plain');
-        $response->headers->makeDisposition(
+        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
         		ResponseHeaderBag::DISPOSITION_ATTACHMENT,
         		$name . '.txt'
-        );
+        ));
         
         $response->setContent($content);
         return $response;
@@ -268,10 +270,10 @@ class BuilderController extends Controller
 		$response = new Response();
 
 		$response->headers->set('Content-Type', 'application/octgn');
-		$response->headers->makeDisposition(
+		$response->headers->set('Content-Disposition', $response->headers->makeDisposition(
 		    ResponseHeaderBag::DISPOSITION_ATTACHMENT,
 		    $name . '.o8d'
-		);
+		));
 
 		$response->setContent($content);
 		return $response;
@@ -613,10 +615,10 @@ class BuilderController extends Controller
         $response = new Response();
         $response->headers->set('Content-Type', 'application/zip');
         $response->headers->set('Content-Length', filesize($file));
-        $response->headers->makeDisposition(
+        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
         		ResponseHeaderBag::DISPOSITION_ATTACHMENT,
         		'thronesdb.zip'
-        );
+        ));
         
         $response->setContent(file_get_contents($file));
         unlink($file);

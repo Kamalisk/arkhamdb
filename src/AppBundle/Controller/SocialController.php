@@ -1,8 +1,10 @@
 <?php
 namespace AppBundle\Controller;
+
 use \DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -778,10 +780,10 @@ class SocialController extends Controller
         $name = $content = '';
 
         $response->headers->set('Content-Type', 'text/plain');
-        $response->headers->makeDisposition(
+        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
         		ResponseHeaderBag::DISPOSITION_ATTACHMENT,
         		$name . '.txt'
-        );
+        ));
         
         $response->setContent($content);
         return $response;
@@ -812,36 +814,13 @@ class SocialController extends Controller
         $response = new Response();
 
         $response->headers->set('Content-Type', 'application/octgn');
-        $response->headers->makeDisposition(
+        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
         		ResponseHeaderBag::DISPOSITION_ATTACHMENT,
         		$name . '.o8d'
-        );
-
-        $response->setContent($content);
-        return $response;
-    }
-
-    /*
-	 * does the "downloadable file" part of the export
-	 */
-    public function octgnexport ($filename, $identity, $rd, $description, $response)
-    {
-
-        $content = $this->renderView('AppBundle::octgn.xml.twig', array(
-                "identity" => $identity,
-                "rd" => $rd,
-                "description" => strip_tags($description)
         ));
 
-        $response->headers->set('Content-Type', 'application/octgn');
-        $response->headers->makeDisposition(
-        		ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-        		$filename
-        );
-        
         $response->setContent($content);
         return $response;
-
     }
 
     /*
