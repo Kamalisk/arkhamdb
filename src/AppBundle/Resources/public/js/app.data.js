@@ -46,6 +46,7 @@ data.load = function load() {
 			 */
 			var age_of_database = new Date() - new Date(data.masters.cards.metaData().lastChange);
 			if(age_of_database > 864000000) {
+				console.log('database is older than 10 days => refresh it');
 				data.masters.packs.setData([]);
 				data.masters.cards.setData([]);
 			}
@@ -54,6 +55,7 @@ data.load = function load() {
 			 * if database is empty, we will wait for the new data
 			 */
 			if(data.masters.packs.count() === 0 || data.masters.cards.count() === 0) {
+				console.log('database is empty => load it');
 				force_update = true;
 			}
 
@@ -122,9 +124,15 @@ data.update_done = function update_done(packs_updated, cards_updated) {
 	}
 
 	if(packs_updated || cards_updated) {
-		var message = "A new version of the data is available. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
-		var alert = $('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
-		$('#wrapper>div.container:first-child').prepend(alert);
+		/*
+		 * we display a message informing the user that they can reload their page to use the updated data
+		 * except if we are on the front page, because data is not essential on the front page
+		 */
+		if($('.site-title').size() === 0) {
+			var message = "A new version of the data is available. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
+			var alert = $('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
+			$('#wrapper>div.main.container:first').prepend(alert);
+		}
 	}
 };
 
@@ -160,6 +168,7 @@ data.update_collection = function update_collection(data, collection, lastModifi
 	 * then we update the database
 	 */
 	if(force_update || !lastChangeDatabase || lastChangeDatabase < lastModifiedData) {
+		console.log('data is newer than database or update forced => update the database')
 		collection.setData(data);
 		is_collection_updated = true;
 	}
