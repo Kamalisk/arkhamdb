@@ -30,71 +30,6 @@ var charts = [],
 			'#a99560',
 	};
 
-deck_charts.chart_icon = function chart_icon() {
-
-	var data = [{
-		name: 'Military',
-		color: '#c8232a',
-		y: 0
-	}, {
-		name: 'Intrigue',
-		color: '#13522f',
-		y: 0
-	}, {
-		name: 'Power',
-		color: '#292e5f',
-		y: 0
-	}];
-
-	var draw_deck = app.deck.get_draw_deck();
-	draw_deck.forEach(function (card) {
-		if(card.is_military) data[0].y += (card.is_unique ? 1 : card.indeck);
-		if(card.is_intrigue) data[1].y += (card.is_unique ? 1 : card.indeck);
-		if(card.is_power) data[2].y += (card.is_unique ? 1 : card.indeck);
-	})
-
-	$("#deck-chart-icon").highcharts({
-		chart: {
-			type: 'column'
-		},
-		title: {
-			text: "Characters by icon"
-		},
-		subtitle: {
-			text: "Duplicates of unique characters are not counted"
-		},
-		xAxis: {
-			categories: _.pluck(data, name),
-			title: {
-				text: null
-			}
-		},
-		yAxis: {
-			min: 0,
-			allowDecimals: false,
-			tickInterval: 2,
-			title: null,
-			labels: {
-				overflow: 'justify'
-			}
-		},
-		series: [{
-			type: "column",
-			animation: false,
-			name: 'Icons',
-			showInLegend: false,
-			data: data
-		}],
-		plotOptions: {
-			column: {
-				borderWidth: 0,
-				groupPadding: 0,
-				shadow: false
-			}
-		}
-	});
-}
-
 deck_charts.chart_faction = function chart_faction() {
 	var factions = {};
 	var draw_deck = app.deck.get_draw_deck();
@@ -107,6 +42,7 @@ deck_charts.chart_faction = function chart_faction() {
 	_.each(_.values(factions), function (faction) {
 		data.push({
 			name: faction.name,
+			label: '<span class="icon icon-'+faction.code+'"></span>',
 			color: faction_colors[faction.code],
 			y: faction.count
 		});
@@ -117,13 +53,16 @@ deck_charts.chart_faction = function chart_faction() {
             type: 'column'
         },
 		title: {
-            text: "Cards by factions"
+            text: "Card Factions"
         },
 		subtitle: {
             text: "Draw deck only"
         },
 		xAxis: {
-			categories: _.pluck(data, name),
+			categories: _.pluck(data, 'label'),
+			labels: {
+				useHTML: true
+			},
             title: {
                 text: null
             }
@@ -140,7 +79,7 @@ deck_charts.chart_faction = function chart_faction() {
         series: [{
 			type: "column",
 			animation: false,
-            name: 'Factions',
+            name: '# cards',
 			showInLegend: false,
             data: data
         }],
@@ -152,6 +91,80 @@ deck_charts.chart_faction = function chart_faction() {
 			}
 		}
     });
+}
+
+deck_charts.chart_icon = function chart_icon() {
+
+	var data = [{
+		name: 'Military',
+		label: '<span class="icon icon-military"></span>',
+		color: '#c8232a',
+		y: 0
+	}, {
+		name: 'Intrigue',
+		label: '<span class="icon icon-intrigue"></span>',
+		color: '#13522f',
+		y: 0
+	}, {
+		name: 'Power',
+		label: '<span class="icon icon-power"></span>',
+		color: '#292e5f',
+		y: 0
+	}];
+
+	var draw_deck = app.deck.get_draw_deck();
+	draw_deck.forEach(function (card) {
+		if(card.is_military) data[0].y += (card.is_unique ? 1 : card.indeck);
+		if(card.is_intrigue) data[1].y += (card.is_unique ? 1 : card.indeck);
+		if(card.is_power) data[2].y += (card.is_unique ? 1 : card.indeck);
+	})
+
+	$("#deck-chart-icon").highcharts({
+		chart: {
+			type: 'column'
+		},
+		title: {
+			text: "Character Icons"
+		},
+		subtitle: {
+			text: "Duplicates not counted"
+		},
+		xAxis: {
+			categories: _.pluck(data, 'label'),
+			labels: {
+				useHTML: true
+			},
+			title: {
+				text: null
+			}
+		},
+		yAxis: {
+			min: 0,
+			allowDecimals: false,
+			tickInterval: 2,
+			title: null,
+			labels: {
+				overflow: 'justify'
+			}
+		},
+		tooltip: {
+			headerFormat: '<span style="font-size: 10px">Icon {point.key}</span><br/>'
+		},
+		series: [{
+			type: "column",
+			animation: false,
+			name: '# characters',
+			showInLegend: false,
+			data: data
+		}],
+		plotOptions: {
+			column: {
+				borderWidth: 0,
+				groupPadding: 0,
+				shadow: false
+			}
+		}
+	});
 }
 
 deck_charts.chart_strength = function chart_strength() {
@@ -173,12 +186,14 @@ deck_charts.chart_strength = function chart_strength() {
 				type: 'line'
 			},
 			title: {
-				text: "Characters by strength"
+				text: "Character Strength"
 			},
 			subtitle: {
-				text: "Duplicates of unique characters are not counted"
+				text: "Duplicates not counted"
 			},
 			xAxis: {
+				allowDecimals: false,
+				tickInterval: 1,
 				title: {
 					text: null
 				}
@@ -192,9 +207,12 @@ deck_charts.chart_strength = function chart_strength() {
 					overflow: 'justify'
 				}
 			},
+			tooltip: {
+				headerFormat: '<span style="font-size: 10px">STR {point.key}</span><br/>'
+			},
 			series: [{
 				animation: false,
-				name: 'Strength',
+				name: '# characters',
 				showInLegend: false,
 				data: data
 			}]
@@ -219,12 +237,14 @@ deck_charts.chart_cost = function chart_cost() {
 				type: 'line'
 			},
 			title: {
-				text: "Cards by cost"
+				text: "Card Cost"
 			},
 			subtitle: {
-				text: "All copies of a card are counted"
+				text: "Cost X ignored"
 			},
 			xAxis: {
+				allowDecimals: false,
+				tickInterval: 1,
 				title: {
 					text: null
 				}
@@ -238,9 +258,12 @@ deck_charts.chart_cost = function chart_cost() {
 					overflow: 'justify'
 				}
 			},
+			tooltip: {
+				headerFormat: '<span style="font-size: 10px">Cost {point.key}</span><br/>'
+			},
 			series: [{
 				animation: false,
-				name: 'Cost',
+				name: '# cards',
 				showInLegend: false,
 				data: data
 			}]
