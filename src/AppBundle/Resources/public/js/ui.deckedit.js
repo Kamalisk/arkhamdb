@@ -456,7 +456,7 @@ ui.update_list_template = function update_list_template() {
 				+ '<div class="media">'
 					+ '<div class="media-left"><img class="media-object" src="/bundles/cards/<%= card.code %>.png" alt="<%= card.name %>"></div>'
 					+ '<div class="media-body">'
-						+ '<h4 class="media-heading"><a class="card" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></h4>'
+						+ '<h4 class="media-heading"><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></h4>'
 						+ '<div class="btn-group" data-toggle="buttons"><%= radios %></div>'
 					+ '</div>'
 				+ '</div>'
@@ -469,7 +469,7 @@ ui.update_list_template = function update_list_template() {
 				+ '<div class="media">'
 					+ '<div class="media-left"><img class="media-object" src="/bundles/cards/<%= card.code %>.png" alt="<%= card.name %>"></div>'
 					+ '<div class="media-body">'
-						+ '<h5 class="media-heading"><a class="card" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></h5>'
+						+ '<h5 class="media-heading"><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></h5>'
 						+ '<div class="btn-group" data-toggle="buttons"><%= radios %></div>'
 					+ '</div>'
 				+ '</div>'
@@ -578,7 +578,7 @@ ui.on_deck_modified = function on_deck_modified() {
 ui.refresh_deck = function refresh_deck() {
 	app.deck.display('#deck', 'type');
 	app.draw_simulator && app.draw_simulator.reset();
-
+	app.deck_charts && app.deck_charts.setup();
 }
 
 /**

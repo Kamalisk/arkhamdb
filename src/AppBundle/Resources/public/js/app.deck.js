@@ -184,6 +184,10 @@ deck.get_nb_cards = function get_nb_cards(cards) {
  */
 deck.get_included_packs = function get_included_packs() {
 	var cards = deck.get_cards();
+	var nb_packs = {};
+	cards.forEach(function (card) {
+		nb_packs[card.pack_code] = Math.max(nb_packs[card.pack_code] || 0, card.indeck / card.quantity);
+	});
 	var pack_codes = _.uniq(_.pluck(cards, 'pack_code'));
 	var packs = app.data.packs.find({
 		'code': {
@@ -194,6 +198,9 @@ deck.get_included_packs = function get_included_packs() {
 			'available': 1
 		}
 	});
+	packs.forEach(function (pack) {
+		pack.quantity = nb_packs[pack.code] || 0;
+	})
 	return packs;
 }
 
@@ -277,7 +284,7 @@ deck.display_by_type = function display_by_type() {
 	}
 	$('<div>Draw deck: '+deck.get_draw_deck_size()+' cards</div>').addClass(deck.get_draw_deck_size() < 60 ? 'text-danger': '').appendTo(deck_intro_meta);
 	$('<div>Plot deck: '+deck.get_plot_deck_size()+' cards</div>').addClass(deck.get_plot_deck_size() != 7 ? 'text-danger': '').appendTo(deck_intro_meta);
-	deck_intro_meta.append('<div>Included packs: ' + _.pluck(deck.get_included_packs(), 'name').join(', ') + '</div>');
+	deck_intro_meta.append('<div>Packs: ' + _.map(deck.get_included_packs(), function (pack) { return pack.name+(pack.quantity > 1 ? ' ('+pack.quantity+')' : ''); }).join(', ') + '</div>');
 	if(problem) {
 
 		$('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+problem_labels[problem]+'</div>').appendTo(deck_intro_meta);
