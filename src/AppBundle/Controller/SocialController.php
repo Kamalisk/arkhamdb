@@ -777,17 +777,28 @@ class SocialController extends Controller
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-        $name = $content = '';
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->get('doctrine')->getManager();
+
+        /* @var $decklist \AppBundle\Entity\Decklist */
+        $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
+        if (! $decklist)
+            throw new NotFoundHttpException("Unable to find decklist.");
+
+        $content = $this->renderView('AppBundle:Export:plain.txt.twig', [
+        	"deck" => $this->get('deck_interface')->getArrayForExport($decklist)
+      	]);
+
+        $response = new Response();
 
         $response->headers->set('Content-Type', 'text/plain');
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
         		ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-        		$name . '.txt'
+        		$decklist->getName() . '.txt'
         ));
-        
+
         $response->setContent($content);
         return $response;
-
     }
 
     /*
@@ -807,16 +818,16 @@ class SocialController extends Controller
         if (! $decklist)
             throw new NotFoundHttpException("Unable to find decklist.");
 
-        $content = $this->get('octgn')->export($decklist);
-
-        $name = $decklist->getName();
+        $content = $this->renderView('AppBundle:Export:octgn.xml.twig', [
+        	"deck" => $this->get('deck_interface')->getArrayForExport($decklist)
+      	]);
 
         $response = new Response();
 
         $response->headers->set('Content-Type', 'application/octgn');
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
         		ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-        		$name . '.o8d'
+        		$decklist->getName() . '.o8d'
         ));
 
         $response->setContent($content);

@@ -1,0 +1,50 @@
+{{ deck.name }}
+
+{{ deck.faction.name }}{% if deck.agenda %} / {{ deck.agenda.name }}{% endif %}
+
+
+{% set first_pack = deck.included_packs|first %}
+{% set last_pack = deck.included_packs|last %}
+Packs: {% if deck.included_packs|length > 1 %}
+From {{ first_pack.pack.name }}{% if first_pack.nb > 1 %} ({{ first_pack.nb }}){% endif %} to {{ last_pack.pack.name }}{% if last_pack.nb > 1 %} ({{ last_pack.nb }}){% endif %}
+{% else %}
+{{ first_pack.pack.name }}{% if first_pack.nb > 1 %} ({{ first_pack.nb }}){% endif %}
+{% endif %}
+
+
+{% set plots = deck.slots_by_type.plot %}
+Plot{% if plots|length > 1 %}s{% endif %}
+
+{% for slot in plots %}
+{{ slot.quantity }}x {{ slot.card.name }} ({{ slot.card.pack.name }})
+{% endfor %}
+
+{% set characters = deck.slots_by_type.character %}
+Character{% if characters|length > 1 %}s{% endif %}
+
+{% for slot in characters %}
+{{ slot.quantity }}x {{ slot.card.name }} ({{ slot.card.pack.name }})
+{% endfor %}
+
+{% set locations = deck.slots_by_type.location %}
+Location{% if locations|length > 1 %}s{% endif %}
+
+{% for slot in locations %}
+{{ slot.quantity }}x {{ slot.card.name }} ({{ slot.card.pack.name }})
+{% endfor %}
+
+{% set attachments = deck.slots_by_type.attachment %}
+Attachment{% if attachments|length > 1 %}s{% endif %}
+
+{% for slot in attachments %}
+{{ slot.quantity }}x {{ slot.card.name }} ({{ slot.card.pack.name }})
+{% endfor %}
+
+{% set events = deck.slots_by_type.event %}
+Event{% if events|length > 1 %}s{% endif %}
+
+{% for slot in events %}
+{{ slot.quantity }}x {{ slot.card.name }} ({{ slot.card.pack.name }})
+{% endfor %}
+
+{{ footer|default('') }}

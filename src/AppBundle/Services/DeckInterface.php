@@ -4,6 +4,7 @@ namespace AppBundle\Services;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Monolog\Logger;
+use AppBundle\Entity\Decklist;
 
 /*
  * Functions that can be used on a Deck or on a decklist
@@ -24,7 +25,53 @@ class DeckInterface
             }
             return $count;
         }
+        
+        public function getIncludedPacks($deck) {
+        	$packs = [];
+        	foreach ( $deck->getSlots () as $slot ) {
+        		$card = $slot->getCard();
+        		$pack = $card->getPack();
+        		if(!isset($packs[$pack->getPosition()])) {
+        			$packs[$pack->getPosition()] = [
+        				'pack' => $pack,
+        				'nb' => 0
+        			];
+        		}
+        		
+        		$nbpacks = ceil($slot->getQuantity() / $card->getQuantity());
+        		if($packs[$pack->getPosition()]['nb'] < $nbpacks) {
+        			$packs[$pack->getPosition()]['nb'] = $nbpacks;
+        		}
+        	}
+        	ksort($packs);
+        	return array_values($packs);
+        }
+        
+        public function getArrayForExport($deck) {
+        	
+        	$arr = [
+        			'name' => $deck->getName(),
+        			'faction' => $deck->getFaction(),
+        			'agenda' => $this->getAgenda($deck),
+        			'draw_deck_size' => $this->countCards($this->getDrawDeck($deck)),
+        			'plot_deck_size' => $this->countCards($this->getPlotDeck($deck)),
+        			'included_packs' => $this->getIncludedPacks($deck),
+        			'slots_by_type' => $this->getSlotsByType($deck)
+        	];
+        	
+        	return $arr;
+        }
 
+        public function getSlotsByType($deck) {
+        	$slotsByType = [ 'plot' => [], 'character' => [], 'location' => [], 'attachment' => [], 'event' => [] ];
+        	foreach($deck->getSlots () as $slot) {
+        		if(array_key_exists($slot->getCard()->getType()->getCode(), $slotsByType)) {
+        			$slotsByType[$slot->getCard()->getType()->getCode()][] = $slot;
+        		}
+        	}
+        	return $slotsByType;
+        }
+        
         public function getCountByType($deck) {
             $countByType = [ 'character' => 0, 'location' => 0, 'attachment' => 0, 'event' => 0 ];
             foreach($deck->getSlots () as $slot) {

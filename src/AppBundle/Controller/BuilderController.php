@@ -237,19 +237,27 @@ class BuilderController extends Controller
 
     public function textexportAction ($deck_id)
     {
-		$name = '';
-		$content = '';
+		/* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->get('doctrine')->getManager();
 
-        $response = new Response();
+        /* @var $deck \AppBundle\Entity\Deck */
+        $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
+        if (! $this->getUser() || $this->getUser()->getId() != $deck->getUser()->getId())
+            throw new UnauthorizedHttpException("You don't have access to this deck.");
 
-        $response->headers->set('Content-Type', 'text/plain');
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-        		ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-        		$name . '.txt'
-        ));
-        
-        $response->setContent($content);
-        return $response;
+        $content = $this->renderView('AppBundle:Export:plain.txt.twig', [
+        	"deck" => $this->get('deck_interface')->getArrayForExport($deck)
+      	]);
+
+		$response = new Response();
+		$response->headers->set('Content-Type', 'text/plain');
+		$response->headers->set('Content-Disposition', $response->headers->makeDisposition(
+		    ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+		    $deck->getName() . '.txt'
+		));
+
+		$response->setContent($content);
+		return $response;
 
     }
 
@@ -263,16 +271,16 @@ class BuilderController extends Controller
         if (! $this->getUser() || $this->getUser()->getId() != $deck->getUser()->getId())
             throw new UnauthorizedHttpException("You don't have access to this deck.");
 
-        $content = $this->get('octgn')->export($deck);
-
-        $name = $deck->getName();
-
+		$content = $this->renderView('AppBundle:Export:octgn.xml.twig', [
+        	"deck" => $this->get('deck_interface')->getArrayForExport($deck)
+      	]);
+        
 		$response = new Response();
 
 		$response->headers->set('Content-Type', 'application/octgn');
 		$response->headers->set('Content-Disposition', $response->headers->makeDisposition(
 		    ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-		    $name . '.o8d'
+		    $deck->getName() . '.o8d'
 		));
 
 		$response->setContent($content);
