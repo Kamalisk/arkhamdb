@@ -106,9 +106,12 @@ class BuilderController extends Controller
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
+        $factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findAll();
+        
         return $this->render('AppBundle:Builder:directimport.html.twig',
                 array(
                         'pagetitle' => "Import a deck",
+                		'factions' => array_map(function ($faction) { return [ 'code' => $faction->getCode(), 'name' => $faction->getName() ]; }, $factions)
                 ), $response);
 
     }

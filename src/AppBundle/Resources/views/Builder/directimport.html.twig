@@ -1,16 +1,15 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
 {% block javascripts %}
-
-<script src="{{ asset('/bundles/app/js/directimport.js') }}"></script>
-<script src="{{ asset('/bundles/app/js/app.fuzzy_search.js') }}"></script>
-<script src="{{ asset('/bundles/app/js/string_score.min.js') }}"></script>
-<script type="text/javascript">
-
-var CardDB, CardNames;
-
-</script>
-
+	{% javascripts '@AppBundle/Resources/public/js/ui.deckimport.js' %}
+	<script src="{{ asset_url }}"></script>
+	{% endjavascripts %}
+	<script>
+	$(document).on('data.app', function () {
+		app.data.factions = app.data.db.collection('faction', {primaryKey:'code', changeTimestamp: false});
+		app.data.factions.setData({{ factions|json_encode|raw }});
+	});
+	</script>
 {% endblock %}
 
 {% block body %}
@@ -19,38 +18,29 @@ var CardDB, CardNames;
 
 <div class="row">
 
-<div class="col-md-5">
+<div class="col-md-6">
 <form role="form">
   <div class="form-group">
-    <label for="content">Paste deck here</label>
-    <textarea class="form-control" name="content" rows="30"></textarea>
+    <label for="content">Paste the content of your deck here</label>
+    <textarea class="form-control" id="content" rows="30"></textarea>
   </div>
-  <button id="btn-import" type="button" class="btn btn-default" disabled="disabled" onclick="do_import()">Import</button>
+  <button id="btn-import" type="button" class="btn btn-primary">Parse</button>
 </form>
 </div>
 
-<div class="col-md-5">
+<div class="col-md-6">
 <form role="form" action="{{ path('deck_save') }}" method="POST">
-  <div class="form-group">
-    <label for="">Import result here</label>
-    <ul class="list-group" id="analyzed">
-    </ul>
-  </div>
   <div class="form-group">
     <label for="name">Deck Name</label>
     <input class="form-control decklist-name" type="text" name="name" placeholder="Name">
   </div>
-  <input type="hidden" name="content">
-  <button id="btn-save" type="submit" class="btn btn-success" disabled="disabled" onclick="do_save()">Save</button>
-</form>
-</div>
-
-<div class="col-md-2">
-<form role="form">
   <div class="form-group">
-    <label for="">Statistics</label>
-    <div id="stats"></div>
+    <ul class="list-group" id="deck">
+    </ul>
   </div>
+  <input type="hidden" name="faction_code">
+  <input type="hidden" name="content">
+  <button id="btn-save" type="submit" class="btn btn-success">Save the deck</button>
 </form>
 </div>
 
