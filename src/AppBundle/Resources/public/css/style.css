@@ -255,7 +255,7 @@ div.tags span.tag:not(:first-child)::before {
 h1.site-title {
 	font-family: 'Julius Sans One', sans-serif;
 	position:relative;
-	font-size:128px;
+	font-size:116px;
 	text-align:center;
 	margin-top: 0;
 }
