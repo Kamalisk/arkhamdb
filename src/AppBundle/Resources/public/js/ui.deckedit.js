@@ -47,7 +47,7 @@ ui.init_config_buttons = function init_config_buttons() {
 		$('input[name='+radio+'][value='+Config[radio]+']').prop('checked', true);
 	});
 	// checkbox
-	['show-disabled', 'only-deck'].forEach(function (checkbox) {
+	['show-unusable', 'show-only-deck'].forEach(function (checkbox) {
 		if(Config[checkbox]) $('input[name='+checkbox+']').prop('checked', true);
 	})
 }
