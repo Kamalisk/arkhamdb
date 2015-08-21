@@ -37,10 +37,10 @@ function display_card_on_element(card, element, event) {
 					event : event.type,
 					ready : true,
 					solo : true
-				},
+				}/*,
 				hide : {
 					event: 'unfocus'
-				}
+				}*/
 			}, event);
 }
 
