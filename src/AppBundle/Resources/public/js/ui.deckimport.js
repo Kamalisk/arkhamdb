@@ -15,7 +15,7 @@ ui.on_content_change = function on_content_change(event) {
 		}
 		if(name.match(/^(\d+)x (.*)/)) {
 			qty = parseInt(RegExp.$1, 10);
-			name = RegExp.$2;
+			name = RegExp.$2.trim();
 		}
 		if(card = app.data.cards.findOne({ name: name })) {
 			slots[card.code] = qty;
