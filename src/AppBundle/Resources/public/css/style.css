@@ -208,7 +208,8 @@ div.tags span.tag:not(:first-child)::before {
 
 /************** QTIP ****************/
 
-.qtip-thronesdb{min-width:360px;max-width:360px;font-size:15px}
+.qtip-thronesdb-text{min-width:360px;max-width:360px;font-size:15px}
+.qtip-thronesdb-image{max-width:500px}
 
 /***************** THUMBNAIL CARD IMAGE **************/
 

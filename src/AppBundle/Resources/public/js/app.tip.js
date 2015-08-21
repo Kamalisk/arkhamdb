@@ -1,17 +1,24 @@
 (function app_tip(tip, $) {
 
-var cards_zoom_regexp = /card\/(\d\d\d\d\d)$/;
+var cards_zoom_regexp = /card\/(\d\d\d\d\d)$/,
+	mode = 'text';
 
 function display_card_on_element(card, element, event) {
-	var image = card.imagesrc ? '<div class="card-thumbnail card-thumbnail-'+(card.type_code === 'plot' ? 4 : 3)+'x card-thumbnail-'+card.type_code+'" style="background-image:url('+card.imagesrc+')"></div>' : "";
+	var content;
+	if(mode == 'text') {
+		var image = card.imagesrc ? '<div class="card-thumbnail card-thumbnail-'+(card.type_code === 'plot' ? 4 : 3)+'x card-thumbnail-'+card.type_code+'" style="background-image:url('+card.imagesrc+')"></div>' : "";
 
-	var content = image
-	+ '<h4 class="card-name">' + app.format.name(card) + '</h4>'
-	+ '<div class="card-info">' + app.format.info(card) + '</div>'
-	+ '<div class="card-traits">' + app.format.traits(card) + '</div>'
-	+ '<div class="card-text">' + app.format.text(card) + '</div>'
-	+ '<span class="card-pack pull-right" style="clear:right">' + app.format.pack(card) + '</span>'
-	+ '<span class="card-faction">' + app.format.faction(card) + '</span>';
+		content = image
+		+ '<h4 class="card-name">' + app.format.name(card) + '</h4>'
+		+ '<div class="card-info">' + app.format.info(card) + '</div>'
+		+ '<div class="card-traits">' + app.format.traits(card) + '</div>'
+		+ '<div class="card-text">' + app.format.text(card) + '</div>'
+		+ '<span class="card-pack pull-right" style="clear:right">' + app.format.pack(card) + '</span>'
+		+ '<span class="card-faction">' + app.format.faction(card) + '</span>';
+	}
+	else {
+		content = card.imagesrc ? '<img src="'+card.imagesrc+'">' : "";
+	}
 
 	$(element).qtip(
 			{
@@ -19,21 +26,21 @@ function display_card_on_element(card, element, event) {
 					text : content
 				},
 				style : {
-					classes : 'qtip-bootstrap qtip-thronesdb card-content'
+					classes : 'card-content qtip-bootstrap qtip-thronesdb qtip-thronesdb-' + mode
 				},
 				position : {
-					my : 'left center',
-					at : 'right center',
+					my : mode == 'text' ? 'center left' : 'top left',
+					at : mode == 'text' ? 'center right' : 'bottom right',
 					viewport : $(window)
 				},
 				show : {
 					event : event.type,
 					ready : true,
 					solo : true
-				}/*,
+				},
 				hide : {
 					event: 'unfocus'
-				}*/
+				}
 			}, event);
 }
 
@@ -61,6 +68,12 @@ tip.guess = function guess(event) {
 		if(card && href === generated_url) {
 			display_card_on_element(card, this, event);
 		}
+	}
+}
+
+tip.set_mode = function set_mode(opt_mode) {
+	if(opt_mode == 'text' || opt_mode == 'image') {
+		mode = opt_mode;
 	}
 }
 
