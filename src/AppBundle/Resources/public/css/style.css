@@ -5,6 +5,9 @@ body {
 .card-content {
 	font: 16px/20px 'Amiri', serif
 }
+.card-content abbr[title] {
+	border-bottom: none;
+}
 .card-name {
 	font-family: 'Julius Sans One', sans-serif;
 	font-weight: 700;
