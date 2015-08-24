@@ -15,7 +15,7 @@ Login
     <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
 {% endif %}
 
-<form action="{{ path("fos_user_security_check") }}" method="post" class="">
+<form action="{{ path("fos_user_security_check") }}" method="post">
 	<input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
 
     <div class="form-group">
@@ -37,13 +37,13 @@ Login
     
     {% if error and error.messageKey == 'Account is disabled.' %}
     <p>
-    	Never got the registration email? <a href="{{ path('remind_email',{username:last_username}) }}">Click here</a>.</p>
+    	Never got the registration email? <a href="{{ path('remind_email',{username:last_username}) }}">Click here</a>.
     </p>
     {% endif %}
     
     <input type="submit" id="_submit" name="_submit" class="btn btn-primary" value="{{ 'security.login.submit'|trans }}" />
-    <a href="{{ path('fos_user_registration_register') }}" class="btn btn-link">Register</button>
-    <a href="{{ path('fos_user_resetting_request') }}" class="btn btn-link">Forgot your password?</button>
+    <a href="{{ path('fos_user_registration_register') }}" class="btn btn-link">Register</a>
+    <a href="{{ path('fos_user_resetting_request') }}" class="btn btn-link">Forgot your password?</a>
     
 </form>
 
