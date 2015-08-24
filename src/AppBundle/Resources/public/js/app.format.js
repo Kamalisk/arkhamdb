@@ -63,7 +63,7 @@ format.info = function info(card) {
 		text += 'Initiative: '+card.initiative+'. ';
 		text += 'Claim: '+card.claim+'. ';
 		text += 'Reserve: '+card.reserve+'. ';
-		text += 'Plot deck limit: '+card.plot_limit+'. ';
+		text += 'Plot deck limit: '+card.deck_limit+'. ';
 		break;
 	}
 	return text;

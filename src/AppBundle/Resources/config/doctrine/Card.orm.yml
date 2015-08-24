@@ -77,10 +77,10 @@ AppBundle\Entity\Card:
         reserve:
             type: smallint
             nullable: true
-        plotLimit:
+        deckLimit:
             type: smallint
             nullable: true
-            column: plot_limit
+            column: deck_limit
         strength:
             type: smallint
             nullable: true

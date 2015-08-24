@@ -73,7 +73,7 @@ class Card
     /**
      * @var integer
      */
-    private $plotLimit;
+    private $deckLimit;
 
     /**
      * @var integer
@@ -452,27 +452,27 @@ class Card
     }
 
     /**
-     * Set plotLimit
+     * Set deckLimit
      *
-     * @param integer $plotLimit
+     * @param integer $deckLimit
      *
      * @return Card
      */
-    public function setPlotLimit($plotLimit)
+    public function setDeckLimit($deckLimit)
     {
-        $this->plotLimit = $plotLimit;
+        $this->deckLimit = $deckLimit;
 
         return $this;
     }
 
     /**
-     * Get plotLimit
+     * Get deckLimit
      *
      * @return integer
      */
-    public function getPlotLimit()
+    public function getDeckLimit()
     {
-        return $this->plotLimit;
+        return $this->deckLimit;
     }
 
     /**

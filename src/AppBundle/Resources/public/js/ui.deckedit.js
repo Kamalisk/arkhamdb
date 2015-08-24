@@ -68,13 +68,9 @@ ui.remove_melee_titles = function remove_melee_titles() {
  */
 ui.set_max_qty = function set_max_qty() {
 	app.data.cards.find().forEach(function(record) {
-		var max_qty = 3;
+		var max_qty = Math.min(3, record.deck_limit);
 		if (record.pack_code == 'core')
-			max_qty = Math.min(record.quantity * Config['core-set'], 3);
-		if (record.type_code == "plot")
-			max_qty = Math.min(max_qty, record.plot_limit);
-		if (record.type_code == "agenda")
-			max_qty = 1;
+			max_qty = Math.min(max_qty, record.quantity * Config['core-set']);
 		app.data.cards.updateById(record.code, {
 			maxqty : max_qty
 		});
