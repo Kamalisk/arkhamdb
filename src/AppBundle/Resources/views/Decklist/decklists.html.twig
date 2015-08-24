@@ -87,7 +87,7 @@ $(function () {
 <tr>
 <td class="decklist-faction-image hidden-xs">
 	<img src="/bundles/app/images/factions/{{ decklist.faction_code }}.png">
-	<img src="/bundles/cards/{{ decklist.agenda_code }}.png">
+	{% if decklist.agenda_code is not null %}<img src="/bundles/cards/{{ decklist.agenda_code }}.png">{% endif %}
 </td>
 <td>
     <article>
