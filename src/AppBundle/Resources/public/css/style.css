@@ -282,6 +282,15 @@ div.site-slogan {
 	padding-top:20px;
 	padding-bottom:10px
 }
+#deck-description h1 {
+	font-size: 26px;
+}
+#deck-description h2 {
+	font-size: 22px;
+}
+#deck-description h3 {
+	font-size: 18px;
+}
 
 /************** FACTIONS COLORS **************/
 .bg-faction a, .bg-faction span {
