@@ -71,7 +71,7 @@ class Decklists
         $query = $this->doctrine->createQuery('
             SELECT
                 d,
-                d.nbVotes/(1+DATE_DIFF(CURRENT_TIMESTAMP(), d.dateCreation)*DATE_DIFF(CURRENT_TIMESTAMP(), d.dateCreation)) as HIDDEN sortCondition
+                (1+d.nbVotes)/(1+DATE_DIFF(CURRENT_TIMESTAMP(), d.dateCreation)*DATE_DIFF(CURRENT_TIMESTAMP(), d.dateCreation)) as HIDDEN sortCondition
             FROM AppBundle:Decklist d
             WHERE
                 d.faction = ?1
@@ -167,7 +167,7 @@ class Decklists
                 join faction f on d.faction_id=f.id
                 left join tournament t on d.tournament_id=t.id
                 where d.date_creation > DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
-                order by 2*d.nb_votes/(1+nbjours*nbjours) DESC, d.nb_votes desc, d.nb_comments desc
+                order by (1+d.nb_votes)/(1+nbjours*nbjours) DESC, d.nb_votes desc, d.nb_comments desc
                 limit $start, $limit")->fetchAll(\PDO::FETCH_ASSOC);
 
         $count = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];
@@ -462,7 +462,7 @@ class Decklists
         	case 'popularity':
             default:
         	    $order = 'popularity';
-        		$extra_select = '(d.nb_votes/(1+DATEDIFF(CURRENT_TIMESTAMP(),d.date_creation)/10)) as popularity';
+        		$extra_select = '(1+d.nb_votes)/(1+DATEDIFF(CURRENT_TIMESTAMP(),d.date_creation)/10) as popularity';
         		break;
         }
 
