@@ -108,7 +108,7 @@ class ExcelController extends Controller
 		$response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
 		$response->headers->set('Content-Disposition', $response->headers->makeDisposition(
 				ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-				$pack->getName() . '.xlsx'
+				str_replace(['/','\\'], ['-','_'], $pack->getName() . '.xlsx')
 		));
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 		return $response;

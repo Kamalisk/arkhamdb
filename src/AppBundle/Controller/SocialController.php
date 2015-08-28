@@ -794,7 +794,7 @@ class SocialController extends Controller
         $response->headers->set('Content-Type', 'text/plain');
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
         		ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-        		$decklist->getName() . '.txt'
+        		str_replace(['/','\\'], ['-','_'], $decklist->getName() . '.txt')
         ));
 
         $response->setContent($content);
@@ -827,7 +827,7 @@ class SocialController extends Controller
         $response->headers->set('Content-Type', 'application/octgn');
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
         		ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-        		$decklist->getName() . '.o8d'
+        		str_replace(['/','\\'], ['-','_'], $decklist->getName() . '.o8d')
         ));
 
         $response->setContent($content);
