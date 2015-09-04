@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-class Decklistslot
+class Decklistslot implements \AppBundle\Model\SlotInterface
 {
 	
     /**

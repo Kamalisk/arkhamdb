@@ -27,4 +27,9 @@ services:
         class: AppBundle\Model\DecklistManager
         scope: prototype
         arguments: ["@doctrine.orm.entity_manager", "@request_stack", "@deck_interface", "@logger"]
-       
+    agenda_helper:
+        class: AppBundle\Helper\AgendaHelper
+        arguments: ["@doctrine.orm.entity_manager"]
+    deck_validation_helper:
+        class: AppBundle\Helper\DeckValidationHelper
+        arguments: ["@agenda_helper"]

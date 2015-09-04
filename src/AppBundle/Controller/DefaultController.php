@@ -46,7 +46,7 @@ class DefaultController extends Controller
             {
                 $array['decklist'] = $decklist;
 
-                $countByType = $this->get('deck_interface')->getCountByType($decklist);
+                $countByType = $decklist->getSlots()->getCountByType();
                 $counts = [];
                 foreach($countByType as $code => $qty) {
                     $typeName = $typeNames[$code];
@@ -55,11 +55,10 @@ class DefaultController extends Controller
                 $array['count_by_type'] = join(' &bull; ', $counts);
 
                 $factions = [ $faction->getName() ];
-                $agenda = $this->get('deck_interface')->getAgenda($decklist);
+                $agenda = $decklist->getSlots()->getAgenda();
                 if($agenda) {
-                    $minor_faction_code = $this->get('deck_interface')->getMinorFactionCode($agenda);
-                    if($minor_faction_code) {
-                    	$minor_faction = $this->get('doctrine')->getRepository('AppBundle:Faction')->findOneBy([ 'code' => $minor_faction_code ]);
+                    $minor_faction = $this->get('agenda_helper')->getMinorFaction($agenda);
+                    if($minor_faction) {
                     	$factions[] = $minor_faction->getName();
                     } else {
                         $factions[] = $agenda->getName();

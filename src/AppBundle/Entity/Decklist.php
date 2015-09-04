@@ -410,11 +410,11 @@ class Decklist
     /**
      * Get slots
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \AppBundle\Model\SlotCollectionInterface
      */
     public function getSlots()
     {
-        return $this->slots;
+        return new \AppBundle\Model\SlotCollectionDecorator($this->slots);
     }
 
     /**
