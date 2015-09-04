@@ -12,9 +12,9 @@
     <link href='http://fonts.googleapis.com/css?family=Amiri:400,400italic,700,700italic|Julius+Sans+One|Open+Sans:400,400italic,700,700italic|Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.css">
-    {% stylesheets
+    {% stylesheets filter="cssrewrite,scssphp" output="css/app.css"
     	'bundles/app/css/*'
-    	filter='cssrewrite' %}
+    %}
     <link rel="stylesheet" href="{{ asset_url }}" />
 	{% endstylesheets %}
 	<!--[if lt IE 9]>
@@ -144,7 +144,7 @@
 		{% include 'AppBundle::google-analytics.html.twig' %}
 	{% endif %}
 
-	{% javascripts
+	{% javascripts filter="jsqueeze" output="js/app.js"
 		'@AppBundle/Resources/public/js/bootstrap.min.js'
 		'@AppBundle/Resources/public/js/forerunnerdb.min.js'
 		'@AppBundle/Resources/public/js/app.data.js'
@@ -161,7 +161,8 @@
         '@AppBundle/Resources/public/js/app.deck.js'
         '@AppBundle/Resources/public/js/app.deck_history.js'
         '@AppBundle/Resources/public/js/app.deck_charts.js'
-		'@AppBundle/Resources/public/js/app.ui.js' %}
+		'@AppBundle/Resources/public/js/app.ui.js'
+    %}
 	<script src="{{ asset_url }}"></script>
 	{% endjavascripts %}
 

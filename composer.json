@@ -27,7 +27,9 @@
         "friendsofsymfony/jsrouting-bundle": "^1.5",
         "twig/extensions": "^1.2",
         "ezyang/htmlpurifier": "^4.6",
-        "michelf/php-markdown": "^1.5"
+        "michelf/php-markdown": "^1.5",
+        "leafo/scssphp": "^0.2.0",
+        "patchwork/jsqueeze": "~1.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
