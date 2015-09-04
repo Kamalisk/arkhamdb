@@ -1,35 +1,30 @@
-parameters:
-    decks.class: AppBundle\Services\Decks
-    highlight.class: AppBundle\Services\Highlight
-    decklists.class: AppBundle\Services\Decklists
-    deck_interface.class: AppBundle\Services\DeckInterface
-    reviews.class: AppBundle\Services\Reviews
-    texts.class: AppBundle\Services\Texts
-    diff.class: AppBundle\Services\Diff
-    cards_data.class: AppBundle\Services\CardsData
-
 services:
     decks:
-        class: "%decks.class%"
+        class: AppBundle\Services\Decks
         arguments: ["@doctrine.orm.entity_manager", "@deck_interface", "@diff", "@logger"]
     highlight:
-        class: "%highlight.class%"
+        class: AppBundle\Services\Highlight
         arguments: ["@doctrine.orm.entity_manager"]
     decklists:
-        class: "%decklists.class%"
+        class: AppBundle\Services\Decklists
         arguments: ["@doctrine.orm.entity_manager", "@deck_interface"]
     deck_interface:
-        class: "%deck_interface.class%"
+        class: AppBundle\Services\DeckInterface
         arguments: ["@doctrine.orm.entity_manager"]
     reviews:
-        class: "%reviews.class%"
+        class: AppBundle\Services\Reviews
         arguments: ["@doctrine.orm.entity_manager"]
     texts:
-        class: "%texts.class%"
+        class: AppBundle\Services\Texts
         arguments: ["%kernel.root_dir%"]
     diff:
-        class: "%diff.class%"
+        class: AppBundle\Services\Diff
         arguments: ["@doctrine.orm.entity_manager"]
     cards_data:
-        class: "%cards_data.class%"
+        class: AppBundle\Services\CardsData
         arguments: ["@doctrine", "@request_stack", "@router", "@templating.helper.assets", "%kernel.root_dir%"]
+    decklist_manager:
+        class: AppBundle\Model\DecklistManager
+        scope: prototype
+        arguments: ["@doctrine.orm.entity_manager", "@request_stack", "@deck_interface", "@logger"]
+       

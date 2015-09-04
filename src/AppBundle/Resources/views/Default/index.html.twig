@@ -28,7 +28,8 @@
                 {{ macros.decklist_social_buttons(data.decklist ) }}
             </div>
             <div>{{ data.factions }}</div>
-            <div>{{ data.count_by_type|raw }}</div>
+            <p>{{ data.count_by_type|raw }}</p>
+            <div class="text-center small"><a href="{{ path('decklists_list',{type:'find',faction:data.faction.code}) }}">More in this faction</a></div>
             <div style="clear:both"></div>
         </div>
     </div>

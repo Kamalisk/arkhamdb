@@ -4,6 +4,8 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Model\DecklistManager;
+use AppBundle\Entity\Decklist;
 
 class DefaultController extends Controller
 {
@@ -14,35 +16,51 @@ class DefaultController extends Controller
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-        $types = [];
+        /** 
+         * @var $decklist_manager DecklistManager  
+         */
+        $decklist_manager = $this->get('decklist_manager');
+        $decklist_manager->setLimit(1);
+        
+        $typeNames = [];
         foreach($this->getDoctrine()->getRepository('AppBundle:Type')->findAll() as $type) {
-            $types[$type->getCode()] = $type;
+        	$typeNames[$type->getCode()] = $type->getName();
         }
-
+        
         $decklists_by_faction = [];
         $factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findBy(['is_primary' => true], ['code' => 'ASC']);
-        foreach($factions as $faction) {
+        
+        foreach($factions as $faction) 
+        {
             $array = [];
             $array['faction'] = $faction;
 
-            $decklist = $this->get('decklists')->popular_for_one_faction($faction, 0, 1);
-            if($decklist) {
+        	$decklist_manager->setFaction($faction);
+        	$paginator = $decklist_manager->findPopularDecklists();
+        	/**
+        	 * @var $decklist Decklist
+        	 */
+            $decklist = $paginator->getIterator()->current();
+            
+            if($decklist) 
+            {
                 $array['decklist'] = $decklist;
 
                 $countByType = $this->get('deck_interface')->getCountByType($decklist);
                 $counts = [];
                 foreach($countByType as $code => $qty) {
-                    $type = $types[$code];
-                    $counts[] = $qty . " " . $type->getName() . "s";
+                    $typeName = $typeNames[$code];
+                    $counts[] = $qty . " " . $typeName . "s";
                 }
                 $array['count_by_type'] = join(' &bull; ', $counts);
 
                 $factions = [ $faction->getName() ];
                 $agenda = $this->get('deck_interface')->getAgenda($decklist);
                 if($agenda) {
-                    $minor_faction = $this->get('deck_interface')->getMinorFaction($agenda);
-                    if($minor_faction) {
-                        $factions[] = $minor_faction->getName();
+                    $minor_faction_code = $this->get('deck_interface')->getMinorFactionCode($agenda);
+                    if($minor_faction_code) {
+                    	$minor_faction = $this->get('doctrine')->getRepository('AppBundle:Faction')->findOneBy([ 'code' => $minor_faction_code ]);
+                    	$factions[] = $minor_faction->getName();
                     } else {
                         $factions[] = $agenda->getName();
                     }

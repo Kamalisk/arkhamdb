@@ -71,7 +71,7 @@ class Decklists
         $query = $this->doctrine->createQuery('
             SELECT
                 d,
-                (1+d.nbVotes)/(1+DATE_DIFF(CURRENT_TIMESTAMP(), d.dateCreation)*DATE_DIFF(CURRENT_TIMESTAMP(), d.dateCreation)) as HIDDEN sortCondition
+                (1+d.nbVotes)/(1+POWER(DATE_DIFF(CURRENT_TIMESTAMP(), d.dateCreation), 2) as HIDDEN sortCondition
             FROM AppBundle:Decklist d
             WHERE
                 d.faction = ?1
@@ -462,7 +462,7 @@ class Decklists
         	case 'popularity':
             default:
         	    $order = 'popularity';
-        		$extra_select = '(1+d.nb_votes)/(1+DATEDIFF(CURRENT_TIMESTAMP(),d.date_creation)/10) as popularity';
+        		$extra_select = '(1+d.nb_votes)/(1+POWER(DATEDIFF(CURRENT_TIMESTAMP(),d.date_creation),2)) as popularity';
         		break;
         }
 
