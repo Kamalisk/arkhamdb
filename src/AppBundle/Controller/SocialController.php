@@ -243,8 +243,10 @@ class SocialController extends Controller
          * @var $decklist_manager DecklistManager
          */
         $decklist_manager = $this->get('decklist_manager');
-        $decklist_manager->setLimit(30);
+        $decklist_manager->setLimit(3);
         $decklist_manager->setPage($page);
+        
+        $request_attributes = $request->attributes->all();
         
         $pagetitle = "Decklists";
         $header = '';

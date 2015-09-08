@@ -225,14 +225,17 @@ class DecklistManager
 	{
 		$request = $this->request_stack->getCurrentRequest();
 		$route = $request->get('_route');
-		$params = $request->query->all();
+		$route_params = $request->get('_route_params');
+		$query = $request->query->all();
+		
+		$params = $query + $route_params;
 		
 		$number_of_pages = $this->getNumberOfPages();
 		$pages = [];
 		for ($page = 1; $page <= $number_of_pages; $page ++) {
 			$pages[] = array(
 				"numero" => $page,
-				"url" => $this->router->generate($route, $params + ["page" => $page]),
+				"url" => $this->router->generate($route, ["page" => $page] + $params),
 				"current" => $page == $this->page
 			);
 		}
