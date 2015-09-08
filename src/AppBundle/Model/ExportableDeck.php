@@ -29,9 +29,9 @@ class ExportableDeck
 		return [
 				'name' => $this->getName(),
 				'faction' => $this->getFaction(),
-				'agenda' => $slots>getAgenda(),
+				'agenda' => $slots->getAgenda(),
 				'draw_deck_size' => $slots->getDrawDeck()->countCards(),
-				'plot_deck_size' => $slots->getPlotDeck->countCards(),
+				'plot_deck_size' => $slots->getPlotDeck()->countCards(),
 				'included_packs' => $slots->getIncludedPacks(),
 				'slots_by_type' => $slots->getSlotsByType()
 		];
