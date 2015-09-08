@@ -218,7 +218,7 @@ class DecklistManager
 	
 	public function getNumberOfPages()
 	{
-		return ceil($this->maxcount / $this->limit);
+		return intval(ceil($this->maxcount / $this->limit));
 	}
 	
 	public function getAllPages()
