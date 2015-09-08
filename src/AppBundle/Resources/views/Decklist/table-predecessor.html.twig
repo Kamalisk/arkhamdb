@@ -1,17 +1,10 @@
 <table class="table table-condensed" id="table-predecessor">
 <thead>
-<tr><th colspan="{% if precedent_decklists|length %}4{% else %}1{% endif %}"><span class="fa fa-backward"></span> Derived from</th></tr>
+<tr><th colspan="{% if decklist.precedent %}4{% else %}1{% endif %}"><span class="fa fa-backward"></span> Derived from</th></tr>
 </thead>
 <tbody>
-{% if precedent_decklists|length %}
-{% for decklist in precedent_decklists %}
-<tr>
-	<td class="decklist-name"><a href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.name_canonical|e('url') }) }}">{{ decklist.name }}</a></td>
-	<td class="social"><span class="fa fa-heart social-icon-like"></span> {{ decklist.nb_votes }}</td>
-	<td class="social"><span class="fa fa-star social-icon-favorite"></span> {{ decklist.nb_favorites }}</td>
-	<td class="social"><span class="fa fa-comment social-icon-comment"></span> {{ decklist.nb_comments }}</td>
-</tr>
-{% endfor %}
+{% if decklist.precedent %}
+{% include 'AppBundle:Default:decklist-table-row.html.twig' %}
 {% else %}
 <tr><td>None. Self-made deck here.</td></tr>
 {% endif %}

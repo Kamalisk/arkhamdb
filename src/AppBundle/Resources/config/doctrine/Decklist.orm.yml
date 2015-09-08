@@ -30,6 +30,7 @@ AppBundle\Entity\Decklist:
                 referencedColumnName: id
         precedent:
             targetEntity: Decklist
+            orderBy: { 'dateCreation': 'ASC' }
             nullable: true
             inversedBy: successors
             joinColumn:
@@ -49,10 +50,12 @@ AppBundle\Entity\Decklist:
             cascade: ["persist","remove"]
         comments:
             targetEntity: Comment
+            orderBy: { 'dateCreation': 'ASC' }
             mappedBy: decklist
             cascade: ["persist"]
         successors:
             targetEntity: Decklist
+            orderBy: { 'dateCreation': 'ASC' }
             mappedBy: precedent
         children:
             targetEntity: Deck

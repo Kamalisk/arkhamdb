@@ -1,16 +1,11 @@
 <table class="table table-condensed" id="table-successor">
 <thead>
-<tr><th colspan="{% if successor_decklists|length %}4{% else %}1{% endif %}"><span class="fa fa-forward"></span> Inspiration for</th></tr>
+<tr><th colspan="{% if decklist.successors|length %}4{% else %}1{% endif %}"><span class="fa fa-forward"></span> Inspiration for</th></tr>
 </thead>
 <tbody>
-{% if successor_decklists|length %}
-{% for decklist in successor_decklists %}
-<tr>
-	<td class="decklist-name"><a href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.name_canonical|e('url') }) }}">{{ decklist.name }}</a></td>
-	<td class="social"><span class="fa fa-heart social-icon-like"></span> {{ decklist.nb_votes }}</td>
-	<td class="social"><span class="fa fa-star social-icon-favorite"></span> {{ decklist.nb_favorites }}</td>
-	<td class="social"><span class="fa fa-comment social-icon-comment"></span> {{ decklist.nb_comments }}</td>
-</tr>
+{% if decklist.successors|length %}
+{% for successor in decklist.successors %}
+{% include 'AppBundle:Default:decklist-table-row.html.twig' %}
 {% endfor %}
 {% else %}
 <tr><td>None yet</td></tr>

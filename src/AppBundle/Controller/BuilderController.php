@@ -72,7 +72,7 @@ class BuilderController extends Controller
         	$agenda = $em->getRepository('AppBundle:Card')->findOneBy(array("code" => $agenda_code));
         	$name = sprintf("New deck: %s, %s", $faction->getName(), $agenda->getName());
         	$pack = $agenda->getPack();
-			$tags[] = $this->get('deck_interface')->getMinorFactionCode($agenda);
+			$tags[] = $this->get('agenda_helper')->getMinorFactionCode($agenda);
         }
 
 
@@ -249,7 +249,7 @@ class BuilderController extends Controller
             throw new UnauthorizedHttpException("You don't have access to this deck.");
 
         $content = $this->renderView('AppBundle:Export:plain.txt.twig', [
-        	"deck" => $this->get('deck_interface')->getArrayForExport($deck)
+        	"deck" => $deck->getTextExport()
       	]);
 
 		$response = new Response();
@@ -275,7 +275,7 @@ class BuilderController extends Controller
             throw new UnauthorizedHttpException("You don't have access to this deck.");
 
 		$content = $this->renderView('AppBundle:Export:octgn.xml.twig', [
-        	"deck" => $this->get('deck_interface')->getArrayForExport($deck)
+        	"deck" => $deck->getTextExport()
       	]);
         
 		$response = new Response();
@@ -406,97 +406,71 @@ class BuilderController extends Controller
 
         $dbh = $this->get('doctrine')->getConnection();
 
-        $deck = $this->get('decks')->getArrayWithSnapshots($deck_id);
+        $deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->find($deck_id);
 
-        if ($this->getUser ()->getId () != $deck ['user_id']) {
-        	throw new UnauthorizedHttpException ( "You are not allowed to view this deck." );
+        if ($this->getUser()->getId () != $deck->getUser()->getId()) 
+        {
+        	return $this->render(
+        		'AppBundle:Default:error.html.twig',
+        		array(
+        			'pagetitle' => "Error",
+        			'error' => 'You are not allowed to view this deck.'
+        		)
+        	);
         }
 
-        $published_decklists = $dbh->executeQuery ( "SELECT
-					d.id,
-					d.name,
-					d.name_canonical,
-					d.nb_votes,
-					d.nb_favorites,
-					d.nb_comments
-					from decklist d
-					where d.parent_deck_id=?
-					order by d.date_creation asc", array (
-        							$deck_id
-        					) )->fetchAll ();
-
-        return $this->render('AppBundle:Builder:deckedit.html.twig',
-                array(
-                        'pagetitle' => "Deckbuilder",
-                        'deck' => $deck,
-                        'published_decklists' => $published_decklists
-                ));
+        return $this->render(
+        	'AppBundle:Builder:deckedit.html.twig',
+        	array(
+        		'pagetitle' => "Deckbuilder",
+        		'deck' => $deck,
+        		'arrayexport' => $deck->getArrayExport(true)
+        	)
+        );
 
     }
 
     public function viewAction ($deck_id)
     {
-		$dbh = $this->getDoctrine()->getConnection();
-
-        $rows = $dbh->executeQuery("SELECT
-				d.id,
-                u.id user_id,
-                u.is_share_decks shared
-                from deck d
-                join user u on d.user_id=u.id
-                where d.id=?
-				", array(
-                $deck_id
-        ))->fetchAll();
-
-        if(!count($rows)) {
-            throw new NotFoundHttpException("Deck doesn't exist");
+    	$deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->find($deck_id);
+    	
+        if(!$deck) {
+        	return $this->render(
+        			'AppBundle:Default:error.html.twig',
+        			array(
+        					'pagetitle' => "Error",
+        					'error' => "This deck doesn't exist."
+        			)
+        	);
         }
-        $deck = $rows[0];
 
-        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck['user_id'];
-        if(!$deck['shared'] && !$is_owner) {
-			return $this->render('AppBundle:Default:error.html.twig',
-					array(
-							'pagetitle' => "Error",
-							'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
-					));
+        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
+        if(!$deck->getUser()->getIsShareDecks() && !$is_owner) {
+			return $this->render(
+				'AppBundle:Default:error.html.twig',
+				array(
+					'pagetitle' => "Error",
+					'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
+				)
+			);
         }
 
 		// we're using deck_interface to use what's been saved, not the snapshots
-        $deck = $this->get('decks')->getArray($this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->find($deck_id));
+        $export = $deck->getArrayExport(false);
 
-        $published_decklists = $dbh->executeQuery(
-                "SELECT
-					d.id,
-					d.name,
-					d.name_canonical,
-					d.nb_votes,
-					d.nb_favorites,
-					d.nb_comments
-					from decklist d
-					where d.parent_deck_id=?
-					order by d.date_creation asc", array(
-                        $deck_id
-                ))->fetchAll();
-
-        $tournaments = $dbh->executeQuery(
-		        "SELECT
-					t.id,
-					t.description
-                FROM tournament t
-                ORDER BY t.description desc")->fetchAll();
-
-        return $this->render('AppBundle:Builder:deckview.html.twig',
-                array(
-                        'pagetitle' => "Deckbuilder",
-                        'deck' => $deck,
-                		'deck_id' => $deck_id,
-                        'published_decklists' => $published_decklists,
-                        'is_owner' => $is_owner,
-                        'tournaments' => $tournaments,
-                ));
-
+        $tournaments = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->findAll();
+        
+        return $this->render(
+        	'AppBundle:Builder:deckview.html.twig',
+        	array(
+        		'pagetitle' => "Deckbuilder",
+        		'deck' => $deck,
+        		'arrayexport' => $export,
+        		'deck_id' => $deck_id,
+        		'is_owner' => $is_owner,
+        		'tournaments' => $tournaments,
+        	)
+        );
     }
 
     public function listAction ()

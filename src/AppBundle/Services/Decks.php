@@ -7,13 +7,16 @@ use AppBundle\Entity\Deck;
 use AppBundle\Entity\Deckslot;
 use Symfony\Bridge\Monolog\Logger;
 use AppBundle\Entity\Deckchange;
+use AppBundle\Helper\DeckValidationHelper;
+use AppBundle\Helper\AgendaHelper;
 
 class Decks
 {
-	public function __construct(EntityManager $doctrine, DeckInterface $deck_interface, Diff $diff, Logger $logger)
+	public function __construct(EntityManager $doctrine, DeckValidationHelper $deck_validation_helper, AgendaHelper $agenda_helper, Diff $diff, Logger $logger)
 	{
 		$this->doctrine = $doctrine;
-		$this->deck_interface = $deck_interface;
+		$this->deck_validation_helper = $deck_validation_helper;
+		$this->agenda_helper = $agenda_helper;
 		$this->diff = $diff;
 		$this->logger = $logger;
 	}
@@ -23,180 +26,10 @@ class Decks
 		$decks = $user->getDecks();
 		$list = [];
 		foreach($decks as $deck) {
-			$list[] = $this->getArray($deck);
+			$list[] = $deck->getArrayExport(false);
 		}
 
 		return $list;
-	}
-
-    /**
-     * outputs an array with the deck info to give to app.deck.js
-     * @param integer $deck_id
-     * @param boolean $decode_variation
-     * @return array
-     */
-    public function getArray($deck)
-    {
-        $array = [
-            'id' => $deck->getId(),
-            'name' => $deck->getName(),
-            'date_creation' => $deck->getDateCreation()->format('r'),
-            'date_update' => $deck->getDateUpdate()->format('r'),
-            'description_md' => $deck->getDescriptionMd(),
-            'user_id' => $deck->getUser()->getId(),
-            'faction_code' => $deck->getFaction()->getCode(),
-            'faction_name' => $deck->getFaction()->getName(),
-			'tags' => $deck->getTags(),
-			'problem' => $deck->getProblem(),
-			'problem_label' => $this->deck_interface->getProblemLabel($deck->getProblem()),
-            'slots' => []
-        ];
-
-        $array['agenda_code'] = null;
-        foreach ( $deck->getSlots () as $slot ) {
-            $array['slots'][$slot->getCard()->getCode()] = $slot->getQuantity();
-            if($slot->getCard()->getType()->getCode() === 'agenda') {
-                $array['agenda_code'] = $slot->getCard()->getCode();
-            }
-        }
-
-        return $array;
-    }
-
-	/**
-	 * outputs an array with the deck info to give to app.deck.js
-	 * @param integer $deck_id
-	 * @param boolean $decode_variation
-	 * @return array
-	 */
-	public function getArrayWithSnapshots($deck_id, $decode_variation = FALSE)
-	{
-		$dbh = $this->doctrine->getConnection ();
-
-		$rows = $dbh->executeQuery ( "SELECT
-				d.id,
-				d.name,
-				DATE_FORMAT(d.date_creation, '%Y-%m-%dT%TZ') date_creation,
-                DATE_FORMAT(d.date_update, '%Y-%m-%dT%TZ') date_update,
-                d.description_md,
-				d.problem,
-                d.tags,
-                d.user_id,
-        		f.code faction_code,
-        		f.name faction_name,
-                (select count(*) from deckchange c where c.deck_id=d.id and c.is_saved=0) unsaved
-				from deck d
-        		join faction f on d.faction_id=f.id
-				where d.id=?
-				", array (
-				$deck_id
-		) )->fetchAll ();
-
-		$deck = $rows [0];
-		$deck['agenda_code'] = null;
-
-		$rows = $dbh->executeQuery ( "SELECT
-				c.code,
-				t.code type_code,
-				s.quantity
-				from deckslot s
-				join card c on s.card_id=c.id
-				join type t on c.type_id=t.id
-				where s.deck_id=?", array (
-				$deck_id
-		) )->fetchAll ();
-
-		$cards = [ ];
-		foreach ( $rows as $row ) {
-			$cards [$row ['code']] = intval ( $row ['quantity'] );
-			if($row['type_code'] === 'agenda') {
-				$deck['agenda_code'] = $row['code'];
-			}
-		}
-
-		$snapshots = [ ];
-
-		$rows = $dbh->executeQuery ( "SELECT
-				DATE_FORMAT(c.date_creation, '%Y-%m-%dT%TZ') date_creation,
-				c.variation,
-                c.is_saved
-				from deckchange c
-				where c.deck_id=? and c.is_saved=1
-                order by date_creation desc", array (
-				$deck_id
-		) )->fetchAll ();
-
-		// recreating the versions with the variation info, starting from $preversion
-		$preversion = $cards;
-		foreach ( $rows as $row ) {
-			$row ['variation'] = $variation = json_decode ( $row ['variation'], TRUE );
-			$row ['is_saved'] = ( boolean ) $row ['is_saved'];
-			// add preversion with variation that lead to it
-			$row ['content'] = $preversion;
-			array_unshift ( $snapshots, $row );
-
-			// applying variation to create 'next' (older) preversion
-			foreach ( $variation [0] as $code => $qty ) {
-				$preversion [$code] = $preversion [$code] - $qty;
-				if ($preversion [$code] == 0)
-					unset ( $preversion [$code] );
-			}
-			foreach ( $variation [1] as $code => $qty ) {
-				if (! isset ( $preversion [$code] ))
-					$preversion [$code] = 0;
-				$preversion [$code] = $preversion [$code] + $qty;
-			}
-			ksort ( $preversion );
-		}
-
-		// add last know version with empty diff
-		$row ['content'] = $preversion;
-		$row ['date_creation'] = $deck ['date_creation'];
-		$row ['saved'] = TRUE;
-		$row ['variation'] = null;
-		array_unshift ( $snapshots, $row );
-
-		$rows = $dbh->executeQuery ( "SELECT
-				DATE_FORMAT(c.date_creation, '%Y-%m-%dT%TZ') date_creation,
-				c.variation,
-                c.is_saved
-				from deckchange c
-				where c.deck_id=? and c.is_saved=0
-                order by date_creation asc", array (
-				$deck_id
-		) )->fetchAll ();
-
-		// recreating the snapshots with the variation info, starting from $postversion
-		$postversion = $cards;
-		foreach ( $rows as $row ) {
-			$row ['variation'] = $variation = json_decode ( $row ['variation'], TRUE );
-			$row ['is_saved'] = ( boolean ) $row ['is_saved'];
-			// applying variation to postversion
-			foreach ( $variation [0] as $code => $qty ) {
-				if (! isset ( $postversion [$code] ))
-					$postversion [$code] = 0;
-				$postversion [$code] = $postversion [$code] + $qty;
-			}
-			foreach ( $variation [1] as $code => $qty ) {
-				$postversion [$code] = $postversion [$code] - $qty;
-				if ($postversion [$code] == 0)
-					unset ( $postversion [$code] );
-			}
-			ksort ( $postversion );
-
-			// add postversion with variation that lead to it
-			$row ['content'] = $postversion;
-			array_push ( $snapshots, $row );
-		}
-
-		// current deck is newest snapshot
-		$deck ['slots'] = $postversion;
-
-		$deck ['history'] = $snapshots;
-
-		$deck['problem'] = "";
-
-		return $deck;
 	}
 
 	public function saveDeck($user, $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck)
@@ -255,7 +88,7 @@ class Decks
 			// compute diff between current content and saved content
 			list ( $listings ) = $this->diff->diffContents ( array (
 					$content,
-					$this->deck_interface->getContent ( $source_deck )
+					$source_deck->getSlots()->getContent()
 			) );
 			// remove all change (autosave) since last deck update (changes are sorted)
 			$changes = $this->getUnsavedChanges ( $deck );
@@ -291,7 +124,7 @@ class Decks
 			);
 		}
 
-		$deck->setProblem($this->deck_interface->getProblem($deck));
+		$deck->setProblem($this->deck_validation_helper->findProblem($deck));
 		$this->doctrine->flush ();
 
 		return $deck->getId ();
@@ -305,7 +138,7 @@ class Decks
 		}
 		// if deck has only one card and it's an agenda, we delete it
 		if(count($deck->getSlots()) === 0 || (
-			count($deck->getSlots()) === 1 && $this->deck_interface->getAgenda($deck)
+			count($deck->getSlots()) === 1 && $this->deck->getSlots()->getAgenda()
 		) ) {
 			$this->doctrine->remove($deck);
 		}

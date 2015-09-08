@@ -39,7 +39,7 @@ AppBundle\Entity\Deck:
             mappedBy: parent
         changes:
             targetEntity: Deckchange
-            orderBy: {'dateCreation':'DESC'}
+            orderBy: {'dateCreation':'DESC', 'isSaved':'DESC'}
             mappedBy: deck
             cascade: ["persist","remove"]
     fields:

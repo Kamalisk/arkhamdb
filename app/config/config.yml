@@ -39,6 +39,7 @@ twig:
     strict_variables: "%kernel.debug%"
     globals:
         cards_data: "@cards_data"
+        deck_validation_helper: "@deck_validation_helper"
     form:
         resources:
             - 'bootstrap_3_layout.html.twig'

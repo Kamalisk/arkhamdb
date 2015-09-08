@@ -37,14 +37,12 @@ class SocialController extends Controller
             throw new UnauthorizedHttpException("You don't have access to this deck.");
         }
 
-        $problem = $this->get('deck_interface')->getProblem($deck);
+        $problem = $this->get('deck_validation_helper')->findProblem($deck);
         if ($problem) {
-            return new Response($this->get('deck_interface')->getProblemLabel($problem));
+            return new Response($this->get('deck_validation_helper')->getProblemLabel($problem));
         }
 
-        $decklists = $this->get('decklists');
-
-        $new_content = json_encode($this->get('deck_interface')->getContent($deck));
+        $new_content = json_encode($deck->getSlots()->getContent());
         $new_signature = md5($new_content);
         $old_decklists = $this->getDoctrine()
             ->getRepository('AppBundle:Decklist')
@@ -54,7 +52,7 @@ class SocialController extends Controller
 
         /* @var $decklist \AppBundle\Entity\Decklist */
         foreach ($old_decklists as $decklist) {
-            if (json_encode($this->get('deck_interface')->getContent($decklist)) == $new_content) {
+            if (json_encode($decklist->getSlots()->getContent()) == $new_content) {
                 $url = $this->generateUrl('decklist_detail', array(
                         'decklist_id' => $decklist->getId(),
                         'decklist_name' => $decklist->getNameCanonical()
@@ -63,7 +61,7 @@ class SocialController extends Controller
             }
         }
 
-        return new Response(json_encode($this->get('decks')->getArray($deck)));
+        return new Response(json_encode($deck->getArrayExport(false)));
 
     }
 
@@ -83,19 +81,19 @@ class SocialController extends Controller
             throw new UnauthorizedHttpException("You don't have access to this deck.");
         }
 
-        $problem = $this->get('deck_interface')->getProblem($deck);
+        $problem = $this->get('deck_validation_helper')->findProblem($deck);
         if($problem) {
             return $this->render('AppBundle:Default:error.html.twig', [
 				'pagetitle' => "Error",
-				'error' => 'You cannot publish this deck because it is invalid: "'.$this->get('deck_interface')->getProblemLabel($problem).'".'
+				'error' => 'You cannot publish this deck because it is invalid: "'.$this->get('deck_validation_helper')->getProblemLabel($problem).'".'
 			]);
         }
 
-        $new_content = json_encode($this->get('deck_interface')->getContent($deck));
+        $new_content = json_encode($deck->getSlots()->getContent());
         $new_signature = md5($new_content);
         $old_decklists = $this->getDoctrine()->getRepository('AppBundle:Decklist')->findBy(['signature' => $new_signature]);
         foreach ($old_decklists as $decklist) {
-            if (json_encode($this->get('deck_interface')->getContent($decklist)) == $new_content) {
+            if (json_encode($decklist->getSlots()->getContent()) == $new_content) {
                 throw new AccessDeniedHttpException('That decklist already exists.');
             }
         }
@@ -330,110 +328,21 @@ class SocialController extends Controller
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-        $dbh = $this->get('doctrine')->getConnection();
-        $rows = $dbh->executeQuery(
-                "SELECT
-				d.id,
-				d.date_update,
-				d.name,
-				d.name_canonical,
-				d.date_creation,
-				d.description_md,
-				d.description_html,
-				d.precedent_decklist_id precedent,
-                d.tournament_id,
-                t.description tournament,
-				u.id user_id,
-				u.username,
-				u.color usercolor,
-				u.reputation,
-				u.donation,
-				f.code faction_code,
-				d.nb_votes,
-				d.nb_favorites,
-				d.nb_comments
-				from decklist d
-				join user u on d.user_id=u.id
-				join faction f on d.faction_id=f.id
-                left join tournament t on d.tournament_id=t.id
-				where d.id=?
-				", array(
-                        $decklist_id
-                ))->fetchAll();
-
-        if (empty($rows)) {
-            throw new NotFoundHttpException('Wrong id');
-        }
-
-        $decklist = $rows[0];
-
-        $comments = $dbh->executeQuery(
-                "SELECT
-				c.id,
-				c.date_creation,
-				c.user_id,
-				u.username author,
-				u.color authorcolor,
-                u.donation,
-				c.text,
-                c.is_hidden
-				from comment c
-				join user u on c.user_id=u.id
-				where c.decklist_id=?
-				order by date_creation asc", array(
-                        $decklist_id
-                ))->fetchAll();
-
-		$commenters = array_values(array_unique(array_merge(array($decklist['username']), array_map(function ($item) { return $item['author']; }, $comments))));
-
-        $decklist['comments'] = $comments;
-
-        $precedent_decklists = $dbh->executeQuery(
-                "SELECT
-					d.id,
-					d.name,
-					d.name_canonical,
-					d.nb_votes,
-					d.nb_favorites,
-					d.nb_comments
-					from decklist d
-					where d.id=?
-					order by d.date_creation asc", array(
-                        $decklist['precedent']
-                ))->fetchAll();
-
-        $successor_decklists = $dbh->executeQuery(
-                "SELECT
-					d.id,
-					d.name,
-					d.name_canonical,
-					d.nb_votes,
-					d.nb_favorites,
-					d.nb_comments
-					from decklist d
-					where d.precedent_decklist_id=?
-					order by d.date_creation asc", array(
-                        $decklist_id
-                ))->fetchAll();
-
-        $tournaments = $dbh->executeQuery(
-                "SELECT
-					t.id,
-					t.description
-                FROM tournament t
-                ORDER BY t.description desc")->fetchAll();
-
-        $deck = $this->get('decklists')->getArray($this->getDoctrine()->getManager()->getRepository('AppBundle:Decklist')->find($decklist_id));
-
+        $decklist = $this->getDoctrine()->getManager()->getRepository('AppBundle:Decklist')->find($decklist_id);
+        
+        $tournaments = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->findAll();
+        
+        $commenters = array_map(function ($comment) {
+        	return $comment->getUser()->getUsername();
+        }, $decklist->getComments()->getValues());
+        
         return $this->render('AppBundle:Decklist:decklist.html.twig',
                 array(
-                        'pagetitle' => $decklist['name'],
+                        'pagetitle' => $decklist->getName(),
                         'decklist' => $decklist,
-                        'commenters' => $commenters,
-                        'precedent_decklists' => $precedent_decklists,
-                        'successor_decklists' => $successor_decklists,
-                        'tournaments' => $tournaments,
-                        'deck' => $deck
+                		'arrayexport' => $decklist->getArrayExport(false),
+                		'commenters' => $commenters,
+                		'tournaments' => $tournaments,
                 ), $response);
 
     }
@@ -745,7 +654,7 @@ class SocialController extends Controller
             throw new NotFoundHttpException("Unable to find decklist.");
 
         $content = $this->renderView('AppBundle:Export:plain.txt.twig', [
-        	"deck" => $this->get('deck_interface')->getArrayForExport($decklist)
+        	"deck" => $decklist->getTextExport()
       	]);
 
         $response = new Response();
@@ -778,7 +687,7 @@ class SocialController extends Controller
             throw new NotFoundHttpException("Unable to find decklist.");
 
         $content = $this->renderView('AppBundle:Export:octgn.xml.twig', [
-        	"deck" => $this->get('deck_interface')->getArrayForExport($decklist)
+        	"deck" => $decklist->getTextExport()
       	]);
 
         $response = new Response();

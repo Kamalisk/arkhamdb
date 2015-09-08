@@ -6,17 +6,17 @@
 	{% endjavascripts %}
 	<script type="text/javascript">
 	var Commenters = {{ commenters|json_encode|raw }};
-	app.deck.json = {{ deck|json_encode|raw }};
+	app.deck.json = {{ arrayexport|json_encode|raw }};
 	app.user.params.decklist_id = {{ decklist.id }};
 	</script>
 {% endblock %}
 
 {% block body %}
 <div class="container">
-	<div class="row title bg-faction bg-{{ decklist.faction_code }}">
+	<div class="row title bg-faction bg-{{ decklist.faction.code }}">
 		<div class="col-xs-12">
 			<h1 class="decklist-name text-center">
-				<span class="icon icon-{{ decklist.faction_code }}"></span>
+				<span class="icon icon-{{ decklist.faction.code }}"></span>
 				{{ decklist.name }}
 			</h1>
 		</div>

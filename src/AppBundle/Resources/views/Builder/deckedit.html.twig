@@ -5,14 +5,14 @@
 	<script src="{{ asset_url }}"></script>
 	{% endjavascripts %}
 	<script type="text/javascript">
-	app.deck.json = {{ deck|json_encode|raw }};
+	app.deck.json = {{ arrayexport|json_encode|raw }};
 	</script>
 {% endblock %}
 
 {% block body %}
 <div class="main white container">
 
-{% if deck.unsaved %}
+{% if arrayexport.unsaved %}
 <div class="alert alert-danger" role="alert" id="deck-unsaved-alert"><span class="fa fa-exclamation-triangle"></span> This deck has unsaved changes. Please save the deck or cancel the changes before making further edits.</div>
 {% endif %}
 
@@ -33,7 +33,7 @@
 	<input type="hidden" id="deck-cancel-edits" name="cancel_edits" value="0">
 	<input type="hidden" name="content">
 	<input type="hidden" name="description">
-	<input type="hidden" name="faction_code" value="{{ deck.faction_code }}">
+	<input type="hidden" name="faction_code" value="{{ deck.faction.code }}">
 	<input type="hidden" name="tags">
 		<div class="form-group">
 			<label for="name">Name</label>

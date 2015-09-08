@@ -1,17 +1,17 @@
 <table class="table">
 <thead>
-<tr><th><span class="fa fa-comment"></span> {{ decklist.nb_comments }} comments</th></tr>
+<tr><th><span class="fa fa-comment"></span> {{ decklist.nbComments }} comments</th></tr>
 </thead>
 <tbody>
 {% for comment in decklist.comments %}
 <tr><td id="comment-{{ comment.id }}">
-    <div class="small comment-toggler" style="{% if not comment.is_hidden %}display:none{% endif %}">
+    <div class="small comment-toggler" style="{% if not comment.isHidden %}display:none{% endif %}">
         <a href="#div-comment-{{ comment.id }}" data-toggle="collapse" class="text-muted pull-right" style="margin-left:.5em"><span class="fa fa-eye"></span></a>
     </div>
-    <div class="collapse{% if not comment.is_hidden %} in{% endif %}" id="div-comment-{{ comment.id }}">
-        <span class="comment-date" title="{{ comment.date_creation|date('r') }}">{{ comment.date_creation|date('M d, Y') }}</span>
-        <a href="{{ path('user_profile_public', {user_id:comment.user_id,user_name:comment.author|e('url')}) }}" class="comment-author username {{ comment.authorcolor }}">{{ comment.author }}</a>
-        {% if comment.donation > 0 %}<span class="fa fa-gift donator" title="ThronesDB Gracious Donator"></span>{% endif %}
+    <div class="collapse{% if not comment.isHidden %} in{% endif %}" id="div-comment-{{ comment.id }}">
+        <span class="comment-date" title="{{ comment.dateCreation|date('r') }}">{{ comment.dateCreation|date('M d, Y') }}</span>
+        <a href="{{ path('user_profile_public', {user_id:comment.user.id,user_name:comment.user.username|e('url')}) }}" class="comment-author username {{ comment.user.color }}">{{ comment.user.username }}</a>
+        {% if comment.user.donation > 0 %}<span class="fa fa-gift donator" title="ThronesDB Gracious Donator"></span>{% endif %}
         <div class="comment-text">{{ comment.text|raw }}</div>
     </div>
 </td></tr>

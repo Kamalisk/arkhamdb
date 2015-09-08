@@ -29,12 +29,11 @@ class DecklistManager
 	protected $limit = 30;
 	protected $maxcount = 0;
 	
-	public function __construct(EntityManager $doctrine, RequestStack $request_stack, Router $router, DeckInterface $deck_interface, LoggerInterface $logger)
+	public function __construct(EntityManager $doctrine, RequestStack $request_stack, Router $router, LoggerInterface $logger)
 	{
 		$this->doctrine = $doctrine;
 		$this->request_stack = $request_stack;
 		$this->router = $router;
-		$this->deck_interface = $deck_interface;
 		$this->logger = $logger;
 	}
 	

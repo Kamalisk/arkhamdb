@@ -2,9 +2,8 @@
 
 namespace AppBundle\Entity;
 
-class Decklist
+class Decklist extends \AppBundle\Model\ExportableDeck implements \AppBundle\Model\ExportableDeckInterface
 {
-	
     /**
      * @var integer
      */

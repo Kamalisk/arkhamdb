@@ -2,6 +2,7 @@
 
 namespace AppBundle\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Decorator for a collection of SlotInterface 
  */
@@ -12,6 +13,16 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
 	public function __construct(\Doctrine\Common\Collections\Collection $slots)
 	{
 		$this->slots = $slots;
+	}
+	
+	public function add($element)
+	{
+		return $this->slots->add($element);
+	}
+
+	public function removeElement($element)
+	{
+		return $this->slots->removeElement($element);
 	}
 	
 	public function count($mode = null)
@@ -102,7 +113,7 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
 				$plotDeck[] = $slot;
 			}
 		}
-		return new SlotCollectionDecorator($plotDeck);
+		return new SlotCollectionDecorator(new ArrayCollection($plotDeck));
 	}
 
 	public function getAgendas()
@@ -113,7 +124,7 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
 				$agendas[] = $slot;
 			}
 		}
-		return new SlotCollectionDecorator($agendas);
+		return new SlotCollectionDecorator(new ArrayCollection($agendas));
 	}
 
 	public function getAgenda()
@@ -136,7 +147,7 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
 				$drawDeck[] = $slot;
 			}
 		}
-		return new SlotCollectionDecorator($drawDeck);
+		return new SlotCollectionDecorator(new ArrayCollection($drawDeck));
 	}
 
 	public function getContent()

@@ -31,9 +31,8 @@ class DeckValidationHelper
 		if($card->getIsLoyal()) {
 			return false;
 		}
-		$agenda = $this->getAgenda($deck);
-		$minorFactionCode = $this->agenda_helper->getMinorFactionCode($agenda);
-		if($minorFactionCode && $minorFactionCode === $card->getFaction()->getCode()) {
+		$agenda = $deck->getSlots()->getAgenda();
+		if($agenda && $this->agenda_helper->getMinorFactionCode($agenda) === $card->getFaction()->getCode()) {
 			return true;
 		}
 		return false;
@@ -41,8 +40,8 @@ class DeckValidationHelper
 	
 	public function findProblem($deck)
 	{
-		$plotDeck = $deck->getPlotDeck();
-		$plotDeckSize = $deck->countCards($plotDeck);
+		$plotDeck = $deck->getSlots()->getPlotDeck();
+		$plotDeckSize = $plotDeck->countCards();
 		if($plotDeckSize > 7) {
 			return 'too_many_plots';
 		}
@@ -52,21 +51,21 @@ class DeckValidationHelper
 		if(count($plotDeck) < 6) {
 			return 'too_many_different_plots';
 		}
-		if($deck->countCards($deck->getAgendas($deck)) > 1) {
+		if($deck->getSlots()->getAgendas()->countCards() > 1) {
 			return 'too_many_agendas';
 		}
-		if($deck->countCards($deck->getDrawDeck($deck)) < 60) {
+		if($deck->getSlots()->getDrawDeck()->countCards() < 60) {
 			return 'too_few_cards';
 		}
-		if(count($deck->getInvalidCards($deck))) {
+		if(!empty($this->getInvalidCards($deck))) {
 			return 'invalid_cards';
 		}
-		$agenda = $deck->getAgenda($deck);
+		$agenda = $deck->getSlots()->getAgenda();
 		if($agenda) {
 	
 			switch($agenda->getCode()) {
 				case '01027': {
-					$drawDeck = $deck->getDrawDeck($deck);
+					$drawDeck = $deck->getSlots()->getDrawDeck();
 					$count = 0;
 					foreach($drawDeck as $slot) {
 						if($slot->getCard()->getFaction()->getCode() === 'neutral') {

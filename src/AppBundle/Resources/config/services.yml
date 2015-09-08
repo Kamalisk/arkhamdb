@@ -1,15 +1,9 @@
 services:
     decks:
         class: AppBundle\Services\Decks
-        arguments: ["@doctrine.orm.entity_manager", "@deck_interface", "@diff", "@logger"]
+        arguments: ["@doctrine.orm.entity_manager", "@deck_validation_helper", "@agenda_helper", "@diff", "@logger"]
     highlight:
         class: AppBundle\Services\Highlight
-        arguments: ["@doctrine.orm.entity_manager"]
-    decklists:
-        class: AppBundle\Services\Decklists
-        arguments: ["@doctrine.orm.entity_manager", "@deck_interface"]
-    deck_interface:
-        class: AppBundle\Services\DeckInterface
         arguments: ["@doctrine.orm.entity_manager"]
     reviews:
         class: AppBundle\Services\Reviews
@@ -26,7 +20,7 @@ services:
     decklist_manager:
         class: AppBundle\Model\DecklistManager
         scope: prototype
-        arguments: ["@doctrine.orm.entity_manager", "@request_stack", "@router", "@deck_interface", "@logger"]
+        arguments: ["@doctrine.orm.entity_manager", "@request_stack", "@router", "@logger"]
     agenda_helper:
         class: AppBundle\Helper\AgendaHelper
         arguments: ["@doctrine.orm.entity_manager"]

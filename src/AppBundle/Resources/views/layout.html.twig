@@ -144,7 +144,7 @@
 		{% include 'AppBundle::google-analytics.html.twig' %}
 	{% endif %}
 
-	{% javascripts filter="jsqueeze" output="js/app.js"
+	{% javascripts filter="?jsqueeze" output="js/app.js"
 		'@AppBundle/Resources/public/js/bootstrap.min.js'
 		'@AppBundle/Resources/public/js/forerunnerdb.min.js'
 		'@AppBundle/Resources/public/js/app.data.js'
@@ -159,6 +159,7 @@
         '@AppBundle/Resources/public/js/app.markdown.js'
         '@AppBundle/Resources/public/js/app.smart_filter.js'
         '@AppBundle/Resources/public/js/app.deck.js'
+        '@AppBundle/Resources/public/js/app.diff.js'
         '@AppBundle/Resources/public/js/app.deck_history.js'
         '@AppBundle/Resources/public/js/app.deck_charts.js'
 		'@AppBundle/Resources/public/js/app.ui.js'
