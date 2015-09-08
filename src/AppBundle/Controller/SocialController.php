@@ -16,6 +16,8 @@ use AppBundle\Entity\Comment;
 use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use AppBundle\Model\DecklistManager;
+use AppBundle\Services\Pagination\Pagination;
 
 class SocialController extends Controller
 {
@@ -231,133 +233,88 @@ class SocialController extends Controller
     /*
 	 * displays the lists of decklists
 	 */
-    public function listAction ($type, $code = null, $page = 1, Request $request)
+    public function listAction ($type, $faction = null, $page = 1, Request $request)
     {
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
-
-        $limit = 30;
-        if ($page < 1)
-            $page = 1;
-        $start = ($page - 1) * $limit;
-
+        
+        /**
+         * @var $decklist_manager DecklistManager
+         */
+        $decklist_manager = $this->get('decklist_manager');
+        $decklist_manager->setLimit(30);
+        $decklist_manager->setPage($page);
+        
         $pagetitle = "Decklists";
         $header = '';
 
         switch ($type) {
             case 'find':
-                $result = $this->get('decklists')->find($start, $limit, $request);
                 $pagetitle = "Decklist search results";
                 $header = $this->searchForm($request);
+                $paginator = $decklist_manager->findDecklistsWithComplexSearch();
                 break;
             case 'favorites':
                 $response->setPrivate();
                 $user = $this->getUser();
-                if (! $user) {
-                    $result = array('decklists' => [], 'count' => 0);
-                } else {
-                    $result = $this->get('decklists')->favorites($user->getId(), $start, $limit);
+                if($user)
+                {
+                	$paginator = $decklist_manager->findDecklistsByFavorite($user);
+                }
+                else
+                {
+                	$paginator = $decklist_manager->getEmptyList();
                 }
                 $pagetitle = "Favorite Decklists";
                 break;
             case 'mine':
                 $response->setPrivate();
                 $user = $this->getUser();
-                if (! $user) {
-                    $result = array('decklists' => [], 'count' => 0);
-                } else {
-                    $result = $this->get('decklists')->by_author($user->getId(), $start, $limit);
+                if($user)
+                {
+                	$paginator = $decklist_manager->findDecklistsByAuthor($user);
+                }
+                else
+                {
+                	$paginator = $decklist_manager->getEmptyList();
                 }
                 $pagetitle = "My Decklists";
                 break;
             case 'recent':
-                $result = $this->get('decklists')->recent($start, $limit);
+            	$paginator = $decklist_manager->findDecklistsByAge(false);
                 $pagetitle = "Recent Decklists";
                 break;
             case 'halloffame':
-                $result = $this->get('decklists')->halloffame($start, $limit);
+            	$paginator = $decklist_manager->findDecklistsInHallOfFame();
                 $pagetitle = "Hall of Fame";
                 break;
             case 'hottopics':
-                $result = $this->get('decklists')->hottopics($start, $limit);
+            	$paginator = $decklist_manager->findDecklistsInHotTopic();
                 $pagetitle = "Hot Topics";
                 break;
             case 'tournament':
-                $result = $this->get('decklists')->tournaments($start, $limit);
+            	$paginator = $decklist_manager->findDecklistsInTournaments();
                 $pagetitle = "Tournaments";
                 break;
             case 'popular':
             default:
-                $result = $this->get('decklists')->popular($start, $limit);
-                $pagetitle = "Popular Decklists";
+            	$paginator = $decklist_manager->findDecklistsByPopularity();
+            	$pagetitle = "Popular Decklists";
                 break;
         }
-
-        $decklists = $result['decklists'];
-        $maxcount = $result['count'];
-
-        $dbh = $this->get('doctrine')->getConnection();
-        $factions = $dbh->executeQuery(
-                "SELECT
-				f.name,
-				f.code
-				from faction f
-				order by f.name asc")
-            ->fetchAll();
-
-        $packs = $dbh->executeQuery(
-                "SELECT
-				p.name,
-				p.code
-				from pack p
-				where p.date_release is not null
-				order by p.date_release desc
-				limit 0,5")
-            ->fetchAll();
-
-        // pagination : calcul de nbpages // currpage // prevpage // nextpage
-        // à partir de $start, $limit, $count, $maxcount, $page
-
-        $currpage = $page;
-        $prevpage = max(1, $currpage - 1);
-        $nbpages = min(10, ceil($maxcount / $limit));
-        $nextpage = min($nbpages, $currpage + 1);
-
-        $route = $request->get('_route');
-
-        $params = $request->query->all();
-        $params['type'] = $type;
-
-        $pages = [];
-        for ($page = 1; $page <= $nbpages; $page ++) {
-            $pages[] = array(
-                    "numero" => $page,
-                    "url" => $this->generateUrl($route, $params + array(
-                            "page" => $page
-                    )),
-                    "current" => $page == $currpage
-            );
-        }
-
+        
         return $this->render('AppBundle:Decklist:decklists.html.twig',
                 array(
                         'pagetitle' => $pagetitle,
                         'pagedescription' => "Browse the collection of thousands of premade decks.",
-                        'decklists' => $decklists,
-                        'packs' => $packs,
-                        'factions' => $factions,
+                        'decklists' => $paginator,
                         'url' => $this->getRequest()->getRequestUri(),
                         'header' => $header,
-                        'route' => $route,
-                        'pages' => $pages,
                         'type' => $type,
-                        'prevurl' => $currpage == 1 ? null : $this->generateUrl($route, $params + array(
-                                "page" => $prevpage
-                        )),
-                        'nexturl' => $currpage == $nbpages ? null : $this->generateUrl($route, $params + array(
-                                "page" => $nextpage
-                        ))
+                		'pages' => $decklist_manager->getClosePages(),
+                        'prevurl' => $decklist_manager->getPreviousUrl(),
+                        'nexturl' => $decklist_manager->getNextUrl(),
                 ), $response);
 
     }

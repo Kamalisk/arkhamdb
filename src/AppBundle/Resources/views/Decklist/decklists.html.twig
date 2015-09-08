@@ -56,27 +56,7 @@ $(function () {
 
 {{ header|raw }}
 
-<div class="text-center">
-<ul class="pagination pagination-sm" style="margin-top:0">
-{% if prevurl is null %}
-  <li class="disabled"><a href="#">&laquo;</a></li>
-{% else %}
-  <li class=""><a href="{{ prevurl }}">&laquo;</a></li>
-{% endif %}
-{% for page in pages %}
-{% if page.current %}
-  <li class="active"><a href="{{ page.url }}">{{ page.numero }} <span class="sr-only">(current)</span></a></li>
-{% else %}
-  <li><a href="{{ page.url }}">{{ page.numero }}</a></li>
-{% endif %}
-{% endfor %}
-{% if nexturl is null %}
-  <li class="disabled"><a href="#">&raquo;</a></li>
-{% else %}
-  <li class=""><a href="{{ nexturl }}">&raquo;</a></li>
-{% endif %}
-  </ul>
-</div>
+{% include 'AppBundle:Default:pagination.html.twig' %}
 
 <table class="table">
 <thead></thead>
@@ -86,29 +66,29 @@ $(function () {
 
 <tr>
 <td class="decklist-faction-image hidden-xs">
-	<img src="/bundles/app/images/factions/{{ decklist.faction_code }}.png">
-	{% if decklist.agenda_code is not null %}<img src="/bundles/cards/{{ decklist.agenda_code }}.png">{% endif %}
+	<img src="/bundles/app/images/factions/{{ decklist.faction.code }}.png">
+	{% if decklist.slots.agenda %}<img src="/bundles/cards/{{ decklist.slots.agenda.code }}.png">{% endif %}
 </td>
 <td>
     <article>
 	<h4>
 		<small class="pull-right social">
-			<span class="fa fa-heart social-icon-like"></span> {{ decklist.nb_votes }}
-			<span class="fa fa-star social-icon-favorite"></span> {{ decklist.nb_favorites }}
-			<span class="fa fa-comment social-icon-comment"></span> {{ decklist.nb_comments }}
+			<span class="fa fa-heart social-icon-like"></span> {{ decklist.nbVotes }}
+			<span class="fa fa-star social-icon-favorite"></span> {{ decklist.nbFavorites }}
+			<span class="fa fa-comment social-icon-comment"></span> {{ decklist.nbComments }}
 		</small>
-		<a class="decklist-name" href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.name_canonical|e('url') }) }}">{{ decklist.name }}</a>
+		<a class="decklist-name" href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.nameCanonical|e('url') }) }}">{{ decklist.name }}</a>
 	</h4>
 	<h5>
-		<time class="pull-right" datetime="{{ decklist.date_creation|date('c') }}">{{ decklist.date_creation|date('M d') }}</time>
+		<time class="pull-right" datetime="{{ decklist.dateCreation|date('c') }}">{{ decklist.dateCreation|date('M d') }}</time>
 		<span class="username">
-    		<a href="{{ path('user_profile_public', {user_id:decklist.user_id,user_name:decklist.username|e('url')}) }}" class="{{ decklist.usercolor }}">{{ decklist.username }}</a>
-    		{% if decklist.donation > 0 %}<span class="fa fa-gift donator" title="ThronesDB Gracious Donator"></span>{% endif %}
-    		<small class="reputation">{{ decklist.reputation }}</small>
+    		<a href="{{ path('user_profile_public', {user_id:decklist.user.id,user_name:decklist.user.username|e('url')}) }}" class="{{ decklist.user.color }}">{{ decklist.user.username }}</a>
+    		{% if decklist.user.donation > 0 %}<span class="fa fa-gift donator" title="ThronesDB Gracious Donator"></span>{% endif %}
+    		<small class="reputation">{{ decklist.user.reputation }}</small>
 		</span>
         {% if decklist.tournament %}
 		<span class="text-success" style="margin-left:1em">
-            <span class="fa fa-certificate"></span> {{ decklist.tournament }}
+            <span class="fa fa-certificate"></span> {{ decklist.tournament.description }}
         </span>
 	    {% endif %}
 	</h5>
@@ -120,27 +100,7 @@ $(function () {
 </tbody>
 </table>
 
-<div class="text-center">
-<ul class="pagination pagination-sm" style="margin:0">
-{% if prevurl is null %}
-  <li class="disabled"><a href="#">&laquo;</a></li>
-{% else %}
-  <li class=""><a href="{{ prevurl }}">&laquo;</a></li>
-{% endif %}
-{% for page in pages %}
-{% if page.current %}
-  <li class="active"><a href="{{ page.url }}">{{ page.numero }} <span class="sr-only">(current)</span></a></li>
-{% else %}
-  <li><a href="{{ page.url }}">{{ page.numero }}</a></li>
-{% endif %}
-{% endfor %}
-{% if nexturl is null %}
-  <li class="disabled"><a href="#">&raquo;</a></li>
-{% else %}
-  <li class=""><a href="{{ nexturl }}">&raquo;</a></li>
-{% endif %}
-  </ul>
-</div>
+{% include 'AppBundle:Default:pagination.html.twig' %}
 
 </div>
 

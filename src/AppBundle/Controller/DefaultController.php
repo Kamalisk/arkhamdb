@@ -36,7 +36,7 @@ class DefaultController extends Controller
             $array['faction'] = $faction;
 
         	$decklist_manager->setFaction($faction);
-        	$paginator = $decklist_manager->findPopularDecklists();
+        	$paginator = $decklist_manager->findDecklistsByPopularity();
         	/**
         	 * @var $decklist Decklist
         	 */
