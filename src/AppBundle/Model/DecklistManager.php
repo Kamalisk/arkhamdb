@@ -173,12 +173,8 @@ class DecklistManager
 		$sort = $request->query->get('sort');
 		
 		$packs = $request->query->get('packs');
-		if(!is_array($packs)) {
-			$packs = $this->doctrine->getRepository('AppBundle:Pack')->findAll();
-		}
 		
 		$qb = $this->getQueryBuilder();
-		$qb->innerJoin('d.slots', 's');
 		if(!empty($faction)) {
 			$qb->andWhere('d.faction = :faction');
 			$qb->setParameter('faction', $faction);
@@ -192,27 +188,31 @@ class DecklistManager
 			$qb->andWhere('d.name like :deckname');
 			$qb->setParameter('deckname', "%$decklist_name%");
 		}
-		if (count($cards_code) ) {
-			foreach ($cards_code as $i => $card_code) {
-				/* @var $card \AppBundle\Entity\Card */
-				$card = $this->doctrine->getRepository('AppBundle:Card')->findOneBy(array('code' => $card_code));
-				if(!$card) continue;
-				
-				$qb->andWhere('s.card = :card'.$i);
-				$qb->setParameter('card'.$i, $card);
+		if(!empty($card_code) && !empty($packs)) {
+			$qb->innerJoin('d.slots', 's');
+			if (!empty($cards_code) ) {
+				foreach ($cards_code as $i => $card_code) {
+					/* @var $card \AppBundle\Entity\Card */
+					$card = $this->doctrine->getRepository('AppBundle:Card')->findOneBy(array('code' => $card_code));
+					if(!$card) continue;
 			
-				$packs[] = $card->getPack()->getId();
+					$qb->andWhere('s.card = :card'.$i);
+					$qb->setParameter('card'.$i, $card);
+						
+					$packs[] = $card->getPack()->getId();
+				}
+			}
+			if (!empty($packs)) {
+				$sub = $this->doctrine->createQueryBuilder();
+				$sub->select("c");
+				$sub->from("AppBundle:Card","c");
+				$sub->where('c = s.card');
+				$sub->andWhere($sub->expr()->notIn('c.pack', $packs));
+					
+				$qb->andWhere($qb->expr()->not($qb->expr()->exists($sub->getDQL())));
 			}
 		}
-		if (count($packs)) {
-			$sub = $this->doctrine->createQueryBuilder();
-			$sub->select("c");
-			$sub->from("AppBundle:Card","c");
-			$sub->where('c = s.card');
-			$sub->andWhere($sub->expr()->notIn('c.pack', $packs));
-			
-			$qb->andWhere($qb->expr()->not($qb->expr()->exists($sub->getDQL())));
-		}
+
 		return $this->getPaginator($qb->getQuery());
 	}
 	
