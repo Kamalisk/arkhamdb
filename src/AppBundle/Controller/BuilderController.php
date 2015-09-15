@@ -404,8 +404,6 @@ class BuilderController extends Controller
     public function editAction ($deck_id)
     {
 
-        $dbh = $this->get('doctrine')->getConnection();
-
         $deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->find($deck_id);
 
         if ($this->getUser()->getId () != $deck->getUser()->getId()) 

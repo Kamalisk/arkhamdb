@@ -187,7 +187,7 @@ class DecklistManager
 			$qb->andWhere('d.name like :deckname');
 			$qb->setParameter('deckname', "%$decklist_name%");
 		}
-		if(!empty($card_code) && !empty($packs)) {
+		if(!empty($cards_code) || !empty($packs)) {
 			$qb->innerJoin('d.slots', 's');
 			if (!empty($cards_code) ) {
 				foreach ($cards_code as $i => $card_code) {
