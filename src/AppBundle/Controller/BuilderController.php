@@ -84,6 +84,8 @@ class BuilderController extends Controller
         $deck->setProblem('deckSize');
         $deck->setTags(join(' ', array_unique($tags)));
         $deck->setUser($this->getUser());
+        $deck->setMajorVersion(0);
+        $deck->setMinorVersion(1);
 
         if($agenda)
         {
