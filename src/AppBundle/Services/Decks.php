@@ -32,6 +32,18 @@ class Decks
 		return $list;
 	}
 
+	/**
+	 * 
+	 * @param unknown $user
+	 * @param Deck $deck
+	 * @param unknown $decklist_id
+	 * @param unknown $name
+	 * @param unknown $faction
+	 * @param unknown $description
+	 * @param unknown $tags
+	 * @param unknown $content
+	 * @param unknown $source_deck
+	 */
 	public function saveDeck($user, $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck)
 	{
 		$deck_content = [ ];
@@ -46,6 +58,7 @@ class Decks
 		$deck->setFaction ( $faction );
 		$deck->setDescriptionMd ( $description );
 		$deck->setUser ( $user );
+		$deck->setMinorVersion( $deck->getMinorVersion() + 1 );
 		$cards = [ ];
 		/* @var $latestPack \AppBundle\Entity\Pack */
 		$latestPack = null;
@@ -102,6 +115,7 @@ class Decks
 				$change->setDeck ( $deck );
 				$change->setVariation ( json_encode ( $listings ) );
 				$change->setIsSaved ( TRUE );
+				$change->setVersion($deck->getVersion());
 				$this->doctrine->persist ( $change );
 				$this->doctrine->flush ();
 			}

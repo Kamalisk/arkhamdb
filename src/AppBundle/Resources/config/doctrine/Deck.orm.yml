@@ -77,4 +77,11 @@ AppBundle\Entity\Deck:
             type: string
             length: 4000
             nullable: true
-    
+        majorVersion:
+            type: integer
+            nullable: false
+            column: major_version
+        minorVersion:
+            type: integer
+            nullable: false
+            column: minor_version

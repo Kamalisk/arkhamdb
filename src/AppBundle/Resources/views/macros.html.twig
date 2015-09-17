@@ -27,3 +27,13 @@
     </a>
 </span>
 {% endmacro %}
+
+{% macro decklist_table_row(decklist) %}
+<tr>
+	<td class="decklist-name"><a href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.nameCanonical|e('url') }) }}">{{ decklist.name }} v{{ decklist.version }}</a></td>
+	<td class="social"><span class="fa fa-heart social-icon-like"></span> {{ decklist.nbVotes }}</td>
+	<td class="social"><span class="fa fa-star social-icon-favorite"></span> {{ decklist.nbFavorites }}</td>
+	<td class="social"><span class="fa fa-comment social-icon-comment"></span> {{ decklist.nbComments }}</td>
+</tr>
+{% endmacro %}
+

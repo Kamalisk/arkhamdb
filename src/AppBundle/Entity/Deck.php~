@@ -50,7 +50,6 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \AppBundle\Model\E
 				$row = [
 						'variation' => $variation,
 						'is_saved' => $change->getIsSaved(),
-						'version' => $change->getVersion(),
 						'content' => $preversion,
 						'date_creation' => $change->getDateCreation()->format('c'),
 				];
@@ -72,7 +71,6 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \AppBundle\Model\E
 			$row = [
 					'variation' => null,
 					'is_saved' => true,
-					'version' => "0.1",
 					'content' => $preversion,
 					'date_creation' => $this->getDateCreation()->format('c')
 			];
@@ -85,9 +83,9 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \AppBundle\Model\E
 				$row = [
 						'variation' => $variation,
 						'is_saved' => $change->getIsSaved(),
-						'version' => $change->getVersion(),
 						'date_creation' => $change->getDateCreation()->format('c'),
 				];
+				array_unshift ( $snapshots, $row );
 					
 				// applying variation to postversion
 				foreach ( $variation[0] as $code => $qty ) {
@@ -148,17 +146,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \AppBundle\Model\E
      * @var string
      */
     private $tags;
-    
-    /**
-     * @var integer
-     */
-    private $majorVersion;
-    
-    /**
-     * @var integer
-     */
-    private $minorVersion;
-    
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -554,58 +542,5 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \AppBundle\Model\E
     public function getParent()
     {
         return $this->parent;
-    }
-
-    /**
-     * Set majorVersion
-     *
-     * @param integer $majorVersion
-     *
-     * @return Deck
-     */
-    public function setMajorVersion($majorVersion)
-    {
-        $this->majorVersion = $majorVersion;
-
-        return $this;
-    }
-
-    /**
-     * Get majorVersion
-     *
-     * @return integer
-     */
-    public function getMajorVersion()
-    {
-        return $this->majorVersion;
-    }
-
-    /**
-     * Set minorVersion
-     *
-     * @param integer $minorVersion
-     *
-     * @return Deck
-     */
-    public function setMinorVersion($minorVersion)
-    {
-        $this->minorVersion = $minorVersion;
-
-        return $this;
-    }
-
-    /**
-     * Get minorVersion
-     *
-     * @return integer
-     */
-    public function getMinorVersion()
-    {
-        return $this->minorVersion;
-    }
-    
-    public function getVersion()
-    {
-    	return $this->majorVersion . "." . $this->minorVersion;
     }
 }

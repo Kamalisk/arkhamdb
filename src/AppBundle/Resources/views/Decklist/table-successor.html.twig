@@ -5,7 +5,7 @@
 <tbody>
 {% if decklist.successors|length %}
 {% for successor in decklist.successors %}
-{% include 'AppBundle:Default:decklist-table-row.html.twig' %}
+{{ macros.decklist_table_row(successor) }}
 {% endfor %}
 {% else %}
 <tr><td>None yet</td></tr>

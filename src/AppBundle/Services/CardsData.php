@@ -534,4 +534,28 @@ class CardsData
 
         return $response;
     }
+    
+    public function getDistinctTraits()
+    {
+    	/**
+    	 * @var $em \Doctrine\ORM\EntityManager
+    	 */
+    	$em = $this->doctrine->getManager();
+    	$qb = $em->createQueryBuilder();
+    	$qb->from('AppBundle:Card', 'c');
+    	$qb->select('c.traits');
+    	$qb->distinct();
+    	$result = $qb->getQuery()->getResult();
+    	
+    	dump($result);
+    	die();
+    	$traits = [];
+    	foreach($result as $card) {
+    		$subs = explode('.', $card["traits"]);
+    		foreach($subs as $sub) {
+    			$traits[trim($sub)] = 1;
+    		}
+    	}
+    	 
+    }
 }

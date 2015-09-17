@@ -28,3 +28,6 @@ AppBundle\Entity\Deckchange:
         isSaved:
             type: boolean
             column: is_saved
+        version:
+            type: string
+            length: 8

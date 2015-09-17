@@ -1,4 +1,5 @@
 {% extends 'AppBundle::layout.html.twig' %}
+{% import "AppBundle::macros.html.twig" as macros %}
 
 {% block javascripts %}
 	{% javascripts '@AppBundle/Resources/public/js/ui.decklist.js' %}
@@ -17,7 +18,7 @@
 		<div class="col-xs-12">
 			<h1 class="decklist-name text-center">
 				<span class="icon icon-{{ decklist.faction.code }}"></span>
-				{{ decklist.name }}
+				{{ decklist.name }} v{{ decklist.version }}
 			</h1>
 		</div>
 		<div class="col-xs-12">

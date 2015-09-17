@@ -132,3 +132,6 @@ AppBundle\Entity\Decklist:
         nbComments:
             type: integer
             column: nb_comments
+        version:
+            type: integer
+            nullable: false

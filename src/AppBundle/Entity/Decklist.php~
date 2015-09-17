@@ -60,11 +60,6 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \AppBundle\Mod
     private $nbComments;
 
     /**
-     * @var integer
-     */
-    private $version;
-
-    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $slots;
@@ -733,29 +728,5 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \AppBundle\Mod
     public function getVotes()
     {
         return $this->votes;
-    }
-
-    /**
-     * Set version
-     *
-     * @param integer $version
-     *
-     * @return Decklist
-     */
-    public function setVersion($version)
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
-    /**
-     * Get version
-     *
-     * @return integer
-     */
-    public function getVersion()
-    {
-        return $this->version;
     }
 }

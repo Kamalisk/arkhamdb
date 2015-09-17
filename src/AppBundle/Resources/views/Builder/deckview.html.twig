@@ -1,4 +1,5 @@
 {% extends 'AppBundle::layout.html.twig' %}
+{% import "AppBundle::macros.html.twig" as macros %}
 
 {% block javascripts %}
 	{% javascripts '@AppBundle/Resources/public/js/ui.deckview.js' %}
@@ -14,7 +15,7 @@
 
 	<div class="row">
 	    <div class="col-md-12">
-	        <h1 style="border-bottom:1px solid lightgray">{{ deck.name }}</h1>
+	        <h1 style="border-bottom:1px solid lightgray">{{ deck.name }} {{ deck.version }}</h1>
 	        {% if deck.problem %}
 	        <div class="alert alert-danger" role="alert">{{ deck_validation_helper.problemLabel(deck.problem) }}</div>
 	        {% endif %}
@@ -95,7 +96,7 @@
 				<tbody>
 				{% if deck.children|length %}
 				{% for decklist in deck.children %}
-				{% include 'AppBundle:Default:decklist-table-row.html.twig' %}
+					{{ macros.decklist_table_row(decklist) }}
 				{% endfor %}
 				{% else %}
 					<tr><td>None.</td></tr>

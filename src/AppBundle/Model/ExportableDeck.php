@@ -18,6 +18,7 @@ class ExportableDeck
 				'faction_name' => $this->getFaction()->getName(),
 				'slots' => $slots->getContent(),
 				'agenda_code' => $slots->getAgenda() ? $slots->getAgenda()->getCode() : null,
+				'version' => $this->getVersion(),
 		];
 	
 		return $array;

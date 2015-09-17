@@ -7,8 +7,9 @@
 		<table class="table">
 		  <thead>
 		      <tr>
-		          <th>Time</th>
-		          <th>Change</th>
+		          <th>Date</th>
+		          <th>Version</th>
+		          <th>Changes</th>
 		          <th>Action</th>
 		      </tr>
 		  </thead>
@@ -27,7 +28,7 @@
 	<tbody>
 	{% if deck.children|length %}
 	{% for decklist in deck.children %}
-	{% include 'AppBundle:Default:decklist-table-row.html.twig' %}
+		{{ macros.decklist_table_row(decklist) }}
 	{% endfor %}
 	{% else %}
 		<tr><td>None.</td></tr>

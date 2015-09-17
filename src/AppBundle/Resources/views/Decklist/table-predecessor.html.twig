@@ -4,7 +4,7 @@
 </thead>
 <tbody>
 {% if decklist.precedent %}
-{% include 'AppBundle:Default:decklist-table-row.html.twig' %}
+{{ macros.decklist_table_row(decklist.precedent) }}
 {% else %}
 <tr><td>None. Self-made deck here.</td></tr>
 {% endif %}

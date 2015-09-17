@@ -28,11 +28,6 @@ class Deckchange
     private $isSaved;
 
     /**
-     * @var string
-     */
-    private $version;
-
-    /**
      * @var \AppBundle\Entity\Deck
      */
     private $deck;
@@ -143,28 +138,5 @@ class Deckchange
     {
         return $this->deck;
     }
-
-    /**
-     * Set version
-     *
-     * @param string $version
-     *
-     * @return Deckchange
-     */
-    public function setVersion($version)
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
-    /**
-     * Get version
-     *
-     * @return string
-     */
-    public function getVersion()
-    {
-        return $this->version;
-    }
 }
+
