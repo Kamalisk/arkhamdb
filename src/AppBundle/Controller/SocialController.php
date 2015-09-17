@@ -101,7 +101,7 @@ class SocialController extends Controller
         // all good for decklist publication
 
         // increasing deck version
-        $deck->setMinorVersion(0);
+        $deck->setMinorVersion(1);
         $deck->setMajorVersion($deck->getMajorVersion() + 1);
         
         $name = filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -128,7 +128,7 @@ class SocialController extends Controller
         $decklist->setnbVotes(0);
         $decklist->setNbfavorites(0);
         $decklist->setNbcomments(0);
-        $decklist->setVersion($deck->getVersion());
+        $decklist->setVersion($deck->getMajorVersion());
         $decklist->setTournament($tournament);
         foreach ($deck->getSlots() as $slot) {
             $decklistslot = new Decklistslot();
