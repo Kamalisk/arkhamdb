@@ -738,7 +738,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \AppBundle\Mod
     /**
      * Set version
      *
-     * @param integer $version
+     * @param string $version
      *
      * @return Decklist
      */
@@ -752,7 +752,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \AppBundle\Mod
     /**
      * Get version
      *
-     * @return integer
+     * @return string
      */
     public function getVersion()
     {

@@ -77,7 +77,7 @@ $(function () {
 			<span class="fa fa-star social-icon-favorite"></span> {{ decklist.nbFavorites }}
 			<span class="fa fa-comment social-icon-comment"></span> {{ decklist.nbComments }}
 		</small>
-		<a class="decklist-name" href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.nameCanonical|e('url') }) }}">{{ decklist.name }} v{{ decklist.version }}</a>
+		<a class="decklist-name" href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.nameCanonical|e('url') }) }}">{{ decklist.name }} {{ decklist.version }}</a>
 	</h4>
 	<h5>
 		<time class="pull-right" datetime="{{ decklist.dateCreation|date('c') }}">{{ decklist.dateCreation|date('M d') }}</time>

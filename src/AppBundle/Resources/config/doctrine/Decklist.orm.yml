@@ -133,5 +133,5 @@ AppBundle\Entity\Decklist:
             type: integer
             column: nb_comments
         version:
-            type: integer
-            nullable: false
+            type: string
+            length: 8
