@@ -1,7 +1,8 @@
 (function app_tip(tip, $) {
 
 var cards_zoom_regexp = /card\/(\d\d\d\d\d)$/,
-	mode = 'text';
+	mode = 'text',
+	hide_event = 'mouseout';
 
 function display_card_on_element(card, element, event) {
 	var content;
@@ -20,28 +21,29 @@ function display_card_on_element(card, element, event) {
 		content = card.imagesrc ? '<img src="'+card.imagesrc+'">' : "";
 	}
 
-	$(element).qtip(
-			{
-				content : {
-					text : content
-				},
-				style : {
-					classes : 'card-content qtip-bootstrap qtip-thronesdb qtip-thronesdb-' + mode
-				},
-				position : {
-					my : mode == 'text' ? 'center left' : 'top left',
-					at : mode == 'text' ? 'center right' : 'bottom right',
-					viewport : $(window)
-				},
-				show : {
-					event : event.type,
-					ready : true,
-					solo : true
-				}/*,
-				hide : {
-					event: 'unfocus'
-				}*/
-			}, event);
+	var qtip = {
+		content : {
+			text : content
+		},
+		style : {
+			classes : 'card-content qtip-bootstrap qtip-thronesdb qtip-thronesdb-' + mode
+		},
+		position : {
+			my : mode == 'text' ? 'center left' : 'top left',
+			at : mode == 'text' ? 'center right' : 'bottom right',
+			viewport : $(window)
+		},
+		show : {
+			event : event.type,
+			ready : true,
+			solo : true
+		},
+		hide: {
+			event: hide_event
+		}
+	};
+	
+	$(element).qtip(qtip, event);
 }
 
 /**
@@ -60,7 +62,7 @@ tip.display = function display(event) {
  * @param event
  */
 tip.guess = function guess(event) {
-	var href = $(this).attr('href');
+	var href = $(this).get(0).href;
 	if(href && href.match(cards_zoom_regexp)) {
 		var code = RegExp.$1;
 		var generated_url = Routing.generate('cards_zoom', {card_code:code}, true);
@@ -77,18 +79,20 @@ tip.set_mode = function set_mode(opt_mode) {
 	}
 }
 
-$(document).on('start.app', function () {
-
-	if(!Modernizr.touch) {
-		$('body').on({
-			mouseover : tip.display
-		}, 'a.card-tip');
-
-		$('body').on({
-			mouseover : tip.guess
-		}, 'a:not(.card-tip)');
+tip.set_hide_event = function set_hide_event(opt_hide_event) {
+	if(opt_hide_event == 'mouseout' || opt_hide_event == 'unfocus') {
+		hide_event = opt_hide_event;
 	}
+}
 
+$(document).on('start.app', function () {
+	$('body').on({
+		mouseover : tip.display
+	}, 'a.card-tip');
+
+	$('body').on({
+		mouseover : tip.guess
+	}, 'a:not(.card-tip)');
 });
 
 })(app.tip = {}, jQuery);

@@ -1,6 +1,4 @@
 <h3 class="username">
-    <a href="{{ path('user_profile_public', {user_id:decklist.user.id,user_name:decklist.user.username|e('url')}) }}" class="{{ decklist.user.color }}">{{ decklist.user.username }}</a>
-    {% if decklist.user.donation > 0 %}<span class="fa fa-gift donator" title="ThronesDB Gracious Donator"></span>{% endif %}
-    <small title="User Reputation">{{ decklist.user.reputation }}</small>
+    {{ macros.username(decklist.user) }}
 </h3>
 <div id="deck-description">{{ decklist.descriptionHtml|raw }}</div>

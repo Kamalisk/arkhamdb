@@ -37,3 +37,8 @@
 </tr>
 {% endmacro %}
 
+{% macro username(user) %}
+<a href="{{ path('user_profile_public', {user_id:user.id,user_name:user.username|e('url')}) }}" class="username {{ user.color }}">{{ user.username }}</a>
+{% if user.donation > 0 %}<span class="fa fa-gift donator" title="ThronesDB Gracious Donator"></span>{% endif %}
+<small title="User Reputation">{{ user.reputation }}</small>
+{% endmacro %}

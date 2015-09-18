@@ -24,7 +24,7 @@ textcomplete.setup = function setup(textarea, options) {
 				return value.name;
 			},
 			replace : function(value) {
-				return '<a href="'+Routing.generate('cards_zoom', {card_code:value.code})+'" class="card-tip" data-code="'+value.code+'">'+value.name+'</a>';
+				return '<a href="'+Routing.generate('cards_zoom', {card_code:value.code})+'">'+value.name+'</a>';
 				return '[' + value.name + ']('
 						+ Routing.generate('cards_zoom', {card_code:value.code})
 						+ ')';
