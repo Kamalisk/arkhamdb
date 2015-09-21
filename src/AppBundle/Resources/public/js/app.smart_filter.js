@@ -188,16 +188,14 @@ function filterSyntax(query) {
 }
 
 $(function() {
-	if(!Modernizr.touch) {
-		$('.smart-filter-help').tooltip({
-			container: 'body',
-			delay: 1000,
-			html: true,
-			placement: 'bottom',
-			title: smart_filter.get_help(),
-			trigger: 'hover'
-		});
-	}
+	$('.smart-filter-help').tooltip({
+		container: 'body',
+		delay: 1000,
+		html: true,
+		placement: 'bottom',
+		title: smart_filter.get_help(),
+		trigger: 'hover'
+	});
 })
 
 })(app.smart_filter = {}, jQuery);

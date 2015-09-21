@@ -18,11 +18,17 @@
 		<div class="col-xs-12">
 			<h1 class="decklist-name text-center">
 				<span class="icon icon-{{ decklist.faction.code }}"></span>
-				{{ decklist.name }} {{ decklist.version }}
+				{{ decklist.name }}
 			</h1>
 		</div>
 		<div class="col-xs-12">
-			{% include 'AppBundle:Decklist:social-buttons.html.twig' %}
+			<div class="social">
+				<div class="pull-right">
+					<span class="hidden-xs">published: </span>
+					<time datetime="{{ decklist.dateCreation|date('c') }}">{{ decklist.dateCreation|date('M d, Y') }}</time>
+					{{ macros.decklist_social_icons(decklist) }}
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

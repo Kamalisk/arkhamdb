@@ -8,8 +8,8 @@
 
 		$('#decklist-edit').on('click', ui.edit_form);
 		$('#decklist-delete').on('click', ui.delete_form);
-		$('#social-icon-like').on('click', ui.send_like);
-		$('#social-icon-favorite').on('click', ui.send_favorite);
+		$('.social .social-icon-like').on('click', ui.send_like);
+		$('.social .social-icon-favorite').on('click', ui.send_favorite);
 		$('#btn-group-decklist button[id],a[id]').on('click', ui.do_action_decklist);
 		$('#btn-compare').on('click', ui.compare_form);
 		$('#btn-compare-submit').on('click', ui.compare_submit);
@@ -77,7 +77,7 @@
 			that.attr('title', that.data('original-tooltip'));
 			$(that).removeClass('processing');
 		});
-		ui.send_like.call($('#social-icon-like'), event);
+		ui.send_like.call($('.social .social-icon-like'), event);
 	}
 
 	ui.setup_comment_form = function setup_comment_form() {
@@ -106,7 +106,7 @@
 			});
 		});
 
-		$('#social-icon-comment').on('click', function() {
+		$('.social .social-icon-comment').on('click', function() {
 			$('#comment-form-text').trigger('focus');
 		});
 
@@ -122,23 +122,23 @@
 	ui.setup_social_icons = function setup_social_icons() {
 
 		if(!app.user.data || app.user.data.is_author || app.user.data.is_liked) {
-			var element = $('#social-icon-like');
+			var element = $('.social .social-icon-like');
 			element.replaceWith($('<span class="social-icon-like"></span').html(element.html()));
 		}
 
 		if(!app.user.data) {
-			var element = $('#social-icon-favorite');
+			var element = $('.social .social-icon-favorite');
 			element.replaceWith($('<span class="social-icon-favorite"></span').html(element.html()));
 		} else if(app.user.data.is_favorite) {
-			var element = $('#social-icon-favorite');
+			var element = $('.social .social-icon-favorite');
 			element.attr('title', "Remove from favorites");
 		} else {
-			var element = $('#social-icon-favorite');
+			var element = $('.social .social-icon-favorite');
 			element.attr('title', "Add to favorites");
 		}
 
 		if(!app.user.data) {
-			var element = $('#social-icon-comment');
+			var element = $('.social .social-icon-comment');
 			element.replaceWith($('<span class="social-icon-comment"></span').html(element.html()));
 		}
 

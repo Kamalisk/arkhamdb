@@ -78,7 +78,7 @@
 			{% endif %}
 		</td>
 		<td>
-			<a href="{{ path('deck_view',{deck_id:deck.id}) }}" class="deck-name">{{ deck.name }} {{ deck.version }}</a>
+			<a href="{{ path('deck_view',{deck_id:deck.id}) }}" class="deck-name">{{ deck.name }}</a> {{ deck.version }}
 			{% if deck.problem is not null %}
 			<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> {{ deck_validation_helper.getProblemLabel(deck.problem) }}</div>
 			{% endif %}

@@ -18,14 +18,14 @@
                   <span class="icon icon-{{ data.faction.code }}"></span>
               </div>
               <div class="media-body">
-                  <h4 class="media-heading" style="white-space:nowrap;overflow:hidden"><a href="{{ path('decklist_detail',{decklist_id:data.decklist.id,decklist_name:data.decklist.nameCanonical}) }}">{{ data.decklist.name }} {{ data.decklist.version }}</a></h4>
+                  <h4 class="media-heading" style="white-space:nowrap;overflow:hidden"><a href="{{ path('decklist_detail',{decklist_id:data.decklist.id,decklist_name:data.decklist.nameCanonical}) }}">{{ data.decklist.name }}</a></h4>
                   <div class="small">by {{ macros.username_with_reputation(data.decklist.user) }} &middot; <time datetime="{{ data.decklist.dateCreation|date('c') }}">{{ data.decklist.dateCreation|date('M d, Y') }}</time></div>
               </div>
             </div>
         </div>
         <div style="background-color: white; padding: 10px 20px 20px 20px">
             <div class="small pull-right">
-                {{ macros.decklist_social_buttons(data.decklist ) }}
+                {{ macros.decklist_social_icons(data.decklist ) }}
             </div>
             <div>{{ data.factions }}</div>
             <p>{{ data.count_by_type|raw }}</p>

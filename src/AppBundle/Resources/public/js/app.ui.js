@@ -24,10 +24,7 @@ ui.on_all_loaded = function on_all_loaded() {};
 $(document).ready(function () {
 	console.log('ui.on_dom_loaded');
 
-	if(Modernizr.touch) {
-	} else {
-		$('[data-toggle="tooltip"]').tooltip();
-	}
+	$('[data-toggle="tooltip"]').tooltip();
 	$('time').each(function (index, element) {
 		var datetime = moment($(element).attr('datetime'));
 		$(element).html(datetime.fromNow());

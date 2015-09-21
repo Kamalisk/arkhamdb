@@ -15,7 +15,7 @@
 
 	<div class="row">
 	    <div class="col-md-12">
-	        <h1 style="border-bottom:1px solid lightgray">{{ deck.name }} {{ deck.version }}</h1>
+	        <h1 style="border-bottom:1px solid lightgray">{{ deck.name }}</h1>
 	        {% if deck.problem %}
 	        <div class="alert alert-danger" role="alert">{{ deck_validation_helper.problemLabel(deck.problem) }}</div>
 	        {% endif %}
@@ -51,31 +51,12 @@
 					</div>
 				</div>
 				{% endif %}
-
-				{#
-				<div>
-					<div class="btn-group">
-						<div class="btn-group">
-							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							  Sort
-							  <span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu" role="menu" id="menu-sort">
-									<li><a href="#" id="btn-sort-type"><label><input type="radio" name="sort-order" checked="checked">by Type</label></a></li>
-									<li><a href="#" id="btn-sort-position"><label><input type="radio" name="sort-order">by Set</label></a></li>
-									<li><a href="#" id="btn-sort-faction"><label><input type="radio" name="sort-order">by Faction</label></a></li>
-									<li><a href="#" id="btn-sort-name"><label><input type="radio" name="sort-order">by Name</label></a></li>
-							</ul>
-						</div>
-
-						<button type="button" id="btn-display-plain" class="btn btn-default">Plain</button>
-						<button type="button" id="btn-display-bbcode" class="btn btn-default">bbCode</button>
-						<button type="button" id="btn-display-markdown" class="btn btn-default">Markdown</button>
-					</div>
-				</div>
-				#}
 			</div>
 
+			<p>
+				Version {{ deck.version }}
+			</p>
+			
 			<!-- Description -->
 			<div class="panel panel-default">
 			  <div class="panel-heading">

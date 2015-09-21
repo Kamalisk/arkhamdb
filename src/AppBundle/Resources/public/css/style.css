@@ -111,9 +111,11 @@ div.tags span.tag:not(:first-child)::before {
 	margin-bottom: 3px;
 }
 
+.social-icons>*{margin-left:5px}
 .social-icon-like{color:red}
 .social-icon-favorite{color:orange}
 .social-icon-comment{color:green}
+.social-icon-version{color:blue}
 
 /********** icon-bg ***********/
 

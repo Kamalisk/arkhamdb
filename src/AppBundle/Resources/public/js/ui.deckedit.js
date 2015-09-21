@@ -93,10 +93,7 @@ ui.build_faction_selector = function build_faction_selector() {
 		var label = $('<label class="btn btn-default btn-sm" data-code="'
 				+ faction_code + '" title="'+example.faction_name+'"><input type="checkbox" name="' + faction_code
 				+ '"><span class="icon-' + faction_code + '"></span></label>');
-		if(Modernizr.touch) {
-		} else {
-			label.tooltip({container: 'body'});
-		}
+		label.tooltip({container: 'body'});
 		$('[data-filter=faction_code]').append(label);
 	});
 	$('[data-filter=faction_code]').button();
@@ -113,10 +110,7 @@ ui.build_type_selector = function build_type_selector() {
 		var label = $('<label class="btn btn-default btn-sm" data-code="'
 				+ type_code + '" title="'+example.type_name+'"><input type="checkbox" name="' + type_code
 				+ '"><span class="icon-' + type_code + '"></span></label>');
-		if(Modernizr.touch) {
-		} else {
-			label.tooltip({container: 'body'});
-		}
+		label.tooltip({container: 'body'});
 		$('[data-filter=type_code]').append(label);
 	});
 	$('[data-filter=type_code]').button();
