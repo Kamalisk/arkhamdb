@@ -119,6 +119,10 @@ class Decks
 				$this->doctrine->persist ( $change );
 				$this->doctrine->flush ();
 			}
+			// copy version
+			$deck->setMajorVersion($source_deck->getMajorVersion());
+			$deck->setMinorVersion($source_deck->getMinorVersion());
+				
 		}
 		foreach ( $deck->getSlots () as $slot ) {
 			$deck->removeSlot ( $slot );

@@ -72,7 +72,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \AppBundle\Model\E
 			$row = [
 					'variation' => null,
 					'is_saved' => true,
-					'version' => "0.1",
+					'version' => "0.0",
 					'content' => $preversion,
 					'date_creation' => $this->getDateCreation()->format('c')
 			];
@@ -202,6 +202,8 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \AppBundle\Model\E
         $this->slots = new \Doctrine\Common\Collections\ArrayCollection();
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
         $this->changes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->minorVersion = 0;
+        $this->majorVersion = 0;
     }
 
     /**
