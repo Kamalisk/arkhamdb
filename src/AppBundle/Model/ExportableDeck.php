@@ -10,8 +10,8 @@ class ExportableDeck
 		$array = [
 				'id' => $this->getId(),
 				'name' => $this->getName(),
-				'date_creation' => $this->getDateCreation()->format('r'),
-				'date_update' => $this->getDateUpdate()->format('r'),
+				'date_creation' => $this->getDateCreation()->format('c'),
+				'date_update' => $this->getDateUpdate()->format('c'),
 				'description_md' => $this->getDescriptionMd(),
 				'user_id' => $this->getUser()->getId(),
 				'faction_code' => $this->getFaction()->getCode(),

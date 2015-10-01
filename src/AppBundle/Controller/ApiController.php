@@ -9,11 +9,12 @@ use AppBundle\Entity\Deckslot;
 use AppBundle\Entity\Decklist;
 use AppBundle\Entity\Decklistslot;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Common\Collections\Criteria;
 
 class ApiController extends Controller
 {
 
-	public function setsAction(Request $request)
+	public function listPacksAction(Request $request)
 	{
 		$response = new Response();
 		$response->setPublic();
@@ -70,7 +71,7 @@ class ApiController extends Controller
 		return $response;
 	}
 
-	public function cardAction($card_code, Request $request)
+	public function getCardAction($card_code, Request $request)
 	{
 
 		$response = new Response();
@@ -113,7 +114,7 @@ class ApiController extends Controller
 
 	}
 
-	public function cardsAction(Request $request)
+	public function listCardsAction(Request $request)
 	{
 
 		$response = new Response();
@@ -161,7 +162,7 @@ class ApiController extends Controller
 
 	}
 
-	public function setAction($pack_code)
+	public function listCardsByPackAction($pack_code)
 	{
 		$response = new Response();
 		$response->setPublic();
@@ -214,5 +215,97 @@ class ApiController extends Controller
 		return $response;
 	}
 
+	public function getDecklistAction($decklist_id, Request $request)
+	{
+		$response = new Response();
+		$response->setPublic();
+		$response->setMaxAge($this->container->getParameter('cache_expiration'));
+		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
+		
+		$jsonp = $this->getRequest()->query->get('jsonp');
+		
+		$format = $this->getRequest()->getRequestFormat();
+		if($format !== 'json') {
+			$response->setContent($this->getRequest()->getRequestFormat() . ' format not supported. Only json is supported.');
+			return $response;
+		}
+		
+		/* @var $decklist \AppBundle\Entity\Decklist */
+		$decklist = $this->getDoctrine()->getRepository('AppBundle:Decklist')->find($decklist_id);
+		if(!$decklist) die();
+		
+		$response->setLastModified($decklist->getDateUpdate());
+		if ($response->isNotModified($this->getRequest())) {
+			return $response;
+		}
+		
+		$content = json_encode($decklist->getArrayExport());
+		
+		if (isset($jsonp)) {
+			$content = "$jsonp($content)";
+			$response->headers->set('Content-Type', 'application/javascript');
+		} else {
+			$response->headers->set('Content-Type', 'application/json');
+		}
+		
+		$response->setContent($content);
+		return $response;
+		
+	}
 
+	public function listDecklistsAction($date, Request $request)
+	{
+		$response = new Response();
+		$response->setPublic();
+		$response->setMaxAge($this->container->getParameter('cache_expiration'));
+		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
+		
+		$jsonp = $this->getRequest()->query->get('jsonp');
+		
+		$format = $this->getRequest()->getRequestFormat();
+		if($format !== 'json') {
+			$response->setContent($this->getRequest()->getRequestFormat() . ' format not supported. Only json is supported.');
+			return $response;
+		}
+		
+		$start = \DateTime::createFromFormat('Y-m-d', $date);
+		$start->setTime(0, 0, 0);
+		$end = clone $start;
+		$end->add(new \DateInterval("P1D"));
+		
+		$expr = Criteria::expr();
+		$criteria = Criteria::create();
+		$criteria->where($expr->gte('dateCreation', $start));
+		$criteria->andWhere($expr->lt('dateCreation', $end));
+		
+		/* @var $decklists \Doctrine\Common\Collections\ArrayCollection */
+		$decklists = $this->getDoctrine()->getRepository('AppBundle:Decklist')->matching($criteria);
+		if(!$decklists) die();
+		
+		$dateUpdates = $decklists->map(function ($decklist) {
+			return $decklist->getDateUpdate();
+		})->toArray();
+		
+		$response->setLastModified(max($dateUpdates));
+		if ($response->isNotModified($this->getRequest())) {
+			return $response;
+		}
+		
+		$list = $decklists->map(function ($decklist) {
+			return $decklist->getArrayExport();
+		})->toArray();
+		
+		$content = json_encode($list);
+		
+		if (isset($jsonp)) {
+			$content = "$jsonp($content)";
+			$response->headers->set('Content-Type', 'application/javascript');
+		} else {
+			$response->headers->set('Content-Type', 'application/json');
+		}
+		
+		$response->setContent($content);
+		return $response;
+		
+	}
 }

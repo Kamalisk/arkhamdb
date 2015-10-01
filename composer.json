@@ -1,5 +1,5 @@
 {
-    "name": "cedric/thronesdb",
+    "name": "alsciende/thronesdb",
     "description": "A Game of Thrones LCG deckbuilder",
     "license": "proprietary",
     "type": "project",
@@ -29,7 +29,9 @@
         "ezyang/htmlpurifier": "^4.6",
         "michelf/php-markdown": "^1.5",
         "leafo/scssphp": "^0.2.0",
-        "patchwork/jsqueeze": "~1.0"
+        "patchwork/jsqueeze": "~1.0",
+        "friendsofsymfony/oauth-server-bundle": "^1.4",
+        "phpunit/phpunit": "4.8.*"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

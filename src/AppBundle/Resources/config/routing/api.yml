@@ -1,56 +1,44 @@
+api_packs:
+    pattern: /packs/
+    defaults:
+        _controller: AppBundle:Api:listPacks
+
+api_card:
+    pattern: /card/{card_code}.{_format}
+    defaults:
+        _controller: AppBundle:Api:getCard
+        _format: json
+    requirements:
+        _format: json
+        card_code: \d+
+
+api_cards:
+    pattern: /cards/
+    defaults:
+        _controller: AppBundle:Api:listCards
+
+api_cards_pack:
+    pattern: /cards/{pack_code}.{_format}
+    defaults:
+        _controller: AppBundle:Api:listCardsByPack
+        _format: json
+    requirements:
+        _format: json|xml|xlsx|xls
 
 api_decklist:
     pattern: /decklist/{decklist_id}.{_format}
     defaults:
-        _controller: AppBundle:Api:decklist
+        _controller: AppBundle:Api:getDecklist
         _format: json
     requirements:
         _format: json
         decklist_id: \d+
 
 api_decklists:
-    pattern: /decklists/by_date/{date}.{_format}
+    pattern: /decklists/{date}.{_format}
     defaults:
-        _controller: AppBundle:Api:decklists
+        _controller: AppBundle:Api:listDecklists
         _format: json
     requirements:
         _format: json
         date: \d\d\d\d-\d\d-\d\d
-
-api_decks:
-    pattern: /decks
-    defaults:
-        _controller: AppBundle:Api:decks
-
-api_cards:
-    pattern: /cards/
-    defaults:
-        _controller: AppBundle:Api:cards
-
-api_card:
-    pattern: /card/{card_code}.{_format}
-    defaults:
-        _controller: AppBundle:Api:card
-        _format: json
-    requirements:
-        _format: json
-        card_code: \d+
-
-api_packs:
-    pattern: /packs/
-    defaults:
-        _controller: AppBundle:Api:sets
-
-api_set:
-    pattern: /set/{pack_code}.{_format}
-    defaults:
-        _controller: AppBundle:Api:set
-        _format: json
-    requirements:
-        _format: json|xml|xlsx|xls
-        
-user_info:
-    pattern: /user_info
-    defaults:
-        _controller: AppBundle:User:info
-        
