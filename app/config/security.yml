@@ -11,6 +11,23 @@ security:
             id: fos_user.user_provider.username_email
 
     firewalls:
+        oauth_token:
+            pattern:    ^/oauth/v2/token
+            security:   false
+
+        oauth_authorize:
+            pattern:    ^/oauth/v2/auth
+            form_login:
+                provider: fos_userbundle
+                check_path: oauth_server_auth_login_check
+                login_path: oauth_server_auth_login
+            anonymous: true
+
+        oauth_api:
+            pattern:    ^/oauth2
+            fos_oauth:  true
+            stateless:  true
+
         dev:
             pattern: ^/(_(profiler|wdt|error)|css|images|js)/
             security: false
@@ -37,6 +54,7 @@ security:
         - { path: ^/remind, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/, role: ROLE_ADMIN }
         - { path: ^/api/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/oauth2, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/js/, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/deck/view/, role: IS_AUTHENTICATED_ANONYMOUSLY }
