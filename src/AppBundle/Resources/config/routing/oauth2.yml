@@ -1,26 +1,30 @@
 
 api_oauth2_decks:
-    pattern: /api_oauth2/decks
+    pattern: /decks
+    methods: [GET]
     defaults:
-        _controller: AppBundle:Api:decks
+        _controller: AppBundle:Oauth2:listDecks
 
 api_oauth2_load_deck:
-    pattern: /api_oauth2/load_deck/{deck_id}
+    pattern: /deck/load/{id}
+    methods: [GET]
     defaults:
-        _controller: AppBundle:Api:loadDeck
+        _controller: AppBundle:Oauth2:loadDeck
     requirements:
-        deck_id: \d+
+        id: \d+
 
 api_oauth2_save_deck:
-    pattern: /api_oauth2/save_deck/{deck_id}
+    pattern: /deck/save/{id}
+    methods: [PUT]
     defaults:
-        _controller: AppBundle:Api:saveDeck
+        _controller: AppBundle:Oauth2:saveDeck
     requirements:
-        deck_id: \d+
+        id: \d+
 
 api_oauth2_publish_deck:
-    pattern: /api_oauth2/publish_deck/{deck_id}
+    pattern: /deck/publish/{id}
+    methods: [PUT]
     defaults:
-        _controller: AppBundle:Api:publish
+        _controller: AppBundle:Oauth2:publishDeck
     requirements:
-        deck_id: \d+
+        id: \d+

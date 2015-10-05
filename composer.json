@@ -31,7 +31,8 @@
         "leafo/scssphp": "^0.2.0",
         "patchwork/jsqueeze": "~1.0",
         "friendsofsymfony/oauth-server-bundle": "^1.4",
-        "phpunit/phpunit": "4.8.*"
+        "phpunit/phpunit": "4.8.*",
+        "nelmio/api-doc-bundle": "^2.9"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

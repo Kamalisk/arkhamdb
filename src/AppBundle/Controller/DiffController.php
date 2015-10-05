@@ -22,7 +22,7 @@ class DiffController extends Controller
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
         
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
         /* @var $d1 Decklist */
         $d1 = $em->getRepository('AppBundle:Decklist')->find($decklist1_id);
         /* @var $d2 Decklist */

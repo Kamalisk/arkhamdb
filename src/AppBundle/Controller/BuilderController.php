@@ -26,7 +26,7 @@ class BuilderController extends Controller
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 
 		/* @var $em \Doctrine\ORM\EntityManager */
-		$em = $this->get('doctrine')->getManager();
+		$em = $this->getDoctrine()->getManager();
 
 		$factions = $em->getRepository('AppBundle:Faction')->findBy(["is_primary" => TRUE]);
 		$agenda = $em->getRepository('AppBundle:Type')->findOneBy(['code' => 'agenda']);
@@ -42,7 +42,7 @@ class BuilderController extends Controller
     public function initbuildAction (Request $request)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         $faction_code = $request->request->get('faction');
         $agenda_code = $request->request->get('agenda');
@@ -156,7 +156,7 @@ class BuilderController extends Controller
     public function parseTextImport ($text)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         $content = [];
         $lines = explode("\n", $text);
@@ -195,7 +195,7 @@ class BuilderController extends Controller
     public function parseOctgnImport ($octgn)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         $crawler = new Crawler();
         $crawler->addXmlContent($octgn);
@@ -241,7 +241,7 @@ class BuilderController extends Controller
     public function textexportAction ($deck_id)
     {
 		/* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         /* @var $deck \AppBundle\Entity\Deck */
         $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
@@ -267,7 +267,7 @@ class BuilderController extends Controller
     public function octgnexportAction ($deck_id)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         /* @var $deck \AppBundle\Entity\Deck */
         $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
@@ -294,7 +294,7 @@ class BuilderController extends Controller
     {
 
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         $user = $this->getUser();
         if (count($user->getDecks()) > $user->getMaxNbDecks())
@@ -342,7 +342,8 @@ class BuilderController extends Controller
         $tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
         $this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck ? $source_deck : null);
-
+        $em->flush();
+        
         return $this->redirect($this->generateUrl('decks_list'));
 
     }
@@ -350,7 +351,7 @@ class BuilderController extends Controller
     public function deleteAction (Request $request)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         $deck_id = filter_var($request->get('deck_id'), FILTER_SANITIZE_NUMBER_INT);
         $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
@@ -376,7 +377,7 @@ class BuilderController extends Controller
     public function deleteListAction (Request $request)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         $list_id = explode('-', $request->get('ids'));
 
@@ -520,7 +521,7 @@ class BuilderController extends Controller
     public function copyAction ($decklist_id)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         /* @var $decklist \AppBundle\Entity\Decklist */
         $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
@@ -542,7 +543,7 @@ class BuilderController extends Controller
     public function duplicateAction ($deck_id)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         /* @var $deck \AppBundle\Entity\Deck */
         $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
@@ -570,7 +571,7 @@ class BuilderController extends Controller
         /* @var $user \AppBundle\Entity\User */
         $user = $this->getUser();
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         $decks = $this->get('decks')->getByUser($user, FALSE);
 
@@ -638,11 +639,14 @@ class BuilderController extends Controller
                  $parse = $this->parseTextImport($zip->getFromIndex($i));
 
                  $deck = new Deck();
+                 $em->persist($deck);
                  $this->get('decks')->saveDeck($this->getUser(), $deck, null, $name, '', '', $parse['content']);
             }
         }
         $zip->close();
 
+        $em->flush();
+        
         $this->get('session')
             ->getFlashBag()
             ->set('notice', "Decks imported.");
@@ -655,7 +659,7 @@ class BuilderController extends Controller
         $user = $this->getUser();
 
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         $deck_id = $request->get('deck_id');
 

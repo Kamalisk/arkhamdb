@@ -101,3 +101,18 @@ fos_user:
 # FOSJsRoutingBundle Configuration
 fos_js_routing:
     routes_to_expose: [ '.*' ]
+
+
+# NelmioApiDocBundle Configuration
+nelmio_api_doc: ~
+
+# FOSOAuthServerBundle Configuration
+fos_oauth_server:
+    db_driver: orm       # Driver availables: orm, mongodb, or propel
+    client_class:        AppBundle\Entity\Client
+    access_token_class:  AppBundle\Entity\AccessToken
+    refresh_token_class: AppBundle\Entity\RefreshToken
+    auth_code_class:     AppBundle\Entity\AuthCode
+    service:
+        user_provider: fos_user.user_manager
+

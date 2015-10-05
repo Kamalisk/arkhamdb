@@ -20,7 +20,7 @@ class ReviewController extends Controller
     public function postAction(Request $request)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         /* @var $user \AppBundle\Entity\User */
         $user = $this->getUser();
@@ -78,7 +78,7 @@ class ReviewController extends Controller
     {
 
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         /* @var $user \AppBundle\Entity\User */
         $user = $this->getUser();
@@ -118,7 +118,7 @@ class ReviewController extends Controller
     public function likeAction(Request $request)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         $user = $this->getUser();
         if(!$user) {
@@ -162,7 +162,7 @@ class ReviewController extends Controller
     public function removeAction($id, Request $request)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         $user = $this->getUser();
         if(!$user || !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
@@ -201,7 +201,7 @@ class ReviewController extends Controller
         $pagetitle = "Card Reviews";
 
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         $dql = "SELECT r FROM AppBundle:Review r JOIN r.card c JOIN c.pack p WHERE p.dateRelease IS NOT NULL ORDER BY r.dateCreation DESC";
         $query = $em->createQuery($dql)->setFirstResult($start)->setMaxResults($limit);
@@ -267,7 +267,7 @@ class ReviewController extends Controller
         $start = ($page - 1) * $limit;
 
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         $user = $em->getRepository('AppBundle:User')->find($user_id);
 
@@ -332,7 +332,7 @@ class ReviewController extends Controller
     {
 
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         /* @var $user \AppBundle\Entity\User */
         $user = $this->getUser();

@@ -76,12 +76,6 @@ card_reviews_list:
     requirements:
         page: \d+
 
-faction_page:
-    pattern: /faction/{faction_code}
-    methods: [GET]
-    defaults:
-        _controller: AppBundle:Faction:faction
-
 about:
     pattern: /about
     defaults:

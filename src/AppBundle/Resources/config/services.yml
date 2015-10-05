@@ -21,6 +21,9 @@ services:
         class: AppBundle\Model\DecklistManager
         scope: prototype
         arguments: ["@doctrine.orm.entity_manager", "@request_stack", "@router", "@logger"]
+    decklist_factory:
+        class: AppBundle\Model\DecklistFactory
+        arguments: ["@doctrine.orm.entity_manager", "@deck_validation_helper", "@texts"]
     agenda_helper:
         class: AppBundle\Helper\AgendaHelper
         arguments: ["@doctrine.orm.entity_manager"]

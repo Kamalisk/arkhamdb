@@ -4,7 +4,7 @@ namespace AppBundle\Entity;
 
 class Deck extends \AppBundle\Model\ExportableDeck implements \AppBundle\Model\ExportableDeckInterface
 {
-	public function getArrayExport($withUnsavedChanges = false)
+	public function getArrayExport($withUnsavedChanges = FALSE)
 	{
 		$array = parent::getArrayExport($withUnsavedChanges);
 		$array['problem'] = $this->getProblem();

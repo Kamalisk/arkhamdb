@@ -18,7 +18,7 @@ class TagController extends Controller
         $list_tag = array_map(function ($tag) { return preg_replace('/[^a-zA-Z0-9-]/', '', $tag); }, $list_tag);
         
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
         
         $response = array("success" => true);
         
@@ -43,7 +43,7 @@ class TagController extends Controller
         $list_tag = $request->get('tags');
         
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
         
         $response = array("success" => true);
         
@@ -67,7 +67,7 @@ class TagController extends Controller
         $list_id = $request->get('ids');
         
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
         
         $response = array("success" => true);
         

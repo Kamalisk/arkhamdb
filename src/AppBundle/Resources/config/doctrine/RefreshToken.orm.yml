@@ -1,0 +1,22 @@
+AppBundle\Entity\RefreshToken:
+    type: entity
+    table: oauth2_refresh_token
+    manyToOne:
+        client:
+            targetEntity: Client
+            nullable: false
+            joinColumn:
+                name: client_id
+                referencedColumnName: id
+        user:
+            targetEntity: User
+            nullable: false
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO

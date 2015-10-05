@@ -166,7 +166,7 @@ class ExcelController extends Controller
         }
 
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('AppBundle:Card');
 
         $metaData = $em->getClassMetadata('AppBundle:Card');

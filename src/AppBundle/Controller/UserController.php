@@ -20,7 +20,7 @@ class UserController extends Controller
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
         /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         /* @var $user \AppBundle\Entity\User */
         $user = $em->getRepository('AppBundle:User')->find($user_id);
@@ -36,7 +36,7 @@ class UserController extends Controller
     {
     	$user = $this->getUser();
 
-    	$factions = $this->get('doctrine')->getRepository('AppBundle:Faction')->findAll();
+    	$factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findAll();
 
     	return $this->render('AppBundle:User:profile_edit.html.twig', array(
     			'user'=> $user,
@@ -86,7 +86,7 @@ class UserController extends Controller
     	$user->setIsNotifMention($notifMention);
     	$user->setIsShareDecks($shareDecks);
 
-    	$this->get('doctrine')->getManager()->flush();
+    	$this->getDoctrine()->getManager()->flush();
 
         $this->get('session')
             ->getFlashBag()
@@ -124,14 +124,14 @@ class UserController extends Controller
 
             if(isset($decklist_id)) {
                 /* @var $em \Doctrine\ORM\EntityManager */
-                $em = $this->get('doctrine')->getManager();
+                $em = $this->getDoctrine()->getManager();
                 /* @var $decklist \AppBundle\Entity\Decklist */
                 $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
 
 				if ($decklist) {
     				$decklist_id = $decklist->getId();
 
-    				$dbh = $this->get('doctrine')->getConnection();
+    				$dbh = $this->getDoctrine()->getConnection();
 
     			    $content['is_liked'] = (boolean) $dbh->executeQuery("SELECT
         				count(*)
@@ -155,7 +155,7 @@ class UserController extends Controller
 
             if(isset($card_id)) {
                 /* @var $em \Doctrine\ORM\EntityManager */
-                $em = $this->get('doctrine')->getManager();
+                $em = $this->getDoctrine()->getManager();
                 /* @var $card \AppBundle\Entity\Card */
                 $card = $em->getRepository('AppBundle:Card')->find($card_id);
 

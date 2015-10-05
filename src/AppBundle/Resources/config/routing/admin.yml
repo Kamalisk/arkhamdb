@@ -10,10 +10,6 @@ AppBundle_admin_pack:
 AppBundle_admin_card:
     resource: "@AppBundle/Resources/config/routing/admin/card.yml"
     prefix:   /card
-
-AppBundle_admin_type:
-    resource: "@AppBundle/Resources/config/routing/admin/type.yml"
-    prefix:   /type
     
 AppBundle_excel:
     resource: "@AppBundle/Resources/config/routing/admin/excel.yml"

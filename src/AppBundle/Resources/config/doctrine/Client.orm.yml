@@ -1,0 +1,12 @@
+AppBundle\Entity\Client:
+    type: entity
+    table: oauth2_client
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        name:
+            type: string
+            

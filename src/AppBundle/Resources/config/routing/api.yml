@@ -1,10 +1,12 @@
 api_packs:
     pattern: /packs/
+    methods: [GET]
     defaults:
         _controller: AppBundle:Api:listPacks
 
 api_card:
     pattern: /card/{card_code}.{_format}
+    methods: [GET]
     defaults:
         _controller: AppBundle:Api:getCard
         _format: json
@@ -14,11 +16,13 @@ api_card:
 
 api_cards:
     pattern: /cards/
+    methods: [GET]
     defaults:
         _controller: AppBundle:Api:listCards
 
 api_cards_pack:
     pattern: /cards/{pack_code}.{_format}
+    methods: [GET]
     defaults:
         _controller: AppBundle:Api:listCardsByPack
         _format: json
@@ -27,6 +31,7 @@ api_cards_pack:
 
 api_decklist:
     pattern: /decklist/{decklist_id}.{_format}
+    methods: [GET]
     defaults:
         _controller: AppBundle:Api:getDecklist
         _format: json
@@ -36,6 +41,7 @@ api_decklist:
 
 api_decklists:
     pattern: /decklists/{date}.{_format}
+    methods: [GET]
     defaults:
         _controller: AppBundle:Api:listDecklists
         _format: json

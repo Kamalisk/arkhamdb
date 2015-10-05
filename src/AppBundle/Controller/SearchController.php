@@ -69,7 +69,7 @@ class SearchController extends Controller
 		$response->setPublic();
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-		$dbh = $this->get('doctrine')->getConnection();
+		$dbh = $this->getDoctrine()->getConnection();
 
 		$list_packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findBy([], array("dateRelease" => "ASC", "position" => "ASC"));
 		$packs = [];
@@ -190,7 +190,7 @@ class SearchController extends Controller
 		$sort = $request->query->get('sort') ?: 'name';
 
 		$operators = array(":","!","<",">");
-		$factions = $this->get('doctrine')->getRepository('AppBundle:Faction')->findAll();
+		$factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findAll();
 
 		$params = [];
 		if($request->query->get('q') != "") {

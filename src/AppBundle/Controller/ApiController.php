@@ -10,10 +10,24 @@ use AppBundle\Entity\Decklist;
 use AppBundle\Entity\Decklistslot;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\Criteria;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class ApiController extends Controller
 {
 
+	/**
+	 * Get the description of all the packs as an array of JSON objects.
+	 * 
+	 * @ApiDoc(
+	 *  section="Pack",
+	 *  resource=true,
+	 *  description="All the Packs",
+	 *  parameters={
+	 *    {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+	 *  },
+	 * )
+	 * @param Request $request
+	 */
 	public function listPacksAction(Request $request)
 	{
 		$response = new Response();
@@ -23,7 +37,7 @@ class ApiController extends Controller
 
 		$jsonp = $this->getRequest()->query->get('jsonp');
 
-		$list_packs = $this->get('doctrine')->getRepository('AppBundle:Pack')->findBy(array(), array("dateRelease" => "ASC", "position" => "ASC"));
+		$list_packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findBy(array(), array("dateRelease" => "ASC", "position" => "ASC"));
 
 		// check the last-modified-since header
 
@@ -71,6 +85,33 @@ class ApiController extends Controller
 		return $response;
 	}
 
+	/**
+	 * Get the description of a card as a JSON object.
+	 *
+	 * @ApiDoc(
+	 *  section="Card",
+	 *  resource=true,
+	 *  description="One Card",
+	 *  parameters={
+	 *      {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+	 *  },
+	 *  requirements={
+     *      {
+     *          "name"="card_code",
+     *          "dataType"="string",
+     *          "requirement"="\d+",
+     *          "description"="The code of the card to get, e.g. '01001'"
+     *      },
+     *      {
+     *          "name"="_format",
+     *          "dataType"="string",
+     *          "requirement"="json",
+     *          "description"="The format of the returned data. Only 'json' is supported at the moment."
+     *      }
+     *  },
+	 * )
+	 * @param Request $request
+	 */
 	public function getCardAction($card_code, Request $request)
 	{
 
@@ -81,7 +122,7 @@ class ApiController extends Controller
 
 		$jsonp = $this->getRequest()->query->get('jsonp');
 
-		$card = $this->get('doctrine')->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
+		$card = $this->getDoctrine()->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
 
 		// check the last-modified-since header
 
@@ -114,6 +155,20 @@ class ApiController extends Controller
 
 	}
 
+
+	/**
+	 * Get the description of all the cards as an array of JSON objects.
+	 *
+	 * @ApiDoc(
+	 *  section="Card",
+	 *  resource=true,
+	 *  description="All the Cards",
+	 *  parameters={
+	 *      {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+	 *  },
+	 * )
+	 * @param Request $request
+	 */
 	public function listCardsAction(Request $request)
 	{
 
@@ -124,7 +179,7 @@ class ApiController extends Controller
 
 		$jsonp = $this->getRequest()->query->get('jsonp');
 
-		$list_cards = $this->get('doctrine')->getRepository('AppBundle:Card')->findBy(array(), array("code" => "ASC"));
+		$list_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(array(), array("code" => "ASC"));
 
 		// check the last-modified-since header
 
@@ -162,7 +217,35 @@ class ApiController extends Controller
 
 	}
 
-	public function listCardsByPackAction($pack_code)
+
+	/**
+	 * Get the description of all the card from a pack, as an array of JSON objects.
+	 *
+	 * @ApiDoc(
+	 *  section="Card",
+	 *  resource=true,
+	 *  description="All the Cards from One Pack",
+	 *  parameters={
+	 *      {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+	 *  },
+	 *  requirements={
+     *      {
+     *          "name"="pack_code",
+     *          "dataType"="string",
+     *          "requirement"="\d+",
+     *          "description"="The code of the pack to get the cards from, e.g. 'core'"
+     *      },
+     *      {
+     *          "name"="_format",
+     *          "dataType"="string",
+     *          "requirement"="json|xml|xlsx|xls",
+     *          "description"="The format of the returned data. Only 'json' is supported at the moment."
+     *      }
+     *  },
+	 * )
+	 * @param Request $request
+	 */
+	public function listCardsByPackAction($pack_code, Request $request)
 	{
 		$response = new Response();
 		$response->setPublic();
@@ -215,6 +298,34 @@ class ApiController extends Controller
 		return $response;
 	}
 
+
+	/**
+	 * Get the description of a decklist as a JSON object.
+	 *
+	 * @ApiDoc(
+	 *  section="Decklist",
+	 *  resource=true,
+	 *  description="One Decklist",
+	 *  parameters={
+	 *      {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+	 *  },
+	 *  requirements={
+	 *      {
+	 *          "name"="decklist_id",
+	 *          "dataType"="integer",
+	 *          "requirement"="\d+",
+	 *          "description"="The numeric identifier of the decklist"
+	 *      },
+	 *      {
+	 *          "name"="_format",
+	 *          "dataType"="string",
+	 *          "requirement"="json",
+	 *          "description"="The format of the returned data. Only 'json' is supported at the moment."
+	 *      }
+	 *  },
+	 * )
+	 * @param Request $request
+	 */
 	public function getDecklistAction($decklist_id, Request $request)
 	{
 		$response = new Response();
@@ -253,6 +364,33 @@ class ApiController extends Controller
 		
 	}
 
+	/**
+	 * Get the description of all the decklists published at a given date, as an array of JSON objects.
+	 *
+	 * @ApiDoc(
+	 *  section="Decklist",
+	 *  resource=true,
+	 *  description="All the Decklists from One Day",
+	 *  parameters={
+	 *      {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+	 *  },
+	 *  requirements={
+     *      {
+     *          "name"="date",
+     *          "dataType"="string",
+     *          "requirement"="\d\d\d\d-\d\d-\d\d",
+     *          "description"="The date, format 'Y-m-d'"
+     *      },
+     *      {
+     *          "name"="_format",
+     *          "dataType"="string",
+     *          "requirement"="json",
+     *          "description"="The format of the returned data. Only 'json' is supported at the moment."
+     *      }
+     *  },
+	 * )
+	 * @param Request $request
+	 */
 	public function listDecklistsAction($date, Request $request)
 	{
 		$response = new Response();

@@ -16,43 +16,34 @@ class CreateClientCommand extends ContainerAwareCommand
             ->setName('app:oauth-server:client:create')
             ->setDescription('Creates a new client')
             ->addOption(
-                'redirect-uri',
-                null,
-                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Sets redirect uri for client. Use this option multiple times to set multiple redirect URIs.',
-                null
-            )
-            ->addOption(
                 'grant-type',
                 null,
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                 'Sets allowed grant type for client. Use this option multiple times to set multiple grant types..',
-                null
+                ["authorization_code", "refresh_token"]
             )
-            ->addOption(
+            ->addArgument(
+                'redirect-uri',
+            	InputArgument::REQUIRED,
+                'Sets redirect uri for client'
+            )
+            ->addArgument(
                 'client-name',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'Sets the displayed name of the client',
-                null
+                InputArgument::REQUIRED,
+                'Sets the displayed name of the client'
             )
-            ->setHelp(
-                <<<EOT
-                    The <info>%command.name%</info>command creates a new client.
-
-<info>php %command.full_name% [--redirect-uri=...] [--grant-type=...] name</info>
-
-EOT
-            );
+            ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+    	$redirectUris = [ $input->getArgument('redirect-uri') ];
+    	
         $clientManager = $this->getContainer()->get('fos_oauth_server.client_manager.default');
         $client = $clientManager->createClient();
-        $client->setRedirectUris($input->getOption('redirect-uri'));
+        $client->setRedirectUris($redirectUris);
         $client->setAllowedGrantTypes($input->getOption('grant-type'));
-        $client->setName($input->getOption('client-name'));
+        $client->setName($input->getArgument('client-name'));
         $clientManager->updateClient($client);
         $output->writeln(
             sprintf(

@@ -143,7 +143,6 @@ class Decks
 		}
 
 		$deck->setProblem($this->deck_validation_helper->findProblem($deck));
-		$this->doctrine->flush ();
 
 		return $deck->getId ();
 	}
