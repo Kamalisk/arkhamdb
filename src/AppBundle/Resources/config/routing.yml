@@ -1,33 +1,33 @@
 app_admin:
-    resource: "@AppBundle/Resources/config/routing/admin.yml"
+    resource: "@AppBundle/Resources/config/routing/routing_admin.yml"
     prefix: /admin
 
 app_api:
-    resource: "@AppBundle/Resources/config/routing/api.yml"
+    resource: "@AppBundle/Resources/config/routing/routing_api.yml"
     prefix: /api
 
 app_cards:
-    resource: "@AppBundle/Resources/config/routing/cards.yml"
+    resource: "@AppBundle/Resources/config/routing/routing_cards.yml"
 #    prefix:
 
 app_deck:
-    resource: "@AppBundle/Resources/config/routing/deck.yml"
+    resource: "@AppBundle/Resources/config/routing/routing_deck.yml"
     prefix: /deck
 
 app_decklist:
-    resource: "@AppBundle/Resources/config/routing/decklist.yml"
+    resource: "@AppBundle/Resources/config/routing/routing_decklist.yml"
     prefix: /decklist
 
 app_review:
-    resource: "@AppBundle/Resources/config/routing/review.yml"
+    resource: "@AppBundle/Resources/config/routing/routing_review.yml"
     prefix: /review
 
 app_tag:
-    resource: "@AppBundle/Resources/config/routing/tag.yml"
+    resource: "@AppBundle/Resources/config/routing/routing_tag.yml"
     prefix: /tag
 
 app_user:
-    resource: "@AppBundle/Resources/config/routing/user.yml"
+    resource: "@AppBundle/Resources/config/routing/routing_user.yml"
     prefix: /user
 
 index:
@@ -76,11 +76,6 @@ about:
     pattern: /about
     defaults:
         _controller: AppBundle:Default:about
-
-apidoc:
-    pattern: /apidoc
-    defaults:
-        _controller: AppBundle:Default:apidoc
 
 rules:
     pattern: /rules

@@ -100,14 +100,14 @@ class DefaultController extends Controller
     	), $response);
     }
 
-    function apidocAction()
+    function apiIntroAction()
     {
     	$response = new Response();
     	$response->setPublic();
     	$response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-    	return $this->render('AppBundle:Default:apidoc.html.twig', array(
-    			"pagetitle" => "API documentation",
+    	return $this->render('AppBundle:Default:apiIntro.html.twig', array(
+    			"pagetitle" => "API",
     	), $response);
     }
 }

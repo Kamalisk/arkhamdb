@@ -1,9 +1,0 @@
-# these routes are available to anybody
-AppBundle_api_public:
-    resource: "@AppBundle/Resources/config/routing/api/public.yml"
-    prefix:   /public
-
-# these routes are available to users with an OAuth2 access_token
-AppBundle_api_oauth2:
-    resource: "@AppBundle/Resources/config/routing/api/oauth2.yml"
-    prefix:   /oauth2

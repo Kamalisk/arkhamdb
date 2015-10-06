@@ -391,7 +391,7 @@ class ApiController extends Controller
 	 * )
 	 * @param Request $request
 	 */
-	public function listDecklistsAction($date, Request $request)
+	public function listDecklistsByDateAction($date, Request $request)
 	{
 		$response = new Response();
 		$response->setPublic();

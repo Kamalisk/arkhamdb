@@ -39,11 +39,11 @@ api_decklist:
         _format: json
         decklist_id: \d+
 
-api_decklists:
-    pattern: /decklists/{date}.{_format}
+api_decklists_by_date:
+    pattern: /decklists/by_date/{date}.{_format}
     methods: [GET]
     defaults:
-        _controller: AppBundle:Api:listDecklists
+        _controller: AppBundle:Api:listDecklistsByDate
         _format: json
     requirements:
         _format: json
