@@ -1,4 +1,10 @@
 services:
+    # core exception listener
+    core_exception_listener:
+        class: AppBundle\Listener\CoreExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }
+
     decks:
         class: AppBundle\Services\Decks
         arguments: ["@doctrine.orm.entity_manager", "@deck_validation_helper", "@agenda_helper", "@diff", "@logger"]

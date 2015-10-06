@@ -23,17 +23,21 @@ security:
                 login_path: oauth_server_auth_login
             anonymous: true
 
-        oauth_api:
-            pattern:    ^/oauth2
+        api_oauth2:
+            pattern:    ^/api/oauth2
             fos_oauth:  true
             stateless:  true
 
+        api_public:
+            pattern:    ^/api/public
+            security:   false
+
         dev:
-            pattern: ^/(_(profiler|wdt|error)|css|images|js)/
+            pattern:    ^/(_(profiler|wdt|error)|css|images|js)/
             security: false
 
         default:
-            pattern: ^/
+            pattern:    ^/
             form_login:
                 provider: fos_userbundle
                 csrf_provider: form.csrf_provider

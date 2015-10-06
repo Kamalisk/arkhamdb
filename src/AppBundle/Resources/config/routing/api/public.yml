@@ -1,0 +1,55 @@
+api_packs:
+    pattern: /packs/
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Api:listPacks
+
+api_card:
+    pattern: /card/{card_code}.{_format}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Api:getCard
+        _format: json
+    requirements:
+        _format: json
+        card_code: \d+
+
+api_cards:
+    pattern: /cards/
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Api:listCards
+
+api_cards_pack:
+    pattern: /cards/{pack_code}.{_format}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Api:listCardsByPack
+        _format: json
+    requirements:
+        _format: json|xml|xlsx|xls
+
+api_decklist:
+    pattern: /decklist/{decklist_id}.{_format}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Api:getDecklist
+        _format: json
+    requirements:
+        _format: json
+        decklist_id: \d+
+
+api_decklists:
+    pattern: /decklists/{date}.{_format}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Api:listDecklists
+        _format: json
+    requirements:
+        _format: json
+        date: \d\d\d\d-\d\d-\d\d
+
+user_info:
+    pattern: /user/info
+    defaults:
+        _controller: AppBundle:User:info
