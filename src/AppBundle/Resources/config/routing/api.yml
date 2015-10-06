@@ -48,3 +48,9 @@ api_decklists:
     requirements:
         _format: json
         date: \d\d\d\d-\d\d-\d\d
+
+user_info:
+    pattern: /user/info
+    defaults:
+        _controller: AppBundle:User:info
+        

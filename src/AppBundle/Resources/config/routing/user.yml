@@ -56,8 +56,3 @@ card_reviews_list_byauthor:
     requirements:
         page: \d+
         user_id: \d+
-
-user_info:
-    pattern: /user_info
-    defaults:
-        _controller: AppBundle:User:info

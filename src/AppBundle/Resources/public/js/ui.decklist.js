@@ -262,7 +262,7 @@
 	ui.on_all_loaded = function on_all_loaded() {
 		ui.refresh_deck();
 		app.draw_simulator && app.draw_simulator.reset();
-		$.when(app.user.deferred).then(ui.handle_user_deferred);
+		app.user.deferred.always(ui.handle_user_deferred);
 	};
 
 })(app.ui, jQuery);
