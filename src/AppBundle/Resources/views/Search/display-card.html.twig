@@ -1,11 +1,20 @@
 {% extends 'AppBundle:Search:display.html.twig' %}
+{% import "AppBundle::macros.html.twig" as macros %}
+
+{% block javascripts %}
+	{% javascripts '@AppBundle/Resources/public/js/ui.card.js' %}
+	<script src="{{ asset_url }}"></script>
+	{% endjavascripts %}
+	<script type="text/javascript">
+	app.user.params.card_id = {{ cards[0].id }};
+	</script>
+{% endblock %}
 
 {% block main %}
-
 <div class="row">
     <div class="col-md-9">
         <div class="row">
-{% for i in 0..cards|length-1 %}{% set card = cards[i] %}
+{% for card in cards %}
         	<div class="col-sm-7" style="margin-bottom:2em">
         		<div>
         			<div class="panel panel-default">
@@ -33,6 +42,9 @@
         			{% endif %}
         		</div>
         	</div>
+        {% if includeReviews %}
+   	    	{% include 'AppBundle:Search:display-card-reviews.html.twig' %}
+        {% endif %}
 {% endfor %}
         </div>
     </div>

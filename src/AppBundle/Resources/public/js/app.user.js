@@ -1,14 +1,13 @@
 (function app_user(user, $) {
 
 user.params = {};
-user.deferred = $.Deferred().always(function() {
-	if(user.data) {
-		user.update();
-	} else {
-		user.anonymous();
-	}
-	user.always();
-});
+
+/**
+ * Deferred Object. The handlers are defined at the end of the module, once the functions are declared
+ * resolve: the User is logged in (authenticated session)
+ * reject: the User is not logged in (anonymous session)
+ */
+user.loaded = $.Deferred();
 
 /**
  * @memberOf user
@@ -19,11 +18,15 @@ user.query = function query() {
 		dataType: 'json',
 		success: function(data, textStatus, jqXHR) {
 			user.data = data;
-			user.deferred.resolve();
+			if(user.data) {
+				user.loaded.resolve();
+			} else {
+				user.loaded.reject();
+			}
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
 			console.log('['+moment().format('YYYY-MM-DD HH:mm:ss')+'] Error on '+this.url, textStatus, errorThrown);
-			user.deferred.reject();
+			user.loaded.reject();
 		}
 	});
 };
@@ -39,7 +42,11 @@ user.retrieve = function retrieve() {
 			var storedData = localStorage.getItem('user');
 			if(storedData) {
 				user.data = JSON.parse(storedData);
-				user.deferred.resolve();
+				if(user.data) {
+					user.loaded.resolve();
+				} else {
+					user.loaded.reject();
+				}
 				return;
 			}
 		}
@@ -92,7 +99,7 @@ user.dropdown = function dropdown(list) {
 /**
  * @memberOf user
  */
-user.always = function always() {
+user.display_ads = function display_ads() {
 	return;
 
 	// show ads if not donator
@@ -111,6 +118,8 @@ user.always = function always() {
 		});
 	}
 }
+
+user.loaded.done(user.update).fail(user.anonymous).always(user.display_ads);
 
 $(function() {
 	if($.isEmptyObject(user.params)) {

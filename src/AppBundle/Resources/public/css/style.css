@@ -357,3 +357,36 @@ div.site-slogan {
 .fg-neutral {
 	color: #a99560;
 }
+
+/**************** REVIEW ON CARD PAGE ******************/
+
+article.review {
+	margin-top: 2em;
+	padding-top: 2em;
+	border-top: 1px solid #ddd;
+}
+article.review:first-child {
+	margin-top: 0 !important;
+}
+article.review .review-like { 
+	float:left; 
+	font-size: 120%; 
+	width:50px 
+}
+article.review .review-content { 
+	margin-left: 50px 
+}
+article.review .review-text :first-child { 
+	margin-top: 0px 
+}
+article.review .review-date { 
+	clear: both; 
+	text-align: right 
+}
+article.review .review-author { 
+	text-align: right 
+}
+article.review .review-comment { 
+	border-top: 1px solid #ddd; 
+	padding: 0.5em; 
+}

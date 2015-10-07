@@ -512,25 +512,7 @@ class CardsData
     {
         $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(array('card' => $card), array('nbVotes' => 'DESC'));
 
-        $response = [];
-
-        foreach($reviews as $review) {
-            /* @var $review \AppBundle\Entity\Review */
-            $user = $review->getUser();
-            $datecreation = $review->getDatecreation();
-            $response[] = array(
-                    'id' => $review->getId(),
-                    'text' => $review->getText(),
-                    'author_id' => $user->getId(),
-                    'author_name' => $user->getUsername(),
-                    'author_reputation' => $user->getReputation(),
-                    'author_donation' => $user->getDonation(),
-                    'author_color' => $user->getFaction(),
-                    'datecreation' => $datecreation,
-                    'nbVotes' => $review->getnbVotes(),
-                    'comments' => $review->getComments(),
-            );
-        }
+        $response = $reviews;
 
         return $response;
     }

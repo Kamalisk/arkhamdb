@@ -218,18 +218,6 @@
 		});
 	}
 
-
-	ui.handle_user_deferred = function handle_user_deferred() {
-		if(app.user.data) {
-			ui.setup_comment_form();
-			ui.add_author_actions();
-			ui.setup_comment_hide();
-		} else {
-			$('<p>You must be logged in to post comments.</p>').insertAfter('#comment-form');
-		}
-		ui.setup_social_icons();
-	}
-
 	/**
 	 * @memberOf ui
 	 */
@@ -262,7 +250,16 @@
 	ui.on_all_loaded = function on_all_loaded() {
 		ui.refresh_deck();
 		app.draw_simulator && app.draw_simulator.reset();
-		app.user.deferred.always(ui.handle_user_deferred);
+		
+		app.user.loaded.done(function () {
+			ui.setup_comment_form();
+			ui.add_author_actions();
+			ui.setup_comment_hide();
+		}).fail(function () {
+			$('<p>You must be logged in to post comments.</p>').insertAfter('#comment-form');
+		}).always(function () {
+			ui.setup_social_icons();
+		});
 	};
 
 })(app.ui, jQuery);

@@ -1,0 +1,51 @@
+{% if card.available == true %}
+<div class="col-md-12" style="margin-top:2em">
+	<div style="line-height:34px" id="reviews-header">
+		<span style="font-size:24px">Reviews</span>
+	</div>
+	<form method="POST" action="{{ path('card_review_post') }}" style="clear:right" id="review-edit-form">
+		<input type="hidden" name="card_id" value="{{ card.id }}">
+		<input type="hidden" name="review_id" value="">
+	</form>
+	{% if card.reviews|length %}
+		{% for review in card.reviews %}
+		<article class="review" data-id="{{ review.id }}" id="review-{{ review.id }}">
+			<div class="review-like">
+				<a id="review-social-icon-like" href="#" class="social-icon-like" data-toggle="tooltip" data-placement="bottom" title="Like that review">
+					<span class="fa fa-heart"></span> <span class="num">{{ review.nbVotes }}</span>
+				</a>
+			</div>
+			<div class="review-content">
+				<div class="review-text">
+					{{ review.textHtml|raw }}
+				</div>
+				<div class="review-date">
+					<time datetime="{{ review.dateCreation|date('c') }}" title="{{ review.dateCreation|date('F jS, Y') }}">{{ review.dateCreation|date('n/j/y') }}</time>
+				</div>
+				<div class="review-author">
+					{{ macros.username_with_reputation(review.user) }}
+				</div>
+				{% for comment in review.comments %}
+				<div class="review-comment text-muted small">{{ comment.text }}
+					&mdash;
+					{{ macros.username_with_reputation(comment.user) }}
+					<time datetime="{{ comment.dateCreation|date('c') }}" title="{{ comment.dateCreation|date('F jS, Y') }}">{{ comment.dateCreation|date('n/j/y') }}</time>
+				</div>
+				{% endfor %}
+				<form action="{{ path('card_reviewcomment_post') }}" method="POST" class="form-comment">
+					<input type="hidden" name="comment_review_id" value="{{ review.id }}">
+					<button class="btn btn-link btn-write-comment">Add a comment</button>
+				</form>
+			</div>
+		</article>
+		{% endfor %}
+	{% else %}
+	<p><i>No review yet for this card.</i></p>
+	{% endif %}
+</div>
+{% else %}
+<div class="col-md-12" style="margin-top:2em">
+	<p class="text-muted">Reviews will be enabled for this card when it is officially released.</p>
+</div>
+{% endif %}
+           

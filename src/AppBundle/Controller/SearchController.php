@@ -279,9 +279,9 @@ class SearchController extends Controller
 			'card' => 20,
 			'scan' => 20,
 			'short' => 1000,
-		    'zoom' => 1,
 		);
-
+		$includeReviews = FALSE;
+		
 		if(!array_key_exists($view, $pagesizes))
 		{
 			$view = 'list';
@@ -296,7 +296,8 @@ class SearchController extends Controller
 		{
 			if(count($rows) == 1)
 			{
-				$view = 'zoom';
+				$view = 'card';
+				$includeReviews = TRUE;
 			}
 
 			if($pagetitle == "") {
@@ -332,7 +333,7 @@ class SearchController extends Controller
 					if($pack->getDateRelease() && $pack->getDateRelease() <= new \DateTime()) $availability[$pack->getCode()] = true;
 				}
 				$cardinfo['available'] = $availability[$pack->getCode()];
-				if($view == "zoom") {
+				if($includeReviews) {
 				    $cardinfo['reviews'] = $this->get('cards_data')->get_reviews($card);
 				}
 				$cards[] = $cardinfo;
@@ -393,6 +394,7 @@ class SearchController extends Controller
 			"pagination" => $pagination,
 			"pagetitle" => $pagetitle,
 			"metadescription" => $meta,
+			"includeReviews" => $includeReviews,
 		), $response);
 	}
 

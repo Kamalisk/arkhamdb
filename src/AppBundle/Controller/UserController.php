@@ -165,7 +165,7 @@ class UserController extends Controller
                     foreach($reviews as $review) {
                         if($review->getUser()->getId() === $user->getId()) {
                             $content['review_id'] = $review->getId();
-                            $content['review_text'] = $review->getRawtext();
+                            $content['review_text'] = $review->getTextMd();
                         }
                     }
                 }
