@@ -68,7 +68,7 @@ user.store = function store() {
  */
 user.anonymous = function anonymous() {
 	user.wipe();
-	$('#login').append('<ul class="dropdown-menu"><li><a href="'+Routing.generate('fos_user_security_login')+'">Login or Register</a></li></ul>');
+	user.dropdown('<ul class="dropdown-menu"><li><a href="'+Routing.generate('fos_user_security_login')+'">Login or Register</a></li></ul>');
 };
 
 /**
@@ -76,7 +76,7 @@ user.anonymous = function anonymous() {
  */
 user.update = function update() {
 	user.store();
-	$('#login a').append('<span class="caret"></span>').removeClass('disabled').addClass('dropdown-toggle').attr('data-toggle', 'dropdown').after('<ul class="dropdown-menu"><li><a href="'
+	user.dropdown('<ul class="dropdown-menu"><li><a href="'
 			+ Routing.generate('user_profile_edit')
 			+ '">Edit account</a></li><li><a href="'
 			+ user.data.public_profile_url
@@ -84,6 +84,10 @@ user.update = function update() {
 			+ Routing.generate('fos_user_security_logout')
 			+ '" onclick="app.user.wipe()">Log out</a></li></ul>');
 };
+
+user.dropdown = function dropdown(list) {
+	$('#login a').append('<span class="caret"></span>').removeClass('disabled').addClass('dropdown-toggle').attr('data-toggle', 'dropdown').after(list);
+}
 
 /**
  * @memberOf user
