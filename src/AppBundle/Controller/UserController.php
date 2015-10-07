@@ -104,11 +104,11 @@ class UserController extends Controller
 
         $content = null;
 
-        /* @var $user \AppBundle\Entity\User */
-        $user = $this->getUser();
-        if($user)
+        $securityContext = $this->container->get('security.context');
+        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) 
         {
-            $user_id = $user->getId();
+        	$user = $this->getUser();
+        	$user_id = $user->getId();
 
             $public_profile_url = $this->get('router')->generate('user_profile_public', array(
                     'user_id' => $user_id,

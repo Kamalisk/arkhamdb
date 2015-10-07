@@ -28,10 +28,6 @@ security:
             fos_oauth:  true
             stateless:  true
 
-        api_public:
-            pattern:    ^/api/public
-            security:   false
-
         dev:
             pattern:    ^/(_(profiler|wdt|error)|css|images|js)/
             security: false
@@ -57,8 +53,8 @@ security:
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/remind, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/, role: ROLE_ADMIN }
-        - { path: ^/api/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/oauth2, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/public, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/oauth2, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/js/, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/deck/view/, role: IS_AUTHENTICATED_ANONYMOUSLY }

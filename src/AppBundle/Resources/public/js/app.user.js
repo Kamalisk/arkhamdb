@@ -76,7 +76,7 @@ user.anonymous = function anonymous() {
  */
 user.update = function update() {
 	user.store();
-	$('#login').addClass('dropdown').append('<ul class="dropdown-menu"><li><a href="'
+	$('#login a').append('<span class="caret"></span>').removeClass('disabled').addClass('dropdown-toggle').attr('data-toggle', 'dropdown').after('<ul class="dropdown-menu"><li><a href="'
 			+ Routing.generate('user_profile_edit')
 			+ '">Edit account</a></li><li><a href="'
 			+ user.data.public_profile_url
