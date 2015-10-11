@@ -514,7 +514,8 @@ ui.refresh_list = _.debounce(function refresh_list() {
 		orderBy = {};
 
 	orderBy[SortKey] = SortOrder;
-	orderBy['name'] = 1;
+	if(SortKey !== 'name') orderBy['name'] = 1;
+	
 	var cards = app.data.cards.find(query, {'$orderBy': orderBy});
 	var divs = CardDivs[ Config['display-column'] - 1 ];
 
