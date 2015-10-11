@@ -33,7 +33,7 @@ class Decks
 	}
 
 	/**
-	 * 
+	 *
 	 * @param unknown $user
 	 * @param Deck $deck
 	 * @param unknown $decklist_id
@@ -122,7 +122,7 @@ class Decks
 			// copy version
 			$deck->setMajorVersion($source_deck->getMajorVersion());
 			$deck->setMinorVersion($source_deck->getMinorVersion());
-				
+
 		}
 		foreach ( $deck->getSlots () as $slot ) {
 			$deck->removeSlot ( $slot );
@@ -155,7 +155,7 @@ class Decks
 		}
 		// if deck has only one card and it's an agenda, we delete it
 		if(count($deck->getSlots()) === 0 || (
-			count($deck->getSlots()) === 1 && $this->deck->getSlots()->getAgenda()
+			count($deck->getSlots()) === 1 && $deck->getSlots()->getAgenda()
 		) ) {
 			$this->doctrine->remove($deck);
 		}
