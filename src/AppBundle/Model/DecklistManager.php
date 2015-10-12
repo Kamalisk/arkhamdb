@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Model;
 
@@ -19,7 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * The job of this class is to find and return decklists
  * @author alsciende
  * @property integer $maxcount Number of found rows for last request
- * 
+ *
  */
 class DecklistManager
 {
@@ -28,7 +28,7 @@ class DecklistManager
 	protected $start = 0;
 	protected $limit = 30;
 	protected $maxcount = 0;
-	
+
 	public function __construct(EntityManager $doctrine, RequestStack $request_stack, Router $router, LoggerInterface $logger)
 	{
 		$this->doctrine = $doctrine;
@@ -36,28 +36,28 @@ class DecklistManager
 		$this->router = $router;
 		$this->logger = $logger;
 	}
-	
+
 	public function setFaction(Faction $faction = null)
 	{
 		$this->faction = $faction;
 	}
-	
+
 	public function setLimit($limit)
 	{
 		$this->limit = $limit;
 	}
-	
+
 	public function setPage($page)
 	{
 		$this->page = max($page, 1);
 		$this->start = ($this->page - 1) * $this->limit;
 	}
-	
+
 	public function getMaxCount()
 	{
 		return $this->maxcount;
 	}
-	
+
 	/**
 	 * creates the basic query builder and initializes it
 	 */
@@ -72,9 +72,10 @@ class DecklistManager
 		}
 		$qb->setFirstResult($this->start);
 		$qb->setMaxResults($this->limit);
+		$qb->distinct();
 		return $qb;
 	}
-	
+
 	/**
 	 * creates the paginator around the query
 	 * @param Query $query
@@ -85,13 +86,13 @@ class DecklistManager
 		$this->maxcount = $paginator->count();
 		return $paginator;
 	}
-	
+
 	public function getEmptyList()
 	{
 		$this->maxcount = 0;
 		return new ArrayCollection([]);
 	}
-	
+
 	public function findDecklistsByPopularity()
 	{
 		$qb = $this->getQueryBuilder();
@@ -99,14 +100,14 @@ class DecklistManager
 		$qb->orderBy('popularity', 'DESC');
 		return $this->getPaginator($qb->getQuery());
 	}
-	
+
 	public function findDecklistsByAge($ignoreEmptyDescriptions = FALSE)
 	{
 		$qb = $this->getQueryBuilder();
 		$qb->orderBy('d.dateCreation', 'DESC');
 		return $this->getPaginator($qb->getQuery());
 	}
-	
+
 	public function findDecklistsByFavorite(User $user)
 	{
 		$qb = $this->getQueryBuilder();
@@ -116,7 +117,7 @@ class DecklistManager
 		$qb->orderBy('d.dateCreation', 'DESC');
 		return $this->getPaginator($qb->getQuery());
 	}
-	
+
 	public function findDecklistsByAuthor(User $user)
 	{
 		$qb = $this->getQueryBuilder();
@@ -125,7 +126,7 @@ class DecklistManager
 		$qb->orderBy('d.dateCreation', 'DESC');
 		return $this->getPaginator($qb->getQuery());
 	}
-	
+
 	public function findDecklistsInHallOfFame()
 	{
 		$qb = $this->getQueryBuilder();
@@ -133,7 +134,7 @@ class DecklistManager
 		$qb->orderBy('d.nbVotes', 'DESC');
 		return $this->getPaginator($qb->getQuery());
 	}
-	
+
 	public function findDecklistsInHotTopic()
 	{
 		$qb = $this->getQueryBuilder();
@@ -142,7 +143,7 @@ class DecklistManager
 		$qb->orderBy('d.nbComments', 'DESC');
 		return $this->getPaginator($qb->getQuery());
 	}
-	
+
 	public function findDecklistsInTournaments()
 	{
 		$qb = $this->getQueryBuilder();
@@ -150,7 +151,7 @@ class DecklistManager
 		$qb->orderBy('d.dateCreation', 'DESC');
 		return $this->getPaginator($qb->getQuery());
 	}
-	
+
 	public function findDecklistsWithComplexSearch()
 	{
 		$request = $this->request_stack->getCurrentRequest();
@@ -159,20 +160,20 @@ class DecklistManager
 		if(!is_array($cards_code)) {
 			$cards_code = [];
 		}
-		
+
 		$faction_code = filter_var($request->query->get('faction'), FILTER_SANITIZE_STRING);
 		if($faction_code) {
 			$faction = $this->doctrine->getRepository('AppBundle:Faction')->findOneBy(['code' => $faction_code]);
 		}
-		
+
 		$author_name = filter_var($request->query->get('author'), FILTER_SANITIZE_STRING);
-		
+
 		$decklist_name = filter_var($request->query->get('name'), FILTER_SANITIZE_STRING);
-		
+
 		$sort = $request->query->get('sort');
-		
+
 		$packs = $request->query->get('packs');
-		
+
 		$qb = $this->getQueryBuilder();
 		if(!empty($faction)) {
 			$qb->andWhere('d.faction = :faction');
@@ -194,10 +195,10 @@ class DecklistManager
 					/* @var $card \AppBundle\Entity\Card */
 					$card = $this->doctrine->getRepository('AppBundle:Card')->findOneBy(array('code' => $card_code));
 					if(!$card) continue;
-			
+
 					$qb->andWhere('s.card = :card'.$i);
 					$qb->setParameter('card'.$i, $card);
-						
+
 					$packs[] = $card->getPack()->getId();
 				}
 			}
@@ -207,28 +208,28 @@ class DecklistManager
 				$sub->from("AppBundle:Card","c");
 				$sub->where('c = s.card');
 				$sub->andWhere($sub->expr()->notIn('c.pack', $packs));
-					
+
 				$qb->andWhere($qb->expr()->not($qb->expr()->exists($sub->getDQL())));
 			}
 		}
 
 		return $this->getPaginator($qb->getQuery());
 	}
-	
+
 	public function getNumberOfPages()
 	{
 		return intval(ceil($this->maxcount / $this->limit));
 	}
-	
+
 	public function getAllPages()
 	{
 		$request = $this->request_stack->getCurrentRequest();
 		$route = $request->get('_route');
 		$route_params = $request->get('_route_params');
 		$query = $request->query->all();
-		
+
 		$params = $query + $route_params;
-		
+
 		$number_of_pages = $this->getNumberOfPages();
 		$pages = [];
 		for ($page = 1; $page <= $number_of_pages; $page ++) {
@@ -249,36 +250,36 @@ class DecklistManager
 		foreach($allPages as $numero => $page) {
 			if($numero === 0
 					|| $numero === count($allPages) - 1
-					|| abs($numero - $numero_courant) <= 2) 
+					|| abs($numero - $numero_courant) <= 2)
 			{
 				$pages[] = $page;
 			}
 		}
 		return $pages;
 	}
-	
+
 	public function getPreviousUrl()
 	{
 		if($this->page === 1) return null;
-		
+
 		$request = $this->request_stack->getCurrentRequest();
 		$route = $request->get('_route');
 		$params = $request->query->all();
 		$previous_page = max(1, $this->page - 1);
-		
+
 		return $this->router->generate($route, $params + [ "page" => $previous_page ]);
 	}
 
 	public function getNextUrl()
 	{
 		if($this->page === $this->getNumberOfPages()) return null;
-	
+
 		$request = $this->request_stack->getCurrentRequest();
 		$route = $request->get('_route');
 		$params = $request->query->all();
 		$next_page = min($this->getNumberOfPages(), $this->page + 1);
-	
+
 		return $this->router->generate($route, $params + [ "page" => $next_page ]);
 	}
-	
+
 }
