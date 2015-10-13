@@ -175,12 +175,15 @@ class DecklistManager
 		$packs = $request->query->get('packs');
 
 		$qb = $this->getQueryBuilder();
+		$joinTables = [];
+		
 		if(!empty($faction)) {
 			$qb->andWhere('d.faction = :faction');
 			$qb->setParameter('faction', $faction);
 		}
 		if(!empty($author_name)) {
 			$qb->innerJoin('d.user', 'u');
+			$joinTables[] = 'd.user';
 			$qb->andWhere('u.username = :username');
 			$qb->setParameter('username', $author_name);
 		}
@@ -213,6 +216,25 @@ class DecklistManager
 			}
 		}
 
+		switch($sort) {
+			case 'popularity':
+				$qb->addSelect('(1+d.nbVotes)/(1+POWER(DATE_DIFF(CURRENT_TIMESTAMP(), d.dateCreation), 2)) AS HIDDEN popularity');
+				$qb->orderBy('popularity', 'DESC');
+				break;
+			case 'date':
+				$qb->orderBy('d.dateCreation', 'DESC');
+				break;
+			case 'likes':
+				$qb->orderBy('d.nbVotes', 'DESC');
+				break;
+			case 'reputation':
+				if(!in_array('d.user', $joinTables)) {
+					$qb->innerJoin('d.user', 'u');
+				}
+				$qb->orderBy('u.reputation', 'DESC');
+				break;
+		}
+		
 		return $this->getPaginator($qb->getQuery());
 	}
 
