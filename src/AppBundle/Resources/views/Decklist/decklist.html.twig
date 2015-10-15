@@ -19,6 +19,22 @@
 			<h1 class="decklist-name text-center">
 				<span class="icon icon-{{ decklist.faction.code }}"></span>
 				{{ decklist.name }}
+<span class="dropdown">
+  <button class="btn dropdown-toggle bg-{{ decklist.faction.code }}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" id="dropdownVersions">
+    {{ decklist.version }}
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownVersions">
+  	<li class="dropdown-header">Versions</li>
+  	{% for other_decklist in versions %}
+  		<li class="{% if other_decklist.id == decklist.id %}disabled{% endif %}">
+  			<a href="{{ path('decklist_detail', { 'decklist_id': other_decklist.id, 'decklist_name': other_decklist.nameCanonical|e('url') }) }}">
+  				{{ other_decklist.version }}
+  			</a>
+  		</li>
+    {% endfor %}
+  </ul>
+</span>
 			</h1>
 		</div>
 		<div class="col-xs-12">

@@ -296,7 +296,7 @@ div.site-slogan {
 
 /************** FACTIONS COLORS **************/
 .bg-faction a, .bg-faction span {
-	color: inherit !important;
+	color: inherit;
 }
 .bg-targaryen {
 	background-color: #1c1c1c;
@@ -321,7 +321,7 @@ div.site-slogan {
 	color: white;
 }
 .bg-nightswatch {
-	background-color: #6e6e6e;
+	background-color: #7a7a7a;
 }
 .bg-martell {
 	background-color: #e89521;
@@ -349,7 +349,7 @@ div.site-slogan {
 	color: #509f16;
 }
 .fg-nightswatch {
-	color: #6e6e6e;
+	color: #7a7a7a;
 }
 .fg-martell {
 	color: #e89521;
@@ -366,7 +366,7 @@ article.review {
 	border-top: 1px solid #ddd;
 }
 article.review:first-child {
-	margin-top: 0 !important;
+	margin-top: 0;
 }
 article.review .review-like { 
 	float:left; 
