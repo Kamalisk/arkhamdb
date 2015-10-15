@@ -2269,7 +2269,7 @@ fieldset[disabled] a.btn {
 }
 .btn-default:hover {
   color: #333333;
-  background-color: #e6e6e6;
+  background-color: #f8f8f8;
   border-color: #adadad;
 }
 .btn-default:active,
