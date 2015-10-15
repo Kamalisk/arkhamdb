@@ -322,7 +322,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \AppBundle\Mod
      *
      * @return Decklist
      */
-    public function setnbVotes($nbVotes)
+    public function setNbVotes($nbVotes)
     {
         $this->nbVotes = $nbVotes;
 

@@ -256,7 +256,7 @@ class BuilderController extends Controller
 		$response->headers->set('Content-Type', 'text/plain');
 		$response->headers->set('Content-Disposition', $response->headers->makeDisposition(
 		    ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-		    str_replace(['/','\\'], ['-','_'], $deck->getName() . '.txt')
+				$this->get('texts')->slugify($deck->getName()) . '.txt'
 		));
 
 		$response->setContent($content);
@@ -282,8 +282,8 @@ class BuilderController extends Controller
 
 		$response->headers->set('Content-Type', 'application/octgn');
 		$response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-		    ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-		    str_replace(['/','\\'], ['-','_'], $deck->getName() . '.o8d')
+				ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+				$this->get('texts')->slugify($deck->getName()) . '.o8d'
 		));
 
 		$response->setContent($content);
@@ -603,7 +603,7 @@ class BuilderController extends Controller
         $response->headers->set('Content-Length', filesize($file));
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
         		ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-        		str_replace(['/','\\'], ['-','_'], 'thronesdb.zip')
+        		$this->get('texts')->slugify('thronesdb') . '.zip'
         ));
         
         $response->setContent(file_get_contents($file));

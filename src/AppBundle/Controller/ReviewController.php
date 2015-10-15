@@ -72,7 +72,7 @@ class ReviewController extends Controller
         $review->setUser($user);
       	$review->setTextMd($review_raw);
       	$review->setTextHtml($review_html);
-        $review->setnbVotes(0);
+        $review->setNbVotes(0);
 
         $em->persist($review);
 
@@ -162,7 +162,7 @@ class ReviewController extends Controller
                 $author = $review->getUser();
                 $author->setReputation($author->getReputation() + 1);
                 $user->addReviewVote($review);
-                $review->setnbVotes($review->getnbVotes() + 1);
+                $review->setNbVotes($review->getnbVotes() + 1);
                 $em->flush();
             }
         }

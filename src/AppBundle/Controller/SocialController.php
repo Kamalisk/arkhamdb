@@ -621,7 +621,7 @@ class SocialController extends Controller
         $response->headers->set('Content-Type', 'text/plain');
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
         		ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-        		str_replace(['/','\\'], ['-','_'], $decklist->getName() . '.txt')
+        		$decklist->getNameCanonical() . '.txt'
         ));
 
         $response->setContent($content);
@@ -654,7 +654,7 @@ class SocialController extends Controller
         $response->headers->set('Content-Type', 'application/octgn');
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
         		ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-        		str_replace(['/','\\'], ['-','_'], $decklist->getName() . '.o8d')
+        		$decklist->getNameCanonical() . '.o8d'
         ));
 
         $response->setContent($content);
@@ -709,7 +709,7 @@ class SocialController extends Controller
         }
 
         $decklist->setName($name);
-        $decklist->setNameCanonical(preg_replace('/[^a-z0-9]+/', '-', mb_strtolower($name)));
+        $decklist->setNameCanonical($this->get('texts')->slugify($name) . '-' . $decklist->getVersion());
         $decklist->setDescriptionMd($rawdescription);
         $decklist->setDescriptionHtml($description);
         $decklist->setPrecedent($precedent_decklist);

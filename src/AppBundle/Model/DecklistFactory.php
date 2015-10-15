@@ -54,7 +54,8 @@ class DecklistFactory
 		
 		$decklist = new Decklist();
 		$decklist->setName($name);
-		$decklist->setNameCanonical(preg_replace('/[^a-z0-9]+/', '-', mb_strtolower($name)));
+		$decklist->setVersion($deck->getVersion());
+		$decklist->setNameCanonical($this->get('texts')->slugify($name) . '-' . $decklist->getVersion());
 		$decklist->setDescriptionMd($descriptionMd);
 		$decklist->setDescriptionHtml($description);
 		$decklist->setDateCreation(new \DateTime());
@@ -62,11 +63,10 @@ class DecklistFactory
 		$decklist->setSignature($new_signature);
 		$decklist->setFaction($deck->getFaction());
 		$decklist->setLastPack($deck->getLastPack());
-		$decklist->setnbVotes(0);
+		$decklist->setNbVotes(0);
 		$decklist->setNbfavorites(0);
 		$decklist->setNbcomments(0);
 		$decklist->setUser($deck->getUser());
-		$decklist->setVersion($deck->getVersion());
 		$decklist->setTournament($tournament);
 		foreach ($deck->getSlots() as $slot) {
 			$decklistslot = new Decklistslot();

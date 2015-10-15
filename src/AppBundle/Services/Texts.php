@@ -93,4 +93,20 @@ class Texts
     {
     	return preg_replace('/<img/', '<img class="img-responsive"', $string);
     }
+    
+    /**
+     * Transforms the string into a valid filename, lower-case, no spaces, pure ASCII, etc.
+     * @param string $filename
+     * @return string
+     */
+    public function slugify($filename)
+    {
+    	$filename = mb_ereg_replace('[^\w\-]', '-', $filename);
+    	$filename = iconv('utf-8', 'us-ascii//TRANSLIT', $filename);
+    	$filename = preg_replace('/[^\w\-]/', '', $filename);
+    	$filename = preg_replace('/\-+/', '-', $filename);
+    	$filename = trim($filename, '-');
+    	$filename = strtolower($filename);
+    	return $filename;
+    }
 }
