@@ -19,14 +19,14 @@ class DecklistFactory
 		$this->deckValidationHelper = $deckValidationHelper;
 		$this->texts = $texts;
 	}
-	
+
 	public function createDecklistFromDeck(Deck $deck, $name = null, $descriptionMd = null, Tournament $tournament = null)
 	{
 		$problem = $this->deckValidationHelper->findProblem($deck);
 		if($problem) {
 			throw new \Exception('You cannot publish this deck because it is invalid: "'.$this->deckValidationHelper->getProblemLabel($problem).'".');
 		}
-		
+
 		$new_content = json_encode($deck->getSlots()->getContent());
 		$new_signature = md5($new_content);
 		$old_decklists = $this->doctrine->getRepository('AppBundle:Decklist')->findBy(['signature' => $new_signature]);
@@ -35,27 +35,27 @@ class DecklistFactory
 				throw new \Exception('That decklist already exists.');
 			}
 		}
-		
+
 		// all good for decklist publication
-		
+
 		// increasing deck version
 		$deck->setMinorVersion(0);
 		$deck->setMajorVersion($deck->getMajorVersion() + 1);
-		
+
 		if(empty($name)) {
 			$name = $deck->getName();
 		}
 		$name = substr($name, 0, 60);
-		
+
 		if(empty($descriptionMd)) {
 			$descriptionMd = $deck->getDescriptionMd();
 		}
 		$description = $this->texts->markdown($descriptionMd);
-		
+
 		$decklist = new Decklist();
 		$decklist->setName($name);
 		$decklist->setVersion($deck->getVersion());
-		$decklist->setNameCanonical($this->get('texts')->slugify($name) . '-' . $decklist->getVersion());
+		$decklist->setNameCanonical($this->texts->slugify($name) . '-' . $decklist->getVersion());
 		$decklist->setDescriptionMd($descriptionMd);
 		$decklist->setDescriptionHtml($description);
 		$decklist->setDateCreation(new \DateTime());
@@ -83,9 +83,9 @@ class DecklistFactory
 			}
 		}
 		$decklist->setParent($deck);
-		
+
 		$deck->setMinorVersion(1);
-		
+
 		return $decklist;
 	}
 }
