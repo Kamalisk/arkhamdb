@@ -27,14 +27,12 @@ data.load = function load() {
 	data.masters.packs.load(function (err) {
 		if(err) {
 			console.log('error when loading packs', err);
-			data.dfd.packs.reject(false);
-			return;
+			force_update = true;
 		}
 		data.masters.cards.load(function (err) {
 			if(err) {
 				console.log('error when loading cards', err);
-				data.dfd.cards.reject(false);
-				return;
+				force_update = true;
 			}
 
 			/*
