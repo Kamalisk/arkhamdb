@@ -96,7 +96,6 @@ ui.on_dom_loaded = function on_dom_loaded() {
  * @memberOf ui
  */
 ui.on_data_loaded = function on_data_loaded() {
-	app.deck.init();
 };
 
 /**

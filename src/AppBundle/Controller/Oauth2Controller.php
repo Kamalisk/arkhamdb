@@ -39,11 +39,7 @@ class Oauth2Controller extends Controller
 			return $response;
 		}
 
-		$list = array_map(function ($deck) {
-			return $deck->getArrayExport();
-		}, $decks);
-		
-		$content = json_encode($list);
+		$content = json_encode($decks);
 		
 		$response->headers->set('Content-Type', 'application/json');
 		$response->setContent($content);
@@ -87,7 +83,7 @@ class Oauth2Controller extends Controller
 			return $response;
 		}
 
-		$content = json_encode($deck->getArrayExport());
+		$content = json_encode($deck);
 		
 		$response->headers->set('Content-Type', 'application/json');
 		$response->setContent($content);

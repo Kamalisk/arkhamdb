@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use AppBundle\Model\DecklistManager;
 use AppBundle\Services\Pagination\Pagination;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class SocialController extends Controller
 {
@@ -61,7 +62,7 @@ class SocialController extends Controller
             }
         }
 
-        return new Response(json_encode($deck->getArrayExport(false)));
+        return new JsonResponse($deck);
 
     }
 
@@ -298,7 +299,6 @@ class SocialController extends Controller
                 array(
                         'pagetitle' => $decklist->getName(),
                         'decklist' => $decklist,
-                		'arrayexport' => $decklist->getArrayExport(false),
                 		'commenters' => $commenters,
                 		'tournaments' => $tournaments,
                 		'versions' => $versions,
@@ -660,11 +660,32 @@ class SocialController extends Controller
         $response->setContent($content);
         return $response;
     }
-
+    
+    /**
+     * Displays the decklist edit form
+     */
+	public function editAction($decklist_id, Request $request)
+	{
+		/* @var $em \Doctrine\ORM\EntityManager */
+		$em = $this->getDoctrine()->getManager();
+		
+		$user = $this->getUser();
+		if (! $user)
+			throw new UnauthorizedHttpException("You must be logged in for this operation.");
+		
+		$decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
+		if (! $decklist || $decklist->getUser()->getId() != $user->getId())
+			throw new UnauthorizedHttpException("You don't have access to this decklist.");
+		
+		return $this->render('AppBundle:Decklist:edit.html.twig', [
+				'decklist' => $decklist
+		]);
+	}
+    
     /*
-	 * edits name and description of a decklist by its publisher
+	 * save the name and description of a decklist by its publisher
 	 */
-    public function editAction ($decklist_id, Request $request)
+    public function saveAction ($decklist_id, Request $request)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getDoctrine()->getManager();

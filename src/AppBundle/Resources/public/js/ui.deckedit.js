@@ -633,7 +633,6 @@ ui.on_dom_loaded = function on_dom_loaded() {
  */
 ui.on_data_loaded = function on_data_loaded() {
 	ui.remove_melee_titles();
-	app.deck.init();
 	ui.set_max_qty();
 	app.draw_simulator && app.draw_simulator.on_data_loaded();
 };

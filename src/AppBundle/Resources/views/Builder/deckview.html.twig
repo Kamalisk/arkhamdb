@@ -6,7 +6,7 @@
 	<script src="{{ asset_url }}"></script>
 	{% endjavascripts %}
 	<script type="text/javascript">
-	app.deck.json = {{ arrayexport|json_encode|raw }};
+	app.deck && app.deck.init({{ deck|json_encode|raw }});
 	</script>
 {% endblock %}
 

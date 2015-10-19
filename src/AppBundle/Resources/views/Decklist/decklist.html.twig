@@ -7,7 +7,7 @@
 	{% endjavascripts %}
 	<script type="text/javascript">
 	var Commenters = {{ commenters|json_encode|raw }};
-	app.deck.json = {{ arrayexport|json_encode|raw }};
+	app.deck.init({{ decklist|json_encode|raw }});
 	app.user.params.decklist_id = {{ decklist.id }};
 	</script>
 {% endblock %}
@@ -19,22 +19,22 @@
 			<h1 class="decklist-name text-center">
 				<span class="icon icon-{{ decklist.faction.code }}"></span>
 				{{ decklist.name }}
-<span class="dropdown">
-  <button class="btn dropdown-toggle bg-{{ decklist.faction.code }}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" id="dropdownVersions">
-    {{ decklist.version }}
-    <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu" aria-labelledby="dropdownVersions">
-  	<li class="dropdown-header">Versions</li>
-  	{% for other_decklist in versions %}
-  		<li class="{% if other_decklist.id == decklist.id %}disabled{% endif %}">
-  			<a href="{{ path('decklist_detail', { 'decklist_id': other_decklist.id, 'decklist_name': other_decklist.nameCanonical|e('url') }) }}">
-  				{{ other_decklist.version }}
-  			</a>
-  		</li>
-    {% endfor %}
-  </ul>
-</span>
+				<span class="dropdown">
+				  <button class="btn dropdown-toggle bg-{{ decklist.faction.code }}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" id="dropdownVersions">
+				    {{ decklist.version }}
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" aria-labelledby="dropdownVersions">
+				  	<li class="dropdown-header">Versions</li>
+				  	{% for other_decklist in versions %}
+				  		<li class="{% if other_decklist.id == decklist.id %}disabled{% endif %}">
+				  			<a href="{{ path('decklist_detail', { 'decklist_id': other_decklist.id, 'decklist_name': other_decklist.nameCanonical|e('url') }) }}">
+				  				{{ other_decklist.version }}
+				  			</a>
+				  		</li>
+				    {% endfor %}
+				  </ul>
+				</span>
 			</h1>
 		</div>
 		<div class="col-xs-12">
@@ -75,7 +75,6 @@
 	</div>
 </div>
 {% include 'AppBundle:Decklist:export-modal.html.twig' %}
-{% include 'AppBundle:Decklist:edit-modal.html.twig' %}
 {% include 'AppBundle:Decklist:delete-modal.html.twig' %}
 {% include 'AppBundle:Decklist:odds-modal.html.twig' %}
 {% include 'AppBundle:Decklist:compare-modal.html.twig' %}

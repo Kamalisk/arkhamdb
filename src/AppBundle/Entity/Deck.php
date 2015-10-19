@@ -2,116 +2,130 @@
 
 namespace AppBundle\Entity;
 
-class Deck extends \AppBundle\Model\ExportableDeck implements \AppBundle\Model\ExportableDeckInterface
+class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
 {
-	public function getArrayExport($withUnsavedChanges = FALSE)
+	/**
+	 * @return array
+	 */
+	public function getHistory()
 	{
-		$array = parent::getArrayExport($withUnsavedChanges);
+		$slots = $this->getSlots();
+		$cards = $slots->getContent();
+			
+		$snapshots = [];
+			
+		/**
+		 * All changes, with the newest at position 0
+		*/
+		$changes = $this->getChanges();
+			
+		/**
+		 * Saved changes, with the newest at position 0
+		 * @var $savedChanges Deckchange[]
+		*/
+		$savedChanges =[];
+			
+		/**
+		 * Unsaved changes, with the oldest at position 0
+		 * @var $unsavedChanges Deckchange[]
+		*/
+		$unsavedChanges =[];
+			
+		foreach($changes as $change) {
+			if($change->getIsSaved()) {
+				array_push($savedChanges, $change);
+			}
+			else {
+				array_unshift($unsavedChanges, $change);
+			}
+		}
+		$array['unsaved'] = count($unsavedChanges);
+			
+		// recreating the versions with the variation info, starting from $preversion
+		$preversion = $cards;
+		foreach ( $savedChanges as $change ) {
+			$variation = json_decode ( $change->getVariation(), TRUE );
+			$row = [
+					'variation' => $variation,
+					'is_saved' => $change->getIsSaved(),
+					'version' => $change->getVersion(),
+					'content' => $preversion,
+					'date_creation' => $change->getDateCreation()->format('c'),
+			];
+			array_unshift ( $snapshots, $row );
+				
+			// applying variation to create 'next' (older) preversion
+			foreach ( $variation[0] as $code => $qty ) {
+				$preversion[$code] = $preversion[$code] - $qty;
+				if ($preversion[$code] == 0) unset ( $preversion[$code] );
+			}
+			foreach ( $variation[1] as $code => $qty ) {
+				if (! isset ( $preversion[$code] )) $preversion[$code] = 0;
+				$preversion[$code] = $preversion[$code] + $qty;
+			}
+			ksort ( $preversion );
+		}
+			
+		// add last know version with empty diff
+		$row = [
+				'variation' => null,
+				'is_saved' => true,
+				'version' => "0.0",
+				'content' => $preversion,
+				'date_creation' => $this->getDateCreation()->format('c')
+		];
+		array_unshift ( $snapshots, $row );
+			
+		// recreating the snapshots with the variation info, starting from $postversion
+		$postversion = $cards;
+		foreach ( $unsavedChanges as $change ) {
+			$variation = json_decode ( $change->getVariation(), TRUE );
+			$row = [
+					'variation' => $variation,
+					'is_saved' => $change->getIsSaved(),
+					'version' => $change->getVersion(),
+					'date_creation' => $change->getDateCreation()->format('c'),
+			];
+				
+			// applying variation to postversion
+			foreach ( $variation[0] as $code => $qty ) {
+				if (! isset ( $postversion[$code] )) $postversion[$code] = 0;
+				$postversion[$code] = $postversion[$code] + $qty;
+			}
+			foreach ( $variation[1] as $code => $qty ) {
+				$postversion[$code] = $postversion[$code] - $qty;
+				if ($postversion[$code] == 0) unset ( $postversion[$code] );
+			}
+			ksort ( $postversion );
+				
+			// add postversion with variation that lead to it
+			$row['content'] = $postversion;
+			array_push ( $snapshots, $row );
+		}
+		
+		return $snapshots;
+	}
+	
+	public function jsonSerialize()
+	{
+		$array = parent::getArrayExport();
 		$array['problem'] = $this->getProblem();
 		$array['tags'] = $this->getTags();
 		
-		if($withUnsavedChanges)
-		{
-			$cards = $array['slots'];
-			
-			$snapshots =[];
-			
-			/**
-			 * All changes, with the newest at position 0
-			*/
-			$changes = $this->getChanges();
-			
-			/**
-			 * Saved changes, with the newest at position 0
-			 * @var $savedChanges Deckchange[]
-			*/
-			$savedChanges =[];
-			
-			/**
-			 * Unsaved changes, with the oldest at position 0
-			 * @var $unsavedChanges Deckchange[]
-			*/
-			$unsavedChanges =[];
-			
-			foreach($changes as $change) {
-				if($change->getIsSaved()) {
-					array_push($savedChanges, $change);
-				}
-				else {
-					array_unshift($unsavedChanges, $change);
-				}
-			}
-			$array['unsaved'] = count($unsavedChanges);
-			
-			// recreating the versions with the variation info, starting from $preversion
-			$preversion = $cards;
-			foreach ( $savedChanges as $change ) {
-				$variation = json_decode ( $change->getVariation(), TRUE );
-				$row = [
-						'variation' => $variation,
-						'is_saved' => $change->getIsSaved(),
-						'version' => $change->getVersion(),
-						'content' => $preversion,
-						'date_creation' => $change->getDateCreation()->format('c'),
-				];
-				array_unshift ( $snapshots, $row );
-			
-				// applying variation to create 'next' (older) preversion
-				foreach ( $variation[0] as $code => $qty ) {
-					$preversion[$code] = $preversion[$code] - $qty;
-					if ($preversion[$code] == 0) unset ( $preversion[$code] );
-				}
-				foreach ( $variation[1] as $code => $qty ) {
-					if (! isset ( $preversion[$code] )) $preversion[$code] = 0;
-					$preversion[$code] = $preversion[$code] + $qty;
-				}
-				ksort ( $preversion );
-			}
-			
-			// add last know version with empty diff
-			$row = [
-					'variation' => null,
-					'is_saved' => true,
-					'version' => "0.0",
-					'content' => $preversion,
-					'date_creation' => $this->getDateCreation()->format('c')
-			];
-			array_unshift ( $snapshots, $row );
-			
-			// recreating the snapshots with the variation info, starting from $postversion
-			$postversion = $cards;
-			foreach ( $unsavedChanges as $change ) {
-				$variation = json_decode ( $change->getVariation(), TRUE );
-				$row = [
-						'variation' => $variation,
-						'is_saved' => $change->getIsSaved(),
-						'version' => $change->getVersion(),
-						'date_creation' => $change->getDateCreation()->format('c'),
-				];
-					
-				// applying variation to postversion
-				foreach ( $variation[0] as $code => $qty ) {
-					if (! isset ( $postversion[$code] )) $postversion[$code] = 0;
-					$postversion[$code] = $postversion[$code] + $qty;
-				}
-				foreach ( $variation[1] as $code => $qty ) {
-					$postversion[$code] = $postversion[$code] - $qty;
-					if ($postversion[$code] == 0) unset ( $postversion[$code] );
-				}
-				ksort ( $postversion );
-					
-				// add postversion with variation that lead to it
-				$row['content'] = $postversion;
-				array_push ( $snapshots, $row );
-			}
-			
-			// current deck is newest snapshot
-			$array['slots'] = $postversion;
-			$array['history'] = $snapshots;
-			
-		}
-	
 		return $array;
+	}
+	
+	public function getIsUnsaved()
+	{
+		$changes = $this->getChanges();
+
+		foreach($changes as $change) {
+			if(!$change->getIsSaved()) {
+				return TRUE;
+			}
+		}
+		
+		return FALSE;
 	}
 	
 	/**

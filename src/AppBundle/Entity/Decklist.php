@@ -2,8 +2,16 @@
 
 namespace AppBundle\Entity;
 
-class Decklist extends \AppBundle\Model\ExportableDeck implements \AppBundle\Model\ExportableDeckInterface
+class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
 {
+
+	public function jsonSerialize()
+	{
+		$array = parent::getArrayExport();
+	
+		return $array;
+	}
+	
     /**
      * @var integer
      */

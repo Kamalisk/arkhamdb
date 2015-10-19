@@ -26,9 +26,16 @@ decklist_detail:
 
 decklist_edit:
     pattern: /edit/{decklist_id}
-    methods: [POST]
     defaults:
         _controller: AppBundle:Social:edit
+    requirements:
+        decklist_id: \d+
+
+decklist_save:
+    pattern: /save/{decklist_id}
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Social:save
     requirements:
         decklist_id: \d+
 

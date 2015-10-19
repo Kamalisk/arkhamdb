@@ -26,7 +26,7 @@ class Decks
 		$decks = $user->getDecks();
 		$list = [];
 		foreach($decks as $deck) {
-			$list[] = $deck->getArrayExport(false);
+			$list[] = $deck->jsonSerialize(false);
 		}
 
 		return $list;

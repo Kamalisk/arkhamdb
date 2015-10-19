@@ -423,7 +423,6 @@ class BuilderController extends Controller
         	array(
         		'pagetitle' => "Deckbuilder",
         		'deck' => $deck,
-        		'arrayexport' => $deck->getArrayExport(true)
         	)
         );
 
@@ -454,9 +453,6 @@ class BuilderController extends Controller
 			);
         }
 
-		// we're using deck_interface to use what's been saved, not the snapshots
-        $export = $deck->getArrayExport(false);
-
         $tournaments = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->findAll();
         
         return $this->render(
@@ -464,7 +460,6 @@ class BuilderController extends Controller
         	array(
         		'pagetitle' => "Deckbuilder",
         		'deck' => $deck,
-        		'arrayexport' => $export,
         		'deck_id' => $deck_id,
         		'is_owner' => $is_owner,
         		'tournaments' => $tournaments,

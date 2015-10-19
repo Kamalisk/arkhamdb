@@ -9,7 +9,7 @@
 			<div class="modal-body">
 				<div class="row">
 					<div class="col-md-12">
-						<form action="{{ path('decklist_edit', {decklist_id:decklist.id}) }}" method="POST" enctype="application/x-www-form-urlencoded" id="edit-decklistform">
+						<form action="{{ path('decklist_save', {decklist_id:decklist.id}) }}" method="POST" enctype="application/x-www-form-urlencoded" id="edit-decklistform">
 							<input type="hidden" name="decklist_id" id="edit-decklist-id" value="{{ decklist.id }}">
 							<div class="form-group">
 								<label for="edit-decklist-name">Name</label>

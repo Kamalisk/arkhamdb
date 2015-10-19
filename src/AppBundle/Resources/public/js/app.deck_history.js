@@ -2,6 +2,7 @@
 
 var tbody,
 	clock,
+	snapshots_init = [],
 	snapshots = [],
 	progressbar,
 	timer,
@@ -152,20 +153,26 @@ deck_history.is_changed_since_last_autosave = function is_changed_since_last_aut
 	return changed_since_last_autosave;
 }
 
+deck_history.init = function init(data) 
+{
+	snapshots_init = data;
+}
+
 /**
  * @memberOf deck_history
  * @param container
  */
-deck_history.setup = function setup_history(container) {
-
+deck_history.setup = function setup_history(container) 
+{
 	tbody = $(container).find('tbody').on('click', 'a[role=button]', deck_history.load_snapshot);
 	progressbar = $(container).find('.progress-bar');
 
-	app.deck.get_history().forEach(function (snapshot) {
+	clock = setInterval(deck_history.autosave_interval, 1000);
+	
+	snapshots_init.forEach(function (snapshot) {
 		deck_history.add_snapshot(snapshot);
 	});
 
-	clock = setInterval(deck_history.autosave_interval, 1000);
 }
 
 })(app.deck_history = {}, jQuery);

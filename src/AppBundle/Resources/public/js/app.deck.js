@@ -1,11 +1,8 @@
 (function app_deck(deck, $) {
 
-deck.json = {};
-
 var date_creation,
 	date_update,
 	description_md,
-	history,
 	id,
 	name,
 	slots,
@@ -27,23 +24,28 @@ var date_creation,
 	card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a>');
 
 /**
+ * Called on page load before DOM and data
  * @memberOf deck
  */
-deck.init = function init(json) {
-	if(json) deck.json = json;
-	date_creation = deck.json.date_creation;
-	date_update = deck.json.date_update;
-	description_md = deck.json.description_md;
-	history = deck.json.history;
-	id = deck.json.id;
-	name = deck.json.name;
-	slots = deck.json.slots;
-	tags = deck.json.tags;
-	faction_code = deck.json.faction_code;
-	faction_name = deck.json.faction_name;
-	unsaved = deck.json.unsaved;
-	user_id = deck.json.user_id;
+deck.init = function init(data) {
+	date_creation = data.date_creation;
+	date_update = data.date_update;
+	description_md = data.description_md;
+	id = data.id;
+	name = data.name;
+	slots = data.slots;
+	tags = data.tags;
+	faction_code = data.faction_code;
+	faction_name = data.faction_name;
+	unsaved = data.unsaved;
+	user_id = data.user_id;
+	
+	// when app.data has finished, update the card database
+	$(document).on('data.app', deck.on_data_loaded);
+}
 
+deck.on_data_loaded = function deck_on_data_loaded()
+{
 	app.data.cards.update({}, {
 		indeck: 0
 	});
@@ -101,13 +103,6 @@ deck.get_agendas = function get_agendas() {
 deck.get_agenda = function get_agenda() {
 	var agendas = deck.get_agendas();
 	return agendas.length ? agendas[0] : null;
-}
-
-/**
- * @memberOf deck
- */
-deck.get_history = function get_history() {
-	return history;
 }
 
 /**
@@ -346,7 +341,7 @@ deck.set_card_copies = function set_card_copies(card_code, nb_copies) {
 	app.data.cards.updateById(card_code, {
 		indeck: nb_copies
 	});
-	if(app.deck_history) app.deck_history.notify_change();
+	app.deck_history && app.deck_history.notify_change();
 
 	return updated_other_card;
 }

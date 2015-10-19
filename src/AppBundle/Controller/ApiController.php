@@ -350,7 +350,7 @@ class ApiController extends Controller
 			return $response;
 		}
 		
-		$content = json_encode($decklist->getArrayExport());
+		$content = json_encode($decklist);
 		
 		if (isset($jsonp)) {
 			$content = "$jsonp($content)";
@@ -429,11 +429,7 @@ class ApiController extends Controller
 			return $response;
 		}
 		
-		$list = $decklists->map(function ($decklist) {
-			return $decklist->getArrayExport();
-		})->toArray();
-		
-		$content = json_encode($list);
+		$content = json_encode($decklists);
 		
 		if (isset($jsonp)) {
 			$content = "$jsonp($content)";

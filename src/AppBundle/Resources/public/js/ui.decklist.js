@@ -6,7 +6,6 @@
 	 */
 	ui.setup_event_handlers = function setup_event_handlers() {
 
-		$('#decklist-edit').on('click', ui.edit_form);
 		$('#decklist-delete').on('click', ui.delete_form);
 		$('.social .social-icon-like').on('click', ui.send_like);
 		$('.social .social-icon-favorite').on('click', ui.send_favorite);
@@ -14,10 +13,6 @@
 		$('#btn-compare').on('click', ui.compare_form);
 		$('#btn-compare-submit').on('click', ui.compare_submit);
 
-	}
-
-	ui.edit_form = function edit_form() {
-		$('#editModal').modal('show');
 	}
 
 	ui.delete_form = function delete_form() {
@@ -240,7 +235,6 @@
 	 * @memberOf ui
 	 */
 	ui.on_data_loaded = function on_data_loaded() {
-		app.deck.init();
 	};
 
 	/**
