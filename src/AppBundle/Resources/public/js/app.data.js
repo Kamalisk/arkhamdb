@@ -96,7 +96,7 @@ data.query = function query() {
 		success: data.parse_packs,
 		error: function (jqXHR, textStatus, errorThrown) {
 			console.log('error when requesting packs', errorThrown);
-			data.dfd.packs.reject(true);
+			data.dfd.packs.reject(false);
 		}
 	});
 
@@ -105,7 +105,7 @@ data.query = function query() {
 		success: data.parse_cards,
 		error: function (jqXHR, textStatus, errorThrown) {
 			console.log('error when requesting cards', errorThrown);
-			data.dfd.cards.reject(true);
+			data.dfd.cards.reject(false);
 		}
 	});
 };
@@ -121,7 +121,7 @@ data.update_done = function update_done(packs_updated, cards_updated) {
 		return;
 	}
 
-	if(packs_updated || cards_updated) {
+	if(packs_updated === true || cards_updated === true) {
 		/*
 		 * we display a message informing the user that they can reload their page to use the updated data
 		 * except if we are on the front page, because data is not essential on the front page
@@ -140,14 +140,17 @@ data.update_done = function update_done(packs_updated, cards_updated) {
  * @memberOf data
  */
 data.update_fail = function update_fail(packs_loaded, cards_loaded) {
-	if(!packs_loaded || !cards_loaded) {
+	if(packs_loaded === false || cards_loaded === false) {
 		var message = "Unable to load the data. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
 		var alert = $('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
-		$('#wrapper>div.container').prepend(alert);
+		$('#wrapper>div.container').first().prepend(alert);
 	} else {
-		var message = "Unable to update the data. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
-		var alert = $('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
-		$('#wrapper>div.container').prepend(alert);
+		/*
+		 * since data hasn't been persisted, we will have to do the query next time as well
+		 * -- not much we can do about it
+		 * but since data has been loaded, we call the promise
+		 */
+		data.release();
 	}
 };
 
@@ -157,7 +160,7 @@ data.update_fail = function update_fail(packs_loaded, cards_loaded) {
  */
 data.update_collection = function update_collection(data, collection, lastModifiedData, deferred) {
 	var lastChangeDatabase = new Date(collection.metaData().lastChange)
-	var is_collection_updated = false;
+	var isCollectionUpdated = false;
 
 	/*
 	 * if we decided to force the update,
@@ -168,7 +171,7 @@ data.update_collection = function update_collection(data, collection, lastModifi
 	if(force_update || !lastChangeDatabase || lastChangeDatabase < lastModifiedData) {
 		console.log('data is newer than database or update forced => update the database')
 		collection.setData(data);
-		is_collection_updated = true;
+		isCollectionUpdated = true;
 	}
 
 	collection.save(function (err) {
@@ -176,7 +179,7 @@ data.update_collection = function update_collection(data, collection, lastModifi
 			console.log('error when saving '+collection.name(), err);
 			deferred.reject(true)
 		} else {
-			deferred.resolve(is_collection_updated);
+			deferred.resolve(isCollectionUpdated);
 		}
 	});
 }
