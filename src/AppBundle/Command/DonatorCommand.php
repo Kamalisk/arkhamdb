@@ -26,7 +26,7 @@ class DonatorCommand extends ContainerAwareCommand
         )
         ->addArgument(
                 'donation',
-                InputArgument::REQUIRED,
+                InputArgument::OPTIONAL,
                 'Amount of donation'
         )
         ;
@@ -48,9 +48,13 @@ class DonatorCommand extends ContainerAwareCommand
         }
 
         if($user) {
-            $user->setDonation($donation + $user->getDonation());
-            $em->flush();
-            $output->writeln(date('c') . " " . "Success");
+        	if($donation) {
+        		$user->setDonation($donation + $user->getDonation());
+        		$em->flush();
+            	$output->writeln(date('c') . " " . "Success");
+        	} else {
+        		$output->writeln(date('c') . " User " . $user->getUsername() . " donated " . $user->getDonation());
+        	}
         } else {
             $output->writeln(date('c') . " " . "Cannot find user [$email]");
         }
