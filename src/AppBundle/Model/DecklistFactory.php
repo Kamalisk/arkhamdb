@@ -20,7 +20,7 @@ class DecklistFactory
 		$this->texts = $texts;
 	}
 
-	public function createDecklistFromDeck(Deck $deck, $name = null, $descriptionMd = null, Tournament $tournament = null)
+	public function createDecklistFromDeck(Deck $deck, $name = null, $descriptionMd = null)
 	{
 		$problem = $this->deckValidationHelper->findProblem($deck);
 		if($problem) {
@@ -67,7 +67,6 @@ class DecklistFactory
 		$decklist->setNbfavorites(0);
 		$decklist->setNbcomments(0);
 		$decklist->setUser($deck->getUser());
-		$decklist->setTournament($tournament);
 		foreach ($deck->getSlots() as $slot) {
 			$decklistslot = new Decklistslot();
 			$decklistslot->setQuantity($slot->getQuantity());

@@ -90,7 +90,7 @@
 		</td>
 		<td class="decks-actions text-right">
 			<a href="{{ path('deck_edit',{deck_id:deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit"><span class="fa fa-pencil fa-fw"></span></a>
-			<button class="btn btn-xs btn-default btn-publish-deck{% if deck.problem is not null %} disabled{% endif %}" data-toggle="tooltip" title="Publish"><span class="fa fa-share fa-fw"></span></button>
+			<a href="{{ path('deck_publish_form',{deck_id:deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Publish"><span class="fa fa-share fa-fw"></span></a>
 			<button class="btn btn-xs btn-default btn-delete-deck" data-toggle="tooltip" title="Delete"><span class="fa fa-trash-o fa-fw"></span></button>
 		</td>
 	</tr>
@@ -109,7 +109,6 @@
 {% include 'AppBundle:Modale:file.html.twig' %}
 {% include 'AppBundle:Modale:delete.html.twig' %}
 {% include 'AppBundle:Modale:delete_list.html.twig' %}
-{% include 'AppBundle:Modale:publish.html.twig' %}
 {% include 'AppBundle:Modale:export.html.twig' %}
 {% include 'AppBundle:Modale:odds.html.twig' %}
 {% include 'AppBundle:Modale:tag_add.html.twig' %}

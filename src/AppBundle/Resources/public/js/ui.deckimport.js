@@ -34,7 +34,7 @@ ui.on_content_change = function on_content_change(event) {
 		faction_name: faction_name,
 		slots: slots       
 	});
-	app.deck.display('#deck', 'type');
+	app.deck.display('#deck');
 	$('input[name=content').val(app.deck.get_json());
 	$('input[name=faction_code').val(faction_code);
 }

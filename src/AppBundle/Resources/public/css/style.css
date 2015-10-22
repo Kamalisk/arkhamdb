@@ -49,7 +49,9 @@ body {
 .table-expanded>thead>tr>th, .table-expanded>tbody>tr>th, .table-expanded>tfoot>tr>th, .table-expanded>thead>tr>td, .table-expanded>tbody>tr>td, .table-expanded>tfoot>tr>td {
 	padding: 16px 8px;
 }
-
+.navbar-static-top {
+	z-index: auto;
+}
 
 .display-spoiler-card {
 	margin-bottom: 1em;
@@ -389,4 +391,10 @@ article.review .review-author {
 article.review .review-comment { 
 	border-top: 1px solid #ddd; 
 	padding: 0.5em; 
+}
+
+/****************** BOOTSTRAP MARKDOWN *******************/
+
+.md-editor.md-fullscreen-mode {
+	z-index: 99;
 }

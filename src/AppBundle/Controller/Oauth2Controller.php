@@ -211,6 +211,7 @@ class Oauth2Controller extends Controller
 	 *  parameters={
 	 *      {"name"="description_md", "dataType"="string", "required"=false, "description"="Description of the Decklist in Markdown"},
 	 *      {"name"="tournament_id", "dataType"="integer", "required"=false, "description"="Identifier of the Tournament type of the Decklist"},
+	 *      {"name"="precedent_id", "dataType"="integer", "required"=false, "description"="Identifier of the Predecessor of the Decklist"},
 	 *  },
 	 * )
 	 * @param Request $request
@@ -225,12 +226,16 @@ class Oauth2Controller extends Controller
 		
 		$name = filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		$descriptionMd = trim($request->request->get('description_md'));
-		$tournament_id = filter_var($request->request->get('tournament_id'), FILTER_SANITIZE_NUMBER_INT);
+		
+		$tournament_id = intval(filter_var($request->request->get('tournament_id'), FILTER_SANITIZE_NUMBER_INT));
 		$tournament = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->find($tournament_id);
+
+		$precedent_id = intval(filter_var($request->request->get('precedent'), FILTER_SANITIZE_NUMBER_INT));
+		$precedent = $em->getRepository('AppBundle:Decklist')->find($precedent_id);
 		
         try 
         {
-        	$decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $name, $descriptionMd, $tournament);
+        	$decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $name, $descriptionMd);
         }
         catch(\Exception $e)
         {
@@ -240,6 +245,8 @@ class Oauth2Controller extends Controller
         	]);
         }
         
+        $decklist->setTournament($tournament);
+        $decklist->setPrecedent($precedent);
         $this->getDoctrine()->getManager()->persist($decklist);
         $this->getDoctrine()->getManager()->flush();
 

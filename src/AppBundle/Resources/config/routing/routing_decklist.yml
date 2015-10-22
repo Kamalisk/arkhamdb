@@ -24,10 +24,16 @@ decklist_detail:
     requirements:
         decklist_id: \d+
 
+decklist_create:
+    pattern: /create
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Social:create
+
 decklist_edit:
     pattern: /edit/{decklist_id}
     defaults:
-        _controller: AppBundle:Social:edit
+        _controller: AppBundle:Social:editForm
     requirements:
         decklist_id: \d+
 

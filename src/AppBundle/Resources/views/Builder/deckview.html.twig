@@ -12,6 +12,13 @@
 
 {% block body %}
 <div class="main white container">
+	
+	{% for flashMessage in app.session.flashbag.get('error') %}
+	    <div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>{{ flashMessage|raw }}</div>
+	{% endfor %}
+	{% for flashMessage in app.session.flashbag.get('notice') %}
+	    <div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>{{ flashMessage|raw }}</div>
+	{% endfor %}
 
 	<div class="row">
 	    <div class="col-md-12">
@@ -38,7 +45,7 @@
 				<div style="margin-bottom:5px">
 				{#    <button type="button" id="btn-print" class="btn btn-default"><span class="fa fa-print"></span> Print</button>#}
 					<a href="{{ path('deck_edit', {deck_id:deck_id}) }}" class="btn btn-primary"><span class="fa fa-pencil"></span> Edit</a>
-					<button type="button" id="btn-publish" disabled="disabled" class="btn btn-success"><span class="fa fa-share"></span> Publish</button>
+					<a href="{{ path('deck_publish_form', {deck_id:deck_id}) }}" id="btn-publish" disabled="disabled" class="btn btn-success"><span class="fa fa-share"></span> Publish</a>
 					<button type="button" id="btn-delete" class="btn btn-danger"><span class="fa fa-trash"></span> Delete</button>
 					<div class="btn-group">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -94,7 +101,6 @@
 
 {% include 'AppBundle:Modale:odds.html.twig' %}
 {% include 'AppBundle:Modale:delete.html.twig' %}
-{% include 'AppBundle:Modale:publish.html.twig' %}
 {% include 'AppBundle:Modale:export.html.twig' %}
 
 {% endblock %}

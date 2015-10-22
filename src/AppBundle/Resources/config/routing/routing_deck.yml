@@ -84,12 +84,11 @@ deck_copy:
     requirements:
         decklist_id: \d+
 
-decklist_new:
-    pattern: /publish
-    methods: [POST]
+deck_publish_form:
+    pattern: /publish/{deck_id}
+    methods: [GET]
     defaults:
-        _controller: AppBundle:Social:new
-
+        _controller: AppBundle:Social:publishForm
 
 decks_upload_all:
     pattern: /import/all

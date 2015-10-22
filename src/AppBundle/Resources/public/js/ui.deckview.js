@@ -2,40 +2,6 @@
 
 var DisplaySort = 'type'
 
-function confirm_publish(event) {
-	var button = $(this);
-	if($(button).hasClass('processing')) return;
-	$(button).addClass('processing');
-
-	$('#publish-form-alert').remove();
-
-	$.ajax(Routing.generate('deck_publish', {deck_id:app.deck.get_id()}), {
-		dataType: 'json',
-		success: function( response ) {
-		  if(typeof response === 'object') {
-			  $('#publish-deck-name').val(response.name);
-			  $('#publish-deck-id').val(response.id);
-			  $('#publish-deck-description').val(response.description_md);
-			  $('#btn-publish-submit').text("Go").prop('disabled', false);
-		  }
-		  else
-		  {
-			  $('#publish-deck-form').prepend('<div id="publish-form-alert" class="alert alert-danger">That deck cannot be published because <a href="'+response+'">another decklist</a> already has the same composition.</div>');
-			  $('#btn-publish-submit').text("Refused").prop('disabled', true);
-		  }
-	  },
-	  error: function( jqXHR, textStatus, errorThrown ) {
-		  console.log('['+moment().format('YYYY-MM-DD HH:mm:ss')+'] Error on '+this.url, textStatus, errorThrown);
-		  $('#publish-deck-form').prepend('<div id="publish-form-alert" class="alert alert-danger">'+jqXHR.responseText+'</div>');
-		  $('#btn-publish-submit').text("Error").prop('disabled', true);
-	  },
-	  complete: function() {
-		  $(button).removeClass('processing');
-		  $('#publishModal').modal('show');
-	  }
-	});
-}
-
 function confirm_delete() {
 	$('#delete-deck-name').text(app.deck.get_name());
 	$('#delete-deck-id').val(app.deck.get_id());
@@ -48,7 +14,6 @@ ui.do_action_deck = function do_action_deck(event) {
 	if(!action_id) return;
 
 	switch(action_id) {
-		case 'btn-publish': confirm_publish(); break;
 		case 'btn-delete': confirm_delete(); break;
 		case 'btn-print': window.print(); break;
 		case 'btn-sort-type': DisplaySort = 'type'; ui.refresh_deck()(); break;
@@ -78,7 +43,7 @@ ui.setup_event_handlers = function setup_event_handlers() {
  * @memberOf ui
  */
 ui.refresh_deck = function refresh_deck() {
-	app.deck.display('#deck', DisplaySort);
+	app.deck.display('#deck');
 	app.draw_simulator && app.draw_simulator.reset();
 }
 

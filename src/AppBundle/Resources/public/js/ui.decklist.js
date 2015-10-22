@@ -217,7 +217,7 @@
 	 * @memberOf ui
 	 */
 	ui.refresh_deck = function refresh_deck() {
-		app.deck.display('#deck-content', 'type');
+		app.deck.display('#deck-content');
 		app.deck_charts && app.deck_charts.setup();
 	}
 

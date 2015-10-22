@@ -567,7 +567,7 @@ ui.on_deck_modified = function on_deck_modified() {
  * @memberOf ui
  */
 ui.refresh_deck = function refresh_deck() {
-	app.deck.display('#deck', 'type');
+	app.deck.display('#deck');
 	app.draw_simulator && app.draw_simulator.reset();
 	app.deck_charts && app.deck_charts.setup();
 }

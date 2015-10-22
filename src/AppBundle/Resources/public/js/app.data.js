@@ -128,8 +128,7 @@ data.update_done = function update_done(packs_updated, cards_updated) {
 		 */
 		if($('.site-title').size() === 0) {
 			var message = "A new version of the data is available. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
-			var alert = $('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
-			$('#wrapper>div.main.container:first').prepend(alert);
+			ui.insert_alert_message('warning', message);
 		}
 	}
 };
@@ -142,8 +141,7 @@ data.update_done = function update_done(packs_updated, cards_updated) {
 data.update_fail = function update_fail(packs_loaded, cards_loaded) {
 	if(packs_loaded === false || cards_loaded === false) {
 		var message = "Unable to load the data. Click <a href=\"javascript:window.location.reload(true)\">here</a> to reload your page.";
-		var alert = $('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+message+'</div>');
-		$('#wrapper>div.container').first().prepend(alert);
+		ui.insert_alert_message('danger', message);
 	} else {
 		/*
 		 * since data hasn't been persisted, we will have to do the query next time as well

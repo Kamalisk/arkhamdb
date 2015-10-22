@@ -2,42 +2,6 @@
 
 ui.decks = [];
 
-ui.confirm_publish = function confirm_publish(event) {
-	var button = $(this);
-	if($(button).hasClass('disabled') || $(button).hasClass('processing')) return;
-	$(button).addClass('processing');
-
-	var deck_id = $(this).closest('tr').data('id');
-
-	$('#publish-form-alert').remove();
-
-	$.ajax(Routing.generate('deck_publish', {deck_id:deck_id}), {
-		dataType: 'json',
-		success: function( response ) {
-		  if(typeof response === 'object') {
-			  $('#publish-deck-name').val(response.name);
-			  $('#publish-deck-id').val(response.id);
-			  $('#publish-deck-description').val(response.description_md);
-			  $('#btn-publish-submit').text("Go").prop('disabled', false);
-		  }
-		  else
-		  {
-			  $('#publish-deck-form').prepend('<div id="publish-form-alert" class="alert alert-danger">That deck cannot be published because <a href="'+response+'">another decklist</a> already has the same composition.</div>');
-			  $('#btn-publish-submit').text("Refused").prop('disabled', true);
-		  }
-	  },
-	  error: function( jqXHR, textStatus, errorThrown ) {
-		  console.log('['+moment().format('YYYY-MM-DD HH:mm:ss')+'] Error on '+this.url, textStatus, errorThrown);
-		  $('#publish-deck-form').prepend('<div id="publish-form-alert" class="alert alert-danger">'+jqXHR.responseText+'</div>');
-		  $('#btn-publish-submit').text("Error").prop('disabled', true);
-	  },
-	  complete: function() {
-		  $(button).removeClass('processing');
-		  $('#publishModal').modal('show');
-	  }
-	});
-}
-
 ui.confirm_delete = function confirm_delete(event) {
 	var tr = $(this).closest('tr');
 	var deck_id = tr.data('id');
@@ -180,7 +144,6 @@ ui.do_action_selection = function do_action_selection(event) {
  */
 ui.on_dom_loaded = function on_dom_loaded() {
 
-	$('#decks').on('click', 'button.btn-publish-deck', ui.confirm_publish);
 	$('#decks').on('click', 'button.btn-delete-deck', ui.confirm_delete);
 	$('#decks').on('click', 'input[type=checkbox]', function (event) {
 		var checked = $(this).closest('tbody').find('input[type=checkbox]:checked');

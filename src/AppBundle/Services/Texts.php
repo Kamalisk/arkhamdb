@@ -12,9 +12,11 @@ class Texts
         $config = \HTMLPurifier_Config::create(array('Cache.SerializerPath' => $root_dir));
 		$def = $config->getHTMLDefinition(true);
 		$def->addAttribute('a', 'data-code', 'Text');
-        $this->purifier = new \HTMLPurifier($config);
+        $this->purifier_service = new \HTMLPurifier($config);
 
-        $this->transformer = new \Michelf\Markdown();
+        $this->markdown_service = new \Michelf\Markdown();
+        
+        $this->smartypants_service = new \Michelf\SmartyPants;
 	}
 
     /**
@@ -61,7 +63,17 @@ class Texts
      */
     public function markdown($string)
     {
-        return $this->purify($this->img_responsive($this->transform($string)));
+        return $this->purify($this->img_responsive($this->smartypants($this->transform($string))));
+    }
+    
+    /**
+     * runs the text through Smarty Pants
+     * @param string $string
+     * @return $string
+     */
+    public function smartypants($string)
+    {
+    	return $this->smartypants_service->transform($string);
     }
 
     /**
@@ -71,7 +83,7 @@ class Texts
      */
     public function purify($string)
     {
-    	return $this->purifier->purify($string);
+    	return $this->purifier_service->purify($string);
     }
 
     /**
@@ -81,7 +93,7 @@ class Texts
      */
     public function transform($string)
     {
-    	return $this->transformer->transform($string);
+    	return $this->markdown_service->transform($string);
     }
 
     /**

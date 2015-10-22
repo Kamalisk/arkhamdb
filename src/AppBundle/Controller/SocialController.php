@@ -19,75 +19,91 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use AppBundle\Model\DecklistManager;
 use AppBundle\Services\Pagination\Pagination;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use AppBundle\Form\DecklistType;
 
 class SocialController extends Controller
 {
-    /*
-	 * checks to see if a deck can be published in its current saved state
-	 */
-    public function publishAction ($deck_id, Request $request)
+    /**
+     * Checks to see if a deck can be published in its current saved state
+     * If it is, displays the decklist edit form for initial publication of a deck
+     */
+    public function publishFormAction($deck_id, Request $request)
     {
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->getDoctrine()->getManager();
+    	/* @var $em \Doctrine\ORM\EntityManager */
+    	$em = $this->getDoctrine()->getManager();
+    
+    	$user = $this->getUser();
+    	if (! $user) {
+    		$this->createAccessDeniedException("You must be logged in for this operation.");
+    	}
+    
+    	$deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
+    	if (! $deck || $deck->getUser()->getId() != $user->getId()) {
+    		$this->createAccessDeniedException("You don't have access to this decklist.");
+    	}
 
-        $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
-        if(!$deck)
-        	throw new NotFoundHttpException("Deck not found: ".$deck_id);
-
-        if ($this->getUser()->getId() != $deck->getUser()->getId()) {
-            throw new UnauthorizedHttpException("You don't have access to this deck.");
-        }
-
-        $problem = $this->get('deck_validation_helper')->findProblem($deck);
-        if ($problem) {
-            return new Response($this->get('deck_validation_helper')->getProblemLabel($problem));
-        }
-
-        $new_content = json_encode($deck->getSlots()->getContent());
-        $new_signature = md5($new_content);
-        $old_decklists = $this->getDoctrine()
-            ->getRepository('AppBundle:Decklist')
-            ->findBy(array(
-                'signature' => $new_signature
-        ));
-
-        /* @var $decklist \AppBundle\Entity\Decklist */
-        foreach ($old_decklists as $decklist) {
-            if (json_encode($decklist->getSlots()->getContent()) == $new_content) {
-                $url = $this->generateUrl('decklist_detail', array(
-                        'decklist_id' => $decklist->getId(),
-                        'decklist_name' => $decklist->getNameCanonical()
-                ));
-                return new Response(json_encode($url));
-            }
-        }
-
-        return new JsonResponse($deck);
-
+    	$problem = $this->get('deck_validation_helper')->findProblem($deck);
+    	if ($problem) {
+    		$this->get('session')->getFlashBag()->set('error', "This deck cannot be published because it is invalid.");
+    		return $this->redirect($this->generateUrl('deck_view', [ 'deck_id' => $deck->getId() ]));
+    	}
+    	
+    	$new_content = json_encode($deck->getSlots()->getContent());
+    	$new_signature = md5($new_content);
+    	$old_decklists = $this->getDoctrine()->getRepository('AppBundle:Decklist')->findBy([ 'signature' => $new_signature ]);
+    	
+    	/* @var $decklist \AppBundle\Entity\Decklist */
+    	foreach ($old_decklists as $decklist) {
+    		if (json_encode($decklist->getSlots()->getContent()) == $new_content) {
+    			$url = $this->generateUrl('decklist_detail', array(
+    					'decklist_id' => $decklist->getId(),
+    					'decklist_name' => $decklist->getNameCanonical()
+    			));
+    			$this->get('session')->getFlashBag()->set('error', "This deck cannot be published because <a href=\"$url\">another decklist</a> already has the same composition.");
+    			return $this->redirect($this->generateUrl('deck_view', [ 'deck_id' => $deck->getId() ]));
+    		}
+    	}
+    	
+    	// decklist for the form ; won't be persisted
+    	$decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $deck->getName(), $deck->getDescriptionMd());
+    	    	
+    	$tournaments = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->findAll();
+    
+    	return $this->render('AppBundle:Decklist:decklist_edit.html.twig', [
+    			'url' => $this->generateUrl('decklist_create'),
+    			'deck' => $deck,
+    			'decklist' => $decklist,
+    			'tournaments' => $tournaments,
+    	]);
     }
-
-    /*
+    
+    /**
 	 * creates a new decklist from a deck (publish action)
 	 */
-    public function newAction (Request $request)
+    public function createAction (Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $deck_id = filter_var($request->request->get('deck_id'), FILTER_SANITIZE_NUMBER_INT);
+        $deck_id = intval(filter_var($request->request->get('deck_id'), FILTER_SANITIZE_NUMBER_INT));
         
         /* @var $deck \AppBundle\Entity\Deck */
         $deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->find($deck_id);
         if ($this->getUser()->getId() !== $deck->getUser()->getId()) {
         	$this->createAccessDeniedException("Access denied to this object.");
         }
+        
         $name = filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $descriptionMd = trim($request->request->get('description'));
+        $descriptionMd = trim($request->request->get('descriptionMd'));
+
         $tournament_id = filter_var($request->request->get('tournament'), FILTER_SANITIZE_NUMBER_INT);
         $tournament = $em->getRepository('AppBundle:Tournament')->find($tournament_id);
+
+        $precedent_id = intval(filter_var($request->request->get('precedent'), FILTER_SANITIZE_NUMBER_INT));
+        $precedent = $em->getRepository('AppBundle:Decklist')->find($precedent_id);
         
         try 
         {
-        	$decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $name, $descriptionMd, $tournament);
+        	$decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $name, $descriptionMd);
         }
         catch(\Exception $e)
         {
@@ -97,6 +113,8 @@ class SocialController extends Controller
         	]);
         }
         
+        $decklist->setTournament($tournament);
+        $decklist->setPrecedent($precedent);
         $em->persist($decklist);
         $em->flush();
 
@@ -106,6 +124,118 @@ class SocialController extends Controller
         )));
     }
 
+    /**
+     * Displays the decklist edit form
+     */
+    public function editFormAction($decklist_id, Request $request)
+    {
+    	/* @var $em \Doctrine\ORM\EntityManager */
+    	$em = $this->getDoctrine()->getManager();
+    
+    	$user = $this->getUser();
+    	if (! $user)
+    		throw new UnauthorizedHttpException("You must be logged in for this operation.");
+    
+    	$decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
+    	if (! $decklist || $decklist->getUser()->getId() != $user->getId())
+    		throw new UnauthorizedHttpException("You don't have access to this decklist.");
+    
+    	$tournaments = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->findAll();
+    
+    	return $this->render('AppBundle:Decklist:decklist_edit.html.twig', [
+    			'url' => $this->generateUrl('decklist_save', [ 'decklist_id' => $decklist->getId() ]),
+    			'deck' => null,
+    			'decklist' => $decklist,
+    			'tournaments' => $tournaments,
+    	]);
+    }
+    
+    /*
+     * save the name and description of a decklist by its publisher
+     */
+    public function saveAction ($decklist_id, Request $request)
+    {
+    	/* @var $em \Doctrine\ORM\EntityManager */
+    	$em = $this->getDoctrine()->getManager();
+    
+    	$user = $this->getUser();
+    	if (! $user)
+    		throw new UnauthorizedHttpException("You must be logged in for this operation.");
+    
+    	$decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
+    	if (! $decklist || $decklist->getUser()->getId() != $user->getId())
+    		throw new UnauthorizedHttpException("You don't have access to this decklist.");
+    
+    	$name = trim(filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+    	$name = substr($name, 0, 60);
+    	if(empty($name)) $name = "Untitled";
+    	$descriptionMd = trim($request->request->get('descriptionMd'));
+    	$descriptionHtml = $this->get('texts')->markdown($descriptionMd);
+    
+    	$tournament_id = intval(filter_var($request->request->get('tournament'), FILTER_SANITIZE_NUMBER_INT));
+    	$tournament = $em->getRepository('AppBundle:Tournament')->find($tournament_id);
+    
+    	$precedent_id = intval(filter_var($request->request->get('precedent'), FILTER_SANITIZE_NUMBER_INT));
+    	$precedent = $em->getRepository('AppBundle:Decklist')->find($precedent_id);
+    
+    	$decklist->setName($name);
+    	$decklist->setNameCanonical($this->get('texts')->slugify($name) . '-' . $decklist->getVersion());
+    	$decklist->setDescriptionMd($descriptionMd);
+    	$decklist->setDescriptionHtml($descriptionHtml);
+    	$decklist->setPrecedent($precedent);
+    	$decklist->setTournament($tournament);
+    	$decklist->setDateUpdate(new \DateTime());
+    	$em->flush();
+    
+    	return $this->redirect($this->generateUrl('decklist_detail', array(
+    			'decklist_id' => $decklist_id,
+    			'decklist_name' => $decklist->getNameCanonical()
+    	)));
+    
+    }
+
+    /**
+     * deletes a decklist if it has no comment, no vote, no favorite
+     */
+    public function deleteAction ($decklist_id, Request $request)
+    {
+    	/* @var $em \Doctrine\ORM\EntityManager */
+    	$em = $this->getDoctrine()->getManager();
+    
+    	$user = $this->getUser();
+    	if (! $user)
+    		throw new UnauthorizedHttpException("You must be logged in for this operation.");
+    
+    	$decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
+    	if (! $decklist || $decklist->getUser()->getId() != $user->getId())
+    		throw new UnauthorizedHttpException("You don't have access to this decklist.");
+    
+    	if ($decklist->getnbVotes() || $decklist->getNbfavorites() || $decklist->getNbcomments())
+    		throw new UnauthorizedHttpException("Cannot delete this decklist.");
+    
+    	$precedent = $decklist->getPrecedent();
+    
+    	$children_decks = $decklist->getChildren();
+    	/* @var $children_deck Deck */
+    	foreach ($children_decks as $children_deck) {
+    		$children_deck->setParent($precedent);
+    	}
+    
+    	$successor_decklists = $decklist->getSuccessors();
+    	/* @var $successor_decklist Decklist */
+    	foreach ($successor_decklists as $successor_decklist) {
+    		$successor_decklist->setPrecedent($precedent);
+    	}
+    
+    	$em->remove($decklist);
+    	$em->flush();
+    
+    	return $this->redirect($this->generateUrl('decklists_list', array(
+    			'type' => 'mine'
+    	)));
+    
+    }
+    
     private function searchForm(Request $request)
     {
         $dbh = $this->getDoctrine()->getConnection();
@@ -287,8 +417,6 @@ class SocialController extends Controller
 
         $decklist = $this->getDoctrine()->getManager()->getRepository('AppBundle:Decklist')->find($decklist_id);
         
-        $tournaments = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->findAll();
-        
         $commenters = array_map(function ($comment) {
         	return $comment->getUser()->getUsername();
         }, $decklist->getComments()->getValues());
@@ -300,7 +428,6 @@ class SocialController extends Controller
                         'pagetitle' => $decklist->getName(),
                         'decklist' => $decklist,
                 		'commenters' => $commenters,
-                		'tournaments' => $tournaments,
                 		'versions' => $versions,
                 ), $response);
 
@@ -659,132 +786,6 @@ class SocialController extends Controller
 
         $response->setContent($content);
         return $response;
-    }
-    
-    /**
-     * Displays the decklist edit form
-     */
-	public function editAction($decklist_id, Request $request)
-	{
-		/* @var $em \Doctrine\ORM\EntityManager */
-		$em = $this->getDoctrine()->getManager();
-		
-		$user = $this->getUser();
-		if (! $user)
-			throw new UnauthorizedHttpException("You must be logged in for this operation.");
-		
-		$decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
-		if (! $decklist || $decklist->getUser()->getId() != $user->getId())
-			throw new UnauthorizedHttpException("You don't have access to this decklist.");
-		
-		return $this->render('AppBundle:Decklist:edit.html.twig', [
-				'decklist' => $decklist
-		]);
-	}
-    
-    /*
-	 * save the name and description of a decklist by its publisher
-	 */
-    public function saveAction ($decklist_id, Request $request)
-    {
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->getDoctrine()->getManager();
-
-        $user = $this->getUser();
-        if (! $user)
-            throw new UnauthorizedHttpException("You must be logged in for this operation.");
-
-        $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
-        if (! $decklist || $decklist->getUser()->getId() != $user->getId())
-            throw new UnauthorizedHttpException("You don't have access to this decklist.");
-
-        $name = trim(filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $name = substr($name, 0, 60);
-        if (empty($name))
-            $name = "Untitled";
-        $rawdescription = trim($request->request->get('description'));
-        $description = $this->get('texts')->markdown($rawdescription);
-
-        $tournament_id = filter_var($request->request->get('tournament'), FILTER_SANITIZE_NUMBER_INT);
-        $tournament = $em->getRepository('AppBundle:Tournament')->find($tournament_id);
-
-        $derived_from = $request->request->get('derived');
-        $matches = [];
-        if(preg_match('/^(\d+)$/', $derived_from, $matches)) {
-
-        } else if(preg_match('/decklist\/(\d+)\//', $derived_from, $matches)) {
-            $derived_from = $matches[1];
-        } else {
-            $derived_from = null;
-        }
-
-        if(!$derived_from) {
-            $precedent_decklist = null;
-        }
-        else {
-            /* @var $precedent_decklist Decklist */
-            $precedent_decklist = $em->getRepository('AppBundle:Decklist')->find($derived_from);
-            if(!$precedent_decklist || $precedent_decklist->getDateCreation() > $decklist->getDateCreation()) {
-                $precedent_decklist = $decklist->getPrecedent();
-            }
-        }
-
-        $decklist->setName($name);
-        $decklist->setNameCanonical($this->get('texts')->slugify($name) . '-' . $decklist->getVersion());
-        $decklist->setDescriptionMd($rawdescription);
-        $decklist->setDescriptionHtml($description);
-        $decklist->setPrecedent($precedent_decklist);
-        $decklist->setTournament($tournament);
-        $decklist->setDateUpdate(new \DateTime());
-        $em->flush();
-
-        return $this->redirect($this->generateUrl('decklist_detail', array(
-                'decklist_id' => $decklist_id,
-                'decklist_name' => $decklist->getNameCanonical()
-        )));
-
-    }
-
-    /*
-	 * deletes a decklist if it has no comment, no vote, no favorite
-	*/
-    public function deleteAction ($decklist_id, Request $request)
-    {
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->getDoctrine()->getManager();
-
-        $user = $this->getUser();
-        if (! $user)
-            throw new UnauthorizedHttpException("You must be logged in for this operation.");
-
-        $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
-        if (! $decklist || $decklist->getUser()->getId() != $user->getId())
-            throw new UnauthorizedHttpException("You don't have access to this decklist.");
-
-        if ($decklist->getnbVotes() || $decklist->getNbfavorites() || $decklist->getNbcomments())
-            throw new UnauthorizedHttpException("Cannot delete this decklist.");
-
-        $precedent = $decklist->getPrecedent();
-
-        $children_decks = $decklist->getChildren();
-        /* @var $children_deck Deck */
-        foreach ($children_decks as $children_deck) {
-            $children_deck->setParent($precedent);
-        }
-
-        $successor_decklists = $decklist->getSuccessors();
-        /* @var $successor_decklist Decklist */
-        foreach ($successor_decklists as $successor_decklist) {
-            $successor_decklist->setPrecedent($precedent);
-        }
-
-        $em->remove($decklist);
-        $em->flush();
-
-        return $this->redirect($this->generateUrl('decklists_list', array(
-                'type' => 'mine'
-        )));
-
     }
 
     public function usercommentsAction ($page, Request $request)

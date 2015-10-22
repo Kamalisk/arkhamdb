@@ -21,7 +21,17 @@ var date_creation,
 		agenda: "Doesn't comply with the Agenda conditions"
 	},
 	header_tpl = _.template('<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'),
-	card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a>');
+	card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a>'),
+	layouts = {},
+	layout_data = {};
+
+/*
+ * Templates for the different deck layouts, see deck.get_layout_data
+ */
+layouts['1-col-no-images'] = _.template('<div class="deck-content"><%= meta %><%= plots %><%= characters %><%= attachments %><%= locations %><%= events %></div>');
+layouts['2-cols'] = _.template('<div class="deck-content"><div class="row"><div class="col-xs-2"><%= images %></div><div class="col-xs-4"><%= meta %></div><div class="col-sm-6"><%= plots %></div></div><div class="row"><div class="col-sm-6"><%= characters %></div><div class="col-sm-6"><%= attachments %><%= locations %><%= events %></div></div></div>');
+layouts['2-cols-no-images'] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-6"><%= meta %></div><div class="col-sm-6"><%= plots %></div></div><div class="row"><div class="col-sm-6"><%= characters %></div><div class="col-sm-6"><%= attachments %><%= locations %><%= events %></div></div></div>');
+layouts['3-cols'] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= meta %><%= plots %></div><div class="col-sm-4"><%= characters %></div><div class="col-sm-4"><%= attachments %><%= locations %><%= events %></div></div></div>');
 
 /**
  * Called on page load before DOM and data
@@ -202,104 +212,64 @@ deck.get_included_packs = function get_included_packs() {
 /**
  * @memberOf deck
  */
-deck.display = function display(container, sort) {
-	var elements;
+deck.display = function display(container, options) {
+	
+	options = _.extend({sort: 'type', layout: '2-cols'}, options);
 
-	if(sort === 'type') {
-		elements = deck.display_by_type();
-	}
-	else {
-		elements = deck.display_by_other();
-	}
+	var layout_data = deck.get_layout_data(options);
+	var deck_content = layouts[options.layout](layout_data);
 
 	$(container)
 		.removeClass('deck-loading')
 		.empty();
 
-	elements.forEach(function (element) {
-		$(container).append(element);
-	})
+	$(container).append(deck_content);
 }
 
-deck.display_by_other = function display_by_other() {
-	/* to sort cards, we need:
-	 * name of the key to sort upon
-	 * label to display for each key
-	 * order of the values
-	 */
-	var sortKey = '', displayLabel = '', valuesOrder = [];
-	switch(sort) {
-	case 'faction':
-		sortKey = 'faction_code';
-		displayLabel = 'faction_name';
-		valuesOrder = app.data.cards.distinct('faction_code').sort();
-		break;
-	}
-
-	var deck_content = $('<div class="deck-content">');
-
-	valuesOrder.forEach(function (sortValue) {
-		var query = {
-			indeck: {
-				'$gt': 0
-			}
-		};
-		query[sortKey] = sortValue;
-		var cards = app.data.cards.find(query, {
-			'$orderBy': { name: 1 }
-		});
-		if(!cards.length) return;
-
-		$(header_tpl({name:cards[0][displayLabel], quantity: cards.length})).appendTo(deck_content);
-		cards.forEach(function (card) {
-			$('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card').append($(card_line_tpl({card:card}))).prepend(card.indeck+'x ').appendTo(deck_content);
-		})
-	})
-
-	// TODO
-}
-
-deck.display_by_type = function display_by_type() {
+deck.get_layout_data = function get_layout_data(options) {
+	
+	var data = {
+			images: '',
+			meta: '',
+			plots: '',
+			characters: '',
+			attachments: '',
+			locations: '',
+			events: ''
+	};
+	
 	var agenda = deck.get_agenda();
 	var problem = deck.get_problem();
 
-	var deck_content = $('<div class="deck-content">');
-	var deck_content_first_row = $('<div class="row">').appendTo(deck_content);
-
-	var deck_intro_images = $('<div class="col-xs-2">').appendTo(deck_content_first_row);
-	deck_intro_images.append('<div style="margin-bottom:10px"><img src="/bundles/app/images/factions/'+deck.get_faction_code()+'.png" class="img-responsive">');
+	deck.update_layout_section(data, 'images', $('<div style="margin-bottom:10px"><img src="/bundles/app/images/factions/'+deck.get_faction_code()+'.png" class="img-responsive">'));
 	if(agenda) {
-		deck_intro_images.append('<div><img src="'+agenda.imagesrc+'" class="img-responsive">');
+		deck.update_layout_section(data, 'images', $('<div><img src="'+agenda.imagesrc+'" class="img-responsive">'));
 	}
 
-	var deck_intro_meta = $('<div class="col-sm-4">').appendTo(deck_content_first_row);
-	deck_intro_meta.append('<h4 style="font-weight:bold">'+faction_name+'</h4>');
+	deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold">'+faction_name+'</h4>'));
 	if(agenda) {
-		$('<h5>').append($(card_line_tpl({card:agenda}))).appendTo(deck_intro_meta).find('.icon').remove();
+		var agenda_line = $('<h5>').append($(card_line_tpl({card:agenda})));
+		agenda_line.find('.icon').remove();
+		deck.update_layout_section(data, 'meta', agenda_line);
 	}
-	$('<div>Draw deck: '+deck.get_draw_deck_size()+' cards</div>').addClass(deck.get_draw_deck_size() < 60 ? 'text-danger': '').appendTo(deck_intro_meta);
-	$('<div>Plot deck: '+deck.get_plot_deck_size()+' cards</div>').addClass(deck.get_plot_deck_size() != 7 ? 'text-danger': '').appendTo(deck_intro_meta);
-	deck_intro_meta.append('<div>Packs: ' + _.map(deck.get_included_packs(), function (pack) { return pack.name+(pack.quantity > 1 ? ' ('+pack.quantity+')' : ''); }).join(', ') + '</div>');
+	deck.update_layout_section(data, 'meta', $('<div>Draw deck: '+deck.get_draw_deck_size()+' cards</div>').addClass(deck.get_draw_deck_size() < 60 ? 'text-danger': ''));
+	deck.update_layout_section(data, 'meta', $('<div>Plot deck: '+deck.get_plot_deck_size()+' cards</div>').addClass(deck.get_plot_deck_size() != 7 ? 'text-danger': ''));
+	deck.update_layout_section(data, 'meta', $('<div>Packs: ' + _.map(deck.get_included_packs(), function (pack) { return pack.name+(pack.quantity > 1 ? ' ('+pack.quantity+')' : ''); }).join(', ') + '</div>'));
 	if(problem) {
-
-		$('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+problem_labels[problem]+'</div>').appendTo(deck_intro_meta);
+		deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+problem_labels[problem]+'</div>'));
 	}
 
-	var deck_intro_plots = $('<div class="col-sm-6">').appendTo(deck_content_first_row);
-	deck_intro_plots.append(deck.display_one_section('type_code', 'plot', 'type_name'));
+	deck.update_layout_section(data, 'plots', deck.display_one_section('type_code', 'plot', 'type_name'));
+	deck.update_layout_section(data, 'characters', deck.display_one_section('type_code', 'character', 'type_name'));
+	deck.update_layout_section(data, 'attachments', deck.display_one_section('type_code', 'attachment', 'type_name'));
+	deck.update_layout_section(data, 'locations', deck.display_one_section('type_code', 'location', 'type_name'));
+	deck.update_layout_section(data, 'events', deck.display_one_section('type_code', 'event', 'type_name'));
+	
+	return data;
+}
 
-	var deck_content_second_row = $('<div class="row">').appendTo(deck_content);
-
-	var deck_draw_deck_left = $('<div class="col-sm-6">').appendTo(deck_content_second_row);
-	deck_draw_deck_left.append(deck.display_one_section('type_code', 'character', 'type_name'));
-
-	var deck_draw_deck_right = $('<div class="col-sm-6">').appendTo(deck_content_second_row);
-	deck_draw_deck_right.append(deck.display_one_section('type_code', 'attachment', 'type_name'));
-	deck_draw_deck_right.append(deck.display_one_section('type_code', 'location', 'type_name'));
-	deck_draw_deck_right.append(deck.display_one_section('type_code', 'event', 'type_name'));
-
-
-	return [ deck_content ];
+deck.update_layout_section = function update_layout_section(data, section, element) {
+	data[section] = data[section] + element[0].outerHTML;
 }
 
 deck.display_one_section = function display_one_section(sortKey, sortValue, displayLabel) {

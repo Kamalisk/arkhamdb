@@ -21,6 +21,11 @@ ui.on_data_loaded = function on_data_loaded() {};
  */
 ui.on_all_loaded = function on_all_loaded() {};
 
+ui.insert_alert_message = function ui_insert_alert_message(type, message) {
+	var alert = $('<div class="alert" role="alert"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button></div>').addClass('alert-'+type).append(message);
+	$('#wrapper>div.container').first().prepend(alert);
+}
+
 $(document).ready(function () {
 	console.log('ui.on_dom_loaded');
 
