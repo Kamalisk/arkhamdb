@@ -1,0 +1,30 @@
+admin_tournament:
+    path:     /
+    defaults: { _controller: "AppBundle:Tournament:index" }
+
+admin_tournament_show:
+    path:     /{id}/show
+    defaults: { _controller: "AppBundle:Tournament:show" }
+
+admin_tournament_new:
+    path:     /new
+    defaults: { _controller: "AppBundle:Tournament:new" }
+
+admin_tournament_create:
+    path:     /create
+    defaults: { _controller: "AppBundle:Tournament:create" }
+    methods:  POST
+
+admin_tournament_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AppBundle:Tournament:edit" }
+
+admin_tournament_update:
+    path:     /{id}/update
+    defaults: { _controller: "AppBundle:Tournament:update" }
+    methods:  [POST, PUT]
+
+admin_tournament_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AppBundle:Tournament:delete" }
+    methods:  [POST, DELETE]

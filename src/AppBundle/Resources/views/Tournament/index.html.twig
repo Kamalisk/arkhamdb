@@ -1,0 +1,43 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block body -%}
+<div class="main white container">
+<h1>Tournament list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('admin_tournament_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.description }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('admin_tournament_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('admin_tournament_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('admin_tournament_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+</div>
+{% endblock %}
