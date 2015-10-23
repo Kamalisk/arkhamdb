@@ -28,10 +28,9 @@ var date_creation,
 /*
  * Templates for the different deck layouts, see deck.get_layout_data
  */
-layouts['1-col-no-images'] = _.template('<div class="deck-content"><%= meta %><%= plots %><%= characters %><%= attachments %><%= locations %><%= events %></div>');
-layouts['2-cols'] = _.template('<div class="deck-content"><div class="row"><div class="col-xs-2"><%= images %></div><div class="col-xs-4"><%= meta %></div><div class="col-sm-6"><%= plots %></div></div><div class="row"><div class="col-sm-6"><%= characters %></div><div class="col-sm-6"><%= attachments %><%= locations %><%= events %></div></div></div>');
-layouts['2-cols-no-images'] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-6"><%= meta %></div><div class="col-sm-6"><%= plots %></div></div><div class="row"><div class="col-sm-6"><%= characters %></div><div class="col-sm-6"><%= attachments %><%= locations %><%= events %></div></div></div>');
-layouts['3-cols'] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= meta %><%= plots %></div><div class="col-sm-4"><%= characters %></div><div class="col-sm-4"><%= attachments %><%= locations %><%= events %></div></div></div>');
+layouts[1] = _.template('<div class="deck-content"><%= meta %><%= plots %><%= characters %><%= attachments %><%= locations %><%= events %></div>');
+layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-6"><%= meta %></div><div class="col-sm-6"><%= plots %></div></div><div class="row"><div class="col-sm-6"><%= characters %></div><div class="col-sm-6"><%= attachments %><%= locations %><%= events %></div></div></div>');
+layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= meta %><%= plots %></div><div class="col-sm-4"><%= characters %></div><div class="col-sm-4"><%= attachments %><%= locations %><%= events %></div></div></div>');
 
 /**
  * Called on page load before DOM and data
@@ -214,10 +213,10 @@ deck.get_included_packs = function get_included_packs() {
  */
 deck.display = function display(container, options) {
 	
-	options = _.extend({sort: 'type', layout: '2-cols'}, options);
+	options = _.extend({sort: 'type', cols: 2}, options);
 
 	var layout_data = deck.get_layout_data(options);
-	var deck_content = layouts[options.layout](layout_data);
+	var deck_content = layouts[options.cols](layout_data);
 
 	$(container)
 		.removeClass('deck-loading')
@@ -259,11 +258,11 @@ deck.get_layout_data = function get_layout_data(options) {
 		deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+problem_labels[problem]+'</div>'));
 	}
 
-	deck.update_layout_section(data, 'plots', deck.display_one_section('type_code', 'plot', 'type_name'));
-	deck.update_layout_section(data, 'characters', deck.display_one_section('type_code', 'character', 'type_name'));
-	deck.update_layout_section(data, 'attachments', deck.display_one_section('type_code', 'attachment', 'type_name'));
-	deck.update_layout_section(data, 'locations', deck.display_one_section('type_code', 'location', 'type_name'));
-	deck.update_layout_section(data, 'events', deck.display_one_section('type_code', 'event', 'type_name'));
+	deck.update_layout_section(data, 'plots', deck.get_layout_data_one_section('type_code', 'plot', 'type_name'));
+	deck.update_layout_section(data, 'characters', deck.get_layout_data_one_section('type_code', 'character', 'type_name'));
+	deck.update_layout_section(data, 'attachments', deck.get_layout_data_one_section('type_code', 'attachment', 'type_name'));
+	deck.update_layout_section(data, 'locations', deck.get_layout_data_one_section('type_code', 'location', 'type_name'));
+	deck.update_layout_section(data, 'events', deck.get_layout_data_one_section('type_code', 'event', 'type_name'));
 	
 	return data;
 }
@@ -272,7 +271,7 @@ deck.update_layout_section = function update_layout_section(data, section, eleme
 	data[section] = data[section] + element[0].outerHTML;
 }
 
-deck.display_one_section = function display_one_section(sortKey, sortValue, displayLabel) {
+deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey, sortValue, displayLabel) {
 	var section = $('<div>');
 	var query = {};
 	query[sortKey] = sortValue;

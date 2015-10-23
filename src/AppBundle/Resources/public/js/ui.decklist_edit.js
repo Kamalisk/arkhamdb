@@ -97,7 +97,7 @@ ui.on_data_loaded = function on_data_loaded() {
  */
 ui.on_all_loaded = function on_all_loaded() {
 	app.textcomplete.setup('#descriptionMd');
-	app.deck.display('#decklist', { layout: '1-col-no-images', images: false });
+	app.deck.display('#decklist', { cols: 1 });
 };
 
 
