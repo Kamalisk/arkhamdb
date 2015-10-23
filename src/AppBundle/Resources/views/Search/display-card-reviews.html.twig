@@ -23,12 +23,12 @@
 					<time datetime="{{ review.dateCreation|date('c') }}" title="{{ review.dateCreation|date('F jS, Y') }}">{{ review.dateCreation|date('n/j/y') }}</time>
 				</div>
 				<div class="review-author">
-					{{ macros.username_with_reputation(review.user) }}
+					<span class="username">{{ macros.username(review.user) }}</span>
 				</div>
 				{% for comment in review.comments %}
 				<div class="review-comment text-muted small">{{ comment.text }}
 					&mdash;
-					{{ macros.username_with_reputation(comment.user) }}
+					<span class="username">{{ macros.username(comment.user) }}</span>
 					<time datetime="{{ comment.dateCreation|date('c') }}" title="{{ comment.dateCreation|date('F jS, Y') }}">{{ comment.dateCreation|date('n/j/y') }}</time>
 				</div>
 				{% endfor %}

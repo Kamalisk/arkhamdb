@@ -19,7 +19,7 @@
               </div>
               <div class="media-body">
                   <h4 class="media-heading" style="white-space:nowrap"><a href="{{ path('decklist_detail',{decklist_id:data.decklist.id,decklist_name:data.decklist.nameCanonical}) }}">{{ data.decklist.name }}</a></h4>
-                  <div class="small">by {{ macros.username_with_reputation(data.decklist.user) }} &middot; <time datetime="{{ data.decklist.dateCreation|date('c') }}">{{ data.decklist.dateCreation|date('M d, Y') }}</time></div>
+                  <div class="small">by <span class="username">{{ macros.username(data.decklist.user) }}</span> &middot; <time datetime="{{ data.decklist.dateCreation|date('c') }}">{{ data.decklist.dateCreation|date('M d, Y') }}</time></div>
               </div>
             </div>
         </div>
