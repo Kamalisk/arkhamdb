@@ -217,10 +217,6 @@ class DecklistManager
 		}
 
 		switch($sort) {
-			case 'popularity':
-				$qb->addSelect('(1+d.nbVotes)/(1+POWER(DATE_DIFF(CURRENT_TIMESTAMP(), d.dateCreation), 2)) AS HIDDEN popularity');
-				$qb->orderBy('popularity', 'DESC');
-				break;
 			case 'date':
 				$qb->orderBy('d.dateCreation', 'DESC');
 				break;
@@ -232,6 +228,11 @@ class DecklistManager
 					$qb->innerJoin('d.user', 'u');
 				}
 				$qb->orderBy('u.reputation', 'DESC');
+				break;
+			case 'popularity':
+			default:
+				$qb->addSelect('(1+d.nbVotes)/(1+POWER(DATE_DIFF(CURRENT_TIMESTAMP(), d.dateCreation), 2)) AS HIDDEN popularity');
+				$qb->orderBy('popularity', 'DESC');
 				break;
 		}
 		
