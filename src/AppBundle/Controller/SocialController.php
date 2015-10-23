@@ -20,6 +20,7 @@ use AppBundle\Model\DecklistManager;
 use AppBundle\Services\Pagination\Pagination;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Form\DecklistType;
+use FOS\UserBundle\FOSUserBundle;
 
 class SocialController extends Controller
 {
@@ -34,12 +35,12 @@ class SocialController extends Controller
     
     	$user = $this->getUser();
     	if (! $user) {
-    		$this->createAccessDeniedException("You must be logged in for this operation.");
+    		throw $this->createAccessDeniedException("You must be logged in for this operation.");
     	}
     
     	$deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
     	if (! $deck || $deck->getUser()->getId() != $user->getId()) {
-    		$this->createAccessDeniedException("You don't have access to this decklist.");
+    		throw $this->createAccessDeniedException("You don't have access to this decklist.");
     	}
 
     	$problem = $this->get('deck_validation_helper')->findProblem($deck);
@@ -89,7 +90,7 @@ class SocialController extends Controller
         /* @var $deck \AppBundle\Entity\Deck */
         $deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->find($deck_id);
         if ($this->getUser()->getId() !== $deck->getUser()->getId()) {
-        	$this->createAccessDeniedException("Access denied to this object.");
+        	throw $this->createAccessDeniedException("Access denied to this object.");
         }
         
         $name = filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -111,7 +112,7 @@ class SocialController extends Controller
         		$precedent_id = null;
         	}
         }
-        $precedent = $em->getRepository('AppBundle:Decklist')->find($precedent_id);
+        $precedent = $precedent_id ? $em->getRepository('AppBundle:Decklist')->find($precedent_id) : null;
         
         try 
         {
@@ -144,13 +145,20 @@ class SocialController extends Controller
     	/* @var $em \Doctrine\ORM\EntityManager */
     	$em = $this->getDoctrine()->getManager();
     
+    	/* @var $user \AppBundle\Entity\User */
     	$user = $this->getUser();
-    	if (! $user)
-    		throw new UnauthorizedHttpException("You must be logged in for this operation.");
+    	if (! $user) {
+    		throw $this->createAccessDeniedException("Anonymous access denied");
+    	}
     
     	$decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
-    	if (! $decklist || $decklist->getUser()->getId() != $user->getId())
-    		throw new UnauthorizedHttpException("You don't have access to this decklist.");
+    	if (! $decklist ) {
+    		throw $this->createNotFoundException("Decklist not found");
+    	}
+    	
+    	if ( !$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') && $user->getId() !== $decklist->getUser()->getId() ) {
+    		throw $this->createAccessDeniedException("Access denied");
+    	}
     
     	$tournaments = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->findAll();
     
@@ -171,13 +179,19 @@ class SocialController extends Controller
     	$em = $this->getDoctrine()->getManager();
     
     	$user = $this->getUser();
-    	if (! $user)
-    		throw new UnauthorizedHttpException("You must be logged in for this operation.");
-    
+    	if (! $user) {
+    		throw $this->createAccessDeniedException("Anonymous access denied");
+    	}
+    	
     	$decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
-    	if (! $decklist || $decklist->getUser()->getId() != $user->getId())
-    		throw new UnauthorizedHttpException("You don't have access to this decklist.");
-    
+    	if (! $decklist ) {
+    		throw $this->createNotFoundException("Decklist not found");
+    	}
+    	 
+    	if ( !$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') && $user->getId() !== $decklist->getUser()->getId() ) {
+    		throw $this->createAccessDeniedException("Access denied");
+    	}
+    	
     	$name = trim(filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
     	$name = substr($name, 0, 60);
     	if(empty($name)) $name = "Untitled";
@@ -200,7 +214,7 @@ class SocialController extends Controller
         		$precedent_id = null;
         	}
         }
-        $precedent = $em->getRepository('AppBundle:Decklist')->find($precedent_id);
+        $precedent = $precedent_id ? $em->getRepository('AppBundle:Decklist')->find($precedent_id) : null;
     
     	$decklist->setName($name);
     	$decklist->setNameCanonical($this->get('texts')->slugify($name) . '-' . $decklist->getVersion());

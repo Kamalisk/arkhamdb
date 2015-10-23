@@ -27,7 +27,7 @@ class ReviewController extends Controller
         $user = $this->getUser();
         if(!$user) 
         {
-        	$this->createAccessDeniedException("You are not logged in.");
+        	throw $this->createAccessDeniedException("You are not logged in.");
         }
 
         // a user cannot post more reviews than her reputation
@@ -133,7 +133,7 @@ class ReviewController extends Controller
 
         $user = $this->getUser();
         if(!$user) {
-        	$this->createAccessDeniedException("You are not logged in.");
+        	throw $this->createAccessDeniedException("You are not logged in.");
         }
 
         $review_id = filter_var($request->request->get('id'), FILTER_SANITIZE_NUMBER_INT);
@@ -179,7 +179,7 @@ class ReviewController extends Controller
 
         $user = $this->getUser();
         if(!$user || !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-            $this->createAccessDeniedException('No user or not admin');
+            throw $this->createAccessDeniedException('No user or not admin');
         }
 
         $review_id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
@@ -351,7 +351,7 @@ class ReviewController extends Controller
         /* @var $user \AppBundle\Entity\User */
         $user = $this->getUser();
         if(!$user) {
-        	$this->createAccessDeniedException("You are not logged in.");
+        	throw $this->createAccessDeniedException("You are not logged in.");
         }
 
         $review_id = filter_var($request->get('comment_review_id'), FILTER_SANITIZE_NUMBER_INT);

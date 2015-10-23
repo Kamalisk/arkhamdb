@@ -8,7 +8,7 @@ ui.on_dom_loaded = function on_dom_loaded() {
 	$('#descriptionMd').markdown({
 		autofocus: true,
 		iconlibrary: 'fa',
-		hiddenButtons: ['cmdImage','cmdCode'],
+		hiddenButtons: ['cmdHeading', 'cmdImage', 'cmdCode'],
 		footer: 'Press # to insert a card name, $ to insert a game symbol.',
 		additionalButtons: 
 			[[{
@@ -26,10 +26,58 @@ ui.on_dom_loaded = function on_dom_loaded() {
 					title: "Insert a game symbol",
 					icon: "icon-power",
 					callback: ui.on_button_symbol
-}]
+				}]
+			},{
+				name: "groupCustom",
+				data: [{
+					name: "cmdCustom1",
+					title: "Heading 1",
+					icon: "fa fa-header",
+					callback: _.partial(ui.on_button_heading, '#')
+				},{
+					name: "cmdCustom2",
+					title: "Heading 2",
+					icon: "fa fa-header small",
+					callback: _.partial(ui.on_button_heading, '##')
+				},{
+					name: "cmdCustom3",
+					title: "Heading 3",
+					icon: "fa fa-header smaller",
+					callback: _.partial(ui.on_button_heading, '###')
+				}]
 			}]]
 	});
 };
+
+ui.on_button_heading = function ui_on_button_heading(heading, e) {
+    // Append/remove # surround the selection
+    var chunk, cursor, selected = e.getSelection(), content = e.getContent(), pointer, prevChar;
+
+    if (selected.length === 0) {
+      // Give extra word
+      chunk = e.__localize('heading text');
+    } else {
+      chunk = selected.text + '\n';
+    }
+
+    // transform selection and set the cursor into chunked text
+    if ((pointer = heading.length+2, content.substr(selected.start-pointer,pointer) === heading+' ')
+        || (pointer = heading.length+1, content.substr(selected.start-pointer,pointer) === heading)) {
+      e.setSelection(selected.start-pointer,selected.end);
+      e.replaceSelection(chunk);
+      cursor = selected.start-pointer;
+    } else if (selected.start > 0 && (prevChar = content.substr(selected.start-1,1), !!prevChar && prevChar != '\n')) {
+      e.replaceSelection('\n\n'+heading+' '+chunk);
+      cursor = selected.start+heading.length+4;
+    } else {
+      // Empty string before element
+      e.replaceSelection(heading+' '+chunk);
+      cursor = selected.start+heading.length+1;
+    }
+
+    // Set the cursor
+    e.setSelection(cursor,cursor+chunk.length);
+}
 
 ui.on_button_symbol = function ui_on_button_symbol(e) 
 {

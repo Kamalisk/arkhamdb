@@ -119,6 +119,12 @@ div.tags span.tag:not(:first-child)::before {
 .social-icon-comment{color:green}
 .social-icon-version{color:blue}
 
+/*** generic ****/
+
+.smaller {
+    font-size: 70%;
+}
+
 /********** icon-bg ***********/
 
 .icon-bg:before {
@@ -287,13 +293,16 @@ div.site-slogan {
 	padding-bottom:10px
 }
 #deck-description h1 {
-	font-size: 26px;
+	font-size: 171%;
 }
 #deck-description h2 {
-	font-size: 22px;
+	font-size: 143%;
 }
 #deck-description h3 {
-	font-size: 18px;
+	font-size: 121%;
+}
+#deck-description h4 {
+	font-size: 107%;
 }
 
 /************** FACTIONS COLORS **************/

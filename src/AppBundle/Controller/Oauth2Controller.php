@@ -75,7 +75,7 @@ class Oauth2Controller extends Controller
 
 		if($deck->getUser()->getId() !== $this->getUser()->getId())
 		{
-			$this->createAccessDeniedException("Access denied to this object.");
+			throw $this->createAccessDeniedException("Access denied to this object.");
 		}
 		
 		$response->setLastModified($deck->getDateUpdate());
@@ -133,7 +133,7 @@ class Oauth2Controller extends Controller
 			$deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->find($id);
 			if($deck->getUser()->getId() !== $this->getUser()->getId())
 			{
-				$this->createAccessDeniedException("Access denied to this object.");
+				throw $this->createAccessDeniedException("Access denied to this object.");
 			}
 		}
 		
@@ -221,7 +221,7 @@ class Oauth2Controller extends Controller
 		/* @var $deck \AppBundle\Entity\Deck */
 		$deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->find($id);
 		if ($this->getUser()->getId() !== $deck->getUser()->getId()) {
-			$this->createAccessDeniedException("Access denied to this object.");
+			throw $this->createAccessDeniedException("Access denied to this object.");
 		}
 		
 		$name = filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -243,7 +243,7 @@ class Oauth2Controller extends Controller
 				$precedent_id = null;
 			}
 		}
-		$precedent = $em->getRepository('AppBundle:Decklist')->find($precedent_id);
+		$precedent = $precedent_id ? $em->getRepository('AppBundle:Decklist')->find($precedent_id) : null;
 		
         try 
         {
