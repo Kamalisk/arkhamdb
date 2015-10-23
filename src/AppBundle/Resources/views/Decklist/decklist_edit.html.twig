@@ -30,8 +30,8 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<label for="precedent">Derived from</label>
-					<input type="number" class="form-control" name="precedent" id="precedent" value="{% if not decklist.precedent is null %}{{ decklist.precedent.id }}{% endif %}">
+					<label for="precedent">Derived from (copy id or address of the decklist this one is inspired from)</label>
+					<input type="text" class="form-control" name="precedent" id="precedent" value="{% if not decklist.precedent is null %}{{ decklist.precedent.id }}{% endif %}">
 				</div>
 				<div class="form-group">
 					<label for="descriptionMd">Description</label>

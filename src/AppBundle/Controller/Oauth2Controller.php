@@ -230,7 +230,19 @@ class Oauth2Controller extends Controller
 		$tournament_id = intval(filter_var($request->request->get('tournament_id'), FILTER_SANITIZE_NUMBER_INT));
 		$tournament = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->find($tournament_id);
 
-		$precedent_id = intval(filter_var($request->request->get('precedent'), FILTER_SANITIZE_NUMBER_INT));
+		$precedent_id = trim($request->request->get('precedent'));
+		if(!preg_match('/^\d+$/', $precedent_id)) 
+		{
+			// route decklist_detail hard-coded
+			if(preg_match('/view\/(\d+)/', $precedent_id, $matches)) 
+			{
+				$precedent_id = $matches[1];
+			}
+			else
+			{
+				$precedent_id = null;
+			}
+		}
 		$precedent = $em->getRepository('AppBundle:Decklist')->find($precedent_id);
 		
         try 

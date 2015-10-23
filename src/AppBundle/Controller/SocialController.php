@@ -98,7 +98,19 @@ class SocialController extends Controller
         $tournament_id = filter_var($request->request->get('tournament'), FILTER_SANITIZE_NUMBER_INT);
         $tournament = $em->getRepository('AppBundle:Tournament')->find($tournament_id);
 
-        $precedent_id = intval(filter_var($request->request->get('precedent'), FILTER_SANITIZE_NUMBER_INT));
+        $precedent_id = trim($request->request->get('precedent'));
+        if(!preg_match('/^\d+$/', $precedent_id)) 
+        {
+        	// route decklist_detail hard-coded
+        	if(preg_match('/view\/(\d+)/', $precedent_id, $matches)) 
+        	{
+        		$precedent_id = $matches[1];
+        	}
+        	else 
+        	{
+        		$precedent_id = null;
+        	}
+        }
         $precedent = $em->getRepository('AppBundle:Decklist')->find($precedent_id);
         
         try 
@@ -175,8 +187,20 @@ class SocialController extends Controller
     	$tournament_id = intval(filter_var($request->request->get('tournament'), FILTER_SANITIZE_NUMBER_INT));
     	$tournament = $em->getRepository('AppBundle:Tournament')->find($tournament_id);
     
-    	$precedent_id = intval(filter_var($request->request->get('precedent'), FILTER_SANITIZE_NUMBER_INT));
-    	$precedent = $em->getRepository('AppBundle:Decklist')->find($precedent_id);
+    	$precedent_id = trim($request->request->get('precedent'));
+        if(!preg_match('/^\d+$/', $precedent_id)) 
+        {
+        	// route decklist_detail hard-coded
+        	if(preg_match('/view\/(\d+)/', $precedent_id, $matches)) 
+        	{
+        		$precedent_id = $matches[1];
+        	}
+        	else 
+        	{
+        		$precedent_id = null;
+        	}
+        }
+        $precedent = $em->getRepository('AppBundle:Decklist')->find($precedent_id);
     
     	$decklist->setName($name);
     	$decklist->setNameCanonical($this->get('texts')->slugify($name) . '-' . $decklist->getVersion());
