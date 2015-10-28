@@ -1,1 +1,5 @@
-{% if href %}<a href="{{ href }}">{% endif %} {{ s }}&ndash;{{ e }}{% if href %}</a>{% endif %}
+{% if href %}
+<li><a href="{{ href }}">{{ s }}&ndash;{{ e }}</a></li>
+{% else %}
+<li class="active"><a href="#">{{ s }}&ndash;{{ e }}</a></li>
+{% endif %}

@@ -3,13 +3,13 @@
 </div>
 <div class="col-sm-8 text-center">
 <ul class="pagination">
-  <li>{{ first|raw }}</li>
-  {% if ellipsisbefore %}<li><span>...</span></li>{% endif %}
-  <li>{{ prev|raw }}</li>
-  <li><span>{{ current|raw }}</span></li>
-  <li>{{ next|raw }}</li>
-  {% if ellipsisafter %}<li><span>...</span></li>{% endif %}
-  <li>{{ last|raw }}</li>
+  {{ first|raw }}
+  {% if ellipsisbefore %}<li class="disabled"><a href="#">...</a></li>{% endif %}
+  {{ prev|raw }}
+  {{ current|raw }}
+  {{ next|raw }}
+  {% if ellipsisafter %}<li class="disabled"><a href="#">...</a></li>{% endif %}
+  {{ last|raw }}
 </ul>
 </div>
 <div class="col-sm-2 text-right">
