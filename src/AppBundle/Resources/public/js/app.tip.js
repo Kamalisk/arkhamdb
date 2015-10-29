@@ -62,6 +62,7 @@ tip.display = function display(event) {
  * @param event
  */
 tip.guess = function guess(event) {
+	if($(this).hasClass('no-popup')) return;
 	var href = $(this).get(0).href;
 	if(href && href.match(cards_zoom_regexp)) {
 		var code = RegExp.$1;
