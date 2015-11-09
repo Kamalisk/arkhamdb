@@ -434,7 +434,8 @@ ui.update_list_template = function update_list_template() {
 			'<tr>'
 				+ '<td><div class="btn-group" data-toggle="buttons"><%= radios %></div></td>'
 				+ '<td><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></td>'
-				+ '<td class="cost"><%= card.cost %></td>'
+				+ '<td class="cost"><%= card.cost %><%= card.income %></td>'
+				+ '<td class="cost"><%= card.strength %><%= card.initiative %></td>'
 				+ '<td class="type"><span class="icon-<%= card.type_code %>" title="<%= card.type_name %>"></span></td>'
 				+ '<td class="faction"><span class="icon-<%= card.faction_code %> fg-<%= card.faction_code %>" title="<%= card.faction_name %>"></span></td>'
 			+ '</tr>'
@@ -513,9 +514,10 @@ ui.refresh_list = _.debounce(function refresh_list() {
 		query = app.smart_filter.get_query(filters),
 		orderBy = {};
 
-	orderBy[SortKey] = SortOrder;
+	SortKey.split('|').forEach(function (key ) {
+		orderBy[key] = SortOrder;
+	});
 	if(SortKey !== 'name') orderBy['name'] = 1;
-	
 	var cards = app.data.cards.find(query, {'$orderBy': orderBy});
 	var divs = CardDivs[ Config['display-column'] - 1 ];
 
@@ -596,7 +598,7 @@ ui.setup_typeahead = function setup_typeahead() {
 }
 
 ui.update_sort_caret = function update_sort_caret() {
-	var elt = $('[data-sort='+SortKey+']');
+	var elt = $('[data-sort="'+SortKey+'"]');
 	$(elt).closest('tr').find('th').removeClass('dropup').find('span.caret').remove();
 	$(elt).after('<span class="caret"></span>').closest('th').addClass(SortOrder > 0 ? '' : 'dropup');
 }
