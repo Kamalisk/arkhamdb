@@ -454,6 +454,11 @@ class SocialController extends Controller
 
         $decklist = $this->getDoctrine()->getManager()->getRepository('AppBundle:Decklist')->find($decklist_id);
         
+        $duplicate = $this->getDoctrine()->getManager()->getRepository('AppBundle:Decklist')->findOneBy(['signature' => $decklist->getSignature()], ['dateCreation' => 'ASC']);
+        if($duplicate->getDateCreation() >= $decklist->getDateCreation() || $duplicate->getId() === $decklist->getId()) {
+        	$duplicate = null;
+        }
+        
         $commenters = array_map(function ($comment) {
         	return $comment->getUser()->getUsername();
         }, $decklist->getComments()->getValues());
@@ -464,6 +469,7 @@ class SocialController extends Controller
                 array(
                         'pagetitle' => $decklist->getName(),
                         'decklist' => $decklist,
+                		'duplicate' => $duplicate,
                 		'commenters' => $commenters,
                 		'versions' => $versions,
                 ), $response);

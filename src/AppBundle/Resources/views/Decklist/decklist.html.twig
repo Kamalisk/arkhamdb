@@ -44,6 +44,11 @@
 					<time datetime="{{ decklist.dateCreation|date('c') }}">{{ decklist.dateCreation|date('M d, Y') }}</time>
 					{{ macros.decklist_social_icons(decklist) }}
 				</div>
+				{% if duplicate %}
+				<small>Duplicate of <a href="{{ path('decklist_detail', { 'decklist_id': duplicate.id, 'decklist_name': duplicate.nameCanonical|e('url') }) }}">
+					{{ duplicate.name }} {{ duplicate.version }}
+				</a></small>
+				{% endif %}
 			</div>
 		</div>
 	</div>
