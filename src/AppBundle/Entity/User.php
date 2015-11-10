@@ -646,4 +646,82 @@ class User extends BaseUser
     {
         return $this->reviewvotes;
     }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $following;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $followers;
+
+
+    /**
+     * Add following
+     *
+     * @param \AppBundle\Entity\User $following
+     *
+     * @return User
+     */
+    public function addFollowing(\AppBundle\Entity\User $following)
+    {
+        $this->following[] = $following;
+
+        return $this;
+    }
+
+    /**
+     * Remove following
+     *
+     * @param \AppBundle\Entity\User $following
+     */
+    public function removeFollowing(\AppBundle\Entity\User $following)
+    {
+        $this->following->removeElement($following);
+    }
+
+    /**
+     * Get following
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFollowing()
+    {
+        return $this->following;
+    }
+
+    /**
+     * Add follower
+     *
+     * @param \AppBundle\Entity\User $follower
+     *
+     * @return User
+     */
+    public function addFollower(\AppBundle\Entity\User $follower)
+    {
+        $this->followers[] = $follower;
+
+        return $this;
+    }
+
+    /**
+     * Remove follower
+     *
+     * @param \AppBundle\Entity\User $follower
+     */
+    public function removeFollower(\AppBundle\Entity\User $follower)
+    {
+        $this->followers->removeElement($follower);
+    }
+
+    /**
+     * Get followers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFollowers()
+    {
+        return $this->followers;
+    }
 }
