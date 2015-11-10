@@ -326,8 +326,8 @@ class CardsData
 			case 'set': $qb->orderBy('c.code'); break;
 			case 'faction': $qb->orderBy('c.faction')->addOrderBy('c.type'); break;
 			case 'type': $qb->orderBy('c.type')->addOrderBy('c.faction'); break;
-			case 'cost': $qb->orderBy('c.type')->addOrderBy('c.cost'); break;
-			case 'strength': $qb->orderBy('c.type')->addOrderBy('c.strength'); break;
+			case 'cost': $qb->orderBy('c.type')->addOrderBy('c.cost')->addOrderBy('c.income'); break;
+			case 'strength': $qb->orderBy('c.type')->addOrderBy('c.strength')->addOrderBy('c.initiative'); break;
 		}
 		$qb->addOrderBy('c.name');
 		$qb->addOrderBy('c.code');
@@ -529,8 +529,6 @@ class CardsData
     	$qb->distinct();
     	$result = $qb->getQuery()->getResult();
     	
-    	dump($result);
-    	die();
     	$traits = [];
     	foreach($result as $card) {
     		$subs = explode('.', $card["traits"]);
