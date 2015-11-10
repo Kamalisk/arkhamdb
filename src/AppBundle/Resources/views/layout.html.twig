@@ -144,6 +144,17 @@
     <script type="text/javascript">
 	var app = {};
     moment.locale('en-US');
+    $(function() {
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+    	app.ui.insert_alert_message('success', {{ flashMessage|json_encode|raw }});
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('warning') %}
+    	app.ui.insert_alert_message('warning', {{ flashMessage|json_encode|raw }});
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('error') %}
+    	app.ui.insert_alert_message('danger', {{ flashMessage|json_encode|raw }});
+    {% endfor %}
+	});
     </script>
 
 	{% if app.environment == 'prod' %}

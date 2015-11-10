@@ -60,8 +60,7 @@ class SocialController extends Controller
     					'decklist_id' => $decklist->getId(),
     					'decklist_name' => $decklist->getNameCanonical()
     			));
-    			$this->get('session')->getFlashBag()->set('error', "This deck cannot be published because <a href=\"$url\">another decklist</a> already has the same composition.");
-    			return $this->redirect($this->generateUrl('deck_view', [ 'deck_id' => $deck->getId() ]));
+    			$this->get('session')->getFlashBag()->set('warning', "This deck <a href=\"$url\">has already been published</a> before. You are going to create a duplicate.");
     		}
     	}
     	

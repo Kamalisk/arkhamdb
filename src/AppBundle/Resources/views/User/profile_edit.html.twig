@@ -14,13 +14,6 @@
 
 <form role="form" action="{{ path('user_profile_save') }}" method="POST">
 
-	{% for flashMessage in app.session.flashbag.get('error') %}
-	    <div class="alert alert-danger">{{ flashMessage }}</div>
-	{% endfor %}
-	{% for flashMessage in app.session.flashbag.get('notice') %}
-	    <div class="alert alert-success">{{ flashMessage }}</div>
-	{% endfor %}
-
   <div class="form-group">
     <label>Reputation</label>
     <p>{{ user.reputation }}</p>

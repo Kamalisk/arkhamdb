@@ -31,20 +31,20 @@ AppBundle\Entity\User:
             targetEntity: Review
             mappedBy: votes
             cascade: ["remove"]
-#        following:
-#            targetEntity: User
-#            mappedBy: followers
-#        followers:
-#            targetEntity: User
-#            inversedBy: following
-#            joinTable:
-#                name: follow
-#                joinColumns:
-#                    user_id:
-#                        referencedColumnName: id
-#                inverseJoinColumns:
-#                    follower_id:
-#                        referencedColumnName: id
+        following:
+            targetEntity: User
+            mappedBy: followers
+        followers:
+            targetEntity: User
+            inversedBy: following
+            joinTable:
+                name: follow
+                joinColumns:
+                    following_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    follower_id:
+                        referencedColumnName: id
     fields:
         id:
             type: integer

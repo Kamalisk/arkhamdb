@@ -24,16 +24,7 @@ class DecklistFactory
 	{
 		$problem = $this->deckValidationHelper->findProblem($deck);
 		if($problem) {
-			throw new \Exception('You cannot publish this deck because it is invalid: "'.$this->deckValidationHelper->getProblemLabel($problem).'".');
-		}
-
-		$new_content = json_encode($deck->getSlots()->getContent());
-		$new_signature = md5($new_content);
-		$old_decklists = $this->doctrine->getRepository('AppBundle:Decklist')->findBy(['signature' => $new_signature]);
-		foreach ($old_decklists as $decklist) {
-			if (json_encode($decklist->getSlots()->getContent()) == $new_content) {
-				throw new \Exception('That decklist already exists.');
-			}
+			throw new \Exception('This deck cannot be published  because it is invalid: "'.$this->deckValidationHelper->getProblemLabel($problem).'".');
 		}
 
 		// all good for decklist publication
@@ -52,6 +43,9 @@ class DecklistFactory
 		}
 		$description = $this->texts->markdown($descriptionMd);
 
+		$new_content = json_encode($deck->getSlots()->getContent());
+		$new_signature = md5($new_content);
+		
 		$decklist = new Decklist();
 		$decklist->setName($name);
 		$decklist->setVersion($deck->getVersion());
