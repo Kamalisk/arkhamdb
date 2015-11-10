@@ -57,7 +57,7 @@ smart_filter.get_help = function get_help() {
 	var items = _.map(configuration, function (value, key) {
 		return '<li><tt>'+key+'</tt> &ndash; '+value[2]+'</li>';
 	});
-	return '<ul>'+items.join('')+'</ul><p>Example: <tt>m:1 s>3</tt> shows all characters with a Military icon and a STR greater then 3</p>';
+	return '<ul>'+items.join('')+'</ul><p>Example: <tt>m:1 s>3</tt> shows all characters with a Military icon and a STR greater than 3</p>';
 }
 
 function add_integer_sf(key, operator, values) {
