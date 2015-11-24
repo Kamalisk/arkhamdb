@@ -70,9 +70,12 @@ class DefaultController extends Controller
             }
         }
 
+        $game_name = $this->container->getParameter('game_name');
+        $publisher_name = $this->container->getParameter('publisher_name');
+        
         return $this->render('AppBundle:Default:index.html.twig', [
-            'pagetitle' => "A Game of Thrones: The Card Game Second Edition Deckbuilder",
-            'pagedescription' => "Build your deck for A Game of Thrones: The Card Game Second Edition by Fantasy Flight Games. Browse the cards and the thousand of decklists submitted by the community. Publish your own decks and get feedback.",
+            'pagetitle' =>  "$game_name Deckbuilder",
+            'pagedescription' => "Build your deck for $game_name by $publisher_name. Browse the cards and the thousand of decklists submitted by the community. Publish your own decks and get feedback.",
             'decklists_by_faction' => $decklists_by_faction
         ], $response);
     }
@@ -97,6 +100,7 @@ class DefaultController extends Controller
 
     	return $this->render('AppBundle:Default:about.html.twig', array(
     			"pagetitle" => "About",
+    			"game_name" => $this->container->getParameter('game_name'),
     	), $response);
     }
 
@@ -108,6 +112,8 @@ class DefaultController extends Controller
 
     	return $this->render('AppBundle:Default:apiIntro.html.twig', array(
     			"pagetitle" => "API",
+    			"game_name" => $this->container->getParameter('game_name'),
+    			"publisher_name" => $this->container->getParameter('publisher_name'),
     	), $response);
     }
 }
