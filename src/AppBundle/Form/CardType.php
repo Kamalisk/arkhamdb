@@ -45,6 +45,6 @@ class CardType extends AbstractType
 
     public function getName()
     {
-        return 'thronesdb_appbundle_cardtype';
+    	return 'appbundle_cardtype';
     }
 }

@@ -1,17 +1,13 @@
-{% extends 'AppBundle::layout.html.twig' %}
+{% extends 'AppBundle:Admin:base.html.twig' %}
 
-{% block body -%}
-<div class="main white container">
+{% block content -%}
 <h1>Tournament creation</h1>
 
-    {{ form(form) }}
-
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('admin_tournament') }}">
+	<form action="{{ path('admin_tournament_create') }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-success">Create</button>
+        <a href="{{ path('admin_tournament') }}" class="btn btn-default">
             Back to the list
         </a>
-    </li>
-</ul>
-</div>
+    </form>
 {% endblock %}

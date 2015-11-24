@@ -26,9 +26,9 @@ class PackType extends AbstractType
             'data_class' => 'AppBundle\Entity\Pack'
         ));
     }
-
+    
     public function getName()
     {
-        return 'thronesdb_appbundle_packtype';
+    	return 'appbundle_packtype';
     }
 }

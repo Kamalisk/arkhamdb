@@ -12,9 +12,6 @@ body {
 	font-family: 'Julius Sans One', sans-serif;
 	font-weight: 700;
 }
-.card-preview {
-	color: red;
-}
 .card-type {
 	font-weight: 700;
 }
@@ -90,6 +87,10 @@ td.type, td.faction {
 }
 .container.main.white {
 	background-color: #fff;
+}
+.container.main.admin {
+	background-color: #fff;
+	border: 1px solid red;
 }
 #wrapper {
 	min-height: 100%;
@@ -223,9 +224,9 @@ div.tags span.tag:not(:first-child)::before {
 .tt-suggestion p{margin:0}
 
 /************** QTIP ****************/
-.qtip-thronesdb{border-radius:2px}
-.qtip-thronesdb-text{min-width:360px;max-width:360px;font-size:15px}
-.qtip-thronesdb-image{max-width:500px}
+.qtip-game{border-radius:2px}
+.qtip-game-text{min-width:360px;max-width:360px;font-size:15px}
+.qtip-game-image{max-width:500px}
 
 /***************** THUMBNAIL CARD IMAGE **************/
 

@@ -1,10 +1,9 @@
-{% extends 'AppBundle::layout.html.twig' %}
+{% extends 'AppBundle:Admin:base.html.twig' %}
 
-{% block body -%}
-<div class="main white container">
+{% block content -%}
 <h1>Card list</h1>
 
-    <table class="records_list" style="table-layout:fixed;width:100%">
+    <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
@@ -28,26 +27,15 @@
                 <td>{{ entity.type.name }}</td>
                 <td>{{ entity.name }}</td>
                 <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('admin_card_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('admin_card_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
+                        <a href="{{ path('admin_card_show', { 'id': entity.id }) }}" class="btn btn-default btn-sm">show</a>
+                        <a href="{{ path('admin_card_edit', { 'id': entity.id }) }}" class="btn btn-default btn-sm">edit</a>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-        <ul>
-        <li>
-            <a href="{{ path('admin_card_new') }}">
+            <a href="{{ path('admin_card_new') }}" class="btn btn-default">
                 Create a new entry
             </a>
-        </li>
-    </ul>
-</div>
     {% endblock %}

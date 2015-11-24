@@ -34,6 +34,6 @@ class TournamentType extends AbstractType
      */
     public function getName()
     {
-        return 'appbundle_tournament';
+        return 'appbundle_tournamenttype';
     }
 }

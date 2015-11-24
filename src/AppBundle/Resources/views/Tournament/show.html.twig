@@ -1,10 +1,9 @@
-{% extends 'AppBundle::layout.html.twig' %}
+{% extends 'AppBundle:Admin:base.html.twig' %}
 
-{% block body -%}
-<div class="main white container">
+{% block content -%}
 <h1>Tournament</h1>
 
-    <table class="record_properties">
+    <table class="table">
         <tbody>
             <tr>
                 <th>Id</th>
@@ -17,18 +16,14 @@
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('admin_tournament') }}">
+        <a href="{{ path('admin_tournament') }}" class="btn btn-default">
             Back to the list
         </a>
-    </li>
-    <li>
-        <a href="{{ path('admin_tournament_edit', { 'id': entity.id }) }}">
+        <a href="{{ path('admin_tournament_edit', { 'id': entity.id }) }}" class="btn btn-default">
             Edit
         </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
-</div>
+        <form action="{{ path('admin_tournament_delete', { 'id': entity.id }) }}" method="post" style="display:inline-block">
+            {{ form_widget(delete_form) }}
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
 {% endblock %}

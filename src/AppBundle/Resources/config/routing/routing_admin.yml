@@ -13,22 +13,27 @@ AppBundle_admin_pack:
 AppBundle_admin_card:
     resource: "@AppBundle/Resources/config/routing/admin/routing_admin_card.yml"
     prefix:   /card
-    
+
 AppBundle_excel:
     resource: "@AppBundle/Resources/config/routing/admin/routing_admin_excel.yml"
     prefix:   /excel
-    
+
+admin:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Admin:index
+
 all_comments:
-    pattern: /deckcomments/{page}
+    path: /deckcomments/{page}
     methods: [GET]
     defaults:
         _controller: AppBundle:Social:comments
         page: 1
-    
+
 user_comments:
-    pattern: /user/comments/{page}
+    path: /user/comments/{page}
     methods: [GET]
     defaults:
         _controller: AppBundle:Social:usercomments
         page: 1
-        

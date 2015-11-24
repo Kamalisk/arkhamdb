@@ -24,9 +24,9 @@ class CycleType extends AbstractType
             'data_class' => 'AppBundle\Entity\Cycle'
         ));
     }
-
+    
     public function getName()
     {
-        return 'thronesdb_appbundle_cycletype';
+    	return 'appbundle_cycletype';
     }
 }

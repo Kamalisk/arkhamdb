@@ -1,10 +1,9 @@
-{% extends 'AppBundle::layout.html.twig' %}
+{% extends 'AppBundle:Admin:base.html.twig' %}
 
-{% block body -%}
-<div class="main white container">
+{% block content -%}
 <h1>Cycle</h1>
 
-    <table class="record_properties">
+    <table class="table">
         <tbody>
             <tr>
                 <th>Id</th>
@@ -29,24 +28,15 @@
             </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('admin_cycle') }}">
+        <a href="{{ path('admin_cycle') }}" class="btn btn-default">
             Back to the list
         </a>
-    </li>
-    <li>
-        <a href="{{ path('admin_cycle_edit', { 'id': entity.id }) }}">
+        <a href="{{ path('admin_cycle_edit', { 'id': entity.id }) }}" class="btn btn-default">
             Edit
         </a>
-    </li>
-    <li>
-        <form action="{{ path('admin_cycle_delete', { 'id': entity.id }) }}" method="post">
+        <form action="{{ path('admin_cycle_delete', { 'id': entity.id }) }}" method="post" style="display:inline-block">
             <input type="hidden" name="_method" value="DELETE" />
             {{ form_widget(delete_form) }}
-            <button type="submit">Delete</button>
+            <button type="submit" class="btn btn-danger">Delete</button>
         </form>
-    </li>
-</ul>
-</div>
 {% endblock %}

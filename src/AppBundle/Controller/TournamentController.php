@@ -67,8 +67,6 @@ class TournamentController extends Controller
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
-
         return $form;
     }
 
@@ -216,8 +214,7 @@ class TournamentController extends Controller
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('admin_tournament_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->setMethod('POST')
             ->getForm()
         ;
     }
