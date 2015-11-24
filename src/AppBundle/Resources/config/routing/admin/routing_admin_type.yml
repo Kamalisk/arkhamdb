@@ -1,0 +1,30 @@
+admin_type:
+    path:  /
+    defaults: { _controller: "AppBundle:Type:index" }
+
+admin_type_show:
+    path:  /{id}/show
+    defaults: { _controller: "AppBundle:Type:show" }
+
+admin_type_new:
+    path:  /new
+    defaults: { _controller: "AppBundle:Type:new" }
+
+admin_type_create:
+    path:  /create
+    defaults: { _controller: "AppBundle:Type:create" }
+    methods: [ post ]
+
+admin_type_edit:
+    path:  /{id}/edit
+    defaults: { _controller: "AppBundle:Type:edit" }
+
+admin_type_update:
+    path:  /{id}/update
+    defaults: { _controller: "AppBundle:Type:update" }
+    methods: [ post ]
+
+admin_type_delete:
+    path:  /{id}/delete
+    defaults: { _controller: "AppBundle:Type:delete" }
+    methods: [ post ]

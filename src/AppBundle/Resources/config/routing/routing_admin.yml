@@ -10,6 +10,14 @@ AppBundle_admin_pack:
     resource: "@AppBundle/Resources/config/routing/admin/routing_admin_pack.yml"
     prefix:   /pack
 
+AppBundle_admin_type:
+    resource: "@AppBundle/Resources/config/routing/admin/routing_admin_type.yml"
+    prefix:   /type
+
+AppBundle_admin_faction:
+    resource: "@AppBundle/Resources/config/routing/admin/routing_admin_faction.yml"
+    prefix:   /faction
+
 AppBundle_admin_card:
     resource: "@AppBundle/Resources/config/routing/admin/routing_admin_card.yml"
     prefix:   /card
