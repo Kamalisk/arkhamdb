@@ -87,6 +87,16 @@ data.release = function release() {
 }
 
 /**
+ * triggers an update of the database
+ * @param force set to true to force the update even if the local database is newer
+ * @memberOf data
+ */
+data.update = function update(force) {
+	force_update = force;
+	data.query();
+}
+
+/**
  * queries the server to update data
  * @memberOf data
  */
