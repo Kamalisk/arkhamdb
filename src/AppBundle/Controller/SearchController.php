@@ -192,7 +192,11 @@ class SearchController extends Controller
 		);
 	}
 
-	// target of the search form
+	/**
+	 * Processes the action of the card search form 
+	 * @param Request $request
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
 	public function processAction(Request $request)
 	{
 		$view = $request->query->get('view') ?: 'list';
@@ -212,7 +216,7 @@ class SearchController extends Controller
 					if($searchName == "faction" && count($val) == count($factions)) continue;
 					$params[] = $key.":".implode("|", array_map(function ($s) { return strstr($s, " ") !== FALSE ? "\"$s\"" : $s; }, $val));
 				} else {
-					if(strstr($val, " ") != FALSE) {
+					if(!preg_match('/^[\p{L}\p{N}\_\-\&]+$/u', $val, $match)) {
 						$val = "\"$val\"";
 					}
 					$op = $request->query->get($key."o");
@@ -232,7 +236,11 @@ class SearchController extends Controller
 		return $this->redirect($this->generateUrl('cards_find').'?'.http_build_query($find));
 	}
 
-	// target of the search input
+	/**
+	 * Processes the action of the single card search input
+	 * @param Request $request
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
 	public function findAction(Request $request)
 	{
 		$q = $request->query->get('q');
