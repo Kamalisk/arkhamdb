@@ -12,7 +12,6 @@ api_card:
         _format: json
     requirements:
         _format: json
-        card_code: \d+
 
 api_cards:
     pattern: /cards/

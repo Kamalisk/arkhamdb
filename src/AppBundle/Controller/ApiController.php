@@ -99,7 +99,6 @@ class ApiController extends Controller
      *      {
      *          "name"="card_code",
      *          "dataType"="string",
-     *          "requirement"="\d+",
      *          "description"="The code of the card to get, e.g. '01001'"
      *      },
      *      {
@@ -232,7 +231,6 @@ class ApiController extends Controller
      *      {
      *          "name"="pack_code",
      *          "dataType"="string",
-     *          "requirement"="\d+",
      *          "description"="The code of the pack to get the cards from, e.g. 'core'"
      *      },
      *      {

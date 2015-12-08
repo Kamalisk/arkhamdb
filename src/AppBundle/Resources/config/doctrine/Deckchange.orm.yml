@@ -31,3 +31,4 @@ AppBundle\Entity\Deckchange:
         version:
             type: string
             length: 8
+            nullable: true

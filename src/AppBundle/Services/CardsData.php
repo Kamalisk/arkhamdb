@@ -29,7 +29,7 @@ class CardsData
 	 */
 	public function replaceSymbols($text)
 	{
-		$map = array(
+		static $displayTextReplacements = [
 			'[baratheon]' => '<span class="icon-baratheon"></span>',
 			'[intrigue]' => '<span class="icon-intrigue"></span>',
 			'[greyjoy]' => '<span class="icon-greyjoy"></span>',
@@ -42,9 +42,15 @@ class CardsData
 			'[targaryen]' => '<span class="icon-targaryen"></span>',
 			'[tyrell]' => '<span class="icon-tyrell"></span>',
 			'[unique]' => '<span class="icon-unique"></span>',
-		);
-
-		return str_replace(array_keys($map), array_values($map), $text);
+		];
+		
+		return str_replace(array_keys($displayTextReplacements), array_values($displayTextReplacements), $text);
+	}
+	
+	public function splitInParagraphs($text)
+	{
+		if(empty($text)) return '';
+		return implode(array_map(function ($l) { return "<p>$l</p>"; }, preg_split('/[\r\n]+/', $text)));	
 	}
 
 	public function allsetsdata()
@@ -323,7 +329,7 @@ class CardsData
 			return;
 		}
 		switch($sortorder) {
-			case 'set': $qb->orderBy('c.code'); break;
+			case 'set': $qb->orderBy('y.position')->addOrderBy('p.position')->addOrderBy('c.position'); break;
 			case 'faction': $qb->orderBy('c.faction')->addOrderBy('c.type'); break;
 			case 'type': $qb->orderBy('c.type')->addOrderBy('c.faction'); break;
 			case 'cost': $qb->orderBy('c.type')->addOrderBy('c.cost')->addOrderBy('c.income'); break;
@@ -394,7 +400,8 @@ class CardsData
 			$cardinfo = array_filter($cardinfo, function ($var) { return isset($var); });
 		} else {
 			$cardinfo['text'] = $this->replaceSymbols($cardinfo['text']);
-			$cardinfo['text'] = implode(array_map(function ($l) { return "<p>$l</p>"; }, preg_split('/[\r\n]+/', $cardinfo['text'])));
+			$cardinfo['text'] = $this->splitInParagraphs($cardinfo['text']);
+			
 			$cardinfo['flavor'] = $this->replaceSymbols($cardinfo['flavor']);
 		}
 
