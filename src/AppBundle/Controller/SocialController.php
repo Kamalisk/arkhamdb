@@ -213,7 +213,7 @@ class SocialController extends Controller
         		$precedent_id = null;
         	}
         }
-        $precedent = $precedent_id ? $em->getRepository('AppBundle:Decklist')->find($precedent_id) : null;
+        $precedent = ($precedent_id && $precedent_id != $decklist_id) ? $em->getRepository('AppBundle:Decklist')->find($precedent_id) : null;
     
     	$decklist->setName($name);
     	$decklist->setNameCanonical($this->get('texts')->slugify($name) . '-' . $decklist->getVersion());
