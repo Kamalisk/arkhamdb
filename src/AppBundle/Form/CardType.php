@@ -14,6 +14,7 @@ class CardType extends AbstractType
             ->add('pack', 'entity', array('class' => 'AppBundle:Pack', 'property' => 'name'))
             ->add('position')
             ->add('quantity')
+            ->add('deck_limit')
             ->add('code')
             ->add('type', 'entity', array('class' => 'AppBundle:Type', 'property' => 'name'))
             ->add('faction', 'entity', array('class' => 'AppBundle:Faction', 'property' => 'name'))
