@@ -81,7 +81,7 @@ class BuilderController extends Controller
         $deck->setFaction($faction);
         $deck->setLastPack($pack);
         $deck->setName($name);
-        $deck->setProblem('deckSize');
+        $deck->setProblem('too_few_cards');
         $deck->setTags(join(' ', array_unique($tags)));
         $deck->setUser($this->getUser());
 
