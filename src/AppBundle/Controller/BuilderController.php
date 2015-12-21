@@ -251,6 +251,7 @@ class BuilderController extends Controller
         $content = $this->renderView('AppBundle:Export:plain.txt.twig', [
         	"deck" => $deck->getTextExport()
       	]);
+        $content = str_replace("\n", "\r\n", $content);
 
 		$response = new Response();
 		$response->headers->set('Content-Type', 'text/plain');

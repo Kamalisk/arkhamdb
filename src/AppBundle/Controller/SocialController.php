@@ -785,6 +785,7 @@ class SocialController extends Controller
         $content = $this->renderView('AppBundle:Export:plain.txt.twig', [
         	"deck" => $decklist->getTextExport()
       	]);
+        $content = str_replace("\n", "\r\n", $content);
 
         $response = new Response();
 

@@ -216,15 +216,16 @@ class SearchController extends Controller
 					if($searchName == "faction" && count($val) == count($factions)) continue;
 					$params[] = $key.":".implode("|", array_map(function ($s) { return strstr($s, " ") !== FALSE ? "\"$s\"" : $s; }, $val));
 				} else {
-					if(!preg_match('/^[\p{L}\p{N}\_\-\&]+$/u', $val, $match)) {
-						$val = "\"$val\"";
-					}
-					$op = $request->query->get($key."o");
-					if(!in_array($op, $operators)) {
-						$op = ":";
-					}
-					if($key == "date_release") {
+					if($searchName == "date_release") {
 						$op = "";
+					} else {
+						if(!preg_match('/^[\p{L}\p{N}\_\-\&]+$/u', $val, $match)) {
+							$val = "\"$val\"";
+						}
+						$op = $request->query->get($key."o");
+						if(!in_array($op, $operators)) {
+							$op = ":";
+						}
 					}
 					$params[] = "$key$op$val";
 				}

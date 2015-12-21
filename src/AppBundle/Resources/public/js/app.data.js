@@ -87,13 +87,14 @@ data.release = function release() {
 }
 
 /**
- * triggers an update of the database
- * @param force set to true to force the update even if the local database is newer
+ * triggers a forced update of the database
  * @memberOf data
  */
-data.update = function update(force) {
-	force_update = force;
-	data.query();
+data.update = function update() {
+	_.each(data.masters, function (collection) {
+		collection.drop();
+	});
+	data.load();
 }
 
 /**
