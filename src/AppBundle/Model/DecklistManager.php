@@ -193,14 +193,14 @@ class DecklistManager
 		}
 		if(!empty($cards_code) || !empty($packs)) {
 			if (!empty($cards_code) ) {
-				$qb->innerJoin('d.slots', 's1');
 				foreach ($cards_code as $i => $card_code) {
 					/* @var $card \AppBundle\Entity\Card */
 					$card = $this->doctrine->getRepository('AppBundle:Card')->findOneBy(array('code' => $card_code));
 					if(!$card) continue;
 
-					$qb->andWhere('s1.card = :card'.$i);
-					$qb->setParameter('card'.$i, $card);
+					$qb->innerJoin('d.slots', "s$i");
+					$qb->andWhere("s$i.card = :card$i");
+					$qb->setParameter("card$i", $card);
 
 					$packs[] = $card->getPack()->getId();
 				}
@@ -209,8 +209,8 @@ class DecklistManager
 				$sub = $this->doctrine->createQueryBuilder();
 				$sub->select("c");
 				$sub->from("AppBundle:Card","c");
-				$sub->innerJoin('AppBundle:Decklistslot', 's2', 'WITH', 's2.card = c');
-				$sub->where('s2.decklist = d');
+				$sub->innerJoin('AppBundle:Decklistslot', 's', 'WITH', 's.card = c');
+				$sub->where('s.decklist = d');
 				$sub->andWhere($sub->expr()->notIn('c.pack', $packs));
 
 				$qb->andWhere($qb->expr()->not($qb->expr()->exists($sub->getDQL())));
