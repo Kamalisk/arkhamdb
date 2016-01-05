@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 class Card
 {
-
     /**
      * @var integer
      */
