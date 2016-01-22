@@ -52,7 +52,7 @@ AppBundle\Entity\Decklist:
             targetEntity: Comment
             orderBy: { 'dateCreation': 'ASC' }
             mappedBy: decklist
-            cascade: ["persist"]
+            cascade: ["persist","remove"]
         successors:
             targetEntity: Decklist
             orderBy: { 'dateCreation': 'ASC' }
@@ -66,25 +66,25 @@ AppBundle\Entity\Decklist:
             inversedBy: favorites
             joinTable:
                 name: favorite
+                cascade: ["persist","remove"]
                 joinColumns:
                     decklist_id:
                         referencedColumnName: id
                 inverseJoinColumns:
                     user_id:
                         referencedColumnName: id
-            cascade: ["persist"]
         votes:
             targetEntity: User
             inversedBy: votes
             joinTable:
                 name: vote
+                cascade: ["persist","remove"]
                 joinColumns:
                     decklist_id:
                         referencedColumnName: id
                 inverseJoinColumns:
                     user_id:
                         referencedColumnName: id
-            cascade: ["persist"]
     fields:
         id:
             type: integer
