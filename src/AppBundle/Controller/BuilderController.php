@@ -291,6 +291,39 @@ class BuilderController extends Controller
 		return $response;
     }
 
+    public function cloneAction ($deck_id)
+    {
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->getDoctrine()->getManager();
+
+        /* @var $deck \AppBundle\Entity\Deck */
+        $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
+
+        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
+        if(!$deck->getUser()->getIsShareDecks() && !$is_owner) {
+            return $this->render(
+                'AppBundle:Default:error.html.twig',
+                array(
+                    'pagetitle' => "Error",
+                    'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
+                )
+            );
+        }
+
+        $content = [];
+        foreach ($deck->getSlots() as $slot) {
+            $content[$slot->getCard()->getCode()] = $slot->getQuantity();
+        }
+        return $this->forward('AppBundle:Builder:save',
+            array(
+                'name' => $deck->getName().' (clone)',
+                'faction_code' => $deck->getFaction()->getCode(),
+                'content' => json_encode($content),
+                'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null
+            ));
+
+    }
+
     public function saveAction (Request $request)
     {
 
@@ -532,32 +565,6 @@ class BuilderController extends Controller
                 		'faction_code' => $decklist->getFaction()->getCode(),
                         'content' => json_encode($content),
                         'decklist_id' => $decklist_id
-                ));
-
-    }
-
-    public function duplicateAction ($deck_id)
-    {
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->getDoctrine()->getManager();
-
-        /* @var $deck \AppBundle\Entity\Deck */
-        $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
-
-        if($this->getUser()->getId() != $deck->getUser()->getId()) {
-            throw new UnauthorizedHttpException("You are not allowed to view this deck.");
-        }
-
-        $content = [];
-        foreach ($deck->getSlots() as $slot) {
-            $content[$slot->getCard()->getCode()] = $slot->getQuantity();
-        }
-        return $this->forward('AppBundle:Builder:save',
-                array(
-                        'name' => $deck->getName().' (copy)',
-                		'faction_code' => $deck->getFaction()->getCode(),
-                        'content' => json_encode($content),
-                        'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null
                 ));
 
     }

@@ -33,11 +33,11 @@ deck_view:
     requirements:
         deck_id: \d+
 
-deck_duplicate:
-    pattern: /duplicate/{deck_id}
+deck_clone:
+    pattern: /clone/{deck_id}
     methods: [GET]
     defaults:
-        _controller: AppBundle:Builder:duplicate
+        _controller: AppBundle:Builder:clone
     requirements:
         deck_id: \d+
 
