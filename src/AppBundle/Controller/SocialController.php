@@ -492,7 +492,7 @@ class SocialController extends Controller
 
         $decklist = $this->getDoctrine()->getManager()->getRepository('AppBundle:Decklist')->find($decklist_id);
         if(!$decklist) {
-            return $this->createNotFoundException("Decklist not found.");
+            throw $this->createNotFoundException("Decklist not found.");
         }
 
         $duplicate = $this->getDoctrine()->getManager()->getRepository('AppBundle:Decklist')->findOneBy(['signature' => $decklist->getSignature()], ['dateCreation' => 'ASC']);
