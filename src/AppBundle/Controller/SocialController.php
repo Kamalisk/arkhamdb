@@ -32,13 +32,29 @@ class SocialController extends Controller
     {
     	/* @var $em \Doctrine\ORM\EntityManager */
     	$em = $this->getDoctrine()->getManager();
-    
+
+        /* @var $user \AppBundle\Entity\User */
     	$user = $this->getUser();
     	if (! $user) {
     		throw $this->createAccessDeniedException("You must be logged in for this operation.");
     	}
-    
-    	$deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
+
+        $yesterday = (new \DateTime())->modify('-24 hours');
+        if($user->getDateCreation() > $yesterday) {
+            $this->get('session')->getFlashBag()->set('error', "To prevent spam, newly created accounts must wait 24 hours before being allowed to publish a decklist.");
+            return $this->redirect($this->generateUrl('deck_view', [ 'deck_id' => $deck->getId() ]));
+        }
+
+        $query = $em->createQuery("SELECT COUNT(d) FROM AppBundle:Decklist d WHERE d.dateCreation>:date");
+        $query->setParameter('date', $yesterday);
+        $decklistsSinceYesterday = $query->getSingleScalarResult();
+
+        if($decklistsSinceYesterday > $user->getReputation()) {
+            $this->get('session')->getFlashBag()->set('error', "To prevent spam, accounts cannot publish more decklists than their reputation per 24 hours.");
+            return $this->redirect($this->generateUrl('deck_view', [ 'deck_id' => $deck->getId() ]));
+        }
+
+        $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
     	if (! $deck || $deck->getUser()->getId() != $user->getId()) {
     		throw $this->createAccessDeniedException("You don't have access to this decklist.");
     	}
