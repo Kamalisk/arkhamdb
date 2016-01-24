@@ -96,7 +96,7 @@ fos_user:
     user_class: AppBundle\Entity\User
     registration:
         confirmation:
-            enabled: false
+            enabled: true
 
 # FOSJsRoutingBundle Configuration
 fos_js_routing:
