@@ -39,6 +39,11 @@ class SocialController extends Controller
     		throw $this->createAccessDeniedException("You must be logged in for this operation.");
     	}
 
+        $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
+        if (! $deck || $deck->getUser()->getId() != $user->getId()) {
+            throw $this->createAccessDeniedException("You don't have access to this decklist.");
+        }
+
         $yesterday = (new \DateTime())->modify('-24 hours');
         if($user->getDateCreation() > $yesterday) {
             $this->get('session')->getFlashBag()->set('error', "To prevent spam, newly created accounts must wait 24 hours before being allowed to publish a decklist.");
@@ -53,11 +58,6 @@ class SocialController extends Controller
             $this->get('session')->getFlashBag()->set('error', "To prevent spam, accounts cannot publish more decklists than their reputation per 24 hours.");
             return $this->redirect($this->generateUrl('deck_view', [ 'deck_id' => $deck->getId() ]));
         }
-
-        $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
-    	if (! $deck || $deck->getUser()->getId() != $user->getId()) {
-    		throw $this->createAccessDeniedException("You don't have access to this decklist.");
-    	}
 
     	$problem = $this->get('deck_validation_helper')->findProblem($deck);
     	if ($problem) {
