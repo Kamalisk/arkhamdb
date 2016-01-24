@@ -491,6 +491,9 @@ class SocialController extends Controller
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
         $decklist = $this->getDoctrine()->getManager()->getRepository('AppBundle:Decklist')->find($decklist_id);
+        if(!$decklist) {
+            $this->createNotFoundException("Decklist not found.");
+        }
         
         $duplicate = $this->getDoctrine()->getManager()->getRepository('AppBundle:Decklist')->findOneBy(['signature' => $decklist->getSignature()], ['dateCreation' => 'ASC']);
         if($duplicate->getDateCreation() >= $decklist->getDateCreation() || $duplicate->getId() === $decklist->getId()) {
