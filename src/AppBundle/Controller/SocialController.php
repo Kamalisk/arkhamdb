@@ -82,13 +82,35 @@ class SocialController extends Controller
 	 */
     public function createAction (Request $request)
     {
+        /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getDoctrine()->getManager();
+        /* @var $user \AppBundle\Entity\User */
+        $user = $this->getUser();
+
+        $yesterday = (new \DateTime())->modify('-24 hours');
+        if($user->getDateCreation() > $yesterday) {
+            return $this->render('AppBundle:Default:error.html.twig', [
+                'pagetitle' => "Spam prevention",
+                'error' => "To prevent spam, newly created accounts must wait 24 hours before being allowed to publish a decklist.",
+            ]);
+        }
+
+        $query = $em->createQuery("SELECT COUNT(d) FROM AppBundle:Decklist d WHERE d.dateCreation>:date");
+        $query->setParameter('date', $yesterday);
+        $decklistsSinceYesterday = $query->getSingleScalarResult();
+
+        if($decklistsSinceYesterday > $user->getReputation()) {
+            return $this->render('AppBundle:Default:error.html.twig', [
+                'pagetitle' => "Spam prevention",
+                'error' => "To prevent spam, accounts cannot publish more decklists than their reputation per 24 hours.",
+            ]);
+        }
 
         $deck_id = intval(filter_var($request->request->get('deck_id'), FILTER_SANITIZE_NUMBER_INT));
         
         /* @var $deck \AppBundle\Entity\Deck */
         $deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->find($deck_id);
-        if ($this->getUser()->getId() !== $deck->getUser()->getId()) {
+        if ($user->getId() !== $deck->getUser()->getId()) {
         	throw $this->createAccessDeniedException("Access denied to this object.");
         }
         
