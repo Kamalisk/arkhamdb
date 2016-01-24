@@ -37,9 +37,14 @@ class RemoveUserCommand extends ContainerAwareCommand
             return;
         }
 
+        $output->writeln("User ".$user->getUsername());
+
         $decks = $em->getRepository('AppBundle:Deck')->findBy(array(
             'user' => $user
         ));
+
+        $output->writeln(count($decks)." decks");
+
         foreach($decks as $deck)
         {
             $children = $em->getRepository('AppBundle:Decklist')->findBy(array(
@@ -51,9 +56,14 @@ class RemoveUserCommand extends ContainerAwareCommand
             $em->remove($deck);
         }
 
+        $output->writeln("Decks deleted");
+
         $decklists = $em->getRepository('AppBundle:Decklist')->findBy(array(
             'user' => $user
         ));
+
+        $output->writeln(count($decklists)." decklists");
+
         foreach($decklists as $decklist)
         {
             $successors = $em->getRepository('AppBundle:Decklist')->findBy(array(
@@ -74,6 +84,8 @@ class RemoveUserCommand extends ContainerAwareCommand
 
             $em->remove($decklist);
         }
+
+        $output->writeln("Decklists deleted");
 
         $user->setLocked(TRUE);
 
