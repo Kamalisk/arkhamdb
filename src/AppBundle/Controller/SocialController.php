@@ -50,8 +50,9 @@ class SocialController extends Controller
             return $this->redirect($this->generateUrl('deck_view', [ 'deck_id' => $deck->getId() ]));
         }
 
-        $query = $em->createQuery("SELECT COUNT(d) FROM AppBundle:Decklist d WHERE d.dateCreation>:date");
+        $query = $em->createQuery("SELECT COUNT(d) FROM AppBundle:Decklist d WHERE d.dateCreation>:date AND d.user=:user");
         $query->setParameter('date', $yesterday);
+        $query->setParameter('user', $user);
         $decklistsSinceYesterday = $query->getSingleScalarResult();
 
         if($decklistsSinceYesterday > $user->getReputation()) {
