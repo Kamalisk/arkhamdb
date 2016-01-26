@@ -22,9 +22,9 @@ admin_faction_edit:
 admin_faction_update:
     path:  /{id}/update
     defaults: { _controller: "AppBundle:Faction:update" }
-    methods: [ post ]
+    methods: [ post, put ]
 
 admin_faction_delete:
     path:  /{id}/delete
     defaults: { _controller: "AppBundle:Faction:delete" }
-    methods: [ post ]
+    methods: [ post, delete ]
