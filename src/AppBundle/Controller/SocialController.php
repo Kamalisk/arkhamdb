@@ -17,7 +17,7 @@ use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use AppBundle\Model\DecklistManager;
-use AppBundle\Services\Pagination\Pagination;
+use AppBundle\Services\Pagination;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Form\DecklistType;
 use FOS\UserBundle\FOSUserBundle;
@@ -112,8 +112,9 @@ class SocialController extends Controller
             ]);
         }
 
-        $query = $em->createQuery("SELECT COUNT(d) FROM AppBundle:Decklist d WHERE d.dateCreation>:date");
+        $query = $em->createQuery("SELECT COUNT(d) FROM AppBundle:Decklist d WHERE d.dateCreation>:date AND d.user=:user");
         $query->setParameter('date', $yesterday);
+        $query->setParameter('user', $user);
         $decklistsSinceYesterday = $query->getSingleScalarResult();
 
         if($decklistsSinceYesterday > $user->getReputation()) {
