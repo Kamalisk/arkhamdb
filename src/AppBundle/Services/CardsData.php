@@ -36,7 +36,7 @@ class CardsData
 			'[lannister]' => '<span class="icon-lannister"></span>',
 			'[martell]' => '<span class="icon-martell"></span>',
 			'[military]' => '<span class="icon-military"></span>',
-			'[nightswatch]' => '<span class="icon-nightswatch"></span>',
+			'[thenightswatch]' => '<span class="icon-thenightswatch"></span>',
 			'[power]' => '<span class="icon-power"></span>',
 			'[stark]' => '<span class="icon-stark"></span>',
 			'[targaryen]' => '<span class="icon-targaryen"></span>',

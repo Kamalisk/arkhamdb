@@ -412,7 +412,7 @@ deck.get_minor_faction_code = function get_minor_faction_code() {
 		'01199': 'greyjoy',
 		'01200': 'lannister',
 		'01201': 'martell',
-		'01202': 'nightswatch',
+		'01202': 'thenightswatch',
 		'01203': 'stark',
 		'01204': 'targaryen',
 		'01205': 'tyrell'

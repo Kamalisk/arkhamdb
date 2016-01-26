@@ -20,7 +20,7 @@ var charts = [],
 		tyrell :
 			'#509f16',
 
-		nightswatch :
+		thenightswatch :
 			'#6e6e6e',
 
 		martell :
