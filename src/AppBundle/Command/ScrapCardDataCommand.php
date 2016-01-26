@@ -45,10 +45,7 @@ class ScrapCardDataCommand extends ContainerAwareCommand
         
         $filename = $input->getArgument('filename');
         
-        //exec("curl -o data.js.gz http://www.cardgamedb.com/deckbuilders/gameofthrones2ndedition/database/$filename.jgz -H \"Accept-Encoding: gzip, deflate, sdch\"");
-        //exec("gunzip data.js.gz");
-        $file = file_get_contents("data.js");
-
+        $file = file_get_contents("http://www.cardgamedb.com/deckbuilders/gameofthrones2ndedition/database/$filename.jgz");
         if(!preg_match('/^cards = (.*);$/', $file, $matches)) {
           $output->writeln("<error>Error while parsing js file</error>");
         }
