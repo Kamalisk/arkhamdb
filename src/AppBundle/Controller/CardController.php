@@ -137,11 +137,14 @@ class CardController extends Controller
 
             /* @var $file \Symfony\Component\HttpFoundation\File\UploadedFile */
             $file = $editForm['file']->getData();
-            $imagedirurl  = $this->get('templating.helper.assets')->getUrl('/bundles/app/images/cards');
-            $imagedirpath = $this->get('kernel')->getRootDir() . '/../web' . preg_replace('/\?.*/', '', $imagedirurl);
-            $imagefilename = $entity->getCode() . '.png';
-            $file->move($imagedirpath, $imagefilename);
-            
+            if($file)
+            {
+                $imagedirurl  = $this->get('templating.helper.assets')->getUrl('/bundles/app/images/cards');
+                $imagedirpath = $this->get('kernel')->getRootDir() . '/../web' . preg_replace('/\?.*/', '', $imagedirurl);
+                $imagefilename = $entity->getCode() . '.png';
+                $file->move($imagedirpath, $imagefilename);
+            }
+
             return $this->redirect($this->generateUrl('admin_card_edit', array('id' => $id)));
         }
 

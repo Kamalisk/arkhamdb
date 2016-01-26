@@ -17,4 +17,5 @@ tags
 /.buildpath
 /.project
 /.tags_swap
+/.idea/
 .DS_Store
