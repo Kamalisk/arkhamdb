@@ -33,14 +33,14 @@
 		<div class="col-md-6 hidden-print">
 
 			<div style="margin-bottom:20px" id="btn-group-deck">
-
-				{% if is_owner %}
 				<div style="margin-bottom:5px">
-				{#    <button type="button" id="btn-print" class="btn btn-default"><span class="fa fa-print"></span> Print</button>#}
+					{% if is_owner %}
 					<a href="{{ path('deck_edit', {deck_id:deck_id}) }}" class="btn btn-primary"><span class="fa fa-pencil"></span> Edit</a>
-					<a href="{{ path('deck_publish_form', {deck_id:deck_id}) }}" id="btn-publish" disabled="disabled" class="btn btn-success"><span class="fa fa-share"></span> Publish</a>
-					<a href="{{ path('deck_clone', {deck_id:deck_id}) }}" id="btn-clone" class="btn btn-info"><span class="fa fa-clone"></span> Clone</a>
+					<a href="{{ path('deck_publish_form', {deck_id:deck_id}) }}" id="btn-publish" class="btn btn-success"><span class="fa fa-share"></span> Publish</a>
 					<button type="button" id="btn-delete" class="btn btn-danger"><span class="fa fa-trash"></span> Delete</button>
+					{% endif %}
+					<a href="{{ path('deck_clone', {deck_id:deck_id}) }}" id="btn-clone" class="btn btn-info"><span class="fa fa-clone"></span> Clone</a>
+					{#    <button type="button" id="btn-print" class="btn btn-default"><span class="fa fa-print"></span> Print</button>#}
 					<div class="btn-group">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 							<span class="fa fa-download"></span> Download <span class="caret"></span>
@@ -51,7 +51,6 @@
 						</ul>
 					</div>
 				</div>
-				{% endif %}
 			</div>
 
 			<p>

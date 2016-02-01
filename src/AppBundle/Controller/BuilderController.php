@@ -245,8 +245,17 @@ class BuilderController extends Controller
 
         /* @var $deck \AppBundle\Entity\Deck */
         $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
-        if (! $this->getUser() || $this->getUser()->getId() != $deck->getUser()->getId())
-            throw new UnauthorizedHttpException("You don't have access to this deck.");
+        
+        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
+        if(!$deck->getUser()->getIsShareDecks() && !$is_owner) {
+        	return $this->render(
+        			'AppBundle:Default:error.html.twig',
+        			array(
+        					'pagetitle' => "Error",
+        					'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
+        			)
+        	);
+        }
 
         $content = $this->renderView('AppBundle:Export:plain.txt.twig', [
         	"deck" => $deck->getTextExport()
@@ -272,9 +281,18 @@ class BuilderController extends Controller
 
         /* @var $deck \AppBundle\Entity\Deck */
         $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
-        if (! $this->getUser() || $this->getUser()->getId() != $deck->getUser()->getId())
-            throw new UnauthorizedHttpException("You don't have access to this deck.");
 
+        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
+        if(!$deck->getUser()->getIsShareDecks() && !$is_owner) {
+        	return $this->render(
+        			'AppBundle:Default:error.html.twig',
+        			array(
+        					'pagetitle' => "Error",
+        					'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
+        			)
+        	);
+        }
+        
 		$content = $this->renderView('AppBundle:Export:octgn.xml.twig', [
         	"deck" => $deck->getTextExport()
       	]);

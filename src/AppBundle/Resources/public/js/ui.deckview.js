@@ -71,7 +71,6 @@ ui.on_data_loaded = function on_data_loaded() {
 ui.on_all_loaded = function on_all_loaded() {
 	app.markdown && app.markdown.update(app.deck.get_description_md() || '*No description.*', '#description');
 	ui.refresh_deck();
-	$('#btn-publish').prop('disabled', !!app.deck.get_problem());
 };
 
 })(app.ui, jQuery);
