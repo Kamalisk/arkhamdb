@@ -142,7 +142,7 @@ class ScrapCardDataCommand extends ContainerAwareCommand
           $card->setIncome($data['gold'] !== '' ? $data['gold'] : null);
           $card->setInitiative($data['initiative'] !== '' ? $data['initiative'] : null);
           $card->setIsIntrigue($data['intrigue'] === 'Y');
-          $card->setIsLoyal($data['loyal'] === 'Y');
+          $card->setIsLoyal($data['loyal'] === 'L');
           $card->setIsMilitary($data['military'] === 'Y');
           $card->setIsPower($data['power'] === 'Y');
           $card->setIsUnique($data['unique'] === 'Y');
