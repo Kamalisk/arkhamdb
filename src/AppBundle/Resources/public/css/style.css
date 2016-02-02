@@ -1,3 +1,4 @@
+
 /* fonts */
 
 body {
@@ -410,4 +411,17 @@ article.review .review-comment {
 
 .md-editor.md-fullscreen-mode {
 	z-index: 99;
+}
+
+/* PRINT STYLESHEETS */
+
+@media print {
+  a[href]:after {
+    content: none !important;
+  }
+  #wrapper {
+  	border: none;
+  	padding: 0;
+  	min-height: auto;
+  }
 }
