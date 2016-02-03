@@ -27,13 +27,12 @@
         "friendsofsymfony/jsrouting-bundle": "^1.5",
         "twig/extensions": "^1.2",
         "ezyang/htmlpurifier": "^4.6",
-        "michelf/php-markdown": "^1.5@dev",
-        "michelf/php-smartypants": "^1.6@dev",
         "leafo/scssphp": "^0.2.0",
         "patchwork/jsqueeze": "~1.0",
         "friendsofsymfony/oauth-server-bundle": "^1.4",
         "phpunit/phpunit": "4.8.*",
-        "nelmio/api-doc-bundle": "^2.9"
+        "nelmio/api-doc-bundle": "^2.9",
+        "erusev/parsedown": "^1.6"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

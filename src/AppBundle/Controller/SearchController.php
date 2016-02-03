@@ -6,8 +6,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Controller\DefaultController;
-use \Michelf\Markdown;
-use AppBundle\AppBundle;
 use Symfony\Component\HttpFoundation\Request;
 
 class SearchController extends Controller

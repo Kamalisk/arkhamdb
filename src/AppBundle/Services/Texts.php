@@ -14,9 +14,7 @@ class Texts
 		$def->addAttribute('a', 'data-code', 'Text');
         $this->purifier_service = new \HTMLPurifier($config);
 
-        $this->markdown_service = new \Michelf\Markdown();
-        
-        $this->smartypants_service = new \Michelf\SmartyPants;
+        $this->markdown_service = new \Parsedown();
 	}
 
     /**
@@ -63,19 +61,9 @@ class Texts
      */
     public function markdown($string)
     {
-        return $this->purify($this->img_responsive($this->smartypants($this->transform($string))));
+        return $this->purify($this->img_responsive($this->transform($string)));
     }
     
-    /**
-     * runs the text through Smarty Pants
-     * @param string $string
-     * @return $string
-     */
-    public function smartypants($string)
-    {
-    	return $this->smartypants_service->transform($string);
-    }
-
     /**
      * removes any dangerous code from a HTML string
      * @param unknown $string
@@ -93,7 +81,7 @@ class Texts
      */
     public function transform($string)
     {
-    	return $this->markdown_service->transform($string);
+    	return $this->markdown_service->text($string);
     }
 
     /**

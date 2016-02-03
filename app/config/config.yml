@@ -116,3 +116,6 @@ fos_oauth_server:
     service:
         user_provider: fos_user.user_manager
 
+services:
+    fos_user.doctrine_registry:
+        alias: doctrine
