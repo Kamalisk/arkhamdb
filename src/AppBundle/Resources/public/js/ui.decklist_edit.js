@@ -128,7 +128,7 @@ ui.replace_selection = function ui_replace_selection(e, selected, chunk)
 {
     e.replaceSelection(chunk);
     var cursor = selected.start;
-    e.setSelection(cursor,cursor+chunk.length);
+    e.setSelection(cursor+chunk.length, cursor+chunk.length);
     e.$textarea.focus();
 }
 
