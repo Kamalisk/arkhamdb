@@ -11,11 +11,7 @@ class TagController extends Controller
     public function addAction(Request $request)
     {
         $list_id = $request->get('ids');
-        if(!is_array($list_id)) $list_id = explode(' ', $list_id);
         $list_tag = $request->get('tags');
-        if(!is_array($list_tag)) $list_tag = explode(' ', $list_tag);
-        
-        $list_tag = array_map(function ($tag) { return preg_replace('/[^a-zA-Z0-9-]/', '', $tag); }, $list_tag);
         
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getDoctrine()->getManager();
@@ -28,7 +24,7 @@ class TagController extends Controller
             $deck = $em->getRepository('AppBundle:Deck')->find($id);
             if(!$deck) continue;
             if ($this->getUser()->getId() != $deck->getUser()->getId()) continue;
-            $tags = array_values(array_filter(array_unique(array_merge(explode(' ', $deck->getTags()), $list_tag)), function ($tag) { return $tag != ""; }));
+            $tags = array_unique(array_values(array_merge(preg_split('/\s+/', $deck->getTags()), $list_tag)));
             $response['tags'][$deck->getId()] = $tags;
             $deck->setTags(implode(' ', $tags));
         }
@@ -53,7 +49,7 @@ class TagController extends Controller
             $deck = $em->getRepository('AppBundle:Deck')->find($id);
             if(!$deck) continue;
             if ($this->getUser()->getId() != $deck->getUser()->getId()) continue;
-            $tags = array_values(array_diff(explode(' ', $deck->getTags()), $list_tag));
+            $tags = array_values(array_diff(preg_split('/\s+/', $deck->getTags()), $list_tag));
             $response['tags'][$deck->getId()] = $tags;
             $deck->setTags(implode(' ', $tags));
         }

@@ -85,13 +85,13 @@ class Decks
 		$deck->setLastPack ( $latestPack );
 		if (empty ( $tags )) {
 			// tags can never be empty. if it is we put faction in
-			$tags = array (
-					$faction->getCode()
-			);
+			$tags = [ $faction->getCode() ];
 		}
-		if (is_array ( $tags )) {
-			$tags = implode ( ' ', $tags );
+		if(is_string($tags)) 
+		{
+			$tags = preg_split( '/\s+/', $tags );
 		}
+		$tags = implode(' ', array_unique(array_values($tags)));
 		$deck->setTags ( $tags );
 		$this->doctrine->persist ( $deck );
 

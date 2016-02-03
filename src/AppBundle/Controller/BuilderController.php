@@ -539,7 +539,7 @@ class BuilderController extends Controller
 			foreach($decks as $deck) {
 				$tags[] = $deck['tags'];
 			}
-			$tags = array_unique(explode(' ', join(' ', $tags)));
+			$tags = array_unique($tags);
         	return $this->render('AppBundle:Builder:decks.html.twig',
         			array(
         					'pagetitle' => "My Decks",
