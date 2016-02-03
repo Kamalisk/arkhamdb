@@ -1057,12 +1057,8 @@ class SocialController extends Controller
                 $categories[] = $category;
             }
         }
-
-        return $this->render('AppBundle:Search:search.html.twig',
-                array(
-                        'pagetitle' => 'Decklist Search',
-                        'url' => $this->getRequest()->getRequestUri(),
-                        'form' => $this->renderView('AppBundle:Search:form.html.twig',
+        
+        $searchForm = $this->renderView('AppBundle:Search:form.html.twig',
                             array(
                                 'factions' => $factions,
                                 'allowed' => $categories,
@@ -1071,9 +1067,20 @@ class SocialController extends Controller
                                 'author' => '',
                                 'name' => '',
                             )
-                        ),
-                ), $response);
+                        );
 
+        return $this->render('AppBundle:Decklist:decklists.html.twig',
+        		array(
+        				'pagetitle' => 'Decklist Search',
+        				'decklists' => null,
+        				'url' => $this->getRequest()->getRequestUri(),
+        				'header' => $searchForm,
+        				'type' => 'find',
+        				'pages' => null,
+        				'prevurl' => null,
+        				'nexturl' => null,
+        		), $response);	
+        
     }
 
     public function donatorsAction (Request $request)
