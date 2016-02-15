@@ -21,6 +21,7 @@ use AppBundle\Services\Pagination;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Form\DecklistType;
 use FOS\UserBundle\FOSUserBundle;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SocialController extends Controller
 {
@@ -650,9 +651,9 @@ class SocialController extends Controller
             $email_data = array(
                 'username' => $user->getUsername(),
                 'decklist_name' => $decklist->getName(),
-                'url' => $this->generateUrl('decklist_detail', array('decklist_id' => $decklist->getId(), 'decklist_name' => $decklist->getNameCanonical()), TRUE) . '#' . $comment->getId(),
+                'url' => $this->generateUrl('decklist_detail', array('decklist_id' => $decklist->getId(), 'decklist_name' => $decklist->getNameCanonical()), UrlGeneratorInterface::ABSOLUTE_URL) . '#' . $comment->getId(),
                 'comment' => $comment_html,
-                'profile' => $this->generateUrl('user_profile_edit', [], TRUE)
+                'profile' => $this->generateUrl('user_profile_edit', [], UrlGeneratorInterface::ABSOLUTE_URL)
             );
             foreach($spool as $email => $view) {
                 $message = \Swift_Message::newInstance()

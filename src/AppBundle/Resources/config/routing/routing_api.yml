@@ -9,7 +9,7 @@ AppBundle_api_oauth2:
     prefix:   /oauth2
 
 api_intro:
-    pattern: /
+    path: /
     defaults:
         _controller: AppBundle:Default:apiIntro
     

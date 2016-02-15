@@ -1,12 +1,12 @@
 
 api_oauth2_decks:
-    pattern: /decks
+    path: /decks
     methods: [GET]
     defaults:
         _controller: AppBundle:Oauth2:listDecks
 
 api_oauth2_load_deck:
-    pattern: /deck/load/{id}
+    path: /deck/load/{id}
     methods: [GET]
     defaults:
         _controller: AppBundle:Oauth2:loadDeck
@@ -14,7 +14,7 @@ api_oauth2_load_deck:
         id: \d+
 
 api_oauth2_save_deck:
-    pattern: /deck/save/{id}
+    path: /deck/save/{id}
     methods: [PUT]
     defaults:
         _controller: AppBundle:Oauth2:saveDeck
@@ -22,7 +22,7 @@ api_oauth2_save_deck:
         id: \d+
 
 api_oauth2_publish_deck:
-    pattern: /deck/publish/{id}
+    path: /deck/publish/{id}
     methods: [PUT]
     defaults:
         _controller: AppBundle:Oauth2:publishDeck

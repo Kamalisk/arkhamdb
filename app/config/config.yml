@@ -40,9 +40,8 @@ twig:
     globals:
         cards_data: "@cards_data"
         deck_validation_helper: "@deck_validation_helper"
-    form:
-        resources:
-            - 'bootstrap_3_layout.html.twig'
+    form_themes:
+        - 'bootstrap_3_layout.html.twig'
 
 # Assetic Configuration
 assetic:

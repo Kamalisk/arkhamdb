@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Templating\Helper\AssetsHelper;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /*
  *
@@ -63,7 +64,7 @@ class CardsData
 				$lines[] = array(
 						"label" => $cycle->getName(),
 						"available" => true,
-						"url" => $this->router->generate('cards_cycle', array('cycle_code' => $cycle->getCode()), true),
+						"url" => $this->router->generate('cards_cycle', array('cycle_code' => $cycle->getCode()), UrlGeneratorInterface::ABSOLUTE_URL),
 				);
 			}
 			$packs = $cycle->getPacks();
@@ -84,7 +85,7 @@ class CardsData
 				$lines[] = array(
 						"label" => $label,
 						"available" => $pack->getDateRelease() ? true : false,
-						"url" => $this->router->generate('cards_list', array('pack_code' => $pack->getCode()), true),
+						"url" => $this->router->generate('cards_list', array('pack_code' => $pack->getCode()), UrlGeneratorInterface::ABSOLUTE_URL),
 				);
 			}
 		}
@@ -386,7 +387,7 @@ class CardsData
 	    	$cardinfo[$fieldName] = $value;
 	    }
 
-		$cardinfo['url'] = $this->router->generate('cards_zoom', array('card_code' => $card->getCode()), true);
+		$cardinfo['url'] = $this->router->generate('cards_zoom', array('card_code' => $card->getCode()), UrlGeneratorInterface::ABSOLUTE_URL);
 		$imageurl = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'.png');
 		$imagepath= $this->rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl);
 		if(file_exists($imagepath)) {

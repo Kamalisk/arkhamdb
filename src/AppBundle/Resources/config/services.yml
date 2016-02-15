@@ -25,7 +25,7 @@ services:
         arguments: ["@doctrine", "@request_stack", "@router", "@templating.helper.assets", "%kernel.root_dir%"]
     decklist_manager:
         class: AppBundle\Model\DecklistManager
-        scope: prototype
+        shared: false
         arguments: ["@doctrine.orm.entity_manager", "@request_stack", "@router", "@logger"]
     decklist_factory:
         class: AppBundle\Model\DecklistFactory

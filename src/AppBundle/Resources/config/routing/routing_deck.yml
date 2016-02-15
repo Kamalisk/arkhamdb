@@ -1,24 +1,24 @@
 
 deck_buildform:
-    pattern:  /new
+    path:  /new
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:buildform
 
 deck_initbuild:
-    pattern: /build
+    path: /build
     methods: [POST]
     defaults:
         _controller: AppBundle:Builder:initbuild
 
 deck_save:
-    pattern: /save
+    path: /save
     methods: [POST]
     defaults:
         _controller: AppBundle:Builder:save
 
 deck_edit:
-    pattern: /edit/{deck_id}
+    path: /edit/{deck_id}
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:edit
@@ -26,7 +26,7 @@ deck_edit:
         deck_id: \d+
 
 deck_view:
-    pattern: /view/{deck_id}
+    path: /view/{deck_id}
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:view
@@ -34,7 +34,7 @@ deck_view:
         deck_id: \d+
 
 deck_clone:
-    pattern: /clone/{deck_id}
+    path: /clone/{deck_id}
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:clone
@@ -42,62 +42,62 @@ deck_clone:
         deck_id: \d+
 
 deck_delete:
-    pattern: /delete
+    path: /delete
     methods: [POST]
     defaults:
         _controller: AppBundle:Builder:delete
 
 deck_delete_list:
-    pattern: /delete_list
+    path: /delete_list
     methods: [POST]
     defaults:
         _controller: AppBundle:Builder:deleteList
 
 deck_import:
-    pattern: /import
+    path: /import
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:import
 
 deck_textimport:
-    pattern: /textimport
+    path: /textimport
     methods: [POST]
     defaults:
         _controller: AppBundle:Builder:textimport
 
 deck_fileimport:
-    pattern: /fileimport
+    path: /fileimport
     methods: [POST]
     defaults:
         _controller: AppBundle:Builder:fileimport
 
 deck_meteorimport:
-    pattern: /meteorimport
+    path: /meteorimport
     methods: [POST]
     defaults:
         _controller: AppBundle:Builder:meteorimport
 
 deck_copy:
-    pattern: /copy/{decklist_id}
+    path: /copy/{decklist_id}
     defaults:
         _controller: AppBundle:Builder:copy
     requirements:
         decklist_id: \d+
 
 deck_publish_form:
-    pattern: /publish/{deck_id}
+    path: /publish/{deck_id}
     methods: [GET]
     defaults:
         _controller: AppBundle:Social:publishForm
 
 decks_upload_all:
-    pattern: /import/all
+    path: /import/all
     methods: [POST]
     defaults:
         _controller: AppBundle:Builder:uploadall
 
 deck_export_octgn:
-    pattern: /export/octgn/{deck_id}
+    path: /export/octgn/{deck_id}
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:octgnexport
@@ -105,7 +105,7 @@ deck_export_octgn:
         deck_id: \d+
 
 deck_export_text:
-    pattern: /export/text/{deck_id}
+    path: /export/text/{deck_id}
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:textexport
@@ -113,39 +113,39 @@ deck_export_text:
         deck_id: \d+
 
 deck_export_octgn_list:
-    pattern: /export/octgn/list
+    path: /export/octgn/list
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:octgnexportList
 
 deck_export_text_list:
-    pattern: /export/text/list
+    path: /export/text/list
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:textexportList
 
 deck_email:
-    pattern: /export/email/{deck_id}
+    path: /export/email/{deck_id}
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:email
         deck_id: \d+
 
 deck_publish:
-    pattern: /can_publish/{deck_id}
+    path: /can_publish/{deck_id}
     methods: [GET]
     defaults:
         _controller: AppBundle:Social:publish
         deck_id: \d+
 
 deck_autosave:
-    pattern: /autosave
+    path: /autosave
     methods: [POST]
     defaults:
         _controller: AppBundle:Builder:autosave
 
 decks_download_all:
-    pattern: /export/all
+    path: /export/all
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:downloadall

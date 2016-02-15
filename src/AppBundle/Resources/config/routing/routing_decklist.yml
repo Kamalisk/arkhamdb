@@ -1,6 +1,6 @@
 
 decklist_export_octgn:
-    pattern: /export/octgn/{decklist_id}
+    path: /export/octgn/{decklist_id}
     methods: [GET]
     defaults:
         _controller: AppBundle:Social:octgnexport
@@ -8,7 +8,7 @@ decklist_export_octgn:
         decklist_id: \d+
 
 decklist_export_text:
-    pattern: /export/text/{decklist_id}
+    path: /export/text/{decklist_id}
     methods: [GET]
     defaults:
         _controller: AppBundle:Social:textexport
@@ -16,7 +16,7 @@ decklist_export_text:
         decklist_id: \d+
 
 decklist_detail:
-    pattern: /view/{decklist_id}/{decklist_name}
+    path: /view/{decklist_id}/{decklist_name}
     methods: [GET]
     defaults:
         _controller: AppBundle:Social:view
@@ -25,20 +25,20 @@ decklist_detail:
         decklist_id: \d+
 
 decklist_create:
-    pattern: /create
+    path: /create
     methods: [POST]
     defaults:
         _controller: AppBundle:Social:create
 
 decklist_edit:
-    pattern: /edit/{decklist_id}
+    path: /edit/{decklist_id}
     defaults:
         _controller: AppBundle:Social:editForm
     requirements:
         decklist_id: \d+
 
 decklist_save:
-    pattern: /save/{decklist_id}
+    path: /save/{decklist_id}
     methods: [POST]
     defaults:
         _controller: AppBundle:Social:save
@@ -46,7 +46,7 @@ decklist_save:
         decklist_id: \d+
 
 decklist_delete:
-    pattern: /delete/{decklist_id}
+    path: /delete/{decklist_id}
     methods: [POST]
     defaults:
         _controller: AppBundle:Social:delete
@@ -54,7 +54,7 @@ decklist_delete:
         decklist_id: \d+
         
 decklists_diff:
-    pattern: /diff/{decklist1_id}/{decklist2_id}
+    path: /diff/{decklist1_id}/{decklist2_id}
     methods: [GET]
     defaults:
         _controller: AppBundle:Diff:decklistDiff

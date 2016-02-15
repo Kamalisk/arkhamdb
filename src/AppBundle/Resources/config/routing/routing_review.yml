@@ -1,29 +1,29 @@
 
 card_review_post:
-    pattern: /post
+    path: /post
     methods: [POST]
     defaults: 
         _controller: AppBundle:Review:post
 
 card_review_edit:
-    pattern: /edit
+    path: /edit
     methods: [POST]
     defaults: 
         _controller: AppBundle:Review:edit
 
 card_review_like:
-    pattern: /like
+    path: /like
     methods: [POST]
     defaults:
         _controller: AppBundle:Review:like
 
 card_review_remove:
-    pattern: /remove/{id}
+    path: /remove/{id}
     defaults:
         _controller: AppBundle:Review:remove
         
 card_reviewcomment_post:
-    pattern: /comment
+    path: /comment
     methods: [POST]
     defaults: 
         _controller: AppBundle:Review:comment

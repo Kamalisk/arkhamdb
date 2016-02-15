@@ -1,23 +1,23 @@
 excel_download_form:
-    pattern: /download
+    path: /download
     methods: [GET]
     defaults:
         _controller: AppBundle:Excel:downloadForm
 
 excel_download_process:
-    pattern: /download
+    path: /download
     methods: [POST]
     defaults:
         _controller: AppBundle:Excel:downloadProcess
 
 excel_upload_form:
-    pattern: /upload
+    path: /upload
     methods: [GET]
     defaults:
         _controller: AppBundle:Excel:uploadForm
 
 excel_upload_process:
-    pattern: /upload
+    path: /upload
     methods: [POST]
     defaults:
         _controller: AppBundle:Excel:uploadProcess

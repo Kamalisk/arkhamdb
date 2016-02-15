@@ -31,31 +31,31 @@ app_user:
     prefix: /user
 
 index:
-    pattern: /
+    path: /
     methods: [GET]
     defaults:
         _controller: AppBundle:Default:index
 
 donators:
-    pattern: /donators
+    path: /donators
     methods: [GET]
     defaults:
         _controller: AppBundle:Social:donators
 
 decks_list:
-    pattern: /decks
+    path: /decks
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:list
 
 decklists_searchform:
-    pattern: /decklists/search
+    path: /decklists/search
     methods: [GET]
     defaults:
         _controller: AppBundle:Social:search
 
 decklists_list:
-    pattern: /decklists/{type}/{page}
+    path: /decklists/{type}/{page}
     methods: [GET]
     defaults:
         _controller: AppBundle:Social:list
@@ -65,7 +65,7 @@ decklists_list:
         page: \d+
 
 card_reviews_list:
-    pattern: /reviews/{page}
+    path: /reviews/{page}
     defaults:
         _controller: AppBundle:Review:list
         page: 1
@@ -73,16 +73,16 @@ card_reviews_list:
         page: \d+
 
 about:
-    pattern: /about
+    path: /about
     defaults:
         _controller: AppBundle:Default:about
 
 rules:
-    pattern: /rules
+    path: /rules
     defaults:
         _controller: AppBundle:Default:rules
 
 ffg:
-    pattern: /ffg
+    path: /ffg
     defaults:
         _controller: AppBundle:Default:ffg

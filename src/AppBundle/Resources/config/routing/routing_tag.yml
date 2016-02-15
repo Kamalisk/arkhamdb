@@ -1,18 +1,18 @@
 
 tag_add:
-    pattern: /add
+    path: /add
     methods: [POST]
     defaults:
         _controller: AppBundle:Tag:add
 
 tag_remove:
-    pattern: /remove
+    path: /remove
     methods: [POST]
     defaults:
         _controller: AppBundle:Tag:remove
 
 tag_clear:
-    pattern: /clear
+    path: /clear
     methods: [POST]
     defaults:
         _controller: AppBundle:Tag:clear

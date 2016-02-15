@@ -11,6 +11,7 @@ use AppBundle\Entity\Decklistslot;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\Criteria;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ApiController extends Controller
 {
@@ -68,7 +69,7 @@ class ApiController extends Controller
 					"available" => $pack->getDateRelease() ? $pack->getDateRelease()->format('Y-m-d') : '',
 					"known" => intval($real),
 					"total" => $max,
-					"url" => $this->get('router')->generate('cards_list', array('pack_code' => $pack->getCode()), true),
+					"url" => $this->get('router')->generate('cards_list', array('pack_code' => $pack->getCode()), UrlGeneratorInterface::ABSOLUTE_URL),
 			);
 		}
 

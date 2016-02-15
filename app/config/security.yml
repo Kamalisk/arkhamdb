@@ -36,13 +36,13 @@ security:
             pattern:    ^/
             form_login:
                 provider: fos_userbundle
-                csrf_provider: form.csrf_provider
+                csrf_token_generator: security.csrf.token_manager
                 always_use_default_target_path: false
                 default_target_path: index
             logout:       true
             anonymous:    true
             remember_me:
-                key:      "%secret%"
+                secret:   "%secret%"
                 lifetime: 31536000 # 365 jours en secondes
                 path:     /
                 domain:   ~ # Prend la valeur par défaut du domaine courant depuis $_SERVER

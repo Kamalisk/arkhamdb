@@ -4,7 +4,7 @@ remind_email:
         _controller: AppBundle:User:remind
 
 user_profile_public:
-    pattern: /profile/{user_id}/{user_name}/{page}
+    path: /profile/{user_id}/{user_name}/{page}
     methods: [GET]
     defaults:
         _controller: AppBundle:User:publicProfile
@@ -13,43 +13,43 @@ user_profile_public:
         user_id: \d+
 
 user_profile_edit:
-    pattern: /profile_edit
+    path: /profile_edit
     methods: [GET]
     defaults:
         _controller: AppBundle:User:editProfile
 
 user_profile_save:
-    pattern: /profile_save
+    path: /profile_save
     methods: [POST]
     defaults:
         _controller: AppBundle:User:saveProfile
 
 decklist_favorite:
-    pattern: /favorite
+    path: /favorite
     methods: [POST]
     defaults:
         _controller: AppBundle:Social:favorite
 
 decklist_like:
-    pattern: /like
+    path: /like
     methods: [POST]
     defaults:
         _controller: AppBundle:Social:vote
 
 decklist_comment:
-    pattern: /comment
+    path: /comment
     methods: [POST]
     defaults:
         _controller: AppBundle:Social:comment
 
 decklist_comment_hide:
-    pattern: /hidecomment/{comment_id}/{hidden}
+    path: /hidecomment/{comment_id}/{hidden}
     methods: [POST]
     defaults:
         _controller: AppBundle:Social:hidecomment
 
 card_reviews_list_byauthor:
-    pattern: /reviews/{user_id}/{page}
+    path: /reviews/{user_id}/{page}
     defaults:
         _controller: AppBundle:Review:byauthor
         page: 1

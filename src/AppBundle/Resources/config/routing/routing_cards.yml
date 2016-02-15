@@ -1,6 +1,6 @@
 
 cards_list:
-    pattern: /set/{pack_code}/{view}/{sort}/{page}
+    path: /set/{pack_code}/{view}/{sort}/{page}
     defaults:
         _controller: AppBundle:Search:list
         view: list
@@ -8,12 +8,12 @@ cards_list:
         page: 1
 
 cards_zoom:
-    pattern: /card/{card_code}
+    path: /card/{card_code}
     defaults:
         _controller: AppBundle:Search:zoom
 
 cards_cycle:
-    pattern: /cycle/{cycle_code}/{view}/{sort}/{page}
+    path: /cycle/{cycle_code}/{view}/{sort}/{page}
     defaults:
         _controller: AppBundle:Search:cycle
         view: list
@@ -21,16 +21,16 @@ cards_cycle:
         page: 1
 
 cards_search:
-    pattern: /search
+    path: /search
     defaults:
         _controller: AppBundle:Search:form
 
 cards_find:
-    pattern: /find
+    path: /find
     defaults:
         _controller: AppBundle:Search:find
 
 cards_processSearchForm:
-    pattern: /process
+    path: /process
     defaults:
         _controller: AppBundle:Search:process
