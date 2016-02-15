@@ -256,7 +256,7 @@ class ReviewController extends Controller
                         'pagetitle' => $pagetitle,
                         'pagedescription' => "Read the latest user-submitted reviews on the cards.",
                         'reviews' => $reviews,
-                        'url' => $this->getRequest()->getRequestUri(),
+                        'url' => $request->getRequestUri(),
                         'route' => $route,
                         'pages' => $pages,
                         'prevurl' => $currpage == 1 ? null : $this->generateUrl($route, $params + array(
@@ -327,7 +327,7 @@ class ReviewController extends Controller
                         'pagetitle' => $pagetitle,
                         'pagedescription' => "Read the latest user-submitted reviews on the cards.",
                         'reviews' => $reviews,
-                        'url' => $this->getRequest()->getRequestUri(),
+                        'url' => $request->getRequestUri(),
                         'route' => $route,
                         'pages' => $pages,
                         'prevurl' => $currpage == 1 ? null : $this->generateUrl($route, $params + array(

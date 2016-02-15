@@ -48,7 +48,7 @@ class UserController extends Controller
     {
     	/* @var $user \AppBundle\Entity\User */
     	$user = $this->getUser();
-    	$request = $this->getRequest();
+    	$request = $request;
     	$em = $this->getDoctrine()->getManager();
 
     	$username = filter_var($request->get('username'), FILTER_SANITIZE_STRING);

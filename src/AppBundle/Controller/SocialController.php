@@ -474,7 +474,7 @@ class SocialController extends Controller
                         'pagetitle' => $pagetitle,
                         'pagedescription' => "Browse the collection of thousands of premade decks.",
                         'decklists' => $paginator,
-                        'url' => $this->getRequest()->getRequestUri(),
+                        'url' => $request->getRequestUri(),
                         'header' => $header,
                         'type' => $type,
                 		'pages' => $decklist_manager->getClosePages(),
@@ -919,7 +919,7 @@ class SocialController extends Controller
         $nbpages = min(10, ceil($maxcount / $limit));
         $nextpage = min($nbpages, $currpage + 1);
 
-        $route = $this->getRequest()->get('_route');
+        $route = $request->get('_route');
 
         $pages = [];
         for ($page = 1; $page <= $nbpages; $page ++) {
@@ -936,7 +936,7 @@ class SocialController extends Controller
                 array(
                         'user' => $user,
                         'comments' => $comments,
-                        'url' => $this->getRequest()
+                        'url' => $request
                             ->getRequestUri(),
                         'route' => $route,
                         'pages' => $pages,
@@ -990,7 +990,7 @@ class SocialController extends Controller
         $nbpages = min(10, ceil($maxcount / $limit));
         $nextpage = min($nbpages, $currpage + 1);
 
-        $route = $this->getRequest()->get('_route');
+        $route = $request->get('_route');
 
         $pages = [];
         for ($page = 1; $page <= $nbpages; $page ++) {
@@ -1006,7 +1006,7 @@ class SocialController extends Controller
         return $this->render('AppBundle:Default:allcomments.html.twig',
                 array(
                         'comments' => $comments,
-                        'url' => $this->getRequest()
+                        'url' => $request
                             ->getRequestUri(),
                         'route' => $route,
                         'pages' => $pages,
@@ -1074,7 +1074,7 @@ class SocialController extends Controller
         		array(
         				'pagetitle' => 'Decklist Search',
         				'decklists' => null,
-        				'url' => $this->getRequest()->getRequestUri(),
+        				'url' => $request->getRequestUri(),
         				'header' => $searchForm,
         				'type' => 'find',
         				'pages' => null,

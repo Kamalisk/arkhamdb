@@ -35,7 +35,7 @@ class Oauth2Controller extends Controller
 		}, $decks);
 		
 		$response->setLastModified(max($dateUpdates));
-		if ($response->isNotModified($this->getRequest())) {
+		if ($response->isNotModified($request)) {
 			return $response;
 		}
 
@@ -79,7 +79,7 @@ class Oauth2Controller extends Controller
 		}
 		
 		$response->setLastModified($deck->getDateUpdate());
-		if ($response->isNotModified($this->getRequest())) {
+		if ($response->isNotModified($request)) {
 			return $response;
 		}
 

@@ -36,7 +36,7 @@ class ApiController extends Controller
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 
-		$jsonp = $this->getRequest()->query->get('jsonp');
+		$jsonp = $request->query->get('jsonp');
 
 		$list_packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findBy(array(), array("dateRelease" => "ASC", "position" => "ASC"));
 
@@ -120,7 +120,7 @@ class ApiController extends Controller
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 
-		$jsonp = $this->getRequest()->query->get('jsonp');
+		$jsonp = $request->query->get('jsonp');
 
 		$card = $this->getDoctrine()->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
 
@@ -177,7 +177,7 @@ class ApiController extends Controller
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 
-		$jsonp = $this->getRequest()->query->get('jsonp');
+		$jsonp = $request->query->get('jsonp');
 
 		$list_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(array(), array("code" => "ASC"));
 
@@ -251,11 +251,11 @@ class ApiController extends Controller
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 
-		$jsonp = $this->getRequest()->query->get('jsonp');
+		$jsonp = $request->query->get('jsonp');
 
-		$format = $this->getRequest()->getRequestFormat();
+		$format = $request->getRequestFormat();
 		if($format !== 'json') {
-			$response->setContent($this->getRequest()->getRequestFormat() . ' format not supported. Only json is supported.');
+			$response->setContent($request->getRequestFormat() . ' format not supported. Only json is supported.');
 			return $response;
 		}
 
@@ -274,7 +274,7 @@ class ApiController extends Controller
 				if(empty($last_modified) || $last_modified < $rows[$rowindex]->getDateUpdate()) $last_modified = $rows[$rowindex]->getDateUpdate();
 			}
 			$response->setLastModified($last_modified);
-			if ($response->isNotModified($this->getRequest())) {
+			if ($response->isNotModified($request)) {
 				return $response;
 			}
 			for($rowindex = 0; $rowindex < count($rows); $rowindex++) {
@@ -332,11 +332,11 @@ class ApiController extends Controller
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 		
-		$jsonp = $this->getRequest()->query->get('jsonp');
+		$jsonp = $request->query->get('jsonp');
 		
-		$format = $this->getRequest()->getRequestFormat();
+		$format = $request->getRequestFormat();
 		if($format !== 'json') {
-			$response->setContent($this->getRequest()->getRequestFormat() . ' format not supported. Only json is supported.');
+			$response->setContent($request->getRequestFormat() . ' format not supported. Only json is supported.');
 			return $response;
 		}
 		
@@ -345,7 +345,7 @@ class ApiController extends Controller
 		if(!$decklist) die();
 		
 		$response->setLastModified($decklist->getDateUpdate());
-		if ($response->isNotModified($this->getRequest())) {
+		if ($response->isNotModified($request)) {
 			return $response;
 		}
 		
@@ -397,11 +397,11 @@ class ApiController extends Controller
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 		
-		$jsonp = $this->getRequest()->query->get('jsonp');
+		$jsonp = $request->query->get('jsonp');
 		
-		$format = $this->getRequest()->getRequestFormat();
+		$format = $request->getRequestFormat();
 		if($format !== 'json') {
-			$response->setContent($this->getRequest()->getRequestFormat() . ' format not supported. Only json is supported.');
+			$response->setContent($request->getRequestFormat() . ' format not supported. Only json is supported.');
 			return $response;
 		}
 		
@@ -424,7 +424,7 @@ class ApiController extends Controller
 		})->toArray();
 		
 		$response->setLastModified(max($dateUpdates));
-		if ($response->isNotModified($this->getRequest())) {
+		if ($response->isNotModified($request)) {
 			return $response;
 		}
 		
