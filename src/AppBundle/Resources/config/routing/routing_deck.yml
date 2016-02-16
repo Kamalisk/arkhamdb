@@ -154,7 +154,7 @@ decks_diff:
     path: /compare/{deck1_id}/{deck2_id}
     methods: [GET]
     defaults:
-        _controller: AppBundle:Diff:deckDiff
+        _controller: AppBundle:Builder:compare
     requirements:
         deck1_id: \d+
         deck2_id: \d+

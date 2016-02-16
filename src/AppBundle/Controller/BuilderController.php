@@ -519,6 +519,60 @@ class BuilderController extends Controller
         );
     }
 
+    public function compareAction($deck1_id, $deck2_id, Request $request)
+    {
+    	$entityManager = $this->getDoctrine()->getManager();
+    
+    	/* @var $deck1 \AppBundle\Entity\Deck */
+    	$deck1 = $entityManager->getRepository('AppBundle:Deck')->find($deck1_id);
+    
+    	/* @var $deck2 \AppBundle\Entity\Deck */
+    	$deck2 = $entityManager->getRepository('AppBundle:Deck')->find($deck2_id);
+    
+    	if(!$deck1 || !$deck2) {
+    		return $this->render(
+    				'AppBundle:Default:error.html.twig',
+    				array(
+    						'pagetitle' => "Error",
+    						'error' => 'This deck cannot be found.'
+    				)
+    		);
+    	}
+    	
+    	$is_owner = $this->getUser() && $this->getUser()->getId() == $deck1->getUser()->getId();
+    	if(!$deck1->getUser()->getIsShareDecks() && !$is_owner) {
+    		return $this->render(
+    				'AppBundle:Default:error.html.twig',
+    				array(
+    						'pagetitle' => "Error",
+    						'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
+    				)
+    		);
+    	}
+    	
+    	$is_owner = $this->getUser() && $this->getUser()->getId() == $deck2->getUser()->getId();
+    	if(!$deck2->getUser()->getIsShareDecks() && !$is_owner) {
+    		return $this->render(
+    				'AppBundle:Default:error.html.twig',
+    				array(
+    						'pagetitle' => "Error",
+    						'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
+    				)
+    		);
+    	}
+    	 
+    	$plotIntersection = $this->get('diff')->getSlotsDiff([$deck1->getSlots()->getPlotDeck(), $deck2->getSlots()->getPlotDeck()]);
+    
+    	$drawIntersection = $this->get('diff')->getSlotsDiff([$deck1->getSlots()->getDrawDeck(), $deck2->getSlots()->getDrawDeck()]);
+    
+    	return $this->render('AppBundle:Compare:deck_compare.html.twig', [
+    			'deck1' => $deck1,
+    			'deck2' => $deck2,
+    			'plot_deck' => $plotIntersection,
+    			'draw_deck' => $drawIntersection,
+    	]);
+    }
+    
     public function listAction ()
     {
         /* @var $user \AppBundle\Entity\User */
