@@ -149,6 +149,11 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
 		}
 		return new SlotCollectionDecorator(new ArrayCollection($drawDeck));
 	}
+	
+	public function getSlots()
+	{
+		return $this->slots;
+	}
 
 	public function getContent()
 	{
@@ -159,5 +164,5 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
 		ksort ( $arr );
 		return $arr;
 	}
-
+	
 }

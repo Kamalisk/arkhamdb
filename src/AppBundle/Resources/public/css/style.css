@@ -425,3 +425,9 @@ article.review .review-comment {
   	min-height: auto;
   }
 }
+
+/*************** DECK(LIST) COMPARE *****************/
+
+.diff {
+	background: rgba(255,0,0,.5);
+}

@@ -117,6 +117,9 @@ ui.filter_decks = function filter_decks() {
 	}
 }
 
+ui.do_diff = function do_diff(ids) {
+	location.href = Routing.generate('decks_diff', { deck1_id: ids[0], deck2_id: ids[1] });
+}
 
 ui.do_action_selection = function do_action_selection(event) {
 	event.stopPropagation();
@@ -126,8 +129,7 @@ ui.do_action_selection = function do_action_selection(event) {
 	}).get();
 	if(!action_id || !ids.length) return;
 	switch(action_id) {
-//		case 'btn-compare': do_diff(ids); break;
-//		case 'btn-compare-collection': do_diff_collection(ids); break;
+		case 'btn-compare': ui.do_diff(ids); break;
 		case 'btn-tag-add': ui.tag_add(ids); break;
 		case 'btn-tag-remove-one': ui.tag_remove(ids); break;
 		case 'btn-tag-remove-all': ui.tag_clear(ids); break;

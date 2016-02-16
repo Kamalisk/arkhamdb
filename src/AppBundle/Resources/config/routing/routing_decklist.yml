@@ -52,13 +52,3 @@ decklist_delete:
         _controller: AppBundle:Social:delete
     requirements:
         decklist_id: \d+
-        
-decklists_diff:
-    path: /diff/{decklist1_id}/{decklist2_id}
-    methods: [GET]
-    defaults:
-        _controller: AppBundle:Diff:decklistDiff
-    requirements:
-        decklist1_id: \d+
-        decklist2_id: \d+
-        

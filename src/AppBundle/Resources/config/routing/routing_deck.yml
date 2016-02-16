@@ -149,3 +149,13 @@ decks_download_all:
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:downloadall
+        
+decks_diff:
+    path: /compare/{deck1_id}/{deck2_id}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Diff:deckDiff
+    requirements:
+        deck1_id: \d+
+        deck2_id: \d+
+        
