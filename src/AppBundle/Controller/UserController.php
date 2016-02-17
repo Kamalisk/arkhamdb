@@ -44,7 +44,7 @@ class UserController extends Controller
         ));
     }
 
-    public function saveProfileAction()
+    public function saveProfileAction(Request $request)
     {
     	/* @var $user \AppBundle\Entity\User */
     	$user = $this->getUser();
