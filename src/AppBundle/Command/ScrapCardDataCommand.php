@@ -58,14 +58,14 @@ class ScrapCardDataCommand extends ContainerAwareCommand
           $name = $data['name'];
           $name = str_replace(['“', '”', '’'], ['"', '"', '\''], $name);
           
-          $setname = $data['setname'];
+          $setname = html_entity_decode($data['setname'], ENT_QUOTES);
           $setname = str_replace(['“', '”', '’'], ['"', '"', '\''], $setname);
           
           /* @var $pack \AppBundle\Entity\Pack */
           $pack = $em->getRepository('AppBundle:Pack')->findOneBy(array('name' => $setname));
           if(!$pack)
           {
-          	$output->writeln("<error>Cannot find pack [".$data['setname']."]</error>");
+          	$output->writeln("<error>Cannot find pack [".$setname."]</error>");
           	die();
           }
           if($pack->getSize() === count($pack->getCards())) {

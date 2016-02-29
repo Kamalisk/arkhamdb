@@ -43,11 +43,7 @@ class DownloadImagesCommand extends ContainerAwareCommand
             $output->writeln("Skip ".$card_code);
           }
           else {
-            $matches = [];
-            if(preg_match('/^(..)(...)/', $card_code, $matches)) {
-              $pack_code = $matches[1];
-              $card_position = intval($matches[2]);
-              $cgdbfile = sprintf('GT%s_%d.jpg', $pack_code, $card_position);
+              $cgdbfile = sprintf('GT%02d_%d.jpg', $card->getPack()->getId(), $card->getPosition());
               $cgdburl = "http://lcg-cdn.fantasyflightgames.com/got2nd/" . $cgdbfile;
 
               $dirname = dirname($imagepath);
@@ -61,7 +57,6 @@ class DownloadImagesCommand extends ContainerAwareCommand
               else {
                 $output->writeln("Failed at downloading $cgdburl");
               }
-            }
 
           }
 
