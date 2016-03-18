@@ -5,7 +5,6 @@ var date_creation,
 	description_md,
 	id,
 	name,
-	slots,
 	tags,
 	faction_code,
 	faction_name,
@@ -33,7 +32,6 @@ layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="
 layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= meta %><%= plots %></div><div class="col-sm-4"><%= characters %></div><div class="col-sm-4"><%= attachments %><%= locations %><%= events %></div></div></div>');
 
 /**
- * Called on page load before DOM and data
  * @memberOf deck
  */
 deck.init = function init(data) {
@@ -42,19 +40,25 @@ deck.init = function init(data) {
 	description_md = data.description_md;
 	id = data.id;
 	name = data.name;
-	slots = data.slots;
 	tags = data.tags;
 	faction_code = data.faction_code;
 	faction_name = data.faction_name;
 	unsaved = data.unsaved;
 	user_id = data.user_id;
 	
-	// when app.data has finished, update the card database
-	$(document).on('data.app', deck.on_data_loaded);
+	if(app.data.isLoaded) {
+		deck.set_slots(data.slots);
+	} else {
+		console.log("deck.set_slots put on hold until data.app");
+		$(document).on('data.app', function () { deck.set_slots(data.slots); });
+	}
 }
 
-deck.on_data_loaded = function deck_on_data_loaded()
-{
+/**
+ * Sets the slots of the deck
+ * @memberOf deck
+ */
+deck.set_slots = function set_slots(slots) {
 	app.data.cards.update({}, {
 		indeck: 0
 	});

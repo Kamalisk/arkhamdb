@@ -32,7 +32,7 @@ ui.on_content_change = function on_content_change(event) {
 	app.deck.init({
 		faction_code: faction_code,
 		faction_name: faction_name,
-		slots: slots       
+		slots: slots
 	});
 	app.deck.display('#deck');
 	$('input[name=content').val(app.deck.get_json());

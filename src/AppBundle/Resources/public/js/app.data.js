@@ -8,6 +8,8 @@ var force_update = false;
  * @memberOf data
  */
 data.load = function load() {
+	
+	data.isLoaded = false;
 
 	var fdb = new ForerunnerDB();
 	data.db = fdb.db('thronesdb');
@@ -83,6 +85,8 @@ data.release = function release() {
 	data.cards = data.db.collection('card', {primaryKey:'code', changeTimestamp: false});
 	data.cards.setData(data.masters.cards.find());
 
+	data.isLoaded = true;
+	
 	$(document).trigger('data.app');
 }
 
