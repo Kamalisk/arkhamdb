@@ -21,7 +21,8 @@ body {
 	font-style: italic;
 }
 .card-text {
-	border-left:1px solid #888;
+	border-left-width: 2px;
+	border-left-style: solid;
 }
 .card-text p {
 	margin: 6px;
@@ -225,9 +226,9 @@ div.tags span.tag:not(:first-child)::before {
 .tt-suggestion p{margin:0}
 
 /************** QTIP ****************/
-.qtip-game{border-radius:2px}
-.qtip-game-text{min-width:360px;max-width:360px;font-size:15px}
-.qtip-game-image{max-width:500px}
+.qtip-thronesdb{border-radius:2px;max-width:400px}
+.qtip-thronesdb-text{font-size:15px}
+.qtip-thronesdb-image{}
 
 /***************** THUMBNAIL CARD IMAGE **************/
 
@@ -372,6 +373,34 @@ div.site-slogan {
 }
 .fg-neutral {
 	color: #a99560;
+}
+
+.border-targaryen {
+	border-color: #1c1c1c;
+}
+.border-baratheon {
+	border-color: #e3d852;
+}
+.border-stark {
+	border-color: #cfcfcf;
+}
+.border-greyjoy {
+	border-color: #1d7a99;
+}
+.border-lannister {
+	border-color: #c00106;
+}
+.border-tyrell {
+	border-color: #509f16;
+}
+.border-thenightswatch {
+	border-color: #7a7a7a;
+}
+.border-martell {
+	border-color: #e89521;
+}
+.border-neutral {
+	border-color: #a99560;
 }
 
 /**************** REVIEW ON CARD PAGE ******************/

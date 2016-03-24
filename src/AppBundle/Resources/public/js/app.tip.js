@@ -13,7 +13,7 @@ function display_card_on_element(card, element, event) {
 		+ '<h4 class="card-name">' + app.format.name(card) + '</h4>'
 		+ '<div class="card-info">' + app.format.info(card) + '</div>'
 		+ '<div class="card-traits">' + app.format.traits(card) + '</div>'
-		+ '<div class="card-text">' + app.format.text(card) + '</div>'
+		+ '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>'
 		+ '<span class="card-pack pull-right" style="clear:right">' + app.format.pack(card) + '</span>'
 		+ '<span class="card-faction">' + app.format.faction(card) + '</span>';
 	}
