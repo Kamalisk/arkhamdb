@@ -9,13 +9,13 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
-class UpdateOctgnCommand extends ContainerAwareCommand
+class ImportGuidsCommand extends ContainerAwareCommand
 {
 
     protected function configure()
     {
         $this
-        ->setName('app:octgn')
+        ->setName('app:import:guids')
         ->setDescription('Download OCTGN IDs from CGDB')
         ;
     }

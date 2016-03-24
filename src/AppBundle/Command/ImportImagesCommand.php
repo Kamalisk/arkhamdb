@@ -9,13 +9,13 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
-class DownloadImagesCommand extends ContainerAwareCommand
+class ImportImagesCommand extends ContainerAwareCommand
 {
 
     protected function configure()
     {
         $this
-        ->setName('app:download-images')
+        ->setName('app:import:images')
         ->setDescription('Download missing card images from FFG websites')
         ;
     }

@@ -9,14 +9,15 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use AppBundle\Entity\Card;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-class ScrapCardDataCommand extends ContainerAwareCommand
+class ImportCardsCommand extends ContainerAwareCommand
 {
 
     protected function configure()
     {
         $this
-        ->setName('app:cgdb:cards')
+        ->setName('app:import:cards')
         ->setDescription('Download new card data from CGDB')
         ->addArgument(
         		'filename',
@@ -31,8 +32,8 @@ class ScrapCardDataCommand extends ContainerAwareCommand
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getContainer()->get('doctrine')->getManager();
 
-        /* @var $dialog \Symfony\Component\Console\Helper\DialogHelper */
-        $dialog = $this->getHelper('dialog');
+        /* @var $helper \Symfony\Component\Console\Helper\QuestionHelper */
+        $helper = $this->getHelper('question');
 
         $assets_helper = $this->getContainer()->get('templating.helper.assets');
         $rootDir = $this->getContainer()->get('kernel')->getRootDir();
@@ -76,7 +77,8 @@ class ScrapCardDataCommand extends ContainerAwareCommand
           $card = $em->getRepository('AppBundle:Card')->findOneBy(array('name' => $name, 'pack' => $pack));
           if($card) continue;
           
-          if(!$dialog->askConfirmation($output, "<question>Shall I import the card =< $name >= from the set =< $setname >= ?</question> ", true)) {
+          $question = new ConfirmationQuestion("Shall I import the card <comment>$name</comment> from the set <comment>$setname</comment>? (Y/n) ", true);
+          if(!$helper->ask($input, $output, $question)) {
           	continue;
           }
           
@@ -135,7 +137,7 @@ class ScrapCardDataCommand extends ContainerAwareCommand
           $card = new Card();
           $card->setClaim($data['claim'] !== '' ? $data['claim'] : null);
           $card->setCode(sprintf("%02d%03d", $pack->getCycle()->getPosition(), $position));
-          $card->setCost($data['cost'] !== '' ? $data['cost'] : null);
+          $card->setCost($data['cost'] !== '' && $data['cost'] !== 'X' ? $data['cost'] : null);
           $card->setDeckLimit($data['max']);
           $card->setFaction($faction);
           $card->setIllustrator(trim($data['illustrator']));
