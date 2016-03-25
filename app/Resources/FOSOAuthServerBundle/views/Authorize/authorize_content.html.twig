@@ -1,0 +1,33 @@
+
+<div class="panel panel-default">
+<div class="panel-heading">
+<h3 class="panel-title" style="line-height:2em">ThronesDB Authorization</h3>
+</div>
+<div class="panel-body">
+	  <p>
+		  The application <i>{{ client.name }}</i> would like to connect to your account.
+	  </p>
+	  <p>
+		   If you agree, <i>{{ client.name }}</i> will be able to perform the following operations on your behalf:
+	   </p>
+	   <ul>
+		   <li>Read your decks saved on ThronesDB</li>
+		   <li>Modify a deck or create a new one on ThronesDB</li>
+		</ul>
+</p>
+  <div class="form">
+<form action="{{ path('fos_oauth_server_authorize') }}" method="POST" class="fos_oauth_server_authorize" {{ form_enctype(form) }}>
+    <input type="submit" class="btn btn-primary" name="accepted" value="{{ 'authorize.accept'|trans({}, 'FOSOAuthServerBundle') }}" />
+    <input type="submit" class="btn btn-danger" name="rejected" value="{{ 'authorize.reject'|trans({}, 'FOSOAuthServerBundle') }}" />
+    {{ form_row(form.client_id) }}
+    {{ form_row(form.response_type) }}
+    {{ form_row(form.redirect_uri) }}
+    {{ form_row(form.state) }}
+    {{ form_row(form.scope) }}
+    {{ form_rest(form) }}
+</form>
+  </div>
+  
+</div>
+</div>
+</div>  
