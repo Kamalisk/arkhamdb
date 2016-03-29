@@ -23,6 +23,19 @@ draw_simulator.on_dom_loaded = function on_dom_loaded() {
 	$('#table-draw-simulator').on('click', 'button.btn', draw_simulator.handle_click);
 	$('#table-draw-simulator').on('click', 'img, div.card-proxy', draw_simulator.toggle_opacity);
 	container = $('#table-draw-simulator-content');
+	
+	$('#oddsModal').on({change: draw_simulator.compute_odds}, 'input');
+}
+
+/**
+ * @memberOf draw_simulator
+ */
+draw_simulator.compute_odds = function compute_odds() {
+	var inputs = {};
+	$.each(['N','K','n','k'], function (i, key) {
+		inputs[key] = parseInt($('#odds-calculator-'+key).val(), 10) || 0;
+	});
+	$('#odds-calculator-p').text( Math.round( 100 * app.hypergeometric.get_cumul(inputs.k, inputs.N, inputs.K, inputs.n) ) );
 }
 
 /**
