@@ -35,8 +35,7 @@ class ImportGuidsCommand extends ContainerAwareCommand
 
         $setid = $input->getArgument('setid');
         
-        //$xmlstr = file_get_contents("https://raw.githubusercontent.com/TassLehoff/AGoTv2-OCTGN/master/GameDatabase/30c200c9-6c98-49a4-a293-106c06295c05/sets/$setid/set.xml");
-        $xmlstr = file_get_contents("set.xml");
+        $xmlstr = file_get_contents("https://raw.githubusercontent.com/TassLehoff/AGoTv2-OCTGN/master/GameDatabase/30c200c9-6c98-49a4-a293-106c06295c05/sets/$setid/set.xml");
         
         $set = new \SimpleXMLElement($xmlstr);
         $cards = $set->cards[0];
