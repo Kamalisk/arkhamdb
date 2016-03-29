@@ -17,6 +17,11 @@ class ImportGuidsCommand extends ContainerAwareCommand
         $this
         ->setName('app:import:guids')
         ->setDescription('Download OCTGN IDs from CGDB')
+        ->addArgument(
+        		'setid',
+        		InputArgument::REQUIRED,
+        		'GUID of the set for OCTGN'
+        )
         ;
     }
 
@@ -28,59 +33,36 @@ class ImportGuidsCommand extends ContainerAwareCommand
         /* @var $repo \AppBundle\Entity\ReviewRepository */
         $repo = $em->getRepository('AppBundle:Card');
 
-        $file = exec('curl http://www.cardgamedb.com/deckbuilders/gameofthrones2ndedition/database/agotoctgnguids-1.jgz -H "Accept-Encoding: gzip, deflate, sdch" | gunzip -c');
-
-        if(!preg_match('/^.*?(\{.*\});$/', $file, $matches)) {
-          $output->writeln("<error>Error while parsing js file</error>");
+        $setid = $input->getArgument('setid');
+        
+        //$xmlstr = file_get_contents("https://raw.githubusercontent.com/TassLehoff/AGoTv2-OCTGN/master/GameDatabase/30c200c9-6c98-49a4-a293-106c06295c05/sets/$setid/set.xml");
+        $xmlstr = file_get_contents("set.xml");
+        
+        $set = new \SimpleXMLElement($xmlstr);
+        $cards = $set->cards[0];
+        
+        $guids = [];
+        foreach($cards->children() as $card) {
+        	$attributes = $card->attributes();
+        	$name = (string)$attributes->name;
+        	$guid = (string)$attributes->id;
+        	$name  = str_replace('’', '\'', $name);
+        	$guids[$name] = $guid;
         }
-
-        $json = $matches[1];
-        $lookup = json_decode($json, TRUE);
-
-        foreach($lookup as $key => $value) {
-          $newkey = str_replace(['“', '”', '’'], ['"', '"', '\''], $key);
-          if($newkey !=$key) {
-            $lookup[$newkey] = $value;
-            unset($lookup[$key]);
-          }
-        }
-
-        $cards = $repo->findBy([], ['code' => 'ASC']);
+        
+        $cards = $repo->findBy(['octgnid' => null], ['code' => 'ASC']);
 
         foreach($cards as $card) {
-
-          if($card->getOctgnid()) continue;
-
-          $key = sprintf("%s (%s)", $card->getName(), $card->getPack()->getName());
-
-          if(isset($lookup[$key])) {
-            $card->setOctgnid($lookup[$key]);
-            $output->writeln("<info>Updating octgn id for $key</info>");
-          }
-          else {
-            $output->writeln("<error>Cannot find $key in lookup</error>");
-          }
-
+        	$name = $card->getName();
+        	if(key_exists($name, $guids)) {
+            	$card->setOctgnid($guids[$name]);
+            	unset($guids[$name]);
+            	$output->writeln("<info>Updating octgn id for $name</info>");
+        	} else {
+        		$output->writeln("<error>Cannot find $name</error>");
+        	}
         }
-
-        $factions = $em->getRepository('AppBundle:Faction')->findBy(['is_primary' => TRUE], ['code' => 'ASC']);
-
-        foreach($factions as $faction) {
-
-          if($faction->getOctgnid()) continue;
-
-          $key = sprintf("%s (Core Set)", $faction->getName());
-
-          if(isset($lookup[$key])) {
-            $faction->setOctgnid($lookup[$key]);
-            $output->writeln("<info>Updating octgn id for $key</info>");
-          }
-          else {
-            $output->writeln("<error>Cannot find $key in lookup</error>");
-          }
-
-        }
-
+        
         $em->flush();
     }
 }
