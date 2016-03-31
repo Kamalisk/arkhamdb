@@ -26,3 +26,7 @@ AppBundle\Entity\Faction:
         octgnid:
             type: string
             nullable: true
+    uniqueConstraints:
+        faction_code_idx:
+            columns: [ code ]
+            

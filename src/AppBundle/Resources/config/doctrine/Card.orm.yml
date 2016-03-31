@@ -118,3 +118,6 @@ AppBundle\Entity\Card:
         octgnid:
             type: string
             nullable: true
+    uniqueConstraints:
+        card_code_idx:
+            columns: [ code ]

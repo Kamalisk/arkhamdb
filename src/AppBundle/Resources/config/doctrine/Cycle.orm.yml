@@ -41,4 +41,7 @@ AppBundle\Entity\Cycle:
             gedmo:
                 timestampable:
                     on: update
-        
+    uniqueConstraints:
+        cycle_code_idx:
+            columns: [ code ]
+                    

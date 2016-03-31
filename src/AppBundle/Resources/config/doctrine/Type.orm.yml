@@ -20,4 +20,7 @@ AppBundle\Entity\Type:
             type: string
             length: 1024
             nullable: false
-     
+    uniqueConstraints:
+        type_code_idx:
+            columns: [ code ]
+            
