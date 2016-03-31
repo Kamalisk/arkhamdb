@@ -1,0 +1,71 @@
+{% extends 'AppBundle:Admin:base.html.twig' %}
+
+{% block content -%}
+<h1>User Administration</h1>
+
+{% for label, flashes in app.session.flashbag.all %}
+    {% for flash in flashes %}
+        <div class="alert alert-{{ label }}">
+            {{ flash }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+<table class="table">
+<tr>
+	<td>Username</td>
+	<td>{{ user.username }}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>Email</td>
+	<td>{{ user.email }}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>Blocked</td>
+	<td>{% if user.locked %}Yes{% else %}No{% endif %}</td>
+	<td><a href="{{ path('admin_user_locked_toggle',{user_id:user.id}) }}" class="btn btn-danger">{% if user.locked %}Unblock{% else %}Block{% endif %}</a></td>
+</tr>
+<tr>
+	<td>Date of creation</td>
+	<td>{{ user.dateCreation|date('r') }}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>Date of last update</td>
+	<td>{{ user.dateUpdate|date('r') }}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>Reputation</td>
+	<td>{{ user.reputation }}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>Resume</td>
+	<td>{{ user.resume }}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>Shares decks</td>
+	<td>{% if user.isShareDecks %}Yes{% else %}No{% endif %}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>Number of private decks</td>
+	<td>{{ user.decks|length }}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>Number of published decklists</td>
+	<td>{{ user.decklists|length }}</td>
+	<td><a href="{{ path('admin_user_decklists_show',{user_id:user.id}) }}" class="btn btn-default">Show</a></td>
+</tr>
+<tr>
+	<td>Number of comments</td>
+	<td>{{ user.comments|length }}</td>
+	<td><a href="{{ path('admin_user_comments_show',{user_id:user.id}) }}" class="btn btn-default">Show</a></td>
+</tr>
+</table>    
+{% endblock %}

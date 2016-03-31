@@ -1,0 +1,32 @@
+{% extends 'AppBundle:Admin:base.html.twig' %}
+
+{% block content -%}
+<h1>User Decklists</h1>
+
+{% for label, flashes in app.session.flashbag.all %}
+    {% for flash in flashes %}
+        <div class="alert alert-{{ label }}">
+            {{ flash }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+<table class="table">
+<thead>
+<tr>
+	<th>Decklist</th>
+	<th>Date</th>
+	<th>Action</th>
+</tr>
+</thead>
+{% for decklist in user.decklists %}
+<tr>
+	<td>{{ decklist.name }}</td>
+	<td>{{ decklist.dateCreation|date('r') }}</td>
+	<td>
+		<a href="{{ path('admin_decklist_delete',{decklist_id:decklist.id}) }}" class="btn btn-danger">Delete</a>
+	</td>
+</tr>
+{% endfor %}
+</table>    
+{% endblock %}

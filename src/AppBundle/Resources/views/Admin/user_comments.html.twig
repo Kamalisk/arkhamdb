@@ -1,0 +1,37 @@
+{% extends 'AppBundle:Admin:base.html.twig' %}
+
+{% block content -%}
+<h1>User Comments</h1>
+
+{% for label, flashes in app.session.flashbag.all %}
+    {% for flash in flashes %}
+        <div class="alert alert-{{ label }}">
+            {{ flash }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+<table class="table">
+<thead>
+<tr>
+	<th>Decklist</th>
+	<th>Date</th>
+	<th>Comment</th>
+	<th>Status</th>
+	<th>Action</th>
+</tr>
+</thead>
+{% for comment in user.comments %}
+<tr>
+	<td>{{ comment.decklist.name }}</td>
+	<td>{{ comment.dateCreation|date('r') }}</td>
+	<td>{{ comment.text|raw }}</td>
+	<td>{% if comment.isHidden %}Hidden{% else %}Visible{% endif %}</td>
+	<td>
+		<a href="{{ path('admin_comment_hidden_toggle',{comment_id:comment.id}) }}" class="btn btn-default">{% if comment.isHidden %}Unhide{% else %}Hide{% endif %}</a>
+		<a href="{{ path('admin_comment_delete',{comment_id:comment.id}) }}" class="btn btn-danger">Delete</a>
+	</td>
+</tr>
+{% endfor %}
+</table>    
+{% endblock %}
