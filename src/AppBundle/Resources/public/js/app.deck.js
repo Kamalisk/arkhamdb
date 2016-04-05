@@ -28,7 +28,7 @@ var date_creation,
  * Templates for the different deck layouts, see deck.get_layout_data
  */
 layouts[1] = _.template('<div class="deck-content"><%= meta %><%= plots %><%= characters %><%= attachments %><%= locations %><%= events %></div>');
-layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-6"><%= meta %></div><div class="col-sm-6"><%= plots %></div></div><div class="row"><div class="col-sm-6"><%= characters %></div><div class="col-sm-6"><%= attachments %><%= locations %><%= events %></div></div></div>');
+layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6"><%= meta %></div><div class="col-sm-6 col-print-6"><%= plots %></div></div><div class="row"><div class="col-sm-6 col-print-6"><%= characters %></div><div class="col-sm-6 col-print-6"><%= attachments %><%= locations %><%= events %></div></div></div>');
 layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= meta %><%= plots %></div><div class="col-sm-4"><%= characters %></div><div class="col-sm-4"><%= attachments %><%= locations %><%= events %></div></div></div>');
 
 /**
