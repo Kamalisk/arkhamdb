@@ -618,6 +618,16 @@ ui.init_filter_help = function init_filter_help() {
 	});
 }
 
+ui.setup_dataupdate = function setup_dataupdate() {
+	$('a.data-update').click(function (event) {
+		$(document).on('data.app', function (event) {
+			$('a.data-update').parent().text("Data refreshed. You can save or reload your deck.");
+		});
+		app.data.update();
+		return false;
+	})
+}
+
 /**
  * called when the DOM is loaded
  * @memberOf ui
@@ -657,6 +667,7 @@ ui.on_all_loaded = function on_all_loaded() {
 	ui.refresh_deck();
 	ui.refresh_list();
 	ui.setup_typeahead();
+	ui.setup_dataupdate();
 	app.deck_history && app.deck_history.setup('#history');
 };
 
