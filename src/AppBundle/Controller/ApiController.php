@@ -232,7 +232,7 @@ class ApiController extends Controller
      *      {
      *          "name"="pack_code",
      *          "dataType"="string",
-     *          "description"="The code of the pack to get the cards from, e.g. 'core'"
+     *          "description"="The code of the pack to get the cards from, e.g. 'Core'"
      *      },
      *      {
      *          "name"="_format",

@@ -69,7 +69,7 @@ ui.remove_melee_titles = function remove_melee_titles() {
 ui.set_max_qty = function set_max_qty() {
 	app.data.cards.find().forEach(function(record) {
 		var max_qty = Math.min(3, record.deck_limit);
-		if (record.pack_code == 'core')
+		if (record.pack_code == 'Core')
 			max_qty = Math.min(max_qty, record.quantity * Config['core-set']);
 		app.data.cards.updateById(record.code, {
 			maxqty : max_qty

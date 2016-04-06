@@ -284,8 +284,14 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 	if(cards.length) {
 		$(header_tpl({code: sortValue, name:cards[0][displayLabel], quantity: deck.get_nb_cards(cards)})).appendTo(section);
 		cards.forEach(function (card) {
-			$('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card').append($(card_line_tpl({card:card}))).prepend(card.indeck+'x ').appendTo(section);
-		})
+			var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
+			$div.append($(card_line_tpl({card:card})));
+			$div.prepend(card.indeck+'x ');
+			if(app.data.cards.find({'name': card.name}).length > 1) {
+				$div.append(' ('+card.pack_code+')');
+			}
+			$div.appendTo(section);
+		});
 	}
 	return section;
 }

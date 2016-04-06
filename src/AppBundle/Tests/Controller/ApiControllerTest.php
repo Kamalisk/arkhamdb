@@ -37,7 +37,7 @@ class ApiControllerTest extends WebTestCase
     public function testListCardsByPack()
     {
     	$client = static::createClient();
-    	$client->request('GET', '/api/cards/core');
+    	$client->request('GET', '/api/cards/Core');
     	$response = $client->getResponse();
     	$json = $response->getContent();
     	$this->assertJson($json);
@@ -49,7 +49,7 @@ class ApiControllerTest extends WebTestCase
     	{
     		$this->assertInternalType('array', $item);
     		$this->assertArrayHasKey("pack_code", $item);
-    		$this->assertEquals("core", $item['pack_code']);
+    		$this->assertEquals("Core", $item['pack_code']);
     	}
     }
     

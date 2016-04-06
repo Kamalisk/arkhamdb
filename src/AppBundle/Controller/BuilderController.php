@@ -65,7 +65,7 @@ class BuilderController extends Controller
         {
         	$agenda = NULL;
         	$name = sprintf("New deck: %s", $faction->getName());
-        	$pack = $em->getRepository('AppBundle:Pack')->findOneBy(array("code" => "core"));
+        	$pack = $em->getRepository('AppBundle:Pack')->findOneBy(array("code" => "Core"));
         }
         else
         {
