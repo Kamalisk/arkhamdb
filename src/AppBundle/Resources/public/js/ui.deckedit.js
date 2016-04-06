@@ -126,6 +126,11 @@ ui.build_pack_selector = function build_pack_selector() {
 		name: {
 			'$exists': true
 		}
+	}, {
+	    $orderBy: {
+	        cycle_position: 1,
+	        position: 1
+	    }
 	}).forEach(function(record) {
 		// checked or unchecked ? checked by default
 		var checked = true;

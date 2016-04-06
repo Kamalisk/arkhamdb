@@ -16,6 +16,7 @@ var date_creation,
 		too_many_different_plots: "Contains more than one duplicated Plot",
 		too_many_agendas: "Contains more than one Agenda",
 		too_few_cards: "Contains too few cards",
+		too_many_copies: "Contains too many copies of a card (by title)",
 		invalid_cards: "Contains forbidden cards (cards no permitted by Faction or Agenda)",
 		agenda: "Doesn't comply with the Agenda conditions"
 	},
@@ -348,6 +349,26 @@ deck.get_export = function get_export(format) {
 /**
  * @memberOf deck
  */
+deck.get_copies_and_deck_limit = function get_copies_and_deck_limit() {
+	var copies_and_deck_limit = {};
+	deck.get_draw_deck().forEach(function (card) {
+		var value = copies_and_deck_limit[card.name];
+		if(!value) {
+			copies_and_deck_limit[card.name] = {
+					nb_copies: card.indeck,
+					deck_limit: card.deck_limit
+			};
+		} else {
+			value.nb_copies += card.indeck;
+			value.deck_limit = Math.min(card.deck_limit, value.deck_limit);
+		}
+	})
+	return copies_and_deck_limit;
+}
+
+/**
+ * @memberOf deck
+ */
 deck.get_problem = function get_problem() {
 	// exactly 7 plots
 	if(deck.get_plot_deck_size() > 7) {
@@ -372,11 +393,16 @@ deck.get_problem = function get_problem() {
 		return 'too_few_cards';
 	}
 
+	// too many copies of one card
+	if(_.findKey(deck.get_copies_and_deck_limit(), function(value) {
+	    return value.nb_copies > value.deck_limit;
+	}) != null) return 'too_many_copies';
+
 	// no invalid card
 	if(deck.get_invalid_cards().length > 0) {
 		return 'invalid_cards';
 	}
-
+	
 	// the condition(s) of the agenda must be fulfilled
 	var agenda = deck.get_agenda();
 	if(!agenda) return;

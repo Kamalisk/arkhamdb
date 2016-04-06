@@ -57,6 +57,9 @@ class DeckValidationHelper
 		if($deck->getSlots()->getDrawDeck()->countCards() < 60) {
 			return 'too_few_cards';
 		}
+		foreach($deck->getSlots()->getCopiesAndDeckLimit() as $cardName => $value) {
+			if($value['copies'] > $value['deck_limit']) return 'too_many_copies';
+		}
 		if(!empty($this->getInvalidCards($deck))) {
 			return 'invalid_cards';
 		}
@@ -93,6 +96,7 @@ class DeckValidationHelper
 				'too_many_different_plots' => "Contains more than one duplicated Plot",
 				'too_many_agendas' => "Contains more than one Agenda",
 				'too_few_cards' => "Contains too few cards",
+				'too_many_copies' => "Contains too many copies of a card (by title)",
 				'invalid_cards' => "Contains forbidden cards (cards no permitted by Faction or Agenda)",
 				'agenda' => "Doesn't comply with the Agenda conditions"
 		];
