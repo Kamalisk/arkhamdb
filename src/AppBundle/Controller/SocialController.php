@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Form\DecklistType;
 use FOS\UserBundle\FOSUserBundle;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use AppBundle\Entity\Pack;
 
 class SocialController extends Controller
 {
@@ -62,7 +63,7 @@ class SocialController extends Controller
         }
 
         $lastPack = $deck->getLastPack();
-        if(!$lastPack->getReleased() || $lastPack->getReleased() > new \DateTime()) {
+        if(!$lastPack->getDateRelease() || $lastPack->getDateRelease() > new \DateTime()) {
         	$this->get('session')->getFlashBag()->set('error', "You cannot publish this deck yet, because it has unreleased cards.");
         	return $this->redirect($this->generateUrl('deck_view', [ 'deck_id' => $deck->getId() ]));
         }
