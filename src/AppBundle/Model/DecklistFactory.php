@@ -22,6 +22,11 @@ class DecklistFactory
 
 	public function createDecklistFromDeck(Deck $deck, $name = null, $descriptionMd = null)
 	{
+		$lastPack = $deck->getLastPack();
+		if(!$lastPack->getReleased() || $lastPack->getReleased() > new \DateTime()) {
+			throw new \Exception("You cannot publish this deck yet, because it has unreleased cards.");
+		}
+		
 		$problem = $this->deckValidationHelper->findProblem($deck);
 		if($problem) {
 			throw new \Exception('This deck cannot be published  because it is invalid: "'.$this->deckValidationHelper->getProblemLabel($problem).'".');

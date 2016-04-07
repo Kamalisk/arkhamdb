@@ -61,6 +61,12 @@ class SocialController extends Controller
             return $this->redirect($this->generateUrl('deck_view', [ 'deck_id' => $deck->getId() ]));
         }
 
+        $lastPack = $deck->getLastPack();
+        if(!$lastPack->getReleased() || $lastPack->getReleased() > new \DateTime()) {
+        	$this->get('session')->getFlashBag()->set('error', "You cannot publish this deck yet, because it has unreleased cards.");
+        	return $this->redirect($this->generateUrl('deck_view', [ 'deck_id' => $deck->getId() ]));
+        }
+        
     	$problem = $this->get('deck_validation_helper')->findProblem($deck);
     	if ($problem) {
     		$this->get('session')->getFlashBag()->set('error', "This deck cannot be published because it is invalid.");
