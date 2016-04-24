@@ -17,14 +17,15 @@ parameters:
     cache_expiration:  600
     
     # Email sender
-    email_sender_address: alsciende@icloud.com
-    email_sender_name: Alsciende
+    email_sender_address: ~
+    email_sender_name: ~
     
     # Branding
-    website_name: ThronesDB
-    game_name: A Game of Thrones: The Card Game Second Edition
-    publisher_name: Fantasy Flight Games
-       
-    google_analytics_tracking_code: UA-44413511-1
-    google_adsense_client: ca-pub-2254488884647695
-    google_adsense_slot: 3777512162
+    website_name: ~
+    game_name: ~
+    publisher_name: ~ 
+    
+    # Analytics & AdSense
+    google_analytics_tracking_code: UA-00000000-1
+    google_adsense_client: ca-pub-000000000000000
+    google_adsense_slot: 0000000000
