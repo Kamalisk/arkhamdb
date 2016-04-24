@@ -288,10 +288,11 @@ class DecklistManager
 
 		$request = $this->request_stack->getCurrentRequest();
 		$route = $request->get('_route');
+		$routeParams = $request->get('_route_params');
 		$params = $request->query->all();
 		$previous_page = max(1, $this->page - 1);
 
-		return $this->router->generate($route, $params + [ "page" => $previous_page ]);
+		return $this->router->generate($route, [ "page" => $previous_page ] + $routeParams + $params);
 	}
 
 	public function getNextUrl()
@@ -300,10 +301,11 @@ class DecklistManager
 
 		$request = $this->request_stack->getCurrentRequest();
 		$route = $request->get('_route');
+		$routeParams = $request->get('_route_params');
 		$params = $request->query->all();
 		$next_page = min($this->getNumberOfPages(), $this->page + 1);
 
-		return $this->router->generate($route, $params + [ "page" => $next_page ]);
+		return $this->router->generate($route, [ "page" => $next_page ] + $routeParams + $params);
 	}
 
 }
