@@ -159,7 +159,7 @@
 
 	{% if app.environment == 'prod' %}
 		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-		{% include 'AppBundle::google-analytics.html.twig' %}
+		{% include 'AppBundle:Default:google-analytics.html.twig' %}
 	{% endif %}
 
 	{% javascripts filter="?jsqueeze" output="js/app.js"

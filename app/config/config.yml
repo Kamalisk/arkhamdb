@@ -39,6 +39,9 @@ twig:
     globals:
         cards_data: "@cards_data"
         deck_validation_helper: "@deck_validation_helper"
+        google_analytics_tracking_code: "%google_analytics_tracking_code%"
+        google_adsense_client: "%google_adsense_client%"
+        google_adsense_slot: "%google_adsense_slot%"
     form_themes:
         - 'bootstrap_3_layout.html.twig'
 

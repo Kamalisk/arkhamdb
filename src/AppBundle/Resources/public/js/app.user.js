@@ -100,8 +100,6 @@ user.dropdown = function dropdown(list) {
  * @memberOf user
  */
 user.display_ads = function display_ads() {
-	return;
-
 	// show ads if not donator
 	if(user.data && user.data.donation > 0) return;
 

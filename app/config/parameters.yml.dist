@@ -24,4 +24,7 @@ parameters:
     website_name: ThronesDB
     game_name: A Game of Thrones: The Card Game Second Edition
     publisher_name: Fantasy Flight Games
-    
+       
+    google_analytics_tracking_code: UA-44413511-1
+    google_adsense_client: ca-pub-2254488884647695
+    google_adsense_slot: 3777512162
