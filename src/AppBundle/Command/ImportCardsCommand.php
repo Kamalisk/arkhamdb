@@ -24,6 +24,12 @@ class ImportCardsCommand extends ContainerAwareCommand
         		InputArgument::REQUIRED,
         		'Name of the file to download (ex "GT03-db")'
         )
+        ->addOption(
+        		'yes',
+        		'y',
+        		InputOption::VALUE_NONE,
+        		'Reply yes to all questions'
+        )
         ;
     }
 
@@ -46,13 +52,20 @@ class ImportCardsCommand extends ContainerAwareCommand
         
         $filename = $input->getArgument('filename');
         
-        $file = file_get_contents("http://www.cardgamedb.com/deckbuilders/gameofthrones2ndedition/database/$filename.jgz");
+        $assumeYes = $input->getOption('yes'); 
+        
+        $fileUrl = "http://www.cardgamedb.com/deckbuilders/gameofthrones2ndedition/database/$filename.jgz";
+        $output->writeln("Trying to download the file...");
+        $file = file_get_contents($fileUrl);
         if(!preg_match('/^cards = (.*);$/', $file, $matches)) {
           $output->writeln("<error>Error while parsing js file</error>");
+          return;
         }
+        $output->writeln("File successfully downloaded");
 
         $json = $matches[1];
         $lookup = json_decode($json, TRUE);
+        $output->writeln(count($lookup)." cards found in file");
         
         foreach($lookup as $data) {
           
@@ -74,12 +87,15 @@ class ImportCardsCommand extends ContainerAwareCommand
           	continue;
           }
           
+          /* @var $card \AppBundle\Entity\Card */
           $card = $em->getRepository('AppBundle:Card')->findOneBy(array('name' => $name, 'pack' => $pack));
-          if($card) continue;
+          if($card && $card->getOctgnid()) continue;
           
-          $question = new ConfirmationQuestion("Shall I import the card <comment>$name</comment> from the set <comment>$setname</comment>? (Y/n) ", true);
-          if(!$helper->ask($input, $output, $question)) {
-          	continue;
+          if(!$assumeYes) {
+          	$question = new ConfirmationQuestion("Shall I import the card <comment>$name</comment> from the set <comment>$setname</comment>? (Y/n) ", true);
+          	if(!$helper->ask($input, $output, $question)) {
+          		continue;
+          	}
           }
           
           $faction = null;
@@ -134,7 +150,7 @@ class ImportCardsCommand extends ContainerAwareCommand
           $text = preg_replace("/\n+/", "\n", $text);
           $text = trim($text);
           
-          $card = new Card();
+          if(!$card) $card = new Card();
           $card->setClaim($data['claim'] !== '' ? $data['claim'] : null);
           $card->setCode(sprintf("%02d%03d", $pack->getCycle()->getPosition(), $position));
           $card->setCost($data['cost'] !== '' && $data['cost'] !== 'X' ? $data['cost'] : null);
@@ -170,6 +186,8 @@ class ImportCardsCommand extends ContainerAwareCommand
           $cgdburl = "http://lcg-cdn.fantasyflightgames.com/got2nd/" . $data['img'];
           $image = file_get_contents($cgdburl);
           file_put_contents($outputfile, $image);
+          
+          $output->writeln("Added card ".$card->getName());
         }
         
         $em->flush();

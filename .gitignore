@@ -12,10 +12,10 @@
 tags
 /web/js/
 /web/css/
-/.externalToolBuilders/
-/.settings/
-/.buildpath
-/.project
-/.tags_swap
-/.idea/
+.externalToolBuilders/
+.settings/
+.buildpath
+.project
+.tags_swap
+.idea/
 .DS_Store
