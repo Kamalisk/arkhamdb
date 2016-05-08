@@ -72,6 +72,9 @@ class ImportCardsCommand extends ContainerAwareCommand
           $name = $data['name'];
           $name = str_replace(['“', '”', '’'], ['"', '"', '\''], $name);
           
+          $traits = $data['traits'];
+          $traits = str_replace(['“', '”', '’'], ['"', '"', '\''], $traits);
+          
           $setname = html_entity_decode($data['setname'], ENT_QUOTES);
           $setname = str_replace(['“', '”', '’'], ['"', '"', '\''], $setname);
           
@@ -171,7 +174,7 @@ class ImportCardsCommand extends ContainerAwareCommand
           $card->setReserve($data['reserve'] !== '' ? $data['reserve'] : null);
           $card->setStrength($data['strength'] !== '' ? $data['strength'] : null);
           $card->setText($text);
-          $card->setTraits($data['traits']);
+          $card->setTraits($traits);
           $card->setType($type);
 
           $em->persist($card);
