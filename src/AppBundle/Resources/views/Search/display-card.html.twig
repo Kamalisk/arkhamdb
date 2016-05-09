@@ -17,18 +17,19 @@
 {% for card in cards %}
         	<div class="col-sm-7" style="margin-bottom:2em">
         		<div>
-        			<div class="panel panel-default">
-        				<div class="panel-heading">
+        			<div class="panel panel-default border-{{ card.faction_code }}">
+        				<div class="panel-heading border-{{ card.faction_code }} bg-{{ card.faction_code }}">
         					<h3 class="panel-title">
-        						{% include 'AppBundle:Search:card-name.html.twig' %}
+        						{% include 'AppBundle:Search:card-name-with-link.html.twig' %}
         					</h3>
         	  			</div>
         				<div class="panel-body card-content">
+        					{% include 'AppBundle:Search:card-faction.html.twig' %}
         					{% include 'AppBundle:Search:card-info.html.twig' %}
         					{% include 'AppBundle:Search:card-text.html.twig' %}
         					{% include 'AppBundle:Search:card-flavor.html.twig' %}
         					{% include 'AppBundle:Search:card-illustrator.html.twig' %}
-							{% include 'AppBundle:Search:card-pack-faction.html.twig' %}
+							{% include 'AppBundle:Search:card-pack.html.twig' %}
         				</div>
         			</div>
         		</div>

@@ -15,9 +15,11 @@ format.name = function name(card) {
 }
 
 format.faction = function faction(card) {
-	var text = card.faction_name + '. ';
-	if(card.is_loyal) text += 'Loyal. ';
-	else text += 'Non-loyal. ';
+	var text = '<span class="fg-'+card.faction_code+' icon-'+card.faction_code+'"></span> '+ card.faction_name + '. ';
+	if(card.faction_code != 'neutral') {
+		if(card.is_loyal) text += 'Loyal. ';
+		else text += 'Non-loyal. ';
+	}
 	return text;
 }
 
@@ -33,11 +35,7 @@ format.pack = function pack(card) {
  * @memberOf format
  */
 format.pack_faction = function pack_faction(card) {
-	var text = card.pack_name + ' #' + card.position + '. ';
-	text += card.faction_name + '. ';
-	if(card.is_loyal) text += 'Loyal. ';
-	else text += 'Non-loyal. ';
-	return text;
+	return pack(card) + faction(card);
 }
 
 /**

@@ -319,91 +319,91 @@ div.site-slogan {
 	color: inherit;
 }
 .bg-targaryen {
-	background-color: #1c1c1c;
-	color: white;
+	background-color: #1c1c1c !important;
+	color: white !important;
 }
 .bg-baratheon {
-	background-color: #e3d852;
+	background-color: #e3d852 !important;
 }
 .bg-stark {
-	background-color: #cfcfcf;
+	background-color: #cfcfcf !important;
 }
 .bg-greyjoy {
-	background-color: #1d7a99;
-	color: white;
+	background-color: #1d7a99 !important;
+	color: white !important;
 }
 .bg-lannister {
-	background-color: #c00106;
-	color: white;
+	background-color: #c00106 !important;
+	color: white !important;
 }
 .bg-tyrell {
-	background-color: #509f16;
-	color: white;
+	background-color: #509f16 !important;
+	color: white !important;
 }
 .bg-thenightswatch {
-	background-color: #7a7a7a;
+	background-color: #7a7a7a !important;
 }
 .bg-martell {
-	background-color: #e89521;
+	background-color: #e89521 !important;
 }
 .bg-neutral {
-	background-color: #a99560;
+	background-color: #a99560 !important;
 }
 
 .fg-targaryen {
-	color: #1c1c1c;
+	color: #1c1c1c !important;
 }
 .fg-baratheon {
-	color: #e3d852;
+	color: #e3d852 !important;
 }
 .fg-stark {
-	color: #cfcfcf;
+	color: #cfcfcf !important;
 }
 .fg-greyjoy {
-	color: #1d7a99;
+	color: #1d7a99 !important;
 }
 .fg-lannister {
-	color: #c00106;
+	color: #c00106 !important;
 }
 .fg-tyrell {
-	color: #509f16;
+	color: #509f16 !important;
 }
 .fg-thenightswatch {
-	color: #7a7a7a;
+	color: #7a7a7a !important;
 }
 .fg-martell {
-	color: #e89521;
+	color: #e89521 !important;
 }
 .fg-neutral {
-	color: #a99560;
+	color: #a99560 !important;
 }
 
 .border-targaryen {
-	border-color: #1c1c1c;
+	border-color: #1c1c1c !important;
 }
 .border-baratheon {
-	border-color: #e3d852;
+	border-color: #e3d852 !important;
 }
 .border-stark {
-	border-color: #cfcfcf;
+	border-color: #cfcfcf !important;
 }
 .border-greyjoy {
-	border-color: #1d7a99;
+	border-color: #1d7a99 !important;
 }
 .border-lannister {
-	border-color: #c00106;
+	border-color: #c00106 !important;
 }
 .border-tyrell {
-	border-color: #509f16;
+	border-color: #509f16 !important;
 }
 .border-thenightswatch {
-	border-color: #7a7a7a;
+	border-color: #7a7a7a !important;
 }
 .border-martell {
-	border-color: #e89521;
+	border-color: #e89521 !important;
 }
 .border-neutral {
-	border-color: #a99560;
+	border-color: #a99560 !important;
 }
 
 /**************** REVIEW ON CARD PAGE ******************/
