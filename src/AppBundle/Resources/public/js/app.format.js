@@ -34,13 +34,6 @@ format.pack = function pack(card) {
 /**
  * @memberOf format
  */
-format.pack_faction = function pack_faction(card) {
-	return format.pack(card) + format.faction(card);
-}
-
-/**
- * @memberOf format
- */
 format.info = function info(card) {
 	var text = '<span class="card-type">'+card.type_name+'. </span>';
 	switch(card.type_code) {
