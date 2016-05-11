@@ -35,7 +35,7 @@ format.pack = function pack(card) {
  * @memberOf format
  */
 format.pack_faction = function pack_faction(card) {
-	return pack(card) + faction(card);
+	return format.pack(card) + format.faction(card);
 }
 
 /**
