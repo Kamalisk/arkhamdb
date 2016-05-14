@@ -92,7 +92,7 @@ class ImportCardsCommand extends ContainerAwareCommand
           
           /* @var $card \AppBundle\Entity\Card */
           $card = $em->getRepository('AppBundle:Card')->findOneBy(array('name' => $name, 'pack' => $pack));
-          if($card && $card->getOctgnid()) continue;
+          if($card && $card->getOctgnId()) continue;
           
           if(!$assumeYes) {
           	$question = new ConfirmationQuestion("Shall I import the card <comment>$name</comment> from the set <comment>$setname</comment>? (Y/n) ", true);

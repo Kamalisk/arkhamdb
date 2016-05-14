@@ -4,6 +4,9 @@ namespace AppBundle\Entity;
 
 class Cycle
 {
+	public function toString() {
+		return $this->name;
+	}
 	
     /**
      * @var integer
@@ -26,9 +29,9 @@ class Cycle
     private $position;
 
     /**
-     * @var boolean
+     * @var integer
      */
-    private $isBox;
+    private $size;
 
     /**
      * @var \DateTime
@@ -136,27 +139,27 @@ class Cycle
     }
 
     /**
-     * Set isBox
+     * Set size
      *
-     * @param boolean $isBox
+     * @param integer $size
      *
      * @return Cycle
      */
-    public function setIsBox($isBox)
+    public function setSize($size)
     {
-        $this->isBox = $isBox;
+        $this->size = $size;
 
         return $this;
     }
 
     /**
-     * Get isBox
+     * Get size
      *
-     * @return boolean
+     * @return integer
      */
-    public function getIsBox()
+    public function getSize()
     {
-        return $this->isBox;
+        return $this->size;
     }
 
     /**

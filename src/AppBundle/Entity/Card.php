@@ -4,7 +4,11 @@ namespace AppBundle\Entity;
 
 class Card
 {
-    /**
+    public function toString() {
+		return $this->name;
+	}
+	
+	/**
      * @var integer
      */
     private $id;
@@ -122,7 +126,7 @@ class Card
     /**
      * @var string
      */
-    private $octgnid;
+    private $octgnId;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -149,6 +153,10 @@ class Card
      */
     public function __construct()
     {
+    	$this->isMilitary = false;
+    	$this->isIntrigue = false;
+    	$this->isPower = false;
+    	 
         $this->reviews = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -691,27 +699,27 @@ class Card
     }
 
     /**
-     * Set octgnid
+     * Set octgnId
      *
-     * @param boolean $octgnid
+     * @param boolean $octgnId
      *
      * @return Card
      */
-    public function setOctgnid($octgnid)
+    public function setOctgnId($octgnId)
     {
-        $this->octgnid = $octgnid;
+        $this->octgnId = $octgnId;
 
         return $this;
     }
 
     /**
-     * Get octgnid
+     * Get octgnId
      *
      * @return boolean
      */
-    public function getOctgnid()
+    public function getOctgnId()
     {
-        return $this->octgnid;
+        return $this->octgnId;
     }
 
     /**

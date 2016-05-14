@@ -29,7 +29,7 @@ class CardType extends AbstractType
             ->add('traits')
             ->add('flavor', 'textarea', array('required' => false))
             ->add('illustrator')
-            ->add('octgnid')
+            ->add('octgn_id')
             ->add('is_unique', 'checkbox', array('required' => false))
             ->add('is_loyal', 'checkbox', array('required' => false))
             ->add('is_military', 'checkbox', array('required' => false))

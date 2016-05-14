@@ -28,7 +28,7 @@ class BuilderController extends Controller
 		/* @var $em \Doctrine\ORM\EntityManager */
 		$em = $this->getDoctrine()->getManager();
 
-		$factions = $em->getRepository('AppBundle:Faction')->findBy(["is_primary" => TRUE]);
+		$factions = $em->getRepository('AppBundle:Faction')->findBy(["isPrimary" => TRUE]);
 		$agenda = $em->getRepository('AppBundle:Type')->findOneBy(['code' => 'agenda']);
 		$agendas = $em->getRepository('AppBundle:Card')->findBy(['type' => $agenda]);
 
@@ -199,11 +199,11 @@ class BuilderController extends Controller
 
         $crawler = new Crawler();
         $crawler->addXmlContent($octgn);
-		// read octgnid
+		// read octgnId
         $cardcrawler = $crawler->filter('deck > section > card');
-		$octgnids = [];
+		$octgnIds = [];
 		foreach ($cardcrawler as $domElement) {
-			$octgnids[$domElement->getAttribute('id')] = intval($domElement->getAttribute('qty'));
+			$octgnIds[$domElement->getAttribute('id')] = intval($domElement->getAttribute('qty'));
         }
 		// read desc
 		$desccrawler = $crawler->filter('deck > notes');
@@ -214,16 +214,16 @@ class BuilderController extends Controller
 
         $content = [];
 		$faction = null;
-        foreach ($octgnids as $octgnid => $qty) {
+        foreach ($octgnIds as $octgnId => $qty) {
 			$card = $em->getRepository('AppBundle:Card')->findOneBy(array(
-                    'octgnid' => $octgnid
+                    'octgnId' => $octgnId
             ));
             if ($card) {
                 $content[$card->getCode()] = $qty;
             }
 			else {
 				$faction = $faction ?: $em->getRepository('AppBundle:Faction')->findOneBy(array(
-	                    'octgnid' => $octgnid
+	                    'octgnId' => $octgnId
 	            ));
 			}
         }

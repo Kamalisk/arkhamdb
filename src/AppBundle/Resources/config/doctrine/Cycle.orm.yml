@@ -23,10 +23,9 @@ AppBundle\Entity\Cycle:
         position:
             type: smallint
             nullable: false
-        isBox:
-            type: boolean
+        size:
+            type: smallint
             nullable: false
-            column: is_box
         dateCreation:
             type: datetime
             nullable: false

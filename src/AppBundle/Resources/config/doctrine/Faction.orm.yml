@@ -20,12 +20,14 @@ AppBundle\Entity\Faction:
             type: string
             length: 1024
             nullable: false
-        is_primary:
+        isPrimary:
             type: boolean
             nullable: false
-        octgnid:
+            column: is_primary
+        octgnId:
             type: string
             nullable: true
+            column: octgn_id
     uniqueConstraints:
         faction_code_idx:
             columns: [ code ]

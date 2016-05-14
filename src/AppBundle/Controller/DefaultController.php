@@ -28,7 +28,7 @@ class DefaultController extends Controller
         }
         
         $decklists_by_faction = [];
-        $factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findBy(['is_primary' => true], ['code' => 'ASC']);
+        $factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findBy(['isPrimary' => true], ['code' => 'ASC']);
         
         foreach($factions as $faction) 
         {

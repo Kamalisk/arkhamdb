@@ -60,7 +60,7 @@ class CardsData
 		$lines = [];
 		/* @var $cycle \AppBundle\Entity\Cycle */
 		foreach($list_cycles as $cycle) {
-			if(!$cycle->getIsBox()) {
+			if(!$cycle->getSize() === 1) {
 				$lines[] = array(
 						"label" => $cycle->getName(),
 						"available" => true,
@@ -73,7 +73,7 @@ class CardsData
 				$known = count($pack->getCards());
 				$max = $pack->getSize();
 
-				if($cycle->getIsBox()) {
+				if($cycle->getSize() === 1) {
 					$label = $pack->getName();
 				} else {
 					$label = $pack->getPosition() . '. ' . $pack->getName();
@@ -94,7 +94,7 @@ class CardsData
 
 	public function getPrimaryFactions()
 	{
-		$factions = $this->doctrine->getRepository('AppBundle:Faction')->findBy(array("is_primary" => TRUE), array("code" => "ASC"));
+		$factions = $this->doctrine->getRepository('AppBundle:Faction')->findBy(array("isPrimary" => TRUE), array("code" => "ASC"));
 		return $factions;
 	}
 

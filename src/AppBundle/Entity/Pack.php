@@ -4,6 +4,9 @@ namespace AppBundle\Entity;
 
 class Pack
 {
+	public function toString() {
+		return $this->name;
+	}
 	
     /**
      * @var integer

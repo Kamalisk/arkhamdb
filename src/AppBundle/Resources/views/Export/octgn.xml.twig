@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <deck game="30c200c9-6c98-49a4-a293-106c06295c05" sleeveid="0">
   <section name="Faction" shared="False">
-    <card qty="1" id="{{ deck.faction.octgnid }}">{{ deck.faction.name }}</card>
+    <card qty="1" id="{{ deck.faction.octgnId }}">{{ deck.faction.name }}</card>
   </section>
   <section name="Agenda" shared="False">
 {% if deck.agenda is not null %}
-    <card qty="1" id="{{ deck.agenda.octgnid }}">{{ deck.agenda.name }}</card>
+    <card qty="1" id="{{ deck.agenda.octgnId }}">{{ deck.agenda.name }}</card>
 {% endif %}
   </section>
   <section name="Plots" shared="False">
 {% for slot in deck.slots_by_type.plot %}
-    <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnid }}">{{ slot.card.name }}</card>
+    <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnId }}">{{ slot.card.name }}</card>
 {% endfor %}
   </section>
   <section name="Characters" shared="False">
 {% for slot in deck.slots_by_type.character %}
-    <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnid }}">{{ slot.card.name }}</card>
+    <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnId }}">{{ slot.card.name }}</card>
 {% endfor %}
   </section>
   <section name="Locations" shared="False">
 {% for slot in deck.slots_by_type.location %}
-    <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnid }}">{{ slot.card.name }}</card>
+    <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnId }}">{{ slot.card.name }}</card>
 {% endfor %}
   </section>
   <section name="Attachments" shared="False">
 {% for slot in deck.slots_by_type.attachment %}
-    <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnid }}">{{ slot.card.name }}</card>
+    <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnId }}">{{ slot.card.name }}</card>
 {% endfor %}
   </section>
   <section name="Events" shared="False">
 {% for slot in deck.slots_by_type.event %}
-    <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnid }}">{{ slot.card.name }}</card>
+    <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnId }}">{{ slot.card.name }}</card>
 {% endfor %}
   </section>
 <notes><![CDATA[]]></notes>

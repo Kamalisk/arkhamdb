@@ -18,7 +18,7 @@ class FactionType extends AbstractType
             ->add('code')
             ->add('name')
             ->add('is_primary')
-            ->add('octgnid')
+            ->add('octgn_id')
         ;
     }
     

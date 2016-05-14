@@ -115,9 +115,10 @@ AppBundle\Entity\Card:
             type: boolean
             nullable: false
             column: is_power
-        octgnid:
+        octgnId:
             type: string
             nullable: true
+            column: octgn_id
     uniqueConstraints:
         card_code_idx:
             columns: [ code ]

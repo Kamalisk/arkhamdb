@@ -49,12 +49,12 @@ class ImportGuidsCommand extends ContainerAwareCommand
         	$guids[$name] = $guid;
         }
         
-        $cards = $repo->findBy(['octgnid' => null], ['code' => 'ASC']);
+        $cards = $repo->findBy(['octgnId' => null], ['code' => 'ASC']);
 
         foreach($cards as $card) {
         	$name = $card->getName();
         	if(key_exists($name, $guids)) {
-            	$card->setOctgnid($guids[$name]);
+            	$card->setOctgnId($guids[$name]);
             	unset($guids[$name]);
             	$output->writeln("<info>Updating octgn id for $name</info>");
         	} else {
