@@ -152,6 +152,65 @@ class ImportJsonCommand extends ContainerAwareCommand
 			$this->em->persist($card);
 		}
 	}
+	
+	protected function copyFieldValueToEntity($entity, $entityName, $fieldName, $newJsonValue)
+	{
+		$metadata = $this->em->getClassMetadata($entityName);
+		$type = $metadata->fieldMappings[$fieldName]['type'];
+		
+		// new value, by default what json gave us is the correct typed value
+		$newTypedValue = $newJsonValue;
+		
+		// current value, by default the json, serialized value is the same as what's in the entity
+		$getter = 'get'.ucfirst($fieldName);
+		$currentJsonValue = $currentTypedValue = $entity->$getter();
+
+		// if the field is a data, the default assumptions above are wrong
+		if(in_array($type, ['date', 'datetime'])) {
+			if($newJsonValue !== null) {
+				$newTypedValue = new \DateTime($newJsonValue);				
+			}
+			if($currentTypedValue !== null) {
+				switch($type) {
+					case 'date': {
+						$currentJsonValue = $currentTypedValue->format('Y-m-d');
+						break;
+					}
+					case 'datetime': {
+						$currentJsonValue = $currentTypedValue->format('Y-m-d H:i:s');
+					}
+				}
+			}
+		}
+				
+		$different = ($currentJsonValue !== $newJsonValue);
+		if($different) {
+			$this->output->writeln("Changing the <info>$fieldName</info> of <info>".$entity->toString()."</info> ($currentJsonValue => $newJsonValue)");
+			$setter = 'set'.ucfirst($fieldName);
+			$entity->$setter($newTypedValue);
+		}
+	}
+	
+	protected function copyKeyToEntity($entity, $entityName, $data, $key, $isMandatory = TRUE)
+	{
+		$metadata = $this->em->getClassMetadata($entityName);
+		
+		if(!key_exists($key, $data)) {
+			if($isMandatory) {
+				throw new \Exception("Missing key [$key] in ".json_encode($data));
+			} else {
+				$data[$key] = null;
+			}
+		}
+		$value = $data[$key];
+		
+		if(!key_exists($key, $metadata->fieldNames)) {
+			throw new \Exception("Missing key [$key] in fieldNames of ".$entityName);
+		}
+		$fieldName = $metadata->fieldNames[$key];
+		
+		$this->copyFieldValueToEntity($entity, $entityName, $fieldName, $value);
+	}
 
 	protected function getEntityFromData($entityName, $data, $mandatoryKeys, $foreignKeys, $optionalKeys)
 	{
@@ -164,42 +223,14 @@ class ImportJsonCommand extends ContainerAwareCommand
 			$entity = new $entityName();
 		}
 	
-		$metadata = $this->em->getClassMetadata($entityName);
-
 		foreach($mandatoryKeys as $key) {
-			if(!key_exists($key, $data)) {
-				throw new \Exception("Missing key [$key] in ".json_encode($data));
-			}
-			$value = $data[$key];
-	
-			if(!key_exists($key, $metadata->fieldNames)) {
-				throw new \Exception("Missing key [$key] in fieldNames of ".$entityName);
-			}
-			$fieldName = $metadata->fieldNames[$key];
-			$type = $metadata->fieldMappings[$fieldName]['type'];
-			if($type === 'date' && $value !== null) {
-				$value = new \DateTime($value);
-			}
-			
-			$getter = 'get'.ucfirst($fieldName);
-			$currentValue = $entity->$getter();
-			$different = false;
-			if(is_object($currentValue) && $currentValue !== null && $value !== null) {
-				if($type === 'date') {
-					$different = ($currentValue->format('Y-m-d') !== $value->format('Y-m-d'));
-				} else {
-					$different = ($currentValue->toString() !== $value->toString());
-				}
-			} else {
-				$different = ($currentValue !== $value);
-			}
-			if($different) {
-				$this->output->writeln("Changing the <info>$key</info> of <info> ($currentValue => $value)".$entity->toString()."</info>");
-				$setter = 'set'.ucfirst($fieldName);
-				$entity->$setter($value);
-			}
+			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
 		}
-	
+
+		foreach($optionalKeys as $key) {
+			$this->copyKeyToEntity($entity, $entityName, $data, $key, FALSE);
+		}
+		
 		foreach($foreignKeys as $key) {
 			$foreignEntityShortName = ucfirst(str_replace('_code', '', $key));
 	
@@ -224,26 +255,6 @@ class ImportJsonCommand extends ContainerAwareCommand
 			}
 		}
 	
-		foreach($optionalKeys as $key) {
-			if(!key_exists($key, $data)) {
-				$data[$key] = null;
-			}
-	
-			$value = $data[$key];
-
-			if(!key_exists($key, $metadata->fieldNames)) {
-				throw new \Exception("Missing key [$key] in fieldNames of ".$entityName);
-			}
-			$fieldName = $metadata->fieldNames[$key];
-			
-			$getter = 'get'.ucfirst($fieldName);
-			if($entity->$getter() !== $value) {
-				$this->output->writeln("Changing the <info>$key</info> of <info>".$entity->toString()."</info>");
-				$setter = 'set'.ucfirst($fieldName);
-				$entity->$setter($value);
-			}
-		}
-	
 		// special case for Card
 		if($entityName === 'AppBundle\Entity\Card') {
 			// calling a function whose name depends on the type_code
@@ -259,21 +270,8 @@ class ImportJsonCommand extends ContainerAwareCommand
 		$mandatoryKeys = [
 		];
 		
-		$metadata = $this->em->getClassMetadata($entityName);
 		foreach($mandatoryKeys as $key) {
-			if(!key_exists($key, $data)) {
-				throw new \Exception("Missing key [$key] in ".json_encode($data));
-			}
-				
-			$value = $data[$key];
-				
-			if(!key_exists($key, $metadata->fieldNames)) {
-				throw new \Exception("Missing key [$key] in fieldNames of ".$entityName);
-			}
-			$fieldName = $metadata->fieldNames[$key];
-				
-			$setter = 'set'.ucfirst($fieldName);
-			$card->$setter($value);
+			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
 		}
 	}
 
@@ -283,21 +281,8 @@ class ImportJsonCommand extends ContainerAwareCommand
 				'cost'
 		];
 
-		$metadata = $this->em->getClassMetadata($entityName);
 		foreach($mandatoryKeys as $key) {
-			if(!key_exists($key, $data)) {
-				throw new \Exception("Missing key [$key] in ".json_encode($data));
-			}
-				
-			$value = $data[$key];
-			
-			if(!key_exists($key, $metadata->fieldNames)) {
-				throw new \Exception("Missing key [$key] in fieldNames of ".$entityName);
-			}
-			$fieldName = $metadata->fieldNames[$key];
-			
-			$setter = 'set'.ucfirst($fieldName);
-			$card->$setter($value);
+			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
 		}
 	}
 
@@ -311,21 +296,8 @@ class ImportJsonCommand extends ContainerAwareCommand
 				'is_power'
 		];
 
-		$metadata = $this->em->getClassMetadata($entityName);
 		foreach($mandatoryKeys as $key) {
-			if(!key_exists($key, $data)) {
-				throw new \Exception("Missing key [$key] in ".json_encode($data));
-			}
-			
-			$value = $data[$key];
-
-			if(!key_exists($key, $metadata->fieldNames)) {
-				throw new \Exception("Missing key [$key] in fieldNames of ".$entityName);
-			}
-			$fieldName = $metadata->fieldNames[$key];
-				
-			$setter = 'set'.ucfirst($fieldName);
-			$card->$setter($value);
+			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
 		}
 	}
 
@@ -335,21 +307,8 @@ class ImportJsonCommand extends ContainerAwareCommand
 				'cost'
 		];
 
-		$metadata = $this->em->getClassMetadata($entityName);
 		foreach($mandatoryKeys as $key) {
-			if(!key_exists($key, $data)) {
-				throw new \Exception("Missing key [$key] in ".json_encode($data));
-			}
-				
-			$value = $data[$key];
-
-			if(!key_exists($key, $metadata->fieldNames)) {
-				throw new \Exception("Missing key [$key] in fieldNames of ".$entityName);
-			}
-			$fieldName = $metadata->fieldNames[$key];
-				
-			$setter = 'set'.ucfirst($fieldName);
-			$card->$setter($value);
+			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
 		}
 	}
 
@@ -359,21 +318,8 @@ class ImportJsonCommand extends ContainerAwareCommand
 				'cost'
 		];
 
-		$metadata = $this->em->getClassMetadata($entityName);
 		foreach($mandatoryKeys as $key) {
-			if(!key_exists($key, $data)) {
-				throw new \Exception("Missing key [$key] in ".json_encode($data));
-			}
-				
-			$value = $data[$key];
-				
-			if(!key_exists($key, $metadata->fieldNames)) {
-				throw new \Exception("Missing key [$key] in fieldNames of ".$entityName);
-			}
-			$fieldName = $metadata->fieldNames[$key];
-				
-			$setter = 'set'.ucfirst($fieldName);
-			$card->$setter($value);
+			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
 		}
 	}
 
@@ -385,22 +331,9 @@ class ImportJsonCommand extends ContainerAwareCommand
 				'initiative',
 				'reserve'
 		];
-		
-		$metadata = $this->em->getClassMetadata($entityName);
+
 		foreach($mandatoryKeys as $key) {
-			if(!key_exists($key, $data)) {
-				throw new \Exception("Missing key [$key] in ".json_encode($data));
-			}
-				
-			$value = $data[$key];
-				
-			if(!key_exists($key, $metadata->fieldNames)) {
-				throw new \Exception("Missing key [$key] in fieldNames of ".$entityName);
-			}
-			$fieldName = $metadata->fieldNames[$key];
-				
-			$setter = 'set'.ucfirst($fieldName);
-			$card->$setter($value);
+			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
 		}
 	}
 
@@ -409,21 +342,8 @@ class ImportJsonCommand extends ContainerAwareCommand
 		$mandatoryKeys = [
 		];
 
-		$metadata = $this->em->getClassMetadata($entityName);
 		foreach($mandatoryKeys as $key) {
-			if(!key_exists($key, $data)) {
-				throw new \Exception("Missing key [$key] in ".json_encode($data));
-			}
-				
-			$value = $data[$key];
-				
-			if(!key_exists($key, $metadata->fieldNames)) {
-				throw new \Exception("Missing key [$key] in fieldNames of ".$entityName);
-			}
-			$fieldName = $metadata->fieldNames[$key];
-				
-			$setter = 'set'.ucfirst($fieldName);
-			$card->$setter($value);
+			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
 		}
 	}
 
