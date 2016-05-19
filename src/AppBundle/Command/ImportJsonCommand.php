@@ -271,7 +271,7 @@ class ImportJsonCommand extends ContainerAwareCommand
 		];
 		
 		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
+			$this->copyKeyToEntity($card, $entityName, $data, $key, TRUE);
 		}
 	}
 
@@ -282,7 +282,7 @@ class ImportJsonCommand extends ContainerAwareCommand
 		];
 
 		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
+			$this->copyKeyToEntity($card, $entityName, $data, $key, TRUE);
 		}
 	}
 
@@ -297,7 +297,7 @@ class ImportJsonCommand extends ContainerAwareCommand
 		];
 
 		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
+			$this->copyKeyToEntity($card, $entityName, $data, $key, TRUE);
 		}
 	}
 
@@ -308,7 +308,7 @@ class ImportJsonCommand extends ContainerAwareCommand
 		];
 
 		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
+			$this->copyKeyToEntity($card, $entityName, $data, $key, TRUE);
 		}
 	}
 
@@ -319,7 +319,7 @@ class ImportJsonCommand extends ContainerAwareCommand
 		];
 
 		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
+			$this->copyKeyToEntity($card, $entityName, $data, $key, TRUE);
 		}
 	}
 
@@ -333,7 +333,7 @@ class ImportJsonCommand extends ContainerAwareCommand
 		];
 
 		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
+			$this->copyKeyToEntity($card, $entityName, $data, $key, TRUE);
 		}
 	}
 
@@ -343,7 +343,7 @@ class ImportJsonCommand extends ContainerAwareCommand
 		];
 
 		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
+			$this->copyKeyToEntity($card, $entityName, $data, $key, TRUE);
 		}
 	}
 
