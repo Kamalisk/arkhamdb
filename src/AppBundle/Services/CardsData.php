@@ -60,13 +60,6 @@ class CardsData
 		$lines = [];
 		/* @var $cycle \AppBundle\Entity\Cycle */
 		foreach($list_cycles as $cycle) {
-			if(!$cycle->getSize() === 1) {
-				$lines[] = array(
-						"label" => $cycle->getName(),
-						"available" => true,
-						"url" => $this->router->generate('cards_cycle', array('cycle_code' => $cycle->getCode()), UrlGeneratorInterface::ABSOLUTE_URL),
-				);
-			}
 			$packs = $cycle->getPacks();
 			/* @var $pack \AppBundle\Entity\Pack */
 			foreach($packs as $pack) {
@@ -83,6 +76,7 @@ class CardsData
 				}
 
 				$lines[] = array(
+						"code" => $pack->getCode(),
 						"label" => $label,
 						"available" => $pack->getDateRelease() ? true : false,
 						"url" => $this->router->generate('cards_list', array('pack_code' => $pack->getCode()), UrlGeneratorInterface::ABSOLUTE_URL),

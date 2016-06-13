@@ -69,14 +69,7 @@ class SearchController extends Controller
 
 		$dbh = $this->getDoctrine()->getConnection();
 
-		$list_packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findBy([], array("dateRelease" => "ASC", "position" => "ASC"));
-		$packs = [];
-		foreach($list_packs as $pack) {
-			$packs[] = array(
-					"name" => $pack->getName(),
-					"code" => $pack->getCode(),
-			);
-		}
+		$packs = $this->get('cards_data')->allsetsdata();
 
 		$cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findBy([], array("position" => "ASC"));
 		$types = $this->getDoctrine()->getRepository('AppBundle:Type')->findBy([], array("name" => "ASC"));
