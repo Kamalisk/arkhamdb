@@ -2,9 +2,24 @@
 
 namespace AppBundle\Entity;
 
-class Pack
+class Pack implements \Serializable
 {
-	public function toString() {
+	public function serialize() {
+		return [
+				'code' => $this->code,
+				'cycle_code' => $this->cycle ? $this->cycle->getCode() : null,
+				'date_release' => $this->dateRelease ? $this->dateRelease->format('Y-m-d') : null,
+				'name' => $this->name,
+				'position' => $this->position,
+				'size' => $this->size,
+		];
+	}
+	
+	public function unserialize($serialized) {
+		throw new \Exception("unserialize() method unsupported");
+	}
+	
+    public function toString() {
 		return $this->name;
 	}
 	

@@ -2,10 +2,20 @@
 
 namespace AppBundle\Entity;
 
-class Type
+class Type implements \Serializable
 {
+	public function serialize() {
+		return [
+				'code' => $this->code,
+				'name' => $this->name
+		];
+	}
 	
-    /**
+	public function unserialize($serialized) {
+		throw new \Exception("unserialize() method unsupported");
+	}
+	
+	/**
      * @var integer
      */
     private $id;

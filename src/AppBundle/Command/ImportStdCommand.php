@@ -15,7 +15,7 @@ use AppBundle\Entity\Cycle;
 use AppBundle\Entity\Pack;
 use AppBundle\Entity\Card;
 
-class ImportJsonCommand extends ContainerAwareCommand
+class ImportStdCommand extends ContainerAwareCommand
 {
 	/* @var $em EntityManager */
 	private $em;
@@ -28,7 +28,7 @@ class ImportJsonCommand extends ContainerAwareCommand
 	protected function configure()
 	{
 		$this
-		->setName('app:import:json')
+		->setName('app:import:std')
 		->setDescription('Import cards data file in json format from a copy of https://github.com/Alsciende/thronesdb-json-data')
 		->addArgument(
 				'path',
@@ -47,50 +47,131 @@ class ImportJsonCommand extends ContainerAwareCommand
 
 		/* @var $helper \Symfony\Component\Console\Helper\QuestionHelper */
 		$helper = $this->getHelper('question');
-		
-		$this->loadCollection('Type');
-		$this->loadCollection('Faction');
-		$this->loadCollection('Pack');
-		$this->loadCollection('Cycle');
-		
-		// first, cycles
 
+		// factions
+		
+		$output->writeln("Importing Factions...");
+		$factionsFileInfo = $this->getFileInfo($path, 'factions.json');
+		$imported = $this->importFactionsJsonFile($factionsFileInfo);
+		if(count($imported)) {
+			$question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
+			if(!$helper->ask($input, $output, $question)) {
+				die();
+			}
+		}
+		$this->em->flush();
+		$this->loadCollection('Faction');
+		$output->writeln("Done.");
+		
+		// types
+		
+		$output->writeln("Importing Types...");
+		$typesFileInfo = $this->getFileInfo($path, 'types.json');
+		$imported = $this->importTypesJsonFile($typesFileInfo);
+		if(count($imported)) {
+			$question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
+			if(!$helper->ask($input, $output, $question)) {
+				die();
+			}
+		}
+		$this->em->flush();
+		$this->loadCollection('Type');
+		$output->writeln("Done.");
+		
+		// cycles
+
+		$output->writeln("Importing Cycles...");
 		$cyclesFileInfo = $this->getFileInfo($path, 'cycles.json');
-		$this->importCyclesJsonFile($cyclesFileInfo);
-		$question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
-		if(!$helper->ask($input, $output, $question)) {
-			die();
+		$imported = $this->importCyclesJsonFile($cyclesFileInfo);
+		if(count($imported)) {
+			$question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
+			if(!$helper->ask($input, $output, $question)) {
+				die();
+			}
 		}
 		$this->em->flush();
 		$this->loadCollection('Cycle');
+		$output->writeln("Done.");
 		
 		// second, packs
 
+		$output->writeln("Importing Packs...");
 		$packsFileInfo = $this->getFileInfo($path, 'packs.json');
-		$this->importPacksJsonFile($packsFileInfo);
+		$imported = $this->importPacksJsonFile($packsFileInfo);
 		$question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
-		if(!$helper->ask($input, $output, $question)) {
-			die();
+		if(count($imported)) {
+			$question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
+			if(!$helper->ask($input, $output, $question)) {
+				die();
+			}
 		}
 		$this->em->flush();
-				$this->loadCollection('Pack');
-		
+		$this->loadCollection('Pack');
+		$output->writeln("Done.");
+				
 		// third, cards
 		
+		$output->writeln("Importing Cards...");
 		$fileSystemIterator = $this->getFileSystemIterator($path);
-		
+		$imported = [];
 		foreach ($fileSystemIterator as $fileinfo) {
-			$this->importCardsJsonFile($fileinfo);
+			$imported = array_merge($imported, $this->importCardsJsonFile($fileinfo));
 		}
-		$question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
-		if(!$helper->ask($input, $output, $question)) {
-			die();
+		if(count($imported)) {
+			$question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
+			if(!$helper->ask($input, $output, $question)) {
+				die();
+			}
 		}
 		$this->em->flush();
+		$output->writeln("Done.");
+		
 	}
 
+	protected function importFactionsJsonFile(\SplFileInfo $fileinfo)
+	{
+		$result = [];
+	
+		$list = $this->getDataFromFile($fileinfo);
+		foreach($list as $data)
+		{
+			$faction = $this->getEntityFromData('AppBundle\\Entity\\Faction', $data, [
+					'code',
+					'name'
+			], [], []);
+			if($faction) {
+				$result[] = $faction;
+				$this->em->persist($faction);
+			}
+		}
+	
+		return $result;
+	}
+	
+	protected function importTypesJsonFile(\SplFileInfo $fileinfo)
+	{
+		$result = [];
+	
+		$list = $this->getDataFromFile($fileinfo);
+		foreach($list as $data)
+		{
+			$type = $this->getEntityFromData('AppBundle\\Entity\\Type', $data, [
+					'code',
+					'name'
+			], [], []);
+			if($type) {
+				$result[] = $type;
+				$this->em->persist($type);
+			}
+		}
+	
+		return $result;
+	}
+	
 	protected function importCyclesJsonFile(\SplFileInfo $fileinfo)
 	{
+		$result = [];
+	
 		$cyclesData = $this->getDataFromFile($fileinfo);
 		foreach($cyclesData as $cycleData) {
 			$cycle = $this->getEntityFromData('AppBundle\Entity\Cycle', $cycleData, [
@@ -99,12 +180,19 @@ class ImportJsonCommand extends ContainerAwareCommand
 					'position', 
 					'size'
 			], [], []);
-			$this->em->persist($cycle);
+			if($cycle) {
+				$result[] = $cycle;
+				$this->em->persist($cycle);
+			}
 		}
+		
+		return $result;
 	}
 
 	protected function importPacksJsonFile(\SplFileInfo $fileinfo)
 	{
+		$result = [];
+	
 		$packsData = $this->getDataFromFile($fileinfo);
 		foreach($packsData as $packData) {
 			$pack = $this->getEntityFromData('AppBundle\Entity\Pack', $packData, [
@@ -116,12 +204,19 @@ class ImportJsonCommand extends ContainerAwareCommand
 			], [
 					'cycle_code'
 			], []);
-			$this->em->persist($pack);
+			if($pack) {
+				$result[] = $pack;
+				$this->em->persist($pack);
+			}
 		}
+		
+		return $result;
 	}
 	
 	protected function importCardsJsonFile(\SplFileInfo $fileinfo)
 	{
+		$result = [];
+	
 		$code = $fileinfo->getBasename('.json');
 		
 		$pack = $this->em->getRepository('AppBundle:Pack')->findOneBy(['code' => $code]);
@@ -149,8 +244,13 @@ class ImportJsonCommand extends ContainerAwareCommand
 					'cost',
 					'octgn_id'
 			]);
-			$this->em->persist($card);
+			if($card) {
+				$result[] = $card;
+				$this->em->persist($card);
+			}
 		}
+		
+		return $result;
 	}
 	
 	protected function copyFieldValueToEntity($entity, $entityName, $fieldName, $newJsonValue)
@@ -182,7 +282,7 @@ class ImportJsonCommand extends ContainerAwareCommand
 				}
 			}
 		}
-				
+		
 		$different = ($currentJsonValue !== $newJsonValue);
 		if($different) {
 			$this->output->writeln("Changing the <info>$fieldName</info> of <info>".$entity->toString()."</info> ($currentJsonValue => $newJsonValue)");
@@ -205,7 +305,7 @@ class ImportJsonCommand extends ContainerAwareCommand
 		$value = $data[$key];
 		
 		if(!key_exists($key, $metadata->fieldNames)) {
-			throw new \Exception("Missing key [$key] in fieldNames of ".$entityName);
+			throw new \Exception("Missing column [$key] in entity ".$entityName);
 		}
 		$fieldName = $metadata->fieldNames[$key];
 		
@@ -222,6 +322,7 @@ class ImportJsonCommand extends ContainerAwareCommand
 		if(!$entity) {
 			$entity = new $entityName();
 		}
+		$orig = $entity->serialize();
 	
 		foreach($mandatoryKeys as $key) {
 			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
@@ -259,34 +360,34 @@ class ImportJsonCommand extends ContainerAwareCommand
 		if($entityName === 'AppBundle\Entity\Card') {
 			// calling a function whose name depends on the type_code
 			$functionName = 'import' . $entity->getType()->getName() . 'Data';
-			$this->$functionName($entity, $data, $entityName);
+			$this->$functionName($entity, $data);
 		}
 	
-		return $entity;
+		if($entity->serialize() !== $orig) return $entity;
 	}
 	
-	protected function importAgendaData(Card $card, $data, $entityName)
+	protected function importAgendaData(Card $card, $data)
 	{
 		$mandatoryKeys = [
 		];
 		
 		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($card, $entityName, $data, $key, TRUE);
+			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
 		}
 	}
 
-	protected function importAttachmentData(Card $card, $data, $entityName)
+	protected function importAttachmentData(Card $card, $data)
 	{
 		$mandatoryKeys = [
 				'cost'
 		];
 
 		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($card, $entityName, $data, $key, TRUE);
+			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
 		}
 	}
 
-	protected function importCharacterData(Card $card, $data, $entityName)
+	protected function importCharacterData(Card $card, $data)
 	{
 		$mandatoryKeys = [
 				'cost',
@@ -297,33 +398,33 @@ class ImportJsonCommand extends ContainerAwareCommand
 		];
 
 		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($card, $entityName, $data, $key, TRUE);
+			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
 		}
 	}
 
-	protected function importEventData(Card $card, $data, $entityName)
+	protected function importEventData(Card $card, $data)
 	{
 		$mandatoryKeys = [
 				'cost'
 		];
 
 		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($card, $entityName, $data, $key, TRUE);
+			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
 		}
 	}
 
-	protected function importLocationData(Card $card, $data, $entityName)
+	protected function importLocationData(Card $card, $data)
 	{
 		$mandatoryKeys = [
 				'cost'
 		];
 
 		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($card, $entityName, $data, $key, TRUE);
+			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
 		}
 	}
 
-	protected function importPlotData(Card $card, $data, $entityName)
+	protected function importPlotData(Card $card, $data)
 	{
 		$mandatoryKeys = [
 				'claim',
@@ -333,17 +434,17 @@ class ImportJsonCommand extends ContainerAwareCommand
 		];
 
 		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($card, $entityName, $data, $key, TRUE);
+			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
 		}
 	}
 
-	protected function importTitleData(Card $card, $data, $entityName)
+	protected function importTitleData(Card $card, $data)
 	{
 		$mandatoryKeys = [
 		];
 
 		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($card, $entityName, $data, $key, TRUE);
+			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
 		}
 	}
 

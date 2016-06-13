@@ -2,8 +2,90 @@
 
 namespace AppBundle\Entity;
 
-class Card
+class Card implements \Serializable
 {
+	private function snakeToCamel($snake) {
+		$parts = explode('_', $snake);
+		return implode('', array_map('ucfirst', $parts));
+	}
+	
+	public function serialize() {
+		$serialized = [];
+		if(empty($this->code)) return $serialized;
+	
+		$mandatoryFields = [
+				'code',
+				'deck_limit',
+				'position',
+				'quantity',
+				'name',
+				'is_loyal',
+				'is_unique'
+		];
+	
+		$optionalFields = [
+				'illustrator',
+				'flavor',
+				'traits',
+				'text',
+				'cost',
+				'octgn_id'
+		];
+	
+		$externalFields = [
+				'faction',
+				'pack',
+				'type'
+		];
+	
+		switch($this->type->getCode()) {
+			case 'agenda':
+			case 'title':
+				break;
+			case 'attachment':
+			case 'event':
+			case 'location':
+				$mandatoryFields[] = 'cost';
+				break;
+			case 'character':
+				$mandatoryFields[] = 'cost';
+				$mandatoryFields[] = 'strength';
+				$mandatoryFields[] = 'is_military';
+				$mandatoryFields[] = 'is_intrigue';
+				$mandatoryFields[] = 'is_power';
+				break;
+			case 'plot':
+				$mandatoryFields[] = 'claim';
+				$mandatoryFields[] = 'income';
+				$mandatoryFields[] = 'initiative';
+				$mandatoryFields[] = 'reserve';
+				break;
+		}
+	
+		foreach($optionalFields as $optionalField) {
+			$getter = 'get' . $this->snakeToCamel($optionalField);
+			$serialized[$optionalField] = $this->$getter();
+			if(!isset($serialized[$optionalField]) || $serialized[$optionalField] === '') unset($serialized[$optionalField]);
+		}
+	
+		foreach($mandatoryFields as $mandatoryField) {
+			$getter = 'get' . $this->snakeToCamel($mandatoryField);
+			$serialized[$mandatoryField] = $this->$getter();
+		}
+	
+		foreach($externalFields as $externalField) {
+			$getter = 'get' . $this->snakeToCamel($externalField);
+			$serialized[$externalField.'_code'] = $this->$getter()->getCode();
+		}
+	
+		ksort($serialized);
+		return $serialized;
+	}
+
+	public function unserialize($serialized) {
+		throw new \Exception("unserialize() method unsupported");
+	}
+	
     public function toString() {
 		return $this->name;
 	}

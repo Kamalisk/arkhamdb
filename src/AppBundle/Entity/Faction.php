@@ -2,9 +2,21 @@
 
 namespace AppBundle\Entity;
 
-class Faction
+class Faction implements \Serializable
 {
-
+	public function serialize() {
+		return [
+				'code' => $this->code,
+				'name' => $this->name,
+				'is_primary' => $this->isPrimary,
+				'octgn_id' => $this->octgnId
+		];
+	}
+	
+	public function unserialize($serialized) {
+		throw new \Exception("unserialize() method unsupported");
+	}
+	
     /**
      * @var integer
      */

@@ -2,8 +2,21 @@
 
 namespace AppBundle\Entity;
 
-class Cycle
+class Cycle implements \Serializable
 {
+	public function serialize() {
+		return [
+				'code' => $this->code,
+				'name' => $this->name,
+				'position' => $this->position,
+				'size' => $this->size
+		];
+	}
+	
+	public function unserialize($serialized) {
+		throw new \Exception("unserialize() method unsupported");
+	}
+	
 	public function toString() {
 		return $this->name;
 	}

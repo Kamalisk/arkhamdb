@@ -1,15 +1,7 @@
-<<<<<<< Updated upstream
 <?xml version="1.0" encoding="UTF-8"?>
 <buildpath>
-	<buildpathentry excluding="app/|bin/|web/|vendor/|src/" kind="src" path=""/>
+	<buildpathentry excluding="web/|vendor/|src/|bin/|app/" kind="src" path=""/>
 	<buildpathentry kind="src" path="vendor"/>
 	<buildpathentry kind="src" path="src"/>
 	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
 </buildpath>
-=======
-<?xml version="1.0" encoding="UTF-8"?>
-<buildpath>
-	<buildpathentry excluding="app/|.externalToolBuilders/|.settings/|bin/|web/" kind="src" path=""/>
-	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
-</buildpath>
->>>>>>> Stashed changes
