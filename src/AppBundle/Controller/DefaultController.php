@@ -86,8 +86,8 @@ class DefaultController extends Controller
     	$response->setPublic();
     	$response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-    	$page = $this->get('cards_data')->replaceSymbols($this->renderView('AppBundle:Default:rules.html.twig',
-    			array("pagetitle" => "Rules", "pagedescription" => "Refer to the official rules of the game.")));
+    	$page = $this->renderView('AppBundle:Default:rulesreference.html.twig',
+    			array("pagetitle" => "Rules", "pagedescription" => "Rules Reference"));
     	$response->setContent($page);
     	return $response;
     }

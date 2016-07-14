@@ -60,6 +60,7 @@
             {#
             <li class="hidden-sm"><a href="{{ path('card_reviews_list') }}">Reviews</a></li>
             #}
+            <li><a href="{{ path('rules') }}">Rules</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown hidden-xs hidden-lg">
@@ -165,6 +166,7 @@
 	{% javascripts filter="?jsqueeze" output="js/app.js"
 		'@AppBundle/Resources/public/js/bootstrap.js'
 		'@AppBundle/Resources/public/js/fdb-all.min.js'
+		'@AppBundle/Resources/public/js/jquery.toc.min.js'
 		'@AppBundle/Resources/public/js/app.data.js'
 		'@AppBundle/Resources/public/js/app.format.js'
 		'@AppBundle/Resources/public/js/app.tip.js'
