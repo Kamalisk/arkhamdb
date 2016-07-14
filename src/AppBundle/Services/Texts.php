@@ -3,8 +3,6 @@
 
 namespace AppBundle\Services;
 
-use Doctrine\ORM\EntityManager;
-
 class Texts
 {
 	public function __construct($root_dir)

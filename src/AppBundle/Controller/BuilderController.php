@@ -12,9 +12,6 @@ use AppBundle\Entity\Card;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Deckchange;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class BuilderController extends Controller
 {

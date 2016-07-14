@@ -4,10 +4,7 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use AppBundle\Entity\Deck;
-use AppBundle\Entity\Deckslot;
 use AppBundle\Entity\Decklist;
-use AppBundle\Entity\Decklistslot;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\Criteria;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;

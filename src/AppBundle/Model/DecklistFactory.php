@@ -4,11 +4,9 @@ namespace AppBundle\Model;
 
 use AppBundle\Entity\Decklist;
 use AppBundle\Entity\Deck;
-use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Helper\DeckValidationHelper;
 use AppBundle\Services\Texts;
-use AppBundle\Entity\Tournament;
 use AppBundle\Entity\Decklistslot;
 
 class DecklistFactory

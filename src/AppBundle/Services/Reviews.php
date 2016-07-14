@@ -4,7 +4,6 @@
 namespace AppBundle\Services;
 
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\HttpFoundation\Request;
 
 class Reviews
 {

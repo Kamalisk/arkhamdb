@@ -5,13 +5,11 @@ namespace AppBundle\Model;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Router;
-use AppBundle\Services\DeckInterface;
 use Psr\Log\LoggerInterface;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Pack;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Doctrine\ORM\QueryBuilder;
 use AppBundle\Entity\Faction;
 use Doctrine\Common\Collections\ArrayCollection;
 
