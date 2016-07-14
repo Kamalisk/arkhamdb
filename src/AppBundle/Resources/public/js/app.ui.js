@@ -27,8 +27,6 @@ ui.insert_alert_message = function ui_insert_alert_message(type, message) {
 }
 
 $(document).ready(function () {
-	console.log('ui.on_dom_loaded');
-
 	$('[data-toggle="tooltip"]').tooltip();
 	$('time').each(function (index, element) {
 		var datetime = moment($(element).attr('datetime'));
@@ -39,12 +37,10 @@ $(document).ready(function () {
 	dom_loaded.resolve();
 });
 $(document).on('data.app', function () {
-	console.log('ui.on_data_loaded');
 	if(typeof ui.on_data_loaded === 'function') ui.on_data_loaded();
 	data_loaded.resolve();
 });
 $(document).on('start.app', function () {
-	console.log('ui.on_all_loaded');
 	if(typeof ui.on_all_loaded === 'function') ui.on_all_loaded();
 	$('abbr').each(function (index, element) {
 		var title;
