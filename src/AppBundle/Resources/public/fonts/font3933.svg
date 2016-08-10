@@ -1,0 +1,30 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+<metadata>
+Created by FontForge 20160407 at Tue Aug  9 19:51:59 2016
+ By Jimmy Wärting
+</metadata>
+<defs>
+<font id="font3933" horiz-adv-x="1024" >
+  <font-face 
+    font-family="Your Icons"
+    font-weight="400"
+    font-stretch="normal"
+    units-per-em="1024"
+    panose-1="2 0 5 9 0 0 0 0 0 0"
+    ascent="819"
+    descent="-205"
+    bbox="0 -28.035 1000 1024"
+    underline-thickness="0"
+    underline-position="0"
+    unicode-range="U+0073-0073"
+  />
+<missing-glyph 
+d="M0 0h1000v1024h-1000v-1024z" />
+    <glyph glyph-name=".notdef" 
+d="M0 0h1000v1024h-1000v-1024z" />
+    <glyph glyph-name="s" unicode="s" 
+d="M772.708 -28.035l-260.629 137.965l-261.407 -136.486l50.6736 290.507l-210.585 206.436l291.947 41.578l131.258 264.07l129.76 -264.81l291.707 -43.2318l-211.751 -205.24z" />
+  </font>
+</defs></svg>

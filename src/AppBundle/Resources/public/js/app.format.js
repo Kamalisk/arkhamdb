@@ -16,10 +16,6 @@ format.name = function name(card) {
 
 format.faction = function faction(card) {
 	var text = '<span class="fg-'+card.faction_code+' icon-'+card.faction_code+'"></span> '+ card.faction_name + '. ';
-	if(card.faction_code != 'neutral') {
-		if(card.is_loyal) text += 'Loyal. ';
-		else text += 'Non-loyal. ';
-	}
 	return text;
 }
 
@@ -40,21 +36,12 @@ format.info = function info(card) {
 	case 'character':
 		text += 'Cost: '+(card.cost != null ? card.cost : 'X')+'. ';
 		text += 'STR: '+(card.strength != null ? card.strength : 'X')+'. '
-		if(card.is_military) text += '<span class="color-military icon-military" title="Military"></span> ';
-		if(card.is_intrigue) text += '<span class="color-intrigue icon-intrigue" title="Intrigue"></span> ';
-		if(card.is_power) text += '<span class="color-power icon-power" title="Power"></span> ';
-		break;
-	case 'attachment':
-	case 'location':
+		break;	
+	case 'asset':
 	case 'event':
 		text += 'Cost: '+(card.cost != null ? card.cost : 'X')+'. ';
 		break;
-	case 'plot':
-		text += 'Gold: '+card.income+'. ';
-		text += 'Initiative: '+card.initiative+'. ';
-		text += 'Claim: '+card.claim+'. ';
-		text += 'Reserve: '+card.reserve+'. ';
-		text += 'Plot deck limit: '+card.deck_limit+'. ';
+	case 'skill':
 		break;
 	}
 	return text;

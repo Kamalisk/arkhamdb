@@ -9,11 +9,11 @@ AppBundle\Entity\Decklist:
             joinColumn:
                 name: user_id
                 referencedColumnName: id
-        faction:
-            targetEntity: Faction
+        character:
+            targetEntity: Card
             nullable: false
             joinColumn:
-                name: faction_id
+                name: card_id
                 referencedColumnName: id
         lastPack:
             targetEntity: Pack

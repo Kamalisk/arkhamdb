@@ -19,7 +19,6 @@ class Card implements \Serializable
 				'position',
 				'quantity',
 				'name',
-				'is_loyal',
 				'is_unique'
 		];
 	
@@ -39,26 +38,19 @@ class Card implements \Serializable
 		];
 	
 		switch($this->type->getCode()) {
-			case 'agenda':
-			case 'title':
-				break;
-			case 'attachment':
-			case 'event':
-			case 'location':
+			case 'asset':
 				$mandatoryFields[] = 'cost';
+				break;
+			case 'event':
+				$mandatoryFields[] = 'cost';
+				break;
+			case 'skill':
 				break;
 			case 'character':
-				$mandatoryFields[] = 'cost';
+				$mandatoryFields[] = 'will';
+				$mandatoryFields[] = 'lore';
 				$mandatoryFields[] = 'strength';
-				$mandatoryFields[] = 'is_military';
-				$mandatoryFields[] = 'is_intrigue';
-				$mandatoryFields[] = 'is_power';
-				break;
-			case 'plot':
-				$mandatoryFields[] = 'claim';
-				$mandatoryFields[] = 'income';
-				$mandatoryFields[] = 'initiative';
-				$mandatoryFields[] = 'reserve';
+				$mandatoryFields[] = 'agility';
 				break;
 		}
 	
@@ -111,6 +103,11 @@ class Card implements \Serializable
     private $name;
 
     /**
+     * @var string
+     */
+    private $subname;
+
+    /**
      * @var integer
      */
     private $cost;
@@ -138,32 +135,48 @@ class Card implements \Serializable
     /**
      * @var integer
      */
-    private $income;
+    private $will;
 
     /**
      * @var integer
      */
-    private $initiative;
-
-    /**
-     * @var integer
-     */
-    private $claim;
-
-    /**
-     * @var integer
-     */
-    private $reserve;
-
-    /**
-     * @var integer
-     */
-    private $deckLimit;
+    private $lore;
 
     /**
      * @var integer
      */
     private $strength;
+
+    /**
+     * @var integer
+     */
+    private $agility;
+
+    /**
+     * @var integer
+     */
+    private $wild;
+
+    /**
+     * @var integer
+     */
+    private $xp;
+
+    /**
+     * @var integer
+     */
+    private $health;
+
+    /**
+     * @var integer
+     */
+    private $sanity;
+    
+
+    /**
+     * @var integer
+     */
+    private $deckLimit;
 
     /**
      * @var string
@@ -184,26 +197,6 @@ class Card implements \Serializable
      * @var boolean
      */
     private $isUnique;
-
-    /**
-     * @var boolean
-     */
-    private $isLoyal;
-
-    /**
-     * @var boolean
-     */
-    private $isMilitary;
-
-    /**
-     * @var boolean
-     */
-    private $isIntrigue;
-
-    /**
-     * @var boolean
-     */
-    private $isPower;
 
     /**
      * @var string
@@ -231,16 +224,17 @@ class Card implements \Serializable
     private $faction;
 
     /**
+     * @var \AppBundle\Entity\Card
+     */
+    private $upgrade;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-    	$this->isMilitary = false;
-    	$this->isIntrigue = false;
-    	$this->isPower = false;
-    	 
-        $this->reviews = new \Doctrine\Common\Collections\ArrayCollection();
-    }
+      $this->reviews = new \Doctrine\Common\Collections\ArrayCollection();
+  	}
 
     /**
      * Get id
@@ -322,6 +316,31 @@ class Card implements \Serializable
     public function getName()
     {
         return $this->name;
+    }
+    
+    
+        /**
+     * Set subname
+     *
+     * @param string $subname
+     *
+     * @return Card
+     */
+    public function setSubname($subname)
+    {
+        $this->subname = $subname;
+
+        return $this;
+    }
+
+    /**
+     * Get subname
+     *
+     * @return string
+     */
+    public function getSubname()
+    {
+        return $this->subname;
     }
 
     /**
@@ -445,99 +464,51 @@ class Card implements \Serializable
     }
 
     /**
-     * Set income
+     * Set health
      *
-     * @param integer $income
+     * @param integer $health
      *
      * @return Card
      */
-    public function setIncome($income)
+    public function setHealth($health)
     {
-        $this->income = $income;
+        $this->health = $health;
 
         return $this;
     }
 
     /**
-     * Get income
+     * Get health
      *
      * @return integer
      */
-    public function getIncome()
+    public function getHealth()
     {
-        return $this->income;
+        return $this->health;
     }
 
     /**
-     * Set initiative
+     * Set sanity
      *
-     * @param integer $initiative
+     * @param integer $sanity
      *
      * @return Card
      */
-    public function setInitiative($initiative)
+    public function setSanity($sanity)
     {
-        $this->initiative = $initiative;
+        $this->sanity = $sanity;
 
         return $this;
     }
 
     /**
-     * Get initiative
+     * Get sanity
      *
      * @return integer
      */
-    public function getInitiative()
+    public function getSanity()
     {
-        return $this->initiative;
-    }
-
-    /**
-     * Set claim
-     *
-     * @param integer $claim
-     *
-     * @return Card
-     */
-    public function setClaim($claim)
-    {
-        $this->claim = $claim;
-
-        return $this;
-    }
-
-    /**
-     * Get claim
-     *
-     * @return integer
-     */
-    public function getClaim()
-    {
-        return $this->claim;
-    }
-
-    /**
-     * Set reserve
-     *
-     * @param integer $reserve
-     *
-     * @return Card
-     */
-    public function setReserve($reserve)
-    {
-        $this->reserve = $reserve;
-
-        return $this;
-    }
-
-    /**
-     * Get reserve
-     *
-     * @return integer
-     */
-    public function getReserve()
-    {
-        return $this->reserve;
+        return $this->sanity;
     }
 
     /**
@@ -565,6 +536,55 @@ class Card implements \Serializable
     }
 
     /**
+     * Set will
+     *
+     * @param integer $will
+     *
+     * @return Card
+     */
+    public function setWill($will)
+    {
+        $this->will = $will;
+
+        return $this;
+    }
+
+    /**
+     * Get will
+     *
+     * @return integer
+     */
+    public function getWill()
+    {
+        return $this->will;
+    }
+    
+        /**
+     * Set lore
+     *
+     * @param integer $lore
+     *
+     * @return Card
+     */
+    public function setLore($lore)
+    {
+        $this->lore = $lore;
+
+        return $this;
+    }
+
+    /**
+     * Get lore
+     *
+     * @return integer
+     */
+    public function getLore()
+    {
+        return $this->lore;
+    }
+    
+    
+        /**
      * Set strength
      *
      * @param integer $strength
@@ -586,6 +606,79 @@ class Card implements \Serializable
     public function getStrength()
     {
         return $this->strength;
+    }
+    
+    
+        /**
+     * Set agility
+     *
+     * @param integer $agility
+     *
+     * @return Card
+     */
+    public function setAgility($agility)
+    {
+        $this->agility = $agility;
+
+        return $this;
+    }
+
+    /**
+     * Get agility
+     *
+     * @return integer
+     */
+    public function getAgility()
+    {
+        return $this->agility;
+    }
+    
+        /**
+     * Set wild
+     *
+     * @param integer $wild
+     *
+     * @return Card
+     */
+    public function setWild($wild)
+    {
+        $this->wild = $wild;
+
+        return $this;
+    }
+
+    /**
+     * Get wild
+     *
+     * @return integer
+     */
+    public function getWild()
+    {
+        return $this->wild;
+    }
+
+    /**
+     * Set xp
+     *
+     * @param integer $xp
+     *
+     * @return Card
+     */
+    public function setXp($xp)
+    {
+        $this->xp = $xp;
+
+        return $this;
+    }
+
+    /**
+     * Get xp
+     *
+     * @return integer
+     */
+    public function getXp()
+    {
+        return $this->xp;
     }
 
     /**
@@ -684,101 +777,7 @@ class Card implements \Serializable
         return $this->isUnique;
     }
 
-    /**
-     * Set isLoyal
-     *
-     * @param boolean $isLoyal
-     *
-     * @return Card
-     */
-    public function setIsLoyal($isLoyal)
-    {
-        $this->isLoyal = $isLoyal;
 
-        return $this;
-    }
-
-    /**
-     * Get isLoyal
-     *
-     * @return boolean
-     */
-    public function getIsLoyal()
-    {
-        return $this->isLoyal;
-    }
-
-    /**
-     * Set isMilitary
-     *
-     * @param boolean $isMilitary
-     *
-     * @return Card
-     */
-    public function setIsMilitary($isMilitary)
-    {
-        $this->isMilitary = $isMilitary;
-
-        return $this;
-    }
-
-    /**
-     * Get isMilitary
-     *
-     * @return boolean
-     */
-    public function getIsMilitary()
-    {
-        return $this->isMilitary;
-    }
-
-    /**
-     * Set isIntrigue
-     *
-     * @param boolean $isIntrigue
-     *
-     * @return Card
-     */
-    public function setIsIntrigue($isIntrigue)
-    {
-        $this->isIntrigue = $isIntrigue;
-
-        return $this;
-    }
-
-    /**
-     * Get isIntrigue
-     *
-     * @return boolean
-     */
-    public function getIsIntrigue()
-    {
-        return $this->isIntrigue;
-    }
-
-    /**
-     * Set isPower
-     *
-     * @param boolean $isPower
-     *
-     * @return Card
-     */
-    public function setIsPower($isPower)
-    {
-        $this->isPower = $isPower;
-
-        return $this;
-    }
-
-    /**
-     * Get isPower
-     *
-     * @return boolean
-     */
-    public function getIsPower()
-    {
-        return $this->isPower;
-    }
 
     /**
      * Set octgnId
@@ -909,4 +908,29 @@ class Card implements \Serializable
     {
         return $this->faction;
     }
+    
+        /**
+     * set Upgrade
+     *
+     * @param \AppBundle\Entity\Card $card
+     *
+     * @return Card
+     */
+    public function setUpgrade(\AppBundle\Entity\Card $upgrade = null)
+    {
+        $this->upgrade = $upgrade;
+
+        return $this;
+    }
+
+    /**
+     * Get faction
+     *
+     * @return \AppBundle\Entity\Faction
+     */
+    public function getUpgrade()
+    {
+        return $this->upgrade;
+    }
+    
 }

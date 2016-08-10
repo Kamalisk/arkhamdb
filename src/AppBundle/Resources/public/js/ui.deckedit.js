@@ -92,7 +92,7 @@ ui.build_faction_selector = function build_faction_selector() {
 		var example = app.data.cards.find({"faction_code": faction_code})[0];
 		var label = $('<label class="btn btn-default btn-sm" data-code="'
 				+ faction_code + '" title="'+example.faction_name+'"><input type="checkbox" name="' + faction_code
-				+ '"><span class="icon-' + faction_code + '"></span></label>');
+				+ '">' + example.faction_name + '<span class="icon-' + faction_code + '"></span></label>');
 		label.tooltip({container: 'body'});
 		$('[data-filter=faction_code]').append(label);
 	});
@@ -104,8 +104,9 @@ ui.build_faction_selector = function build_faction_selector() {
  * @memberOf ui
  */
 ui.build_type_selector = function build_type_selector() {
+	return false;
 	$('[data-filter=type_code]').empty();
-	['agenda','plot','character','attachment','location','event'].forEach(function(type_code) {
+	['asset','event','skill'].forEach(function(type_code) {
 		var example = app.data.cards.find({"type_code": type_code})[0];
 		var label = $('<label class="btn btn-default btn-sm" data-code="'
 				+ type_code + '" title="'+example.type_name+'"><input type="checkbox" name="' + type_code
@@ -115,6 +116,7 @@ ui.build_type_selector = function build_type_selector() {
 	});
 	$('[data-filter=type_code]').button();
 }
+
 
 /**
  * builds the pack selector
@@ -151,16 +153,16 @@ ui.build_pack_selector = function build_pack_selector() {
 	});
 }
 
+
 /**
  * @memberOf ui
  */
 ui.init_selectors = function init_selectors() {
 	$('[data-filter=faction_code]').find('input[name=neutral]').prop("checked", true).parent().addClass('active');
-	$('[data-filter=faction_code]').find('input[name='+app.deck.get_faction_code()+']').prop("checked", true).parent().addClass('active');
-	var minor_faction_code = app.deck.get_minor_faction_code();
-	if(minor_faction_code) $('[data-filter=faction_code]').find('input[name='+minor_faction_code+']').prop("checked", true).parent().addClass('active');
-
-	$('[data-filter=type_code]').find('input[name=character]').prop("checked", true).parent().addClass('active');
+	//$('[data-filter=faction_code]').find('input[name='+app.deck.get_faction_code()+']').prop("checked", true).parent().addClass('active');
+	//var minor_faction_code = app.deck.get_minor_faction_code();
+	//if(minor_faction_code) $('[data-filter=faction_code]').find('input[name='+minor_faction_code+']').prop("checked", true).parent().addClass('active');
+	//$('[data-filter=type_code]').find('input[name=character]').prop("checked", true).parent().addClass('active');
 }
 
 function uncheck_all_others() {

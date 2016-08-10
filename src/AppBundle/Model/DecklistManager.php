@@ -65,7 +65,8 @@ class DecklistManager
 		$qb->select('d');
 		$qb->from('AppBundle:Decklist', 'd');
 		if($this->faction) {
-			$qb->where('d.faction = :faction');
+			$qb->join('d.character', 'c');
+			$qb->where('c.faction = :faction');
 			$qb->setParameter('faction', $this->faction);
 		}
 		$qb->setFirstResult($this->start);

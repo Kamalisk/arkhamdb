@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'thronesdb';
-	src:url('../fonts/thronesdb.eot?irjt2b');
-	src:url('../fonts/thronesdb.eot?#iefixirjt2b') format('embedded-opentype'),
-		url('../fonts/thronesdb.ttf?irjt2b') format('truetype'),
-		url('../fonts/thronesdb.woff?irjt2b') format('woff'),
-		url('../fonts/thronesdb.svg?irjt2b#thronesdb') format('svg');
+	src:url('../fonts/font3933.eot?irjt2b');
+	src:url('../fonts/font3933.eot?#iefixirjt2b') format('embedded-opentype'),
+		url('../fonts/font3933.ttf?irjt2b') format('truetype'),
+		url('../fonts/font3933.woff?irjt2b') format('woff'),
+		url('../fonts/font3933.svg?irjt2b#thronesdb') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -23,60 +23,6 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.icon-baratheon:before {
-	content: "\e600";
-}
-.icon-greyjoy:before {
-	content: "\e601";
-}
-.icon-intrigue:before {
-	content: "\e602";
-}
-.icon-lannister:before {
-	content: "\e603";
-}
-.icon-martell:before {
-	content: "\e604";
-}
-.icon-military:before {
-	content: "\e605";
-}
-.icon-thenightswatch:before {
-	content: "\e606";
-}
-.icon-power:before {
-	content: "\e607";
-}
-.icon-stark:before {
-	content: "\e608";
-}
-.icon-targaryen:before {
-	content: "\e609";
-}
-.icon-tyrell:before {
-	content: "\e60a";
-}
-.icon-unique:before {
-	content: "\e60b";
-}
-.icon-plot:before {
-	content: "\e60c";
-}
-.icon-location:before {
-	content: "\e60e";
-}
-.icon-character:before {
-	content: "\e60f";
-}
-.icon-event:before {
-	content: "\e610";
-}
-.icon-agenda:before {
-	content: "\e611";
-}
-.icon-attachment:before {
-	content: "\e60d";
-}
-.icon-neutral:before {
-	content: "\e612";
+.icon-reaction:before {
+	content: "s";
 }

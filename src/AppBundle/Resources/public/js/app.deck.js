@@ -6,8 +6,8 @@ var date_creation,
 	id,
 	name,
 	tags,
-	faction_code,
-	faction_name,
+	investigator_code,
+	investigator_name,
 	unsaved,
 	user_id,
 	problem_labels = {
@@ -21,7 +21,7 @@ var date_creation,
 		agenda: "Doesn't comply with the Agenda conditions"
 	},
 	header_tpl = _.template('<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'),
-	card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a>'),
+	card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.investigator_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a>'),
 	layouts = {},
 	layout_data = {};
 
@@ -42,8 +42,8 @@ deck.init = function init(data) {
 	id = data.id;
 	name = data.name;
 	tags = data.tags;
-	faction_code = data.faction_code;
-	faction_name = data.faction_name;
+	investigator_code = data.investigator_code;
+	investigator_name = data.investigator_name;
 	unsaved = data.unsaved;
 	user_id = data.user_id;
 	
@@ -90,8 +90,8 @@ deck.get_name = function get_name() {
  * @memberOf deck
  * @returns string
  */
-deck.get_faction_code = function get_faction_code() {
-	return faction_code;
+deck.get_investigator_code = function get_investigator_code() {
+	return investigator_code;
 }
 
 /**
@@ -245,12 +245,12 @@ deck.get_layout_data = function get_layout_data(options) {
 	var agenda = deck.get_agenda();
 	var problem = deck.get_problem();
 
-	deck.update_layout_section(data, 'images', $('<div style="margin-bottom:10px"><img src="/bundles/app/images/factions/'+deck.get_faction_code()+'.png" class="img-responsive">'));
+	deck.update_layout_section(data, 'images', $('<div style="margin-bottom:10px"><img src="/bundles/app/images/factions/'+deck.get_investigator_code()+'.png" class="img-responsive">'));
 	if(agenda) {
 		deck.update_layout_section(data, 'images', $('<div><img src="'+agenda.imagesrc+'" class="img-responsive">'));
 	}
 
-	deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold">'+faction_name+'</h4>'));
+	deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold">'+investigator_name+'</h4>'));
 	if(agenda) {
 		var agenda_line = $('<h5>').append($(card_line_tpl({card:agenda})));
 		agenda_line.find('.icon').remove();
@@ -467,18 +467,21 @@ deck.get_invalid_cards = function get_invalid_cards() {
  * @memberOf deck
  */
 deck.can_include_card = function can_include_card(card) {
+	// allow all cards
+	// XXX
+	return true;
 	// neutral card => yes
-	if(card.faction_code === 'neutral') return true;
+	//if(card.faction_code === 'neutral') return true;
 
 	// in-house card => yes
-	if(card.faction_code === faction_code) return true;
+	//if(card.faction_code === faction_code) return true;
 
 	// out-of-house and loyal => no
-	if(card.is_loyal) return false;
+	//if(card.is_loyal) return false;
 
 	// minor faction => yes
-	var minor_faction_code = deck.get_minor_faction_code();
-	if(minor_faction_code && minor_faction_code === card.faction_code) return true;
+	//var minor_faction_code = deck.get_minor_faction_code();
+	//if(minor_faction_code && minor_faction_code === card.faction_code) return true;
 
 	// if none above => no
 	return false;

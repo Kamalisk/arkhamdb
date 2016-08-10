@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{{ pagetitle|default('Deckbuilder') }} &middot; ThronesDB</title>
+    <title>{{ pagetitle|default('Deckbuilder') }} &middot; ArkhamDB</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
@@ -40,7 +40,7 @@
           <a class="navbar-brand" href="{{ path('index') }}">
             <span class="icon icon-link-half-top"></span>
             <span class="icon icon-link-half-bottom"></span>
-            <span class="icon icon-power"></span> ThronesDB
+            <span class="icon icon-power"></span> ArkhamDB
           </a>
         </div>
         <div class="navbar-collapse collapse">
@@ -60,7 +60,7 @@
             {#
             <li class="hidden-sm"><a href="{{ path('card_reviews_list') }}">Reviews</a></li>
             #}
-            <li><a href="{{ path('rules') }}">Rules</a></li>
+            <!--<li><a href="{{ path('rules') }}">Rules</a></li>-->
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown hidden-xs hidden-lg">
@@ -102,11 +102,10 @@
     </ul>
 
     <p>
-    Designed and built by Alsciende. 
-    Contact: 
-    <a href="https://twitter.com/alsciende" title="Twitter"><span class="fa fa-twitter"></span></a>
-    <a href="https://reddit.com/user/Alsciende/" title="Reddit"><span class="fa fa-reddit"></span></a>
-    <a href="mailto:alsciende@icloud.com" title="E-mail"><span class="fa fa-envelope"></span></a>
+    Based on ThronesDB by Alsciende. Modified by Kam.
+    Contact:     
+    <a href="https://reddit.com/user/kamalisk/" title="Reddit"><span class="fa fa-reddit"></span></a>
+    <a href="mailto:s.arkhamdb@kamalisk.com" title="E-mail"><span class="fa fa-envelope"></span></a>
     </p>
 
     <p>
@@ -157,11 +156,6 @@
     {% endfor %}
 	});
     </script>
-
-	{% if app.environment == 'prod' %}
-		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-		{% include 'AppBundle:Default:google-analytics.html.twig' %}
-	{% endif %}
 
 	{% javascripts filter="?jsqueeze" output="js/app.js"
 		'@AppBundle/Resources/public/js/bootstrap.js'

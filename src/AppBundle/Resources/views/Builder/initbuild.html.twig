@@ -8,38 +8,18 @@
 <form action="{{ path('deck_initbuild') }}" method="post" enctype="application/x-www-form-urlencoded">
 <div class="row">
 	<div class="col-md-8">
-		<h1>Choose your faction</h1>
+		<h1>Choose your Investigator</h1>
 		<div class="row">
-			{% for faction in factions %}
-			<div class="col-md-3 col-sm-4">
-				<label class="thumbnail">
-					<img src="{{ asset('/bundles/app/images/factions/' ~ faction.code ~ '.png') }}" class="hidden-xs">
-					<div class="caption text-center" style="white-space:nowrap">
-							<input type="radio" name="faction" value="{{ faction.code }}"> <small>{{ faction.name }}</small>
+			{% for investigator in investigators %}
+			<div class="col-md-8">
+				<label class="thumbnail">					
+					<div class="caption text-left" style="white-space:nowrap">
+							<input type="radio" name="investigator" value="{{ investigator.code }}"> <small>{{ investigator.name }}</small>
 					</div>
 				</label>
 			</div>
 			{% endfor %}
 		</div>
-	</div>
-	<div class="col-md-4">
-		<h2>Choose an agenda</h2>
-		<ul class="list-group">
-			<li class="list-group-item radio">
-				<label>
-					<input type="radio" name="agenda" value="" checked="checked">
-					No agenda
-				</label>
-			</li>
-		{% for agenda in agendas %}
-			<li class="list-group-item radio">
-				<label>
-					<input type="radio" name="agenda" value="{{ agenda.code }}">
-					{{ macros.card_name_with_pack_no_link(agenda) }}
-				</label>
-			</li>
-		{% endfor %}
-		</ul>
 	</div>
 </div>
 <div class="row">

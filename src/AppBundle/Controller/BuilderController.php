@@ -25,14 +25,14 @@ class BuilderController extends Controller
 		/* @var $em \Doctrine\ORM\EntityManager */
 		$em = $this->getDoctrine()->getManager();
 
-		$factions = $em->getRepository('AppBundle:Faction')->findBy(["isPrimary" => TRUE]);
-		$agenda = $em->getRepository('AppBundle:Type')->findOneBy(['code' => 'agenda']);
-		$agendas = $em->getRepository('AppBundle:Card')->findBy(['type' => $agenda]);
+		$type = $em->getRepository('AppBundle:Type')->findOneBy(['code' => 'investigator']);
+		$investigators = $em->getRepository('AppBundle:Card')->findBy(['type' => $type]);
+		//$agenda = $em->getRepository('AppBundle:Type')->findOneBy(['code' => 'agenda']);
+		//$agendas = $em->getRepository('AppBundle:Card')->findBy(['type' => $agenda]);
 
 		return $this->render('AppBundle:Builder:initbuild.html.twig', [
 				'pagetitle' => "New deck",
-				'factions' => $factions,
-				'agendas' => $agendas,
+				'investigators' => $investigators
 		], $response);
     }
 
@@ -41,55 +41,33 @@ class BuilderController extends Controller
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $faction_code = $request->request->get('faction');
-        $agenda_code = $request->request->get('agenda');
+        $investigator_code = $request->request->get('investigator');
 
-        if(!$faction_code)
+        if(!$investigator_code)
         {
-        	$this->get('session')->getFlashBag()->set('error', "A faction is required.");
+        	$this->get('session')->getFlashBag()->set('error', "An investigator is required.");
         	return $this->redirect($this->generateUrl('deck_buildform'));
         }
 
-        $faction = $em->getRepository('AppBundle:Faction')->findOneBy(array("code" => $faction_code));
-        if(!$faction)
+        $investigator = $em->getRepository('AppBundle:Card')->findOneBy(array("code" => $investigator_code));
+        if(!$investigator)
         {
-        	$this->get('session')->getFlashBag()->set('error', "A faction is required.");
+        	$this->get('session')->getFlashBag()->set('error', "An investigator is required.");
         	return $this->redirect($this->generateUrl('deck_buildform'));
         }
-		$tags = [ $faction_code ];
-
-        if(!$agenda_code)
-        {
-        	$agenda = NULL;
-        	$name = sprintf("New deck: %s", $faction->getName());
-        	$pack = $em->getRepository('AppBundle:Pack')->findOneBy(array("code" => "Core"));
-        }
-        else
-        {
-        	$agenda = $em->getRepository('AppBundle:Card')->findOneBy(array("code" => $agenda_code));
-        	$name = sprintf("New deck: %s, %s", $faction->getName(), $agenda->getName());
-        	$pack = $agenda->getPack();
-			$tags[] = $this->get('agenda_helper')->getMinorFactionCode($agenda);
-        }
-
+				$tags = [ $investigator_code ];
+				
+				$pack = $investigator->getPack();
+				$name = sprintf("New deck: %s", $investigator->getName());
 
         $deck = new Deck();
         $deck->setDescriptionMd("");
-        $deck->setFaction($faction);
+        $deck->setCharacter($investigator);
         $deck->setLastPack($pack);
         $deck->setName($name);
         $deck->setProblem('too_few_cards');
         $deck->setTags(join(' ', array_unique($tags)));
         $deck->setUser($this->getUser());
-
-        if($agenda)
-        {
-        	$slot = new Deckslot();
-        	$slot->setCard($agenda);
-        	$slot->setQuantity(1);
-        	$slot->setDeck($deck);
-        	$deck->addSlot($slot);
-        }
 
         $em->persist($deck);
         $em->flush();

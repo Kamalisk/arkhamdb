@@ -196,7 +196,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
     /**
      * @var \AppBundle\Entity\Faction
      */
-    private $faction;
+    private $character;
 
     /**
      * @var \AppBundle\Entity\Pack
@@ -501,27 +501,27 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
     }
 
     /**
-     * Set faction
+     * Set character
      *
-     * @param \AppBundle\Entity\Faction $faction
+     * @param \AppBundle\Entity\Card $character
      *
      * @return Deck
      */
-    public function setFaction(\AppBundle\Entity\Faction $faction = null)
+    public function setCharacter(\AppBundle\Entity\Card $character = null)
     {
-        $this->faction = $faction;
+        $this->character = $character;
 
         return $this;
     }
 
     /**
-     * Get faction
+     * Get character
      *
-     * @return \AppBundle\Entity\Faction
+     * @return \AppBundle\Entity\Card
      */
-    public function getFaction()
+    public function getCharacter()
     {
-        return $this->faction;
+        return $this->character;
     }
 
     /**
