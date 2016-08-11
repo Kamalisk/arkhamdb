@@ -5,29 +5,24 @@ var charts = [],
 		targaryen :
 			'#1c1c1c',
 
-		baratheon :
+		seeker :
 			'#e3d852',
 
-		stark :
+		neutral :
 			'#cfcfcf',
 
-		greyjoy :
+		guardian :
 			'#1d7a99',
 
-		lannister :
+		survivor :
 			'#c00106',
 
-		tyrell :
+		rogue :
 			'#509f16',
 
-		thenightswatch :
-			'#6e6e6e',
+		mystic :
+			'#ae1eae'
 
-		martell :
-			'#e89521',
-
-		neutral :
-			'#a99560',
 	};
 
 deck_charts.chart_faction = function chart_faction() {
@@ -93,81 +88,7 @@ deck_charts.chart_faction = function chart_faction() {
     });
 }
 
-deck_charts.chart_icon = function chart_icon() {
-
-	var data = [{
-		name: 'Military',
-		label: '<span class="icon icon-military"></span>',
-		color: '#c8232a',
-		y: 0
-	}, {
-		name: 'Intrigue',
-		label: '<span class="icon icon-intrigue"></span>',
-		color: '#13522f',
-		y: 0
-	}, {
-		name: 'Power',
-		label: '<span class="icon icon-power"></span>',
-		color: '#292e5f',
-		y: 0
-	}];
-
-	var draw_deck = app.deck.get_draw_deck();
-	draw_deck.forEach(function (card) {
-		if(card.is_military) data[0].y += (card.is_unique ? 1 : card.indeck);
-		if(card.is_intrigue) data[1].y += (card.is_unique ? 1 : card.indeck);
-		if(card.is_power) data[2].y += (card.is_unique ? 1 : card.indeck);
-	})
-
-	$("#deck-chart-icon").highcharts({
-		chart: {
-			type: 'column'
-		},
-		title: {
-			text: "Character Icons"
-		},
-		subtitle: {
-			text: "Duplicates not counted"
-		},
-		xAxis: {
-			categories: _.pluck(data, 'label'),
-			labels: {
-				useHTML: true
-			},
-			title: {
-				text: null
-			}
-		},
-		yAxis: {
-			min: 0,
-			allowDecimals: false,
-			tickInterval: 2,
-			title: null,
-			labels: {
-				overflow: 'justify'
-			}
-		},
-		tooltip: {
-			headerFormat: '<span style="font-size: 10px">{point.key} Icon</span><br/>'
-		},
-		series: [{
-			type: "column",
-			animation: false,
-			name: '# characters',
-			showInLegend: false,
-			data: data
-		}],
-		plotOptions: {
-			column: {
-				borderWidth: 0,
-				groupPadding: 0,
-				shadow: false
-			}
-		}
-	});
-}
-
-deck_charts.chart_strength = function chart_strength() {
+deck_charts.chart_attributes = function chart_attributes() {
 
 		var data = [];
 
@@ -271,8 +192,7 @@ deck_charts.chart_cost = function chart_cost() {
 
 deck_charts.setup = function setup(options) {
 	deck_charts.chart_faction();
-	deck_charts.chart_icon();
-	deck_charts.chart_strength();
+	deck_charts.chart_attributes();
 	deck_charts.chart_cost();
 }
 

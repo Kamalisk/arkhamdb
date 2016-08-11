@@ -1,19 +1,20 @@
 {% import "AppBundle::macros.html.twig" as macros %}
-<span class="card-props">
-{% if card.type_code == 'character' or card.type_code == 'attachment' or card.type_code == 'event' or card.type_code == 'location' %}
+<div class="card-props">
+{% if card.type_code == 'asset' or card.type_code == 'event' %}
 	Cost: {{ macros.integer_or_x(card.cost) }}.
 {% endif %}
-{% if card.type_code == 'character' %}
-	STR: {{ macros.integer_or_x(card.strength) }}.
-	{% if card.is_military %}<span class="color-military icon-military" title="Military"></span>{% endif %}
-	{% if card.is_intrigue %}<span class="color-intrigue icon-intrigue" title="Intrigue"></span>{% endif %}
-	{% if card.is_power %}<span class="color-power icon-power" title="Power"></span>{% endif %}
+</div>
+
+{% if card.type_code == 'investigator' %}
+<div class="card-props">
+	Will: {{ macros.integer_or_x(card.will) }}.
+	Lore: {{ macros.integer_or_x(card.lore) }}.
+	Strength: {{ macros.integer_or_x(card.strength) }}.
+	Agility: {{ macros.integer_or_x(card.agility) }}.
+</div>
 {% endif %}
-{% if card.type_code == 'plot' %}
-	Income: {{ macros.integer_or_x(card.income) }}.
-	Initiative: {{ macros.integer_or_x(card.initiative) }}.
-	Claim: {{ macros.integer_or_x(card.claim) }}.
-	Reserve: {{ macros.integer_or_x(card.reserve) }}.
-	Plot deck limit: {{ macros.integer_or_x(card.deck_limit) }}.
+{% if card.health or card.sanity%}
+	Health: {{ macros.integer_or_x(card.health) }}.
+	Sanity: {{ macros.integer_or_x(card.sanity) }}.
 {% endif %}
-</span>
+

@@ -40,21 +40,7 @@ class DeckValidationHelper
 	
 	public function findProblem($deck)
 	{
-		$plotDeck = $deck->getSlots()->getPlotDeck();
-		$plotDeckSize = $plotDeck->countCards();
-		if($plotDeckSize > 7) {
-			return 'too_many_plots';
-		}
-		if($plotDeckSize < 7) {
-			return 'too_few_plots';
-		}
-		if(count($plotDeck) < 6) {
-			return 'too_many_different_plots';
-		}
-		if($deck->getSlots()->getAgendas()->countCards() > 1) {
-			return 'too_many_agendas';
-		}
-		if($deck->getSlots()->getDrawDeck()->countCards() < 60) {
+		if($deck->getSlots()->getDrawDeck()->countCards() < 30) {
 			return 'too_few_cards';
 		}
 		foreach($deck->getSlots()->getCopiesAndDeckLimit() as $cardName => $value) {
@@ -63,25 +49,9 @@ class DeckValidationHelper
 		if(!empty($this->getInvalidCards($deck))) {
 			return 'invalid_cards';
 		}
-		$agenda = $deck->getSlots()->getAgenda();
-		if($agenda) {
-	
-			switch($agenda->getCode()) {
-				case '01027': {
-					$drawDeck = $deck->getSlots()->getDrawDeck();
-					$count = 0;
-					foreach($drawDeck as $slot) {
-						if($slot->getCard()->getFaction()->getCode() === 'neutral') {
-							$count += $slot->getQuantity();
-						}
-					}
-					if($count > 15) {
-						return 'agenda';
-					}
-					break;
-				}
-			}
-	
+		$investigator = $deck->getInvestigator();
+		if($investigator) {
+
 		}
 		return null;
 	}

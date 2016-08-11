@@ -14,7 +14,9 @@
 			<div class="col-md-8">
 				<label class="thumbnail">					
 					<div class="caption text-left" style="white-space:nowrap">
-							<input type="radio" name="investigator" value="{{ investigator.code }}"> <small>{{ investigator.name }}</small>
+							<input type="radio" name="investigator" value="{{ investigator.code }}"> 
+							<span class="deck-list-investigator-image" title="{{ investigator.name }}" style="background-image:url({{ asset('/bundles/app/images/cards/'~investigator.code~'.png') }})"></span>
+							<small>{{ investigator.name }}</small>
 					</div>
 				</label>
 			</div>

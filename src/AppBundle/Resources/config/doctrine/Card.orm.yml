@@ -21,7 +21,7 @@ AppBundle\Entity\Card:
                 name: faction_id
                 referencedColumnName: id
         upgrade:
-            targetEntity: card
+            targetEntity: Card
             inversedBy: cards
             joinColumn:
                 name: upgrade_id
@@ -106,7 +106,23 @@ AppBundle\Entity\Card:
         strength:
             type: smallint
             nullable: true
+        slot:
+            type: string
+            length: 50
+            nullable: true
         traits:
+            type: string
+            length: 255
+            nullable: true
+        deckRequirements:
+            type: string
+            length: 255
+            nullable: true
+        deckOptions:
+            type: string
+            length: 255
+            nullable: true
+        restrictions:
             type: string
             length: 255
             nullable: true

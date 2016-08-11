@@ -154,6 +154,63 @@ class ApiController extends Controller
 
 
 	/**
+	 * Get the description of all the factions as an array of JSON objects.
+	 *
+	 * @ApiDoc(
+	 *  section="Faction",
+	 *  resource=true,
+	 *  description="All the Factions",
+	 *  parameters={
+	 *      {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+	 *  },
+	 * )
+	 * @param Request $request
+	 */
+	public function listFactionsAction(Request $request)
+	{
+
+		$response = new Response();
+		$response->setPublic();
+		$response->setMaxAge($this->container->getParameter('cache_expiration'));
+		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
+
+		$jsonp = $request->query->get('jsonp');
+
+		$list_factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findBy(array(), array("code" => "ASC"));
+
+		// check the last-modified-since header
+
+		$lastModified = NULL;
+		
+		$response->setLastModified($lastModified);
+		if ($response->isNotModified($request)) {
+			return $response;
+		}
+
+		// build the response
+
+		$factions = array();
+		/* @var $card \AppBundle\Entity\Card */
+		foreach($list_factions as $faction) {
+			$factions[] = $this->get('factions_data')->getfactionInfo($faction, true, "en");
+		}
+
+		$content = json_encode($factions);
+		if(isset($jsonp))
+		{
+			$content = "$jsonp($content)";
+			$response->headers->set('Content-Type', 'application/javascript');
+		} else
+		{
+			$response->headers->set('Content-Type', 'application/json');
+		}
+		$response->setContent($content);
+		return $response;
+
+	}
+
+
+	/**
 	 * Get the description of all the cards as an array of JSON objects.
 	 *
 	 * @ApiDoc(

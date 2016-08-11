@@ -31,21 +31,59 @@ class CardsData
 	public function replaceSymbols($text)
 	{
 		static $displayTextReplacements = [
-			'[baratheon]' => '<span class="icon-baratheon"></span>',
-			'[intrigue]' => '<span class="icon-intrigue"></span>',
-			'[greyjoy]' => '<span class="icon-greyjoy"></span>',
-			'[lannister]' => '<span class="icon-lannister"></span>',
-			'[martell]' => '<span class="icon-martell"></span>',
-			'[military]' => '<span class="icon-military"></span>',
-			'[thenightswatch]' => '<span class="icon-thenightswatch"></span>',
-			'[power]' => '<span class="icon-power"></span>',
-			'[stark]' => '<span class="icon-stark"></span>',
-			'[targaryen]' => '<span class="icon-targaryen"></span>',
-			'[tyrell]' => '<span class="icon-tyrell"></span>',
-			'[unique]' => '<span class="icon-unique"></span>',
+			'[eldersign]' => '<span class="icon-eldersign"></span>',
+			'[reaction]' => '<span class="icon-reaction"></span>',
+			'[action]' => '<span class="icon-action"></span>',
+			'[will]' => '<span class="icon-will"></span>',
+			'[lore]' => '<span class="icon-lore"></span>',
+			'[strength]' => '<span class="icon-strength"></span>',
+			'[agility]' => '<span class="icon-agility"></span>',
+			'[wild]' => '<span class="icon-wild"></span>'
 		];
 		
 		return str_replace(array_keys($displayTextReplacements), array_values($displayTextReplacements), $text);
+	}
+	
+	/**
+	 * Searches for and replaces symbol tokens with markup in a given text.
+	 * @param string $text
+	 * @return string
+	 */
+	public function parseDeckRequirements($text)
+	{
+		$return_requirements = [];
+		$restrictions = explode(",", $text);
+		foreach($restrictions as $restriction) {
+			if (trim($restriction)){
+				$matches = [];
+				//preg_match ( "/([A-Za-z0-9]+)(?::([A-Za-z0-9]+))+/" , trim($restriction), $matches );
+				$params = explode(":", $restriction);
+				//$text .= print_r($matches,1);	
+				if (isset($params[0])){
+					$type = trim($params[0]);
+					if (!isset($return_requirements[$type])){
+						$return_requirements[$type] = [];
+					}
+					$req = [];
+					if (isset($params[1])){
+						if (intval(trim($params[1]))){
+							$req[] = trim($params[1]);
+						}else {
+							$return_requirements[$type][trim($params[1])] = trim($params[1]);
+							$req[] = trim($params[1]);	
+						}						
+					}
+					if (isset($params[2])){
+						//$req[] = $params[2];
+					}
+					if (isset($params[3])){
+						//$req[] = $params[3];
+					}
+					$return_requirements[$type][] = $req;
+				}
+			}
+		}
+		return $return_requirements;
 	}
 	
 	public function splitInParagraphs($text)
@@ -346,28 +384,28 @@ class CardsData
 	 */
 	public function getCardInfo($card, $api = false)
 	{
-	    $cardinfo = [];
+    $cardinfo = [];
 
-	    $metadata = $this->doctrine->getManager()->getClassMetadata('AppBundle:Card');
-	    $fieldNames = $metadata->getFieldNames();
-	    $associationMappings = $metadata->getAssociationMappings();
+    $metadata = $this->doctrine->getManager()->getClassMetadata('AppBundle:Card');
+    $fieldNames = $metadata->getFieldNames();
+    $associationMappings = $metadata->getAssociationMappings();
 
-	    foreach($associationMappings as $fieldName => $associationMapping)
-	    {
-	    	if($associationMapping['isOwningSide']) {
-	    		$getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
-	    		$associationEntity = $card->$getter();
-	    		if(!$associationEntity) continue;
+    foreach($associationMappings as $fieldName => $associationMapping)
+    {
+    	if($associationMapping['isOwningSide']) {
+    		$getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
+    		$associationEntity = $card->$getter();
+    		if(!$associationEntity) continue;
 
-    			$cardinfo[$fieldName.'_code'] = $associationEntity->getCode();
-    			$cardinfo[$fieldName.'_name'] = $associationEntity->getName();
-	    	}
-	    }
+  			$cardinfo[$fieldName.'_code'] = $associationEntity->getCode();
+  			$cardinfo[$fieldName.'_name'] = $associationEntity->getName();
+    	}
+    }
 
-	    foreach($fieldNames as $fieldName)
-	    {
-	    	$getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
-	    	$value = $card->$getter();
+    foreach($fieldNames as $fieldName)
+    {
+    	$getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
+    	$value = $card->$getter();
 			switch($metadata->getTypeOfField($fieldName)) {
 				case 'datetime':
 				case 'date':
@@ -378,8 +416,8 @@ class CardsData
 					break;
 			}
 			$fieldName = ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', $fieldName)), '_');
-	    	$cardinfo[$fieldName] = $value;
-	    }
+    	$cardinfo[$fieldName] = $value;
+    }
 
 		$cardinfo['url'] = $this->router->generate('cards_zoom', array('card_code' => $card->getCode()), UrlGeneratorInterface::ABSOLUTE_URL);
 		$imageurl = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'.png');
@@ -392,11 +430,16 @@ class CardsData
 
 		if($api) {
 			unset($cardinfo['id']);
+			$cardinfo['deck_requirements'] = $this->parseDeckRequirements($cardinfo['deck_requirements']);
+			$cardinfo['deck_options'] = $this->parseDeckRequirements($cardinfo['deck_options']);
+			$cardinfo['restrictions'] = $this->parseDeckRequirements($cardinfo['restrictions']);
 			$cardinfo = array_filter($cardinfo, function ($var) { return isset($var); });
 		} else {
 			$cardinfo['text'] = $this->replaceSymbols($cardinfo['text']);
 			$cardinfo['text'] = $this->splitInParagraphs($cardinfo['text']);
-			
+			$cardinfo['deck_requirements'] = $this->parseDeckRequirements($cardinfo['deck_requirements']);
+			$cardinfo['deck_options'] = $this->parseDeckRequirements($cardinfo['deck_options']);
+			$cardinfo['restrictions'] = $this->parseDeckRequirements($cardinfo['restrictions']);
 			$cardinfo['flavor'] = $this->replaceSymbols($cardinfo['flavor']);
 		}
 

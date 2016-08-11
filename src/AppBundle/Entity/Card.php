@@ -186,6 +186,26 @@ class Card implements \Serializable
     /**
      * @var string
      */
+    private $deckRequirements;
+    
+        /**
+     * @var string
+     */
+    private $deckOptions;
+    
+    /**
+     * @var string
+     */
+    private $restrictions;
+
+    /**
+     * @var string
+     */
+    private $slot;
+
+    /**
+     * @var string
+     */
     private $flavor;
 
     /**
@@ -704,17 +724,114 @@ class Card implements \Serializable
     {
         return $this->traits;
     }
-
+    
+    
     /**
-     * Set flavor
+     * Set deckRequirements
      *
-     * @param string $flavor
+     * @param string $deckRequirements
      *
      * @return Card
      */
-    public function setFlavor($flavor)
+    public function setDeckRequirements($deckRequirements)
     {
-        $this->flavor = $flavor;
+        $this->deckRequirements = $deckRequirements;
+
+        return $this;
+    }
+
+    /**
+     * Get deckRequirements
+     *
+     * @return string
+     */
+    public function getDeckRequirements()
+    {
+        return $this->deckRequirements;
+    }
+    
+    
+        /**
+     * Set deckOptions
+     *
+     * @param string $deckOptions
+     *
+     * @return Card
+     */
+    public function setDeckOptions($deckOptions)
+    {
+        $this->deckOptions = $deckOptions;
+        return $this;
+    }
+
+    /**
+     * Get deckOptions
+     *
+     * @return string
+     */
+    public function getdeckOptions()
+    {
+        return $this->deckOptions;
+    }
+    
+        /**
+     * Set restrictions
+     *
+     * @param string $restrictions
+     *
+     * @return Card
+     */
+    public function setRestrictions($restrictions)
+    {
+        $this->restrictions = $restrictions;
+
+        return $this;
+    }
+
+    /**
+     * Get restrictions
+     *
+     * @return string
+     */
+    public function getRestrictions()
+    {
+        return $this->restrictions;
+    }
+    
+        /**
+     * Set slot
+     *
+     * @param string $slot
+     *
+     * @return Card
+     */
+    public function setSlot($slot)
+    {
+        $this->slot = $slot;
+
+        return $this;
+    }
+
+    /**
+     * Get slot
+     *
+     * @return string
+     */
+    public function getSlot()
+    {
+        return $this->slot;
+    }
+
+    /**
+     * Set slot
+     *
+     * @param string $slot
+     *
+     * @return Card
+     */
+    public function setFlavor($slot)
+    {
+        $this->slot = $slot;
 
         return $this;
     }

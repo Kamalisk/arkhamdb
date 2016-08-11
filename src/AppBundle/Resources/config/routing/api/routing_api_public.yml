@@ -4,6 +4,12 @@ api_packs:
     defaults:
         _controller: AppBundle:Api:listPacks
 
+api_factions:
+    path: /factions/
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Api:listFactions
+
 api_card:
     path: /card/{card_code}.{_format}
     methods: [GET]

@@ -55,7 +55,7 @@ class Decks
 		}
 
 		$deck->setName ( $name );
-		$deck->setFaction ( $faction );
+		//$deck->setFaction ( $faction );
 		$deck->setDescriptionMd ( $description );
 		$deck->setUser ( $user );
 		$deck->setMinorVersion( $deck->getMinorVersion() + 1 );

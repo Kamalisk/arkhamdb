@@ -67,7 +67,8 @@
 	<tr data-id="{{ deck.id }}">
 		<td><input type="checkbox"></td>
 		<td class="hidden-xs">
-			<img src="{{ asset('/bundles/app/images/factions/.png') }}">
+			<div class="deck-list-investigator-image hidden-xs" title="{{ deck.investigator_name }}" style="background-image:url({{ asset('/bundles/app/images/cards/'~deck.investigator_code~'.png') }})"></div>
+			<!-- <img src="{{ asset('/bundles/app/images/cards/'~deck.investigator_code~'.png') }}"> -->
 		</td>
 		<td>
 			<a href="{{ path('deck_view',{deck_id:deck.id}) }}" class="deck-name">{{ deck.name }}</a> {{ deck.version }}

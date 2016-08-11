@@ -338,15 +338,10 @@ class BuilderController extends Controller
             $source_deck = $deck;
         }
 
-		$faction_code = filter_var($request->get('faction_code'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(!$faction_code) {
-			return new Response('Cannot import deck without faction');
-		}
-		$faction = $em->getRepository('AppBundle:Faction')->findOneBy(['code' => $faction_code]);
-		if(!$faction) {
-			return new Response('Cannot import deck with unknown faction ' . $faction_code);
-		}
-
+				// XXX
+				// check for investigator here
+				$investigator = false;
+				
         $cancel_edits = (boolean) filter_var($request->get('cancel_edits'), FILTER_SANITIZE_NUMBER_INT);
         if($cancel_edits) {
             if($deck) $this->get('decks')->revertDeck($deck);
@@ -368,7 +363,7 @@ class BuilderController extends Controller
         $description = trim($request->get('description'));
         $tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-        $this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck ? $source_deck : null);
+        $this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $content, $source_deck ? $source_deck : null);
         $em->flush();
         
         return $this->redirect($this->generateUrl('decks_list'));

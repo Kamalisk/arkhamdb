@@ -525,6 +525,16 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
     }
 
     /**
+     * Get faction
+     *
+     * @return \AppBundle\Entity\Faction
+     */
+    public function getFaction()
+    {
+        return $this->character->getFaction();
+    }
+
+    /**
      * Set lastPack
      *
      * @param \AppBundle\Entity\Pack $lastPack

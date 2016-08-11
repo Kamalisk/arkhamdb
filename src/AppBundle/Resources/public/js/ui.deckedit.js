@@ -104,15 +104,17 @@ ui.build_faction_selector = function build_faction_selector() {
  * @memberOf ui
  */
 ui.build_type_selector = function build_type_selector() {
-	return false;
 	$('[data-filter=type_code]').empty();
-	['asset','event','skill'].forEach(function(type_code) {
+	['asset','event','skill', 'treachery', 'weakness'].forEach(function(type_code) {
 		var example = app.data.cards.find({"type_code": type_code})[0];
-		var label = $('<label class="btn btn-default btn-sm" data-code="'
-				+ type_code + '" title="'+example.type_name+'"><input type="checkbox" name="' + type_code
-				+ '"><span class="icon-' + type_code + '"></span></label>');
-		label.tooltip({container: 'body'});
-		$('[data-filter=type_code]').append(label);
+		// not all card types might exist
+		if (example){
+			var label = $('<label class="btn btn-default btn-sm" data-code="'
+					+ type_code + '" title="'+example.type_name+'"><input type="checkbox" name="' + type_code
+					+ '"><span class="icon-' + type_code + '"></span>' + example.type_name + '</label>');
+			label.tooltip({container: 'body'});
+			$('[data-filter=type_code]').append(label);
+		}
 	});
 	$('[data-filter=type_code]').button();
 }
@@ -159,6 +161,13 @@ ui.build_pack_selector = function build_pack_selector() {
  */
 ui.init_selectors = function init_selectors() {
 	$('[data-filter=faction_code]').find('input[name=neutral]').prop("checked", true).parent().addClass('active');
+	var investigator = app.data.cards.findById(app.deck.get_investigator_code());
+	if (investigator.deck_options && investigator.deck_options.faction){
+		$.each(investigator.deck_options.faction, function(key, value){
+			$('[data-filter=faction_code]').find('input[name='+value+']').prop("checked", true).parent().addClass('active');
+		})
+	}
+	
 	//$('[data-filter=faction_code]').find('input[name='+app.deck.get_faction_code()+']').prop("checked", true).parent().addClass('active');
 	//var minor_faction_code = app.deck.get_minor_faction_code();
 	//if(minor_faction_code) $('[data-filter=faction_code]').find('input[name='+minor_faction_code+']').prop("checked", true).parent().addClass('active');
@@ -442,9 +451,8 @@ ui.update_list_template = function update_list_template() {
 				+ '<td><div class="btn-group" data-toggle="buttons"><%= radios %></div></td>'
 				+ '<td><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></td>'
 				+ '<td class="cost"><%= card.cost %><%= card.income %></td>'
-				+ '<td class="cost"><%= card.strength %><%= card.initiative %></td>'
-				+ '<td class="type"><span class="icon-<%= card.type_code %>" title="<%= card.type_name %>"></span></td>'
-				+ '<td class="faction"><span class="icon-<%= card.faction_code %> fg-<%= card.faction_code %>" title="<%= card.faction_name %>"></span></td>'
+				+ '<td class="type"><span class="icon-<%= card.type_code %>" title="<%= card.type_name %>"><%= card.type_name %></span></td>'
+				+ '<td class="faction"><span class="icon-<%= card.faction_code %> fg-<%= card.faction_code %>" title="<%= card.faction_name %>"><%= card.faction_name %></span></td>'
 			+ '</tr>'
 		);
 		break;
@@ -651,7 +659,6 @@ ui.on_dom_loaded = function on_dom_loaded() {
  * @memberOf ui
  */
 ui.on_data_loaded = function on_data_loaded() {
-	ui.remove_melee_titles();
 	ui.set_max_qty();
 	app.draw_simulator && app.draw_simulator.on_data_loaded();
 };
