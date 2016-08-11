@@ -140,10 +140,10 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
 	{
 		$drawDeck = [];
 		foreach($this->slots as $slot) {
-			if($slot->getCard()->getType()->getCode() === 'character'
-			|| $slot->getCard()->getType()->getCode() === 'location'
-			|| $slot->getCard()->getType()->getCode() === 'attachment'
-			|| $slot->getCard()->getType()->getCode() === 'event') {
+			if($slot->getCard()->getType()->getCode() === 'asset'
+			|| $slot->getCard()->getType()->getCode() === 'event'
+			|| $slot->getCard()->getType()->getCode() === 'skill'
+			|| $slot->getCard()->getType()->getCode() === 'treachery') {
 				$drawDeck[] = $slot;
 			}
 		}
