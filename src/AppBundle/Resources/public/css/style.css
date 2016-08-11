@@ -205,6 +205,12 @@ div.tags span.tag:not(:first-child)::before {
 	margin: auto;
 	width: 55px;
 	display: inline-block;
+	vertical-align: top;
+}
+
+
+.investigator-select .selected {
+	background-color : rgba(180, 220, 180, 1);
 }
 
 /********** NEW DECK **********/

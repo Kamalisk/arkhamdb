@@ -7,16 +7,16 @@
 
 <form action="{{ path('deck_initbuild') }}" method="post" enctype="application/x-www-form-urlencoded">
 <div class="row">
-	<div class="col-md-8">
+	<div class="col-md-8 investigator-select">
 		<h1>Choose your Investigator</h1>
 		<div class="row">
 			{% for investigator in investigators %}
-			<div class="col-md-8">
+			<div class="col-md-4 align-top">
 				<label class="thumbnail">					
-					<div class="caption text-left" style="white-space:nowrap">
-							<input type="radio" name="investigator" value="{{ investigator.code }}"> 
+					<div style="cursor: pointer;"  class="caption text-left" style="white-space:nowrap">
 							<span class="deck-list-investigator-image" title="{{ investigator.name }}" style="background-image:url({{ asset('/bundles/app/images/cards/'~investigator.code~'.png') }})"></span>
-							<small>{{ investigator.name }}</small>
+							<input onchange="update_selection()" style="display : none;" type="radio" name="investigator" value="{{ investigator.code }}"> 							
+							{{ investigator.name }}							
 					</div>
 				</label>
 			</div>
@@ -32,5 +32,12 @@
 </form>
 
 </div>
+
+<script>
+	function update_selection(){
+		$("input[type=radio]").parent().removeClass("selected");
+		$("input[type=radio]:checked").parent().addClass("selected");
+	}
+</script>
 
 {% endblock %}

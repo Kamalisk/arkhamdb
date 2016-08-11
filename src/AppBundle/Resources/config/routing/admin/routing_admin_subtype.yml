@@ -1,0 +1,30 @@
+admin_subtype:
+    path:  /
+    defaults: { _controller: "AppBundle:Subtype:index" }
+
+admin_subtype_show:
+    path:  /{id}/show
+    defaults: { _controller: "AppBundle:Subtype:show" }
+
+admin_subtype_new:
+    path:  /new
+    defaults: { _controller: "AppBundle:Subtype:new" }
+
+admin_subtype_create:
+    path:  /create
+    defaults: { _controller: "AppBundle:Subtype:create" }
+    methods: [ post ]
+
+admin_subtype_edit:
+    path:  /{id}/edit
+    defaults: { _controller: "AppBundle:Subtype:edit" }
+
+admin_subtype_update:
+    path:  /{id}/update
+    defaults: { _controller: "AppBundle:Subtype:update" }
+    methods: [ post ]
+
+admin_subtype_delete:
+    path:  /{id}/delete
+    defaults: { _controller: "AppBundle:Subtype:delete" }
+    methods: [ post ]

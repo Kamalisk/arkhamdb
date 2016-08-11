@@ -85,7 +85,7 @@ class Decks
 		$deck->setLastPack ( $latestPack );
 		if (empty ( $tags )) {
 			// tags can never be empty. if it is we put faction in
-			$tags = [ $faction->getCode() ];
+			$tags = [  ];
 		}
 		if(is_string($tags)) 
 		{

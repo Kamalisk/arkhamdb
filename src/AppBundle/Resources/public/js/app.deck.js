@@ -24,9 +24,9 @@ var date_creation,
 /*
  * Templates for the different deck layouts, see deck.get_layout_data
  */
-layouts[1] = _.template('<div class="deck-content"><%= meta %><%= assets %><%= events %><%= skills %></div>');
-layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><div class="col-sm-6 col-print-6"><%= events %></div><div class="col-sm-6 col-print-6"><%= assets %><%= skills %></div></div></div>');
-layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= images %><%= meta %></div><div class="col-sm-4"><%= assets %></div><div class="col-sm-4"><%= events %><%= skills %></div></div></div>');
+layouts[1] = _.template('<div class="deck-content"><%= meta %><%= assets %><%= events %><%= skills %><%= treachery %></div>');
+layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><div class="col-sm-6 col-print-6"><%= assets %><%= skills %></div><div class="col-sm-6 col-print-6"><%= events %><%= treachery %></div></div></div>');
+layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= images %><%= meta %></div><div class="col-sm-4"><%= assets %><%= skills %></div><div class="col-sm-4"><%= events %><%= treachery %></div></div></div>');
 
 /**
  * @memberOf deck
@@ -191,7 +191,7 @@ deck.get_layout_data = function get_layout_data(options) {
 			assets: '',
 			events: '',
 			skills: '',
-			weaknesses: ''
+			treachery: ''
 	};
 	
 	//var investigator = deck.get_investigator();
@@ -208,7 +208,7 @@ deck.get_layout_data = function get_layout_data(options) {
 	deck.update_layout_section(data, 'assets', deck.get_layout_data_one_section('type_code', 'asset', 'type_name'));
 	deck.update_layout_section(data, 'events', deck.get_layout_data_one_section('type_code', 'event', 'type_name'));
 	deck.update_layout_section(data, 'skills', deck.get_layout_data_one_section('type_code', 'skill', 'type_name'));
-	//deck.update_layout_section(data, 'events', deck.get_layout_data_one_section('type_code', 'event', 'type_name'));
+	deck.update_layout_section(data, 'treachery', deck.get_layout_data_one_section('type_code', 'treachery', 'type_name'));
 	
 	return data;
 }

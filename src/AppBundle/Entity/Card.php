@@ -242,6 +242,11 @@ class Card implements \Serializable
      * @var \AppBundle\Entity\Faction
      */
     private $faction;
+    
+        /**
+     * @var \AppBundle\Entity\Subtype
+     */
+    private $subtype;
 
     /**
      * @var \AppBundle\Entity\Card
@@ -1000,6 +1005,30 @@ class Card implements \Serializable
     public function getType()
     {
         return $this->type;
+    }
+    
+        /**
+     * Set subtype
+     *
+     * @param \AppBundle\Entity\Subtype $type
+     *
+     * @return Card
+     */
+    public function setSubtype(\AppBundle\Entity\Subtype $subtype = null)
+    {
+        $this->subtype = $subtype;
+
+        return $this;
+    }
+
+    /**
+     * Get subtype
+     *
+     * @return \AppBundle\Entity\Subtype
+     */
+    public function getSubtype()
+    {
+        return $this->subtype;
     }
 
     /**
