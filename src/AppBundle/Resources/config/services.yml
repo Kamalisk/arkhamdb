@@ -28,7 +28,7 @@ services:
         arguments: ["@doctrine.orm.entity_manager"]
     cards_data:
         class: AppBundle\Services\CardsData
-        arguments: ["@doctrine", "@request_stack", "@router", "@templating.helper.assets", "%kernel.root_dir%"]
+        arguments: ["@doctrine", "@request_stack", "@router", "@templating.helper.assets", "@deck_validation_helper", "%kernel.root_dir%"]
     decklist_manager:
         class: AppBundle\Model\DecklistManager
         shared: false

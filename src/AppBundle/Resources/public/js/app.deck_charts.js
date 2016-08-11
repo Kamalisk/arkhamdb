@@ -88,57 +88,6 @@ deck_charts.chart_faction = function chart_faction() {
     });
 }
 
-deck_charts.chart_attributes = function chart_attributes() {
-
-		var data = [];
-
-		var draw_deck = app.deck.get_draw_deck();
-		draw_deck.forEach(function (card) {
-			if(typeof card.strength === 'number') {
-				data[card.strength] = data[card.strength] || 0;
-				data[card.strength] += (card.is_unique ? 1 : card.indeck);
-			}
-		})
-		data = _.flatten(data).map(function (value) { return value || 0; });
-
-		$("#deck-chart-strength").highcharts({
-			chart: {
-				type: 'line'
-			},
-			title: {
-				text: "Character Strength"
-			},
-			subtitle: {
-				text: "Duplicates not counted"
-			},
-			xAxis: {
-				allowDecimals: false,
-				tickInterval: 1,
-				title: {
-					text: null
-				}
-			},
-			yAxis: {
-				min: 0,
-				allowDecimals: false,
-				tickInterval: 1,
-				title: null,
-				labels: {
-					overflow: 'justify'
-				}
-			},
-			tooltip: {
-				headerFormat: '<span style="font-size: 10px">STR {point.key}</span><br/>'
-			},
-			series: [{
-				animation: false,
-				name: '# characters',
-				showInLegend: false,
-				data: data
-			}]
-		});
-}
-
 deck_charts.chart_cost = function chart_cost() {
 
 		var data = [];
@@ -192,7 +141,6 @@ deck_charts.chart_cost = function chart_cost() {
 
 deck_charts.setup = function setup(options) {
 	deck_charts.chart_faction();
-	deck_charts.chart_attributes();
 	deck_charts.chart_cost();
 }
 

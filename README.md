@@ -1,4 +1,4 @@
-ThronesDB
+ArkhamDB
 =======
 
 # Very quick guide on how to install a local copy

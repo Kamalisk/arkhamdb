@@ -8,19 +8,20 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Templating\Helper\AssetsHelper;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use AppBundle\Helper\DeckValidationHelper;
 
 /*
  *
  */
 class CardsData
 {
-	public function __construct(Registry $doctrine, RequestStack $request_stack, Router $router, AssetsHelper $assets_helper, $rootDir) {
+	public function __construct(Registry $doctrine, RequestStack $request_stack, Router $router, AssetsHelper $assets_helper, DeckValidationHelper $deckValidationHelper, $rootDir) {
 		$this->doctrine = $doctrine;
-        $this->request_stack = $request_stack;
-        $this->router = $router;
-        $this->assets_helper = $assets_helper;
-				$this->rootDir = $rootDir;
-
+		$this->request_stack = $request_stack;
+		$this->router = $router;
+		$this->assets_helper = $assets_helper;
+		$this->rootDir = $rootDir;
+		$this->deckValidationHelper = $deckValidationHelper;
 	}
 
 	/**
@@ -45,9 +46,9 @@ class CardsData
 	}
 	
 	/**
-	 * Searches for and replaces symbol tokens with markup in a given text.
+	 * Parse deck requirements/restrictions and convert to array
 	 * @param string $text
-	 * @return string
+	 * @return Array
 	 */
 	public function parseDeckRequirements($text)
 	{
@@ -430,16 +431,28 @@ class CardsData
 
 		if($api) {
 			unset($cardinfo['id']);
-			$cardinfo['deck_requirements'] = $this->parseDeckRequirements($cardinfo['deck_requirements']);
-			$cardinfo['deck_options'] = $this->parseDeckRequirements($cardinfo['deck_options']);
-			$cardinfo['restrictions'] = $this->parseDeckRequirements($cardinfo['restrictions']);
+			if (isset($cardinfo['deck_requirements']) && $cardinfo['deck_requirements']){
+				$cardinfo['deck_requirements'] = $this->deckValidationHelper->parseReqString($cardinfo['deck_requirements']);
+			}
+			if (isset($cardinfo['deck_options']) && $cardinfo['deck_options']){
+				$cardinfo['deck_options'] = $this->deckValidationHelper->parseReqString($cardinfo['deck_options']);
+			}
+			if (isset($cardinfo['restrictions']) && $cardinfo['restrictions']){
+				$cardinfo['restrictions'] = $this->deckValidationHelper->parseReqString($cardinfo['restrictions']);
+			}
 			$cardinfo = array_filter($cardinfo, function ($var) { return isset($var); });
 		} else {
 			$cardinfo['text'] = $this->replaceSymbols($cardinfo['text']);
 			$cardinfo['text'] = $this->splitInParagraphs($cardinfo['text']);
-			$cardinfo['deck_requirements'] = $this->parseDeckRequirements($cardinfo['deck_requirements']);
-			$cardinfo['deck_options'] = $this->parseDeckRequirements($cardinfo['deck_options']);
-			$cardinfo['restrictions'] = $this->parseDeckRequirements($cardinfo['restrictions']);
+			if (isset($cardinfo['deck_requirements']) && $cardinfo['deck_requirements']){
+				$cardinfo['deck_requirements'] = $this->deckValidationHelper->parseReqString($cardinfo['deck_requirements']);
+			}
+			if (isset($cardinfo['deck_options']) && $cardinfo['deck_options']){
+				$cardinfo['deck_options'] = $this->deckValidationHelper->parseReqString($cardinfo['deck_options']);
+			}
+			if (isset($cardinfo['restrictions']) && $cardinfo['restrictions']){
+				$cardinfo['restrictions'] = $this->deckValidationHelper->parseReqString($cardinfo['restrictions']);
+			}
 			$cardinfo['flavor'] = $this->replaceSymbols($cardinfo['flavor']);
 		}
 
