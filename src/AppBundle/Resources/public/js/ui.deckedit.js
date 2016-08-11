@@ -164,7 +164,7 @@ ui.init_selectors = function init_selectors() {
 	var investigator = app.data.cards.findById(app.deck.get_investigator_code());
 	if (investigator.deck_options && investigator.deck_options.faction){
 		$.each(investigator.deck_options.faction, function(key, value){
-			$('[data-filter=faction_code]').find('input[name='+value+']').prop("checked", true).parent().addClass('active');
+			$('[data-filter=faction_code]').find('input[name='+key+']').prop("checked", true).parent().addClass('active');
 		})
 	}
 	
@@ -451,8 +451,8 @@ ui.update_list_template = function update_list_template() {
 				+ '<td><div class="btn-group" data-toggle="buttons"><%= radios %></div></td>'
 				+ '<td><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></td>'
 				+ '<td class="cost"><%= card.cost %><%= card.income %></td>'
-				+ '<td class="type"><span class="icon-<%= card.type_code %>" title="<%= card.type_name %>"><%= card.type_name %></span></td>'
-				+ '<td class="faction"><span class="icon-<%= card.faction_code %> fg-<%= card.faction_code %>" title="<%= card.faction_name %>"><%= card.faction_name %></span></td>'
+				+ '<td class="type"><span class="" title="<%= card.type_name %>"><%= card.type_name %></span></td>'
+				+ '<td class="faction"><span class="fg-<%= card.faction_code %>" title="<%= card.faction_name %>"><%= card.faction_name %></span></td>'
 			+ '</tr>'
 		);
 		break;

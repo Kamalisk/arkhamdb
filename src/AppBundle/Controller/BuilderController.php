@@ -12,6 +12,7 @@ use AppBundle\Entity\Card;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Deckchange;
+use AppBundle\Helper\DeckValidationHelper;
 
 class BuilderController extends Controller
 {
@@ -55,7 +56,23 @@ class BuilderController extends Controller
         	$this->get('session')->getFlashBag()->set('error', "An investigator is required.");
         	return $this->redirect($this->generateUrl('deck_buildform'));
         }
-				$tags = [ $investigator_code ];
+        $tags = [];
+				
+				$cards_to_add = [];
+				// parse deck requirements and pre-fill deck with needed cards
+				if ($investigator->getDeckRequirements()){
+					$deck_requirements = $this->get('DeckValidationHelper')->parseReqString($investigator->getDeckRequirements());
+					if ($deck_requirements['card']){
+						foreach($deck_requirements['card'] as $card_code){
+							if ($card_code){
+								$card_to_add = $em->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
+								if ($card_to_add){
+									$cards_to_add[] = $card_to_add;
+								}
+							}
+						}
+					}
+				}
 				
 				$pack = $investigator->getPack();
 				$name = sprintf("New deck: %s", $investigator->getName());
@@ -68,7 +85,15 @@ class BuilderController extends Controller
         $deck->setProblem('too_few_cards');
         $deck->setTags(join(' ', array_unique($tags)));
         $deck->setUser($this->getUser());
-
+				
+				foreach ( $cards_to_add as $card) {
+					$slot = new Deckslot ();
+					$slot->setQuantity ( 1 );
+					$slot->setCard ( $card );
+					$slot->setDeck ( $deck );
+					$deck->addSlot ( $slot );
+				}
+				
         $em->persist($deck);
         $em->flush();
 

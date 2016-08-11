@@ -352,7 +352,7 @@ deck.can_include_card = function can_include_card(card) {
 	}
 	
 	// reject cards restricted
-	if (card.restrictions && card.restrictions.investigator && card.restrictions.investigator[0] && card.restrictions.investigator[0][0] && card.restrictions.investigator[0][0] !== investigator_code){
+	if (card.restrictions && card.restrictions.investigator &&  card.restrictions.investigator[0] !== investigator_code){
 		return false;
 	}
 	
