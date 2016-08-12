@@ -449,7 +449,7 @@ ui.update_list_template = function update_list_template() {
 		DisplayColumnsTpl = _.template(
 			'<tr>'
 				+ '<td><div class="btn-group" data-toggle="buttons"><%= radios %></div></td>'
-				+ '<td><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></td>'
+				+ '<td><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a> <span class="xp-<%= card.xp %>"><%= card.xp %></span></td>'
 				+ '<td class="cost"><%= card.cost %></td>'
 				+ '<td class="type"><span class="" title="<%= card.type_name %>"><%= card.type_name %></span></td>'
 				+ '<td class="faction"><span class="fg-<%= card.faction_code %>" title="<%= card.faction_name %>"><%= card.faction_name %></span></td>'

@@ -243,7 +243,7 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 			$div.append($(card_line_tpl({card:card})));
 			$div.prepend(card.indeck+'x ');
 			if(card.xp && card.xp > 0) {
-				$div.append('<span class="xp-'+card.xp+'">('+card.xp+')</span>');
+				$div.append(' <span class="xp-'+card.xp+'">('+card.xp+')</span>');
 			}
 			if(app.data.cards.find({'name': card.name}).length > 1) {
 				//$div.append(' ('+card.pack_code+')');
