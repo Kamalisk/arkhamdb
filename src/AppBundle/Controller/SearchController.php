@@ -28,6 +28,7 @@ class SearchController extends Controller
 			'h' => 'health',
 			't' => 'sanity',
 			'x' => 'text',
+			'p' => 'xp',
 			'y' => 'quantity'
 	);
 
@@ -50,7 +51,8 @@ class SearchController extends Controller
 			'h' => 'integer',
 			't' => 'integer',
 			'x' => 'string',
-			'y' => 'integer'
+			'y' => 'integer',
+			'p' => 'integer'
 	);
 
 	public function formAction()
