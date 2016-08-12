@@ -454,7 +454,7 @@ class BuilderController extends Controller
 
         $deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->find($deck_id);
 
-        if ($this->getUser()->getId () != $deck->getUser()->getId()) 
+        if (!$deck || $this->getUser()->getId() != $deck->getUser()->getId()) 
         {
         	return $this->render(
         		'AppBundle:Default:error.html.twig',
