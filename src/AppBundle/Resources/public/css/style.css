@@ -174,18 +174,13 @@ div.tags span.tag:not(:first-child)::before {
 .list-decks>tbody>tr>td {
 	vertical-align: middle;
 }
-.list-decks img {
-	height: 63px;
-	width: 90px;
-}
+
 #tag_toggles button {
 	margin-bottom: 4px;
 	margin-right: 4px;
 }
 
 .deck-list-investigator-image {
-	width : 55px;
-	height : 50px;
 	background-position: 8% 40%;
 	background-repeat: no-repeat;
 	background-size: 130px auto;

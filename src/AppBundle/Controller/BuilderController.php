@@ -56,7 +56,7 @@ class BuilderController extends Controller
         	$this->get('session')->getFlashBag()->set('error', "An investigator is required.");
         	return $this->redirect($this->generateUrl('deck_buildform'));
         }
-        $tags = [];
+        $tags = [ $investigator->getFaction()->getCode() ];
 				
 				$cards_to_add = [];
 				// parse deck requirements and pre-fill deck with needed cards
