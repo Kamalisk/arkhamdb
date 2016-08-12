@@ -25,7 +25,7 @@ class SearchController extends Controller
 			'a' => 'agility',
 			't' => 'type',
 			'u' => 'isUnique',
-			'v' => 'health',
+			'h' => 'health',
 			't' => 'sanity',
 			'x' => 'text',
 			'y' => 'quantity'
@@ -47,7 +47,7 @@ class SearchController extends Controller
 			'a' => 'integer',
 			't' => 'string',
 			'u' => 'boolean',
-			'v' => 'integer',
+			'h' => 'integer',
 			't' => 'integer',
 			'x' => 'string',
 			'y' => 'integer'

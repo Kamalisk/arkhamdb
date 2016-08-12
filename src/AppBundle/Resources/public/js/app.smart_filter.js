@@ -3,23 +3,18 @@
 var SmartFilterQuery = [];
 
 var configuration = {
-	a: [ add_string_sf, 'flavor', "Flavor text" ],
-	b: [ add_integer_sf, 'claim', "Claim value" ],
+	v: [ add_string_sf, 'flavor', "Flavor text" ],
 	e: [ add_string_sf, 'pack_code', "Pack" ],
 	f: [ add_string_sf, 'faction_code', "Faction" ],
-	g: [ add_boolean_sf, 'is_intrigue', "Intrigue icon" ],
-	h: [ add_integer_sf, 'reserve', "Reserve value" ],
 	i: [ add_string_sf, 'illustrator', "Illustrator" ],
 	k: [ add_string_sf, 'traits', "Traits" ],
-	l: [ add_boolean_sf, 'is_loyal', "Loyalty" ],
-	m: [ add_boolean_sf, 'is_military', "Military icon" ],
-	n: [ add_integer_sf, 'income', "Gold value" ],
 	o: [ add_integer_sf, 'cost', "Cost" ],
-	p: [ add_boolean_sf, 'is_power', "Power icon" ],
+	w: [ add_integer_sf, 'will', "Will" ],
+	l: [ add_integer_sf, 'lore', "Lore" ],
 	s: [ add_integer_sf, 'strength', "Strength" ],
+	a: [ add_integer_sf, 'agility', "Agility" ],
 	t: [ add_string_sf, 'type_code', "Type" ],
 	u: [ add_boolean_sf, 'is_unique', "Uniqueness" ],
-	v: [ add_integer_sf, 'initiative', "Initiative value" ],
 	x: [ add_string_sf, 'text', "Text" ],
 	y: [ add_integer_sf, 'quantity', "Quantity in pack" ]
 };

@@ -62,12 +62,30 @@ class BuilderController extends Controller
 				// parse deck requirements and pre-fill deck with needed cards
 				if ($investigator->getDeckRequirements()){
 					$deck_requirements = $this->get('DeckValidationHelper')->parseReqString($investigator->getDeckRequirements());
-					if ($deck_requirements['card']){
+					if (isset($deck_requirements['card']) && $deck_requirements['card']){
 						foreach($deck_requirements['card'] as $card_code){
 							if ($card_code){
 								$card_to_add = $em->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
 								if ($card_to_add){
 									$cards_to_add[] = $card_to_add;
+								}
+							}
+						}
+					}
+					
+					// add random deck requirements here
+					// should add a flag so the user can choose to add these or not
+					if (isset($deck_requirements['random']) && $deck_requirements['random']){
+						foreach($deck_requirements['random'] as $random){
+							if (isset($random['target']) && $random['target']){
+								if ($random['target'] === "subtype"){
+									$subtype = $em->getRepository('AppBundle:Subtype')->findOneBy(array("code" => $random['value']));
+									$valid_targets = $em->getRepository('AppBundle:Card')->findBy(array("subtype" => $subtype->getId() ));
+									print_r($subtype->getId());
+									if ($valid_targets){
+										$key = array_rand($valid_targets);
+										$cards_to_add[] = $valid_targets[$key];
+									}
 								}
 							}
 						}
