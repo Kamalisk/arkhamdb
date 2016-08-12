@@ -41,16 +41,6 @@ body {
 	content: "\2013\FEFF";
 }
 
-.color-military {
-	color: #c8232a;
-}
-.color-intrigue {
-	color: #13522f;
-}
-.color-power {
-	color: #292e5f;
-}
-
 .table-expanded>thead>tr>th, .table-expanded>tbody>tr>th, .table-expanded>tfoot>tr>th, .table-expanded>thead>tr>td, .table-expanded>tbody>tr>td, .table-expanded>tfoot>tr>td {
 	padding: 16px 8px;
 }
@@ -338,92 +328,62 @@ div.site-slogan {
 .bg-faction a, .bg-faction span {
 	color: inherit;
 }
-.bg-targaryen {
-	background-color: #1c1c1c !important;
+.bg-guardian {
+	background-color: #1c1c7c !important;
 	color: white !important;
 }
-.bg-baratheon {
-	background-color: #e3d852 !important;
+.bg-survivor {
+	background-color: #f33832 !important;
 }
-.bg-stark {
-	background-color: #cfcfcf !important;
+.bg-seeker {
+	background-color: #ff8f3f !important;
 }
-.bg-greyjoy {
-	background-color: #1d7a99 !important;
+.bg-mystic {
+	background-color: #6d2aa9 !important;
 	color: white !important;
 }
-.bg-lannister {
-	background-color: #c00106 !important;
+.bg-rogue {
+	background-color: #107116 !important;
 	color: white !important;
-}
-.bg-tyrell {
-	background-color: #509f16 !important;
-	color: white !important;
-}
-.bg-thenightswatch {
-	background-color: #7a7a7a !important;
-}
-.bg-martell {
-	background-color: #e89521 !important;
-}
-.bg-neutral {
-	background-color: #a99560 !important;
 }
 
-.fg-targaryen {
-	color: #1c1c1c !important;
+.fg-guardian {
+	color: #0c0c7c !important;
 }
-.fg-baratheon {
-	color: #e3d852 !important;
+.fg-survivor {
+	color: #f33832 !important;
 }
-.fg-stark {
-	color: #cfcfcf !important;
+.fg-seeker {
+	color: #ff8f3f !important;
 }
-.fg-greyjoy {
-	color: #1d7a99 !important;
+.fg-mystic {
+	color: #6d2aa9 !important;
 }
-.fg-lannister {
-	color: #c00106 !important;
-}
-.fg-tyrell {
-	color: #509f16 !important;
-}
-.fg-thenightswatch {
-	color: #7a7a7a !important;
-}
-.fg-martell {
-	color: #e89521 !important;
+.fg-rogue {
+	color: #107116 !important;
 }
 .fg-neutral {
-	color: #a99560 !important;
+	color: #202020 !important;
 }
 
-.border-targaryen {
-	border-color: #1c1c1c !important;
+
+.border-guardian {
+	border-color: #1c1c7c !important;
 }
-.border-baratheon {
-	border-color: #e3d852 !important;
+.border-survivor {
+	border-color: #f33832 !important;
 }
-.border-stark {
-	border-color: #cfcfcf !important;
+.border-seeker {
+	border-color: #ff8f3f !important;
 }
-.border-greyjoy {
-	border-color: #1d7a99 !important;
+.border-mystic {
+	border-color: #6d2aa9 !important;
 }
-.border-lannister {
-	border-color: #c00106 !important;
-}
-.border-tyrell {
-	border-color: #509f16 !important;
-}
-.border-thenightswatch {
-	border-color: #7a7a7a !important;
-}
-.border-martell {
-	border-color: #e89521 !important;
+.border-rogue {
+	border-color: #107116 !important;
 }
 .border-neutral {
-	border-color: #a99560 !important;
+	border-color: #202020 !important;
 }
 
 /**************** REVIEW ON CARD PAGE ******************/

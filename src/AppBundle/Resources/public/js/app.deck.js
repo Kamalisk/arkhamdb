@@ -13,7 +13,7 @@ var date_creation,
 	problem_labels = {
 		too_few_cards: "Contains too few cards",
 		too_many_copies: "Contains too many copies of a card (by title)",
-		invalid_cards: "Contains forbidden cards (cards no permitted by Faction or Agenda)",
+		invalid_cards: "Contains forbidden cards (cards no permitted by Investigator)",
 		investigator: "Doesn't comply with the Investigator conditions"
 	},
 	header_tpl = _.template('<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'),
@@ -134,6 +134,19 @@ deck.get_draw_deck_size = function get_draw_deck_size(sort) {
 	return deck.get_nb_cards(draw_deck);
 }
 
+/**
+ * @memberOf deck
+ */
+deck.get_xp_usage = function get_xp_usage(sort) {
+	var xp = 0;
+	deck.get_draw_deck().forEach(function (card) {
+		if (card && card.xp){
+			xp += card.xp * card.indeck;
+		}
+	});
+	return xp;
+}
+
 
 deck.get_nb_cards = function get_nb_cards(cards) {
 	if(!cards) cards = deck.get_cards();
@@ -200,6 +213,7 @@ deck.get_layout_data = function get_layout_data(options) {
 	deck.update_layout_section(data, 'images', $('<div style="margin-bottom:10px"><img src="/bundles/app/images/cards/'+deck.get_investigator_code()+'.png" class="img-responsive">'));
 	deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold">'+investigator_name+'</h4>'));
 	deck.update_layout_section(data, 'meta', $('<div>Draw deck: '+deck.get_draw_deck_size()+' cards</div>').addClass(deck.get_draw_deck_size() < 30 ? 'text-danger': ''));
+	deck.update_layout_section(data, 'meta', $('<div>Experience: '+deck.get_xp_usage()+'</div>'));
 	deck.update_layout_section(data, 'meta', $('<div>Packs: ' + _.map(deck.get_included_packs(), function (pack) { return pack.name+(pack.quantity > 1 ? ' ('+pack.quantity+')' : ''); }).join(', ') + '</div>'));
 	if(problem) {
 		deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+problem_labels[problem]+'</div>'));
@@ -228,8 +242,11 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 			var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
 			$div.append($(card_line_tpl({card:card})));
 			$div.prepend(card.indeck+'x ');
+			if(card.xp && card.xp > 0) {
+				$div.append('<span class="xp-'+card.xp+'">('+card.xp+')</span>');
+			}
 			if(app.data.cards.find({'name': card.name}).length > 1) {
-				$div.append(' ('+card.pack_code+')');
+				//$div.append(' ('+card.pack_code+')');
 			}
 			$div.appendTo(section);
 		});

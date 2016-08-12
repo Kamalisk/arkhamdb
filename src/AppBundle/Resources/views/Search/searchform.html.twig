@@ -52,7 +52,7 @@
 			{% for faction in factions %}
 				<label class="btn btn-default active" title="{{ faction.name }}" data-toggle="tooltip" data-container="body">
 					<input type="checkbox" name="f[]" checked value="{{ faction.code }}">
-					<span class="icon icon-{{ faction.code }}"></span>
+					<span class="">{{ faction.name }}</span>
 				</label>
 			{% endfor %}
 			</div>
