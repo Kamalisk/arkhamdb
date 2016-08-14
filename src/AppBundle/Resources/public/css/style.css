@@ -247,31 +247,31 @@ div.tags span.tag:not(:first-child)::before {
 .card-thumbnail-3x{width:67px;height:67px;background-size:100px 139px}
 .card-thumbnail-4x{width:50px;height:50px;background-size:75px 105px}
 .card-thumbnail-5x{width:40px;height:40px;background-size:60px 84px}
-.card-thumbnail-1x.card-thumbnail-character{background-position:-79px -21px}
-.card-thumbnail-2x.card-thumbnail-character{background-position:-40px -10px}
-.card-thumbnail-3x.card-thumbnail-character{background-position:-26px -7px}
-.card-thumbnail-4x.card-thumbnail-character{background-position:-20px -5px}
-.card-thumbnail-5x.card-thumbnail-character{background-position:-16px -4px}
-.card-thumbnail-1x.card-thumbnail-attachment{background-position:-51px -31px}
-.card-thumbnail-2x.card-thumbnail-attachment{background-position:-25.5px -15.5px}
-.card-thumbnail-3x.card-thumbnail-attachment{background-position:-17px -10.3px}
-.card-thumbnail-4x.card-thumbnail-attachment{background-position:-12.75px -7.75px}
-.card-thumbnail-5x.card-thumbnail-attachment{background-position:-10.2px -6.2px}
-.card-thumbnail-1x.card-thumbnail-agenda{background-position:-50px -52px}
-.card-thumbnail-2x.card-thumbnail-agenda{background-position:-25px -26px}
-.card-thumbnail-3x.card-thumbnail-agenda{background-position:-16.7px -17.3px}
-.card-thumbnail-4x.card-thumbnail-agenda{background-position:-12.5px -13px}
-.card-thumbnail-5x.card-thumbnail-agenda{background-position:-10px -10.4px}
-.card-thumbnail-1x.card-thumbnail-event{background-position:-50px -60px}
-.card-thumbnail-2x.card-thumbnail-event{background-position:-25px -30px}
-.card-thumbnail-3x.card-thumbnail-event{background-position:-16.7px -20px}
-.card-thumbnail-4x.card-thumbnail-event{background-position:-12.5px -15px}
-.card-thumbnail-5x.card-thumbnail-event{background-position:-10px -12px}
-.card-thumbnail-1x.card-thumbnail-location{background-position:-82px -26px}
-.card-thumbnail-2x.card-thumbnail-location{background-position:-41px -13px}
-.card-thumbnail-3x.card-thumbnail-location{background-position:-27.3px -8.7px}
-.card-thumbnail-4x.card-thumbnail-location{background-position:-20.5px -6.5px}
-.card-thumbnail-5x.card-thumbnail-location{background-position:-16.4px -5.2px}
+.card-thumbnail-1x.card-thumbnail-investigator{background-position:-79px -21px}
+.card-thumbnail-2x.card-thumbnail-investigator{background-position:-40px -10px}
+.card-thumbnail-3x.card-thumbnail-investigator{background-size:139px 100px;background-position:-5px -18px}
+.card-thumbnail-4x.card-thumbnail-investigator{background-position:-20px -5px}
+.card-thumbnail-5x.card-thumbnail-investigator{background-position:-16px -4px}
+.card-thumbnail-1x.card-thumbnail-asset{background-position:-51px -31px}
+.card-thumbnail-2x.card-thumbnail-asset{background-position:-25.5px -15.5px}
+.card-thumbnail-3x.card-thumbnail-asset{background-position:-17px -10.3px}
+.card-thumbnail-4x.card-thumbnail-asset{background-position:-12.75px -7.75px}
+.card-thumbnail-5x.card-thumbnail-asset{background-position:-10.2px -6.2px}
+.card-thumbnail-1x.card-thumbnail-event{background-position:-50px -52px}
+.card-thumbnail-2x.card-thumbnail-event{background-position:-25px -26px}
+.card-thumbnail-3x.card-thumbnail-event{background-position:-16.7px -17.3px}
+.card-thumbnail-4x.card-thumbnail-event{background-position:-12.5px -13px}
+.card-thumbnail-5x.card-thumbnail-event{background-position:-10px -10.4px}
+.card-thumbnail-1x.card-thumbnail-skill{background-position:-50px -60px}
+.card-thumbnail-2x.card-thumbnail-skill{background-position:-25px -30px}
+.card-thumbnail-3x.card-thumbnail-skill{background-position:-16.7px -20px}
+.card-thumbnail-4x.card-thumbnail-skill{background-position:-12.5px -15px}
+.card-thumbnail-5x.card-thumbnail-skill{background-position:-10px -12px}
+.card-thumbnail-1x.card-thumbnail-treachery{background-position:-82px -26px}
+.card-thumbnail-2x.card-thumbnail-treachery{background-position:-41px -13px}
+.card-thumbnail-3x.card-thumbnail-treachery{background-position:-27.3px -8.7px}
+.card-thumbnail-4x.card-thumbnail-treachery{background-position:-20.5px -6.5px}
+.card-thumbnail-5x.card-thumbnail-treachery{background-position:-16.4px -5.2px}
 .card-thumbnail-1x.card-thumbnail-plot{width:400px;height:100px;background-size:418px 300px;background-position:-9px -25px}
 .card-thumbnail-2x.card-thumbnail-plot{width:200px;height:50px;background-size:209px 150px;background-position:-4.5px -12.5px}
 .card-thumbnail-3x.card-thumbnail-plot{width:133px;height:33px;background-size:139px 100px;background-position:-3px -8.3px}

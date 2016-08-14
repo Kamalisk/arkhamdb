@@ -7,7 +7,7 @@ var cards_zoom_regexp = /card\/(\d\d\d\d\d)$/,
 function display_card_on_element(card, element, event) {
 	var content;
 	if(mode == 'text') {
-		var image = card.imagesrc ? '<div class="card-thumbnail card-thumbnail-'+(card.type_code === 'plot' ? 4 : 3)+'x card-thumbnail-'+card.type_code+'" style="background-image:url('+card.imagesrc+')"></div>' : "";
+		var image = card.imagesrc ? '<div class="card-thumbnail card-thumbnail-3x card-thumbnail-'+card.type_code+'" style="background-image:url('+card.imagesrc+')"></div>' : "";
 
 		content = image
 		+ '<h4 class="card-name">' + app.format.name(card) + '</h4>'
