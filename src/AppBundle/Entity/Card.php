@@ -28,7 +28,8 @@ class Card implements \Serializable
 				'traits',
 				'text',
 				'cost',
-				'octgn_id'
+				'octgn_id',
+				'subname'
 		];
 	
 		$externalFields = [
@@ -40,17 +41,45 @@ class Card implements \Serializable
 		switch($this->type->getCode()) {
 			case 'asset':
 				$mandatoryFields[] = 'cost';
+				$optionalFields[] = 'will';
+				$optionalFields[] = 'lore';
+				$optionalFields[] = 'strength';
+				$optionalFields[] = 'agility';
+				$optionalFields[] = 'wild';
+				$optionalFields[] = 'health';
+				$optionalFields[] = 'sanity';				
+				$optionalFields[] = 'restrictions';
+				$optionalFields[] = 'slot';
 				break;
 			case 'event':
 				$mandatoryFields[] = 'cost';
+				$optionalFields[] = 'will';
+				$optionalFields[] = 'lore';
+				$optionalFields[] = 'strength';
+				$optionalFields[] = 'agility';
+				$optionalFields[] = 'wild';
+				$optionalFields[] = 'restrictions';
 				break;
 			case 'skill':
+				$optionalFields[] = 'will';
+				$optionalFields[] = 'lore';
+				$optionalFields[] = 'strength';
+				$optionalFields[] = 'agility';
+				$optionalFields[] = 'wild';
+				$optionalFields[] = 'restrictions';
 				break;
-			case 'character':
+			case 'investigator':
 				$mandatoryFields[] = 'will';
 				$mandatoryFields[] = 'lore';
 				$mandatoryFields[] = 'strength';
 				$mandatoryFields[] = 'agility';
+				$mandatoryFields[] = 'health';
+				$mandatoryFields[] = 'sanity';
+				$mandatoryFields[] = 'deck_requirements';
+				$mandatoryFields[] = 'deck_options';
+				break;
+			case "treachery":
+				$externalFields[] = "subtype";
 				break;
 		}
 	
@@ -828,15 +857,15 @@ class Card implements \Serializable
     }
 
     /**
-     * Set slot
+     * Set flavor
      *
-     * @param string $slot
+     * @param string $flavor
      *
      * @return Card
      */
-    public function setFlavor($slot)
+    public function setFlavor($flavor)
     {
-        $this->slot = $slot;
+        $this->flavor = $flavor;
 
         return $this;
     }

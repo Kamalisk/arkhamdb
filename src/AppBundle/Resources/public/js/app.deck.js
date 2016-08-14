@@ -210,7 +210,7 @@ deck.get_layout_data = function get_layout_data(options) {
 	//var investigator = deck.get_investigator();
 	var problem = deck.get_problem();
 
-	deck.update_layout_section(data, 'images', $('<div style="margin-bottom:10px"><img src="/bundles/app/images/cards/'+deck.get_investigator_code()+'.png" class="img-responsive">'));
+	deck.update_layout_section(data, 'images', $('<div style="margin-bottom:10px"><img src="/bundles/cards/'+deck.get_investigator_code()+'.png" class="img-responsive">'));
 	deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold">'+investigator_name+'</h4>'));
 	deck.update_layout_section(data, 'meta', $('<div>Draw deck: '+deck.get_draw_deck_size()+' cards</div>').addClass(deck.get_draw_deck_size() < 30 ? 'text-danger': ''));
 	deck.update_layout_section(data, 'meta', $('<div>Experience: '+deck.get_xp_usage()+'</div>'));

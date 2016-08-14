@@ -77,6 +77,21 @@ class ImportStdCommand extends ContainerAwareCommand
 		$this->loadCollection('Type');
 		$output->writeln("Done.");
 		
+		// subtypes
+		
+		$output->writeln("Importing SubTypes...");
+		$subtypesFileInfo = $this->getFileInfo($path, 'subtypes.json');
+		$imported = $this->importSubtypesJsonFile($subtypesFileInfo);
+		if(count($imported)) {
+			$question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
+			if(!$helper->ask($input, $output, $question)) {
+				die();
+			}
+		}
+		$this->em->flush();
+		$this->loadCollection('Subtype');
+		$output->writeln("Done.");
+		
 		// cycles
 
 		$output->writeln("Importing Cycles...");
@@ -167,6 +182,26 @@ class ImportStdCommand extends ContainerAwareCommand
 		return $result;
 	}
 	
+		protected function importSubtypesJsonFile(\SplFileInfo $fileinfo)
+	{
+		$result = [];
+	
+		$list = $this->getDataFromFile($fileinfo);
+		foreach($list as $data)
+		{
+			$type = $this->getEntityFromData('AppBundle\\Entity\\Subtype', $data, [
+					'code',
+					'name'
+			], [], []);
+			if($type) {
+				$result[] = $type;
+				$this->em->persist($type);
+			}
+		}
+	
+		return $result;
+	}
+	
 	protected function importCyclesJsonFile(\SplFileInfo $fileinfo)
 	{
 		$result = [];
@@ -229,19 +264,31 @@ class ImportStdCommand extends ContainerAwareCommand
 					'position',
 					'quantity',
 					'name',
-					'is_loyal',
 					'is_unique'
 			], [
 					'faction_code',
 					'pack_code',
-					'type_code'
+					'type_code',
+					'subtype_code'
 			], [
 					'illustrator',
 					'flavor',
 					'traits',
 					'text',
 					'cost',
-					'octgn_id'
+					'octgn_id',
+					'will',
+					'lore',
+					'strength',
+					'agility',
+					'wild',
+					'health',
+					'sanity',
+					'restrictions',
+					'slot',
+					'deck_options',
+					'deck_requirements',
+					'subname'
 			]);
 			if($card) {
 				$result[] = $card;
@@ -335,6 +382,9 @@ class ImportStdCommand extends ContainerAwareCommand
 			$foreignEntityShortName = ucfirst(str_replace('_code', '', $key));
 	
 			if(!key_exists($key, $data)) {
+				if ($key === "subtype_code"){
+					return false;
+				}
 				throw new \Exception("Missing key [$key] in ".json_encode($data));
 			}
 
@@ -364,19 +414,10 @@ class ImportStdCommand extends ContainerAwareCommand
 	
 		if($entity->serialize() !== $orig) return $entity;
 	}
-	
-	protected function importAgendaData(Card $card, $data)
-	{
-		$mandatoryKeys = [
-		];
-		
-		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
-		}
-	}
 
-	protected function importAttachmentData(Card $card, $data)
+	protected function importAssetData(Card $card, $data)
 	{
+
 		$mandatoryKeys = [
 				'cost'
 		];
@@ -384,16 +425,20 @@ class ImportStdCommand extends ContainerAwareCommand
 		foreach($mandatoryKeys as $key) {
 			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
 		}
+
 	}
 
-	protected function importCharacterData(Card $card, $data)
+	protected function importInvestigatorData(Card $card, $data)
 	{
 		$mandatoryKeys = [
-				'cost',
+				'will',
+				'lore',
 				'strength',
-				'is_military',
-				'is_intrigue',
-				'is_power'
+				'agility',
+				'wild',
+				'health',
+				'sanity',
+				'restrictions'
 		];
 
 		foreach($mandatoryKeys as $key) {
@@ -412,39 +457,14 @@ class ImportStdCommand extends ContainerAwareCommand
 		}
 	}
 
-	protected function importLocationData(Card $card, $data)
+	protected function importSkillData(Card $card, $data)
 	{
-		$mandatoryKeys = [
-				'cost'
-		];
 
-		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
-		}
 	}
 
-	protected function importPlotData(Card $card, $data)
+	protected function importTreacheryData(Card $card, $data)
 	{
-		$mandatoryKeys = [
-				'claim',
-				'income',
-				'initiative',
-				'reserve'
-		];
 
-		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
-		}
-	}
-
-	protected function importTitleData(Card $card, $data)
-	{
-		$mandatoryKeys = [
-		];
-
-		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
-		}
 	}
 
 	protected function getDataFromFile(\SplFileInfo $fileinfo)
