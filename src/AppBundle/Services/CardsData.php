@@ -35,6 +35,7 @@ class CardsData
 			'[eldersign]' => '<span class="icon-eldersign"></span>',
 			'[reaction]' => '<span class="icon-reaction"></span>',
 			'[action]' => '<span class="icon-action"></span>',
+			'[lightning]' => '<span class="icon-lightning"></span>',
 			'[will]' => '<span class="icon-will"></span>',
 			'[lore]' => '<span class="icon-lore"></span>',
 			'[strength]' => '<span class="icon-strength"></span>',
