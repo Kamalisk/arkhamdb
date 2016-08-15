@@ -54,3 +54,19 @@
 .icon-unique:before {
 	content: "u";
 }
+
+.color-will {
+	color : #5F00dF;
+}
+.color-lore {
+	color : #bF00bF;
+}
+.color-strength {
+	color : #aF404F;
+}
+.color-agility {
+	color : #1F701F;
+}
+.color-wild {
+	color : #aFaF3F;
+}

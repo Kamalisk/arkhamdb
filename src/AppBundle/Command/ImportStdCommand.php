@@ -288,7 +288,8 @@ class ImportStdCommand extends ContainerAwareCommand
 					'slot',
 					'deck_options',
 					'deck_requirements',
-					'subname'
+					'subname',
+					'xp'
 			]);
 			if($card) {
 				$result[] = $card;

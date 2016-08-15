@@ -29,7 +29,8 @@ class Card implements \Serializable
 				'text',
 				'cost',
 				'octgn_id',
-				'subname'
+				'subname',
+				'xp'
 		];
 	
 		$externalFields = [
