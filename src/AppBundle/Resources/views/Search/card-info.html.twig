@@ -1,5 +1,5 @@
 <div class="card-info">
-	<span class="card-type">{{ card.type_name }}.</span>
+	<span class="card-type">{{ card.type_name }}{% if card.slot %}. {{card.slot}}{% endif %}{% if card.subtype_name is defined %}. {{card.subtype_name}}{% endif %}</span>
 	<p class="card-traits">{{ card.traits }}</p>
 	{% include 'AppBundle:Search:card-props.html.twig' %}
 </div>

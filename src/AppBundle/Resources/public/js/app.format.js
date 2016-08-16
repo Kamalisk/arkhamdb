@@ -11,7 +11,7 @@ format.traits = function traits(card) {
  * @memberOf format
  */
 format.name = function name(card) {
-	return (card.is_unique ? '<span class="icon-unique"></span> ' : "") + card.name;
+	return (card.is_unique ? '<span class="icon-unique"></span> ' : "") + card.name + (card.subname ? ': '+card.subname : "");
 }
 
 format.faction = function faction(card) {
@@ -31,17 +31,55 @@ format.pack = function pack(card) {
  * @memberOf format
  */
 format.info = function info(card) {
-	var text = '<span class="card-type">'+card.type_name+'. </span>';
+	var text = '';
 	switch(card.type_code) {
-	case 'character':
-		text += 'Cost: '+(card.cost != null ? card.cost : 'X')+'. ';
-		text += 'STR: '+(card.strength != null ? card.strength : 'X')+'. '
+	case 'investigator':
+		text += '<div>Will: '+card.will+'. Lore: '+card.lore+'. Strength: '+card.strength+'. Agility: '+card.agility+'.</div>';
+		text += '<div>Health: '+card.health+'. Sanity: '+card.sanity+'.</div>'
 		break;	
 	case 'asset':
 	case 'event':
-		text += 'Cost: '+(card.cost != null ? card.cost : 'X')+'. ';
+		text += '<div>Cost: '+(card.cost != null ? card.cost : 'X')+'. </div>';
+		if (card.will || card.lore || card.strength || card.agility || card.wild){
+			text += '<div>Test Icons: ';
+			if (card.will){
+				text += Array(card.will+1).join('<span class="icon icon-will color-will"></span>');
+			}
+			if (card.lore){
+				text += Array(card.lore+1).join('<span class="icon icon-lore color-lore"></span>');
+			}
+			if (card.strength){
+				text += Array(card.strength+1).join('<span class="icon icon-strength color-strength"></span>');
+			}
+			if (card.agility){
+				text += Array(card.agility+1).join('<span class="icon icon-agility color-agility"></span>');
+			}
+			if (card.wild){
+				text += Array(card.wild+1).join('<span class="icon icon-wild color-wild"></span>');
+			}
+			text += '</div>';
+		}
 		break;
 	case 'skill':
+		if (card.will || card.lore || card.strength || card.agility || card.wild){
+			text += '<div>Test Icons: ';
+			if (card.will){
+				text += Array(card.will+1).join('<span class="icon icon-will color-will"></span>');
+			}
+			if (card.lore){
+				text += Array(card.lore+1).join('<span class="icon icon-lore color-lore"></span>');
+			}
+			if (card.strength){
+				text += Array(card.strength+1).join('<span class="icon icon-strength color-strength"></span>');
+			}
+			if (card.agility){
+				text += Array(card.agility+1).join('<span class="icon icon-agility color-agility"></span>');
+			}
+			if (card.wild){
+				text += Array(card.wild+1).join('<span class="icon icon-wild color-wild"></span>');
+			}
+			text += '</div>';
+		}
 		break;
 	}
 	return text;

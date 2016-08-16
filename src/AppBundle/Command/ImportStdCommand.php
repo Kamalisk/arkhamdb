@@ -28,7 +28,7 @@ class ImportStdCommand extends ContainerAwareCommand
 	{
 		$this
 		->setName('app:import:std')
-		->setDescription('Import cards data file in json format from a copy of https://github.com/Alsciende/thronesdb-json-data')
+		->setDescription('Import cards data file in json format from a copy of https://github.com/Kamalisk/arkhamdb-json-data')
 		->addArgument(
 				'path',
 				InputArgument::REQUIRED,
@@ -277,11 +277,11 @@ class ImportStdCommand extends ContainerAwareCommand
 					'text',
 					'cost',
 					'octgn_id',
-					'will',
-					'lore',
-					'strength',
-					'agility',
-					'wild',
+					'skill_will',
+					'skill_lore',
+					'skill_strength',
+					'skill_agility',
+					'skill_wild',
 					'health',
 					'sanity',
 					'restrictions',
@@ -350,6 +350,8 @@ class ImportStdCommand extends ContainerAwareCommand
 			}
 		}
 		$value = $data[$key];
+		
+		$key = str_replace("skill_", "", $key);
 		
 		if(!key_exists($key, $metadata->fieldNames)) {
 			throw new \Exception("Missing column [$key] in entity ".$entityName);

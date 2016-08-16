@@ -12,9 +12,23 @@
 	Strength: {{ macros.integer_or_x(card.strength) }}.
 	Agility: {{ macros.integer_or_x(card.agility) }}.
 </div>
+{% else %}
+	{% if card.will or card.lore or card.strength or card.agility or card.wild %}
+	<div>
+	Test Icons:
+	{% if card.will %}{% for i in 1..card.will %}<span title="Will" class="icon icon-will color-will"></span>{% endfor %}{% endif %}
+	{% if card.lore %}{% for i in 1..card.lore %}<span title="Lore" class="icon icon-lore color-lore"></span>{% endfor %}{% endif %}
+	{% if card.strength %}{% for i in 1..card.strength %}<span title="Strength" class="icon icon-strength color-strength"></span>{% endfor %}{% endif %}
+	{% if card.agility %}{% for i in 1..card.agility %}<span title="Agility" class="icon icon-agility color-agility"></span>{% endfor %}{% endif %}
+	{% if card.wild %}{% for i in 1..card.wild %}<span title="Wild" class="icon icon-wild color-wild"></span>{% endfor %}{% endif %}
+	</div>
+	{% endif %}
 {% endif %}
 {% if card.health or card.sanity%}
+	<div>
 	Health: {{ macros.integer_or_x(card.health) }}.
 	Sanity: {{ macros.integer_or_x(card.sanity) }}.
+	</div>
 {% endif %}
+
 

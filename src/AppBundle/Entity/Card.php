@@ -42,11 +42,11 @@ class Card implements \Serializable
 		switch($this->type->getCode()) {
 			case 'asset':
 				$mandatoryFields[] = 'cost';
-				$optionalFields[] = 'will';
-				$optionalFields[] = 'lore';
-				$optionalFields[] = 'strength';
-				$optionalFields[] = 'agility';
-				$optionalFields[] = 'wild';
+				$optionalFields[] = 'skill_will';
+				$optionalFields[] = 'skill_lore';
+				$optionalFields[] = 'skill_strength';
+				$optionalFields[] = 'skill_agility';
+				$optionalFields[] = 'skill_wild';
 				$optionalFields[] = 'health';
 				$optionalFields[] = 'sanity';				
 				$optionalFields[] = 'restrictions';
@@ -54,26 +54,26 @@ class Card implements \Serializable
 				break;
 			case 'event':
 				$mandatoryFields[] = 'cost';
-				$optionalFields[] = 'will';
-				$optionalFields[] = 'lore';
-				$optionalFields[] = 'strength';
-				$optionalFields[] = 'agility';
-				$optionalFields[] = 'wild';
+				$optionalFields[] = 'skill_will';
+				$optionalFields[] = 'skill_lore';
+				$optionalFields[] = 'skill_strength';
+				$optionalFields[] = 'skill_agility';
+				$optionalFields[] = 'skill_wild';
 				$optionalFields[] = 'restrictions';
 				break;
 			case 'skill':
-				$optionalFields[] = 'will';
-				$optionalFields[] = 'lore';
-				$optionalFields[] = 'strength';
-				$optionalFields[] = 'agility';
-				$optionalFields[] = 'wild';
+				$optionalFields[] = 'skill_will';
+				$optionalFields[] = 'skill_lore';
+				$optionalFields[] = 'skill_strength';
+				$optionalFields[] = 'skill_agility';
+				$optionalFields[] = 'skill_wild';
 				$optionalFields[] = 'restrictions';
 				break;
 			case 'investigator':
-				$mandatoryFields[] = 'will';
-				$mandatoryFields[] = 'lore';
-				$mandatoryFields[] = 'strength';
-				$mandatoryFields[] = 'agility';
+				$mandatoryFields[] = 'skill_will';
+				$mandatoryFields[] = 'skill_lore';
+				$mandatoryFields[] = 'skill_strength';
+				$mandatoryFields[] = 'skill_agility';
 				$mandatoryFields[] = 'health';
 				$mandatoryFields[] = 'sanity';
 				$mandatoryFields[] = 'deck_requirements';
@@ -81,17 +81,20 @@ class Card implements \Serializable
 				break;
 			case "treachery":
 				$externalFields[] = "subtype";
+				$optionalFields[] = 'restrictions';
 				break;
 		}
 	
 		foreach($optionalFields as $optionalField) {
-			$getter = 'get' . $this->snakeToCamel($optionalField);
+			$getterString = str_replace("skill_", "", $optionalField);
+			$getter = 'get' . $this->snakeToCamel($getterString);
 			$serialized[$optionalField] = $this->$getter();
 			if(!isset($serialized[$optionalField]) || $serialized[$optionalField] === '') unset($serialized[$optionalField]);
 		}
 	
 		foreach($mandatoryFields as $mandatoryField) {
-			$getter = 'get' . $this->snakeToCamel($mandatoryField);
+			$getterString = str_replace("skill_", "", $mandatoryField);
+			$getter = 'get' . $this->snakeToCamel($getterString);
 			$serialized[$mandatoryField] = $this->$getter();
 		}
 	
