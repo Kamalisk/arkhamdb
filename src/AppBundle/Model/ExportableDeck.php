@@ -17,7 +17,6 @@ class ExportableDeck
 				'investigator_code' => $this->getCharacter()->getCode(),
 				'investigator_name' => $this->getCharacter()->getName(),
 				'slots' => $slots->getContent(),
-				'agenda_code' => $slots->getAgenda() ? $slots->getAgenda()->getCode() : null,
 				'version' => $this->getVersion(),
 		];
 	
@@ -30,9 +29,8 @@ class ExportableDeck
 		return [
 				'name' => $this->getName(),
 				'faction' => $this->getFaction(),
-				'agenda' => $slots->getAgenda(),
+				'investigator' => $this->getCharacter(),
 				'draw_deck_size' => $slots->getDrawDeck()->countCards(),
-				'plot_deck_size' => $slots->getPlotDeck()->countCards(),
 				'included_packs' => $slots->getIncludedPacks(),
 				'slots_by_type' => $slots->getSlotsByType()
 		];

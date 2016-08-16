@@ -86,7 +86,7 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
 	}
 	
 	public function getSlotsByType() {
-		$slotsByType = [ 'plot' => [], 'character' => [], 'location' => [], 'attachment' => [], 'event' => [] ];
+		$slotsByType = [ 'asset' => [], 'event' => [], 'skill' => [], 'treachery' => []];
 		foreach($this->slots as $slot) {
 			if(array_key_exists($slot->getCard()->getType()->getCode(), $slotsByType)) {
 				$slotsByType[$slot->getCard()->getType()->getCode()][] = $slot;
@@ -96,44 +96,13 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
 	}
 	
 	public function getCountByType() {
-		$countByType = [ 'character' => 0, 'location' => 0, 'attachment' => 0, 'event' => 0 ];
+		$countByType = [ 'asset' => 0, 'event' => 0, 'skill' => 0, 'treachery' => 0 ];
 		foreach($this->slots as $slot) {
 			if(array_key_exists($slot->getCard()->getType()->getCode(), $countByType)) {
 				$countByType[$slot->getCard()->getType()->getCode()] += $slot->getQuantity();
 			}
 		}
 		return $countByType;
-	}
-
-	public function getPlotDeck()
-	{
-		$plotDeck = [];
-		foreach($this->slots as $slot) {
-			if($slot->getCard()->getType()->getCode() === 'plot') {
-				$plotDeck[] = $slot;
-			}
-		}
-		return new SlotCollectionDecorator(new ArrayCollection($plotDeck));
-	}
-
-	public function getAgendas()
-	{
-		$agendas = [];
-		foreach($this->slots as $slot) {
-			if($slot->getCard()->getType()->getCode() === 'agenda') {
-				$agendas[] = $slot;
-			}
-		}
-		return new SlotCollectionDecorator(new ArrayCollection($agendas));
-	}
-
-	public function getAgenda()
-	{
-		foreach ( $this->slots as $slot ) {
-			if($slot->getCard()->getType()->getCode() === 'agenda') {
-				return $slot->getCard();
-			}
-		}
 	}
 
 	public function getDrawDeck()

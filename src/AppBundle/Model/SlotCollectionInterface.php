@@ -33,24 +33,6 @@ interface SlotCollectionInterface extends \Countable, \IteratorAggregate, \Array
 	public function getCountByType();
 	
 	/**
-	 * Get the plot deck
-	 * @return \AppBundle\Model\SlotCollectionInterface
-	 */
-	public function getPlotDeck();
-
-	/**
-	 * Get all the agendas
-	 * @return \AppBundle\Model\SlotCollectionInterface
-	 */
-	public function getAgendas();
-	
-	/**
-	 * Get one agenda
-	 * @return \AppBundle\Entity\Card
-	 */
-	public function getAgenda();
-
-	/**
 	 * Get the draw deck
 	 * @return \AppBundle\Model\SlotCollectionInterface
 	 */
