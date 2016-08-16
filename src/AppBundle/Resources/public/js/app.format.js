@@ -90,7 +90,7 @@ format.info = function info(card) {
  */
 format.text = function text(card) {
 	var text = card.text || '';
-	text = text.replace(/\[(\w+)\]/g, '<span class="icon-$1"></span>')
+	text = text.replace(/\[(\w+)\]/g, '<span title="$1" class="icon-$1"></span>')
 	text = text.split("\n").join('</p><p>');
 	return '<p>'+text+'</p>';
 };

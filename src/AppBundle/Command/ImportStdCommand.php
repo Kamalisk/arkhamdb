@@ -369,7 +369,16 @@ class ImportStdCommand extends ContainerAwareCommand
 	
 		$entity = $this->em->getRepository($entityName)->findOneBy(['code' => $data['code']]);
 		if(!$entity) {
-			$entity = new $entityName();
+			// if we cant find it, try more complex methods just to check
+			// the only time this should work is if the existing name also has an _ meaning it was temporary. 
+			if (isset($data['xp'])){
+				$entity = $this->em->getRepository($entityName)->findOneBy(['name' => $data['name'], 'xp' => $data['xp']]);
+			}else {
+				$entity = $this->em->getRepository($entityName)->findOneBy(['name' => $data['name'], 'xp' => null]);
+			}
+			if (!$entity){
+				$entity = new $entityName();
+			}
 		}
 		$orig = $entity->serialize();
 	
