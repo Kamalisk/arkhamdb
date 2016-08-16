@@ -56,8 +56,10 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
 				
 			// applying variation to create 'next' (older) preversion
 			foreach ( $variation[0] as $code => $qty ) {
-				$preversion[$code] = $preversion[$code] - $qty;
-				if ($preversion[$code] == 0) unset ( $preversion[$code] );
+				if (isset($preversion[$code])){
+					$preversion[$code] = $preversion[$code] - $qty;
+					if ($preversion[$code] == 0) unset ( $preversion[$code] );
+				}
 			}
 			foreach ( $variation[1] as $code => $qty ) {
 				if (! isset ( $preversion[$code] )) $preversion[$code] = 0;
