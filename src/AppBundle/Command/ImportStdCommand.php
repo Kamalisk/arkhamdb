@@ -151,7 +151,8 @@ class ImportStdCommand extends ContainerAwareCommand
 		{
 			$faction = $this->getEntityFromData('AppBundle\\Entity\\Faction', $data, [
 					'code',
-					'name'
+					'name',
+					'is_primary'
 			], [], []);
 			if($faction) {
 				$result[] = $faction;
@@ -291,7 +292,7 @@ class ImportStdCommand extends ContainerAwareCommand
 					'subname',
 					'xp'
 			]);
-			if($card) {
+			if($card) {				
 				$result[] = $card;
 				$this->em->persist($card);
 			}
@@ -371,14 +372,16 @@ class ImportStdCommand extends ContainerAwareCommand
 		if(!$entity) {
 			// if we cant find it, try more complex methods just to check
 			// the only time this should work is if the existing name also has an _ meaning it was temporary. 
-			if (isset($data['xp'])){
-				$entity = $this->em->getRepository($entityName)->findOneBy(['name' => $data['name'], 'xp' => $data['xp']]);
-			}else {
-				$entity = $this->em->getRepository($entityName)->findOneBy(['name' => $data['name'], 'xp' => null]);
+			if ($entityName == "'AppBundle:Card'"){
+				if (isset($data['xp'])){
+					$entity = $this->em->getRepository($entityName)->findOneBy(['name' => $data['name'], 'xp' => $data['xp']]);				
+				}else {
+					$entity = $this->em->getRepository($entityName)->findOneBy(['name' => $data['name'], 'xp' => null]);
+				}
 			}
 			if (!$entity){
 				$entity = new $entityName();
-			}
+			}			
 		}
 		$orig = $entity->serialize();
 	
@@ -395,7 +398,7 @@ class ImportStdCommand extends ContainerAwareCommand
 	
 			if(!key_exists($key, $data)) {
 				if ($key === "subtype_code"){
-					return false;
+					continue;
 				}
 				throw new \Exception("Missing key [$key] in ".json_encode($data));
 			}
@@ -423,7 +426,7 @@ class ImportStdCommand extends ContainerAwareCommand
 			$functionName = 'import' . $entity->getType()->getName() . 'Data';
 			$this->$functionName($entity, $data);
 		}
-	
+
 		if($entity->serialize() !== $orig) return $entity;
 	}
 
@@ -443,14 +446,12 @@ class ImportStdCommand extends ContainerAwareCommand
 	protected function importInvestigatorData(Card $card, $data)
 	{
 		$mandatoryKeys = [
-				'will',
-				'lore',
-				'strength',
-				'agility',
-				'wild',
+				'skill_will',
+				'skill_lore',
+				'skill_strength',
+				'skill_agility',				
 				'health',
-				'sanity',
-				'restrictions'
+				'sanity'
 		];
 
 		foreach($mandatoryKeys as $key) {

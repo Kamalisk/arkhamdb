@@ -111,7 +111,7 @@ class Card implements \Serializable
 		throw new \Exception("unserialize() method unsupported");
 	}
 	
-    public function toString() {
+  public function toString() {
 		return $this->name;
 	}
 	
