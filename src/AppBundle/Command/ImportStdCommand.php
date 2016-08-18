@@ -372,7 +372,8 @@ class ImportStdCommand extends ContainerAwareCommand
 		if(!$entity) {
 			// if we cant find it, try more complex methods just to check
 			// the only time this should work is if the existing name also has an _ meaning it was temporary. 
-			if ($entityName == "'AppBundle:Card'"){
+			
+			if ($entityName == "AppBundle\Entity\Card"){
 				if (isset($data['xp'])){
 					$entity = $this->em->getRepository($entityName)->findOneBy(['name' => $data['name'], 'xp' => $data['xp']]);				
 				}else {

@@ -32,6 +32,12 @@ AppBundle\Entity\Card:
             joinColumn:
                 name: upgrade_id
                 referencedColumnName: id
+        encounter:
+            targetEntity: Encounter
+            inversedBy: cards
+            joinColumn:
+                name: encounter_id
+                referencedColumnName: id
     oneToMany:
         reviews:
             targetEntity: Review

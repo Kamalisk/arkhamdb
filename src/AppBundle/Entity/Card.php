@@ -287,6 +287,11 @@ class Card implements \Serializable
     private $upgrade;
 
     /**
+    * @var \AppBundle\Entity\Encounter
+    */
+    private $encounter;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -1110,6 +1115,30 @@ class Card implements \Serializable
     public function getUpgrade()
     {
         return $this->upgrade;
+    }
+    
+     /**
+     * set Encounter
+     *
+     * @param \AppBundle\Entity\Encounter $encounter
+     *
+     * @return Card
+     */
+    public function setEncounter(\AppBundle\Entity\Encounter $encounter = null)
+    {
+        $this->encounter = $encounter;
+
+        return $this;
+    }
+    
+    /**
+     * Get encounter
+     *
+     * @return \AppBundle\Entity\Encounter
+     */
+    public function getEncounter()
+    {
+        return $this->encounter;
     }
     
 }
