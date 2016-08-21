@@ -5,7 +5,7 @@ var SmartFilterQuery = [];
 var configuration = {
 	v: [ add_string_sf, 'flavor', "Flavor text" ],
 	e: [ add_string_sf, 'pack_code', "Pack" ],
-	f: [ add_string_sf, 'faction_code', "Faction" ],
+	f: [ add_string_sf, 'faction_code', "Class" ],
 	i: [ add_string_sf, 'illustrator', "Illustrator" ],
 	k: [ add_string_sf, 'traits', "Traits" ],
 	o: [ add_integer_sf, 'cost', "Cost" ],

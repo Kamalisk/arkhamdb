@@ -49,7 +49,7 @@ class ImportStdCommand extends ContainerAwareCommand
 
 		// factions
 		
-		$output->writeln("Importing Factions...");
+		$output->writeln("Importing Classes...");
 		$factionsFileInfo = $this->getFileInfo($path, 'factions.json');
 		$imported = $this->importFactionsJsonFile($factionsFileInfo);
 		if(count($imported)) {
@@ -248,7 +248,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		return $result;
 	}
 	
-	protected function importCardsJsonFile(\SplFileInfo $fileinfo)
+	protected function importCardsJsonFile(\SplFileInfo $fileinfo, $special="")
 	{
 		$result = [];
 	

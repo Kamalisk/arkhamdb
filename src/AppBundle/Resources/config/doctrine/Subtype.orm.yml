@@ -5,7 +5,7 @@ AppBundle\Entity\Subtype:
         cards:
             targetEntity: Card
             orderBy: {'position':'ASC'}
-            mappedBy: type
+            mappedBy: subtype
     fields:
         id:
             type: integer

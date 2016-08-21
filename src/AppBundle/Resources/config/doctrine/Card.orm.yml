@@ -26,12 +26,6 @@ AppBundle\Entity\Card:
             joinColumn:
                 name: faction_id
                 referencedColumnName: id
-        upgrade:
-            targetEntity: Card
-            inversedBy: cards
-            joinColumn:
-                name: upgrade_id
-                referencedColumnName: id
         encounter:
             targetEntity: Encounter
             inversedBy: cards

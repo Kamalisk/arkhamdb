@@ -1048,7 +1048,7 @@ class Card implements \Serializable
         /**
      * Set subtype
      *
-     * @param \AppBundle\Entity\Subtype $type
+     * @param \AppBundle\Entity\Subtype $subtype
      *
      * @return Card
      */
@@ -1108,9 +1108,9 @@ class Card implements \Serializable
     }
 
     /**
-     * Get faction
+     * Get upgrade
      *
-     * @return \AppBundle\Entity\Faction
+     * @return \AppBundle\Entity\Card
      */
     public function getUpgrade()
     {
