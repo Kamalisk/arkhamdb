@@ -467,7 +467,7 @@ class CardsData
 		// les suivants sont les arguments, en OR
 
 		$query = preg_replace('/\s+/u', ' ', trim($query));
-
+		
 		$list = [];
 		$cond = null;
 		// l'automate a 3 états :
@@ -478,6 +478,7 @@ class CardsData
 		// s'il tombe sur un argument alors qu'il est en recherche de type, alors le type est vide
 		$etat = 1;
 		while($query != "") {
+			
 			if($etat == 1) {
 				if(isset($cond) && $etat != 4 && count($cond)>2) {
 					$list[] = $cond;
@@ -490,10 +491,11 @@ class CardsData
 				} else {
 					$cond = array("", ":");
 				}
+				
 				$etat=2;
 			} else {
 				if( preg_match('/^"([^"]*)"(.*)/u', $query, $match) // jeton "texte libre entre guillements"
-				 || preg_match('/^([\p{L}\p{N}\-\&]+)(.*)/u', $query, $match) // jeton "texte autorisé sans guillements"
+				 || preg_match('/^([_\p{L}\p{N}\-\&]+)(.*)/u', $query, $match) // jeton "texte autorisé sans guillements"
 				) {
 					if(($etat == 2 && count($cond)==2) || $etat == 3) {
 						$cond[] = $match[1];

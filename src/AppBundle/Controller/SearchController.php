@@ -297,6 +297,7 @@ class SearchController extends Controller
 
 		// reconstruction de la bonne chaine de recherche pour affichage
 		$q = $this->get('cards_data')->buildQueryFromConditions($conditions);
+
 		if($q && $rows = $this->get('cards_data')->get_search_rows($conditions, $sort))
 		{
 			if(count($rows) == 1)
