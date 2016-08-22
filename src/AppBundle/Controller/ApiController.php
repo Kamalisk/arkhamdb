@@ -232,8 +232,13 @@ class ApiController extends Controller
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 
 		$jsonp = $request->query->get('jsonp');
-
-		$list_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(array(), array("code" => "ASC"));
+		$include_encounter = $request->query->get('encounter');
+		
+		if ($include_encounter){
+			$list_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(array(), array("code" => "ASC"));
+		}else {
+			$list_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(array("encounter" => null), array("code" => "ASC"));
+		}
 
 		// check the last-modified-since header
 

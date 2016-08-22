@@ -132,7 +132,7 @@ class CardsData
 		return $factions;
 	}
 
-	public function get_search_rows($conditions, $sortorder, $forceempty = false)
+	public function get_search_rows($conditions, $sortorder, $forceempty = false, $encounter = false)
 	{
 		$i=0;
 
@@ -144,7 +144,11 @@ class CardsData
 			->leftJoin('c.faction', 'f');
 		$qb2 = null;
 		$qb3 = null;
-
+		
+		if (!$encounter){
+			$qb->andWhere("(c.encounter IS NULL)");
+		}
+		
 		foreach($conditions as $condition)
 		{
 			$searchCode = array_shift($condition);

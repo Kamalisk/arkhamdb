@@ -18,6 +18,11 @@ AppBundle_admin_subtype:
     resource: "@AppBundle/Resources/config/routing/admin/routing_admin_subtype.yml"
     prefix:   /subtype
 
+AppBundle_admin_encounter:
+    resource: "@AppBundle/Resources/config/routing/admin/routing_admin_encounter.yml"
+    prefix:   /encounter
+
+
 AppBundle_admin_faction:
     resource: "@AppBundle/Resources/config/routing/admin/routing_admin_faction.yml"
     prefix:   /faction

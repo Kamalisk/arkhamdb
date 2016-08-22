@@ -36,7 +36,8 @@ class Card implements \Serializable
 		$externalFields = [
 				'faction',
 				'pack',
-				'type'
+				'type',
+				'encounter'
 		];
 	
 		switch($this->type->getCode()) {
@@ -100,7 +101,9 @@ class Card implements \Serializable
 	
 		foreach($externalFields as $externalField) {
 			$getter = 'get' . $this->snakeToCamel($externalField);
-			$serialized[$externalField.'_code'] = $this->$getter()->getCode();
+			if ($this->$getter()){
+				$serialized[$externalField.'_code'] = $this->$getter()->getCode();
+			}
 		}
 	
 		ksort($serialized);

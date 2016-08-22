@@ -91,6 +91,23 @@ class ImportStdCommand extends ContainerAwareCommand
 		$this->em->flush();
 		$this->loadCollection('Subtype');
 		$output->writeln("Done.");
+
+		// encounter sets
+		
+		$output->writeln("Importing Encounter Sets...");
+		$subtypesFileInfo = $this->getFileInfo($path, 'encounters.json');
+		$imported = $this->importEncountersJsonFile($subtypesFileInfo);
+		if(count($imported)) {
+			$question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
+			if(!$helper->ask($input, $output, $question)) {
+				die();
+			}
+		}
+		$this->em->flush();
+		$this->loadCollection('Subtype');
+		$output->writeln("Done.");
+
+
 		
 		// cycles
 
@@ -202,6 +219,27 @@ class ImportStdCommand extends ContainerAwareCommand
 	
 		return $result;
 	}
+
+		protected function importEncountersJsonFile(\SplFileInfo $fileinfo)
+	{
+		$result = [];
+	
+		$list = $this->getDataFromFile($fileinfo);
+		foreach($list as $data)
+		{
+			$type = $this->getEntityFromData('AppBundle\\Entity\\Encounter', $data, [
+					'code',
+					'name'
+			], [], []);
+			if($type) {
+				$result[] = $type;
+				$this->em->persist($type);
+			}
+		}
+	
+		return $result;
+	}
+
 	
 	protected function importCyclesJsonFile(\SplFileInfo $fileinfo)
 	{
