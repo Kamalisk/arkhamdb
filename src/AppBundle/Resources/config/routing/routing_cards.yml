@@ -1,9 +1,10 @@
 
 cards_list:
-    path: /set/{pack_code}/{view}/{sort}/{page}
+    path: /set/{pack_code}/{view}/{decks}/{sort}/{page}
     defaults:
         _controller: AppBundle:Search:list
         view: list
+        decks: player
         sort: set
         page: 1
 

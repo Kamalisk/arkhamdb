@@ -121,7 +121,7 @@ class SearchController extends Controller
 		);
 	}
 
-	public function listAction($pack_code, $view, $sort, $page, Request $request)
+	public function listAction($pack_code, $view, $decks, $sort, $page, Request $request)
 	{
 		$pack = $this->getDoctrine()->getRepository('AppBundle:Pack')->findOneBy(array("code" => $pack_code));
 		if(!$pack) {
@@ -145,7 +145,8 @@ class SearchController extends Controller
     	        'q' => $key.':'.$pack_code,
 				'view' => $view,
 				'sort' => $sort,
-			    'page' => $page,
+				'page' => $page,
+				'decks' => $decks,
 				'pagetitle' => $pack->getName(),
 				'meta' => $meta,
 			)
@@ -234,20 +235,21 @@ class SearchController extends Controller
 		$q = $request->query->get('q');
 		$page = $request->query->get('page') ?: 1;
 		$view = $request->query->get('view') ?: 'list';
+		$decks = $request->query->get('decks') ?: 'player';
 		$sort = $request->query->get('sort') ?: 'name';
 
 		// we may be able to redirect to a better url if the search is on a single set
 		$conditions = $this->get('cards_data')->syntax($q);
 		if(count($conditions) == 1 && count($conditions[0]) == 3 && $conditions[0][1] == ":") {
 		    if($conditions[0][0] == array_search('pack', SearchController::$searchKeys)) {
-		        $url = $this->get('router')->generate('cards_list', array('pack_code' => $conditions[0][2], 'view' => $view, 'sort' => $sort, 'page' => $page));
+		        $url = $this->get('router')->generate('cards_list', array('pack_code' => $conditions[0][2], 'view' => $view, 'decks' => $decks, 'sort' => $sort, 'page' => $page));
 		        return $this->redirect($url);
 		    }
 		    if($conditions[0][0] == array_search('cycle', SearchController::$searchKeys)) {
 		        $cycle_position = $conditions[0][2];
 		        $cycle = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findOneBy(array('position' => $cycle_position));
 		        if($cycle) {
-		            $url = $this->get('router')->generate('cards_cycle', array('cycle_code' => $cycle->getCode(), 'view' => $view, 'sort' => $sort, 'page' => $page));
+		            $url = $this->get('router')->generate('cards_cycle', array('cycle_code' => $cycle->getCode(), 'view' => $view, 'decks' => $decks, 'sort' => $sort, 'page' => $page));
 		            return $this->redirect($url);
 		        }
 		    }
@@ -258,6 +260,7 @@ class SearchController extends Controller
 			array(
 				'q' => $q,
 				'view' => $view,
+				'decks' => $decks,
 				'sort' => $sort,
 				'page' => $page,
 				'_route' => $request->get('_route')
@@ -265,7 +268,7 @@ class SearchController extends Controller
 		);
 	}
 
-	public function displayAction($q, $view="card", $sort, $page=1, $pagetitle="", $meta="", Request $request)
+	public function displayAction($q, $view="card", $decks="player", $sort, $page=1, $pagetitle="", $meta="", Request $request)
 	{
 		$response = new Response();
 		$response->setPublic();
@@ -298,9 +301,10 @@ class SearchController extends Controller
 		// reconstruction de la bonne chaine de recherche pour affichage
 		$q = $this->get('cards_data')->buildQueryFromConditions($conditions);
 		$include_encounter = false;
-		if ($view == "card"){
+		if ($view == "card" || $decks == "encounter" || $decks == "all"){
 			$include_encounter = true;
 		}
+		
 		if($q && $rows = $this->get('cards_data')->get_search_rows($conditions, $sort, false, $include_encounter))
 		{
 			if(count($rows) == 1)
@@ -385,6 +389,7 @@ class SearchController extends Controller
 		$searchbar = $this->renderView('AppBundle:Search:searchbar.html.twig', array(
 			"q" => $q,
 			"view" => $view,
+			"decks" => $decks,
 			"sort" => $sort,
 		));
 
@@ -395,6 +400,7 @@ class SearchController extends Controller
 		// attention si $s="short", $cards est un tableau à 2 niveaux au lieu de 1 seul
 		return $this->render('AppBundle:Search:display-'.$view.'.html.twig', array(
 			"view" => $view,
+			"decks" => $decks,
 			"sort" => $sort,
 			"cards" => $cards,
 			"first"=> $first,

@@ -1,4 +1,4 @@
-<div class="col-sm-4" style="margin-bottom:.5em">
+<div class="col-sm-3" style="margin-bottom:.5em">
 <select name="sort" class="form-control">
 	<option value="name"    {% if sort|default('name') == "name"    %}selected{% endif %}>Sort by Name</option>
 	<option value="set"     {% if sort|default('name') == "set"     %}selected{% endif %}>Sort by Set</option>
@@ -7,12 +7,19 @@
 	<option value="cost"    {% if sort|default('name') == "cost"    %}selected{% endif %}>Sort by Cost</option>
 </select>
 </div>
-<div class="col-sm-4" style="margin-bottom:.5em">
+<div class="col-sm-3" style="margin-bottom:.5em">
 <select name="view" class="form-control">
 	<option value="list"    {% if view|default('list') == "list"    %}selected{% endif %}>View as a Checklist</option>
 	<option value="spoiler" {% if view|default('list') == "spoiler" %}selected{% endif %}>View as a Spoiler</option>
 	<option value="card"    {% if view|default('list') == "card"    %}selected{% endif %}>View as Full Cards</option>
 	<option value="scan"    {% if view|default('list') == "scan"    %}selected{% endif %}>View as Scans only</option>
 	<option value="short"   {% if view|default('list') == "short"   %}selected{% endif %}>View as Simple List</option>
+</select>
+</div>
+<div class="col-sm-2" style="margin-bottom:.5em">
+<select name="decks" class="form-control">
+	<option value="player"    {% if decks|default('player') == "list"    %}selected{% endif %}>Only Player Cards</option>
+	<option value="encounter" {% if decks|default('player') == "encounter" %}selected{% endif %}>Only Encounter Cards</option>
+	<option value="all"    {% if decks|default('player') == "all"    %}selected{% endif %}>All Cards</option>
 </select>
 </div>
