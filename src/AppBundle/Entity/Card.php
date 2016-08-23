@@ -15,7 +15,6 @@ class Card implements \Serializable
 	
 		$mandatoryFields = [
 				'code',
-				'deck_limit',
 				'position',
 				'quantity',
 				'name',
@@ -30,7 +29,8 @@ class Card implements \Serializable
 				'cost',
 				'octgn_id',
 				'subname',
-				'xp'
+				'xp',
+				'deck_limit'
 		];
 	
 		$externalFields = [
@@ -84,6 +84,29 @@ class Card implements \Serializable
 				$externalFields[] = "subtype";
 				$optionalFields[] = 'restrictions';
 				break;
+			case "enemy":
+				$optionalFields[] = 'enemy_damage';
+				$optionalFields[] = 'enemy_horror';
+				$optionalFields[] = 'enemy_fight';
+				$optionalFields[] = 'enemy_evade';
+				$optionalFields[] = 'victory';
+				$optionalFields[] = 'health';
+				$optionalFields[] = 'encounter_position';
+				break;
+			case "location":
+				$optionalFields[] = 'victory';
+				$optionalFields[] = 'shroud';
+				$optionalFields[] = 'clues';
+				$optionalFields[] = 'encounter_position';
+				break;
+			case "agenda":
+				$optionalFields[] = 'doom';
+				$optionalFields[] = 'encounter_position';
+				break;
+			case "act":
+				$optionalFields[] = 'clues';
+				$optionalFields[] = 'encounter_position';
+				break;
 		}
 	
 		foreach($optionalFields as $optionalField) {
@@ -127,6 +150,13 @@ class Card implements \Serializable
      * @var integer
      */
     private $position;
+
+
+    /**
+     * @var integer
+     */
+    private $encounterPosition;
+
 
     /**
      * @var string
@@ -198,6 +228,25 @@ class Card implements \Serializable
      */
     private $xp;
 
+
+    /**
+     * @var integer
+     */
+    private $shroud;
+
+
+    /**
+     * @var integer
+     */
+    private $doom;
+
+
+    /**
+     * @var integer
+     */
+    private $clues;
+
+
     /**
      * @var integer
      */
@@ -207,6 +256,37 @@ class Card implements \Serializable
      * @var integer
      */
     private $sanity;
+    
+
+    /**
+     * @var integer
+     */
+    private $enemyFight;
+    
+
+    /**
+     * @var integer
+     */
+    private $enemyEvade;
+    
+
+    /**
+     * @var integer
+     */
+    private $enemyDamage;
+    
+
+    /**
+     * @var integer
+     */
+    private $enemyHorror;
+    
+
+
+    /**
+     * @var integer
+     */
+    private $victory;
     
 
     /**
@@ -335,6 +415,32 @@ class Card implements \Serializable
     {
         return $this->position;
     }
+
+    /**
+     * Set encounter position
+     *
+     * @param integer $encounterPosition
+     *
+     * @return Card
+     */
+    public function setEncounterPosition($encounterPosition)
+    {
+        $this->encounterPosition = $encounterPosition;
+
+        return $this;
+    }
+
+    /**
+     * Get encounter position
+     *
+     * @return integer
+     */
+    public function getEncounterPosition()
+    {
+        return $this->encounterPosition;
+    }
+
+
 
     /**
      * Set code
@@ -577,6 +683,134 @@ class Card implements \Serializable
         return $this->sanity;
     }
 
+
+    /**
+     * Set enemy fight
+     *
+     * @param integer $enemyFight
+     *
+     * @return Card
+     */
+    public function setEnemyFight($enemyFight)
+    {
+        $this->enemyFight = $enemyFight;
+
+        return $this;
+    }
+
+    /**
+     * Get enemyFight
+     *
+     * @return integer
+     */
+    public function getEnemyFight()
+    {
+        return $this->enemyFight;
+    }
+
+
+    /**
+     * Set enemy Evade
+     *
+     * @param integer $enemyEvade
+     *
+     * @return Card
+     */
+    public function setEnemyEvade($enemyEvade)
+    {
+        $this->enemyEvade = $enemyEvade;
+
+        return $this;
+    }
+
+    /**
+     * Get enemyEvade
+     *
+     * @return integer
+     */
+    public function getEnemyEvade()
+    {
+        return $this->enemyEvade;
+    }
+
+
+    /**
+     * Set damage health
+     *
+     * @param integer $enemyDamage
+     *
+     * @return Card
+     */
+    public function setEnemyDamage($enemyDamage)
+    {
+        $this->enemyDamage = $enemyDamage;
+
+        return $this;
+    }
+
+    /**
+     * Get damageHealth
+     *
+     * @return integer
+     */
+    public function getEnemyDamage()
+    {
+        return $this->enemyDamage;
+    }
+
+
+    /**
+     * Set damage sanity
+     *
+     * @param integer $enemyHorror
+     *
+     * @return Card
+     */
+    public function setEnemyHorror($enemyHorror)
+    {
+        $this->enemyHorror = $enemyHorror;
+
+        return $this;
+    }
+
+    /**
+     * Get damageSanity
+     *
+     * @return integer
+     */
+    public function getEnemyHorror()
+    {
+        return $this->enemyHorror;
+    }
+
+
+
+    /**
+     * Set victory
+     *
+     * @param integer $victory
+     *
+     * @return Card
+     */
+    public function setVictory($victory)
+    {
+        $this->victory = $victory;
+
+        return $this;
+    }
+
+    /**
+     * Get victory
+     *
+     * @return integer
+     */
+    public function getVictory()
+    {
+        return $this->victory;
+    }
+
+
+
     /**
      * Set deckLimit
      *
@@ -746,6 +980,89 @@ class Card implements \Serializable
     {
         return $this->xp;
     }
+
+
+
+    /**
+     * Set shroud
+     *
+     * @param integer $shroud
+     *
+     * @return Card
+     */
+    public function setShroud($shroud)
+    {
+        $this->shroud = $shroud;
+
+        return $this;
+    }
+
+    /**
+     * Get shroud
+     *
+     * @return integer
+     */
+    public function getShroud()
+    {
+        return $this->shroud;
+    }
+
+
+
+
+    /**
+     * Set clues
+     *
+     * @param integer $clues
+     *
+     * @return Card
+     */
+    public function setClues($clues)
+    {
+        $this->clues = $clues;
+
+        return $this;
+    }
+
+    /**
+     * Get clues
+     *
+     * @return integer
+     */
+    public function getClues()
+    {
+        return $this->clues;
+    }
+
+
+
+    /**
+     * Set doom
+     *
+     * @param integer $doom
+     *
+     * @return Card
+     */
+    public function setDoom($doom)
+    {
+        $this->doom = $doom;
+
+        return $this;
+    }
+
+    /**
+     * Get doom
+     *
+     * @return integer
+     */
+    public function getDoom()
+    {
+        return $this->doom;
+    }
+
+
+
+
 
     /**
      * Set traits

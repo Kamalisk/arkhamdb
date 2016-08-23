@@ -46,6 +46,9 @@ AppBundle\Entity\Card:
         position:
             type: smallint
             nullable: false
+        encounterPosition:
+            type: smallint
+            nullable: true
         code:
             type: string
             length: 255
@@ -99,10 +102,34 @@ AppBundle\Entity\Card:
         xp:
             type: smallint
             nullable: true
+        shroud:
+            type: smallint
+            nullable: true
+        clues:
+            type: smallint
+            nullable: true
+        doom:
+            type: smallint
+            nullable: true
         health:
             type: smallint
             nullable: true
         sanity:
+            type: smallint
+            nullable: true
+        enemyDamage:
+            type: smallint
+            nullable: true
+        enemyHorror:
+            type: smallint
+            nullable: true
+        enemyFight:
+            type: smallint
+            nullable: true
+        enemyEvade:
+            type: smallint
+            nullable: true
+        victory:
             type: smallint
             nullable: true
         deckLimit:

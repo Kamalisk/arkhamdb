@@ -95,8 +95,8 @@ class ImportStdCommand extends ContainerAwareCommand
 		// encounter sets
 		
 		$output->writeln("Importing Encounter Sets...");
-		$subtypesFileInfo = $this->getFileInfo($path, 'encounters.json');
-		$imported = $this->importEncountersJsonFile($subtypesFileInfo);
+		$encounterFileInfo = $this->getFileInfo($path, 'encounters.json');
+		$imported = $this->importEncountersJsonFile($encounterFileInfo);
 		if(count($imported)) {
 			$question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
 			if(!$helper->ask($input, $output, $question)) {
@@ -104,7 +104,7 @@ class ImportStdCommand extends ContainerAwareCommand
 			}
 		}
 		$this->em->flush();
-		$this->loadCollection('Subtype');
+		$this->loadCollection('Encounter');
 		$output->writeln("Done.");
 
 
@@ -291,7 +291,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		$result = [];
 	
 		$code = $fileinfo->getBasename('.json');
-		
+		$code = str_replace("_encounter", "", $code);
 		$pack = $this->em->getRepository('AppBundle:Pack')->findOneBy(['code' => $code]);
 		if(!$pack) throw new \Exception("Unable to find Pack [$code]");
 		
@@ -299,7 +299,6 @@ class ImportStdCommand extends ContainerAwareCommand
 		foreach($cardsData as $cardData) {
 			$card = $this->getEntityFromData('AppBundle\Entity\Card', $cardData, [
 					'code',
-					'deck_limit',
 					'position',
 					'quantity',
 					'name',
@@ -308,8 +307,11 @@ class ImportStdCommand extends ContainerAwareCommand
 					'faction_code',
 					'pack_code',
 					'type_code',
-					'subtype_code'
+					'subtype_code',
+					'encounter_code'
 			], [
+					'deck_limit',
+					'encounter_position',
 					'illustrator',
 					'flavor',
 					'traits',
@@ -328,7 +330,15 @@ class ImportStdCommand extends ContainerAwareCommand
 					'deck_options',
 					'deck_requirements',
 					'subname',
-					'xp'
+					'xp',
+					'enemy_evade',
+					'enemy_fight',
+					'victory',
+					'enemy_damage',
+					'enemy_horror',
+					'doom',
+					'clues',
+					'shroud'
 			]);
 			if($card) {				
 				$result[] = $card;
@@ -436,7 +446,7 @@ class ImportStdCommand extends ContainerAwareCommand
 			$foreignEntityShortName = ucfirst(str_replace('_code', '', $key));
 	
 			if(!key_exists($key, $data)) {
-				if ($key === "subtype_code"){
+				if ($key === "subtype_code" || $key === "encounter_code"){
 					continue;
 				}
 				throw new \Exception("Missing key [$key] in ".json_encode($data));
@@ -497,6 +507,34 @@ class ImportStdCommand extends ContainerAwareCommand
 			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
 		}
 	}
+
+	protected function importEnemyData(Card $card, $data)
+	{
+		$mandatoryKeys = [
+				'enemy_damage',
+				'enemy_horror',
+				'enemy_fight',
+				'enemy_evade',
+				'health'
+		];
+
+		foreach($mandatoryKeys as $key) {
+			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
+		}
+	}
+
+	protected function importLocationData(Card $card, $data)
+	{
+		$mandatoryKeys = [
+				'shroud',
+				'clues'
+		];
+
+		foreach($mandatoryKeys as $key) {
+			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
+		}
+	}
+
 
 	protected function importEventData(Card $card, $data)
 	{

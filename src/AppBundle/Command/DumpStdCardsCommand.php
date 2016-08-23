@@ -17,9 +17,14 @@ class DumpStdCardsCommand extends ContainerAwareCommand
 		->setName('app:dump:std:cards')
 		->setDescription('Dump JSON Data of Cards from a Pack')
 		->addArgument(
-				'pack_code',
+				'pack_code',				
 				InputArgument::REQUIRED,
 				"Pack Code"
+		)
+		->addArgument(
+				'deck_type',				
+				InputArgument::OPTIONAL,
+				"Deck Type"
 		)
 		;
 	}
@@ -27,6 +32,7 @@ class DumpStdCardsCommand extends ContainerAwareCommand
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		$pack_code = $input->getArgument('pack_code');
+		$deck_type = $input->getArgument('deck_type');
 		
 		$pack = $this->getContainer()->get('doctrine')->getManager()->getRepository('AppBundle:Pack')->findOneBy(['code' => $pack_code]);
 		
@@ -37,7 +43,11 @@ class DumpStdCardsCommand extends ContainerAwareCommand
 		/* @var $repository \AppBundle\Repository\CardRepository */
 		$repository = $this->getContainer()->get('doctrine')->getManager()->getRepository('AppBundle:Card');
 		
-		$qb = $repository->createQueryBuilder('c')->where('c.pack = :pack')->setParameter('pack', $pack)->orderBy('c.code');
+		if ($deck_type == "encounter"){
+			$qb = $repository->createQueryBuilder('c')->where('c.pack = :pack and c.encounter is not null')->setParameter('pack', $pack)->orderBy('c.position,c.code');
+		}else {
+			$qb = $repository->createQueryBuilder('c')->where('c.pack = :pack and c.encounter is null')->setParameter('pack', $pack)->orderBy('c.position,c.code');
+		}
 		
 		$cards = $qb->getQuery()->getResult();
 		

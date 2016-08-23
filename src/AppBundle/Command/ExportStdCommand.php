@@ -77,6 +77,20 @@ class ExportStdCommand extends ContainerAwareCommand
 			} else {
 				throw new \Exception("An error occured (code $returnCode)");
 			}
+			$filepath = "${path}/pack/${pack_code}_encounter.json";
+			$output->writeln("Exporting to <info>$filepath</info>");
+	
+			$command = $this->getApplication()->find('app:dump:std:cards');
+			$arguments = [ 'pack_code' => $pack_code, "deck_type" => "encounter" ];
+			$subInput = new ArrayInput($arguments);
+			$subOutput = new BufferedOutput();
+			$returnCode = $command->run($subInput, $subOutput);
+	
+			if($returnCode == 0) {
+				$fs->dumpFile($filepath, $subOutput->fetch());
+			} else {
+				throw new \Exception("An error occured (code $returnCode)");
+			}
 		}
 	}
 }
