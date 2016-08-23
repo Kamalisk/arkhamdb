@@ -144,8 +144,11 @@ class CardsData
 			->leftJoin('c.faction', 'f');
 		$qb2 = null;
 		$qb3 = null;
-		
-		if (!$encounter){
+		if ($encounter === "encounter"){
+			$qb->andWhere("(c.encounter IS NOT NULL)");
+		}else if ($encounter === true || $encounter === "1"){
+			//$qb->andWhere("(c.encounter IS NULL)");
+		}else {
 			$qb->andWhere("(c.encounter IS NULL)");
 		}
 		

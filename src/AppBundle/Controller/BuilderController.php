@@ -384,10 +384,11 @@ class BuilderController extends Controller
 				// XXX
 				// check for investigator here
 				$investigator = false;
-				$investigator_code = filter_var($request->get('investigator_code'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+				$investigator_code = filter_var($request->get('faction_code'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 				if ($investigator_code && $card = $em->getRepository('AppBundle:Card')->findOneBy(["code" => $investigator_code])){
 					$investigator = $card = $em->getRepository('AppBundle:Card')->findOneBy(["code" => $investigator_code]);
 				}
+				
         $cancel_edits = (boolean) filter_var($request->get('cancel_edits'), FILTER_SANITIZE_NUMBER_INT);
         if($cancel_edits) {
             if($deck) $this->get('decks')->revertDeck($deck);

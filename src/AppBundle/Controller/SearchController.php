@@ -301,8 +301,11 @@ class SearchController extends Controller
 		// reconstruction de la bonne chaine de recherche pour affichage
 		$q = $this->get('cards_data')->buildQueryFromConditions($conditions);
 		$include_encounter = false;
-		if ($view == "card" || $decks == "encounter" || $decks == "all"){
+		if ($view == "card" || $decks == "all"){
 			$include_encounter = true;
+		}
+		if ($decks == "encounter"){
+			$include_encounter = "encounter";
 		}
 		
 		if($q && $rows = $this->get('cards_data')->get_search_rows($conditions, $sort, false, $include_encounter))
