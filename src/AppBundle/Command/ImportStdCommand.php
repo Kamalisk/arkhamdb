@@ -338,7 +338,11 @@ class ImportStdCommand extends ContainerAwareCommand
 					'enemy_horror',
 					'doom',
 					'clues',
-					'shroud'
+					'shroud',
+					'back_text',
+					'back_flavor',
+					'back_name',
+					'double_sided'
 			]);
 			if($card) {				
 				$result[] = $card;

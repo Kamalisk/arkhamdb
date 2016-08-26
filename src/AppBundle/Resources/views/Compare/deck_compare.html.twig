@@ -8,44 +8,6 @@
 	    <div class="col-xs-6"><h1>Deck #{{ deck1.id }}</h1><h3>{{ deck1.name }}</h3></div>
 	    <div class="col-xs-6"><h1>Deck #{{ deck2.id }}</h1><h3>{{ deck2.name }}</h3></div>
 	</div>
-
-	<div class="row">
-		<div class="col-xs-12 text-center">
-			<h4>Plot Decks</h4>
-		</div>
-	</div>
-	
-	<!--  plot decks intersection -->
-	<div class="row">
-		<div class="col-xs-6">
-			{% for slot in plot_deck.slots %}
-			<div>{{ macros.slot_with_icons(slot) }}</div>
-			{% endfor %}
-		</div>
-	    <div class="col-xs-6">
-	    	{% for slot in plot_deck.slots %}
-			<div>{{ macros.slot_with_icons(slot) }}</div>
-			{% endfor %}
-	    </div>
-	</div><!-- .row -->
-	
-	<!--  plot decks differences -->
-	<div class="row">
-		<div class="col-xs-6">
-			{% for slot in deck1.slots.plotDeck.slots %}
-			{% if slot.quantity > 0 %}
-			<div class="diff">{{ macros.slot_with_icons(slot) }}</div>
-			{% endif %}
-			{% endfor %}
-		</div>
-	    <div class="col-xs-6">
-	    	{% for slot in deck2.slots.plotDeck.slots %}
-	    	{% if slot.quantity > 0 %}
-			<div class="diff">{{ macros.slot_with_icons(slot) }}</div>
-			{% endif %}
-			{% endfor %}
-	    </div>
-	</div><!-- .row -->
 	
 	<div class="row">
 		<div class="col-xs-12 text-center">

@@ -435,6 +435,17 @@ class CardsData
 		} else {
 			$cardinfo['imagesrc'] = null;
 		}
+		if(isset($cardinfo['double_sided']) && $cardinfo['double_sided']) {
+			$imageurl = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'_back.png');
+			$imagepath= $this->rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl);
+			if ( file_exists($imagepath)){
+				$cardinfo['backimagesrc'] = $imageurl;
+			}else {
+				$cardinfo['backimagesrc'] = null;
+			}
+		}else {
+			$cardinfo['backimagesrc'] = null;
+		}
 
 		if($api) {
 			unset($cardinfo['id']);
@@ -451,6 +462,10 @@ class CardsData
 		} else {
 			$cardinfo['text'] = $this->replaceSymbols($cardinfo['text']);
 			$cardinfo['text'] = $this->splitInParagraphs($cardinfo['text']);
+			if (isset($cardinfo['back_text'])){
+				$cardinfo['back_text'] = $this->replaceSymbols($cardinfo['back_text']);
+				$cardinfo['back_text'] = $this->splitInParagraphs($cardinfo['back_text']);
+			}
 			if (isset($cardinfo['deck_requirements']) && $cardinfo['deck_requirements']){
 				$cardinfo['deck_requirements'] = $this->deckValidationHelper->parseReqString($cardinfo['deck_requirements']);
 			}

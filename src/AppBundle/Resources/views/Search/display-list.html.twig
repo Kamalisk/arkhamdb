@@ -32,6 +32,17 @@
 	{% if card.lore %}<span title="Lore" class="icon icon-lore color-lore"></span>{{ card.lore }}{% endif %}
 	{% if card.strength %}<span title="Strength" class="icon icon-strength color-strength"></span>{{ card.strength }}{% endif %}
 	{% if card.agility %}<span title="Agility" class="icon icon-agility color-agility"></span>{{ card.agility }}{% endif %}
+	{% elseif card.type_code == "enemy" %}
+	{% if card.enemy_fight %}<span title="Combat" class="icon icon-strength color-strength"></span>{{ card.enemy_fight }}{% endif %}
+	{% if card.health %}<span title="Health" class="icon icon-health color-health"></span>Health:{{ card.health }}{% endif %}
+	{% if card.enemy_evade %}<span title="Agility" class="icon icon-agility color-agility"></span>{{ card.enemy_evade }}{% endif %}
+	{% elseif card.type_code == "location" %}
+	{% if card.shroud %}<span title="Shroud" class="icon icon-shroud color-shroud"></span>Shroud: {{ card.shroud }}{% endif %}
+	{% if card.clues %}<span title="Clues" class="icon icon-clues color-clues"></span>Clues: {{ card.clues }}{% endif %}	
+	{% elseif card.type_code == "agenda" %}
+	{% if card.doom %}<span title="Doom" class="icon icon-doom color-doom"></span>Doom: {{ card.doom }}{% endif %}
+	{% elseif card.type_code == "act" %}
+	{% if card.clues %}<span title="Clues" class="icon icon-clues color-clues"></span>Clues: {{ card.clues }}{% endif %}	
 	{% else %}
 	{% if card.will %}{% for i in 1..card.will %}<span title="Will" class="icon icon-will color-will"></span>{% endfor %}{% endif %}
 	{% if card.lore %}{% for i in 1..card.lore %}<span title="Lore" class="icon icon-lore color-lore"></span>{% endfor %}{% endif %}

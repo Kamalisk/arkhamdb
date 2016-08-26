@@ -22,15 +22,52 @@
         					<h3 class="panel-title">
         						{% include 'AppBundle:Search:card-name-with-link.html.twig' %}
         					</h3>
-        	  			</div>
+        	  		</div>
         				<div class="panel-body card-content">
         					{% include 'AppBundle:Search:card-faction.html.twig' %}
         					{% include 'AppBundle:Search:card-info.html.twig' %}
+        					{% if card.type_code == 'agenda' or card.type_code == 'act' %}
+        					{% include 'AppBundle:Search:card-flavor.html.twig' %}
+        					{% include 'AppBundle:Search:card-text.html.twig' %}
+        					{% else %}
         					{% include 'AppBundle:Search:card-text.html.twig' %}
         					{% include 'AppBundle:Search:card-flavor.html.twig' %}
+        					{% endif %}
         					{% include 'AppBundle:Search:card-illustrator.html.twig' %}
-							{% include 'AppBundle:Search:card-pack.html.twig' %}
+									{% include 'AppBundle:Search:card-pack.html.twig' %}
         				</div>
+        				{% if card.back_name %}
+        				<div class="panel-heading border-{{ card.faction_code }} bg-{{ card.faction_code }}">
+        					<h3 class="panel-title">
+        						{{card.back_name}}
+        					</h3>
+        	  		</div>
+        	  		{% endif %}
+        	  		<div class="panel-body card-content">
+        	  			{% if card.type_code == 'agenda' or card.type_code == 'act' %}	
+	        					{% if card.back_flavor %}
+	        					<div class="card-flavor small">
+										{{ card.back_flavor|raw|nl2br }}
+										</div>
+										{% endif %}
+	        					{% if card.back_text %}
+	        					<div class="card-text border-{{ card.faction_code }}">
+										{{ card.back_text|raw }}
+										</div>
+										{% endif %}
+        					{% else %}
+	        					{% if card.back_text %}
+	        					<div class="card-text border-{{ card.faction_code }}">
+										{{ card.back_text|raw }}
+										</div>
+										{% endif %}
+										{% if card.back_flavor %}
+	        					<div class="card-flavor small">
+										{{ card.back_flavor|raw|nl2br }}
+										</div>
+										{% endif %}
+        					{% endif %}
+        	  		</div>
         			</div>
         		</div>
         	</div>
@@ -41,6 +78,9 @@
         			{% else %}
         			   <div class="no-image" style="margin:auto"><div class="no-image-text">No image</div></div>
         			{% endif %}
+        			{% if card.backimagesrc %}
+        			   <img src="{{ card.backimagesrc }}" alt="{{ card.name }}" class="img-responsive" style="margin:auto">
+        			{% endif %}
         		</div>
         	</div>
         {% if includeReviews %}
@@ -48,9 +88,6 @@
         {% endif %}
 {% endfor %}
         </div>
-    </div>
-    <div class="col-md-3">
-        {% include 'AppBundle:Default:google-adaptable-ad.html.twig' %}
     </div>
 </div>
 

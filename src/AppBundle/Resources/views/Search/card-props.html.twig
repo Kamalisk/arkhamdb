@@ -1,9 +1,14 @@
 {% import "AppBundle::macros.html.twig" as macros %}
-<div class="card-props">
-{% if card.type_code == 'asset' or card.type_code == 'event' %}
-	Cost: {{ macros.integer_or_x(card.cost) }}.
+
+{% if card.traits %}
+<p class="card-traits">{{ card.traits }}</p>
 {% endif %}
+
+{% if card.type_code == 'asset' or card.type_code == 'event' %}
+<div class="card-props">
+	Cost: {{ macros.integer_or_x(card.cost) }}.
 </div>
+{% endif %}
 
 {% if card.type_code == 'investigator' %}
 <div class="card-props">
@@ -13,6 +18,12 @@
 	Agility: {{ macros.integer_or_x(card.agility) }}.
 </div>
 {% else %}
+	{% if card.doom or card.clues %}
+	<div>
+	{% if card.doom %}<span title="Doom" class="icon icon-doom color-doom"></span>Doom: {{card.doom}}{% endif %}
+	{% if card.clues %}<span title="Clues" class="icon icon-clues color-clues"></span>Clues: {{card.clues}} per investigator{% endif %}
+	</div>
+	{% endif %}
 	{% if card.will or card.lore or card.strength or card.agility or card.wild %}
 	<div>
 	Test Icons:

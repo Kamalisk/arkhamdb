@@ -578,14 +578,13 @@ class BuilderController extends Controller
     		);
     	}
     	 
-    	$plotIntersection = $this->get('diff')->getSlotsDiff([$deck1->getSlots()->getPlotDeck(), $deck2->getSlots()->getPlotDeck()]);
+    	//$plotIntersection = $this->get('diff')->getSlotsDiff([$deck1->getSlots()->getPlotDeck(), $deck2->getSlots()->getPlotDeck()]);
     
     	$drawIntersection = $this->get('diff')->getSlotsDiff([$deck1->getSlots()->getDrawDeck(), $deck2->getSlots()->getDrawDeck()]);
     
     	return $this->render('AppBundle:Compare:deck_compare.html.twig', [
     			'deck1' => $deck1,
     			'deck2' => $deck2,
-    			'plot_deck' => $plotIntersection,
     			'draw_deck' => $drawIntersection,
     	]);
     }

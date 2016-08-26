@@ -1300,7 +1300,7 @@ class Card implements \Serializable
      */
     public function setBackFlavor($backFlavor)
     {
-        $this->backFlavor = $flavor;
+        $this->backFlavor = $backFlavor;
 
         return $this;
     }
