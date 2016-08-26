@@ -43,6 +43,7 @@
         					</h3>
         	  		</div>
         	  		{% endif %}
+								{% if card.back_flavor or card.back_text %}
         	  		<div class="panel-body card-content">
         	  			{% if card.type_code == 'agenda' or card.type_code == 'act' %}	
 	        					{% if card.back_flavor %}
@@ -68,6 +69,7 @@
 										{% endif %}
         					{% endif %}
         	  		</div>
+        	  		{% endif %}
         			</div>
         		</div>
         	</div>
