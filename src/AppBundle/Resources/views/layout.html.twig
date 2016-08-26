@@ -152,6 +152,11 @@
 	});
     </script>
 
+	{% if app.environment != 'prod' %}
+		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		{% include 'AppBundle:Default:google-analytics.html.twig' %}
+	{% endif %}
+
 	{% javascripts filter="?jsqueeze" output="js/app.js"
 		'@AppBundle/Resources/public/js/bootstrap.js'
 		'@AppBundle/Resources/public/js/fdb-all.min.js'

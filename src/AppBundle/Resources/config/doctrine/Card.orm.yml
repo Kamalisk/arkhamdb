@@ -170,6 +170,20 @@ AppBundle\Entity\Card:
             type: boolean
             nullable: false
             column: is_unique
+        doubleSided:
+            type: boolean
+            nullable: true
+            column: double_sided
+        backText:
+            type: text
+            nullable: true
+        backFlavor:
+            type: text
+            nullable: true
+        backName:
+            type: string
+            length: 1024
+            nullable: true
         octgnId:
             type: string
             nullable: true

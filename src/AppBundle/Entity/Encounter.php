@@ -15,6 +15,10 @@ class Encounter implements \Serializable
 		throw new \Exception("unserialize() method unsupported");
 	}
 	
+	public function toString() {
+		return $this->name;
+	}
+	
 	/**
      * @var integer
      */

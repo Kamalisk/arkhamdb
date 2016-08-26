@@ -30,7 +30,10 @@ class Card implements \Serializable
 				'octgn_id',
 				'subname',
 				'xp',
-				'deck_limit'
+				'deck_limit',
+				'back_text',
+				'back_name',
+				'back_flavor'
 		];
 	
 		$externalFields = [
@@ -52,6 +55,7 @@ class Card implements \Serializable
 				$optionalFields[] = 'sanity';				
 				$optionalFields[] = 'restrictions';
 				$optionalFields[] = 'slot';
+				$optionalFields[] = 'encounter_position';
 				break;
 			case 'event':
 				$mandatoryFields[] = 'cost';
@@ -83,6 +87,7 @@ class Card implements \Serializable
 			case "treachery":
 				$externalFields[] = "subtype";
 				$optionalFields[] = 'restrictions';
+				$optionalFields[] = 'encounter_position';
 				break;
 			case "enemy":
 				$optionalFields[] = 'enemy_damage';
@@ -105,6 +110,9 @@ class Card implements \Serializable
 				break;
 			case "act":
 				$optionalFields[] = 'clues';
+				$optionalFields[] = 'encounter_position';
+				break;
+			case "adventure":
 				$optionalFields[] = 'encounter_position';
 				break;
 		}
@@ -167,6 +175,11 @@ class Card implements \Serializable
      * @var string
      */
     private $name;
+    
+    /**
+     * @var string
+     */
+    private $backName;
 
     /**
      * @var string
@@ -182,6 +195,12 @@ class Card implements \Serializable
      * @var string
      */
     private $text;
+    
+    
+    /**
+     * @var string
+     */
+    private $backText;
 
     /**
      * @var \DateTime
@@ -323,6 +342,11 @@ class Card implements \Serializable
      * @var string
      */
     private $flavor;
+    
+     /**
+     * @var string
+     */
+    private $backFlavor;
 
     /**
      * @var string
@@ -333,6 +357,11 @@ class Card implements \Serializable
      * @var boolean
      */
     private $isUnique;
+    
+    /**
+     * @var boolean
+     */
+    private $doubleSided;
 
     /**
      * @var string
@@ -491,6 +520,31 @@ class Card implements \Serializable
     }
     
     
+     /**
+     * Set backName
+     *
+     * @param string $backName
+     *
+     * @return Card
+     */
+    public function setBackName($backName)
+    {
+        $this->backName = $backName;
+
+        return $this;
+    }
+
+    /**
+     * Get backName
+     *
+     * @return string
+     */
+    public function getBackName()
+    {
+        return $this->backName;
+    }
+    
+    
         /**
      * Set subname
      *
@@ -562,6 +616,32 @@ class Card implements \Serializable
     {
         return $this->text;
     }
+    
+    
+        /**
+     * Set backText
+     *
+     * @param string $backText
+     *
+     * @return Card
+     */
+    public function setBackText($backText)
+    {
+        $this->backText = $backText;
+
+        return $this;
+    }
+
+    /**
+     * Get backText
+     *
+     * @return string
+     */
+    public function getBackText()
+    {
+        return $this->backText;
+    }
+    
 
     /**
      * Set dateCreation
@@ -1208,6 +1288,32 @@ class Card implements \Serializable
     {
         return $this->flavor;
     }
+    
+    
+    
+     /**
+     * Set backFlavor
+     *
+     * @param string $backFlavor
+     *
+     * @return Card
+     */
+    public function setBackFlavor($backFlavor)
+    {
+        $this->backFlavor = $flavor;
+
+        return $this;
+    }
+
+    /**
+     * Get backFlavor
+     *
+     * @return string
+     */
+    public function getBackFlavor()
+    {
+        return $this->backFlavor;
+    }
 
     /**
      * Set illustrator
@@ -1257,6 +1363,31 @@ class Card implements \Serializable
         return $this->isUnique;
     }
 
+
+
+    /**
+     * Set doubleSided
+     *
+     * @param boolean $doubleSided
+     *
+     * @return Card
+     */
+    public function setDoubleSided($doubleSided)
+    {
+        $this->doubleSided = $doubleSided;
+
+        return $this;
+    }
+
+    /**
+     * Get doubleSided
+     *
+     * @return boolean
+     */
+    public function getDoubleSided()
+    {
+        return $this->doubleSided;
+    }
 
 
     /**

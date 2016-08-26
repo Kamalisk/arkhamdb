@@ -456,6 +456,11 @@ class ImportStdCommand extends ContainerAwareCommand
 			if(!key_exists($foreignEntityShortName, $this->collections)) {
 				throw new \Exception("No collection for [$foreignEntityShortName] in ".json_encode($data));
 			}
+
+			//echo $foreignCode." ".$key." ".$foreignEntityShortName;
+			if (!$foreignCode){
+				continue;
+			} 
 			if(!key_exists($foreignCode, $this->collections[$foreignEntityShortName])) {
 				throw new \Exception("Invalid code [$foreignCode] for key [$key] in ".json_encode($data));
 			}
@@ -482,14 +487,6 @@ class ImportStdCommand extends ContainerAwareCommand
 	protected function importAssetData(Card $card, $data)
 	{
 
-		$mandatoryKeys = [
-				'cost'
-		];
-
-		foreach($mandatoryKeys as $key) {
-			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
-		}
-
 	}
 
 	protected function importInvestigatorData(Card $card, $data)
@@ -511,11 +508,32 @@ class ImportStdCommand extends ContainerAwareCommand
 	protected function importEnemyData(Card $card, $data)
 	{
 		$mandatoryKeys = [
-				'enemy_damage',
-				'enemy_horror',
 				'enemy_fight',
 				'enemy_evade',
 				'health'
+		];
+
+		foreach($mandatoryKeys as $key) {
+			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
+		}
+	}
+
+
+	protected function importAgendaData(Card $card, $data)
+	{
+		$mandatoryKeys = [
+				'doom'
+		];
+
+		foreach($mandatoryKeys as $key) {
+			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
+		}
+	}
+
+protected function importActData(Card $card, $data)
+	{
+		$mandatoryKeys = [
+				'clues'
 		];
 
 		foreach($mandatoryKeys as $key) {
@@ -548,6 +566,11 @@ class ImportStdCommand extends ContainerAwareCommand
 	}
 
 	protected function importSkillData(Card $card, $data)
+	{
+
+	}
+
+	protected function importAdventureData(Card $card, $data)
 	{
 
 	}
