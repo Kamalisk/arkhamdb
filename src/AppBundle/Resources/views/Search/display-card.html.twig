@@ -15,7 +15,7 @@
     <div class="col-md-9">
         <div class="row">
 {% for card in cards %}
-        	<div class="col-sm-7" style="margin-bottom:2em">
+        	<div class="col-sm-7">
         		<div>
         			<div class="panel panel-default border-{{ card.faction_code }}">
         				<div class="panel-heading border-{{ card.faction_code }} bg-{{ card.faction_code }}">
@@ -36,6 +36,22 @@
         					{% include 'AppBundle:Search:card-illustrator.html.twig' %}
 									{% include 'AppBundle:Search:card-pack.html.twig' %}
         				</div>
+        			</div>
+        		</div>
+        	</div>
+        	<div class="col-sm-5" style="margin-bottom:2em">
+        		<div>
+        			{% if card.imagesrc %}
+        			   <img src="{{ card.imagesrc }}" alt="{{ card.name }}" class="img-responsive" style="margin:auto">
+        			{% else %}
+        			   <div class="no-image" style="margin:auto"><div class="no-image-text">No image</div></div>
+        			{% endif %}
+        		</div>
+        	</div>
+        	{% if card.double_sided %}
+        	<div class="col-sm-7" style="margin-bottom:2em">
+        		<div>
+        			<div class="panel panel-default border-{{ card.faction_code }}">
         				{% if card.back_name %}
         				<div class="panel-heading border-{{ card.faction_code }} bg-{{ card.faction_code }}">
         					<h3 class="panel-title">
@@ -44,7 +60,7 @@
         	  		</div>
         	  		{% endif %}
 								{% if card.back_flavor or card.back_text %}
-        	  		<div class="panel-body card-content">
+        	  		<div class="panel-body card-content border-{{ card.faction_code }}">
         	  			{% if card.type_code == 'agenda' or card.type_code == 'act' %}	
 	        					{% if card.back_flavor %}
 	        					<div class="card-flavor small">
@@ -75,16 +91,12 @@
         	</div>
         	<div class="col-sm-5" style="margin-bottom:2em">
         		<div>
-        			{% if card.imagesrc %}
-        			   <img src="{{ card.imagesrc }}" alt="{{ card.name }}" class="img-responsive" style="margin:auto">
-        			{% else %}
-        			   <div class="no-image" style="margin:auto"><div class="no-image-text">No image</div></div>
-        			{% endif %}
         			{% if card.backimagesrc %}
         			   <img src="{{ card.backimagesrc }}" alt="{{ card.name }}" class="img-responsive" style="margin:auto">
         			{% endif %}
         		</div>
         	</div>
+        	{% endif %}
         {% if includeReviews %}
    	    	{% include 'AppBundle:Search:display-card-reviews.html.twig' %}
         {% endif %}

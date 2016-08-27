@@ -5,7 +5,8 @@ body {
 
 }
 .card-content {
-	font: 16px/20px 'Amiri', serif
+	font: 16px/20px 'Amiri', serif;
+	border-top : solid 1px;
 }
 .card-content abbr[title] {
 	border-bottom: none;
@@ -15,8 +16,9 @@ body {
 	font-weight: 700;
 }
 .card-subname {
-	padding-left : 2.5em;
-	border-top : solid rgba(100,100,100,0.5) 1px;
+	padding-left : 1.75em;
+	border-top : solid rgba(255,255,255,0.1) 1px;
+	margin-top : 2px;
 }
 .card-preview {
     color: red;
@@ -272,9 +274,9 @@ div.tags span.tag:not(:first-child)::before {
 .card-thumbnail-3x.card-thumbnail-skill{background-position:-16.7px -20px}
 .card-thumbnail-4x.card-thumbnail-skill{background-position:-12.5px -15px}
 .card-thumbnail-5x.card-thumbnail-skill{background-position:-10px -12px}
-.card-thumbnail-1x.card-thumbnail-treachery{background-position:-82px -26px}
-.card-thumbnail-2x.card-thumbnail-treachery{background-position:-41px -13px}
-.card-thumbnail-3x.card-thumbnail-treachery{background-position:-27.3px -8.7px}
+.card-thumbnail-1x.card-thumbnail-treachery{background-position:-92px -26px}
+.card-thumbnail-2x.card-thumbnail-treachery{background-position:-51px -13px}
+.card-thumbnail-3x.card-thumbnail-treachery{background-position:-23.3px -2.7px;background-size:120px 159px}
 .card-thumbnail-4x.card-thumbnail-treachery{background-position:-20.5px -6.5px}
 .card-thumbnail-5x.card-thumbnail-treachery{background-position:-16.4px -5.2px}
 .card-thumbnail-1x.card-thumbnail-plot{width:400px;height:100px;background-size:418px 300px;background-position:-9px -25px}
@@ -329,50 +331,54 @@ div.site-slogan {
 	color: inherit;
 }
 .bg-guardian {
-	background-color: #1c1c7c !important;
+	background-color: #2b80c5 !important;
 	color: white !important;
 }
 .bg-survivor {
-	background-color: #f33832 !important;
+	background-color: #cc3038 !important;
 	color: white !important;
 }
 .bg-seeker {
 	background-color: #ff8f3f !important;
 }
 .bg-mystic {
-	background-color: #6d2aa9 !important;
+	background-color: #5d5593 !important;
 	color: white !important;
 }
 .bg-rogue {
 	background-color: #107116 !important;
 	color: white !important;
 }
+.bg-neutral {
+	background-color: #808080 !important;
+	color: white !important;
+}
 
 .fg-guardian {
-	color: #0c0c7c !important;
+	color: #2b80c5 !important;
 }
 .fg-survivor {
-	color: #f33832 !important;
+	color: #cc3038 !important;
 }
 .fg-seeker {
 	color: #ff8f3f !important;
 }
 .fg-mystic {
-	color: #6d2aa9 !important;
+	color: #484085 !important;
 }
 .fg-rogue {
 	color: #107116 !important;
 }
 .fg-neutral {
-	color: #202020 !important;
+	color: #808080 !important;
 }
 
 
 .border-guardian {
-	border-color: #1c1c7c !important;
+	border-color: #2b80c5 !important;
 }
 .border-survivor {
-	border-color: #f33832 !important;
+	border-color: #cc3038 !important;
 }
 .border-seeker {
 	border-color: #ff8f3f !important;
@@ -384,7 +390,7 @@ div.site-slogan {
 	border-color: #107116 !important;
 }
 .border-neutral {
-	border-color: #202020 !important;
+	border-color: #808080 !important;
 }
 
 /**************** REVIEW ON CARD PAGE ******************/

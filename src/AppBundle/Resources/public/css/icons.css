@@ -26,6 +26,7 @@
 .icon-reaction:before {
 	content: "r";
 	font-size: 1.1em;
+	font-weight : bold;
 }
 .icon-eldersign:before {
 	content: "e";
@@ -35,6 +36,7 @@
 }
 .icon-action:before {
 	content: ">";
+	font-weight : bold;
 }
 .icon-strength:before {
 	content: "s";
@@ -53,6 +55,7 @@
 }
 .icon-unique:before {
 	content: "u";
+	font-size : 0.7em;
 }
 
 .color-will {

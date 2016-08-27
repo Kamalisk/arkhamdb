@@ -4,9 +4,14 @@
 <p class="card-traits">{{ card.traits }}</p>
 {% endif %}
 
-{% if card.type_code == 'asset' or card.type_code == 'event' %}
+{% if card.type_code == 'asset' or card.type_code == 'event' or card.xp %}
 <div class="card-props">
+	{% if card.type_code == 'asset' or card.type_code == 'event'%}
 	Cost: {{ macros.integer_or_x(card.cost) }}.
+	{% endif %}
+	{% if card.xp %}
+	XP: {{ card.xp }}.
+	{% endif %}
 </div>
 {% endif %}
 

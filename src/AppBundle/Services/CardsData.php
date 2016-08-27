@@ -435,6 +435,7 @@ class CardsData
 		} else {
 			$cardinfo['imagesrc'] = null;
 		}
+		
 		if(isset($cardinfo['double_sided']) && $cardinfo['double_sided']) {
 			$imageurl = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'_back.png');
 			$imagepath= $this->rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl);
@@ -442,9 +443,11 @@ class CardsData
 				$cardinfo['backimagesrc'] = $imageurl;
 			}else {
 				$cardinfo['backimagesrc'] = null;
+
 			}
 		}else {
-			$cardinfo['backimagesrc'] = null;
+			$cardinfo['double_sided'] = false;
+
 		}
 
 		if($api) {
