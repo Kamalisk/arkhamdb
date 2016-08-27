@@ -342,7 +342,8 @@ class ImportStdCommand extends ContainerAwareCommand
 					'back_text',
 					'back_flavor',
 					'back_name',
-					'double_sided'
+					'double_sided',
+					'stage'
 			]);
 			if($card) {				
 				$result[] = $card;

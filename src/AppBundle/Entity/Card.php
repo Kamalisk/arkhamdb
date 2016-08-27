@@ -107,10 +107,12 @@ class Card implements \Serializable
 			case "agenda":
 				$optionalFields[] = 'doom';
 				$optionalFields[] = 'encounter_position';
+				$optionalFields[] = 'stage';
 				break;
 			case "act":
 				$optionalFields[] = 'clues';
 				$optionalFields[] = 'encounter_position';
+				$optionalFields[] = 'stage';
 				break;
 			case "adventure":
 				$optionalFields[] = 'encounter_position';
@@ -337,6 +339,11 @@ class Card implements \Serializable
      * @var string
      */
     private $slot;
+
+    /**
+     * @var integer
+     */
+    private $stage;
 
     /**
      * @var string
@@ -1264,6 +1271,32 @@ class Card implements \Serializable
     {
         return $this->slot;
     }
+
+
+    /**
+     * Set stage
+     *
+     * @param integer $stage
+     *
+     * @return Card
+     */
+    public function setStage($stage)
+    {
+        $this->stage = $stage;
+
+        return $this;
+    }
+
+    /**
+     * Get stage
+     *
+     * @return integer
+     */
+    public function getStage()
+    {
+        return $this->stage;
+    }
+
 
     /**
      * Set flavor

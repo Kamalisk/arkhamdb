@@ -143,6 +143,9 @@ AppBundle\Entity\Card:
             type: string
             length: 50
             nullable: true
+        stage:
+            type: smallint
+            nullable: true
         traits:
             type: string
             length: 255

@@ -116,7 +116,7 @@ data.query = function query() {
 	});
 
 	$.ajax({
-		url: Routing.generate('api_cards'),
+		url: Routing.generate('api_cards')+"?encounter=1",
 		success: data.parse_cards,
 		error: function (jqXHR, textStatus, errorThrown) {
 			console.log('error when requesting cards', errorThrown);

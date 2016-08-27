@@ -7,18 +7,17 @@ var cards_zoom_regexp = /card\/(\d\d\d\d\d)$/,
 function display_card_on_element(card, element, event) {
 	var content;
 	if(mode == 'text') {
-		var image = card.imagesrc ? '<div class="card-thumbnail card-thumbnail-3x card-thumbnail-'+card.type_code+'" style="background-image:url('+card.imagesrc+')"></div>' : "";
-
+		var image = card.imagesrc ? '<div class="card-thumbnail card-thumbnail-3x card-thumbnail-'+card.type_code+'" style="background-image:url('+card.imagesrc+')"></div>' : "";		
 		content = image
 		+ '<h4 class="card-name">' + app.format.name(card) + '</h4>'
 		+ '<div class="card-faction">' + app.format.faction(card) + '</div>'
-		+ '<div><span class="card-type">'+card.type_name+(card.slot ? '. '+card.slot : "")+(card.subtype_name ? '. '+card.subtype_name : "")+'</span></div>'
+		+ '<div><span class="card-type">'+card.type_name+((card.type_code == "agenda" || card.type_code == "act") ? '. Stage '+card.stage : '')+(card.slot ? '. '+card.slot : "")+(card.subtype_name ? '. '+card.subtype_name : "")+'</span></div>'
 		+ '<div class="card-traits">' + app.format.traits(card) + '</div>'
 		+ '<div class="card-info">' + app.format.info(card) + '</div>'
-		+ '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>'
+		+ ( (card.type_code == "agenda" || card.type_code == "act") ? '<div class="card-flavor">' + card.flavor + '</div><div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>' : '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>')
 		+ '<div class="card-pack">' + app.format.pack(card) + '</div>'
 		;
-		
+	
 	}
 	else {
 		content = card.imagesrc ? '<img src="'+card.imagesrc+'">' : "";
@@ -53,9 +52,10 @@ function display_card_on_element(card, element, event) {
  * @memberOf tip
  * @param event
  */
-tip.display = function display(event) {
+tip.display = function display(event) {	
 	var code = $(this).data('code');
 	var card = app.data.cards.findById(code);
+
 	if (!card) return;
 	display_card_on_element(card, this, event);
 };
