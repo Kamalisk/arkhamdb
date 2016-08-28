@@ -448,7 +448,6 @@ class CardsData
 			}
 		}else {
 			$cardinfo['double_sided'] = false;
-
 		}
 
 		if($api) {

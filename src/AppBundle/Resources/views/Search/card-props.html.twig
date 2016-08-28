@@ -22,6 +22,22 @@
 	Strength: {{ macros.integer_or_x(card.strength) }}.
 	Agility: {{ macros.integer_or_x(card.agility) }}.
 </div>
+{% if card.health or card.sanity%}
+	<div>
+	Health: {{ macros.integer_or_x(card.health) }}.
+	Sanity: {{ macros.integer_or_x(card.sanity) }}.
+	</div>
+{% endif %}
+{% elseif card.type_code == 'enemy' %}
+	<div>
+	Fight: {{ macros.integer_or_x(card.enemy_fight) }}.
+	Health: {{ macros.integer_or_x(card.health) }}.
+	Evade: {{ macros.integer_or_x(card.enemy_evade) }}.
+	</div>
+	<div>
+	Damage: {{ macros.integer_or_x(card.enemy_damage) }}.
+	Horror: {{ macros.integer_or_x(card.enemy_horror) }}.
+	</div>
 {% else %}
 	{% if card.doom or card.clues %}
 	<div>
@@ -39,12 +55,13 @@
 	{% if card.wild %}{% for i in 1..card.wild %}<span title="Wild" class="icon icon-wild color-wild"></span>{% endfor %}{% endif %}
 	</div>
 	{% endif %}
-{% endif %}
-{% if card.health or card.sanity%}
+	{% if card.health or card.sanity%}
 	<div>
 	Health: {{ macros.integer_or_x(card.health) }}.
 	Sanity: {{ macros.integer_or_x(card.sanity) }}.
 	</div>
+	{% endif %}
 {% endif %}
+
 
 

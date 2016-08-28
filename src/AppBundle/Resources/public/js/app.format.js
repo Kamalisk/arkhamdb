@@ -43,6 +43,10 @@ format.info = function info(card) {
 		case 'act':
 			text += '<div>Clues: '+card.clues+'.</div>';
 			break;
+		case 'enemy':
+			text += '<div>Fight: '+card.enemy_fight+'. Health: '+card.health+'. Evade: '+card.enemy_evade+'.</div>';
+			text += '<div>Damage: '+card.enemy_damage+'. Horror: '+card.enemy_horror+'.</div>';
+			break;
 		case 'investigator':
 			text += '<div>Will: '+card.will+'. Lore: '+card.lore+'. Strength: '+card.strength+'. Agility: '+card.agility+'.</div>';
 			text += '<div>Health: '+card.health+'. Sanity: '+card.sanity+'.</div>'
