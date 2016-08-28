@@ -32,15 +32,15 @@ class CardsData
 	public function replaceSymbols($text)
 	{
 		static $displayTextReplacements = [
-			'[eldersign]' => '<span class="icon-eldersign"></span>',
-			'[reaction]' => '<span class="icon-reaction"></span>',
-			'[action]' => '<span class="icon-action"></span>',
-			'[lightning]' => '<span class="icon-lightning"></span>',
-			'[will]' => '<span class="icon-will"></span>',
-			'[lore]' => '<span class="icon-lore"></span>',
-			'[strength]' => '<span class="icon-strength"></span>',
-			'[agility]' => '<span class="icon-agility"></span>',
-			'[wild]' => '<span class="icon-wild"></span>'
+			'[eldersign]' => '<span class="icon-eldersign" title="Elder Sign"></span>',
+			'[reaction]' => '<span class="icon-reaction" title="Reaction"></span>',
+			'[action]' => '<span class="icon-action" title="Action"></span>',
+			'[lightning]' => '<span class="icon-lightning" title="Fast Action"></span>',
+			'[will]' => '<span class="icon-will" title="Willpower"></span>',
+			'[lore]' => '<span class="icon-lore" title="Intellect"></span>',
+			'[strength]' => '<span class="icon-strength" title="Combat"></span>',
+			'[agility]' => '<span class="icon-agility" title="Agility"></span>',
+			'[wild]' => '<span class="icon-wild" title="Any Skill"></span>'
 		];
 		
 		return str_replace(array_keys($displayTextReplacements), array_values($displayTextReplacements), $text);
@@ -271,13 +271,13 @@ class CardsData
 									$or[] = "(c.code = ?$i)";
 									$qb->setParameter($i++, $arg);
 								} else if($acronym) {
-									$or[] = "(BINARY(c.name) like ?$i)";
+									$or[] = "(BINARY(c.name) like ?$i or BINARY(c.backName) like ?$i)";
 									$qb->setParameter($i++, "%$arg%");
 									$like = implode('% ', str_split($arg));
-									$or[] = "(REPLACE(c.name, '-', ' ') like ?$i)";
+									$or[] = "(REPLACE(c.name, '-', ' ') like ?$i or REPLACE(c.backName, '-', ' ') like ?$i)";
 									$qb->setParameter($i++, "$like%");
 								} else {
-									$or[] = "(c.name like ?$i)";
+									$or[] = "(c.name like ?$i or c.backName like ?$i)";
 									$qb->setParameter($i++, "%$arg%");
 								}
 							}
@@ -289,21 +289,22 @@ class CardsData
 							$or = [];
 							foreach($condition as $arg) {
 								switch($operator) {
-									case ':': $or[] = "(c.text like ?$i)"; break;
-									case '!': $or[] = "(c.text not like ?$i)"; break;
+									case ':': $or[] = "(c.text like ?$i or c.backText like ?$i)"; break;
+									case '!': $or[] = "(c.text not like ?$i and c.backText not like ?$i)"; break;
 								}
 								$qb->setParameter($i++, "%$arg%");
+								
 							}
 							$qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
 							break;
 						}
-						case 'a': // flavor
+						case 'v': // flavor
 						{
 							$or = [];
 							foreach($condition as $arg) {
 								switch($operator) {
-									case ':': $or[] = "(c.flavor like ?$i)"; break;
-									case '!': $or[] = "(c.flavor not like ?$i)"; break;
+									case ':': $or[] = "(c.flavor like ?$i or c.backFlavor like ?$i)"; break;
+									case '!': $or[] = "(c.flavor not like ?$i and c.backFlavor not like ?$i)"; break;
 								}
 								$qb->setParameter($i++, "%$arg%");
 							}

@@ -37,6 +37,12 @@ format.pack = function pack(card) {
 format.info = function info(card) {
 	var text = '';
 	switch(card.type_code) {
+		case 'agenda':
+			text += '<div>Doom: '+card.doom+'.</div>';
+			break;
+		case 'act':
+			text += '<div>Clues: '+card.clues+'.</div>';
+			break;
 		case 'investigator':
 			text += '<div>Will: '+card.will+'. Lore: '+card.lore+'. Strength: '+card.strength+'. Agility: '+card.agility+'.</div>';
 			text += '<div>Health: '+card.health+'. Sanity: '+card.sanity+'.</div>'

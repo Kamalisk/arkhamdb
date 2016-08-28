@@ -1,0 +1,51 @@
+
+{% if card.double_sided %}
+<div class="col-sm-7" style="margin-bottom:2em">
+	<div>
+		<div class="panel panel-default border-{{ card.faction_code }}">
+			{% if card.back_name %}
+			<div class="panel-heading border-{{ card.faction_code }} bg-{{ card.faction_code }}">
+				<h3 class="panel-title">
+					{{card.back_name}}
+				</h3>
+  		</div>
+  		{% endif %}
+			{% if card.back_flavor or card.back_text %}
+  		<div class="panel-body card-content border-{{ card.faction_code }}">
+  			{% if card.type_code == 'agenda' or card.type_code == 'act' %}	
+					{% if card.back_flavor %}
+					<div class="card-flavor small">
+					{{ card.back_flavor|raw|nl2br }}
+					</div>
+					{% endif %}
+					{% if card.back_text %}
+					<div class="card-text border-{{ card.faction_code }}">
+					{{ card.back_text|raw }}
+					</div>
+					{% endif %}
+				{% else %}
+					{% if card.back_text %}
+					<div class="card-text border-{{ card.faction_code }}">
+					{{ card.back_text|raw }}
+					</div>
+					{% endif %}
+					{% if card.back_flavor %}
+					<div class="card-flavor small">
+					{{ card.back_flavor|raw|nl2br }}
+					</div>
+					{% endif %}
+				{% endif %}
+  		</div>
+  		{% endif %}
+		</div>
+	</div>
+</div>
+<div class="col-sm-5" style="margin-bottom:2em">
+	<div>
+		{% if card.backimagesrc %}
+		   <img src="{{ card.backimagesrc }}" alt="{{ card.name }}" class="img-responsive" style="margin:auto">
+		{% endif %}
+	</div>
+</div>
+{% endif %}
+

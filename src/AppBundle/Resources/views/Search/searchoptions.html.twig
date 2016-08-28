@@ -1,4 +1,4 @@
-<div class="col-sm-3" style="margin-bottom:.5em">
+<div class="col-sm-2" style="margin-bottom:.5em">
 <select name="sort" class="form-control">
 	<option value="name"    {% if sort|default('name') == "name"    %}selected{% endif %}>Sort by Name</option>
 	<option value="set"     {% if sort|default('name') == "set"     %}selected{% endif %}>Sort by Set</option>
@@ -16,7 +16,7 @@
 	<option value="short"   {% if view|default('list') == "short"   %}selected{% endif %}>View as Simple List</option>
 </select>
 </div>
-<div class="col-sm-2" style="margin-bottom:.5em">
+<div class="col-sm-3" style="margin-bottom:.5em">
 <select name="decks" class="form-control">
 	<option value="player"    {% if decks|default('player') == "list"    %}selected{% endif %}>Only Player Cards</option>
 	<option value="encounter" {% if decks|default('player') == "encounter" %}selected{% endif %}>Only Encounter Cards</option>

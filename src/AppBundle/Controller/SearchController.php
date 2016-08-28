@@ -360,9 +360,9 @@ class SearchController extends Controller
 			// si on a des cartes on affiche une bande de navigation/pagination
 			if(count($rows)) {
 				if(count($rows) == 1) {
-					$pagination = $this->setnavigation($card, $q, $view, $sort);
+					$pagination = $this->setnavigation($card, $q, $view, $sort, $decks);
 				} else {
-					$pagination = $this->pagination($nb_per_page, count($rows), $first, $q, $view, $sort);
+					$pagination = $this->pagination($nb_per_page, count($rows), $first, $q, $view, $sort, $decks);
 				}
 			}
 
@@ -416,7 +416,7 @@ class SearchController extends Controller
 		), $response);
 	}
 
-	public function setnavigation($card, $q, $view, $sort)
+	public function setnavigation($card, $q, $view, $sort, $encounter)
 	{
 	    $em = $this->getDoctrine();
 	    $prev = $em->getRepository('AppBundle:Card')->findOneBy(array("pack" => $card->getPack(), "position" => $card->getPosition()-1));
@@ -431,10 +431,10 @@ class SearchController extends Controller
 	    ));
 	}
 
-	public function paginationItem($q = null, $v, $s, $ps, $pi, $total)
+	public function paginationItem($q = null, $v, $s, $e, $ps, $pi, $total)
 	{
 		return $this->renderView('AppBundle:Search:paginationitem.html.twig', array(
-			"href" => $q == null ? "" : $this->get('router')->generate('cards_find', array('q' => $q, 'view' => $v, 'sort' => $s, 'page' => $pi)),
+			"href" => $q == null ? "" : $this->get('router')->generate('cards_find', array('q' => $q, 'view' => $v, 'sort' => $s, 'decks' => $e, 'page' => $pi)),
 			"ps" => $ps,
 			"pi" => $pi,
 			"s" => $ps*($pi-1)+1,
@@ -442,7 +442,7 @@ class SearchController extends Controller
 		));
 	}
 
-	public function pagination($pagesize, $total, $current, $q, $view, $sort)
+	public function pagination($pagesize, $total, $current, $q, $view, $sort, $encounter)
 	{
 		if($total < $pagesize) {
 			$pagesize = $total;
@@ -453,24 +453,24 @@ class SearchController extends Controller
 
 		$first = "";
 		if($pageindex > 2) {
-			$first = $this->paginationItem($q, $view, $sort, $pagesize, 1, $total);
+			$first = $this->paginationItem($q, $view, $sort, $encounter, $pagesize, 1, $total);
 		}
 
 		$prev = "";
 		if($pageindex > 1) {
-			$prev = $this->paginationItem($q, $view, $sort, $pagesize, $pageindex - 1, $total);
+			$prev = $this->paginationItem($q, $view, $sort, $encounter, $pagesize, $pageindex - 1, $total);
 		}
 
-		$current = $this->paginationItem(null, $view, $sort, $pagesize, $pageindex, $total);
+		$current = $this->paginationItem(null, $view, $sort, $encounter, $pagesize, $pageindex, $total);
 
 		$next = "";
 		if($pageindex < $pagecount) {
-			$next = $this->paginationItem($q, $view, $sort, $pagesize, $pageindex + 1, $total);
+			$next = $this->paginationItem($q, $view, $sort, $encounter, $pagesize, $pageindex + 1, $total);
 		}
 
 		$last = "";
 		if($pageindex < $pagecount - 1) {
-			$last = $this->paginationItem($q, $view, $sort, $pagesize, $pagecount, $total);
+			$last = $this->paginationItem($q, $view, $sort, $encounter, $pagesize, $pagecount, $total);
 		}
 
 		return $this->renderView('AppBundle:Search:pagination.html.twig', array(

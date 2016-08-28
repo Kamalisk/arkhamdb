@@ -32,9 +32,9 @@
 	{% if card.will or card.lore or card.strength or card.agility or card.wild %}
 	<div>
 	Test Icons:
-	{% if card.will %}{% for i in 1..card.will %}<span title="Will" class="icon icon-will color-will"></span>{% endfor %}{% endif %}
-	{% if card.lore %}{% for i in 1..card.lore %}<span title="Lore" class="icon icon-lore color-lore"></span>{% endfor %}{% endif %}
-	{% if card.strength %}{% for i in 1..card.strength %}<span title="Strength" class="icon icon-strength color-strength"></span>{% endfor %}{% endif %}
+	{% if card.will %}{% for i in 1..card.will %}<span title="Willpower" class="icon icon-will color-will"></span>{% endfor %}{% endif %}
+	{% if card.lore %}{% for i in 1..card.lore %}<span title="INtellect" class="icon icon-lore color-lore"></span>{% endfor %}{% endif %}
+	{% if card.strength %}{% for i in 1..card.strength %}<span title="Combat" class="icon icon-strength color-strength"></span>{% endfor %}{% endif %}
 	{% if card.agility %}{% for i in 1..card.agility %}<span title="Agility" class="icon icon-agility color-agility"></span>{% endfor %}{% endif %}
 	{% if card.wild %}{% for i in 1..card.wild %}<span title="Wild" class="icon icon-wild color-wild"></span>{% endfor %}{% endif %}
 	</div>
