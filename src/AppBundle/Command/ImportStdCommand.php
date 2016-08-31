@@ -562,7 +562,7 @@ protected function importActData(Card $card, $data)
 	protected function importEventData(Card $card, $data)
 	{
 		$mandatoryKeys = [
-				'cost'
+				//'cost'
 		];
 
 		foreach($mandatoryKeys as $key) {

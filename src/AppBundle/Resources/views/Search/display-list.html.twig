@@ -52,7 +52,7 @@
 	{% endif %}
 	</td>
 	<td data-th="Traits">{{ card.traits }}</td>
-	<td data-th="Set">{{ card.pack_name }} {{ card.position }}{% if card.encounter_code is defined %} - {{card.encounter_name}} {% if card.encounter_position %}{{card.encounter_position}}{% endif %}{% endif %}</td>
+	<td data-th="Set">{{ card.pack_name }} {{ card.position }}{% if card.encounter_code is defined %} - {{card.encounter_name}} {% if card.encounter_position %}{{card.encounter_position}}{% if card.quantity > 1 %}-{{card.encounter_position+card.quantity-1}}{% endif %}{% endif %}{% endif %}</td>
 </tr>
 {% endfor %}
 </table>

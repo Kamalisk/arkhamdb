@@ -39,10 +39,11 @@
 	Horror: {{ macros.integer_or_x(card.enemy_horror) }}.
 	</div>
 {% else %}
-	{% if card.doom or card.clues %}
+	{% if card.doom or card.clues or card.shroud %}
 	<div>
-	{% if card.doom %}<span title="Doom" class="icon icon-doom color-doom"></span>Doom: {{card.doom}}{% endif %}
-	{% if card.clues %}<span title="Clues" class="icon icon-clues color-clues"></span>Clues: {{card.clues}} per investigator{% endif %}
+	{% if card.doom %}<span title="Doom" class="icon icon-doom color-doom"></span>Doom: {{card.doom}}.{% endif %}
+	{% if card.shroud %}<span title="Shroud" class="icon icon-shroud color-shroud"></span>Shroud: {{card.shroud}}.{% endif %}
+	{% if card.clues %}<span title="Clues" class="icon icon-clues color-clues"></span>Clues: {{card.clues}} per investigator.{% endif %}
 	</div>
 	{% endif %}
 	{% if card.will or card.lore or card.strength or card.agility or card.wild %}

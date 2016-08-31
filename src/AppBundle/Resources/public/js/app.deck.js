@@ -12,9 +12,10 @@ var date_creation,
 	user_id,
 	problem_labels = {
 		too_few_cards: "Contains too few cards",
+		too_many_cards: "Contains too many cards",
 		too_many_copies: "Contains too many copies of a card (by title)",
-		invalid_cards: "Contains forbidden cards (cards no permitted by Investigator)",
-		investigator: "Doesn't comply with the Investigator conditions"
+		invalid_cards: "Contains forbidden cards (cards not permitted by Investigator)",
+		investigator: "Doesn't comply with the Investigator requirements"
 	},
 	header_tpl = _.template('<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'),
 	card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.investigator_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a>'),
@@ -210,9 +211,33 @@ deck.get_layout_data = function get_layout_data(options) {
 	//var investigator = deck.get_investigator();
 	var problem = deck.get_problem();
 
+	var card = app.data.cards.findById(this.get_investigator_code());
+	var size = 30;
+	var req_count = 0;
+	var req_met_count = 0;
+	
+	if (card.deck_requirements){
+		if (card.deck_requirements.size){
+			size = card.deck_requirements.size;
+		}
+		// must have the required cards
+		if (card.deck_requirements.card){
+			$.each(card.deck_requirements.card, function (key, value){
+				req_count++;
+				var req = app.data.cards.findById(value);
+				if (req && req.indeck){
+					req_met_count++;
+				}
+			});
+			if (req_met_count < req_count){
+				//return "investigator";
+			}
+		}
+	}
+
 	deck.update_layout_section(data, 'images', $('<div style="margin-bottom:10px"><img src="/bundles/cards/'+deck.get_investigator_code()+'.png" class="img-responsive">'));
 	deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold">'+investigator_name+'</h4>'));
-	deck.update_layout_section(data, 'meta', $('<div>Draw deck: '+deck.get_draw_deck_size()+' cards</div>').addClass(deck.get_draw_deck_size() < 30 ? 'text-danger': ''));
+	deck.update_layout_section(data, 'meta', $('<div>Draw deck: '+deck.get_draw_deck_size()+' cards</div>').addClass(deck.get_draw_deck_size() < size+req_met_count ? 'text-danger': ''));
 	deck.update_layout_section(data, 'meta', $('<div>Experience: '+deck.get_xp_usage()+'</div>'));
 	deck.update_layout_section(data, 'meta', $('<div>Packs: ' + _.map(deck.get_included_packs(), function (pack) { return pack.name+(pack.quantity > 1 ? ' ('+pack.quantity+')' : ''); }).join(', ') + '</div>'));
 	if(problem) {
@@ -237,19 +262,70 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 	query[sortKey] = sortValue;
 	var cards = deck.get_cards({ name: 1 }, query);
 	if(cards.length) {
-		$(header_tpl({code: sortValue, name:cards[0][displayLabel], quantity: deck.get_nb_cards(cards)})).appendTo(section);
-		cards.forEach(function (card) {
-			var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
-			$div.append($(card_line_tpl({card:card})));
-			$div.prepend(card.indeck+'x ');
-			if(card.xp && card.xp > 0) {
-				$div.append(' <span class="xp-'+card.xp+'">('+card.xp+')</span>');
-			}
-			if(app.data.cards.find({'name': card.name}).length > 1) {
-				//$div.append(' ('+card.pack_code+')');
-			}
-			$div.appendTo(section);
-		});
+		var name = cards[0][displayLabel];
+		if (sortValue == "asset"){
+			$(header_tpl({code: sortValue, name: name, quantity: deck.get_nb_cards(cards)})).appendTo(section);
+			var slots = {
+				'1-Handed': [],
+				'2-Handed': [],
+				'Accessory': [],
+				'Accessory': [],
+				'Body': [],
+				'Ally': [],
+				'Other': []
+			};
+			cards.forEach(function (card) {
+				var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
+				if (card.slot){
+					$div.append($(card_line_tpl({card:card})+' <span class="small slot-header">'+card.slot+'</span>'));
+				}else {
+					$div.append($(card_line_tpl({card:card})));
+				}
+				$div.prepend(card.indeck+'x ');
+				if(card.xp && card.xp > 0) {
+					$div.append(' <span class="xp-'+card.xp+'">('+card.xp+')</span>');
+				}
+				if(app.data.cards.find({'name': card.name}).length > 1) {
+					//$div.append(' ('+card.pack_code+')');
+				}
+				if (card.slot && slots[card.slot]){
+					slots[card.slot].push($div);
+				} else {
+					slots["Other"].push($div);
+				}
+			});
+			$.each(slots,function (index, slot) {
+				if(slot.length > 0){
+					//$('<div class="slot-header small">'+index+'</div>').appendTo(section);
+					$.each(slot,function (index, div) {
+						div.appendTo(section);
+					});
+				}
+			});
+		} else {
+			$(header_tpl({code: sortValue, name: name, quantity: deck.get_nb_cards(cards)})).appendTo(section);
+			cards.forEach(function (card) {
+				var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
+				
+				if (sortValue == "asset"){
+					if (card.slot){
+						$div.append($(card_line_tpl({card:card})+' <span class="small slot-header">'+card.slot+'</span>'));
+					}else {
+						$div.append($(card_line_tpl({card:card})));
+					}
+				}else {
+					$div.append($(card_line_tpl({card:card})));
+				}
+				$div.prepend(card.indeck+'x ');
+				if(card.xp && card.xp > 0) {
+					$div.append(' <span class="xp-'+card.xp+'">('+card.xp+')</span>');
+				}
+				if(app.data.cards.find({'name': card.name}).length > 1) {
+					//$div.append(' ('+card.pack_code+')');
+				}
+				$div.appendTo(section);
+			});
+		}
 	}
 	return section;
 }
@@ -334,9 +410,34 @@ deck.get_copies_and_deck_limit = function get_copies_and_deck_limit() {
  * @memberOf deck
  */
 deck.get_problem = function get_problem() {
-
+	
+	// get investigator data
+	var card = app.data.cards.findById(this.get_investigator_code());
+	var size = 30;
+	if (card.deck_requirements){
+		if (card.deck_requirements.size){
+			size = card.deck_requirements.size;
+		}
+		console.log(card.deck_requirements);
+		// must have the required cards
+		if (card.deck_requirements.card){
+			var req_count = 0;
+			var req_met_count = 0;
+			$.each(card.deck_requirements.card, function (key, value){
+				req_count++;
+				var req = app.data.cards.findById(value);
+				if (req && req.indeck){
+					req_met_count++;
+				}
+			});
+			if (req_met_count < req_count){
+				return "investigator";
+			}
+		}
+	}
+	
 	// at least 60 others cards
-	if(deck.get_draw_deck_size() < 30) {
+	if(deck.get_draw_deck_size() < size + req_met_count) {
 		return 'too_few_cards';
 	}
 
@@ -349,6 +450,7 @@ deck.get_problem = function get_problem() {
 	if(deck.get_invalid_cards().length > 0) {
 		return 'invalid_cards';
 	}
+	
 }
 
 deck.get_invalid_cards = function get_invalid_cards() {
