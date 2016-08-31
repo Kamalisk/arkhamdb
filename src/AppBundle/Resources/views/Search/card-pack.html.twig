@@ -1,1 +1,1 @@
-<div class="card-pack">{{ card.pack_name }} #{{ card.position }}.{% if card.encounter_code is defined %} {{ card.encounter_name }} #{{ card.encounter_position }}.{% endif %}</div>
+<div class="card-pack">{{ card.pack_name }} #{{ card.position }}.{% if card.encounter_code is defined %} {{ card.encounter_name }} #{{ card.encounter_position }}{% if card.quantity > 1 %}-{{card.encounter_position+card.quantity-1}}{% endif %}.{% endif %}</div>

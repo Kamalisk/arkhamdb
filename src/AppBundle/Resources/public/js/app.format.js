@@ -28,6 +28,16 @@ format.faction = function faction(card) {
  */
 format.pack = function pack(card) {
 	var text = card.pack_name + ' #' + card.position + '. ';
+	if (card.encounter_name){
+		text += card.encounter_name;
+		if (card.encounter_position){
+			text += " #"+card.encounter_position;
+			if (card.quantity > 1){
+				text += "-";
+				text += (card.encounter_position+card.quantity-1);
+			}
+		}
+	}
 	return text;
 }
 
