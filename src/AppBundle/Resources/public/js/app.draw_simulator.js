@@ -1,6 +1,7 @@
 (function app_draw_simulator(draw_simulator, $) {
 
 var deck = null,
+	hand = null,
 	initial_size = 0,
 	draw_count = 0,
 	container = null;
@@ -14,6 +15,29 @@ draw_simulator.reset = function reset() {
 	draw_count = 0;
 	draw_simulator.update_odds();
 	$('#draw-simulator-clear').prop('disabled', true);
+};
+
+
+/**
+ * @memberOf draw_simulator
+ */
+draw_simulator.redraw2 = function redraw2() {
+	$('[data-type="treachery"]',container).remove();
+	var count = 0;
+	var keys_to_clear = [];
+	$.each(hand, function(key, value){
+		if (value && value.type_code == "treachery"){
+			keys_to_clear.push(key);
+			deck.push(value);
+			count++;
+		}
+	});
+	$.each(keys_to_clear, function(key, value){
+		var spliced = hand.splice(key, 1);
+	});
+	
+	draw_simulator.do_draw(count);
+	draw_simulator.update_odds();
 };
 
 /**
@@ -43,7 +67,7 @@ draw_simulator.compute_odds = function compute_odds() {
  */
 draw_simulator.on_data_loaded = function on_data_loaded() {
 	deck = [];
-
+	hand = [];
 	var cards = app.deck.get_draw_deck();
 	cards.forEach(function (card) {
 		for(var ex = 0; ex < card.indeck; ex++) {
@@ -74,9 +98,13 @@ draw_simulator.do_draw = function do_draw(draw) {
 		var card = spliced[0];
 		var card_element;
 		if(card.imagesrc) {
-			card_element = $('<img src="'+card.imagesrc+'">');
+			card_element = $('<div data-type="'+card.type_code+'"><img src="'+card.imagesrc+'"></div>');
 		} else {
-			card_element = $('<div class="card-proxy"><div>'+card.name+'</div></div>');
+			card_element = $('<div data-type="'+card.type_code+'" class="card-proxy"><div>'+card.name+'</div></div>');
+		}
+		hand.push(card);
+		if (card.type_code && card.type_code == "treachery"){
+			$('[data-command=redraw]').prop('disabled', false);
 		}
 		container.append(card_element);
 		draw_count++;
@@ -92,11 +120,18 @@ draw_simulator.handle_click = function handle_click(event) {
 	event.preventDefault();
 
 	var command = $(this).data('command');
+	
+	if(command === 'redraw') {
+		draw_simulator.redraw2();
+		return;
+	}
+	
 	$('[data-command=clear]').prop('disabled', false);
 	if(command === 'clear') {
 		draw_simulator.reset();
 		return;
 	}
+	
 	if(event.shiftKey) {
 		draw_simulator.reset();
 	}
