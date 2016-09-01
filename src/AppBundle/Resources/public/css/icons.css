@@ -58,13 +58,13 @@
 	font-size : 0.7em;
 }
 
-.color-will, color-willpower {
+.color-will, .color-willpower {
 	color : #003961;
 }
-.color-lore, color-intellect {
+.color-lore, .color-intellect {
 	color : #4e1a45;
 }
-.color-strength, color-combat {
+.color-strength, .color-combat {
 	color : #661e09;
 }
 .color-agility {
