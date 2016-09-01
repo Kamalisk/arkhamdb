@@ -84,19 +84,19 @@ AppBundle\Entity\Card:
         quantity:
             type: smallint
             nullable: false
-        will:
+        skillWillpower:
             type: smallint
             nullable: true
-        lore:
+        skillIntellect:
             type: smallint
             nullable: true
-        strength:
+        skillCombat:
             type: smallint
             nullable: true
-        agility:
+        skillAgility:
             type: smallint
             nullable: true
-        wild:
+        skillWild:
             type: smallint
             nullable: true
         xp:
@@ -136,9 +136,6 @@ AppBundle\Entity\Card:
             type: smallint
             nullable: true
             column: deck_limit
-        strength:
-            type: smallint
-            nullable: true
         slot:
             type: string
             length: 50

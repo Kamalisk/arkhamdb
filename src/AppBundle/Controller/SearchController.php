@@ -12,16 +12,16 @@ class SearchController extends Controller
 	public static $searchKeys = array(
 			''  => 'code',
 			'v' => 'flavor',
-			'c' => 'cycle',
+			'y' => 'cycle',
 			'e' => 'pack',
 			'f' => 'faction',
-			'i' => 'illustrator',
+			'd' => 'illustrator',
 			'k' => 'traits',
 			'o' => 'cost',
 			'r' => 'date_release',
-			'w' => 'will',
-			's' => 'strength',
-			'l' => 'lore',
+			'w' => 'willpower',
+			'c' => 'combat',
+			'i' => 'intellect',
 			'a' => 'agility',
 			't' => 'type',
 			'u' => 'isUnique',
@@ -29,7 +29,7 @@ class SearchController extends Controller
 			't' => 'sanity',
 			'x' => 'text',
 			'p' => 'xp',
-			'y' => 'quantity'
+			'q' => 'quantity'
 	);
 
 	public static $searchTypes = array(

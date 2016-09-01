@@ -46,9 +46,9 @@ class Card implements \Serializable
 		switch($this->type->getCode()) {
 			case 'asset':
 				$mandatoryFields[] = 'cost';
-				$optionalFields[] = 'skill_will';
-				$optionalFields[] = 'skill_lore';
-				$optionalFields[] = 'skill_strength';
+				$optionalFields[] = 'skill_willpower';
+				$optionalFields[] = 'skill_intellect';
+				$optionalFields[] = 'skill_combat';
 				$optionalFields[] = 'skill_agility';
 				$optionalFields[] = 'skill_wild';
 				$optionalFields[] = 'health';
@@ -59,25 +59,25 @@ class Card implements \Serializable
 				break;
 			case 'event':
 				$mandatoryFields[] = 'cost';
-				$optionalFields[] = 'skill_will';
-				$optionalFields[] = 'skill_lore';
-				$optionalFields[] = 'skill_strength';
+				$optionalFields[] = 'skill_willpower';
+				$optionalFields[] = 'skill_intellect';
+				$optionalFields[] = 'skill_combat';
 				$optionalFields[] = 'skill_agility';
 				$optionalFields[] = 'skill_wild';
 				$optionalFields[] = 'restrictions';
 				break;
 			case 'skill':
-				$optionalFields[] = 'skill_will';
-				$optionalFields[] = 'skill_lore';
-				$optionalFields[] = 'skill_strength';
+				$optionalFields[] = 'skill_willpower';
+				$optionalFields[] = 'skill_intellect';
+				$optionalFields[] = 'skill_combat';
 				$optionalFields[] = 'skill_agility';
 				$optionalFields[] = 'skill_wild';
 				$optionalFields[] = 'restrictions';
 				break;
 			case 'investigator':
-				$mandatoryFields[] = 'skill_will';
-				$mandatoryFields[] = 'skill_lore';
-				$mandatoryFields[] = 'skill_strength';
+				$mandatoryFields[] = 'skill_willpower';
+				$mandatoryFields[] = 'skill_intellect';
+				$mandatoryFields[] = 'skill_combat';
 				$mandatoryFields[] = 'skill_agility';
 				$mandatoryFields[] = 'health';
 				$mandatoryFields[] = 'sanity';
@@ -120,14 +120,14 @@ class Card implements \Serializable
 		}
 	
 		foreach($optionalFields as $optionalField) {
-			$getterString = str_replace("skill_", "", $optionalField);
+			$getterString = $optionalField;
 			$getter = 'get' . $this->snakeToCamel($getterString);
 			$serialized[$optionalField] = $this->$getter();
 			if(!isset($serialized[$optionalField]) || $serialized[$optionalField] === '') unset($serialized[$optionalField]);
 		}
 	
 		foreach($mandatoryFields as $mandatoryField) {
-			$getterString = str_replace("skill_", "", $mandatoryField);
+			$getterString = $mandatoryField;
 			$getter = 'get' . $this->snakeToCamel($getterString);
 			$serialized[$mandatoryField] = $this->$getter();
 		}
@@ -222,27 +222,27 @@ class Card implements \Serializable
     /**
      * @var integer
      */
-    private $will;
+    private $skillWillpower;
 
     /**
      * @var integer
      */
-    private $lore;
+    private $skillIntellect;
 
     /**
      * @var integer
      */
-    private $strength;
+    private $skillCombat;
 
     /**
      * @var integer
      */
-    private $agility;
+    private $skillAgility;
 
     /**
      * @var integer
      */
-    private $wild;
+    private $skillWild;
 
     /**
      * @var integer
@@ -923,125 +923,125 @@ class Card implements \Serializable
     }
 
     /**
-     * Set will
+     * Set skillWillpower
      *
-     * @param integer $will
+     * @param integer $skillWillpower
      *
      * @return Card
      */
-    public function setWill($will)
+    public function setSkillWillpower($skillWillpower)
     {
-        $this->will = $will;
+        $this->skillWillpower = $skillWillpower;
 
         return $this;
     }
 
     /**
-     * Get will
+     * Get skillWillpower
      *
      * @return integer
      */
-    public function getWill()
+    public function getSkillWillpower()
     {
-        return $this->will;
+        return $this->skillWillpower;
     }
     
         /**
-     * Set lore
+     * Set skillIntellect
      *
-     * @param integer $lore
+     * @param integer $skillIntellect
      *
      * @return Card
      */
-    public function setLore($lore)
+    public function setSkillIntellect($skillIntellect)
     {
-        $this->lore = $lore;
+        $this->skillIntellect = $skillIntellect;
 
         return $this;
     }
 
     /**
-     * Get lore
+     * Get skillIntellect
      *
      * @return integer
      */
-    public function getLore()
+    public function getSkillIntellect()
     {
-        return $this->lore;
-    }
-    
-    
-        /**
-     * Set strength
-     *
-     * @param integer $strength
-     *
-     * @return Card
-     */
-    public function setStrength($strength)
-    {
-        $this->strength = $strength;
-
-        return $this;
-    }
-
-    /**
-     * Get strength
-     *
-     * @return integer
-     */
-    public function getStrength()
-    {
-        return $this->strength;
+        return $this->skillIntellect;
     }
     
     
         /**
-     * Set agility
+     * Set skillCombat
      *
-     * @param integer $agility
+     * @param integer $skillCombat
      *
      * @return Card
      */
-    public function setAgility($agility)
+    public function setSkillCombat($skillCombat)
     {
-        $this->agility = $agility;
+        $this->skillCombat = $skillCombat;
 
         return $this;
     }
 
     /**
-     * Get agility
+     * Get skillCombat
      *
      * @return integer
      */
-    public function getAgility()
+    public function getSkillCombat()
     {
-        return $this->agility;
+        return $this->skillCombat;
+    }
+    
+    
+        /**
+     * Set skillAgility
+     *
+     * @param integer $skillAgility
+     *
+     * @return Card
+     */
+    public function setSkillAgility($skillAgility)
+    {
+        $this->skillAgility = $skillAgility;
+
+        return $this;
+    }
+
+    /**
+     * Get skillAgility
+     *
+     * @return integer
+     */
+    public function getSkillAgility()
+    {
+        return $this->skillAgility;
     }
     
         /**
-     * Set wild
+     * Set skillWild
      *
-     * @param integer $wild
+     * @param integer $skillWild
      *
      * @return Card
      */
-    public function setWild($wild)
+    public function setSkillWild($skillWild)
     {
-        $this->wild = $wild;
+        $this->skillWild = $skillWild;
 
         return $this;
     }
 
     /**
-     * Get wild
+     * Get skillWild
      *
      * @return integer
      */
-    public function getWild()
+    public function getSkillWild()
     {
-        return $this->wild;
+        return $this->skillWild;
     }
 
     /**

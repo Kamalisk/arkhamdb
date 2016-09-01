@@ -36,9 +36,9 @@ class CardsData
 			'[reaction]' => '<span class="icon-reaction" title="Reaction"></span>',
 			'[action]' => '<span class="icon-action" title="Action"></span>',
 			'[lightning]' => '<span class="icon-lightning" title="Fast Action"></span>',
-			'[will]' => '<span class="icon-will" title="Willpower"></span>',
-			'[lore]' => '<span class="icon-lore" title="Intellect"></span>',
-			'[strength]' => '<span class="icon-strength" title="Combat"></span>',
+			'[willpower]' => '<span class="icon-willpower" title="Willpower"></span>',
+			'[intellect]' => '<span class="icon-intellect" title="Intellect"></span>',
+			'[combat]' => '<span class="icon-combat" title="Combat"></span>',
 			'[agility]' => '<span class="icon-agility" title="Agility"></span>',
 			'[wild]' => '<span class="icon-wild" title="Any Skill"></span>'
 		];

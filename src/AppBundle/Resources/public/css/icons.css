@@ -38,16 +38,16 @@
 	content: ">";
 	font-weight : bold;
 }
-.icon-strength:before {
+.icon-strength:before, .icon-combat:before {
 	content: "s";
 }
 .icon-agility:before {
 	content: "a";
 }
-.icon-will:before {
+.icon-will:before, .icon-willpower:before {
 	content: "w";
 }
-.icon-lore:before {
+.icon-lore:before, .icon-intellect:before {
 	content: "l";
 }
 .icon-wild:before {
@@ -58,13 +58,13 @@
 	font-size : 0.7em;
 }
 
-.color-will {
+.color-will, color-willpower {
 	color : #003961;
 }
-.color-lore {
+.color-lore, color-intellect {
 	color : #4e1a45;
 }
-.color-strength {
+.color-strength, color-combat {
 	color : #661e09;
 }
 .color-agility {

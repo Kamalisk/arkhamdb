@@ -318,9 +318,9 @@ class ImportStdCommand extends ContainerAwareCommand
 					'text',
 					'cost',
 					'octgn_id',
-					'skill_will',
-					'skill_lore',
-					'skill_strength',
+					'skill_willpower',
+					'skill_intellect',
+					'skill_combat',
 					'skill_agility',
 					'skill_wild',
 					'health',
@@ -405,7 +405,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		}
 		$value = $data[$key];
 		
-		$key = str_replace("skill_", "", $key);
+		//$key = str_replace("skill_", "", $key);
 		
 		if(!key_exists($key, $metadata->fieldNames)) {
 			throw new \Exception("Missing column [$key] in entity ".$entityName);
@@ -420,7 +420,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		if(!key_exists('code', $data)) {
 			throw new \Exception("Missing key [code] in ".json_encode($data));
 		}
-	
+		
 		$entity = $this->em->getRepository($entityName)->findOneBy(['code' => $data['code']]);
 		if(!$entity) {
 			// if we cant find it, try more complex methods just to check
@@ -438,7 +438,6 @@ class ImportStdCommand extends ContainerAwareCommand
 			}			
 		}
 		$orig = $entity->serialize();
-	
 		foreach($mandatoryKeys as $key) {
 			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
 		}
@@ -472,6 +471,7 @@ class ImportStdCommand extends ContainerAwareCommand
 			$foreignEntity = $this->collections[$foreignEntityShortName][$foreignCode];
 	
 			$getter = 'get'.$foreignEntityShortName;
+			
 			if(!$entity->$getter() || $entity->$getter()->getId() !== $foreignEntity->getId()) {
 				$this->output->writeln("Changing the <info>$key</info> of <info>".$entity->toString()."</info>");
 				$setter = 'set'.$foreignEntityShortName;
@@ -497,10 +497,10 @@ class ImportStdCommand extends ContainerAwareCommand
 	protected function importInvestigatorData(Card $card, $data)
 	{
 		$mandatoryKeys = [
-				'skill_will',
-				'skill_lore',
-				'skill_strength',
-				'skill_agility',				
+				'skill_willpower',
+				'skill_intellect',
+				'skill_combat',
+				'skill_agility',
 				'health',
 				'sanity'
 		];

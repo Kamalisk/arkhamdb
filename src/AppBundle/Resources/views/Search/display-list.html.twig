@@ -28,10 +28,10 @@
 	<td data-th="Type" >{{ card.type_name }}</td>
 	<td data-th="Stats">
 	{% if card.type_code == "investigator" %}
-	{% if card.will %}<span title="Will" class="icon icon-will color-will"></span>{{ card.will }}{% endif %}
-	{% if card.lore %}<span title="Lore" class="icon icon-lore color-lore"></span>{{ card.lore }}{% endif %}
-	{% if card.strength %}<span title="Strength" class="icon icon-strength color-strength"></span>{{ card.strength }}{% endif %}
-	{% if card.agility %}<span title="Agility" class="icon icon-agility color-agility"></span>{{ card.agility }}{% endif %}
+	{% if card.skill_willpower %}<span title="Willpower" class="icon icon-willpower color-willpower"></span>{{ card.skill_willpower }}{% endif %}
+	{% if card.skill_intellect %}<span title="Intellect" class="icon icon-intellect color-intellect"></span>{{ card.skill_intellect }}{% endif %}
+	{% if card.skill_combat %}<span title="Combat" class="icon icon-combat color-combat"></span>{{ card.skill_combat }}{% endif %}
+	{% if card.skill_agility %}<span title="Agility" class="icon icon-agility color-agility"></span>{{ card.skill_agility }}{% endif %}
 	{% elseif card.type_code == "enemy" %}
 	{% if card.enemy_fight %}<span title="Combat" class="icon icon-strength color-strength"></span>{{ card.enemy_fight }}{% endif %}
 	{% if card.health %}<span title="Health" class="icon icon-health color-health"></span>Health:{{ card.health }}{% endif %}
@@ -44,11 +44,11 @@
 	{% elseif card.type_code == "act" %}
 	{% if card.clues %}<span title="Clues" class="icon icon-clues color-clues"></span>Clues: {{ card.clues }}{% endif %}	
 	{% else %}
-	{% if card.will %}{% for i in 1..card.will %}<span title="Will" class="icon icon-will color-will"></span>{% endfor %}{% endif %}
-	{% if card.lore %}{% for i in 1..card.lore %}<span title="Lore" class="icon icon-lore color-lore"></span>{% endfor %}{% endif %}
-	{% if card.strength %}{% for i in 1..card.strength %}<span title="Strength" class="icon icon-strength color-strength"></span>{% endfor %}{% endif %}
-	{% if card.agility %}{% for i in 1..card.agility %}<span title="Agility" class="icon icon-agility color-agility"></span>{% endfor %}{% endif %}
-	{% if card.wild %}{% for i in 1..card.wild %}<span title="Wild" class="icon icon-wild color-wild"></span>{% endfor %}{% endif %}
+	{% if card.skill_willpower %}{% for i in 1..card.skill_willpower %}<span title="Willpower" class="icon icon-willpower color-willpower"></span>{% endfor %}{% endif %}
+	{% if card.skill_intellect %}{% for i in 1..card.skill_intellect %}<span title="Intellect" class="icon icon-intellect color-intellect"></span>{% endfor %}{% endif %}
+	{% if card.skill_combat %}{% for i in 1..card.skill_combat %}<span title="Combat" class="icon icon-combat color-combat"></span>{% endfor %}{% endif %}
+	{% if card.skill_agility %}{% for i in 1..card.skill_agility %}<span title="Agility" class="icon icon-agility color-agility"></span>{% endfor %}{% endif %}
+	{% if card.skill_wild %}{% for i in 1..card.skill_wild %}<span title="Wild" class="icon icon-wild color-wild"></span>{% endfor %}{% endif %}
 	{% endif %}
 	</td>
 	<td data-th="Traits">{{ card.traits }}</td>

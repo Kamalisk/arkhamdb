@@ -17,10 +17,10 @@
 
 {% if card.type_code == 'investigator' %}
 <div class="card-props">
-	Will: {{ macros.integer_or_x(card.will) }}.
-	Lore: {{ macros.integer_or_x(card.lore) }}.
-	Strength: {{ macros.integer_or_x(card.strength) }}.
-	Agility: {{ macros.integer_or_x(card.agility) }}.
+	Willpower: {{ macros.integer_or_x(card.skill_will) }}.
+	Intellect: {{ macros.integer_or_x(card.skill_intellect) }}.
+	Combat: {{ macros.integer_or_x(card.skill_combat) }}.
+	Agility: {{ macros.integer_or_x(card.skill_agility) }}.
 </div>
 {% if card.health or card.sanity%}
 	<div>
@@ -46,14 +46,14 @@
 	{% if card.clues %}<span title="Clues" class="icon icon-clues color-clues"></span>Clues: {{card.clues}} per investigator.{% endif %}
 	</div>
 	{% endif %}
-	{% if card.will or card.lore or card.strength or card.agility or card.wild %}
+	{% if card.skill_willpower or card.skill_intellect or card.skill_combat or card.skill_agility or card.skill_wild %}
 	<div>
 	Test Icons:
-	{% if card.will %}{% for i in 1..card.will %}<span title="Willpower" class="icon icon-will color-will"></span>{% endfor %}{% endif %}
-	{% if card.lore %}{% for i in 1..card.lore %}<span title="INtellect" class="icon icon-lore color-lore"></span>{% endfor %}{% endif %}
-	{% if card.strength %}{% for i in 1..card.strength %}<span title="Combat" class="icon icon-strength color-strength"></span>{% endfor %}{% endif %}
-	{% if card.agility %}{% for i in 1..card.agility %}<span title="Agility" class="icon icon-agility color-agility"></span>{% endfor %}{% endif %}
-	{% if card.wild %}{% for i in 1..card.wild %}<span title="Wild" class="icon icon-wild color-wild"></span>{% endfor %}{% endif %}
+	{% if card.skill_willpower %}{% for i in 1..card.skill_willpower %}<span title="Willpower" class="icon icon-willpower color-willpower"></span>{% endfor %}{% endif %}
+	{% if card.skill_intellect %}{% for i in 1..card.skill_intellect %}<span title="Intellect" class="icon icon-intellect color-intellect"></span>{% endfor %}{% endif %}
+	{% if card.skill_combat %}{% for i in 1..card.skill_combat %}<span title="Combat" class="icon icon-combat color-combat"></span>{% endfor %}{% endif %}
+	{% if card.skill_agility %}{% for i in 1..card.skill_agility %}<span title="Agility" class="icon icon-agility color-agility"></span>{% endfor %}{% endif %}
+	{% if card.skill_wild %}{% for i in 1..card.skill_wild %}<span title="Wild" class="icon icon-wild color-wild"></span>{% endfor %}{% endif %}
 	</div>
 	{% endif %}
 	{% if card.health or card.sanity%}

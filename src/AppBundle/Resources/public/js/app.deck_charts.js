@@ -142,27 +142,27 @@ deck_charts.chart_cost = function chart_cost() {
 deck_charts.chart_skill = function chart_skill() {
 
 	var icons = {};
-	icons['will'] = {code: "will", "name": "Willpower", count: 0};
-	icons['intellect'] = {code: "lore", "name": "Intellect", count: 0};
-	icons['combat'] = {code: "strength", "name": "Combat", count: 0};
+	icons['willpower'] = {code: "willpower", "name": "Willpower", count: 0};
+	icons['intellect'] = {code: "intellect", "name": "Intellect", count: 0};
+	icons['combat'] = {code: "combat", "name": "Combat", count: 0};
 	icons['agility'] = {code: "agility", "name": "Agility", count: 0};
 	icons['wild'] = {code: "wild", "name": "Wild", count: 0};
 	var draw_deck = app.deck.get_draw_deck();
 	draw_deck.forEach(function (card) {
-		if (card.will && card.will > 0){
-			icons['will'].count += card.indeck * card.will;
+		if (card.skill_willpower && card.skill_willpower > 0){
+			icons['willpower'].count += card.indeck * card.skill_willpower;
 		}
-		if (card.lore && card.lore > 0){
-			icons['intellect'].count += card.indeck * card.lore;
+		if (card.skill_intellect && card.skill_intellect > 0){
+			icons['intellect'].count += card.indeck * card.skill_intellect;
 		}
-		if (card.strength && card.strength > 0){
-			icons['combat'].count += card.indeck * card.strength;
+		if (card.skill_combat && card.skill_combat > 0){
+			icons['combat'].count += card.indeck * card.skill_combat;
 		}
-		if (card.agility && card.agility > 0){
-			icons['agility'].count += card.indeck * card.agility;
+		if (card.skill_agility && card.skill_agility > 0){
+			icons['agility'].count += card.indeck * card.skill_agility;
 		}
-		if (card.wild && card.wild > 0){
-			icons['wild'].count += card.indeck * card.wild;
+		if (card.skill_wild && card.skill_wild > 0){
+			icons['wild'].count += card.indeck * card.skill_wild;
 		}
 	})
 
