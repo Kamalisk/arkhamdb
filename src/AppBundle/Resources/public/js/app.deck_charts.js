@@ -2,8 +2,6 @@
 
 var charts = [],
 	faction_colors = {
-		targaryen :
-			'#1c1c1c',
 
 		seeker :
 			'#e3d852',
@@ -88,60 +86,220 @@ deck_charts.chart_faction = function chart_faction() {
     });
 }
 
+
 deck_charts.chart_cost = function chart_cost() {
 
-		var data = [];
+	var data = [];
 
-		var draw_deck = app.deck.get_draw_deck();
-		draw_deck.forEach(function (card) {
-			if(typeof card.cost === 'number') {
-				data[card.cost] = data[card.cost] || 0;
-				data[card.cost] += card.indeck;
+	var draw_deck = app.deck.get_draw_deck();
+	draw_deck.forEach(function (card) {
+		if(typeof card.cost === 'number') {
+			data[card.cost] = data[card.cost] || 0;
+			data[card.cost] += card.indeck;
+		}
+	})
+	data = _.flatten(data).map(function (value) { return value || 0; });
+
+	$("#deck-chart-cost").highcharts({
+		chart: {
+			type: 'line'
+		},
+		title: {
+			text: "Card Cost"
+		},
+		subtitle: {
+			text: "Cost X ignored"
+		},
+		xAxis: {
+			allowDecimals: false,
+			tickInterval: 1,
+			title: {
+				text: null
 			}
-		})
-		data = _.flatten(data).map(function (value) { return value || 0; });
+		},
+		yAxis: {
+			min: 0,
+			allowDecimals: false,
+			tickInterval: 1,
+			title: null,
+			labels: {
+				overflow: 'justify'
+			}
+		},
+		tooltip: {
+			headerFormat: '<span style="font-size: 10px">Cost {point.key}</span><br/>'
+		},
+		series: [{
+			animation: false,
+			name: '# cards',
+			showInLegend: false,
+			data: data
+		}]
+	});
+}
 
-		$("#deck-chart-cost").highcharts({
-			chart: {
-				type: 'line'
+
+deck_charts.chart_skill = function chart_skill() {
+
+	var icons = {};
+	icons['will'] = {code: "will", "name": "Willpower", count: 0};
+	icons['intellect'] = {code: "lore", "name": "Intellect", count: 0};
+	icons['combat'] = {code: "strength", "name": "Combat", count: 0};
+	icons['agility'] = {code: "agility", "name": "Agility", count: 0};
+	icons['wild'] = {code: "wild", "name": "Wild", count: 0};
+	var draw_deck = app.deck.get_draw_deck();
+	draw_deck.forEach(function (card) {
+		if (card.will && card.will > 0){
+			icons['will'].count += card.indeck * card.will;
+		}
+		if (card.lore && card.lore > 0){
+			icons['intellect'].count += card.indeck * card.lore;
+		}
+		if (card.strength && card.strength > 0){
+			icons['combat'].count += card.indeck * card.strength;
+		}
+		if (card.agility && card.agility > 0){
+			icons['agility'].count += card.indeck * card.agility;
+		}
+		if (card.wild && card.wild > 0){
+			icons['wild'].count += card.indeck * card.wild;
+		}
+	})
+
+	var data = [];
+	_.each(_.values(icons), function (icon) {
+		data.push({
+			name: icon.name,
+			label: '<span class="icon icon-'+icon.code+'"></span>',
+			//color: faction_colors[faction.code],
+			y: icon.count
+		});
+	})
+	data = _.flatten(data).map(function (value) { return value || 0; });
+		
+	$("#deck-chart-skill").highcharts({
+		chart: {
+			type: 'column'
+		},
+		title: {
+			text: "Card Skill Icons"
+		},
+		subtitle: {
+			text: ""
+		},
+		xAxis: {
+			categories: _.pluck(data, 'label'),
+			labels: {
+				useHTML: true
 			},
 			title: {
-				text: "Card Cost"
-			},
-			subtitle: {
-				text: "Cost X ignored"
-			},
-			xAxis: {
-				allowDecimals: false,
-				tickInterval: 1,
-				title: {
-					text: null
-				}
-			},
-			yAxis: {
-				min: 0,
-				allowDecimals: false,
-				tickInterval: 1,
-				title: null,
-				labels: {
-					overflow: 'justify'
-				}
-			},
-			tooltip: {
-				headerFormat: '<span style="font-size: 10px">Cost {point.key}</span><br/>'
-			},
-			series: [{
-				animation: false,
-				name: '# cards',
-				showInLegend: false,
-				data: data
-			}]
+				text: null
+			}
+		},
+		yAxis: {
+			min: 0,
+			allowDecimals: false,
+			tickInterval: 3,
+			title: null,
+			labels: {
+				overflow: 'justify'
+			}
+		},
+		series: [{
+			type: "column",
+			animation: false,
+			name: '# of skill icons',
+			showInLegend: false,
+			data: data
+		}],
+		plotOptions: {
+			column: {
+				borderWidth: 0,
+				groupPadding: 0,
+				shadow: false
+			}
+		}
+	});
+}
+
+
+deck_charts.chart_slot = function chart_slot() {
+
+	var slots = {};
+	var draw_deck = app.deck.get_draw_deck();
+	draw_deck.forEach(function (card) {
+		if (card.type_code != "asset"){
+			return;
+		}
+		var card_slot = "Other";
+		if (card.slot){
+			card_slot = card.slot;
+		}
+		if(!slots[card_slot]) slots[card_slot] = { name: card_slot, count: 0};
+		slots[card_slot].count += card.indeck;
+	})
+
+	var data = [];
+	_.each(_.values(slots), function (slot) {
+		data.push({
+			name: slot.name,
+			label: slot.name,
+			//color: faction_colors[faction.code],
+			y: slot.count
 		});
+	})
+	data = _.flatten(data).map(function (value) { return value || 0; });
+		
+	$("#deck-chart-slot").highcharts({
+		chart: {
+			type: 'column'
+		},
+		title: {
+			text: "Asset Slots"
+		},
+		subtitle: {
+			text: ""
+		},
+		xAxis: {
+			categories: _.pluck(data, 'label'),
+			labels: {
+				useHTML: true
+			},
+			title: {
+				text: null
+			}
+		},
+		yAxis: {
+			min: 0,
+			allowDecimals: false,
+			tickInterval: 3,
+			title: null,
+			labels: {
+				overflow: 'justify'
+			}
+		},
+		series: [{
+			type: "column",
+			animation: false,
+			name: '# of cards',
+			showInLegend: false,
+			data: data
+		}],
+		plotOptions: {
+			column: {
+				borderWidth: 0,
+				groupPadding: 0,
+				shadow: false
+			}
+		}
+	});
 }
 
 deck_charts.setup = function setup(options) {
 	deck_charts.chart_faction();
 	deck_charts.chart_cost();
+	deck_charts.chart_skill();
+	deck_charts.chart_slot();
 }
 
 $(document).on('shown.bs.tab', 'a[data-toggle=tab]', function (e) {
