@@ -650,7 +650,7 @@ class BuilderController extends Controller
         return $this->forward('AppBundle:Builder:save',
                 array(
                         'name' => $decklist->getName(),
-                		'faction_code' => $decklist->getFaction()->getCode(),
+												'faction_code' => $decklist->getCharacter()->getCode(),
                         'content' => json_encode($content),
                         'decklist_id' => $decklist_id
                 ));

@@ -25,11 +25,16 @@
         </div>
         <div style="background-color: white; padding: 10px 20px 20px 20px">
             <div class="small pull-right">
-                {{ macros.decklist_social_icons(data.decklist ) }}
+              {{ macros.decklist_social_icons(data.decklist ) }}
             </div>
-            <div>{{ data.factions }}</div>
+            <div class="pull-left" style="margin-right : 10px;">
+            	<div class="card-thumbnail-static card-thumbnail-2x card-thumbnail-investigator" style="background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png)"></div>
+            </div>
+            <div class="padding-left : 10px;">
+            <h3>{{data.decklist.getCharacter().getName()}}</h3>
             <p>{{ data.count_by_type|raw }}</p>
-            <div class="text-center small"><a href="{{ path('decklists_list',{type:'find',faction:data.faction.code}) }}">More in this faction</a></div>
+            <!-- <div class="text-center small"><a href="{{ path('decklists_list',{type:'find',faction:data.faction.code}) }}">More in this faction</a></div>-->
+            </div>
             <div style="clear:both"></div>
         </div>
     </div>

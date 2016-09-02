@@ -58,7 +58,7 @@ class DecklistFactory
 		$decklist->setDateCreation(new \DateTime());
 		$decklist->setDateUpdate(new \DateTime());
 		$decklist->setSignature($new_signature);
-		$decklist->setFaction($deck->getFaction());
+		$decklist->setCharacter($deck->getCharacter());
 		$decklist->setLastPack($deck->getLastPack());
 		$decklist->setNbVotes(0);
 		$decklist->setNbfavorites(0);

@@ -253,14 +253,15 @@ div.tags span.tag:not(:first-child)::before {
 /***************** THUMBNAIL CARD IMAGE **************/
 
 .card-thumbnail{background-attachment:scroll;background-origin:padding-box;background-clip:border-box;background-repeat:no-repeat;margin:0 0 5px 5px;position:relative;border:1px solid #000;float:right}
+.card-thumbnail-static{background-attachment:scroll;background-origin:padding-box;background-clip:border-box;background-repeat:no-repeat;margin:0 0 5px 5px;position:relative;border:1px solid #000;}
 .card-thumbnail-plot{margin-top:5px}
-.card-thumbnail-1x{width:200px;height:200px;background-size:300px 418px}
-.card-thumbnail-2x{width:100px;height:100px;background-size:150px 209px}
+.card-thumbnail-1x{background-repeat:no-repeat;width:200px;height:200px;background-size:300px 418px}
+.card-thumbnail-2x{background-repeat:no-repeat;width:100px;height:100px;background-size:150px 209px}
 .card-thumbnail-3x{width:67px;height:67px;background-size:100px 139px}
 .card-thumbnail-4x{width:50px;height:50px;background-size:75px 105px}
 .card-thumbnail-5x{width:40px;height:40px;background-size:60px 84px}
-.card-thumbnail-1x.card-thumbnail-investigator{background-position:-79px -21px}
-.card-thumbnail-2x.card-thumbnail-investigator{background-position:-40px -10px}
+.card-thumbnail-1x.card-thumbnail-investigator{background-size:400px 300px;background-position: 0px -50px}
+.card-thumbnail-2x.card-thumbnail-investigator{background-size:300px 200px;background-position: -23px -32px}
 .card-thumbnail-3x.card-thumbnail-investigator{background-size:139px 100px;background-position:-5px -18px}
 .card-thumbnail-4x.card-thumbnail-investigator{background-position:-20px -5px}
 .card-thumbnail-5x.card-thumbnail-investigator{background-position:-16px -4px}

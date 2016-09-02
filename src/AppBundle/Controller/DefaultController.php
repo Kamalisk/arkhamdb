@@ -24,7 +24,7 @@ class DefaultController extends Controller
         
         $typeNames = [];
         foreach($this->getDoctrine()->getRepository('AppBundle:Type')->findAll() as $type) {
-        	$typeNames[$type->getCode()] = $type->getName();
+        	$typeNames[$type->getCode()] = $type->getName();        	
         }
         
         $decklists_by_faction = [];
@@ -50,20 +50,12 @@ class DefaultController extends Controller
                 $counts = [];
                 foreach($countByType as $code => $qty) {
                     $typeName = $typeNames[$code];
-                    $counts[] = $qty . " " . $typeName . "s";
+                    $counts[] = $qty."x ".$typeName;
                 }
                 $array['count_by_type'] = join(' &bull; ', $counts);
 
                 $factions = [ $faction->getName() ];
-                $agenda = $decklist->getSlots()->getAgenda();
-                if($agenda) {
-                    $minor_faction = $this->get('agenda_helper')->getMinorFaction($agenda);
-                    if($minor_faction) {
-                    	$factions[] = $minor_faction->getName();
-                    } else {
-                        $factions[] = $agenda->getName();
-                    }
-                }
+                
                 $array['factions'] = join(' / ', $factions);
 
                 $decklists_by_faction[] = $array;
