@@ -31,7 +31,8 @@
             	<div class="card-thumbnail-static card-thumbnail-2x card-thumbnail-investigator" style="background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png)"></div>
             </div>
             <div class="padding-left : 10px;">
-            <h3>{{data.decklist.getCharacter().getName()}}</h3>
+            {% set character = data.decklist.getCharacter() %}
+            <h3><a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.decklist.getCharacter().getName()}}</a></h3>
             <p>{{ data.count_by_type|raw }}</p>
             <!-- <div class="text-center small"><a href="{{ path('decklists_list',{type:'find',faction:data.faction.code}) }}">More in this faction</a></div>-->
             </div>
