@@ -4,19 +4,24 @@ var SmartFilterQuery = [];
 
 var configuration = {
 	v: [ add_string_sf, 'flavor', "Flavor text" ],
+	y: [ add_string_sf, 'cycle_code', "Cycle name" ],
 	e: [ add_string_sf, 'pack_code', "Pack" ],
 	f: [ add_string_sf, 'faction_code', "Class" ],
-	i: [ add_string_sf, 'illustrator', "Illustrator" ],
+	l: [ add_string_sf, 'illustrator', "Illustrator" ],
 	k: [ add_string_sf, 'traits', "Traits" ],
 	o: [ add_integer_sf, 'cost', "Cost" ],
-	w: [ add_integer_sf, 'willpower', "Willpower" ],
-	l: [ add_integer_sf, 'intellect', "Intellect" ],
-	s: [ add_integer_sf, 'combat', "Combat" ],
-	a: [ add_integer_sf, 'agility', "Agility" ],
+	w: [ add_integer_sf, 'skill_willpower', "Willpower" ],
+	c: [ add_integer_sf, 'skill_combat', "Combat" ],
+	i: [ add_integer_sf, 'skill_intellect', "Intellect" ],
+	a: [ add_integer_sf, 'skill_agility', "Agility" ],
+	d: [ add_integer_sf, 'skill_wild', "Wild" ],
 	t: [ add_string_sf, 'type_code', "Type" ],
 	u: [ add_boolean_sf, 'is_unique', "Uniqueness" ],
+	h: [ add_integer_sf, 'health', "Health" ],
+	s: [ add_integer_sf, 'sanity', "Sanity" ],
 	x: [ add_string_sf, 'text', "Text" ],
-	y: [ add_integer_sf, 'quantity', "Quantity in pack" ]
+	p: [ add_integer_sf, 'xp', "Experience" ],
+	q: [ add_integer_sf, 'quantity', "Quantity in pack" ]
 };
 
 /**
@@ -52,7 +57,7 @@ smart_filter.get_help = function get_help() {
 	var items = _.map(configuration, function (value, key) {
 		return '<li><tt>'+key+'</tt> &ndash; '+value[2]+'</li>';
 	});
-	return '<ul>'+items.join('')+'</ul><p>Example: <tt>m:1 s>3</tt> shows all characters with a Military icon and a STR greater than 3</p>';
+	return '<ul>'+items.join('')+'</ul><p>Example: <tt>a:1 c>1</tt> Shows all cards with 1 Agility icon or 1 Agility and more than 1 Combat icon or 1 Combat</p>';
 }
 
 function add_integer_sf(key, operator, values) {

@@ -335,7 +335,7 @@ class CardsData
 							$qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
 							break;
 						}
-						case 'i': // illustrator
+						case 'd': // illustrator
 						{
 							$or = [];
 							foreach($condition as $arg) {
