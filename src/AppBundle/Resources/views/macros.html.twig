@@ -1,5 +1,5 @@
 {% macro integer_or_x(value) %}
-    {% if value is null %}None{% elseif value < 0 %}X{% else %}{{ value }}{% endif %}
+    {% if value is null %}&ndash;{% elseif value < 0 %}X{% else %}{{ value }}{% endif %}
 {% endmacro %}
 
 {% macro card_name_with_pack_no_link(card) %}

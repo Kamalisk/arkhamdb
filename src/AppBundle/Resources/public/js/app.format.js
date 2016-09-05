@@ -7,6 +7,15 @@ format.traits = function traits(card) {
 	return card.traits || '';
 };
 
+
+/**
+ * @memberOf format
+ */
+format.fancy_int = function traits(num) {
+	var string = (num != null ? (num < 0 ? "X" : num) : '&ndash;')
+	return string;
+};
+
 /**
  * @memberOf format
  */
@@ -48,14 +57,14 @@ format.info = function info(card) {
 	var text = '';
 	switch(card.type_code) {
 		case 'agenda':
-			text += '<div>Doom: '+card.doom+'.</div>';
+			text += '<div>Doom: '+format.fancy_int(card.doom)+'.</div>';
 			break;
 		case 'act':
-			text += '<div>Clues: '+card.clues+'.</div>';
+			text += '<div>Clues: '+format.fancy_int(card.clues)+'.</div>';
 			break;
 		case 'enemy':
-			text += '<div>Fight: '+card.enemy_fight+'. Health: '+card.health+'. Evade: '+card.enemy_evade+'.</div>';
-			text += '<div>Damage: '+card.enemy_damage+'. Horror: '+card.enemy_horror+'.</div>';
+			text += '<div>Fight: '+format.fancy_int(card.enemy_fight)+'. Health: '+format.fancy_int(card.health)+'. Evade: '+format.fancy_int(card.enemy_evade)+'.</div>';
+			text += '<div>Damage: '+format.fancy_int(card.enemy_damage)+'. Horror: '+format.fancy_int(card.enemy_horror)+'.</div>';
 			break;
 		case 'investigator':
 			text += '<div>Willpower: '+card.skill_willpower+'. Intellect: '+card.skill_intellect+'. Combat: '+card.skill_combat+'. Agility: '+card.skill_agility+'.</div>';
@@ -63,7 +72,7 @@ format.info = function info(card) {
 			break;	
 		case 'asset':
 		case 'event':
-			text += '<div>Cost: '+(card.cost != null ? (card.cost < 0 ? "X" : card.cost) : 'None')+'. '+(card.xp ? "XP: "+card.xp+"." : "")+'</div>';
+			text += '<div>Cost: '+format.fancy_int(card.cost)+'. '+(card.xp ? "XP: "+card.xp+"." : "")+'</div>';
 
 			if (card.skill_willpower || card.skill_intellect || card.skill_combat || card.skill_agility || card.skill_wild){
 				text += '<div>Test Icons: ';
@@ -85,7 +94,7 @@ format.info = function info(card) {
 				text += '</div>';
 			}
 			if (card.health || card.sanity){
-				text += '<div>Health: '+(card.health ? card.health : "None")+'. Sanity: '+(card.sanity ? card.sanity : "None")+'.</div>';
+				text += '<div>Health: '+format.fancy_int(card.health)+'. Sanity: '+format.fancy_int(card.sanity)+'.</div>';
 			}
 			break;
 		case 'skill':
