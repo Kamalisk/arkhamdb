@@ -58,6 +58,16 @@ class DeckValidationHelper
 							];
 							break;
 						}
+						case "cards":{
+							if ($param1 == "any"){
+								$return_requirements[$type][$param1] = [
+									"min" => 0,
+									"max" => $param3,
+									"limit" => $param2
+								];
+							}
+							break;
+						}
 						case "random":{
 							if ($param1 && $param2){
 								$return_requirements[$type][] = [

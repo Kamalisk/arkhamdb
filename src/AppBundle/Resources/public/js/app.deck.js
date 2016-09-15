@@ -469,6 +469,9 @@ deck.can_include_card = function can_include_card(card) {
 	if (card.type_code === "investigator") {
 		return false;
 	}
+	if (card.faction_code === "mythos") {
+		return false;
+	}
 	
 	// reject cards restricted
 	if (card.restrictions && card.restrictions.investigator &&  card.restrictions.investigator[0] !== investigator_code){
@@ -478,6 +481,9 @@ deck.can_include_card = function can_include_card(card) {
 	var investigator = app.data.cards.findById(investigator_code);
 	if (investigator.deck_options) {
 		if (investigator.deck_options.faction && investigator.deck_options.faction[card.faction_code]){
+			return true;
+		}
+		if (investigator.deck_options.cards && investigator.deck_options.cards.any){
 			return true;
 		}
 	}

@@ -89,6 +89,9 @@ ui.build_faction_selector = function build_faction_selector() {
 	faction_codes.unshift('neutral');
 
 	faction_codes.forEach(function(faction_code) {
+		if (faction_code == "mythos"){
+			return;
+		}
 		var example = app.data.cards.find({"faction_code": faction_code})[0];
 		var label = $('<label class="btn btn-default btn-sm" data-code="'
 				+ faction_code + '" title="'+example.faction_name+'"><input type="checkbox" name="' + faction_code

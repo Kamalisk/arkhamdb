@@ -15,6 +15,7 @@ draw_simulator.reset = function reset() {
 	draw_count = 0;
 	draw_simulator.update_odds();
 	$('#draw-simulator-clear').prop('disabled', true);
+	$('[data-command=redraw]').prop('disabled', true);
 };
 
 
@@ -22,6 +23,7 @@ draw_simulator.reset = function reset() {
  * @memberOf draw_simulator
  */
 draw_simulator.redraw2 = function redraw2() {
+	$('[data-command=redraw]').prop('disabled', true);
 	$('[data-type="treachery"]',container).remove();
 	var count = 0;
 	var keys_to_clear = [];
@@ -30,10 +32,11 @@ draw_simulator.redraw2 = function redraw2() {
 			keys_to_clear.push(key);
 			deck.push(value);
 			count++;
+			draw_count--;
 		}
 	});
 	$.each(keys_to_clear, function(key, value){
-		var spliced = hand.splice(key, 1);
+		var spliced = hand.splice(value, 1);
 	});
 	
 	draw_simulator.do_draw(count);
