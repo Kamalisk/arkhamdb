@@ -28,10 +28,10 @@
 	<td data-th="Type" >{{ card.type_name }}</td>
 	<td data-th="Stats">
 	{% if card.type_code == "investigator" %}
-	{% if card.skill_willpower %}<span title="Willpower" class="icon icon-willpower color-willpower"></span>{{ card.skill_willpower }}{% endif %}
-	{% if card.skill_intellect %}<span title="Intellect" class="icon icon-intellect color-intellect"></span>{{ card.skill_intellect }}{% endif %}
-	{% if card.skill_combat %}<span title="Combat" class="icon icon-combat color-combat"></span>{{ card.skill_combat }}{% endif %}
-	{% if card.skill_agility %}<span title="Agility" class="icon icon-agility color-agility"></span>{{ card.skill_agility }}{% endif %}
+	{% if card.skill_willpower %}{{ card.skill_willpower }}<span title="Willpower" class="icon icon-willpower color-willpower"></span>{% endif %}
+	{% if card.skill_intellect %}{{ card.skill_intellect }}<span title="Intellect" class="icon icon-intellect color-intellect"></span>{% endif %}
+	{% if card.skill_combat %}{{ card.skill_combat }}<span title="Combat" class="icon icon-combat color-combat"></span>{% endif %}
+	{% if card.skill_agility %}{{ card.skill_agility }}<span title="Agility" class="icon icon-agility color-agility"></span>{% endif %}
 	{% elseif card.type_code == "enemy" %}
 	{% if card.enemy_fight %}<span title="Combat" class="icon icon-strength color-strength"></span>{{ card.enemy_fight }}{% endif %}
 	{% if card.health %}<span title="Health" class="icon icon-health color-health"></span>Health:{{ card.health }}{% endif %}
