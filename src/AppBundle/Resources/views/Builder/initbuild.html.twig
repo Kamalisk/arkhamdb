@@ -6,29 +6,42 @@
 <div class="main white container">
 
 <form action="{{ path('deck_initbuild') }}" method="post" enctype="application/x-www-form-urlencoded">
-<div class="row">
-	<div class="col-md-8 investigator-select">
+<div>
+	<div class="investigator-select">
 		<h1>Choose your Investigator</h1>
-		<div class="row">
+		<div>
 			{% for investigator in investigators %}
-			<div class="col-md-4 align-top">
-				<label class="thumbnail">					
-					<div style="cursor: pointer;"  class="caption text-left" style="white-space:nowrap">
-							<span class="deck-list-investigator-image" title="{{ investigator.name }}" style="background-image:url({{ asset('/bundles/app/images/cards/'~investigator.code~'.png') }})"></span>
-							<input onchange="update_selection()" style="display : none;" type="radio" name="investigator" value="{{ investigator.code }}"> 							
-							{{ investigator.name }}							
+	
+				<div class="thumbnail col-md-4" style="margin : 0;">					
+					<div class="col-md-4">
+					<span class="deck-list-investigator-image card-thumbnail-2x card-thumbnail-investigator" title="{{ investigator.name }}" style="background-image:url({{ asset('/bundles/cards/'~investigator.code~'.png') }})"></span>
+					<!-- <input onchange="update_selection()" style="display : none;" type="radio" name="investigator" value="{{ investigator.code }}"> -->
 					</div>
-				</label>
-			</div>
+					<div class="col-md-8"  style="height : 105px;">
+					<h4 style="padding : 2px;" class="bg-{{investigator.faction.code}}">{{ macros.card_name_no_link(investigator) }}</h4>
+					<ul style="padding-left : 17px;">
+					<li>Deck Size: {{investigator.deckRequirements.size}}</li>
+					{% for card in investigator.deckRequirements.cards %}					
+					<li>{{ macros.card_name_no_link(card) }}</li>
+					{% endfor %}					
+					</ul>										
+					</div>
+					<div class="col-md-12">
+					<p><button name="investigator" value="{{ investigator.code }}" type="submit" class="btn btn-primary btn-block">Create {{investigator.name}} Deck</button></p>
+					</div>
+				</div>
+
 			{% endfor %}
 		</div>
 	</div>
 </div>
+<!--
 <div class="row">
 	<div class="col-md-12">
 		<button type="submit" class="btn btn-primary btn-block">Create the deck and start building</button>
 	</div>
 </div>
+-->
 </form>
 
 </div>

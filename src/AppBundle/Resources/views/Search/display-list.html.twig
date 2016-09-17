@@ -33,16 +33,16 @@
 	{% if card.skill_combat %}{{ card.skill_combat }}<span title="Combat" class="icon icon-combat color-combat"></span>{% endif %}
 	{% if card.skill_agility %}{{ card.skill_agility }}<span title="Agility" class="icon icon-agility color-agility"></span>{% endif %}
 	{% elseif card.type_code == "enemy" %}
-	{% if card.enemy_fight %}<span title="Combat" class="icon icon-strength color-strength"></span>{{ card.enemy_fight }}{% endif %}
-	{% if card.health %}<span title="Health" class="icon icon-health color-health"></span>Health:{{ card.health }}{% endif %}
-	{% if card.enemy_evade %}<span title="Agility" class="icon icon-agility color-agility"></span>{{ card.enemy_evade }}{% endif %}
+	{% if card.enemy_fight %}{{ card.enemy_fight }}<span title="Combat" class="icon icon-strength color-strength"></span>{% endif %}
+	{% if card.health %}Health:{{ card.health }}<span title="Health" class="icon icon-health color-health"></span>{% endif %}
+	{% if card.enemy_evade %}{{ card.enemy_evade }}<span title="Agility" class="icon icon-agility color-agility"></span>{% endif %}
 	{% elseif card.type_code == "location" %}
-	{% if card.shroud %}<span title="Shroud" class="icon icon-shroud color-shroud"></span>Shroud: {{ card.shroud }}{% endif %}
-	{% if card.clues %}<span title="Clues" class="icon icon-clues color-clues"></span>Clues: {{ card.clues }}{% endif %}	
+	{% if card.shroud %}Shroud: {{ card.shroud }}<span title="Shroud" class="icon icon-shroud color-shroud"></span>{% endif %}
+	{% if card.clues %}Clues: {{ card.clues }}<span title="Clues" class="icon icon-clues color-clues"></span>{% endif %}	
 	{% elseif card.type_code == "agenda" %}
-	{% if card.doom %}<span title="Doom" class="icon icon-doom color-doom"></span>Doom: {{ card.doom }}{% endif %}
+	{% if card.doom %}Doom: {{ card.doom }}<span title="Doom" class="icon icon-doom color-doom"></span>{% endif %}
 	{% elseif card.type_code == "act" %}
-	{% if card.clues %}<span title="Clues" class="icon icon-clues color-clues"></span>Clues: {{ card.clues }}{% endif %}	
+	{% if card.clues %}Clues: {{ card.clues }}<span title="Clues" class="icon icon-clues color-clues"></span>{% endif %}	
 	{% else %}
 	{% if card.skill_willpower %}{% for i in 1..card.skill_willpower %}<span title="Willpower" class="icon icon-willpower color-willpower"></span>{% endfor %}{% endif %}
 	{% if card.skill_intellect %}{% for i in 1..card.skill_intellect %}<span title="Intellect" class="icon icon-intellect color-intellect"></span>{% endfor %}{% endif %}

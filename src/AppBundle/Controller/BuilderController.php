@@ -28,8 +28,27 @@ class BuilderController extends Controller
 
 		$type = $em->getRepository('AppBundle:Type')->findOneBy(['code' => 'investigator']);
 		$investigators = $em->getRepository('AppBundle:Card')->findBy(['type' => $type]);
-		//$agenda = $em->getRepository('AppBundle:Type')->findOneBy(['code' => 'agenda']);
-		//$agendas = $em->getRepository('AppBundle:Card')->findBy(['type' => $agenda]);
+		foreach($investigators as $investigator){
+			
+			$deck_requirements = $this->get('DeckValidationHelper')->parseReqString($investigator->getDeckRequirements());
+			$cards_to_add = [];
+			if (isset($deck_requirements['card']) && $deck_requirements['card']){
+				foreach($deck_requirements['card'] as $card_code){
+					if ($card_code){
+						$card_to_add = $em->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
+						if ($card_to_add){
+							$cards_to_add[] = $card_to_add;
+						}
+					}
+				}
+			}
+			$req = [
+				"cards" => $cards_to_add,
+				"size" => $deck_requirements['size']
+			];
+			
+			$investigator->setDeckRequirements($req);
+		}
 
 		return $this->render('AppBundle:Builder:initbuild.html.twig', [
 				'pagetitle' => "New deck",
