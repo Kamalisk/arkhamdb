@@ -8,22 +8,22 @@
 <form action="{{ path('deck_initbuild') }}" method="post" enctype="application/x-www-form-urlencoded">
 <div>
 	<div class="investigator-select">
-		<h1>Choose your Investigator</h1>
+		<h1>Select your investigator</h1>
 		<div>
 			{% for investigator in investigators %}
 	
-				<div class="thumbnail col-md-4" style="margin : 0;">					
+				<div class="col-md-4 faint-{{investigator.faction.code}}" style="padding : 2px; padding-top : 10px; border : solid white 1px;">					
 					<div class="col-md-4">
 					<span class="deck-list-investigator-image card-thumbnail-2x card-thumbnail-investigator" title="{{ investigator.name }}" style="background-image:url({{ asset('/bundles/cards/'~investigator.code~'.png') }})"></span>
-					<!-- <input onchange="update_selection()" style="display : none;" type="radio" name="investigator" value="{{ investigator.code }}"> -->
 					</div>
-					<div class="col-md-8"  style="height : 105px;">
-					<h4 style="padding : 2px;" class="bg-{{investigator.faction.code}}">{{ macros.card_name_no_link(investigator) }}</h4>
+					<div class="col-md-8" style="height : 109px; padding-left : 0.2em;">
+					<h4 style="padding : 2px; margin: 0;">{{ macros.card_name_no_link(investigator) }}</h4>
 					<ul style="padding-left : 17px;">
 					<li>Deck Size: {{investigator.deckRequirements.size}}</li>
 					{% for card in investigator.deckRequirements.cards %}					
 					<li>{{ macros.card_name_no_link(card) }}</li>
-					{% endfor %}					
+					{% endfor %}
+					<li>1 Random Basic Weakness</li>
 					</ul>										
 					</div>
 					<div class="col-md-12">

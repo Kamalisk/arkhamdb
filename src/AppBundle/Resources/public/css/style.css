@@ -360,6 +360,31 @@ div.site-slogan {
 	color: white !important;
 }
 
+
+.faint-faction a, .faint-faction span {
+	color: inherit;
+}
+.faint-guardian {
+	background-color: rgba(43, 128, 237, 0.2) !important;
+}
+.faint-survivor {
+	background-color: rgba(204, 48, 56, 0.2) !important;
+}
+.faint-seeker {
+	background-color: rgba(255, 143, 63, 0.2) !important;
+}
+.faint-mystic {
+	background-color: rgba(123, 85, 197, 0.3) !important;
+}
+.faint-rogue {
+	background-color: rgba(16, 113, 22, 0.2) !important;
+}
+.faint-neutral {
+	background-color: rgba(128, 128, 128, 0.2) !important;
+}
+
+
+
 .fg-guardian {
 	color: #2b80c5 !important;
 }

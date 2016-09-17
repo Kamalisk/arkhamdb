@@ -27,7 +27,7 @@ class BuilderController extends Controller
 		$em = $this->getDoctrine()->getManager();
 
 		$type = $em->getRepository('AppBundle:Type')->findOneBy(['code' => 'investigator']);
-		$investigators = $em->getRepository('AppBundle:Card')->findBy(['type' => $type]);
+		$investigators = $em->getRepository('AppBundle:Card')->findBy(['type' => $type], ["name"=>"ASC" ]);
 		foreach($investigators as $investigator){
 			
 			$deck_requirements = $this->get('DeckValidationHelper')->parseReqString($investigator->getDeckRequirements());
