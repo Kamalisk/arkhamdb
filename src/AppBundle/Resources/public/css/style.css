@@ -49,7 +49,7 @@ body {
 }
 
 .table-expanded>thead>tr>th, .table-expanded>tbody>tr>th, .table-expanded>tfoot>tr>th, .table-expanded>thead>tr>td, .table-expanded>tbody>tr>td, .table-expanded>tfoot>tr>td {
-	padding: 16px 8px;
+	padding: 8px 8px;
 }
 .navbar-static-top {
 	z-index: auto;
@@ -392,10 +392,10 @@ div.site-slogan {
 	color: #cc3038 !important;
 }
 .fg-seeker {
-	color: #ff8f3f !important;
+	color: #ec8426 !important;
 }
 .fg-mystic {
-	color: #484085 !important;
+	color: #4331b9 !important;
 }
 .fg-rogue {
 	color: #107116 !important;
@@ -422,6 +422,28 @@ div.site-slogan {
 }
 .border-neutral {
 	border-color: #808080 !important;
+}
+
+.icon-guardian, .icon-mystic, .icon-seeker, .icon-rogue, .icon-survivor {
+	background-image : url("/bundles/app/images/factions/guardian.png");
+	background-repeat : no-repeat;
+	width : 16px;
+	height : 16px;
+	display : inline-block;
+	vertical-align : top;
+	margin-top : 2px;
+}
+.icon-mystic {
+	background-image : url("/bundles/app/images/factions/mystic.png");
+}
+.icon-seeker {
+	background-image : url("/bundles/app/images/factions/seeker.png");
+}
+.icon-rogue {
+	background-image : url("/bundles/app/images/factions/rogue.png");
+}
+.icon-survivor {
+	background-image : url("/bundles/app/images/factions/survivor.png");
 }
 
 /**************** REVIEW ON CARD PAGE ******************/

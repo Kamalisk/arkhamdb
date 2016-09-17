@@ -95,7 +95,7 @@ ui.build_faction_selector = function build_faction_selector() {
 		var example = app.data.cards.find({"faction_code": faction_code})[0];
 		var label = $('<label class="btn btn-default btn-sm" data-code="'
 				+ faction_code + '" title="'+example.faction_name+'"><input type="checkbox" name="' + faction_code
-				+ '">' + example.faction_name + '<span class="icon-' + faction_code + '"></span></label>');
+				+ '"><span class="icon-' + faction_code + '"></span> ' + example.faction_name + '</label>');
 		label.tooltip({container: 'body'});
 		$('[data-filter=faction_code]').append(label);
 	});
@@ -452,7 +452,7 @@ ui.update_list_template = function update_list_template() {
 		DisplayColumnsTpl = _.template(
 			'<tr>'
 				+ '<td><div class="btn-group" data-toggle="buttons"><%= radios %></div></td>'
-				+ '<td><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a> <span class="xp-<%= card.xp %>"><%= card.xp %></span></td>'
+				+ '<td><a class="card card-tip fg-<%= card.faction_code %>" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a> <span class="xp-<%= card.xp %>"><%= card.xp %></span></td>'
 				+ '<td class="cost"><%= card.cost %></td>'
 				+ '<td class="type"><span class="" title="<%= card.type_name %>"><%= card.type_name %></span></td>'
 				+ '<td class="faction"><span class="fg-<%= card.faction_code %>" title="<%= card.faction_name %>"><%= card.faction_name %></span></td>'

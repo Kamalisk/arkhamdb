@@ -23,7 +23,7 @@
 		{{ card.name }}</a>
 		{% if card.xp %}<span class="xp-{{ card.xp }}"> ({{ card.xp }})</span>{% endif %}
 	</td>
-	<td data-th="Faction" class="fg-{{ card.faction_code }}">{{ card.faction_name }}</td>
+	<td data-th="Faction" class="fg-{{ card.faction_code }}"><span class="icon-{{card.faction_code}}"></span> {{ card.faction_name }}</td>
 	<td data-th="Cost">{{ card.cost }}</td>
 	<td data-th="Type" >{{ card.type_name }}</td>
 	<td data-th="Stats">

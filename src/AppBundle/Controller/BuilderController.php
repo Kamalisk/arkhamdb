@@ -112,7 +112,7 @@ class BuilderController extends Controller
 				}
 				
 				$pack = $investigator->getPack();
-				$name = sprintf("New deck: %s", $investigator->getName());
+				$name = sprintf("%s", $investigator->getName());
 
         $deck = new Deck();
         $deck->setDescriptionMd("");

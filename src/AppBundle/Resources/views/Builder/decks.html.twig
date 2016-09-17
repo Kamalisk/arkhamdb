@@ -70,7 +70,6 @@
 			<label for="deck_select_{{deck.id}}">
 			<div class="deck-list-investigator-image card-thumbnail-3x card-thumbnail-investigator hidden-xs" title="{{ deck.investigator_name }}" style="background-image:url({{ asset('/bundles/cards/'~deck.investigator_code~'.png') }})"></div>
 			</label>
-
 		</td>
 		<td>
 			<a href="{{ path('deck_view',{deck_id:deck.id}) }}" class="deck-name">{{ deck.name }}</a> {{ deck.version }}
