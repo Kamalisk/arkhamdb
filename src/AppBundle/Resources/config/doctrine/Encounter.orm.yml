@@ -6,6 +6,11 @@ AppBundle\Entity\Encounter:
             targetEntity: Card
             orderBy: {'position':'ASC'}
             mappedBy: encounter
+    manyToMany:
+        scenarios:
+            targetEntity: Scenario
+            orderBy: {'id':'ASC'}
+            mappedBy: encounters
     fields:
         id:
             type: integer
@@ -21,6 +26,6 @@ AppBundle\Entity\Encounter:
             length: 1024
             nullable: false
     uniqueConstraints:
-        type_code_idx:
+        encounter_code_idx:
             columns: [ code ]
             

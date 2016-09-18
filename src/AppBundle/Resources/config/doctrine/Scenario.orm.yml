@@ -1,0 +1,35 @@
+AppBundle\Entity\Scenario:
+    type: entity
+    table: scenario
+    manyToOne:
+        campaign:
+            targetEntity: Campaign
+            inversedBy: scenarios
+            joinColumn:
+                name: campaign_id
+                referencedColumnName: id
+    manyToMany:
+        encounters:
+            targetEntity: Encounter
+            inversedBy: scenarios
+            joinColumn:
+                name: encounter_id
+                referencedColumnName: id
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        code:
+            type: string
+            length: 255
+            nullable: false
+        name:
+            type: string
+            length: 1024
+            nullable: false
+    uniqueConstraints:
+        scenario_code_idx:
+            columns: [ code ]
+                    

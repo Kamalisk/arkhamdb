@@ -113,6 +113,18 @@ class BuilderController extends Controller
 				
 				$pack = $investigator->getPack();
 				$name = sprintf("%s", $investigator->getName());
+				if ($investigator->getFaction()->getCode() == "guardian"){
+					$name = sprintf("The Adventures of %s", $investigator->getName());
+				} else if ($investigator->getFaction()->getCode() == "seeker"){
+					$name = sprintf("%s Investigates", $investigator->getName());
+				} else if ($investigator->getFaction()->getCode() == "mystic"){
+					$name = sprintf("The %s Mysteries", $investigator->getName());
+				} else if ($investigator->getFaction()->getCode() == "rogue"){
+					$name = sprintf("The %s Job", $investigator->getName());
+				} else if ($investigator->getFaction()->getCode() == "survivor"){
+					$name = sprintf("%s on the Road", $investigator->getName());	
+				}
+				
 
         $deck = new Deck();
         $deck->setDescriptionMd("");

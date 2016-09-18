@@ -6,6 +6,10 @@ AppBundle\Entity\Cycle:
             targetEntity: Pack
             orderBy: {'position':'ASC'}
             mappedBy: cycle
+        campaigns:
+            targetEntity: Campaign
+            orderBy: {'id':'ASC'}
+            mappedBy: cycle
     fields:
         id:
             type: integer

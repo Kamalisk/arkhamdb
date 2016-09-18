@@ -62,6 +62,11 @@ class Cycle implements \Serializable
     private $packs;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $campaigns;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -255,5 +260,39 @@ class Cycle implements \Serializable
     public function getPacks()
     {
         return $this->packs;
+    }
+    
+        /**
+     * Add campaign
+     *
+     * @param \AppBundle\Entity\Campaign $campaign
+     *
+     * @return Cycle
+     */
+    public function addCampaign(\AppBundle\Entity\Campaign $campaign)
+    {
+        $this->campaigns[] = $campaign;
+
+        return $this;
+    }
+
+    /**
+     * Remove campaign
+     *
+     * @param \AppBundle\Entity\Campaign $campaign
+     */
+    public function removeCampaign(\AppBundle\Entity\Campaign $v)
+    {
+        $this->campaigns->removeElement($campaign);
+    }
+
+    /**
+     * Get campaigns
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCampaigns()
+    {
+        return $this->campaigns;
     }
 }

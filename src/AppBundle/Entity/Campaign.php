@@ -2,12 +2,14 @@
 
 namespace AppBundle\Entity;
 
-class Encounter implements \Serializable
+class Campaign implements \Serializable
 {
 	public function serialize() {
 		return [
 				'code' => $this->code,
-				'name' => $this->name
+				'name' => $this->name,
+				'cycle_code' => $this->cycle ? $this->cycle->getCode() : null,
+				'size' => $this->size,
 		];
 	}
 	
@@ -15,11 +17,11 @@ class Encounter implements \Serializable
 		throw new \Exception("unserialize() method unsupported");
 	}
 	
-	public function toString() {
+  public function toString() {
 		return $this->name;
 	}
 	
-	/**
+    /**
      * @var integer
      */
     private $id;
@@ -35,11 +37,16 @@ class Encounter implements \Serializable
     private $name;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var integer
      */
-    private $cards;
-    
-     /**
+    private $size;
+
+    /**
+     * @var \AppBundle\Entity\Cycle
+     */
+    private $cycle;
+
+		 /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $scenarios;
@@ -49,7 +56,7 @@ class Encounter implements \Serializable
      */
     public function __construct()
     {
-        $this->cards = new \Doctrine\Common\Collections\ArrayCollection();
+        
     }
 
     /**
@@ -67,7 +74,7 @@ class Encounter implements \Serializable
      *
      * @param string $code
      *
-     * @return Type
+     * @return Pack
      */
     public function setCode($code)
     {
@@ -91,7 +98,7 @@ class Encounter implements \Serializable
      *
      * @param string $name
      *
-     * @return Type
+     * @return Pack
      */
     public function setName($name)
     {
@@ -111,36 +118,51 @@ class Encounter implements \Serializable
     }
 
     /**
-     * Add card
+     * Set size
      *
-     * @param \AppBundle\Entity\Card $card
+     * @param integer $size
      *
-     * @return Type
+     * @return Pack
      */
-    public function addCard(\AppBundle\Entity\Card $card)
+    public function setSize($size)
     {
-        $this->cards[] = $card;
+        $this->size = $size;
 
         return $this;
     }
 
     /**
-     * Remove card
+     * Get size
      *
-     * @param \AppBundle\Entity\Card $card
+     * @return integer
      */
-    public function removeCard(\AppBundle\Entity\Card $card)
+    public function getSize()
     {
-        $this->cards->removeElement($card);
+        return $this->size;
+    }
+
+
+    /**
+     * Set cycle
+     *
+     * @param \AppBundle\Entity\Cycle $cycle
+     *
+     * @return Pack
+     */
+    public function setCycle(\AppBundle\Entity\Cycle $cycle = null)
+    {
+        $this->cycle = $cycle;
+
+        return $this;
     }
 
     /**
-     * Get cards
+     * Get cycle
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \AppBundle\Entity\Cycle
      */
-    public function getCards()
+    public function getCycle()
     {
-        return $this->cards;
+        return $this->cycle;
     }
 }

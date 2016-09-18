@@ -1,0 +1,37 @@
+AppBundle\Entity\Campaign:
+    type: entity
+    table: campaign
+    manyToOne:
+        cycle:
+            targetEntity: Cycle
+            inversedBy: campaigns
+            joinColumn:
+                name: cycle_id
+                referencedColumnName: id
+    oneToMany:
+        scenarios:
+            targetEntity: Scenario
+            orderBy: {'id':'ASC'}
+            mappedBy: campaign
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        code:
+            type: string
+            length: 255
+            nullable: false
+        name:
+            type: string
+            length: 1024
+            nullable: false
+        size:
+            type: smallint
+            nullable: false
+
+    uniqueConstraints:
+        campaign_code_idx:
+            columns: [ code ]
+                    
