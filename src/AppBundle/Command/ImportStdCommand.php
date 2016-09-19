@@ -106,6 +106,9 @@ class ImportStdCommand extends ContainerAwareCommand
 		$this->em->flush();
 		$this->loadCollection('Encounter');
 		$output->writeln("Done.");
+		
+		
+
 
 
 		
@@ -123,6 +126,39 @@ class ImportStdCommand extends ContainerAwareCommand
 		$this->em->flush();
 		$this->loadCollection('Cycle');
 		$output->writeln("Done.");
+		
+		
+		// campaigns
+		
+		$output->writeln("Importing Campaigns ...");
+		$campaignFileInfo = $this->getFileInfo($path, 'campaigns.json');
+		$imported = $this->importCampaignsJsonFile($campaignFileInfo);
+		if(count($imported)) {
+			$question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
+			if(!$helper->ask($input, $output, $question)) {
+				die();
+			}
+		}
+		$this->em->flush();
+		$this->loadCollection('Campaign');
+		$output->writeln("Done.");
+		
+		
+				// scenarios
+		
+		$output->writeln("Importing Scenarios ...");
+		$scenarioFileInfo = $this->getFileInfo($path, 'scenarios.json');
+		$imported = $this->importScenariosJsonFile($scenarioFileInfo);
+		if(count($imported)) {
+			$question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
+			if(!$helper->ask($input, $output, $question)) {
+				die();
+			}
+		}
+		$this->em->flush();
+		$this->loadCollection('Scenario');
+		$output->writeln("Done.");
+		
 		
 		// second, packs
 
@@ -240,6 +276,49 @@ class ImportStdCommand extends ContainerAwareCommand
 		return $result;
 	}
 
+
+		protected function importScenariosJsonFile(\SplFileInfo $fileinfo)
+	{
+		$result = [];
+	
+		$list = $this->getDataFromFile($fileinfo);
+		foreach($list as $data)
+		{
+			$type = $this->getEntityFromData('AppBundle\\Entity\\Scenario', $data, [
+				'code',
+				'name'
+			], [
+				'campaign_code'
+			], []);
+			if($type) {
+				$result[] = $type;
+				$this->em->persist($type);
+			}
+		}
+	
+		return $result;
+	}
+	
+			protected function importCampaignsJsonFile(\SplFileInfo $fileinfo)
+	{
+		$result = [];
+	
+		$list = $this->getDataFromFile($fileinfo);
+		foreach($list as $data)
+		{
+			$type = $this->getEntityFromData('AppBundle\\Entity\\Campaign', $data, [
+					'code',
+					'name',
+					'size'
+			], [], []);
+			if($type) {
+				$result[] = $type;
+				$this->em->persist($type);
+			}
+		}
+	
+		return $result;
+	}
 	
 	protected function importCyclesJsonFile(\SplFileInfo $fileinfo)
 	{

@@ -45,6 +45,12 @@ class Scenario implements \Serializable
      */
     private $encounters;
 
+
+    /**
+     * @var integer
+     */
+    private $position;
+
 		
 		/**
      * Add campaign
@@ -136,4 +142,61 @@ class Scenario implements \Serializable
         return $this->name;
     }
 
+    /**
+     * Set position
+     *
+     * @param integer $position
+     *
+     * @return Pack
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * Get position
+     *
+     * @return integer
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+		/**
+     * Add Encounter
+     *
+     * @param \AppBundle\Entity\Encounter $encounter
+     *
+     * @return Type
+     */
+    public function addEncounter(\AppBundle\Entity\Encounter $encounter)
+    {
+        $this->encounters[] = $encounter;
+
+        return $this;
+    }
+
+    /**
+     * Remove Encounter
+     *
+     * @param \AppBundle\Entity\Encounter $encounter
+     */
+    public function removeEncounter(\AppBundle\Entity\Encounter $encounter)
+    {
+        $this->encounter->removeElement($encounter);
+    }
+
+    /**
+     * Get Encounter
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEncounters()
+    {
+        return $this->encounters;
+    }
 }

@@ -29,6 +29,9 @@ AppBundle\Entity\Scenario:
             type: string
             length: 1024
             nullable: false
+        position:
+            type: smallint
+            nullable: false
     uniqueConstraints:
         scenario_code_idx:
             columns: [ code ]
