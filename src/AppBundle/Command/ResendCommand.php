@@ -30,6 +30,7 @@ class ResendCommand extends ContainerAwareCommand
 	        		$output->writeln($user->getEmail() . "  ". $user->getConfirmationToken());
 	        		$this->getContainer()->get('fos_user.mailer')->sendConfirmationEmailMessage($user);
 	        		sleep(1);
+				//break;
 	        	}        		
             //$this->mailer->sendConfirmationEmailMessage($user);
         }

@@ -1,0 +1,18 @@
+AppBundle\Entity\Usercampaign:
+    type: entity
+    table: user_campaign
+    oneToMany:
+        user_scenarios:
+            targetEntity: Userscenario
+            orderBy: {'id':'ASC'}
+            mappedBy: user_campaigns
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        name:
+            type: string
+            length: 1024
+            nullable: false

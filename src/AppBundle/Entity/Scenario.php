@@ -51,6 +51,11 @@ class Scenario implements \Serializable
      */
     private $position;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $user_scenarios;
+
 		
 		/**
      * Add campaign

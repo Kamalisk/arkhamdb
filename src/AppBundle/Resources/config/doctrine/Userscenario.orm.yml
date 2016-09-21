@@ -1,0 +1,25 @@
+AppBundle\Entity\Userscenario:
+    type: entity
+    table: user_scenario
+    manyToOne:
+        scenario:
+            targetEntity: Scenario
+            inversedBy: user_scenarios
+            joinColumn:
+                name: scenario_id
+                referencedColumnName: id
+        user_campaigns:
+            targetEntity: Usercampaign
+            inversedBy: user_scenarios
+            joinColumn:
+                name: user_campaign_id
+                referencedColumnName: id
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+
+
+                    

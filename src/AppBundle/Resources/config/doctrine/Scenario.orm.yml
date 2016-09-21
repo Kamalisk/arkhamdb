@@ -15,6 +15,11 @@ AppBundle\Entity\Scenario:
             joinColumn:
                 name: encounter_id
                 referencedColumnName: id
+    oneToMany:
+        user_scenarios:
+            targetEntity: Userscenario
+            orderBy: {'id':'ASC'}
+            mappedBy: scenario
     fields:
         id:
             type: integer
