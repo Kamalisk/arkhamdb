@@ -44,7 +44,7 @@
 </div>
 </fieldset>
 <fieldset>
-<legend>Faction</legend>
+<legend>Class</legend>
 <div class="row">
     <div class="col-sm-12">
         <div class="form-group">
@@ -52,7 +52,7 @@
 			{% for faction in factions %}
 				<label class="btn btn-default active" title="{{ faction.name }}" data-toggle="tooltip" data-container="body">
 					<input type="checkbox" name="f[]" checked value="{{ faction.code }}">
-					<span class="">{{ faction.name }}</span>
+					<span class="icon icon-{{ faction.code }}"></span>{{ faction.name }}
 				</label>
 			{% endfor %}
 			</div>
@@ -103,6 +103,19 @@
 			</div>
 		</div>
 	</div>
+	<div class="col-sm-4">
+        <div class="form-group">
+			<label for="b">SubType</label>
+			<div>
+				<select class="form-control" name="b" id="b">
+					<option value="">any</option>
+					{% for subtype in subtypes %}
+					<option value="{{ subtype.code }}">{{ subtype.name }}</option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
+	</div>
     <div class="col-sm-4">
         <div class="form-group">
 			<label for="k">Traits</label>
@@ -122,7 +135,7 @@
 <fieldset>
 <legend>Numerics</legend>
 <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-4">
         <div class="form-group">
 			<label for="o">Cost</label>
 			<div class="row">
@@ -136,49 +149,21 @@
 		</div>
     </div>
     <div class="col-sm-6">
+    </div>
+    <div class="col-sm-4">
         <div class="form-group">
-			<label for="w">Will</label>
+			<label for="x">XP</label>
 			<div class="row">
                 <div class="col-xs-4">
-                    <select name="wo" id="wo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
+                    <select name="xo" id="xo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
                 </div>
                 <div class="col-xs-8">
-                    <input id="w" name="w" value="" class="form-control">
+                    <input id="x" name="x" value="" class="form-control">
                 </div>
 			</div>
 		</div>
     </div>
-</div>
-<div class="row">
-    <div class="col-sm-6">
-        <div class="form-group">
-			<label for="s">Strength</label>
-			<div class="row">
-                <div class="col-xs-4">
-                    <select name="so" id="so" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
-                </div>
-                <div class="col-xs-8">
-                    <input id="s" name="s" value="" class="form-control">
-                </div>
-			</div>
-		</div>
-    </div>
-    <div class="col-sm-6">
-        <div class="form-group">
-			<label for="l">Lore</label>
-			<div class="row">
-                <div class="col-xs-4">
-                    <select name="lo" id="lo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
-                </div>
-                <div class="col-xs-8">
-                    <input id="l" name="l" value="" class="form-control">
-                </div>
-			</div>
-		</div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-4">
         <div class="form-group">
 			<label for="y">Quantity</label>
 			<div class="row">
@@ -191,7 +176,53 @@
 			</div>
 		</div>
     </div>
-    <div class="col-sm-6">
+</div>
+<div class="row">
+		
+
+</div>
+<div class="row">
+		<div class="col-sm-3">
+        <div class="form-group">
+			<label for="w">Willpower</label>
+			<div class="row">
+                <div class="col-xs-4">
+                    <select name="wo" id="wo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
+                </div>
+                <div class="col-xs-8">
+                    <input id="w" name="w" value="" class="form-control">
+                </div>
+			</div>
+		</div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+			<label for="s">Combat</label>
+			<div class="row">
+                <div class="col-xs-4">
+                    <select name="so" id="so" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
+                </div>
+                <div class="col-xs-8">
+                    <input id="s" name="s" value="" class="form-control">
+                </div>
+			</div>
+		</div>
+    </div>
+		<div class="col-sm-3">
+        <div class="form-group">
+			<label for="l">Intellect</label>
+			<div class="row">
+                <div class="col-xs-4">
+                    <select name="lo" id="lo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
+                </div>
+                <div class="col-xs-8">
+                    <input id="l" name="l" value="" class="form-control">
+                </div>
+			</div>
+		</div>
+    </div>
+
+    <div class="col-sm-3">
         <div class="form-group">
 			<label for="a">Agility</label>
 			<div class="row">
@@ -206,21 +237,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-sm-6">
-    </div>
-    <div class="col-sm-6">
-        <div class="form-group">
-			<label for="x">XP</label>
-			<div class="row">
-                <div class="col-xs-4">
-                    <select name="xo" id="xo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
-                </div>
-                <div class="col-xs-8">
-                    <input id="x" name="x" value="" class="form-control">
-                </div>
-			</div>
-		</div>
-    </div>
+     
 </div>
 </fieldset>
 <fieldset>

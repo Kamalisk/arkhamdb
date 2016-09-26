@@ -141,6 +141,7 @@ class CardsData
 		$qb->leftJoin('c.pack', 'p')
 			->leftJoin('p.cycle', 'y')
 			->leftJoin('c.type', 't')
+			->leftJoin('c.subtype', 'b')
 			->leftJoin('c.faction', 'f');
 		$qb2 = null;
 		$qb3 = null;

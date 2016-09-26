@@ -16,6 +16,7 @@ var configuration = {
 	a: [ add_integer_sf, 'skill_agility', "Agility" ],
 	d: [ add_integer_sf, 'skill_wild', "Wild" ],
 	t: [ add_string_sf, 'type_code', "Type" ],
+	b: [ add_string_sf, 'subtype_code', "Subtype" ],
 	u: [ add_boolean_sf, 'is_unique', "Uniqueness" ],
 	h: [ add_integer_sf, 'health', "Health" ],
 	s: [ add_integer_sf, 'sanity', "Sanity" ],

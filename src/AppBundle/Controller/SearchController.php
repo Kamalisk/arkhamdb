@@ -25,6 +25,7 @@ class SearchController extends Controller
 			'a' => 'skillAgility',
 			'd' => 'skillWild',
 			't' => 'type',
+			'b' => 'subtype',
 			'u' => 'isUnique',
 			'h' => 'health',
 			's' => 'sanity',
@@ -46,6 +47,7 @@ class SearchController extends Controller
 			'w' => 'integer',
 			'a' => 'integer',
 			't' => 'code',
+			'b' => 'code',
 			'u' => 'boolean',
 			'h' => 'integer',
 			's' => 'integer',
@@ -69,6 +71,7 @@ class SearchController extends Controller
 
 		$cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findBy([], array("position" => "ASC"));
 		$types = $this->getDoctrine()->getRepository('AppBundle:Type')->findBy([], array("name" => "ASC"));
+		$subtypes = $this->getDoctrine()->getRepository('AppBundle:Subtype')->findBy([], array("name" => "ASC"));
 		$factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findBy([], array("id" => "ASC"));
 
 		$list_traits = $dbh->executeQuery("SELECT DISTINCT c.traits FROM card c WHERE c.traits != ''")->fetchAll();
@@ -93,6 +96,7 @@ class SearchController extends Controller
 				"packs" => $packs,
 				"cycles" => $cycles,
 				"types" => $types,
+				"subtypes" => $subtypes,
 				"factions" => $factions,
 				"traits" => $traits,
 				"illustrators" => $illustrators,
