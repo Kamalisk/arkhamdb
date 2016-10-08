@@ -234,9 +234,11 @@ deck.get_layout_data = function get_layout_data(options) {
 			}
 		}
 	}
-
+	
 	deck.update_layout_section(data, 'images', $('<div style="margin-bottom:10px"><img src="/bundles/cards/'+deck.get_investigator_code()+'.png" class="img-responsive">'));
-	deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold">'+investigator_name+'</h4>'));
+	
+	deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold"><a class="card card-tip data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="'+deck.get_investigator_code()+'">'+investigator_name+'</a></h4>'));
+	//deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold">'+investigator_name+'</h4>'));
 	deck.update_layout_section(data, 'meta', $('<div>'+deck.get_draw_deck_size()+' cards in deck.</div>').addClass(deck.get_draw_deck_size() < size+req_met_count ? 'text-danger': ''));
 	deck.update_layout_section(data, 'meta', $('<div>'+deck.get_xp_usage()+' experience required.</div>'));
 	deck.update_layout_section(data, 'meta', $('<div>Packs: ' + _.map(deck.get_included_packs(), function (pack) { return pack.name+(pack.quantity > 1 ? ' ('+pack.quantity+')' : ''); }).join(', ') + '</div>'));
