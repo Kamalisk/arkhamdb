@@ -7,7 +7,12 @@
 
 <div class="row">
 
-<div class="col-md-12">
+<div class="col-md-4">
+	<h2>Browse by set</h2>
+	{{ allsets | raw }}
+</div>
+
+<div class="col-md-8">
 
 <h1>{{ block('title') }}</h1>
 <form method="GET" action="{{ path('cards_processSearchForm') }}" role="form" style="margin-bottom:2em">
@@ -70,7 +75,7 @@
 				<select class="form-control" name="e" id="e">
 					<option value="">any</option>
 					{% for pack in packs %}
-					<option value="{{ pack.code }}">{{ pack.label }}</option>
+					<option value="{{ pack.code }}">{{ pack.name }}</option>
 					{% endfor %}
 				</select>
 			</div>
@@ -135,61 +140,57 @@
 <fieldset>
 <legend>Numerics</legend>
 <div class="row">
-    <div class="col-sm-4">
+    <div class="col-sm-3">
         <div class="form-group">
 			<label for="o">Cost</label>
 			<div class="row">
-                <div class="col-xs-4">
+                <div class="col-xs-5">
                     <select name="oo" id="oo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
                 </div>
-                <div class="col-xs-8">
+                <div class="col-xs-7">
                     <input id="o" name="o" value="" class="form-control">
                 </div>
 			</div>
 		</div>
     </div>
-    <div class="col-sm-6">
-    </div>
-    <div class="col-sm-4">
-        <div class="form-group">
-			<label for="x">XP</label>
-			<div class="row">
-                <div class="col-xs-4">
-                    <select name="xo" id="xo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
-                </div>
-                <div class="col-xs-8">
-                    <input id="x" name="x" value="" class="form-control">
-                </div>
+
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="x">XP</label>
+				<div class="row">
+					<div class="col-xs-5">
+						<select name="xo" id="xo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
+					</div>
+					<div class="col-xs-7">
+						<input id="x" name="x" value="" class="form-control">
+					</div>
+				</div>
 			</div>
-		</div>
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-3">
         <div class="form-group">
 			<label for="y">Quantity</label>
 			<div class="row">
-                <div class="col-xs-4">
+                <div class="col-xs-5">
                     <select name="yo" id="yo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
                 </div>
-                <div class="col-xs-8">
+                <div class="col-xs-7">
                     <input id="y" name="y" value="" class="form-control">
                 </div>
 			</div>
 		</div>
     </div>
 </div>
-<div class="row">
-		
 
-</div>
 <div class="row">
 		<div class="col-sm-3">
         <div class="form-group">
-			<label for="w">Willpower</label>
+			<label for="w"><span class="icon-willpower"></span> Willpower</label>
 			<div class="row">
-                <div class="col-xs-4">
+                <div class="col-xs-5">
                     <select name="wo" id="wo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
                 </div>
-                <div class="col-xs-8">
+                <div class="col-xs-7">
                     <input id="w" name="w" value="" class="form-control">
                 </div>
 			</div>
@@ -197,26 +198,26 @@
     </div>
     <div class="col-sm-3">
         <div class="form-group">
-			<label for="s">Combat</label>
+			<label for="s"><span class="icon-combat"></span> Combat</label>
 			<div class="row">
-                <div class="col-xs-4">
-                    <select name="so" id="so" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
+                <div class="col-xs-5">
+                    <select name="co" id="co" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
                 </div>
-                <div class="col-xs-8">
-                    <input id="s" name="s" value="" class="form-control">
+                <div class="col-xs-7">
+                    <input id="c" name="c" value="" class="form-control">
                 </div>
 			</div>
 		</div>
     </div>
 		<div class="col-sm-3">
         <div class="form-group">
-			<label for="l">Intellect</label>
+			<label for="l"><span class="icon-intellect"></span> Intellect</label>
 			<div class="row">
-                <div class="col-xs-4">
-                    <select name="lo" id="lo" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
+                <div class="col-xs-5">
+                    <select name="io" id="io" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
                 </div>
-                <div class="col-xs-8">
-                    <input id="l" name="l" value="" class="form-control">
+                <div class="col-xs-7">
+                    <input id="i" name="i" value="" class="form-control">
                 </div>
 			</div>
 		</div>
@@ -224,35 +225,53 @@
 
     <div class="col-sm-3">
         <div class="form-group">
-			<label for="a">Agility</label>
+			<label for="a"><span class="icon-agility"></span> Agility</label>
 			<div class="row">
-                <div class="col-xs-4">
+                <div class="col-xs-5">
                     <select name="ao" id="ao" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
                 </div>
-                <div class="col-xs-8">
+                <div class="col-xs-7">
                     <input id="a" name="a" value="" class="form-control">
                 </div>
 			</div>
 		</div>
     </div>
 </div>
+
 <div class="row">
-     
+		<div class="col-sm-3">
+        <div class="form-group">
+			<label for="w"><span class="icon-health"></span> Health</label>
+			<div class="row">
+                <div class="col-xs-5">
+                    <select name="ho" id="ho" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
+                </div>
+                <div class="col-xs-7">
+                    <input id="h" name="h" value="" class="form-control">
+                </div>
+			</div>
+		</div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+			<label for="s"><span class="icon-sanity"></span> Sanity</label>
+			<div class="row">
+                <div class="col-xs-5">
+                    <select name="so" id="so" class="form-control"><option value=":">=</option><option value="<">&lt;</option><option value=">">&gt;</option></select>
+                </div>
+                <div class="col-xs-7">
+                    <input id="s" name="s" value="" class="form-control">
+                </div>
+			</div>
+		</div>
+    </div>
+		
 </div>
+
 </fieldset>
 <fieldset>
 <legend>Other</legend>
 <div class="row">
-    <div class="col-sm-6">
-        <div class="form-group">
-			<label>Previews</label>
-			<div class="btn-group btn-group-justified" data-toggle="buttons">
-				<label class="btn btn-default active"><input type="radio" name="r" checked value="">Yes</label>
-				<label class="btn btn-default"><input type="radio" name="r" value="<now">No</label>
-				<label class="btn btn-default"><input type="radio" name="r" value=">now">Only</label>
-			</div>
-		</div>
-    </div>
     <div class="col-sm-6">
         <div class="form-group">
 			<label for="i">Illustrator</label>
@@ -268,7 +287,7 @@
 <div class="row">
     <div class="form-group">
        {% include 'AppBundle:Search:searchoptions.html.twig' %}
-       <div class="col-sm-4">
+       <div class="col-sm-3">
 	      <button class="btn btn-primary" type="submit">Search</button>
        </div>
     </div>
@@ -276,7 +295,6 @@
 </fieldset>
 </form>
 
-{% include 'AppBundle:Default:google-adaptable-ad.html.twig' %}
 
 </div>
 

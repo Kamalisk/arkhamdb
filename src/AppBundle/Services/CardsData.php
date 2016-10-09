@@ -105,39 +105,68 @@ class CardsData
 		if(empty($text)) return '';
 		return implode(array_map(function ($l) { return "<p>$l</p>"; }, preg_split('/[\r\n]+/', $text)));	
 	}
-
+	
+	public function allsetsnocycledata()
+	{
+		$list_packs = $this->doctrine->getRepository('AppBundle:Pack')->findBy(array(), array("dateRelease" => "ASC", "position" => "ASC"));
+		$packs = array();
+		foreach($list_packs as $pack) {
+			$real = count($pack->getCards());
+			$max = $pack->getSize();
+			$packs[] = array(
+					"name" => $pack->getName(),
+					"code" => $pack->getCode(),
+					"number" => $pack->getPosition(),
+					"available" => $pack->getDateRelease() ? $pack->getDateRelease()->format('Y-m-d') : '',
+					"known" => intval($real),
+					"total" => $max,
+					"url" => $this->router->generate('cards_list', array('pack_code' => $pack->getCode()), UrlGeneratorInterface::ABSOLUTE_URL),
+			);
+		}
+		return $packs;
+	}
+	
 	public function allsetsdata()
 	{
-		$list_cycles = $this->doctrine->getRepository('AppBundle:Cycle')->findBy([], array("position" => "ASC"));
-		$lines = [];
-		/* @var $cycle \AppBundle\Entity\Cycle */
+		$list_cycles = $this->doctrine->getRepository('AppBundle:Cycle')->findBy(array(), array("position" => "ASC"));
+		$cycles = array();
 		foreach($list_cycles as $cycle) {
-			$packs = $cycle->getPacks();
-			/* @var $pack \AppBundle\Entity\Pack */
-			foreach($packs as $pack) {
-				$known = count($pack->getCards());
+			$packs = array();
+			$sreal=0; $smax = 0;
+			foreach($cycle->getPacks() as $pack) {
+				$real = count($pack->getCards());
+				$sreal += $real;
 				$max = $pack->getSize();
-
-				if($cycle->getSize() === 1) {
-					$label = $pack->getName();
-				} else {
-					$label = $pack->getPosition() . '. ' . $pack->getName();
-				}
-				if($known < $max) {
-					$label = sprintf("%s (%d/%d)", $label,$known, $max);
-				}
-
-				$lines[] = array(
+				$smax += $max;
+				$packs[] = array(
+						"name" => $pack->getName(),
 						"code" => $pack->getCode(),
-						"label" => $label,
-						"available" => $pack->getDateRelease() ? true : false,
+						"available" => $pack->getDateRelease() ? $pack->getDateRelease()->format('Y-m-d') : '',
+						"known" => intval($real),
+						"total" => $max,
 						"url" => $this->router->generate('cards_list', array('pack_code' => $pack->getCode()), UrlGeneratorInterface::ABSOLUTE_URL),
+						"search" => "e:".$pack->getCode()
+				);
+			}
+			if($cycle->getSize() === 1) {
+				$cycles[] = $packs[0];
+			}
+			else {
+				$cycles[] = array(
+						"name" => $cycle->getName(),
+						"code" => $cycle->getCode(),
+						"known" => intval($sreal),
+						"total" => $smax,
+						"url" => $this->router->generate('cards_cycle', array('cycle_code' => $cycle->getCode()), UrlGeneratorInterface::ABSOLUTE_URL),
+						"search" => 'c:'.$cycle->getCode(),
+						"packs" => $packs,
 				);
 			}
 		}
-		return $lines;
+		return $cycles;
 	}
-
+	
+	
 	public function getPrimaryFactions()
 	{
 		$factions = $this->doctrine->getRepository('AppBundle:Faction')->findBy(array("isPrimary" => TRUE), array("code" => "ASC"));

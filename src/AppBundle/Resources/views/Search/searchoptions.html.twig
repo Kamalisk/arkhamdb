@@ -2,7 +2,7 @@
 <select name="sort" class="form-control">
 	<option value="name"    {% if sort|default('name') == "name"    %}selected{% endif %}>Sort by Name</option>
 	<option value="set"     {% if sort|default('name') == "set"     %}selected{% endif %}>Sort by Set</option>
-	<option value="faction" {% if sort|default('name') == "faction" %}selected{% endif %}>Sort by Faction</option>
+	<option value="faction" {% if sort|default('name') == "faction" %}selected{% endif %}>Sort by Class</option>
 	<option value="type"    {% if sort|default('name') == "type"    %}selected{% endif %}>Sort by Type</option>
 	<option value="cost"    {% if sort|default('name') == "cost"    %}selected{% endif %}>Sort by Cost</option>
 </select>

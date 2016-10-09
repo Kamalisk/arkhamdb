@@ -67,10 +67,11 @@ class SearchController extends Controller
 
 		$dbh = $this->getDoctrine()->getConnection();
 
-		$packs = $this->get('cards_data')->allsetsdata();
+		//$packs = $this->get('cards_data')->allsetsdata();
 
 		$cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findBy([], array("position" => "ASC"));
 		$types = $this->getDoctrine()->getRepository('AppBundle:Type')->findBy([], array("name" => "ASC"));
+		$packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findBy([], array("name" => "ASC"));
 		$subtypes = $this->getDoctrine()->getRepository('AppBundle:Subtype')->findBy([], array("name" => "ASC"));
 		$factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findBy([], array("id" => "ASC"));
 
@@ -89,7 +90,11 @@ class SearchController extends Controller
 		$illustrators = array_map(function ($card) {
 			return $card["illustrator"];
 		}, $list_illustrators);
-
+		
+		$allsets = $this->renderView('AppBundle:Default:allsets.html.twig', [
+			"data" => $this->get('cards_data')->allsetsdata(),
+		]);
+		
 		return $this->render('AppBundle:Search:searchform.html.twig', array(
 				"pagetitle" => "Card Search",
 				"pagedescription" => "Find all the cards of the game, easily searchable.",
@@ -100,6 +105,7 @@ class SearchController extends Controller
 				"factions" => $factions,
 				"traits" => $traits,
 				"illustrators" => $illustrators,
+				"allsets" => $allsets,
 		), $response);
 	}
 

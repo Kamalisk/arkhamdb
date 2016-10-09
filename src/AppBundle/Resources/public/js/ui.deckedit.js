@@ -23,7 +23,7 @@ ui.read_config_from_storage = function read_config_from_storage() {
 		'display-column': 1,
 		'core-set': 3,
 		'show-suggestions': 0,
-		'buttons-behavior': 'cumulative'
+		'buttons-behavior': 'exclusive'
 	}, Config || {});
 }
 
