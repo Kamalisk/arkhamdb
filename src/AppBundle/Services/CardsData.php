@@ -33,6 +33,11 @@ class CardsData
 	{
 		static $displayTextReplacements = [
 			'[eldersign]' => '<span class="icon-eldersign" title="Elder Sign"></span>',
+			'[cultist]' => '<span class="" title="Cultist">[Cultist]</span>',
+			'[tablet]' => '<span class="" title="Tablet">[Tablet]</span>',
+			'[elder_thing]' => '<span class="" title="Elder Thing">[Elder Thing]</span>',
+			'[auto_fail]' => '<span class="" title="Auto Fail">[Auto Fail]</span>',
+			'[skull]' => '<span class="" title="Skull">[Skull]</span>',
 			'[reaction]' => '<span class="icon-reaction" title="Reaction"></span>',
 			'[action]' => '<span class="icon-action" title="Action"></span>',
 			'[lightning]' => '<span class="icon-lightning" title="Fast Action"></span>',
