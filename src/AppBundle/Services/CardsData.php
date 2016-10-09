@@ -36,11 +36,18 @@ class CardsData
 			'[reaction]' => '<span class="icon-reaction" title="Reaction"></span>',
 			'[action]' => '<span class="icon-action" title="Action"></span>',
 			'[lightning]' => '<span class="icon-lightning" title="Fast Action"></span>',
+			'[fast]' => '<span class="icon-lightning" title="Fast Action"></span>',
 			'[willpower]' => '<span class="icon-willpower" title="Willpower"></span>',
 			'[intellect]' => '<span class="icon-intellect" title="Intellect"></span>',
 			'[combat]' => '<span class="icon-combat" title="Combat"></span>',
 			'[agility]' => '<span class="icon-agility" title="Agility"></span>',
-			'[wild]' => '<span class="icon-wild" title="Any Skill"></span>'
+			'[wild]' => '<span class="icon-wild" title="Any Skill"></span>',
+			'[guardian]' => '<span class="icon-guardian" title="Guardian"></span>',
+			'[survivor]' => '<span class="icon-survivor" title="Survivor"></span>',
+			'[rogue]' => '<span class="icon-rogue" title="Rogue"></span>',
+			'[seeker]' => '<span class="icon-seeker" title="Seeker"></span>',
+			'[mystic]' => '<span class="icon-mystic" title="Mystic"></span>',
+			'[neutral]' => '<span class="icon-neutral" title="Neutral">Neutral</span>'
 		];
 		
 		return str_replace(array_keys($displayTextReplacements), array_values($displayTextReplacements), $text);
