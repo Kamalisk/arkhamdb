@@ -37,6 +37,7 @@ class SearchController extends Controller
 	public static $searchTypes = array(
 			'e' => 'code',
 			'f' => 'code',
+			'y' => 'integer',
 			''  => 'string',
 			'v' => 'string',
 			'c' => 'integer',
@@ -52,7 +53,6 @@ class SearchController extends Controller
 			'h' => 'integer',
 			's' => 'integer',
 			'x' => 'string',
-			'y' => 'code',
 			'p' => 'integer',
 			'q' => 'integer',
 			'l' => 'string',

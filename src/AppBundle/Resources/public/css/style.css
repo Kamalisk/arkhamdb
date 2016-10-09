@@ -459,8 +459,8 @@ div.site-slogan {
 /**************** REVIEW ON CARD PAGE ******************/
 
 article.review {
-	margin-top: 2em;
-	padding-top: 2em;
+	margin-top: 0.5em;
+	padding-top: 0.5em;
 	border-top: 1px solid #ddd;
 }
 article.review:first-child {

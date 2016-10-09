@@ -224,7 +224,7 @@ class CardsData
 				{
 					switch($searchCode)
 					{
-						case 'c': // cycle
+						case 'y': // cycle
 						{
 							$or = [];
 							foreach($condition as $arg) {
