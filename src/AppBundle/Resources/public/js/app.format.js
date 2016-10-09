@@ -135,4 +135,14 @@ format.text = function text(card) {
 	return '<p>'+text+'</p>';
 };
 
+/**
+ * @memberOf format
+ */
+format.back_text = function back_text(card) {
+	var text = card.back_text || '';
+	text = text.replace(/\[(\w+)\]/g, '<span title="$1" class="icon-$1"></span>')
+	text = text.split("\n").join('</p><p>');
+	return '<p>'+text+'</p>';
+};
+
 })(app.format = {}, jQuery);

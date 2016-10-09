@@ -16,9 +16,13 @@
         <div class="row">
 				{% for card in cards %}
         	
+        	{% if card.type_code == "location" %}
+        	{% include 'AppBundle:Search:card-back.html.twig' %}
+        	{% include 'AppBundle:Search:card-front.html.twig' %}
+        	{% else %}
         	{% include 'AppBundle:Search:card-front.html.twig' %}
         	{% include 'AppBundle:Search:card-back.html.twig' %}
-        	
+        	{% endif %}
 	        {% if includeReviews %}
 	   	    	{% include 'AppBundle:Search:display-card-reviews.html.twig' %}
 	        {% endif %}

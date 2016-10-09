@@ -14,9 +14,31 @@ function display_card_on_element(card, element, event) {
 		+ '<div><span class="card-type">'+card.type_name+((card.type_code == "agenda" || card.type_code == "act") ? '. Stage '+card.stage : '')+(card.slot ? '. '+card.slot : "")+(card.subtype_name ? '. '+card.subtype_name : "")+'</span></div>'
 		+ '<div class="card-traits">' + app.format.traits(card) + '</div>'
 		+ '<div class="card-info">' + app.format.info(card) + '</div>'
-		+ ( (card.type_code == "agenda" || card.type_code == "act") ? '<div class="card-flavor">' + card.flavor + '</div><div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>' : ( (card.type_code == "location") ? '<div class="card-flavor">' + card.back_flavor + '</div>' : '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>') )
-		+ '<div class="card-pack">' + app.format.pack(card) + '</div>'
 		;
+		
+		if (card.type_code == "agenda" || card.type_code == "act"){
+			content += '<div class="card-flavor">' + card.flavor + '</div><div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>' 			
+		} else if (card.type_code == "location"){
+			content += '<div class="card-flavor">' + card.back_flavor + '</div>';
+			if (card.back_text){
+				content += '<div class="card-text">' + card.back_text + '</div>';
+			}
+		}else {
+			content += '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>'
+			if (card.double_sided){
+				content += '<hr />';
+				if (card.back_flavor){
+					//content += '<div class="card-flavor">' + card.back_flavor + '</div>';
+				}
+				if (card.back_text){
+					content += '<div class="card-text border-'+card.faction_code+'">' + app.format.back_text(card) + '</div>';
+				}
+				content += '</div>';
+			}
+		}
+
+		
+		content += '<div class="card-pack">' + app.format.pack(card) + '</div>';
 	
 	}
 	else {
