@@ -246,8 +246,8 @@ div.tags span.tag:not(:first-child)::before {
 .tt-suggestion p{margin:0}
 
 /************** QTIP ****************/
-.qtip-thronesdb{border-radius:2px;max-width:400px}
-.qtip-thronesdb-text{font-size:15px}
+.qtip-thronesdb{border-radius:2px;min-width:250px;max-width:400px}
+.qtip-thronesdb-text{font-size:15px }
 .qtip-thronesdb-image{}
 
 /***************** THUMBNAIL CARD IMAGE **************/
@@ -290,6 +290,16 @@ div.tags span.tag:not(:first-child)::before {
 .card-thumbnail-3x.card-thumbnail-plot{width:133px;height:33px;background-size:139px 100px;background-position:-3px -8.3px}
 .card-thumbnail-4x.card-thumbnail-plot{width:100px;height:25px;background-size:105px 75px;background-position:-2.25px -6.25px}
 .card-thumbnail-5x.card-thumbnail-plot{width:80px;height:20px;background-size:84px 60px;background-position:-1.8px -5px}
+.card-thumbnail-1x.card-thumbnail-location{background-position:-51px -31px}
+.card-thumbnail-2x.card-thumbnail-location{background-position:-25.5px -15.5px}
+.card-thumbnail-3x.card-thumbnail-location{background-position:-17px -10.3px}
+.card-thumbnail-4x.card-thumbnail-location{background-position:-12.75px -7.75px}
+.card-thumbnail-5x.card-thumbnail-location{background-position:-10.2px -6.2px}
+.card-thumbnail-1x.card-thumbnail-enemy{background-position:-51px -31px}
+.card-thumbnail-2x.card-thumbnail-enemy{background-position:-25.5px -15.5px}
+.card-thumbnail-3x.card-thumbnail-enemy{background-position:-35px -100.3px; background-size:130px 169px}
+.card-thumbnail-4x.card-thumbnail-enemy{background-position:-12.75px -7.75px}
+.card-thumbnail-5x.card-thumbnail-enemy{background-position:-10.2px -6.2px}
 
 /************** INDEX PAGE ***************/
 
