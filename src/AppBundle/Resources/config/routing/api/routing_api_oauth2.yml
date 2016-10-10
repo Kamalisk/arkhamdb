@@ -5,6 +5,12 @@ api_oauth2_decks:
     defaults:
         _controller: AppBundle:Oauth2:listDecks
 
+api_oauth2_campaigns:
+    path: /campaigns
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Oauth2:listDecks
+
 api_oauth2_load_deck:
     path: /deck/load/{id}
     methods: [GET]

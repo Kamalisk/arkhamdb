@@ -129,7 +129,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		
 		
 		// campaigns
-		
+		/*
 		$output->writeln("Importing Campaigns ...");
 		$campaignFileInfo = $this->getFileInfo($path, 'campaigns.json');
 		$imported = $this->importCampaignsJsonFile($campaignFileInfo);
@@ -142,10 +142,10 @@ class ImportStdCommand extends ContainerAwareCommand
 		$this->em->flush();
 		$this->loadCollection('Campaign');
 		$output->writeln("Done.");
-		
+		*/
 		
 				// scenarios
-		
+		/*
 		$output->writeln("Importing Scenarios ...");
 		$scenarioFileInfo = $this->getFileInfo($path, 'scenarios.json');
 		$imported = $this->importScenariosJsonFile($scenarioFileInfo);
@@ -158,7 +158,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		$this->em->flush();
 		$this->loadCollection('Scenario');
 		$output->writeln("Done.");
-		
+		*/
 		
 		// second, packs
 
@@ -654,7 +654,7 @@ protected function importActData(Card $card, $data)
 
 	}
 
-	protected function importAdventureData(Card $card, $data)
+	protected function importScenarioData(Card $card, $data)
 	{
 
 	}

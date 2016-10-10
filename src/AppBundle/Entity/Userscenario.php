@@ -35,6 +35,12 @@ class Userscenario implements \Serializable
      */
     private $user_campaigns;
 
+    
+        /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $userscenarioinvestigators;
+
     /**
      * Constructor
      */

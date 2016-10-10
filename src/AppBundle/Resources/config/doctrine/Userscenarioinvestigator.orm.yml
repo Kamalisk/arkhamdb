@@ -1,0 +1,27 @@
+AppBundle\Entity\Userscenarioinvestigator:
+    type: entity
+    table: userscenarioinvestigator
+    manyToOne:
+        userscenario:
+            targetEntity: Userscenario
+            joinColumn:
+                name: userscenario_id
+                referencedColumnName: id
+        investigator:
+            targetEntity: Card
+            nullable: false
+            joinColumn:
+                name: card_id
+                referencedColumnName: id
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        trauma_mental:
+            type: integer
+            nullable: true
+        trauma_physical:
+            type: integer
+            nullable: true

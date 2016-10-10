@@ -18,6 +18,10 @@ app_decklist:
     resource: "@AppBundle/Resources/config/routing/routing_decklist.yml"
     prefix: /decklist
 
+app_campaign:
+    resource: "@AppBundle/Resources/config/routing/routing_campaign.yml"
+    prefix: /campaign
+
 app_review:
     resource: "@AppBundle/Resources/config/routing/routing_review.yml"
     prefix: /review
@@ -47,6 +51,12 @@ decks_list:
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:list
+
+campaigns_list:
+    path: /campaigns
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Campaign:list
 
 decklists_searchform:
     path: /decklists/search

@@ -1,0 +1,8 @@
+
+campaign_initbuild:
+    path: /build
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Builder:initbuild
+
+        

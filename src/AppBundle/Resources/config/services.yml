@@ -14,6 +14,9 @@ services:
     decks:
         class: AppBundle\Services\Decks
         arguments: ["@doctrine.orm.entity_manager", "@deck_validation_helper", "@agenda_helper", "@diff", "@logger"]
+    usercampaigns:
+        class: AppBundle\Services\Usercampaigns
+        arguments: ["@doctrine.orm.entity_manager", "@deck_validation_helper", "@agenda_helper", "@diff", "@logger"]
     highlight:
         class: AppBundle\Services\Highlight
         arguments: ["@doctrine.orm.entity_manager"]

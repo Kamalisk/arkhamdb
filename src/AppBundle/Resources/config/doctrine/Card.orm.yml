@@ -37,6 +37,7 @@ AppBundle\Entity\Card:
             targetEntity: Review
             orderBy: {'dateCreation':'DESC'}
             mappedBy: card
+
     fields:
         id:
             type: integer

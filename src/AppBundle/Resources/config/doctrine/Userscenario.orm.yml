@@ -5,6 +5,7 @@ AppBundle\Entity\Userscenario:
         scenario:
             targetEntity: Scenario
             inversedBy: user_scenarios
+            nullable: false
             joinColumn:
                 name: scenario_id
                 referencedColumnName: id
@@ -14,6 +15,10 @@ AppBundle\Entity\Userscenario:
             joinColumn:
                 name: user_campaign_id
                 referencedColumnName: id
+        userscenarioinvestigators:
+            targetEntity: Userscenarioinvestigator
+            orderBy: {'id':'ASC'}
+            mappedBy: userscenario
     fields:
         id:
             type: integer

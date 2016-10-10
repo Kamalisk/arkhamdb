@@ -60,4 +60,6 @@ security:
         - { path: ^/deck/view/, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/deck/, role: ROLE_USER }
         - { path: ^/decks, role: ROLE_USER }
+        - { path: ^/campaigns, role: ROLE_USER }
+        - { path: ^/campaign, role: ROLE_USER }
         - { path: ^/user/, role: ROLE_USER }

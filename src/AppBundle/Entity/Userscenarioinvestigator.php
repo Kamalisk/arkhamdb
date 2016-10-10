@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-class Usercampaign implements \Serializable
+class Userscenarioinvestigator implements \Serializable
 {
 	public function serialize() {
 		return [
@@ -23,16 +23,25 @@ class Usercampaign implements \Serializable
      */
     private $id;
 
-    /**
-     * @var string
+	/**
+     * @var integer
      */
-    private $name;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
+    private $trauma_mental;
+    
+	/**
+     * @var integer
      */
-    private $user_scenarios;
+    private $trauma_physical;
 
+        /**
+     * @var AppBundle\Entity\Userscenarioinvestigator
+     */
+    private $userscenario;
+
+		 /**
+     * @var AppBundle\Entity\Card
+     */
+    private $investigator;
 
     /**
      * Constructor
@@ -50,30 +59,6 @@ class Usercampaign implements \Serializable
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Type
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
 }
