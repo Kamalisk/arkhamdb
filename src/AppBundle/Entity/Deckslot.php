@@ -16,6 +16,11 @@ class Deckslot implements \AppBundle\Model\SlotInterface
     private $quantity;
 
     /**
+     * @var boolean
+     */
+    private $ignoreDeckRestrictions;
+
+    /**
      * @var \AppBundle\Entity\Deck
      */
     private $deck;

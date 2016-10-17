@@ -23,3 +23,7 @@ AppBundle\Entity\Decklistslot:
                 strategy: AUTO
         quantity:
             type: smallint
+        ignoreDeckRestrictions:
+            type: boolean
+            nullable: true
+            column: ignore_deck_restrictions
