@@ -25,8 +25,8 @@ var date_creation,
 /*
  * Templates for the different deck layouts, see deck.get_layout_data
  */
-layouts[1] = _.template('<div class="deck-content"><%= meta %><%= assets %><%= events %><%= skills %><%= treachery %></div>');
-layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><div class="col-sm-6 col-print-6"><%= assets %><%= skills %></div><div class="col-sm-6 col-print-6"><%= events %><%= treachery %></div></div></div>');
+layouts[1] = _.template('<div class="deck-content"><%= meta %><%= assets %><%= events %><%= skills %> <%= outassets %> <%= outevents %> <%= outskills %> <%= outtreachery %> <%= outenemy %> </div>');
+layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><div class="col-sm-6 col-print-6"><%= assets %></div><div class="col-sm-6 col-print-6"><%= events %> <%= skills %></div></div> <hr> <div class="row"><div class="col-sm-6 col-print-6"> <%= outassets %> <%= outevents %> <%= outskills %> </div><div class="col-sm-6 col-print-6"><%= outtreachery %> <%= outenemy %></div> </div></div>');
 layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= images %><%= meta %></div><div class="col-sm-4"><%= assets %><%= skills %></div><div class="col-sm-4"><%= events %><%= treachery %></div></div></div>');
 
 /**
@@ -60,11 +60,13 @@ deck.set_slots = function set_slots(slots) {
 	app.data.cards.update({}, {
 		indeck: 0
 	});
+	//console.log(slots);
 	for(code in slots) {
 		if(slots.hasOwnProperty(code)) {
-			app.data.cards.updateById(code, {indeck: slots[code]});
+			app.data.cards.updateById(code, {indeck: slots[code]});			
 		}
 	}
+
 }
 
 /**
@@ -123,6 +125,20 @@ deck.get_draw_deck = function get_draw_deck(sort) {
 	return deck.get_cards(sort, {
 		type_code: {
 			'$nin' : []
+		},
+		xp: {
+			'$exists': true
+		}
+	});
+}
+
+/**
+ * @memberOf deck
+ */
+deck.get_real_draw_deck = function get_real_draw_deck(sort) {
+	return deck.get_cards(sort, {
+		type_code: {
+			'$nin' : []
 		}
 	});
 }
@@ -132,6 +148,14 @@ deck.get_draw_deck = function get_draw_deck(sort) {
  */
 deck.get_draw_deck_size = function get_draw_deck_size(sort) {
 	var draw_deck = deck.get_draw_deck();
+	return deck.get_nb_cards(draw_deck);
+}
+
+/**
+ * @memberOf deck
+ */
+deck.get_real_draw_deck_size = function get_real_draw_deck_size(sort) {
+	var draw_deck = deck.get_real_draw_deck();
 	return deck.get_nb_cards(draw_deck);
 }
 
@@ -205,7 +229,11 @@ deck.get_layout_data = function get_layout_data(options) {
 			assets: '',
 			events: '',
 			skills: '',
-			treachery: ''
+			outassets: '',
+			outevents: '',
+			outskills: '',
+			outtreachery: '',
+			outenemy: ''
 	};
 	
 	//var investigator = deck.get_investigator();
@@ -239,18 +267,23 @@ deck.get_layout_data = function get_layout_data(options) {
 	
 	deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold"><a class="card card-tip data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="'+deck.get_investigator_code()+'">'+investigator_name+'</a></h4>'));
 	//deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold">'+investigator_name+'</h4>'));
-	deck.update_layout_section(data, 'meta', $('<div>'+deck.get_draw_deck_size()+' cards in deck.</div>').addClass(deck.get_draw_deck_size() < size+req_met_count ? 'text-danger': ''));
+	deck.update_layout_section(data, 'meta', $('<div>'+deck.get_draw_deck_size()+' cards ('+deck.get_real_draw_deck_size()+' total)</div>').addClass(deck.get_draw_deck_size() < size ? 'text-danger': ''));
 	deck.update_layout_section(data, 'meta', $('<div>'+deck.get_xp_usage()+' experience required.</div>'));
 	deck.update_layout_section(data, 'meta', $('<div>Packs: ' + _.map(deck.get_included_packs(), function (pack) { return pack.name+(pack.quantity > 1 ? ' ('+pack.quantity+')' : ''); }).join(', ') + '</div>'));
 	if(problem) {
 		deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+problem_labels[problem]+'</div>'));
 	}
 
-	deck.update_layout_section(data, 'assets', deck.get_layout_data_one_section('type_code', 'asset', 'type_name'));
-	deck.update_layout_section(data, 'events', deck.get_layout_data_one_section('type_code', 'event', 'type_name'));
-	deck.update_layout_section(data, 'skills', deck.get_layout_data_one_section('type_code', 'skill', 'type_name'));
-	deck.update_layout_section(data, 'treachery', deck.get_layout_data_one_section('type_code', 'treachery', 'type_name'));
+	deck.update_layout_section(data, 'assets', deck.get_layout_data_one_section('type_code', 'asset', 'type_name', false));
+	deck.update_layout_section(data, 'events', deck.get_layout_data_one_section('type_code', 'event', 'type_name', false));
+	deck.update_layout_section(data, 'skills', deck.get_layout_data_one_section('type_code', 'skill', 'type_name', false));
+	//deck.update_layout_section(data, 'treachery', deck.get_layout_data_one_section('type_code', 'treachery', 'type_name', false));
 	
+	deck.update_layout_section(data, 'outassets', deck.get_layout_data_one_section('type_code', 'asset', 'type_name', true));
+	deck.update_layout_section(data, 'outevents', deck.get_layout_data_one_section('type_code', 'event', 'type_name', true));
+	deck.update_layout_section(data, 'outskills', deck.get_layout_data_one_section('type_code', 'skill', 'type_name', true));
+	deck.update_layout_section(data, 'outtreachery', deck.get_layout_data_one_section('type_code', 'treachery', 'type_name', true));
+	deck.update_layout_section(data, 'outenemy', deck.get_layout_data_one_section('type_code', 'enemy', 'type_name', true));
 	return data;
 }
 
@@ -258,10 +291,20 @@ deck.update_layout_section = function update_layout_section(data, section, eleme
 	data[section] = data[section] + element[0].outerHTML;
 }
 
-deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey, sortValue, displayLabel) {
+deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey, sortValue, displayLabel, out) {
 	var section = $('<div>');
 	var query = {};
 	query[sortKey] = sortValue;
+	if (out == true){
+		query.xp = {
+			'$exists': false
+		};
+	} else {
+		query.xp = {
+			'$in': [0,1,2,3,4,5]
+		};	
+	}
+	
 	var cards = deck.get_cards({ name: 1 }, query);
 	if(cards.length) {
 		var name = cards[0][displayLabel];
@@ -439,7 +482,7 @@ deck.get_problem = function get_problem() {
 	}
 	
 	// at least 60 others cards
-	if(deck.get_draw_deck_size() < size + req_met_count) {
+	if(deck.get_draw_deck_size() < size) {
 		return 'too_few_cards';
 	}
 

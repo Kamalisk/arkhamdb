@@ -87,7 +87,7 @@ ui.build_faction_selector = function build_faction_selector() {
 	var neutral_index = faction_codes.indexOf('neutral');
 	faction_codes.splice(neutral_index, 1);
 	faction_codes.unshift('neutral');
-
+	
 	faction_codes.forEach(function(faction_code) {
 		if (faction_code == "mythos"){
 			return;
@@ -99,7 +99,35 @@ ui.build_faction_selector = function build_faction_selector() {
 		label.tooltip({container: 'body'});
 		$('[data-filter=faction_code]').append(label);
 	});
+	
+	
 	$('[data-filter=faction_code]').button();
+	
+	var label = $('<label class="btn btn-default btn-sm" data-code="'
+			+ "basicweakness" + '" title="'+"Basic Weakness"+'"><input type="checkbox" name="' + "basicweakness"
+			+ '"><span class="icon-' + "basicweakness" + '"></span>' + "Basic Weakness" + '</label>');
+	label.tooltip({container: 'body'});
+	$('[data-filter=subtype_code]').append(label);
+	
+	var label = $('<label class="btn btn-default btn-sm" data-code="'
+			+ "special" + '" title="'+"Special"+'"><input type="checkbox" name="' + "special"
+			+ '"><span class="icon-' + "special" + '"></span>' + "Special" + '</label>');
+	label.tooltip({container: 'body'});
+	$('[data-filter=subtype_code]').append(label);
+	
+	var label = $('<label class="btn btn-default btn-sm" data-code="'
+			+ "specialweakness" + '" title="'+"Special Weakness"+'"><input type="checkbox" name="' + "specialweakness"
+			+ '"><span class="icon-' + "specialweakness" + '"></span>' + "Special Weakness" + '</label>');
+	label.tooltip({container: 'body'});
+	$('[data-filter=subtype_code]').append(label);
+	
+	var label = $('<label class="btn btn-default btn-sm" data-code="'
+			+ "campaign" + '" title="'+"Campaign"+'"><input type="checkbox" name="' + "campaign"
+			+ '"><span class="icon-' + "campaign" + '"></span>' + "Campaign" + '</label>');
+	label.tooltip({container: 'body'});
+	$('[data-filter=subtype_code]').append(label);
+	
+	$('[data-filter=subtype_code]').button();
 }
 
 /**
@@ -108,10 +136,10 @@ ui.build_faction_selector = function build_faction_selector() {
  */
 ui.build_type_selector = function build_type_selector() {
 	$('[data-filter=type_code]').empty();
-	['asset','event','skill', 'treachery', 'weakness'].forEach(function(type_code) {
+	['asset','event','skill', 'basicweakness'].forEach(function(type_code) {
 		var example = app.data.cards.find({"type_code": type_code})[0];
 		// not all card types might exist
-		if (example){
+		if (example) {
 			var label = $('<label class="btn btn-default btn-sm" data-code="'
 					+ type_code + '" title="'+example.type_name+'"><input type="checkbox" name="' + type_code
 					+ '"><span class="icon-' + type_code + '"></span>' + example.type_name + '</label>');
@@ -120,6 +148,20 @@ ui.build_type_selector = function build_type_selector() {
 		}
 	});
 	$('[data-filter=type_code]').button();
+	
+	var label = $('<label class="btn btn-default btn-sm" data-code="'
+			+ "xp" + '" title="'+"0 XP"+'"><input type="checkbox" name="' + "xp0"
+			+ '"><span class="icon-' + "xp" + '"></span>' + "0 XP" + '</label>');
+	label.tooltip({container: 'body'});
+	$('[data-filter=xp]').append(label);
+	
+	var label = $('<label class="btn btn-default btn-sm" data-code="'
+			+ "xp" + '" title="'+"1-5 XP"+'"><input type="checkbox" name="' + "xp15"
+			+ '"><span class="icon-' + "xp" + '"></span>' + "1-5 XP" + '</label>');
+	label.tooltip({container: 'body'});
+	$('[data-filter=xp]').append(label);
+	
+	$('[data-filter=xp]').button();
 }
 
 
@@ -170,7 +212,9 @@ ui.init_selectors = function init_selectors() {
 			$('[data-filter=faction_code]').find('input[name='+key+']').prop("checked", true).parent().addClass('active');
 		})
 	}
-	
+	$('[data-filter=subtype_code]').find('input[name=basicweakness]').prop("checked", true).parent().addClass('active');
+	$('[data-filter=xp]').find('input[name=xp0]').prop("checked", true).parent().addClass('active');
+	//$('[data-filter=mode_filter]').find('input[name=playercards]').prop("checked", true).parent().addClass('active');
 	//$('[data-filter=faction_code]').find('input[name='+app.deck.get_faction_code()+']').prop("checked", true).parent().addClass('active');
 	//var minor_faction_code = app.deck.get_minor_faction_code();
 	//if(minor_faction_code) $('[data-filter=faction_code]').find('input[name='+minor_faction_code+']').prop("checked", true).parent().addClass('active');
@@ -211,11 +255,15 @@ ui.on_click_filter = function on_click_filter(event) {
 		}
 		event.stopPropagation();
 	} else {
-		if (!event.shiftKey && Config['buttons-behavior'] === 'exclusive' || event.shiftKey && Config['buttons-behavior'] === 'cumulative') {
-			if (!event.altKey) {
-				uncheck_all_active.call(this);
-			} else {
-				check_all_inactive.call(this);
+		if ($(event.target).closest('[data-filter]').attr("data-filter") == "subtype_code"){
+			uncheck_all_active.call(this);
+		} else {
+			if (!event.shiftKey && Config['buttons-behavior'] === 'exclusive' || event.shiftKey && Config['buttons-behavior'] === 'cumulative') {
+				if (!event.altKey) {
+					uncheck_all_active.call(this);
+				} else {
+					check_all_inactive.call(this);
+				}
 			}
 		}
 	}
@@ -230,6 +278,16 @@ ui.on_input_smartfilter = function on_input_smartfilter(event) {
 	if(q.match(/^\w[:<>!]/)) app.smart_filter.update(q);
 	else app.smart_filter.update('');
 	ui.refresh_list();
+}
+/**
+ * @memberOf ui
+ * @param event
+ */
+ui.on_input_smartfilter2 = function on_input_smartfilter2(event) {
+	var q = $(this).val();
+	if(q.match(/^\w[:<>!]/)) app.smart_filter2.update(q);
+	else app.smart_filter2.update('');
+	ui.refresh_list2();
 }
 
 /**
@@ -271,13 +329,16 @@ ui.on_config_change = function on_config_change(event) {
 		case 'display-column':
 		ui.update_list_template();
 		ui.refresh_list();
+		ui.refresh_list2();
 		break;
 		case 'show-suggestions':
 		ui.toggle_suggestions();
 		ui.refresh_list();
+		ui.refresh_list2();
 		break;
 		default:
 		ui.refresh_list();
+		ui.refresh_list2();
 	}
 }
 
@@ -364,6 +425,7 @@ ui.on_quantity_change = function on_quantity_change(card_code, quantity) {
 
 	if(update_all) {
 		ui.refresh_list();
+		ui.refresh_list2();
 	}
 	else {
 		ui.refresh_row(card_code, quantity);
@@ -376,12 +438,17 @@ ui.on_quantity_change = function on_quantity_change(card_code, quantity) {
  */
 ui.setup_event_handlers = function setup_event_handlers() {
 
-	$('[data-filter]').on({
+	$('#build_filters [data-filter]').on({
 		change : ui.refresh_list,
+		click : ui.on_click_filter
+	}, 'label');
+	$('#personal_filters [data-filter]').on({
+		change : ui.refresh_list2,
 		click : ui.on_click_filter
 	}, 'label');
 
 	$('#filter-text').on('input', ui.on_input_smartfilter);
+	$('#filter-text-personal').on('input', ui.on_input_smartfilter2);
 
 	$('#save_form').on('submit', ui.on_submit_form);
 
@@ -406,6 +473,8 @@ ui.setup_event_handlers = function setup_event_handlers() {
 
 	$('#config-options').on('change', 'input', ui.on_config_change);
 	$('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
+	$('#special-collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
+	
 
 	$('#cardModal').on('keypress', function(event) {
 		var num = parseInt(event.which, 10) - 48;
@@ -421,24 +490,74 @@ ui.setup_event_handlers = function setup_event_handlers() {
  * returns the current card filters as an array
  * @memberOf ui
  */
-ui.get_filters = function get_filters() {
+ui.get_filters = function get_filters(prefix) {
 	var filters = {};
-	$('[data-filter]').each(
+	var target = "#build_filters [data-filter]";
+	if (prefix){
+		target = "#"+prefix+"_filters [data-filter]";
+	}
+	$(target).each(
 		function(index, div) {
 			var column_name = $(div).data('filter');
 			var arr = [];
-			$(div).find("input[type=checkbox]").each(
-				function(index, elt) {
-					if($(elt).prop('checked')) arr.push($(elt).attr('name'));
+			if(column_name == "subtype_code"){
+				if($("input[name=basicweakness]").prop('checked')) {
+					filters[column_name] = {
+						'$in': ['basicweakness']
+					};
+				} else if($("input[name=special]").prop('checked')) {
+					filters['type_code'] = {
+						'$in': ['asset','event','skill']
+					};
+				} else if($("input[name=specialweakness]").prop('checked')) {
+					filters['subtype_code'] = {
+						'$in': ['weakness']
+					};
+					filters['encounter_code'] = {
+						'$exists': false
+					};
+				} else if($("input[name=campaign]").prop('checked')) {
+					filters['encounter_code'] = {
+						'$exists': true
+					};
+				} else {
+					filters['xp'] = {
+						'$exists': false
+					};
 				}
-			);
-			if(arr.length) {
-				filters[column_name] = {
-					'$in': arr
-				};
+			} else {
+				$(div).find("input[type=checkbox]").each(
+					function(index, elt) {
+						if ($(elt).attr('name') == "xp0"){
+							if($(elt).prop('checked')) arr.push(0);
+						} else if ($(elt).attr('name') == "xp15") {
+							if($(elt).prop('checked')) arr.push(1);
+							if($(elt).prop('checked')) arr.push(2);
+							if($(elt).prop('checked')) arr.push(3);
+							if($(elt).prop('checked')) arr.push(4);
+							if($(elt).prop('checked')) arr.push(5);
+						} else {
+							if($(elt).prop('checked')) arr.push($(elt).attr('name'));
+						}
+					}
+				);
+				if(arr.length) {
+					filters[column_name] = {
+						'$in': arr
+					};
+				}
 			}
 		}
 	);
+	if (!filters['xp']){
+		filters['xp'] = {};
+	}
+	if (prefix){
+		filters['xp']['$exists'] = false;
+	} else {
+		filters['xp']['$exists'] = true;
+	}
+	console.log(filters);
 	return filters;
 }
 
@@ -452,7 +571,8 @@ ui.update_list_template = function update_list_template() {
 		DisplayColumnsTpl = _.template(
 			'<tr>'
 				+ '<td><div class="btn-group" data-toggle="buttons"><%= radios %></div></td>'
-				+ '<td><a class="card card-tip fg-<%= card.faction_code %>" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a> <span class="xp-<%= card.xp %>"><%= card.xp %></span></td>'
+				+ '<td><a class="card card-tip fg-<%= card.faction_code %>" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></td>'
+				+ '<td class="xp"><%= card.xp %></td>'
 				+ '<td class="cost"><%= card.cost %></td>'
 				+ '<td class="type"><span class="" title="<%= card.type_name %>"><%= card.type_name %></span></td>'
 				+ '<td class="faction"><span class="fg-<%= card.faction_code %>" title="<%= card.faction_name %>"><%= card.faction_name %></span></td>'
@@ -515,6 +635,7 @@ ui.build_row = function build_row(card) {
 ui.reset_list = function reset_list() {
 	CardDivs = [[],[],[]];
 	ui.refresh_list();
+	ui.refresh_list2();
 }
 
 /**
@@ -526,10 +647,66 @@ ui.refresh_list = _.debounce(function refresh_list() {
 	$('#collection-table').empty();
 	$('#collection-grid').empty();
 
+	var counter = 0;
+	var container = $('#collection-table');
+	var	filters = ui.get_filters();
+	var query = app.smart_filter.get_query(filters);
+	var orderBy = {};
+
+	SortKey.split('|').forEach(function (key) {
+		orderBy[key] = SortOrder;
+	});
+	if(SortKey !== 'name') orderBy['name'] = 1;
+	var cards = app.data.cards.find(query, {'$orderBy': orderBy});
+	var divs = CardDivs[ Config['display-column'] - 1 ];
+
+	cards.forEach(function (card) {
+		if (Config['show-only-deck'] && !card.indeck) return;
+		var unusable = !app.deck.can_include_card(card);
+		if (!Config['show-unusable'] && unusable) return;
+
+		var row = divs[card.code];
+		if(!row) row = divs[card.code] = ui.build_row(card);
+
+		row.data("code", card.code).addClass('card-container');
+
+		row.find('input[name="qty-' + card.code + '"]').each(
+			function(i, element) {
+				if($(element).val() == card.indeck) {
+					$(element).prop('checked', true).closest('label').addClass('active');
+				} else {
+					$(element).prop('checked', false).closest('label').removeClass('active');
+				}
+			}
+		);
+
+		if (unusable) {
+			row.find('label').addClass("disabled").find('input[type=radio]').attr("disabled", true);
+		}
+
+		if (Config['display-column'] > 1 && (counter % Config['display-column'] === 0)) {
+			container = $('<div class="row"></div>').appendTo($('#collection-grid'));
+		}
+
+		container.append(row);
+		counter++;
+	});
+}, 250);
+
+
+/**
+ * destroys and rebuilds the list of available cards
+ * don't fire unless 250ms has passed since last invocation
+ * @memberOf ui
+ */
+ui.refresh_list2 = _.debounce(function refresh_list2() {
+	$('#special-collection-table').empty();
+	$('#special-collection-grid').empty();
+
 	var counter = 0,
-		container = $('#collection-table'),
-		filters = ui.get_filters(),
-		query = app.smart_filter.get_query(filters),
+		container = $('#special-collection-table'),
+		filters = ui.get_filters("personal"),
+		query = app.smart_filter2.get_query(filters),
 		orderBy = {};
 
 	SortKey.split('|').forEach(function (key ) {
@@ -579,6 +756,7 @@ ui.refresh_list = _.debounce(function refresh_list() {
 ui.on_deck_modified = function on_deck_modified() {
 	ui.refresh_deck();
 	ui.refresh_list();
+	ui.refresh_list2();
 	app.suggestions && app.suggestions.compute();
 }
 
@@ -678,6 +856,7 @@ ui.on_all_loaded = function on_all_loaded() {
 	ui.init_selectors();
 	ui.refresh_deck();
 	ui.refresh_list();
+	ui.refresh_list2();
 	ui.setup_typeahead();
 	ui.setup_dataupdate();
 	app.deck_history && app.deck_history.setup('#history');

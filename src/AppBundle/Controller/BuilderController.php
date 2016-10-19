@@ -140,6 +140,7 @@ class BuilderController extends Controller
 					$slot->setQuantity ( 1 );
 					$slot->setCard ( $card );
 					$slot->setDeck ( $deck );
+					//$slot->setIgnoreDeckRestrictions ( true );
 					$deck->addSlot ( $slot );
 				}
 				

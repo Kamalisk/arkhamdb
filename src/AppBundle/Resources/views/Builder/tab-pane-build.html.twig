@@ -1,11 +1,11 @@
 
 <div class="row">
 	<div class="col-md-12 text-right" style="margin-bottom:10px">
-        <button class="btn btn-default btn-xs" type="button" id="filter-text-button">Filter help</button>
-        <div class="btn-group">
-			<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">Sets <span class="caret"></span></button>
-			<ul class="dropdown-menu pull-right" data-filter="pack_code" title="Shift+Click to select only one option ; Alt+Shift+Click to select all other options"></ul>
-		</div>
+    <button class="btn btn-default btn-xs" type="button" id="filter-text-button">Filter help</button>
+    <div class="btn-group">
+		<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">Sets <span class="caret"></span></button>
+		<ul class="dropdown-menu pull-right" data-filter="pack_code" title="Shift+Click to select only one option ; Alt+Shift+Click to select all other options"></ul>
+	</div>
 		<div class="btn-group">
 			<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">Options <span class="caret"></span></button>
 			<ul class="dropdown-menu pull-right" id="config-options">
@@ -26,18 +26,32 @@
 	</div><!-- /.col-sm-6 -->
 </div><!-- /.row -->
 
-<div class="row">
+<div class="row" id="build_filters">	
+
 	<!-- Search Bar -->
 	<div class="col-sm-12" style="margin-bottom:10px">
 		<input type="text" class="form-control" id="filter-text" placeholder="Find a card or filter the list" tabindex="1">
 	</div>
+	
+	
 	<!-- Search Bar -->
+	<div id="player-cards-filters">
 	<div class="col-sm-12" style="margin-bottom:10px">
       <div class="btn-group btn-group-justified" data-filter="faction_code" data-toggle="buttons"></div>
 	</div>
-	<div class="col-sm-12" style="margin-bottom:10px">
+	
+	
+	<div class="col-sm-8" style="margin-bottom:10px">
 			<div class="btn-group btn-group-justified" data-filter="type_code" data-toggle="buttons"></div>
   </div>
+  
+  <div class="col-sm-4" style="margin-bottom:10px">
+			<div class="btn-group btn-group-justified" data-filter="xp" data-toggle="buttons"></div>
+  </div>
+  
+  </div>
+  
+  
 </div>
 
 <!-- Collection Table -->
@@ -48,7 +62,8 @@
 				<tr>
 					<th style="min-width:85px"><a href="#" data-sort="indeck">Quantity</a></th>
 					<th><a href="#" data-sort="name">Name</a></th>
-					<th class="cost"><a href="#" data-sort="cost|income" title="Cost">Cost</a></th>					
+					<th class="xp"><a href="#" data-sort="xp" title="XP">XP</a></th>		
+					<th class="cost"><a href="#" data-sort="cost" title="Cost">Cost</a></th>					
 					<th class="type"><a href="#" data-sort="type_code" title="Type">Type</a></th>
 					<th class="faction"><a href="#" data-sort="faction_code" title="Faction">Class</a></th>
 				</tr>
