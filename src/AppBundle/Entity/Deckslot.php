@@ -15,10 +15,6 @@ class Deckslot implements \AppBundle\Model\SlotInterface
      */
     private $quantity;
 
-    /**
-     * @var boolean
-     */
-    private $ignoreDeckRestrictions;
 
     /**
      * @var \AppBundle\Entity\Deck
@@ -64,7 +60,7 @@ class Deckslot implements \AppBundle\Model\SlotInterface
     {
         return $this->quantity;
     }
-
+    
     /**
      * Set deck
      *
