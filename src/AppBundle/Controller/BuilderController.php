@@ -385,7 +385,7 @@ class BuilderController extends Controller
         return $this->forward('AppBundle:Builder:save',
             array(
                 'name' => $deck->getName().' (clone)',
-                'investigator_code' => $deck->getCharacter()->getCode(),
+                'faction_code' => $deck->getCharacter()->getCode(),
                 'content' => json_encode($content),
                 'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null
             ));
