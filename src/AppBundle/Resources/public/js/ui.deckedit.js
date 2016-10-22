@@ -21,7 +21,7 @@ ui.read_config_from_storage = function read_config_from_storage() {
 		'show-unusable': false,
 		'show-only-deck': false,
 		'display-column': 1,
-		'core-set': 3,
+		'core-set': 2,
 		'show-suggestions': 0,
 		'buttons-behavior': 'exclusive'
 	}, Config || {});
@@ -68,8 +68,8 @@ ui.remove_melee_titles = function remove_melee_titles() {
  */
 ui.set_max_qty = function set_max_qty() {
 	app.data.cards.find().forEach(function(record) {
-		var max_qty = Math.min(3, record.deck_limit);
-		if (record.pack_code == 'Core')
+		var max_qty = Math.min(2, record.deck_limit);
+		if (record.pack_code == 'core')
 			max_qty = Math.min(max_qty, record.quantity * Config['core-set']);
 		app.data.cards.updateById(record.code, {
 			maxqty : max_qty
@@ -437,7 +437,14 @@ ui.on_quantity_change = function on_quantity_change(card_code, quantity) {
  * @memberOf ui
  */
 ui.setup_event_handlers = function setup_event_handlers() {
-
+	
+	$('#global_filters [data-filter]').on({
+		change : ui.refresh_list,
+		click : ui.on_click_filter
+	}, 'label');
+	$('#global_filters [data-filter]').on({
+		change : ui.refresh_list2
+	}, 'label');
 	$('#build_filters [data-filter]').on({
 		change : ui.refresh_list,
 		click : ui.on_click_filter
@@ -492,9 +499,9 @@ ui.setup_event_handlers = function setup_event_handlers() {
  */
 ui.get_filters = function get_filters(prefix) {
 	var filters = {};
-	var target = "#build_filters [data-filter]";
+	var target = "#build_filters [data-filter], #global_filters [data-filter]";
 	if (prefix){
-		target = "#"+prefix+"_filters [data-filter]";
+		target = "#"+prefix+"_filters [data-filter], #global_filters [data-filter]";
 	}
 	$(target).each(
 		function(index, div) {
@@ -557,7 +564,7 @@ ui.get_filters = function get_filters(prefix) {
 	} else {
 		filters['xp']['$exists'] = true;
 	}
-	console.log(filters);
+	//console.log(filters);
 	return filters;
 }
 
@@ -615,8 +622,9 @@ ui.build_row = function build_row(card) {
 	var radios = '', radioTpl = _.template(
 		'<label class="btn btn-xs btn-default <%= active %>"><input type="radio" name="qty-<%= card.code %>" value="<%= i %>"><%= i %></label>'
 	);
-
-	for (var i = 0; i <= card.maxqty; i++) {
+	
+	//console.log(card.name, card.maxqty, card.quantity);
+	for (var i = 0; i <= card.maxqty; i++) {		
 		radios += radioTpl({
 			i: i,
 			active: (i == card.indeck ? ' active' : ''),
