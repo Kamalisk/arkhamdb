@@ -1,6 +1,6 @@
 (function app_textcomplete(textcomplete, $) {
 
-var icons = 'baratheon greyjoy intrigue lannister martell military thenightswatch power stark targaryen tyrell unique plot attachment location character event agenda neutral'.split(' ');
+var icons = 'guardian survivor rogue mystic seeker action reaction fast elder_sign elder_thing skull cultist lighting tablet willpower intellect combat agility'.split(' ');
 
 /**
  * options: cards, icons, users
