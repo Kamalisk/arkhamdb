@@ -36,27 +36,62 @@ class ImportImagesCommand extends ContainerAwareCommand
         foreach($cards as $card) {
           $card_code = $card->getCode();
           $imageurl = $assets_helper->getUrl('bundles/cards/'.$card_code.'.png');
-          $imagepath= $rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl);
-          if(file_exists($imagepath)) {
+          $imageurl2 = $assets_helper->getUrl('bundles/cards/'.$card_code.'.jpg');
+          $imagepath = $rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl);
+          $imagepath2 = $rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl2);
+          
+          $imageurl_back = $assets_helper->getUrl('bundles/cards/'.$card_code.'_back.png');
+          $imageurl2_back = $assets_helper->getUrl('bundles/cards/'.$card_code.'_back.jpg');
+          $imagepath_back = $rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl_back);
+          $imagepath2_back = $rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl2_back);
+          
+          if(file_exists($imagepath) || file_exists($imagepath2)) {
             $output->writeln("Skip ".$card_code);
           }
           else {
-              $cgdbfile = sprintf('GT%02d_%d.jpg', $card->getPack()->getId(), $card->getPosition());
-              $cgdburl = "http://lcg-cdn.fantasyflightgames.com/got2nd/" . $cgdbfile;
+          		// AHC01_121a.jpg
+          		if ($card->getType()->getCode() == "location"){
+              	$cgdbfile = sprintf('AHC%02d_%db.jpg', $card->getPack()->getId(), $card->getPosition());
+              }else {
+              	$cgdbfile = sprintf('AHC%02d_%d.jpg', $card->getPack()->getId(), $card->getPosition());
+              }
+              $cgdburl = "http://lcg-cdn.fantasyflightgames.com/ahlcg/" . $cgdbfile;
 
               $dirname = dirname($imagepath);
               $outputfile = $dirname . DIRECTORY_SEPARATOR . $card_code . ".jpg";
 
-              $image = file_get_contents($cgdburl);
+              $image = @file_get_contents($cgdburl);
               if($image !== FALSE) {
                 file_put_contents($outputfile, $image);
                 $output->writeln("New file at $outputfile");
+              }else {
+              	$output->writeln("NO Image for $card_code");
               }
-              else {
-                $output->writeln("Failed at downloading $cgdburl");
-              }
+           }
+           
+          if ($card->getDoubleSided()){
+	          if(file_exists($imagepath_back) || file_exists($imagepath2_back)) {
+							$output->writeln("Skip back".$card_code);
+						} else {
+	              if ($card->getType()->getCode() == "location"){
+	            		$cgdbfile = sprintf('AHC%02d_%d.jpg', $card->getPack()->getId(), $card->getPosition());
+	            	}else {
+	            		$cgdbfile = sprintf('AHC%02d_%db.jpg', $card->getPack()->getId(), $card->getPosition());
+	            	}
+	            	$cgdburl = "http://lcg-cdn.fantasyflightgames.com/ahlcg/" . $cgdbfile;
+	            	echo $cgdburl;
+	            	$image = @file_get_contents($cgdburl);
+	            	if($image !== FALSE) {
+	            		$dirname = dirname($imagepath);
+	            		$outputfile = $dirname . DIRECTORY_SEPARATOR . $card_code . "_back.jpg";
+	                file_put_contents($outputfile, $image);
+	                $output->writeln("New file at $outputfile");
+	              }else {
+	              	$output->writeln("NO back Image for $card_code");
+	              }
 
-          }
+	          }
+	         }
 
         }
 
