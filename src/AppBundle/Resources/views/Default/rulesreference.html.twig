@@ -2548,5 +2548,11 @@ A player cannot include 50 or more experience worth of cards in a standalone dec
 
 </div>
 
+<script>
+var curInnerHTML = document.getElementById("rules").innerHTML;
+curInnerHTML = curInnerHTML.replace(/\[(\w+)\]/g, '<span title="$1" class="icon-$1"></span>')
+document.getElementById("rules").innerHTML = curInnerHTML;
+</script>
+
 
 {% endblock %}

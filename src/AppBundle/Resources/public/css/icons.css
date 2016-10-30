@@ -1,10 +1,11 @@
+
 @font-face {
 	font-family: 'thronesdb';
-	src:url('../fonts/arkham.eot?irjt2b');
-	src:url('../fonts/arkham.eot?#iefixirjt2b') format('embedded-opentype'),
-		url('../fonts/arkham.ttf?irjt2b') format('truetype'),
-		url('../fonts/arkham.woff?irjt2b') format('woff'),
-		url('../fonts/arkham.svg?irjt2b#thronesdb') format('svg');
+	src:url('../fonts/arkham.otf?irjt2b');
+	src:url('../fonts/arkham.otf?#iefixirjt2b') format('opentype'),
+	url('../fonts/arkham-icons.ttf?irjt2b') format('truetype'),
+	url('../fonts/arkham-icons.woff?irjt2b') format('woff'),
+		url('../fonts/arkham-icons.svg?irjt2b#thronesdb') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -24,39 +25,65 @@
 }
 
 .icon-reaction:before {
-	content: "r";
-	font-size: 1.1em;
-	font-weight : bold;
-}
-.icon-eldersign:before {
-	content: "e";
-}
-.icon-lightning:before {
 	content: "!";
 }
+.icon-fast:before {
+	content: "j";
+}
+.icon-eldersign:before, .icon-elder_sign:before {
+	content: "o";
+}
+.icon-lightning:before {
+	content: "j";
+}
 .icon-action:before {
-	content: ">";
-	font-weight : bold;
+	content: "i";
 }
 .icon-strength:before, .icon-combat:before {
-	content: "s";
+	content: "c";
 }
 .icon-agility:before {
 	content: "a";
 }
 .icon-will:before, .icon-willpower:before {
-	content: "w";
+	content: "p";
 }
 .icon-lore:before, .icon-intellect:before {
-	content: "l";
+	content: "b";
 }
 .icon-wild:before {
 	content: "?";
+	font-weight : bold;
+	padding-right : 2px;
 }
 .icon-unique:before {
-	content: "u";
-	font-size : 0.7em;
+	content: "s";
+	font-size : 1.1em;
 }
+.icon-elder_thing:before {
+	content: "n";
+}
+.icon-skull:before {
+	content: "k";
+}
+.icon-auto_fail:before {
+	content: "m";
+}
+.icon-cultist:before {
+	content: "l";
+}
+.icon-tablet:before {
+	content: "q";
+}
+.icon-per_investigator:before {
+	content: "u";
+}
+.icon-null:before {
+	content: "t";
+}
+
+
+
 
 .color-will, .color-willpower {
 	color : #003961;
