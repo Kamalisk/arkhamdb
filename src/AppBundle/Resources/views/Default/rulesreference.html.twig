@@ -4,15 +4,13 @@
 {% block body %}
 
 <style>
-table		{ border-spacing: 10; }
-th			{ background-color: lightgrey; padding: 5px; text-align: left; }
-td			{ padding: 5px; }
-td.green	{ background-color: #addfad; text-align:justify; }
-td.red		{ background-color: #ffaaaa; }
-td.grey		{ background-color: lightgrey; text-align:center; font-style: italic; }
-div.column	{ display: inline-block; margin: 0 1.5%; width: 540; }
-li			{ margin-bottom: 20; }
-nav li		{ margin-bottom: 0; }
+table.chart		{ border-spacing: 10; }
+table.chart th		{ background-color: lightgrey; padding: 5px; text-align: left; }
+table.chart td		{ padding: 5px; }
+table.chart td.green	{ background-color: #addfad; text-align:justify; }
+table.chart td.red	{ background-color: #ffaaaa; }
+table.chart td.grey	{ background-color: lightgrey; text-align:center; font-style: italic; }
+div#rules li		{ margin-bottom: 20; }
 </style>
 
 
@@ -213,8 +211,6 @@ nav li		{ margin-bottom: 0; }
 <div class="col-md-8" id="rules">
 
 <div style="text-align: justify">
-
-<h1>RULES REFERENCE</h1>
 
 <h1 id="Intro">The Thing That Should Not Be...</h1>
 
@@ -2147,8 +2143,7 @@ A player cannot include 50 or more experience worth of cards in a standalone dec
 
 <h2 id="Phase_Sequence_Timing">Phase Sequence timing chart</h2>
 
-<div class="column">
-<table>
+<table class="chart">
 <tr><th>I. Mythos phase (skip during first round of game)</th></tr>
 <tr><td class="green">1.1 Round begins. Mythos phase begins.</td></tr>
 <tr><td class="green">1.2 Place 1 doom on the current agenda.</td></tr>
@@ -2167,11 +2162,7 @@ A player cannot include 50 or more experience worth of cards in a standalone dec
 <tr><td class="green">2.2.2 Investigator's turn ends. If an investigator has not yet taken a turn this phase, return to 2.2. If each investigator has taken a turn this phase, proceed to 2.3.</td></tr>
 <tr><td class="green">2.3 Investigation phase ends.</td></tr>
 <tr><td class="grey">Proceed to Enemy Phase.</td></tr>
-</table>
-</div>
-
-<div class="column">
-<table>
+<tr><td></td></tr>
 <tr><th>III. Enemy phase</th></tr>
 <tr><td class="green">3.1 Enemy phase begins.</td></tr>
 <tr><td class="green">3.2 Hunter enemies move.</td></tr>
@@ -2191,7 +2182,6 @@ A player cannot include 50 or more experience worth of cards in a standalone dec
 <tr><td class="green">4.6 Upkeep phase ends. Round ends.</td></tr>
 <tr><td class="grey">Proceed to Mythos Phase of next game round.</td></tr>
 </table>
-</div>
 
 <h2 id="Framework_Event_Details">Framework Event Details</h2>
 
@@ -2352,7 +2342,7 @@ A player cannot include 50 or more experience worth of cards in a standalone dec
 
 <h2 id="Skill_Test_Timing">Skill Test Timing</h2>
 
-<table>
+<table class="chart">
 <tr><th>Skill Test Timing</th></tr>
 <tr><td class="green">ST.1 Determine skill of test. Skill test of that type begins.</td></tr>
 <tr><td class="red">[free] PLAYER WINDOW</td></tr>
