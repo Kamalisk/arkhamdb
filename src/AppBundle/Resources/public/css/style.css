@@ -529,3 +529,15 @@ article.review .review-comment {
 .diff {
 	background: rgba(255,0,0,.5);
 }
+
+
+
+.rules-reference table.chart             { border-spacing: 10; }
+.rules-reference table.chart th          { background-color: lightgrey; padding: 5px; text-align: left; }
+.rules-reference table.chart td          { padding: 5px; }
+.rules-reference table.chart td.green    { background-color: #addfad; text-align:justify; }
+.rules-reference table.chart td.red      { background-color: #ffaaaa; }
+.rules-reference table.chart td.grey     { background-color: lightgrey; text-align:center; font-style: italic; }
+.rules-reference div#rules li            { margin-bottom: 20!important; }
+
+
