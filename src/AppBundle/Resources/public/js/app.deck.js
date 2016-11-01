@@ -6,6 +6,8 @@ var date_creation,
 	id,
 	name,
 	tags,
+	xp,
+	xp_spent = 0, 
 	investigator_code,
 	investigator_name,
 	unsaved,
@@ -26,7 +28,7 @@ var date_creation,
  * Templates for the different deck layouts, see deck.get_layout_data
  */
 layouts[1] = _.template('<div class="deck-content"><%= meta %><%= assets %><%= events %><%= skills %> <%= outassets %> <%= outevents %> <%= outskills %> <%= outtreachery %> <%= outenemy %> </div>');
-layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><div class="col-sm-6 col-print-6"><%= assets %></div><div class="col-sm-6 col-print-6"><%= events %> <%= skills %></div></div> <hr> <div class="row"><div class="col-sm-6 col-print-6"> <%= outassets %> <%= outevents %> <%= outskills %> </div><div class="col-sm-6 col-print-6"><%= outtreachery %> <%= outenemy %></div> </div></div>');
+layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><div class="col-sm-6 col-print-6"><%= assets %></div><div class="col-sm-6 col-print-6"><%= events %> <%= skills %></div></div> <hr> <div class="row"><div class="col-sm-6 col-print-6"> <%= outassets %> <%= outevents %> <%= outskills %> </div><div class="col-sm-6 col-print-6"><%= outtreachery %> <%= outenemy %></div> </div><div id="upgrade_changes"></div></div>');
 layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= images %><%= meta %></div><div class="col-sm-4"><%= assets %><%= skills %></div><div class="col-sm-4"><%= events %><%= treachery %></div></div></div>');
 
 /**
@@ -43,6 +45,9 @@ deck.init = function init(data) {
 	investigator_name = data.investigator_name;
 	unsaved = data.unsaved;
 	user_id = data.user_id;
+	xp = data.xp;
+	next_deck = data.next_deck;
+	previous_deck = data.previous_deck;
 	
 	if(app.data.isLoaded) {
 		deck.set_slots(data.slots);
@@ -83,6 +88,47 @@ deck.get_id = function get_id() {
  */
 deck.get_name = function get_name() {
 	return name;
+}
+
+/**
+ * @memberOf deck
+ * @returns integer
+ */
+deck.get_next_deck = function get_next_deck() {
+	return next_deck;
+}
+
+/**
+ * @memberOf deck
+ * @returns integer
+ */
+deck.get_previous_deck = function get_previous_deck() {
+	return previous_deck;
+}
+
+
+/**
+ * @memberOf deck
+ * @returns integer
+ */
+deck.get_xp = function get_xp() {
+	return xp;
+}
+
+/**
+ * @memberOf deck
+ * @returns integer
+ */
+deck.get_xp_spent = function get_xp_spent() {
+	return xp_spent;
+}
+
+/**
+ * @memberOf deck
+ * @returns integer
+ */
+deck.set_xp_spent = function set_xp_spent(spent_xp) {
+	xp_spent = spent_xp;
 }
 
 /**
@@ -463,7 +509,7 @@ deck.get_problem = function get_problem() {
 		if (card.deck_requirements.size){
 			size = card.deck_requirements.size;
 		}
-		console.log(card.deck_requirements);
+		//console.log(card.deck_requirements);
 		// must have the required cards
 		if (card.deck_requirements.card){
 			var req_count = 0;
@@ -484,6 +530,11 @@ deck.get_problem = function get_problem() {
 	// at least 60 others cards
 	if(deck.get_draw_deck_size() < size) {
 		return 'too_few_cards';
+	}
+	
+	// at least 60 others cards
+	if(deck.get_draw_deck_size() > size) {
+		return 'too_many_cards';
 	}
 
 	// too many copies of one card

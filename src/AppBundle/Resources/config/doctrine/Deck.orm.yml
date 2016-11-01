@@ -15,6 +15,12 @@ AppBundle\Entity\Deck:
             joinColumn:
                 name: character_id
                 referencedColumnName: id
+        usercampaign:
+            targetEntity: Usercampaign
+            nullable: false
+            joinColumn:
+                name: usercampaign_id
+                referencedColumnName: id
         lastPack:
             targetEntity: Pack
             nullable: false
@@ -42,6 +48,21 @@ AppBundle\Entity\Deck:
             orderBy: {'dateCreation':'DESC', 'isSaved':'DESC'}
             mappedBy: deck
             cascade: ["persist","remove"]
+    oneToOne:
+        nextDeck:
+            targetEntity: Deck
+            nullable: true
+            joinColumn:
+                name: next_deck
+                referencedColumnName: id
+                onDelete: CASCADE
+        previousDeck:
+            targetEntity: Deck
+            nullable: true
+            joinColumn:
+                name: previous_deck
+                referencedColumnName: id
+                onDelete: CASCADE
     fields:
         id:
             type: integer
@@ -85,3 +106,13 @@ AppBundle\Entity\Deck:
             type: integer
             nullable: false
             column: minor_version
+        xp:
+            type: integer
+            nullable: true
+        xpSpent:
+            type: integer
+            nullable: true
+        upgrades:
+            type: integer
+            nullable: true
+

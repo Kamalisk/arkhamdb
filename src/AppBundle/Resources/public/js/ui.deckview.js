@@ -15,6 +15,7 @@ ui.do_action_deck = function do_action_deck(event) {
 
 	switch(action_id) {
 		case 'btn-delete': confirm_delete(); break;
+		case 'btn-upgrade': ui.upgrade(app.deck.get_id()); break;
 		case 'btn-print': window.print(); break;
 		case 'btn-sort-type': DisplaySort = 'type'; ui.refresh_deck()(); break;
 		case 'btn-sort-position': DisplaySort = 'position'; ui.refresh_deck()(); break;
@@ -25,6 +26,40 @@ ui.do_action_deck = function do_action_deck(event) {
 		case 'btn-display-markdown': export_markdown(); break;
 	}
 
+}
+
+ui.upgrade = function upgrade(deck_id) {
+	console.log(deck_id);
+	$('#upgrade_deck').val(deck_id);
+	$('#upgrade_xp').val(0);
+	$('#upgradeModal').modal('show');
+	setTimeout(function() { $('#upgrade_xp').focus(); }, 500);
+}
+
+ui.upgrade_process = function upgrade_process(event) {
+	return true;
+	event.preventDefault();
+	var data = {};
+	data.xp = 10;
+	data.deck_id = $('#upgrade_deck').val();
+	$.ajax(Routing.generate("deck_upgrade", { deck_id: $('#upgrade_deck').val() }), {
+		type: 'POST',
+		data: data,
+		dataType: 'json',
+		success: function(data, textStatus, jqXHR) {
+			var response = jqXHR.responseJSON;
+			if(!response.success) {
+				alert('An error occured while upgrading the deck.');
+				return;
+			}
+			// redirect here 
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+			console.log('['+moment().format('YYYY-MM-DD HH:mm:ss')+'] Error on '+this.url, textStatus, errorThrown);
+			alert('An error occured while upgrading the deck.');
+		}
+	});
+	
 }
 
 /**
@@ -54,7 +89,7 @@ ui.refresh_deck = function refresh_deck() {
  */
 ui.on_dom_loaded = function on_dom_loaded() {
 	ui.setup_event_handlers();
-	app.draw_simulator && app.draw_simulator.on_dom_loaded();
+	app.draw_simulator && app.draw_simulator.on_dom_loaded();	
 };
 
 /**
@@ -62,6 +97,7 @@ ui.on_dom_loaded = function on_dom_loaded() {
  * @memberOf ui
  */
 ui.on_data_loaded = function on_data_loaded() {
+	
 };
 
 /**
@@ -71,6 +107,7 @@ ui.on_data_loaded = function on_data_loaded() {
 ui.on_all_loaded = function on_all_loaded() {
 	app.markdown && app.markdown.update(app.deck.get_description_md() || '*No description.*', '#description');
 	ui.refresh_deck();
+	app.deck_history.setup();
 };
 
 })(app.ui, jQuery);

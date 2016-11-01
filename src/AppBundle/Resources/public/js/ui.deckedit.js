@@ -297,6 +297,7 @@ ui.on_input_smartfilter2 = function on_input_smartfilter2(event) {
 ui.on_submit_form = function on_submit_form(event) {
 	var deck_json = app.deck.get_json();
 	$('input[name=content]').val(deck_json);
+	$('input[name=xp_spent]').val(app.deck.get_xp_spent());
 	$('input[name=description]').val($('textarea[name=description_]').val());
 	$('input[name=tags]').val($('input[name=tags_]').val());
 }
@@ -422,7 +423,7 @@ ui.refresh_row = function refresh_row(card_code, quantity) {
 ui.on_quantity_change = function on_quantity_change(card_code, quantity) {
 	var update_all = app.deck.set_card_copies(card_code, quantity);
 	ui.refresh_deck();
-
+	
 	if(update_all) {
 		ui.refresh_list();
 		ui.refresh_list2();
@@ -430,6 +431,7 @@ ui.on_quantity_change = function on_quantity_change(card_code, quantity) {
 	else {
 		ui.refresh_row(card_code, quantity);
 	}
+	app.deck_history.all_changes();
 }
 
 /**
@@ -761,11 +763,12 @@ ui.refresh_list2 = _.debounce(function refresh_list2() {
  * called when the deck is modified and we don't know what has changed
  * @memberOf ui
  */
-ui.on_deck_modified = function on_deck_modified() {
+ui.on_deck_modified = function on_deck_modified() {	
 	ui.refresh_deck();
 	ui.refresh_list();
 	ui.refresh_list2();
 	app.suggestions && app.suggestions.compute();
+	//app.deck_history.all_changes();
 }
 
 

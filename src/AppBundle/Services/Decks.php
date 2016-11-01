@@ -147,6 +147,20 @@ class Decks
 		return $deck->getId ();
 	}
 
+public function upgradeDeck($deck, $xp, $previous_deck, $upgrades)
+	{
+
+		$deck->setXp ( $xp );
+		$deck->setPreviousDeck ( $previous_deck );
+		$deck->setUpgrades ( $upgrades+1 );
+		
+		$previous_deck->setNextDeck($deck);
+		$this->doctrine->persist ( $deck );
+
+		return $deck->getId ();
+	}
+
+
 	public function revertDeck($deck)
 	{
 		$changes = $this->getUnsavedChanges ( $deck );

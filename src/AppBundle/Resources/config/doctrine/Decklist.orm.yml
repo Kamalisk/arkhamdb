@@ -60,6 +60,19 @@ AppBundle\Entity\Decklist:
         children:
             targetEntity: Deck
             mappedBy: parent
+    oneToOne:
+        nextDeck:
+            targetEntity: Decklist
+            nullable: true
+            joinColumn:
+                name: next_deck
+                referencedColumnName: id
+        previousDeck:
+            targetEntity: Decklist
+            nullable: true
+            joinColumn:
+                name: previous_deck
+                referencedColumnName: id
     manyToMany:
         favorites:
             targetEntity: User

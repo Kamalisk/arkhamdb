@@ -41,6 +41,12 @@ deck_clone:
     requirements:
         deck_id: \d+
 
+deck_upgrade:
+    path: /upgrade
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Builder:upgrade
+
 deck_delete:
     path: /delete
     methods: [POST]

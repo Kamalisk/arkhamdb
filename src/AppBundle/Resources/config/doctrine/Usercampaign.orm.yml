@@ -3,6 +3,7 @@ AppBundle\Entity\Usercampaign:
     table: user_campaign
     oneToMany:
         user_scenarios:
+            nullable: true
             targetEntity: Userscenario
             orderBy: {'id':'ASC'}
             mappedBy: user_campaigns

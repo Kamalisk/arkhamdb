@@ -71,6 +71,15 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      * @var integer
      */
     private $version;
+    
+     /**
+     * @var \AppBundle\Entity\Decklist
+     */
+    private $previousDeck;
+    /**
+     * @var \AppBundle\Entity\Decklist
+     */
+    private $nextDeck;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -495,6 +504,55 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
     public function getSuccessors()
     {
         return $this->successors;
+    }
+
+
+     /**
+     * Set previousDeck
+     *
+     * @param \AppBundle\Entity\Decklist $previousDeck
+     *
+     * @return Deck
+     */
+    public function setPreviousDeck(\AppBundle\Entity\Decklist $previousDeck = null)
+    {
+        $this->previousDeck = $previousDeck;
+
+        return $this;
+    }
+
+    /**
+     * Get previousDeck
+     *
+     * @return \AppBundle\Entity\Decklist
+     */
+    public function getPreviousDeck()
+    {
+        return $this->previousDeck;
+    }
+    
+    /**
+     * Set nextDeck
+     *
+     * @param \AppBundle\Entity\Decklist $nextDeck
+     *
+     * @return Deck
+     */
+    public function setNextDeck(\AppBundle\Entity\Decklist $nextDeck = null)
+    {
+        $this->nextDeck = $nextDeck;
+
+        return $this;
+    }
+
+    /**
+     * Get nextDeck
+     *
+     * @return \AppBundle\Entity\Decklist
+     */
+    public function getNextDeck()
+    {
+        return $this->nextDeck;
     }
 
     /**

@@ -68,7 +68,7 @@
 		<td style="width : 30px"><input id="deck_select_{{deck.id}}" type="checkbox"></td>
 		<td class="hidden-xs" style="width : 60px">
 			<label for="deck_select_{{deck.id}}">
-			<div class="deck-list-investigator-image card-thumbnail-3x card-thumbnail-investigator hidden-xs" title="{{ deck.investigator_name }}" style="background-image:url({{ asset('/bundles/cards/'~deck.investigator_code~'.png') }})"></div>
+			<div class="deck-list-investigator-image card-thumbnail-3x card-thumbnail-investigator hidden-xs" title="{{ deck.character.name }}" style="background-image:url({{ asset('/bundles/cards/'~deck.character.code~'.png') }})"></div>
 			</label>
 		</td>
 		<td>
@@ -81,6 +81,18 @@
 			<span class="tag" data-tag="{{ tag }}">{{ tag }}</span>
 			{% endfor %}
 			</div>
+			{% if deck.upgrades is not null %}
+			<div>
+			<span>{{ deck.upgrades }} scenarios. Experience:  {{ deck.xp }} available. {{ deck.xpSpent ? deck.xpSpent : 0}} spent</span>
+			</div>
+			{% endif %}
+			{% if previousdecks[deck.id] is not null and previousdecks[deck.id] %}			
+			<ul style="padding-left : 20px; font-size : 0.8em">
+			{% for previousdeck in previousdecks[deck.id] %}
+			<li style="margin-left : 10px;"><a href="{{ path('deck_view',{deck_id:previousdeck.id}) }}" class="deck-name">{{ previousdeck.name }}</a></li>
+			{% endfor %}
+			</ul>
+			{% endif %}
 		</td>
 		<td class="decks-actions text-right">
 			<a href="{{ path('deck_edit',{deck_id:deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit"><span class="fa fa-pencil fa-fw"></span></a>

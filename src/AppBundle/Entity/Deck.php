@@ -176,6 +176,30 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
     private $minorVersion;
     
     /**
+     * @var integer
+     */
+    private $xp;
+    
+     /**
+     * @var integer
+     */
+    private $xpSpent;
+    
+    /**
+     * @var \AppBundle\Entity\Deck
+     */
+    private $previousDeck;
+    /**
+     * @var \AppBundle\Entity\Deck
+     */
+    private $nextDeck;
+    
+    /**
+     * @var integer
+     */
+    private $upgrades;
+    
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $slots;
@@ -194,6 +218,11 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
      * @var \AppBundle\Entity\User
      */
     private $user;
+    
+    /**
+     * @var \AppBundle\Entity\Usercampaign
+     */
+    private $usercampaign;
 
     /**
      * @var \AppBundle\Entity\Faction
@@ -502,6 +531,33 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
         return $this->user;
     }
 
+
+    /**
+     * Set usercampaign
+     *
+     * @param \AppBundle\Entity\Usercampaign $usercampaign
+     *
+     * @return Deck
+     */
+    public function setUsercampaign(\AppBundle\Entity\Usercampaign $usercampaign = null)
+    {
+        $this->usercampaign = $usercampaign;
+
+        return $this;
+    }
+
+    /**
+     * Get usercampaign
+     *
+     * @return \AppBundle\Entity\Usercampaign
+     */
+    public function getUsercampaign()
+    {
+        return $this->usercampaign;
+    }
+
+
+
     /**
      * Set character
      *
@@ -583,6 +639,54 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
     {
         return $this->parent;
     }
+    
+    /**
+     * Set previousDeck
+     *
+     * @param \AppBundle\Entity\Deck $previousDeck
+     *
+     * @return Deck
+     */
+    public function setPreviousDeck(\AppBundle\Entity\Deck $previousDeck = null)
+    {
+        $this->previousDeck = $previousDeck;
+
+        return $this;
+    }
+
+    /**
+     * Get previousDeck
+     *
+     * @return \AppBundle\Entity\Deck
+     */
+    public function getPreviousDeck()
+    {
+        return $this->previousDeck;
+    }
+    
+    /**
+     * Set nextDeck
+     *
+     * @param \AppBundle\Entity\Deck $nextDeck
+     *
+     * @return Deck
+     */
+    public function setNextDeck(\AppBundle\Entity\Deck $nextDeck = null)
+    {
+        $this->nextDeck = $nextDeck;
+
+        return $this;
+    }
+
+    /**
+     * Get nextDeck
+     *
+     * @return \AppBundle\Entity\Deck
+     */
+    public function getNextDeck()
+    {
+        return $this->nextDeck;
+    }
 
     /**
      * Set majorVersion
@@ -618,6 +722,82 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
     public function setMinorVersion($minorVersion)
     {
         $this->minorVersion = $minorVersion;
+
+        return $this;
+    }
+
+    /**
+     * Get xp
+     *
+     * @return integer
+     */
+    public function getXp()
+    {
+        return $this->xp;
+    }
+    
+    
+    /**
+     * Set xp
+     *
+     * @param integer $xp
+     *
+     * @return Deck
+     */
+    public function setXp($xp)
+    {
+        $this->xp = $xp;
+
+        return $this;
+    }
+    
+    
+        /**
+     * Get xpSpent
+     *
+     * @return integer
+     */
+    public function getXpSpent()
+    {
+        return $this->xpSpent;
+    }
+    
+    
+    /**
+     * Set xpSpent
+     *
+     * @param integer $xpSpent
+     *
+     * @return Deck
+     */
+    public function setXpSpent($xpSpent)
+    {
+        $this->xpSpent = $xpSpent;
+
+        return $this;
+    }
+    
+    /**
+     * Get upgrades
+     *
+     * @return integer
+     */
+    public function getUpgrades()
+    {
+        return $this->upgrades;
+    }
+    
+    
+    /**
+     * Set upgrades
+     *
+     * @param integer $upgrades
+     *
+     * @return Deck
+     */
+    public function setUpgrades($upgrades)
+    {
+        $this->upgrades = $upgrades;
 
         return $this;
     }

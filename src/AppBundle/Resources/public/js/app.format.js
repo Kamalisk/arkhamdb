@@ -145,4 +145,14 @@ format.back_text = function back_text(card) {
 	return '<p>'+text+'</p>';
 };
 
+/**
+ * @memberOf format
+ */
+format.html_page = function back_text(element) {
+	var curInnerHTML = element.innerHTML;
+	curInnerHTML = curInnerHTML.replace(/\[(\w+)\]/g, '<span title="$1" class="icon-$1"></span>')
+	element.innerHTML = curInnerHTML;
+};
+
+
 })(app.format = {}, jQuery);

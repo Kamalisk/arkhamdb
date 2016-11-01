@@ -386,8 +386,51 @@ class BuilderController extends Controller
             array(
                 'name' => $deck->getName().' (clone)',
                 'faction_code' => $deck->getCharacter()->getCode(),
+                'tags' => $deck->getTags(),
                 'content' => json_encode($content),
                 'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null
+            ));
+
+    }
+    
+    public function upgradeAction (Request $request)
+    {
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->getDoctrine()->getManager();
+				
+				$deck_id = filter_var($request->get('upgrade_deck'), FILTER_SANITIZE_NUMBER_INT);
+				$xp = filter_var($request->get('xp'), FILTER_SANITIZE_NUMBER_INT);
+
+        /* @var $deck \AppBundle\Entity\Deck */
+        $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
+				if (!$deck){
+					return false;
+				}
+        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
+        if(!$is_owner) {
+            return $this->render(
+                'AppBundle:Default:error.html.twig',
+                array(
+                    'pagetitle' => "Error",
+                    'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
+                )
+            );
+        }
+
+        $content = [];
+        foreach ($deck->getSlots() as $slot) {
+            $content[$slot->getCard()->getCode()] = $slot->getQuantity();
+        }
+        return $this->forward('AppBundle:Builder:save',
+            array(
+                'name' => $deck->getName().'',
+                'faction_code' => $deck->getCharacter()->getCode(),
+                'tags' => $deck->getTags(),
+                'content' => json_encode($content),
+                'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null,
+                'xp' => $xp + $deck->getXp() - $deck->getXpSpent(),
+                'previous_deck' => $deck,
+                'upgrades' => $deck->getUpgrades()
             ));
 
     }
@@ -411,8 +454,13 @@ class BuilderController extends Controller
                 throw new UnauthorizedHttpException("You don't have access to this deck.");
             }
             $source_deck = $deck;
+            if ($source_deck->getNextDeck()) {
+		            throw new BadRequestHttpException("Deck is locked");
+		        }
         }
+				
 
+				
 				// XXX
 				// check for investigator here
 				$investigator = false;
@@ -439,13 +487,24 @@ class BuilderController extends Controller
 
         $name = filter_var($request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $decklist_id = filter_var($request->get('decklist_id'), FILTER_SANITIZE_NUMBER_INT);
+        $xp_spent = filter_var($request->get('xp_spent'), FILTER_SANITIZE_NUMBER_INT);
         $description = trim($request->get('description'));
         $tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
         $this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $content, $source_deck ? $source_deck : null);
+        if ($source_deck){
+        	$source_deck->setXpSpent($xp_spent);
+        }
+        if ($request->get('previous_deck')){
+        	$this->get('decks')->upgradeDeck($deck, $request->get('xp'), $request->get('previous_deck'), $request->get('upgrades'));
+        }
         $em->flush();
         
-        return $this->redirect($this->generateUrl('decks_list'));
+        if ($request->get('previous_deck')){
+        	return $this->redirect($this->generateUrl('deck_edit', ["deck_id"=>$deck->getId()]));
+        } else {
+        	return $this->redirect($this->generateUrl('decks_list'));
+        }
 
     }
 
@@ -460,7 +519,14 @@ class BuilderController extends Controller
             return $this->redirect($this->generateUrl('decks_list'));
         if ($this->getUser()->getId() != $deck->getUser()->getId())
             throw new UnauthorizedHttpException("You don't have access to this deck.");
-
+				
+				if ($deck->getPreviousDeck()){
+					$deck->getPreviousDeck()->setNextDeck(null);
+				}
+				if ($deck->getPreviousDeck()){
+					$deck->getPreviousDeck()->setNextDeck(null);
+					$deck->setPreviousDeck(null);
+				}
         foreach ($deck->getChildren() as $decklist) {
             $decklist->setParent(null);
         }
@@ -518,7 +584,7 @@ class BuilderController extends Controller
         		)
         	);
         }
-
+				$upgraded = false;
         return $this->render(
         	'AppBundle:Builder:deckedit.html.twig',
         	array(
@@ -545,14 +611,18 @@ class BuilderController extends Controller
 
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
         if(!$deck->getUser()->getIsShareDecks() && !$is_owner) {
-			return $this->render(
-				'AppBundle:Default:error.html.twig',
-				array(
-					'pagetitle' => "Error",
-					'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
-				)
-			);
+					return $this->render(
+						'AppBundle:Default:error.html.twig',
+						array(
+							'pagetitle' => "Error",
+							'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
+						)
+					);
         }
+				$editable = true;
+				if ($deck->getNextDeck()){
+					$editable = false;
+				}
 
         $tournaments = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->findAll();
         
@@ -563,6 +633,7 @@ class BuilderController extends Controller
         		'deck' => $deck,
         		'deck_id' => $deck_id,
         		'is_owner' => $is_owner,
+        		'editable' => $editable,
         		'tournaments' => $tournaments,
         	)
         );
@@ -626,28 +697,34 @@ class BuilderController extends Controller
         /* @var $user \AppBundle\Entity\User */
         $user = $this->getUser();
 
-        $decks = $this->get('decks')->getByUser($user, FALSE);
-
-        $tournaments = $this->getDoctrine()->getConnection()->executeQuery(
-                "SELECT
-					t.id,
-					t.description
-                FROM tournament t
-                ORDER BY t.description desc")->fetchAll();
+        //$decks = $this->get('decks')->getByUser($user, FALSE);
+        $em = $this->getDoctrine()->getManager();
+				$decks = $em->getRepository('AppBundle:Deck')->findBy(["user"=> $user->getId(), "nextDeck" => null], array("dateUpdate" => "DESC"));
+        $tournaments = [];
 
         if(count($decks))
         {
-			$tags = [];
-			foreach($decks as $deck) {
-				$tags[] = $deck['tags'];
-			}
-			$tags = array_unique($tags);
+					$tags = [];
+					$previous_decks = [];
+					foreach($decks as $deck) {						
+						$tags[] = $deck->getTags();
+						$temp_deck = $deck;
+						$previous_decks[$deck->getId()] = [];
+						if ($temp_deck->getPreviousDeck()){
+							while ($temp_deck->getPreviousDeck()){								
+								$temp_deck = $temp_deck->getPreviousDeck();
+								$previous_decks[$deck->getId()][] = $temp_deck;
+							}
+						}
+					}
+					$tags = array_unique($tags);
         	return $this->render('AppBundle:Builder:decks.html.twig',
         			array(
         					'pagetitle' => "My Decks",
         					'pagedescription' => "Create custom decks with the help of a powerful deckbuilder.",
         					'decks' => $decks,
-							'tags' => $tags,
+        					'previousdecks' => $previous_decks,
+									'tags' => $tags,
         					'nbmax' => $user->getMaxNbDecks(),
         					'nbdecks' => count($decks),
         					'cannotcreate' => $user->getMaxNbDecks() <= count($decks),
@@ -792,6 +869,9 @@ class BuilderController extends Controller
         }
         if ($user->getId() != $deck->getUser()->getId()) {
             throw new UnauthorizedHttpException("You don't have access to this deck.");
+        }
+        if ($deck->getNextDeck()) {
+            throw new BadRequestHttpException("Deck is locked");
         }
 
         $diff = (array) json_decode($request->get('diff'));

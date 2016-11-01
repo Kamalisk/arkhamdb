@@ -7,6 +7,25 @@ class ExportableDeck
 	public function getArrayExport($withUnsavedChanges = false)
 	{
 		$slots = $this->getSlots();
+		$previousDeck = $this->getPreviousDeck();
+		$nextDeck = $this->getNextDeck();
+		if ($previousDeck){
+			$previousDeck = $previousDeck->getId();
+		}else {
+			$previousDeck = null;
+		}
+		if ($nextDeck){
+			$nextDeck = $nextDeck->getId();
+		}else {
+			$nextDeck = null;
+		}
+		
+		if (method_exists($this, "getXp")){
+			$xp = $this->getXp();
+		} else {
+			$xp = null;
+		}
+		
 		$array = [
 				'id' => $this->getId(),
 				'name' => $this->getName(),
@@ -18,6 +37,9 @@ class ExportableDeck
 				'investigator_name' => $this->getCharacter()->getName(),
 				'slots' => $slots->getContent(),
 				'version' => $this->getVersion(),
+				'xp' => $xp,
+				'previous_deck' => $previousDeck,
+				'next_deck' => $nextDeck
 		];
 	
 		return $array;
@@ -28,7 +50,6 @@ class ExportableDeck
 		$slots = $this->getSlots();
 		return [
 				'name' => $this->getName(),
-				'faction' => $this->getFaction(),
 				'investigator' => $this->getCharacter(),
 				'draw_deck_size' => $slots->getDrawDeck()->countCards(),
 				'included_packs' => $slots->getIncludedPacks(),

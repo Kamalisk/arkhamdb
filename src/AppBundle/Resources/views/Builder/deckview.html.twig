@@ -7,6 +7,7 @@
 	{% endjavascripts %}
 	<script type="text/javascript">
 	app.deck && app.deck.init({{ deck|json_encode|raw }});
+	app.deck_history && app.deck_history.init({{ deck.history|json_encode|raw }});	
 	</script>
 {% endblock %}
 
@@ -27,6 +28,8 @@
 		<!-- Left-side Column -->
 		<div class="col-md-6" id="deck">
 		</div><!-- /#deck -->
+
+		
 		<!-- Left-side Column -->
 
 		<!-- Right-side Column -->
@@ -34,12 +37,17 @@
 
 			<div style="margin-bottom:20px" id="btn-group-deck">
 				<div style="margin-bottom:5px">
-					{% if is_owner %}
+					{% if is_owner and editable %}
 					<a href="{{ path('deck_edit', {deck_id:deck_id}) }}" class="btn btn-primary"><span class="fa fa-pencil"></span> Edit</a>
 					<a href="{{ path('deck_publish_form', {deck_id:deck_id}) }}" id="btn-publish" class="btn btn-success"><span class="fa fa-share"></span> Publish</a>
-					<button type="button" id="btn-delete" class="btn btn-danger"><span class="fa fa-trash"></span> Delete</button>
+					<button type="button" id="btn-delete" class="btn btn-danger"><span class="fa fa-trash"></span> Delete {% if deck.previousDeck %}upgrade{% endif %}</button>
+					<button type="button" id="btn-upgrade" class="btn btn-danger"><span class="fa fa-arrow-up"></span> Upgrade</button>
 					{% endif %}
+					
 					<a href="{{ path('deck_clone', {deck_id:deck_id}) }}" id="btn-clone" class="btn btn-info"><span class="fa fa-clone"></span> Clone</a>
+					
+					</div>
+					<div>
 					<button type="button" id="btn-print" class="btn btn-default"><span class="fa fa-print"></span> Print</button>
 					<div class="btn-group">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -95,6 +103,7 @@
 
 {% include 'AppBundle:Modale:odds.html.twig' %}
 {% include 'AppBundle:Modale:delete.html.twig' %}
+{% include 'AppBundle:Modale:upgrade.html.twig' %}
 {% include 'AppBundle:Modale:export.html.twig' %}
 
 {% endblock %}

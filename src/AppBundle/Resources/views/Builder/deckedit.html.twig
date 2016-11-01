@@ -7,7 +7,7 @@
 	{% endjavascripts %}
 	<script type="text/javascript">
 	app.deck && app.deck.init({{ deck|json_encode|raw }});
-	app.deck_history && app.deck_history.init({{ deck.history|json_encode|raw }});
+	app.deck_history && app.deck_history.init({{ deck.history|json_encode|raw }});		
 	</script>
 {% endblock %}
 
@@ -27,6 +27,8 @@
 	<i class="fa fa-spinner fa-spin fa-5x"></i>
 </div>
 
+
+
 {% include 'AppBundle:Builder:table-suggestions.html.twig' %}
 
 <form method="POST" action="{{ path('deck_save') }}" id="save_form" role="form" style="margin-bottom:1em">
@@ -35,6 +37,7 @@
 	<input type="hidden" id="deck-cancel-edits" name="cancel_edits" value="0">
 	<input type="hidden" name="content">
 	<input type="hidden" name="description">
+	<input type="hidden" name="xp_spent">
 	<input type="hidden" name="faction_code" value="{{ deck.character.code }}">
 	<input type="hidden" name="tags">
 		<div class="form-group">
