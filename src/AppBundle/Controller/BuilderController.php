@@ -421,7 +421,7 @@ class BuilderController extends Controller
 					$xp += $deck->getXp();
 				}
 				if ($deck->getXpSpent()){
-					$xp -= $deck->getXp();
+					$xp -= $deck->getXpSpent();
 				}
 				
         $content = [];

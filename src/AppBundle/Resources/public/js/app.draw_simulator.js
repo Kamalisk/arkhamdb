@@ -71,7 +71,7 @@ draw_simulator.compute_odds = function compute_odds() {
 draw_simulator.on_data_loaded = function on_data_loaded() {
 	deck = [];
 	hand = [];
-	var cards = app.deck.get_draw_deck();
+	var cards = app.deck.get_real_draw_deck();
 	cards.forEach(function (card) {
 		for(var ex = 0; ex < card.indeck; ex++) {
 			deck.push(card);
