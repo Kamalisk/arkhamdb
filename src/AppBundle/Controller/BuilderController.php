@@ -416,7 +416,14 @@ class BuilderController extends Controller
                 )
             );
         }
-
+				
+				if ($deck->getXp()){
+					$xp += $deck->getXp();
+				}
+				if ($deck->getXpSpent()){
+					$xp -= $deck->getXp();
+				}
+				
         $content = [];
         foreach ($deck->getSlots() as $slot) {
             $content[$slot->getCard()->getCode()] = $slot->getQuantity();
@@ -428,7 +435,7 @@ class BuilderController extends Controller
                 'tags' => $deck->getTags(),
                 'content' => json_encode($content),
                 'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null,
-                'xp' => $xp + $deck->getXp() - $deck->getXpSpent(),
+                'xp' => $xp,
                 'previous_deck' => $deck,
                 'upgrades' => $deck->getUpgrades()
             ));
