@@ -1,0 +1,31 @@
+<!-- Modal -->
+<div class="modal fade" id="upgradeModal" tabindex="-1" role="dialog" aria-labelledby="upgradeModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 class="modal-title" id="upgradeModalLabel">Upgrade Deck</h3>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<form action="{{ path('deck_upgrade') }}" method="POST">
+						<p>This lets you upgrade your deck after finishing a scenario. Once you upgrade a deck you cannot edit the 
+						original deck (you can still view it)</p>
+						<div class="form-group">
+							<label for="upgrade_xp">Enter the XP you earned from the scenario</label>
+							<input class="form-control" type="text" name="xp" id="upgrade_xp" placeholder="XP">
+						</div>
+						<div class="pull-right">
+							<input type="hidden" name="upgrade_deck" id="upgrade_deck">
+							<button type="submit" class="btn btn-success" onclick="$('#upgradeModal').modal('hide');app.ui.upgrade_process(event)">Upgrade</button>
+							<button type="button" class="btn btn-default" onclick="$('#upgradeModal').modal('hide')">Cancel</button>
+						</div>
+						</form>
+					</div><!-- /#modal-info -->
+				</div><!-- /.row -->
+			</div><!-- /.modal-body -->
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Modal -->
