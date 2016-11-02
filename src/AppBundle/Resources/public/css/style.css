@@ -47,6 +47,9 @@ body {
 	/* en dash followed by non-breaking zero-width space */
 	content: "\2013\FEFF";
 }
+.victory {
+	font-weight : bold;
+}
 
 .table-expanded>thead>tr>th, .table-expanded>tbody>tr>th, .table-expanded>tfoot>tr>th, .table-expanded>thead>tr>td, .table-expanded>tbody>tr>td, .table-expanded>tfoot>tr>td {
 	padding: 8px 8px;
