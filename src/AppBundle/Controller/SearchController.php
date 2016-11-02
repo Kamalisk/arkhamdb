@@ -31,7 +31,8 @@ class SearchController extends Controller
 			's' => 'sanity',
 			'x' => 'text',
 			'p' => 'xp',
-			'q' => 'quantity'
+			'q' => 'quantity',
+			'z' => 'slot'
 	);
 
 	public static $searchTypes = array(
@@ -56,7 +57,8 @@ class SearchController extends Controller
 			'p' => 'integer',
 			'q' => 'integer',
 			'l' => 'string',
-			'd' => 'integer'
+			'd' => 'integer',
+			'z' => 'string'
 	);
 
 	public function formAction()

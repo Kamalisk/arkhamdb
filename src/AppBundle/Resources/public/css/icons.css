@@ -1,8 +1,8 @@
 
 @font-face {
 	font-family: 'thronesdb';
-	src:url('../fonts/arkham.otf?irjt2b');
-	src:url('../fonts/arkham.otf?#iefixirjt2b') format('opentype'),
+	src:url('../fonts/arkham-icons.otf?irjt2b');
+	src:url('../fonts/arkham-icons.otf?#iefixirjt2b') format('opentype'),
 	url('../fonts/arkham-icons.ttf?irjt2b') format('truetype'),
 	url('../fonts/arkham-icons.woff?irjt2b') format('woff'),
 		url('../fonts/arkham-icons.svg?irjt2b#thronesdb') format('svg');

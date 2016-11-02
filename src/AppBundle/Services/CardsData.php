@@ -336,7 +336,7 @@ class CardsData
 							foreach($condition as $arg) {
 								switch($operator) {
 									case ':': $or[] = "(c.text like ?$i or c.backText like ?$i)"; break;
-									case '!': $or[] = "(c.text not like ?$i and c.backText not like ?$i)"; break;
+									case '!': $or[] = "(c.text not like ?$i and (c.backText is null or c.backText not like ?$i))"; break;
 								}
 								$qb->setParameter($i++, "%$arg%");
 								
@@ -350,7 +350,7 @@ class CardsData
 							foreach($condition as $arg) {
 								switch($operator) {
 									case ':': $or[] = "(c.flavor like ?$i or c.backFlavor like ?$i)"; break;
-									case '!': $or[] = "(c.flavor not like ?$i and c.backFlavor not like ?$i)"; break;
+									case '!': $or[] = "(c.flavor not like ?$i and (c.backFlavor is null or c.backFlavor not like ?$i))"; break;
 								}
 								$qb->setParameter($i++, "%$arg%");
 							}
@@ -388,6 +388,19 @@ class CardsData
 								switch($operator) {
 									case ':': $or[] = "(c.illustrator = ?$i)"; break;
 									case '!': $or[] = "(c.illustrator != ?$i)"; break;
+								}
+								$qb->setParameter($i++, $arg);
+							}
+							$qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
+							break;
+						}
+						case 'z': // illustrator
+						{
+							$or = [];
+							foreach($condition as $arg) {
+								switch($operator) {
+									case ':': $or[] = "(c.slot = ?$i)"; break;
+									case '!': $or[] = "(c.slot != ?$i)"; break;
 								}
 								$qb->setParameter($i++, $arg);
 							}

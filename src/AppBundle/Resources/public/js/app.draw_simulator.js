@@ -24,11 +24,37 @@ draw_simulator.reset = function reset() {
  */
 draw_simulator.redraw2 = function redraw2() {
 	$('[data-command=redraw]').prop('disabled', true);
-	$('[data-type="treachery"]',container).remove();
+	$('[data-subtype="weakness"]',container).remove();
+	$('[data-subtype="basicweakness"]',container).remove();
 	var count = 0;
 	var keys_to_clear = [];
 	$.each(hand, function(key, value){
-		if (value && value.type_code == "treachery"){
+		if (value && (value.subtype_code == "weakness" || value.subtype_code == "basicweakness")){
+			keys_to_clear.push(key);
+			deck.push(value);
+			count++;
+			draw_count--;
+		}
+	});
+	$.each(keys_to_clear, function(key, value){
+		var spliced = hand.splice(value, 1);
+	});
+	
+	draw_simulator.do_draw(count);
+	draw_simulator.update_odds();
+};
+
+
+/**
+ * @memberOf draw_simulator
+ */
+draw_simulator.redraw3 = function redraw2() {
+	$('[data-command=redraw]').prop('disabled', true);
+	$('[data-selected=true]',container).remove();
+	var count = 0;
+	var keys_to_clear = [];
+	$.each(hand, function(key, value){
+		if (value && (value.subtype_code == "weakness" || value.subtype_code == "basicweakness")){
 			keys_to_clear.push(key);
 			deck.push(value);
 			count++;
@@ -100,13 +126,13 @@ draw_simulator.do_draw = function do_draw(draw) {
 		var spliced = deck.splice(rand, 1);
 		var card = spliced[0];
 		var card_element;
-		if(card.imagesrc) {
-			card_element = $('<div data-type="'+card.type_code+'"><img src="'+card.imagesrc+'"></div>');
-		} else {
-			card_element = $('<div data-type="'+card.type_code+'" class="card-proxy"><div>'+card.name+'</div></div>');
-		}
 		hand.push(card);
-		if (card.type_code && card.type_code == "treachery"){
+		if(card.imagesrc) {
+			card_element = $('<div data-hand-id="'+(hand.length-1)+'" data-type="'+card.type_code+'" data-subtype="'+card.subtype_code+'"><img src="'+card.imagesrc+'"></div>');
+		} else {
+			card_element = $('<div data-hand-id="'+(hand.length-1)+'" data-type="'+card.type_code+'" class="card-proxy" data-subtype="'+card.subtype_code+'"><div>'+card.name+'</div></div>');
+		}
+		if (card.subtype_code && (card.subtype_code == "weakness" || card.subtype_code == "basicweakness") ){
 			$('[data-command=redraw]').prop('disabled', false);
 		}
 		container.append(card_element);
@@ -155,6 +181,12 @@ draw_simulator.handle_click = function handle_click(event) {
  */
 draw_simulator.toggle_opacity = function toggle_opacity(event) {
 	$(this).css('opacity', 1.5 - parseFloat($(this).css('opacity')));
+	if ($(this).attr('data-selected') == "true"){
+		$(this).attr('data-selected', "false" );	
+	} else {
+		$(this).attr('data-selected', "true" );
+	}
+	
 };
 
 })(app.draw_simulator = {}, jQuery);

@@ -22,7 +22,8 @@ var configuration = {
 	s: [ add_integer_sf, 'sanity', "Sanity" ],
 	x: [ add_string_sf, 'text', "Text" ],
 	p: [ add_integer_sf, 'xp', "Experience" ],
-	q: [ add_integer_sf, 'quantity', "Quantity in pack" ]
+	q: [ add_integer_sf, 'quantity', "Quantity in pack" ],
+	z: [ add_string_sf, 'slot', "Slot" ]
 };
 
 /**
@@ -226,7 +227,8 @@ var configuration = {
 	s: [ add_integer_sf, 'sanity', "Sanity" ],
 	x: [ add_string_sf, 'text', "Text" ],
 	p: [ add_integer_sf, 'xp', "Experience" ],
-	q: [ add_integer_sf, 'quantity', "Quantity in pack" ]
+	q: [ add_integer_sf, 'quantity', "Quantity in pack" ],
+	z: [ add_string_sf, 'slot', "Slot" ]
 };
 
 /**
