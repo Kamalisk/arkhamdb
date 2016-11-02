@@ -82,6 +82,16 @@
 	content: "t";
 }
 
+.icon-health:before {
+	content: "";
+	width: 16px;
+	height: 16p;
+	display: inline-block;
+	background-image: url();
+}
+.icon-sanity:before {
+	content: "";
+}
 
 
 

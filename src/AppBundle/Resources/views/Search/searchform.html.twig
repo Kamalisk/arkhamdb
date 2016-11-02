@@ -67,33 +67,7 @@
 </fieldset>
 <fieldset>
 <legend>Attributes</legend>
-<div class="row">
-    <div class="col-sm-4">
-        <div class="form-group">
-			<label for="e">Set</label>
-			<div>
-				<select class="form-control" name="e" id="e">
-					<option value="">any</option>
-					{% for pack in packs %}
-					<option value="{{ pack.code }}">{{ pack.name }}</option>
-					{% endfor %}
-				</select>
-			</div>
-		</div>
-    </div>
-    <div class="col-sm-4">
-        <div class="form-group">
-			<label for="u">Unique</label>
-			<div>
-				<select class="form-control" name="u" id="u">
-					<option value="">any</option>
-					<option value="1">Yes</option>
-					<option value="0">No</option>
-				</select>
-			</div>
-		</div>
-    </div>
-</div>
+
 <div class="row">
     <div class="col-sm-4">
         <div class="form-group">
@@ -130,6 +104,49 @@
 					{% for trait in traits %}
 					<option value="{{ trait }}">{{ trait }}</option>
 					{% endfor %}
+				</select>
+			</div>
+		</div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-4">
+        <div class="form-group">
+			<label for="z">Slot</label>
+			<div>
+				<select class="form-control" name="z" id="z">
+					<option value="">any</option>
+					<option value="hand">One Handed</option>
+					<option value="hand x2">Two Handed</option>
+					<option value="accessory">Accessory</option>
+					<option value="ally">Ally</option>
+					<option value="arcane">One Arcane</option>
+					<option value="arcane x2">Two Arcane</option>
+				</select>
+			</div>
+		</div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+			<label for="e">Set</label>
+			<div>
+				<select class="form-control" name="e" id="e">
+					<option value="">any</option>
+					{% for pack in packs %}
+					<option value="{{ pack.code }}">{{ pack.name }}</option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+			<label for="u">Unique</label>
+			<div>
+				<select class="form-control" name="u" id="u">
+					<option value="">any</option>
+					<option value="1">Yes</option>
+					<option value="0">No</option>
 				</select>
 			</div>
 		</div>
