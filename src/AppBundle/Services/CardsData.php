@@ -39,7 +39,7 @@ class CardsData
 			'[elder_thing]' => '<span class="icon-elder_thing" title="Elder Thing"></span>',
 			'[auto_fail]' => '<span class="icon-auto_fail" title="Auto Fail"></span>',
 			'[fail]' => '<span class="icon-auto_fail" title="Auto Fail"></span>',
-			'[skull]' => '<span class="icon-skull" title="Skull">[Skull]</span>',
+			'[skull]' => '<span class="icon-skull" title="Skull"></span>',
 			'[reaction]' => '<span class="icon-reaction" title="Reaction"></span>',
 			'[action]' => '<span class="icon-action" title="Action"></span>',
 			'[lightning]' => '<span class="icon-lightning" title="Fast Action"></span>',
