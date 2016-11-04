@@ -24,11 +24,11 @@
 	<li><a href="#A_An">A, An</a></li>
 	<li><a href="#Ability">Ability</a></li>
 		<ul>
-		<li><a href="#Constant_Abilities">Constant Abilities</a></li>
-		<li><a href="#Forced_Abilities">Forced Abilities</a></li>
-		<li><a href="#Revelation_Abilities">Revelation Abilities</a></li>
-		<li><a href="#Triggered_Abilities">Triggered Abilities</a></li>
-		<li><a href="#Keyword_Abilities">Keywords</a></li>
+		<li><a href="#Abilities_Constant">Constant Abilities</a></li>
+		<li><a href="#Abilities_Forced">Forced Abilities</a></li>
+		<li><a href="#Abilities_Revelation">Revelation Abilities</a></li>
+		<li><a href="#Abilities_Triggered">Triggered Abilities</a></li>
+		<li><a href="#Abilities_Keywords">Keywords</a></li>
 		<li><a href="#Spawn_Instructions_and_Prey_Instructions">Spawn Instructions and Prey Instructions</a></li>
 		<li><a href="#Action_Designators">Action Designators</a></li>
 		</ul>
@@ -254,11 +254,11 @@
 
 <p>See also: "<a href="#Costs">Costs</a>" on page 7, "<a href="#Effects">Effects</a>" on page 9, "<a href="#Qualifiers">Qualifiers</a>" on page 17, "<a href="#Self_Referential_Text">Self-Referential Text</a>" on page 18.</p>
 
-<h3 id="Constant_Abilities">Constant Abilities</h3>
+<h3 id="Abilities_Constant">Constant Abilities</h3>
 
 <p>Constant abilities are simply stated on a card with no special formatting. Constant abilities are always interacting with the game state as long as the card is in play. (Some constant abilities continuously seek a specific condition, denoted by words such as "during" or "while." The effects of such abilities are active any time the specified condition is met.) Constant abilities have no point of initiation.</p>
 
-<h3 id="Forced_Abilities">Forced Abilities</h3>
+<h3 id="Abilities_Forced">Forced Abilities</h3>
 
 <p>A forced ability is identified by a bold "<strong>Forced</strong> – " command. Forced abilities initiate and interact with the game state automatically at a specified timing point. Such a timing point is usually indicated by words such as: "when," "after," "if," or "at."</p>
 
@@ -278,11 +278,11 @@
 
 <p>See "<a href="#Priority_of_Simultaneous_Resolution">Priority of Simultaneous Resolution</a>" on page 17.</p>
 
-<h3 id="Revelation_Abilities">Revelation Abilities</h3>
+<h3 id="Abilities_Revelation">Revelation Abilities</h3>
 
 <p>A revelation ability, indicated by a bold "<strong>Revelation</strong> – " command on an encounter card or weakness, initiates as that card is drawn by an investigator (see "<a href="#Revelation">Revelation</a>" on page 18).</p>
 
-<h3 id="Triggered_Abilities">Triggered Abilities</h3>
+<h3 id="Abilities_Triggered">Triggered Abilities</h3>
 
 <p>A triggered ability is any ability prefaced by either a [free] icon, a [reaction] icon, or an [action] icon. If the ability has one or more prerequisites (costs and/or conditions), these are listed in text immediately following the icon. A player must always meet the prerequisites of a triggered ability in order to trigger that ability. There are three types of triggered abilities:</p>
 
@@ -314,7 +314,7 @@
 
 </ul>
 
-<h3 id="Keyword_Abilities">Keywords</h3>
+<h3 id="Abilities_Keywords">Keywords</h3>
 
 <p>A keyword is a card ability which conveys specific rules to its card (see "<a href="#Keywords">Keywords</a>" on page 13).</p>
 
@@ -646,9 +646,9 @@
 
 <p><em>Example: Sean and Etienne are each using a deck built from Sean's collection. If Etienne is instructed to "search the collection," he searches Sean's collection.</em></p>
 
-<h2>Constant Abilities</h2>
+<h2 id="Constant_Abilities">Constant Abilities</h2>
 
-<p>See "<a href="#Constant_Abilities">Ability</a>" on page 2.</p>
+<p>See "<a href="#Abilities_Constant">Ability</a>" on page 2.</p>
 
 <h2 id="Control">Control</h2>
 
@@ -1098,11 +1098,15 @@
 
 <p>Fast is a keyword ability. A fast card does not cost an action to be played and is not played using the "Play" action.</p>
 
+<ul>
+
 <li>  A fast event card may be played from a player's hand any time its play instructions specify. If the instructions specify when/after a timing point, the card may be played as if the described timing point were a triggering condition for playing the card. If the instructions specify a duration or period of time, the card may be played during any player window within that period. If the instructions specify both a when/after timing point and a duration or period of time, the card may be played in reference to any instance of the specified triggering condition within that time period.</li>
 
 <li>  A fast asset may be played by an investigator during any player window on his or her turn.</li>
 
 <li>  Because fast cards do not cost actions to play, they do not provoke attacks of opportunity (see "<a href="#Attack_of_Opportunity">Attack of Opportunity</a>" on page 5).</li>
+
+</ul>
 
 <h2 id="Fight_Action">Fight Action</h2>
 
@@ -1124,9 +1128,9 @@
 
 <p>Flavor text is additional text that provides thematic context to a card and/or its abilities. Flavor text does not interact with the game in any manner.</p>
 
-<h2>Forced Abilities</h2>
+<h2 id="Forced_Abilities">Forced Abilities</h2>
 
-<p>See "<a href="#Forced_Abilities">Ability</a>" on page 2.</p>
+<p>See "<a href="#Abilities_Forced">Ability</a>" on page 2.</p>
 
 <h2 id="Gains">Gains</h2>
 
@@ -1284,7 +1288,7 @@
 
 </ul>
 
-<p>See "<a href="#Ability">Ability</a>" on page 2.</p>
+<p>See "<a href="#Abilities_Keywords">Ability</a>" on page 2.</p>
 
 <h2 id="Killed_Insane_Investigators">Killed/Insane Investigators</h2>
 
@@ -1784,7 +1788,7 @@
 
 <p>If an asset has no slot symbols on it, it does not take up any of the above slots. There is no limit to the number of slot-less assets an investigator can have in play. The following symbols (on an asset) indicate which slot(s) that asset fills:</p>
 
-<table>
+<table style="border-spacing: 20">
 <tr>
 	<td colspan="2" align="center">[accessory] 1 accessory slot</td>
 </tr>
@@ -1946,7 +1950,7 @@ A player cannot include 50 or more experience worth of cards in a standalone dec
 
 <li>  The [reaction] indicates a reaction triggered ability that does not cost an action and may be used any time its triggering condition is met.</li>
 
-<p>See also: "<a href="#Ability">Ability</a>" on page 2, "<a href="#Appendix_I_Initiation_Sequence">Appendix I: Initiation Sequence</a>" on page 22."</li>
+<p>See also: "<a href="#Abilities_Triggered">Ability</a>" on page 2, "<a href="#Appendix_I_Initiation_Sequence">Appendix I: Initiation Sequence</a>" on page 22."</li>
 
 </ul>
 
@@ -2395,7 +2399,7 @@ A player cannot include 50 or more experience worth of cards in a standalone dec
 
 <ul>
 
-<li>  If an investigator automatically fails at a test via a card ability or revealing the [auto-fail] symbol, his or her total skill value for that test is considered 0.</li>
+<li>  If an investigator automatically fails at a test via a card ability or revealing the [auto_fail] symbol, his or her total skill value for that test is considered 0.</li>
 
 </ul>
 
