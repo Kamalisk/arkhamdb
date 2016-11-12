@@ -1,0 +1,405 @@
+/**
+ * HTML CHANGES TO MAKE:
+ * Remove all inline-styles on .reviews > .col-lg-8 > ".row"s
+ * Add .review-card class to all .reviews > .col-lg-8 > .row > ".col-lg-12"s
+ * Wrap review in .review-card div
+ * Move .review-author and .review-date up into .review-header
+ * Move .review-like down to bottom of .review-content
+ * Add .review-img class to review card image
+ * Remove padding on some input in card search form so that overflow doesn't hide text
+ * Right h2 margin-top should be 0 on card search page
+ * Wrap all decklist panel on index page in .decklist-panel div nested under bootstrap col
+ *    > add faction specific class to this .decklist-panel div as well
+ * Remove date published from deck view (or find somewhere to move preferably)
+ * Make Sumbit comment button on decklist page .btn-primary instead of .btn-success
+ * Make save button .btn-primary instead of .btn-success on deck editor page
+ */
+
+/** Import new serif font **/
+@import url('https://fonts.googleapis.com/css?family=Eczar');
+@import url('https://fonts.googleapis.com/css?family=Alice');
+
+
+
+
+/** Background image **/
+body {
+  background-color: #000;
+  background-image: url('http://wallpapercave.com/wp/xxUUvqZ.jpg');
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+#wrapper {
+  background-color: rgba(40,40,40,0.5); /** Fade out background image **/
+  border-bottom: none;
+}
+
+
+
+/** Change navbar color scheme **/
+.navbar {
+  background-color: rgba(230,138,68,0.35);
+  border-bottom: none;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+.navbar a {
+  color: #fff !important;
+  transition: text-shadow 0.5s, color 0.5s;
+}
+.navbar a:hover {
+  color: rgb(230, 146, 83) !important;
+  text-shadow: 0 0 5px rgb(230, 146, 83);
+}
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+  border-color: #000;
+}
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+  background: rgba(0, 0, 0, 0.2);
+}
+.navbar .dropdown-menu {
+  background-color: #333;
+}
+.navbar .dropdown-menu a:hover, .navbar .dropdown-menu a:focus, .navbar .dropdown-menu a:active {
+  background-color: #444;
+}
+
+
+
+/** Change footer color scheme **/
+footer {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  border-top: 10px solid #555;
+}
+footer a {
+  color: #a886b3;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #000;
+}
+
+
+
+/** Typography changes **/
+h1, h2, h3, h4, h5, h6 {
+  font-family: Eczar, serif;
+}
+h2 {
+  margin-top: 30px;
+}
+h3 {
+  margin-top: 25px;
+  color: #444;
+}
+a, a:visited, .btn-link {
+  color: #9c74a9;
+}
+a:hover, a:active, a:focus, .btn-link:hover, .btn-link:focus, .btn-link:active {
+  color: rgb(230,138,68);
+}
+blockquote {
+  font-family: Eczar, serif;
+  font-size: 1.35em;
+}
+
+
+
+/** Change button colors **/
+.btn-primary {
+  background-color: #8b6e95;
+  border-color: #7d6487;
+}
+.btn-primary:hover {
+  background-color: #705978;
+  border-color: #775f80;
+}
+.btn-primary:active, .btn-primary:focus {
+  background-color: #614E68 !important;
+  border-color: #514057 !important;
+}
+
+
+
+/** Pagation element style override **/
+.pagination a {
+  color: #8b6e95 !important;
+}
+.pagination a:hover, .pagination a:focus, .pagination a:active {
+  color: rgb(230,138,68) !important;
+}
+.pagination li.active a {
+  background-color: #8b6e95 !important;
+  border-color: #8b6e95 !important;
+  color: #fff !important;
+}
+
+
+
+/** Nav color override **/
+.nav-pills li.active a {
+  background-color: #8b6e95;
+}
+.nav-tabs li.active a {
+  background: #fff !important;
+  color: rgb(230,138,68) !important;
+}
+
+
+
+/** Make main panel "pop" a bit **/
+.main {
+  border-radius: 6px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+  padding: 30px;
+}
+
+
+
+/** Decklist page specific styles **/
+h1.decklist-name {
+  color: #fff;
+  text-shadow: 1px 1px 1px #000;
+}
+.decklist-name #dropdownVersions {
+  font-family: 'Open Sans', Arial, sans-serif;
+  background-color: rgba(255, 255, 255, 0.15);
+  position: relative;
+  margin-left: 5px;
+  top: -4px;
+  border-radius: 4px;
+  transition: background-color 0.5s, color 0.5s;
+}
+.decklist-name #dropdownVersions:hover, .decklist-name #dropdownVersions:focus, .decklist-name #dropdownVersions:active {
+  background-color: rgb(44, 46, 47);
+  color: #9c74a9;
+  text-shadow: initial;
+}
+.decklist-name #dropdownVersions:active {
+  border-radius: 4px 4px 0 0;
+}
+.decklist-name .dropdown-menu {
+  text-shadow: initial;
+  font-family: 'Open Sans', Arial, sans-serif;
+  background-color: rgb(44, 46, 47);
+  border: none;
+  border-radius: 0 4px 4px 4px;
+
+  /** Make sure dropdown is positioned correctly **/
+  margin-top: -20px;
+  margin-left: 5px;
+}
+.decklist-name .dropdown-menu a {
+  color: #777;
+}
+.decklist-name .dropdown-menu li.disabled a {
+  color: #9c74a9;
+}
+.decklist-name .dropdown-menu li:not(.disabled) a:focus, .decklist-name .dropdown-menu li:not(.disabled) a:hover, .decklist-name .dropdown-menu li:not(.disabled) a:active {
+  color: rgb(230,138,68);
+  background: #555;
+}
+.social > div {
+  float: none !important;
+  text-align: center;
+  color: #fff;
+}
+.deck-content h4, h5 {
+  font-family: 'Open Sans', Arial, sans-serif;
+}
+.deck-content h5 {
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+.deck-content hr {
+  margin-bottom: 12px;
+}
+
+
+
+/** Styling for card reviews **/
+.review-card {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 20px;
+  margin-top: 30px;
+  margin-bottom: 60px;
+}
+.review-card .review-header h4 {
+  margin-bottom: 0;
+}
+.review-card .review-header h4 a {
+  font-family: 'Eczar', serif;
+  font-weight: normal;
+  font-size: 1.5em;
+  color: #333;
+}
+.review-card .review-author, .review-card .review-date {
+  font-family: 'Eczar', serif;
+  color: #777;
+  display: inline-block;
+}
+.review-card .review-date:before {
+  content: 'Written ';
+}
+.review-card .review-date:after {
+  content: ' by ';
+}
+.review-card .review {
+  border: none;
+}
+.review-card .review-like a {
+  color: rgb(183, 77, 77);
+  padding-right: 2px;
+  transition: color 0.5s;
+}
+.review-card .review-like a:hover, .review-card .review-like a:active, .review-card .review-like a:focus {
+  color: rgb(230,138,68);
+  text-decoration: none;
+}
+.review-card .review-content {
+  margin: 0 !important;
+}
+.review-card .review-img {
+  margin-left: 30px !important;
+  margin-bottom: 30px !important;
+  margin-top: -130px !important;
+  box-shadow: 0 0 3px #333;
+  border-radius: 6px;
+  transition: margin-top 0.5s, box-shadow 0.5s;
+}
+.review-card:hover .review-img {
+  margin-top: -140px !important;
+  box-shadow: 0 0 4px 1px #333;
+}
+.review-card .form-comment {
+  margin-top: 15px;
+  display: inline-block;
+}
+.review-card .review-like {
+  float: right !important;
+  margin-top: 18px;
+  display: inline-block;
+}
+.review-card .form-comment .btn {
+  color: #777 !important;
+  font-weight: bold;
+  padding-left: 0;
+  transition: color 0.5s;
+}
+.review-card .form-comment .btn:hover, .review-card .form-comment .btn:active, .review-card .form-comment .btn:focus {
+  color: #333 !important;
+  text-decoration: none;
+}
+
+
+
+/** Like, star, comment, version, etc. icon colors **/
+.social {
+  margin-bottom: 10px;
+}
+.social-icons {
+  font-size: 1.2em;
+  text-shadow: 1px 1px 1px #000;
+}
+.social-icons > a, .social-icons > span {
+  margin: 0 12px;
+}
+.social-icon-like {
+  color: #DB504A !important;
+}
+.social-icon-favorite {
+  color: #E3B505 !important;
+}
+.social-icon-comment {
+  color: #759658 !important;
+}
+.social-icon-version {
+  color: #516F7C !important;
+}
+.social-icon-comment, .social-icon-favorite, .social-icon-like, .social-icon-version {
+  transition: color 0.5s;
+}
+.social-icon-like:hover, .social-icon-like:active, .social-icon-like:focus, .social-icon-favorite:hover, .social-icon-favorite:focus, .social-icon-comment:focus, .social-icon-comment:hover, .social-icon-comment:focus {
+  color: rgb(230,138,68) !important;
+  text-decoration: none;
+}
+
+
+
+/** Rules reference page specific styles **/
+#rules h1:not(#Intro) {
+  margin-top: 45px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #000;
+  padding-bottom: 5px;
+  padding-left: 3px;
+}
+
+
+
+/** Card panel specific styles **/
+.panel .card-name {
+  color: #fff;
+  font-family: Alice, serif;
+  font-weight: 400;
+  font-size: 1.2em;
+}
+
+
+
+/** Front page specfic styles **/
+.site-title {
+  font-family: Alice, serif !important;;
+  color: #fff;
+  margin-bottom: 0;
+  text-shadow: 1px 1px 1px #000;
+}
+.site-slogan {
+  font-family: Eczar, serif !important;
+  color: #eee;
+  font-size: 24px !important;
+  text-shadow: 1px 1px 1px #000;
+}
+.decklist-panel {
+  border-radius: 6px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.9);
+  transition: box-shadow 0.5s, border-radius 0.5s;
+}
+.decklist-panel > div:first-child {
+  border-radius: 2px 2px 0 0;
+}
+.decklist-panel > div:last-child {
+  border-radius: 0 0 2px 2px;
+}
+.decklist-panel.guardian:hover {
+  box-shadow: 0 0 5px 1px rgba(43, 128, 197, 0.9), 0 0 3px 3px rgba(0, 0, 0, 0.7);
+}
+.decklist-panel.mystic:hover {
+  box-shadow: 0 0 5px 1px rgba(93, 85, 147, 0.9), 0 0 3px 3px rgba(0, 0, 0, 0.7);
+}
+.decklist-panel.rogue:hover {
+  box-shadow: 0 0 5px 1px rgba(16, 113, 22, 0.9), 0 0 3px 3px rgba(0, 0, 0, 0.7);
+}
+.decklist-panel.seeker:hover {
+  box-shadow: 0 0 5px 1px rgba(255, 143, 63, 0.9), 0 0 3px 3px rgba(0, 0, 0, 0.7);
+}
+.decklist-panel.survivor:hover {
+  box-shadow: 0 0 4px rgba(204, 48, 56, 0.9), 0 0 3px 3px rgba(0, 0, 0, 0.7);
+}
+.decklist-panel .media * {
+  color: #fff !important;
+  font-family: 'Alice', serif;
+}
+.decklist-panel .card-thumbnail-2x.card-thumbnail-investigator {
+  margin-right: 8px;
+}
+.decklist-panel .social-icons {
+  font-size: 1.1em;
+}
+.social-icons > a, .social-icons > span {
+  margin: 0;
+  margin-left: 7px;
+  text-shadow: none !important;
+}
