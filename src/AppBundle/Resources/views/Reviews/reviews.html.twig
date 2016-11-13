@@ -35,44 +35,50 @@
 
 <div class="reviews row">
 	<div class="col-lg-8 col-lg-push-2">
-{% if reviews|length > 0 %}{% for i in 0..reviews|length-1 %}{% set review = reviews[i] %}{% set card = review.card %}
-<div class="row" style="margin-bottom:1em;padding-bottom:1em;border-bottom:1px solid #ddd"><div class="col-lg-12">
-    <div class="review-header">      
-      <h4><a href="{{ path('cards_zoom',{card_code:review.card.code}) }}#review-{{ review.id }}" data-code="{{ review.card.code }}" class="card-tip card card-name">{{ review.card.name }}</a></h4>
-    </div>
-		<article class="review" data-id="{{ review.id }}" id="review-{{ review.id }}">
-			<div class="review-like">
-				<a id="review-social-icon-like" href="#" class="social-icon-like" data-toggle="tooltip" data-placement="bottom" title="Like that review">
-					<span class="fa fa-heart"></span> <span class="num">{{ review.nbVotes }}</span>
-				</a>
+		{% if reviews|length > 0 %}{% for i in 0..reviews|length-1 %}{% set review = reviews[i] %}{% set card = review.card %}
+			<div class="row">
+				<div class="col-lg-12 review-card">
+    				<div class="review-header">      
+      					<h4>
+							<a href="{{ path('cards_zoom',{card_code:review.card.code}) }}#review-{{ review.id }}" data-code="{{ review.card.code }}" class="card-tip card card-name">
+								{{ review.card.name }}
+							</a>
+						</h4>
+						<div class="review-date">
+							<time datetime="{{ review.dateCreation|date('c') }}" title="{{ review.dateCreation|date('F jS, Y') }}">{{ review.dateCreation|date('n/j/y') }}</time>
+						</div>
+						<div class="review-author">
+							<span class="username">{{ macros.username(review.user) }}</span>
+						</div>
+    				</div>
+					<article class="review" data-id="{{ review.id }}" id="review-{{ review.id }}">
+						<div class="review-content">
+							<div class="review-text">
+								<img src="/web/bundles/cards/{{ review.card.code }}.jpg" alt="{{ review.card.name }}" class="pull-right review-img" style="width:120px;margin:0 0 10px 10px" onerror="this.onerror=null;this.src='/web/bundles/cards/{{ review.card.code }}.png';">
+								{{ review.textHtml|raw }}
+							</div>
+							{% for comment in review.comments %}
+								<div class="review-comment text-muted small">{{ comment.text|raw }}
+									&mdash;
+									<span class="username">{{ macros.username(comment.user) }}</span>
+									<time datetime="{{ comment.dateCreation|date('c') }}" title="{{ comment.dateCreation|date('F jS, Y') }}">{{ comment.dateCreation|date('n/j/y') }}</time>
+								</div>
+							{% endfor %}
+							<form action="{{ path('card_reviewcomment_post') }}" method="POST" class="form-comment">
+								<input type="hidden" name="comment_review_id" value="{{ review.id }}">
+								<button class="btn btn-link btn-write-comment">Add a comment</button>
+							</form>
+							<div class="review-like">
+								<a id="review-social-icon-like" href="#" class="social-icon-like" data-toggle="tooltip" data-placement="bottom" title="Like that review">
+									<span class="fa fa-heart"></span> <span class="num">{{ review.nbVotes }}</span>
+								</a>
+							</div>
+						</div>
+					</article>
+				</div>
 			</div>
-			<div class="review-content">
-				<div class="review-text">
-					<img src="/web/bundles/cards/{{ review.card.code }}.jpg" alt="{{ review.card.name }}" class="pull-right" style="width:120px;margin:0 0 10px 10px" onerror="this.onerror=null;this.src='/web/bundles/cards/{{ review.card.code }}.png';">
-					{{ review.textHtml|raw }}
-				</div>
-				<div class="review-date">
-					<time datetime="{{ review.dateCreation|date('c') }}" title="{{ review.dateCreation|date('F jS, Y') }}">{{ review.dateCreation|date('n/j/y') }}</time>
-				</div>
-				<div class="review-author">
-					<span class="username">{{ macros.username(review.user) }}</span>
-				</div>
-				{% for comment in review.comments %}
-				<div class="review-comment text-muted small">{{ comment.text|raw }}
-					&mdash;
-					<span class="username">{{ macros.username(comment.user) }}</span>
-					<time datetime="{{ comment.dateCreation|date('c') }}" title="{{ comment.dateCreation|date('F jS, Y') }}">{{ comment.dateCreation|date('n/j/y') }}</time>
-				</div>
-				{% endfor %}
-				<form action="{{ path('card_reviewcomment_post') }}" method="POST" class="form-comment">
-					<input type="hidden" name="comment_review_id" value="{{ review.id }}">
-					<button class="btn btn-link btn-write-comment">Add a comment</button>
-				</form>
-			</div>
-		</article>
-</div></div>
-{% endfor %}{% endif %}
-</div>
+		{% endfor %}{% endif %}
+	</div>
 </div>
 
 
