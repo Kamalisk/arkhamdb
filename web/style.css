@@ -1,16 +1,16 @@
 /**
  * HTML CHANGES TO MAKE:
- * Remove all inline-styles on .reviews > .col-lg-8 > ".row"s
- * Add .review-card class to all .reviews > .col-lg-8 > .row > ".col-lg-12"s
- * Wrap review in .review-card div
- * Move .review-author and .review-date up into .review-header
- * Move .review-like down to bottom of .review-content
- * Add .review-img class to review card image
- * Remove padding on some input in card search form so that overflow doesn't hide text
- * Right h2 margin-top should be 0 on card search page
- * box-shadow: none; inline on main page
- * Wrap all decklist panel on index page in .decklist-panel div nested under bootstrap col
- *    > add faction specific class to this .decklist-panel div as well
+ x Remove all inline-styles on .reviews > .col-lg-8 > ".row"s
+ x Add .review-card class to all .reviews > .col-lg-8 > .row > ".col-lg-12"s
+ ? Wrap review in .review-card div
+ x Move .review-author and .review-date up into .review-header
+ x Move .review-like down to bottom of .review-content
+ x Add .review-img class to review card image
+ x Remove padding on some input in card search form so that overflow doesn't hide text
+ x Right h2 margin-top should be 0 on card search page
+ x box-shadow: none; inline on main page
+ x Wrap all decklist panel on index page in .decklist-panel div nested under bootstrap col
+ x    > add faction specific class to this .decklist-panel div as well
  * Remove date published from deck view (or find somewhere to move preferably)
  * Make Sumbit comment button on decklist page .btn-primary instead of .btn-success
  * Make save button .btn-primary instead of .btn-success on deck editor page
@@ -70,10 +70,10 @@ body {
 
 /** Change footer color scheme **/
 footer {
-  background-color: #333;
+  background-color: rgba(0, 0, 0, 0.8);
   color: #fff;
   padding: 20px;
-  border-top: 10px solid #555;
+  border-top: 1px solid #555;
 }
 footer a {
   color: #a886b3;
