@@ -38,10 +38,8 @@
 			</h1>
 		</div>
 		<div class="col-xs-12">
-			<div class="social">
+			<div class="social decklist-social-icons">
 				<div class="pull-right">
-					<span class="hidden-xs">published: </span>
-					<time datetime="{{ decklist.dateCreation|date('c') }}">{{ decklist.dateCreation|date('M d, Y') }}</time>
 					{{ macros.decklist_social_icons(decklist) }}
 				</div>
 			</div>
@@ -76,6 +74,10 @@
 				{% endif %}
 				<div class="col-md-12">
 					{% include 'AppBundle:Decklist:author-and-description.html.twig' %}
+				</div>
+				<div class="col-md-12" style="padding-top: 10px; padding-bottom: 20px; color: #777;">
+					<span class="hidden-xs">published: </span>
+					<time datetime="{{ decklist.dateCreation|date('c') }}">{{ decklist.dateCreation|date('M d, Y') }}</time>
 				</div>
 				<div class="col-md-12">
 					{% include 'AppBundle:Decklist:comments.html.twig' %}
