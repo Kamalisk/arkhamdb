@@ -8,11 +8,13 @@
  * Add .review-img class to review card image
  * Remove padding on some input in card search form so that overflow doesn't hide text
  * Right h2 margin-top should be 0 on card search page
+ * box-shadow: none; inline on main page
  * Wrap all decklist panel on index page in .decklist-panel div nested under bootstrap col
  *    > add faction specific class to this .decklist-panel div as well
  * Remove date published from deck view (or find somewhere to move preferably)
  * Make Sumbit comment button on decklist page .btn-primary instead of .btn-success
  * Make save button .btn-primary instead of .btn-success on deck editor page
+ * add .decklist-social-icons to social icons above decklist
  */
 
 /** Import new serif font **/
@@ -321,6 +323,9 @@ h1.decklist-name {
 .social-icon-comment, .social-icon-favorite, .social-icon-like, .social-icon-version {
   transition: color 0.5s;
 }
+.decklist-social-icons .social-icon-like, .decklist-social-icons .social-icon-favorite, .decklist-social-icons .social-icon-comment, .decklist-social-icons .social-icon-version {
+  color: #fff !important;
+}
 .social-icon-like:hover, .social-icon-like:active, .social-icon-like:focus, .social-icon-favorite:hover, .social-icon-favorite:focus, .social-icon-comment:focus, .social-icon-comment:hover, .social-icon-comment:focus {
   color: rgb(230,138,68) !important;
   text-decoration: none;
@@ -398,7 +403,7 @@ h1.decklist-name {
 .decklist-panel .social-icons {
   font-size: 1.1em;
 }
-.social-icons > a, .social-icons > span {
+.decklist-panel .social-icons > a, .decklist-panel .social-icons > span {
   margin: 0;
   margin-left: 7px;
   text-shadow: none !important;
