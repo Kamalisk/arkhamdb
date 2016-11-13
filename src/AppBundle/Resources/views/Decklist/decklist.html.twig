@@ -44,11 +44,6 @@
 					<time datetime="{{ decklist.dateCreation|date('c') }}">{{ decklist.dateCreation|date('M d, Y') }}</time>
 					{{ macros.decklist_social_icons(decklist) }}
 				</div>
-				{% if duplicate %}
-				<small>Duplicate of <a href="{{ path('decklist_detail', { 'decklist_id': duplicate.id, 'decklist_name': duplicate.nameCanonical|e('url') }) }}">
-					{{ duplicate.name }} {{ duplicate.version }}
-				</a></small>
-				{% endif %}
 			</div>
 		</div>
 	</div>
@@ -69,6 +64,16 @@
 				<div class="col-md-12">
 					<div class="pull-right btn-group" role="group">{% include 'AppBundle:Decklist:toolbar.html.twig' %}</div>
 				</div>
+				{% if duplicate %}
+					<div class="col-md-12" style="padding-top: 10px;">
+						<small>
+							Duplicate of 
+							<a href="{{ path('decklist_detail', { 'decklist_id': duplicate.id, 'decklist_name': duplicate.nameCanonical|e('url') }) }}">
+								{{ duplicate.name }} {{ duplicate.version }}
+							</a>
+						</small>
+					</div>
+				{% endif %}
 				<div class="col-md-12">
 					{% include 'AppBundle:Decklist:author-and-description.html.twig' %}
 				</div>
