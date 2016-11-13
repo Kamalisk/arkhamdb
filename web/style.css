@@ -91,6 +91,7 @@ blockquote {
 .btn-primary, .btn-success {
   background-color: #8b6e95;
   border-color: #7d6487;
+  color: #fff !important;
 }
 .btn-primary:hover, .btn-success:hover {
   background-color: #705978;
