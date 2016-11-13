@@ -188,7 +188,7 @@ h1.decklist-name {
   border-radius: 0 4px 4px 4px;
 
   /** Make sure dropdown is positioned correctly **/
-  margin-top: -20px;
+  margin-top: -21px;
   margin-left: 5px;
 }
 .decklist-name .dropdown-menu a {
