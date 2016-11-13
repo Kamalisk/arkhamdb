@@ -88,15 +88,15 @@ blockquote {
 
 
 /** Change button colors **/
-.btn-primary {
+.btn-primary, .btn-success {
   background-color: #8b6e95;
   border-color: #7d6487;
 }
-.btn-primary:hover {
+.btn-primary:hover, .btn-success:hover {
   background-color: #705978;
   border-color: #775f80;
 }
-.btn-primary:active, .btn-primary:focus {
+.btn-primary:active, .btn-primary:focus, .btn-success:active, .btn-success:focus {
   background-color: #614E68 !important;
   border-color: #514057 !important;
 }
