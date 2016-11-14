@@ -367,6 +367,7 @@ class SearchController extends Controller
 				$cardinfo['available'] = $availability[$pack->getCode()];
 				if($includeReviews) {
 				    $cardinfo['reviews'] = $this->get('cards_data')->get_reviews($card);
+				    $cardinfo['faqs'] = $this->get('cards_data')->get_faqs($card);
 				}
 				$cards[] = $cardinfo;
 			}

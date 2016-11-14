@@ -665,7 +665,16 @@ class CardsData
 
     public function get_reviews($card)
     {
-        $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(array('card' => $card), array('nbVotes' => 'DESC'));
+        $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(array('card' => $card, 'faq' => false), array('nbVotes' => 'DESC'));
+
+        $response = $reviews;
+
+        return $response;
+    }
+    
+    public function get_faqs($card)
+    {
+        $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(array('card' => $card, 'faq' => true), array('nbVotes' => 'DESC'));
 
         $response = $reviews;
 
