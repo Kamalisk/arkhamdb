@@ -64,4 +64,7 @@ AppBundle\Entity\Review:
             type: smallint
             nullable: false
             column: nb_votes
-
+        faq:
+            type: boolean
+            nullable: false
+            column: is_faq

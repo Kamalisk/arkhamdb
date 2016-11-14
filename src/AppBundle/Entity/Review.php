@@ -58,6 +58,11 @@ class Review
     private $votes;
 
     /**
+     * @var boolean
+     */
+    private $faq;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -194,6 +199,30 @@ class Review
     public function getNbVotes()
     {
         return $this->nbVotes;
+    }
+    
+    /**
+     * Set faq
+     *
+     * @param boolean $faq
+     *
+     * @return Review
+     */
+    public function setFaq($faq)
+    {
+        $this->faq = $faq;
+
+        return $this;
+    }
+
+    /**
+     * Get faq
+     *
+     * @return integer
+     */
+    public function getFaq()
+    {
+        return $this->faq;
     }
 
     /**

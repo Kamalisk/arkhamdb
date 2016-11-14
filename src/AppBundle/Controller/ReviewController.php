@@ -28,9 +28,14 @@ class ReviewController extends Controller
         {
         	throw $this->createAccessDeniedException("You are not logged in.");
         }
-
+				
+				$is_faq = false;
+				if ($request->get('is_faq')){
+					$is_faq = true;
+				}
+				
         // a user cannot post more reviews than her reputation
-        if(count($user->getReviews()) >= $user->getReputation()) 
+        if(count($user->getReviews()) >= $user->getReputation() && !$is_faq) 
         {
         	throw new \Exception("Your reputation doesn't allow you to write more reviews.");
         }
@@ -49,7 +54,12 @@ class ReviewController extends Controller
         }
 
         // checking the user didn't already write a review for that card
-        $review = $em->getRepository('AppBundle:Review')->findOneBy(array('card' => $card, 'user' => $user));
+	      if ($is_faq){
+	      	$review = $em->getRepository('AppBundle:Review')->findOneBy(array('card' => $card, 'user' => $user, 'faq' => true));	
+	      } else {
+	      	$review = $em->getRepository('AppBundle:Review')->findOneBy(array('card' => $card, 'user' => $user, 'faq' => false));
+	      }
+        
         if($review) 
         {
             throw new \Exception("You cannot write more than 1 review for a given card.");
@@ -69,6 +79,11 @@ class ReviewController extends Controller
         $review = new Review();
         $review->setCard($card);
         $review->setUser($user);
+        if ($is_faq){
+        	$review->setFaq(true);
+        }else {
+        	$review->setFaq(false);
+        }
       	$review->setTextMd($review_raw);
       	$review->setTextHtml($review_html);
         $review->setNbVotes(0);
@@ -216,7 +231,7 @@ class ReviewController extends Controller
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $dql = "SELECT r FROM AppBundle:Review r JOIN r.card c JOIN c.pack p WHERE p.dateRelease IS NOT NULL ORDER BY r.dateCreation DESC";
+        $dql = "SELECT r FROM AppBundle:Review r JOIN r.card c JOIN c.pack p WHERE p.dateRelease IS NOT NULL AND r.faq = false ORDER BY r.dateCreation DESC";
         $query = $em->createQuery($dql)->setFirstResult($start)->setMaxResults($limit);
 
         $paginator = new Paginator($query, false);
@@ -286,7 +301,7 @@ class ReviewController extends Controller
 
         $pagetitle = "Card Reviews by ".$user->getUsername();
 
-        $dql = "SELECT r FROM AppBundle:Review r WHERE r.user = :user ORDER BY r.date_creation DESC";
+        $dql = "SELECT r FROM AppBundle:Review r WHERE r.user = :user ORDER BY r.dateCreation DESC";
         $query = $em->createQuery($dql)->setFirstResult($start)->setMaxResults($limit)->setParameter('user', $user);
 
         $paginator = new Paginator($query, false);
