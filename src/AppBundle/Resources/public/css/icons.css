@@ -27,7 +27,7 @@
 .icon-reaction:before {
 	content: "!";
 }
-.icon-fast:before {
+.icon-fast:before, .icon-free:before {
 	content: "j";
 }
 .icon-eldersign:before, .icon-elder_sign:before {
