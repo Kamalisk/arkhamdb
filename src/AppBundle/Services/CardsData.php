@@ -312,12 +312,12 @@ class CardsData
 							$or = [];
 							foreach($condition as $arg) {
 								$code = preg_match('/^\d\d(\d\d\d|_[a-zA-Z0-9]+)$/u', $arg);
-								$acronym = preg_match('/^[A-Z]{2,}$/', $arg);
+								$acronym = false;////preg_match('/^[A-Z]{2,}$/', $arg);
 								if($code) {
 									$or[] = "(c.code = ?$i)";
 									$qb->setParameter($i++, $arg);
 								} else if($acronym) {
-									$or[] = "(BINARY(c.name) like ?$i or BINARY(c.backName) like ?$i)";
+									$or[] = "(c.name like ?$i or c.backName like ?$i)";
 									$qb->setParameter($i++, "%$arg%");
 									$like = implode('% ', str_split($arg));
 									$or[] = "(REPLACE(c.name, '-', ' ') like ?$i or REPLACE(c.backName, '-', ' ') like ?$i)";
