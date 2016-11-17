@@ -38,7 +38,7 @@
 {% if reviews|length > 0 %}{% for i in 0..reviews|length-1 %}{% set review = reviews[i] %}{% set card = review.card %}
 <div class="row" style="margin-bottom:1em;padding-bottom:1em;border-bottom:1px solid #ddd"><div class="col-lg-12">
     <div class="review-header">      
-      <h4><a href="{{ path('cards_zoom',{card_code:review.card.code}) }}#review-{{ review.id }}" data-code="{{ review.card.code }}" class="card-tip card card-name">{{ review.card.name }}</a></h4>
+      <h4><a href="{{ path('cards_zoom',{card_code:review.card.code}) }}#review-{{ review.id }}" data-code="{{ review.card.code }}" class="card-tip card-name">{{ review.card.name }}</a></h4>
     </div>
 		<article class="review" data-id="{{ review.id }}" id="review-{{ review.id }}">
 			<div class="review-like">
