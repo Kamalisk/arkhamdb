@@ -60,4 +60,5 @@ security:
         - { path: ^/deck/view/, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/deck/, role: ROLE_USER }
         - { path: ^/decks, role: ROLE_USER }
+        - { path: ^/collection, role: ROLE_USER }
         - { path: ^/user/, role: ROLE_USER }

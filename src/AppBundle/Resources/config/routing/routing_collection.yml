@@ -1,0 +1,12 @@
+
+collection_packs:
+    path: /packs
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Collection:packs
+
+collection_save_packs:
+    path: /packs/save
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Collection:savePacks

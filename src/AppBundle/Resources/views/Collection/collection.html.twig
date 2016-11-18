@@ -1,0 +1,47 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block javascripts %}
+    {% javascripts '@AppBundle/Resources/public/js/ui.collection.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% if reloaduser %}
+        <script type="text/javascript">
+            app.user.forceReload = true;
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+
+    <div class="main white container" id="owned_packs" style="display: none">
+        <form action="{{ path('collection_save_packs') }}" method="POST" enctype="application/x-www-form-urlencoded" onsubmit="app.ui.update_selected_packs()">
+            <input type="hidden" name="selected-packs" id="selected-packs" value="">
+            <div class="row">
+                {% for category in categories %}
+                    <div class="col-md-3 col-sm-4 cycle">
+                        <label>{{ category.label }}</label>
+
+                        <div class="pull-right">
+                            <a class="select-all" title="Select All" data-toggle="tooltip"data-container="body"><span class="fa fa-check"></span></a>
+                            &#160;&#160;&#160;
+                            <a class="select-none" title="Select None" data-toggle="tooltip" data-container="body"><span class="fa fa-times"></span></a>
+                        </div>
+
+                        <div class="btn-group btn-group-vertical btn-block" class="packs">
+                            {% for pack in category.packs %}
+                                <label type="button" class="btn btn-default {% if pack.checked %}active{% endif %}" data-id="{{ pack.id }}">{{  pack.label }}</label>
+                            {% endfor %}
+                        </div>
+                        <div class="text-right" style="margin-bottom: 10px;"><small class="pack-count"></small></div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="row">
+                <div class="col-sm-2 col-sm-offset-10 text-right">
+                    <button type="submit" class="btn btn-success btn-block">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
