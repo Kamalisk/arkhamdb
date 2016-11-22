@@ -64,7 +64,7 @@ suggestions.compute = function compute() {
 			if(suggestions.current[i]) suggestions.current[i].proba = 0;
 		});
 		// remove suggestions of identity 
-		app.data.cards({type_code:'identity'}).select('code').map(function (code) {
+		app.data.cards({type_code:'character'}).select('code').map(function (code) {
 			return suggestions.indexFromCodes[code];
 		}).forEach(function (i) {
 			if(suggestions.current[i]) suggestions.current[i].proba = 0;
@@ -168,8 +168,10 @@ suggestions.pick = function pick(event) {
 };
 
 $(function() {
-	suggestions.query(Side);
-	
+	suggestions.query("base");
+
+	console.log("suggestions fired");	
+
 	$('#table-suggestions').on({
 		change : suggestions.pick
 	}, 'input[type=radio]');

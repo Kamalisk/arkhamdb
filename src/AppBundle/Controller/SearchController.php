@@ -33,7 +33,8 @@ class SearchController extends Controller
 			'p' => 'xp',
 			'q' => 'quantity',
 			'z' => 'slot',
-			'j' => 'victory'
+			'j' => 'victory',
+			'm' => 'encounter'
 	);
 
 	public static $searchTypes = array(
@@ -60,7 +61,8 @@ class SearchController extends Controller
 			'l' => 'string',
 			'd' => 'integer',
 			'z' => 'string',
-			'j' => 'integer'
+			'j' => 'integer',
+			'm' => 'code'
 	);
 
 	public function formAction()
@@ -78,6 +80,7 @@ class SearchController extends Controller
 		$packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findBy([], array("name" => "ASC"));
 		$subtypes = $this->getDoctrine()->getRepository('AppBundle:Subtype')->findBy([], array("name" => "ASC"));
 		$factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findBy([], array("id" => "ASC"));
+		$encounters = $this->getDoctrine()->getRepository('AppBundle:Encounter')->findBy([], array("id" => "ASC"));
 
 		$list_traits = $dbh->executeQuery("SELECT DISTINCT c.traits FROM card c WHERE c.traits != ''")->fetchAll();
 		$traits = [];
@@ -108,6 +111,7 @@ class SearchController extends Controller
 				"subtypes" => $subtypes,
 				"factions" => $factions,
 				"traits" => $traits,
+				"encounters" => $encounters,
 				"illustrators" => $illustrators,
 				"allsets" => $allsets,
 		), $response);
@@ -205,6 +209,7 @@ class SearchController extends Controller
 	{
 		$view = $request->query->get('view') ?: 'list';
 		$sort = $request->query->get('sort') ?: 'name';
+		$decks = $request->query->get('decks') ?: 'player';
 
 		$operators = array(":","!","<",">");
 		$factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findAll();
@@ -238,6 +243,7 @@ class SearchController extends Controller
 		$find = array('q' => implode(" ",$params));
 		if($sort != "name") $find['sort'] = $sort;
 		if($view != "list") $find['view'] = $view;
+		if($decks != "player") $find['decks'] = $decks;
 		return $this->redirect($this->generateUrl('cards_find').'?'.http_build_query($find));
 	}
 

@@ -42,36 +42,28 @@ $(document).on('data.app', function () {
 });
 $(document).on('start.app', function () {
 	if(typeof ui.on_all_loaded === 'function') ui.on_all_loaded();
+	
+	// try to update packs to set owned
+	app.user.loaded.always(function() {
+	  app.data.packs.update({}, {
+	      owned: true
+	  });
+	
+	  
+	});
+
+	
+	/*
 	$('abbr').each(function (index, element) {
 		var title;
 		switch($(element).text().toLowerCase()) {
 		case 'renown': 
 			title = "After you win a challenge in which this character is participating, he may gain 1 power.";
-			break;
-		case 'intimidate': 
-			title = "After you win a challenge in which this character is participating, you may choose and kneel a character, controlled by the losing opponent, with equal or lower STR than the amount of STR by which the challenge was won.";
-			break;
-		case 'stealth': 
-			title = "When you declare this character as an attacker, you may choose a character without stealth controlled by the defending opponent. That character cannot be declared as a defender for this challenge.";
-			break;
-		case 'insight': 
-			title = "After you win a challenge in which this character is participating, you may draw 1 card.";
-			break;
-		case 'limited': 
-			title = "No more than 1 card in total with the limited keyword can be marshaled (or played, if the card is an event) by each player each round. No more than 1 limited card can be placed by each player during setup.";
-			break;
-		case 'pillage': 
-			title = "After you win a challenge in which this character is participating, you may discard 1 card from the top of the losing opponent's deck.";
-			break;
-		case 'terminal': 
-			title = "If attached card leaves play, discard this attachment.";
-			break;
-		case 'ambush': 
-			title = "You may pay X gold to put this card into play from your hand during the challenges phase.";
-			break;
+			break;		
 		}
 		if(title) $(element).attr('title', title).tooltip();
 	})
+	*/
 });
 $.when(dom_loaded, data_loaded).done(function () {
 	setTimeout(function () {
