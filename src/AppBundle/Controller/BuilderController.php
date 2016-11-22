@@ -103,8 +103,8 @@ class BuilderController extends Controller
 									print_r($subtype->getId());
 									if ($valid_targets){
 										$key = array_rand($valid_targets);
-										// disable adding random weakness for now
-										//$cards_to_add[] = $valid_targets[$key];
+										// should disable adding random weakness
+										$cards_to_add[] = $valid_targets[$key];
 									}
 								}
 							}
