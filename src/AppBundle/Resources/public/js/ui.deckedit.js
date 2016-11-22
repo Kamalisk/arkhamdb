@@ -418,6 +418,9 @@ ui.on_core_change = function on_core_change(event) {
 		ui.set_max_qty();
 		ui.reset_list();
 		break;
+		default:
+		ui.refresh_list();
+		ui.refresh_list2();
 	}
 }
 
