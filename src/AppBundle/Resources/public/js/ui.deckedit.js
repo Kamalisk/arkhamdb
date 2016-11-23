@@ -185,7 +185,7 @@ ui.build_pack_selector = function build_pack_selector() {
 	if (app.user.data && app.user.data.owned_packs) {
       var packs = app.user.data.owned_packs.split(',');
       _.forEach(packs, function(str) {
-          collection[parseInt(str, 10)] = 1;
+          collection[str] = 1;
           no_collection = false;
       });
 			//console.log(app.user.data.owned_packs, collection);
