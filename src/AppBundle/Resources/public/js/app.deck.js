@@ -323,7 +323,6 @@ deck.get_layout_data = function get_layout_data(options) {
 	deck.update_layout_section(data, 'assets', deck.get_layout_data_one_section('type_code', 'asset', 'type_name', false));
 	deck.update_layout_section(data, 'events', deck.get_layout_data_one_section('type_code', 'event', 'type_name', false));
 	deck.update_layout_section(data, 'skills', deck.get_layout_data_one_section('type_code', 'skill', 'type_name', false));
-	//deck.update_layout_section(data, 'treachery', deck.get_layout_data_one_section('type_code', 'treachery', 'type_name', false));
 	
 	deck.update_layout_section(data, 'outassets', deck.get_layout_data_one_section('type_code', 'asset', 'type_name', true));
 	deck.update_layout_section(data, 'outevents', deck.get_layout_data_one_section('type_code', 'event', 'type_name', true));
@@ -357,8 +356,10 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 		if (sortValue == "asset"){
 			$(header_tpl({code: sortValue, name: name, quantity: deck.get_nb_cards(cards)})).appendTo(section);
 			var slots = {
-				'1-Handed': [],
-				'2-Handed': [],
+				'Hand': [],
+				'Hand x2': [],
+				'Arcane': [],
+				'Arcane x2': [],
 				'Accessory': [],
 				'Accessory': [],
 				'Body': [],
@@ -367,11 +368,11 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 			};
 			cards.forEach(function (card) {
 				var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
-				if (card.slot){
-					$div.append($(card_line_tpl({card:card})+' <span class="small slot-header">'+card.slot+'</span>'));
-				}else {
-					$div.append($(card_line_tpl({card:card})));
-				}
+				//if (card.slot){
+				//	$div.append($(card_line_tpl({card:card})+' <span class="small slot-header">'+card.slot+'</span>'));
+				//}else {
+				$div.append($(card_line_tpl({card:card})));
+				//}
 				$div.prepend(card.indeck+'x ');
 				if(card.xp && card.xp > 0) {
 					$div.append(' <span class="xp-'+card.xp+'">('+card.xp+')</span>');
@@ -387,7 +388,7 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 			});
 			$.each(slots,function (index, slot) {
 				if(slot.length > 0){
-					//$('<div class="slot-header small">'+index+'</div>').appendTo(section);
+					$('<div class="slot-header small">'+index+'</div>').appendTo(section);
 					$.each(slot,function (index, div) {
 						div.appendTo(section);
 					});
