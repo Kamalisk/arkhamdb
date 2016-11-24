@@ -25,9 +25,14 @@ class BuilderController extends Controller
 
 		/* @var $em \Doctrine\ORM\EntityManager */
 		$em = $this->getDoctrine()->getManager();
-
+		
+		$user = $this->getUser();
+		//$collection = $user->getPacksOwned();
+		
 		$type = $em->getRepository('AppBundle:Type')->findOneBy(['code' => 'investigator']);
 		$investigators = $em->getRepository('AppBundle:Card')->findBy(['type' => $type], ["name"=>"ASC" ]);
+		$my_investigators = [];
+		$other_investigators = [];
 		foreach($investigators as $investigator){
 			
 			$deck_requirements = $this->get('DeckValidationHelper')->parseReqString($investigator->getDeckRequirements());
@@ -48,13 +53,17 @@ class BuilderController extends Controller
 			];
 			
 			$investigator->setDeckRequirements($req);
+			//$my_investigators[] = $investigator;
+			//$other_investigators[] = $investigator;
 		}
 
-		return $this->render('AppBundle:Builder:initbuild.html.twig', [
-				'pagetitle' => "New deck",
-				'investigators' => $investigators
-		], $response);
-    }
+			return $this->render('AppBundle:Builder:initbuild.html.twig', [
+					'pagetitle' => "New deck",
+					'investigators' => $investigators
+					//'my_investigators' => $my_investigators,
+					//'other_investigators' => $other_investigators
+			], $response);
+  }
 
     public function initbuildAction (Request $request)
     {
@@ -99,8 +108,9 @@ class BuilderController extends Controller
 							if (isset($random['target']) && $random['target']){
 								if ($random['target'] === "subtype"){
 									$subtype = $em->getRepository('AppBundle:Subtype')->findOneBy(array("code" => $random['value']));
-									$valid_targets = $em->getRepository('AppBundle:Card')->findBy(array("subtype" => $subtype->getId() ));
-									print_r($subtype->getId());
+									//$valid_targets = $em->getRepository('AppBundle:Card')->findBy(array("subtype" => $subtype->getId() ));
+									$valid_targets = $em->getRepository('AppBundle:Card')->findBy(array("name" => "Random Basic Weakness" ));
+									//print_r($subtype->getId());
 									if ($valid_targets){
 										$key = array_rand($valid_targets);
 										// should disable adding random weakness

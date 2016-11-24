@@ -53,16 +53,6 @@ ui.init_config_buttons = function init_config_buttons() {
 }
 
 /**
- * removes titles, which cannot be used in decks
- * @memberOf ui
- */
-ui.remove_melee_titles = function remove_melee_titles() {
-	app.data.cards.remove({
-		'type_code': 'title'
-	});
-}
-
-/**
  * sets the maxqty of each card
  * @memberOf ui
  */
@@ -275,11 +265,6 @@ ui.init_selectors = function init_selectors() {
 	}
 	$('[data-filter=subtype_code]').find('input[name=basicweakness]').prop("checked", true).parent().addClass('active');
 	$('[data-filter=xp]').find('input[name=xp0]').prop("checked", true).parent().addClass('active');
-	//$('[data-filter=mode_filter]').find('input[name=playercards]').prop("checked", true).parent().addClass('active');
-	//$('[data-filter=faction_code]').find('input[name='+app.deck.get_faction_code()+']').prop("checked", true).parent().addClass('active');
-	//var minor_faction_code = app.deck.get_minor_faction_code();
-	//if(minor_faction_code) $('[data-filter=faction_code]').find('input[name='+minor_faction_code+']').prop("checked", true).parent().addClass('active');
-	//$('[data-filter=type_code]').find('input[name=character]').prop("checked", true).parent().addClass('active');
 }
 
 function uncheck_all_others() {
@@ -316,15 +301,11 @@ ui.on_click_filter = function on_click_filter(event) {
 		}
 		event.stopPropagation();
 	} else {
-		if ($(event.target).closest('[data-filter]').attr("data-filter") == "subtype_code"){
-			uncheck_all_active.call(this);
-		} else {
-			if (!event.shiftKey && Config['buttons-behavior'] === 'exclusive' || event.shiftKey && Config['buttons-behavior'] === 'cumulative') {
-				if (!event.altKey) {
-					uncheck_all_active.call(this);
-				} else {
-					check_all_inactive.call(this);
-				}
+		if (!event.shiftKey && Config['buttons-behavior'] === 'exclusive' || event.shiftKey && Config['buttons-behavior'] === 'cumulative') {
+			if (!event.altKey) {
+				uncheck_all_active.call(this);
+			} else {
+				check_all_inactive.call(this);
 			}
 		}
 	}
@@ -564,7 +545,8 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	$('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 	$('#special-collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 	
-
+	$('#deck').on('click', 'a[data-random]', ui.select_basic_weakness);
+	
 	$('#cardModal').on('keypress', function(event) {
 		var num = parseInt(event.which, 10) - 48;
 		$('#cardModal input[type=radio][value=' + num + ']').trigger('change');
@@ -574,6 +556,29 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	$('thead').on('click', 'a[data-sort]', ui.on_table_sort_click);
 
 }
+
+
+ui.select_basic_weakness = function select_basic_weakness() {
+	// replace the random weakness card in the deck with a random weakness
+	var weaknesses = app.data.cards.find({"subtype_code" : "basicweakness"});
+	var filtered_weaknesses = [];
+	weaknesses.forEach(function (card){
+		//console.log(card);
+		
+		if($("[name="+card.pack_code+"]").is(":checked") && card.name != "Random Basic Weakness" && card.indeck < card.maxqty){
+			filtered_weaknesses.push(card);
+		}
+	});
+	if (filtered_weaknesses.length > 0){
+		var weakness = filtered_weaknesses[ Math.round(Math.random(0, 1) * (filtered_weaknesses.length-1)) ];
+		if ($(this) && $(this).data("random")){
+			ui.on_quantity_change($(this).data("random"), 0);	
+		}
+		ui.on_quantity_change(weakness.code, weakness.indeck+1);
+	}
+	
+}
+
 
 /**
  * returns the current card filters as an array
