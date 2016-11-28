@@ -96,12 +96,14 @@ class Card implements \Serializable
 				$optionalFields[] = 'enemy_evade';
 				$optionalFields[] = 'victory';
 				$optionalFields[] = 'health';
+				$optionalFields[] = 'health_per_investigator';
 				$optionalFields[] = 'encounter_position';
 				break;
 			case "location":
 				$optionalFields[] = 'victory';
 				$optionalFields[] = 'shroud';
 				$optionalFields[] = 'clues';
+				$optionalFields[] = 'clues_fixed';
 				$optionalFields[] = 'encounter_position';
 				break;
 			case "agenda":
@@ -267,11 +269,21 @@ class Card implements \Serializable
      */
     private $clues;
 
+    /**
+     * @var boolean
+     */
+    private $cluesFixed;
 
     /**
      * @var integer
      */
     private $health;
+
+    /**
+     * @var boolean
+     */
+    private $healthPerInvestigator;
+
 
     /**
      * @var integer
@@ -746,6 +758,32 @@ class Card implements \Serializable
         return $this->health;
     }
 
+
+    /**
+     * Set healthPerInvestigator
+     *
+     * @param boolean $healthPerInvestigator
+     *
+     * @return Card
+     */
+    public function setHealthPerInvestigator($healthPerInvestigator)
+    {
+        $this->healthPerInvestigator = $healthPerInvestigator;
+
+        return $this;
+    }
+
+    /**
+     * Get healthPerInvestigator
+     *
+     * @return boolean
+     */
+    public function getHealthPerInvestigator()
+    {
+        return $this->healthPerInvestigator;
+    }
+
+
     /**
      * Set sanity
      *
@@ -1119,6 +1157,32 @@ class Card implements \Serializable
     public function getClues()
     {
         return $this->clues;
+    }
+    
+
+
+    /**
+     * Set cluesFixed
+     *
+     * @param boolean $cluesFixed
+     *
+     * @return Card
+     */
+    public function setCluesFixed($cluesFixed)
+    {
+        $this->cluesFixed = $cluesFixed;
+
+        return $this;
+    }
+
+    /**
+     * Get cluesFixed
+     *
+     * @return boolean
+     */
+    public function getCluesFixed()
+    {
+        return $this->cluesFixed;
     }
 
 

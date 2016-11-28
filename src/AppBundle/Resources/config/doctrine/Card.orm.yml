@@ -108,10 +108,16 @@ AppBundle\Entity\Card:
         clues:
             type: smallint
             nullable: true
+        cluesFixed:
+            type: smallint
+            nullable: true
         doom:
             type: smallint
             nullable: true
         health:
+            type: smallint
+            nullable: true
+        healthPerInvestigator:
             type: smallint
             nullable: true
         sanity:
