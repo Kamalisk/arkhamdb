@@ -77,6 +77,8 @@
 }
 .icon-per_investigator:before {
 	content: "u";
+	vertical-align : top;
+	font-size : 12px;
 }
 .icon-null:before {
 	content: "t";
@@ -85,7 +87,7 @@
 .icon-health:before {
 	content: "";
 	width: 16px;
-	height: 16p;
+	height: 16px;
 	display: inline-block;
 	background-image: url();
 }
