@@ -63,7 +63,11 @@ format.info = function info(card) {
 			text += '<div>Clues: '+format.fancy_int(card.clues)+'.</div>';
 			break;
 		case 'enemy':
-			text += '<div>Fight: '+format.fancy_int(card.enemy_fight)+'. Health: '+format.fancy_int(card.health)+'. Evade: '+format.fancy_int(card.enemy_evade)+'.</div>';
+			text += '<div>Fight: '+format.fancy_int(card.enemy_fight)+'. Health: '+format.fancy_int(card.health)+'';
+			if (card.health_per_investigator){
+				text += '<span class="icon icon-per_investigator"></span>';
+			}
+			text += '. Evade: '+format.fancy_int(card.enemy_evade)+'.</div>';
 			text += '<div>Damage: '+format.fancy_int(card.enemy_damage)+'. Horror: '+format.fancy_int(card.enemy_horror)+'.</div>';
 			break;
 		case 'investigator':
