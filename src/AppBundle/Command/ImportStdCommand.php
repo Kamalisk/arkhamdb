@@ -128,36 +128,6 @@ class ImportStdCommand extends ContainerAwareCommand
 		$output->writeln("Done.");
 		
 		
-		// campaigns
-		
-		$output->writeln("Importing Campaigns ...");
-		$campaignFileInfo = $this->getFileInfo($path, 'campaigns.json');
-		$imported = $this->importCampaignsJsonFile($campaignFileInfo);
-		if(count($imported)) {
-			$question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
-			if(!$helper->ask($input, $output, $question)) {
-				die();
-			}
-		}
-		$this->em->flush();
-		$this->loadCollection('Campaign');
-		$output->writeln("Done.");
-		
-		
-				// scenarios
-		
-		$output->writeln("Importing Scenarios ...");
-		$scenarioFileInfo = $this->getFileInfo($path, 'scenarios.json');
-		$imported = $this->importScenariosJsonFile($scenarioFileInfo);
-		if(count($imported)) {
-			$question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
-			if(!$helper->ask($input, $output, $question)) {
-				die();
-			}
-		}
-		$this->em->flush();
-		$this->loadCollection('Scenario');
-		$output->writeln("Done.");
 		
 		
 		// second, packs
@@ -380,8 +350,7 @@ class ImportStdCommand extends ContainerAwareCommand
 					'code',
 					'position',
 					'quantity',
-					'name',
-					'is_unique'
+					'name'
 			], [
 					'faction_code',
 					'pack_code',
@@ -422,7 +391,11 @@ class ImportStdCommand extends ContainerAwareCommand
 					'back_flavor',
 					'back_name',
 					'double_sided',
-					'stage'
+					'stage',
+					'is_unique',
+					'health_per_investigator',
+					'clues_fixed'
+
 			]);
 			if($card) {				
 				$result[] = $card;
@@ -483,7 +456,11 @@ class ImportStdCommand extends ContainerAwareCommand
 			}
 		}
 		$value = $data[$key];
-		
+		if ($key == "is_unique"){
+			if (!$value){
+				$value = false;
+			}
+		}
 		//$key = str_replace("skill_", "", $key);
 		
 		if(!key_exists($key, $metadata->fieldNames)) {
@@ -507,9 +484,9 @@ class ImportStdCommand extends ContainerAwareCommand
 			
 			if ($entityName == "AppBundle\Entity\Card"){
 				if (isset($data['xp'])){
-					$entity = $this->em->getRepository($entityName)->findOneBy(['name' => $data['name'], 'xp' => $data['xp']]);				
+					$entity = $this->em->getRepository($entityName)->findOneBy(['name' => $data['name'], 'type'=> $data['type_code'], 'xp' => $data['xp']]);				
 				}else {
-					$entity = $this->em->getRepository($entityName)->findOneBy(['name' => $data['name'], 'xp' => null]);
+					$entity = $this->em->getRepository($entityName)->findOneBy(['name' => $data['name'], 'type'=> $data['type_code'], 'xp' => null]);
 				}
 			}
 			if (!$entity){
@@ -540,10 +517,13 @@ class ImportStdCommand extends ContainerAwareCommand
 				throw new \Exception("No collection for [$foreignEntityShortName] in ".json_encode($data));
 			}
 
-			//echo $foreignCode." ".$key." ".$foreignEntityShortName;
+			//echo "\n".$foreignCode." ".$key." ".$foreignEntityShortName;
 			if (!$foreignCode){
 				continue;
 			} 
+			//echo "\n";
+			//print("hvor mange ".count($this->collections[$foreignEntityShortName]));
+			//echo "\n".gettype($this->collections[$foreignEntityShortName][$foreignCode])."\n";
 			if(!key_exists($foreignCode, $this->collections[$foreignEntityShortName])) {
 				throw new \Exception("Invalid code [$foreignCode] for key [$key] in ".json_encode($data));
 			}
@@ -614,7 +594,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		}
 	}
 
-protected function importActData(Card $card, $data)
+	protected function importActData(Card $card, $data)
 	{
 		$mandatoryKeys = [
 				'clues'
@@ -655,6 +635,10 @@ protected function importActData(Card $card, $data)
 	}
 
 	protected function importAdventureData(Card $card, $data)
+	{
+
+	}
+	protected function importScenarioData(Card $card, $data)
 	{
 
 	}
@@ -730,9 +714,13 @@ protected function importActData(Card $card, $data)
 		$this->collections[$entityShortName] = [];
 
 		$entities = $this->em->getRepository('AppBundle:'.$entityShortName)->findAll();
-		
+		echo $entityShortName."\n";
 		foreach($entities as $entity) {
 			$this->collections[$entityShortName][$entity->getCode()] = $entity;
+			echo $entity->getCode()."\n";
+		}
+		if(isset($this->collections['Encounter']['cultists'])){
+			echo "wtf\n";
 		}
 	}
 	
