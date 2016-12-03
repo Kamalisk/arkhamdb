@@ -20,7 +20,7 @@
 	<td data-th="Name">
 		<span class="icon icon-{{ card.type_code}} fg-{{ card.faction_code }}"></span>
 		<a href="{{ card.url }}" class="card-tip{% if card.available == false %} card-preview{% endif %}" data-code="{{ card.code }}">
-		{{ card.name }}</a>
+		{{ card.name }}{% if card.subname%}: {{ card.subname }}{% endif %}</a>
 		{% if card.xp %}<span class="xp-{{ card.xp }}"> ({{ card.xp }})</span>{% endif %}
 	</td>
 	<td data-th="Faction" class="fg-{{ card.faction_code }}"><span class="icon-{{card.faction_code}}"></span> {{ card.faction_name }}</td>
