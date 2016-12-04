@@ -219,6 +219,9 @@ class SearchController extends Controller
 			$params[] = $request->query->get('q');
 		}
 		foreach(SearchController::$searchKeys as $key => $searchName) {
+			if ($key == "q"){
+				continue;
+			}
 			$val = $request->query->get($key);
 			if(isset($val) && $val != "") {
 				if(is_array($val)) {

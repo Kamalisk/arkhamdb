@@ -301,6 +301,22 @@
 </div>
 
 </fieldset>
+
+<fieldset>
+<legend>Encounter Cards</legend>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="form-group">
+			<label for="m">Encounter Set</label>
+			<div>
+				<select class="form-control" name="m" id="m"><option value="">any</option>{% for encounter in encounters %}<option value="{{ encounter.code }}">{{ encounter.name }}</option>{% endfor %}</select>
+			</div>
+		</div>
+    </div>
+</div>
+</fieldset>
+
+
 <fieldset>
 <legend>Other</legend>
 <div class="row">
