@@ -1,6 +1,6 @@
 (function app_textcomplete(textcomplete, $) {
 
-var icons = 'guardian survivor rogue mystic seeker action reaction fast elder_sign elder_thing skull cultist lighting tablet willpower intellect combat agility'.split(' ');
+var icons = 'guardian survivor rogue mystic seeker action reaction fast free unique per_investigator null elder_sign elder_thing auto_fail skull cultist lighting tablet willpower intellect combat agility wild'.split(' ');
 
 /**
  * options: cards, icons, users
