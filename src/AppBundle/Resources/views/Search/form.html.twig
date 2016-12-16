@@ -3,7 +3,7 @@
 	<div class="row" style="margin-bottom:1em">
 		<div class="col-sm-4">
 			<div class="form-group">
-				<label for="">Faction</label> <select class="form-control" id="faction" name="faction">
+				<label for="">Class</label> <select class="form-control" id="faction" name="faction">
 					<option value="">any</option>
 					{% for faction in factions %}
 					<option value="{{ faction.code }}"{% if faction_selected is defined  and faction_selected == faction.code %} selected="selected"{% endif %}>{{ faction.name }}</option>

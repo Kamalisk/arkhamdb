@@ -177,7 +177,9 @@ class DecklistManager
 		$joinTables = [];
 		
 		if(!empty($faction)) {
-			$qb->andWhere('d.faction = :faction');
+			$qb->join('d.character', 'a');
+			$qb->where('a.faction = :faction');
+			//$qb->andWhere('d.faction = :faction');
 			$qb->setParameter('faction', $faction);
 		}
 		if(!empty($author_name)) {
