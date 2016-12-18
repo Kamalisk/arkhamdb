@@ -62,6 +62,14 @@ format.info = function info(card) {
 		case 'act':
 			text += '<div>Clues: '+format.fancy_int(card.clues)+'.</div>';
 			break;
+		case 'location':
+			console.log(card);
+			if (card.clues_fixed || card.clues == 0){
+				text += '<div>Shroud: '+format.fancy_int(card.shroud)+'. Clues: '+format.fancy_int(card.clues)+'.</div>';
+			} else {
+				text += '<div>Shroud: '+format.fancy_int(card.shroud)+'. Clues: '+format.fancy_int(card.clues)+'<span class="icon icon-per_investigator"></span>.</div>';
+			}
+			break;
 		case 'enemy':
 			text += '<div>Fight: '+format.fancy_int(card.enemy_fight)+'. Health: '+format.fancy_int(card.health)+'';
 			if (card.health_per_investigator){

@@ -13,17 +13,21 @@ function display_card_on_element(card, element, event) {
 		+ '<div class="card-faction">' + app.format.faction(card) + '</div>'
 		+ '<div><span class="card-type">'+card.type_name+((card.type_code == "agenda" || card.type_code == "act") ? '. Stage '+card.stage : '')+(card.slot ? '. '+card.slot : "")+(card.subtype_name ? '. '+card.subtype_name : "")+'</span></div>'
 		+ '<div class="card-traits">' + app.format.traits(card) + '</div>'
-		+ '<div class="card-info">' + app.format.info(card) + '</div>'
 		;
 		
 		if (card.type_code == "agenda" || card.type_code == "act"){
+			content += '<div class="card-info">' + app.format.info(card) + '</div>';
 			content += '<div class="card-flavor">' + card.flavor + '</div><div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>' 			
-		} else if (card.type_code == "location"){
-			content += '<div class="card-flavor">' + card.back_flavor + '</div>';
+		} else if (card.type_code == "location"){			
 			if (card.back_text){
-				content += '<div class="card-text">' + card.back_text + '</div>';
-			}
+				content += '<div class="card-text">' + app.format.back_text(card) + '</div>';
+			}			
+			content += '<div class="card-flavor">' + card.back_flavor + '</div>';
+			content += '<hr />';
+			content += '<div class="card-info">' + app.format.info(card) + '</div>';
+			content += '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>'
 		}else {
+			content += '<div class="card-info">' + app.format.info(card) + '</div>';
 			content += '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>'
 			if (card.double_sided){
 				content += '<hr />';
@@ -33,8 +37,11 @@ function display_card_on_element(card, element, event) {
 				if (card.back_text){
 					content += '<div class="card-text border-'+card.faction_code+'">' + app.format.back_text(card) + '</div>';
 				}
-				content += '</div>';
 			}
+		}
+		
+		if (card.victory){
+			content += '<div class="card-type">Victory ' + card.victory + '.</div>'
 		}
 
 		
