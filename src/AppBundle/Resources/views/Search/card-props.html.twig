@@ -47,6 +47,8 @@
 	{% if card.clues == 0 %}<span title="Clues" class="icon icon-clues color-clues"></span>Clues: {{card.clues}}{% endif %}
 	</div>
 	{% endif %}
+	{% if card.clues is null and card.type_code == 'act' %}<div>Clues: &ndash;</div>{% endif %}
+	{% if card.doom is null and card.type_code == 'agenda' %}<div>Doom: &ndash;</div>{% endif %}
 	{% if card.skill_willpower or card.skill_intellect or card.skill_combat or card.skill_agility or card.skill_wild %}
 	<div>
 	Test Icons:

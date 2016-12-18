@@ -63,7 +63,6 @@ format.info = function info(card) {
 			text += '<div>Clues: '+format.fancy_int(card.clues)+'.</div>';
 			break;
 		case 'location':
-			console.log(card);
 			if (card.clues_fixed || card.clues == 0){
 				text += '<div>Shroud: '+format.fancy_int(card.shroud)+'. Clues: '+format.fancy_int(card.clues)+'.</div>';
 			} else {

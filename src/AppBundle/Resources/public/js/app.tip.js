@@ -17,7 +17,7 @@ function display_card_on_element(card, element, event) {
 		
 		if (card.type_code == "agenda" || card.type_code == "act"){
 			content += '<div class="card-info">' + app.format.info(card) + '</div>';
-			content += '<div class="card-flavor">' + card.flavor + '</div><div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>' 			
+			content += '<div class="card-flavor">' + card.flavor + '</div><div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>' 
 		} else if (card.type_code == "location"){			
 			if (card.back_text){
 				content += '<div class="card-text">' + app.format.back_text(card) + '</div>';
