@@ -48,9 +48,10 @@ class ReviewController extends Controller
         	throw new \Exception("This card does not exist.");
         }
         
-        if(!$card->getPack()->getDateRelease()) 
+        if(!$card->getPack()->getDateRelease() && !$is_faq) 
         {
-        	throw new \Exception("You may not write a review for an unreleased card.");
+        	// let unreleased cards be reviewed because why not 
+        	//throw new \Exception("You may not write a review for an unreleased card.");
         }
 
         // checking the user didn't already write a review for that card
