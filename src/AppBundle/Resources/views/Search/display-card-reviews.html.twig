@@ -1,4 +1,3 @@
-{% if card.available == true %}
 
 <div class="col-md-12" style="margin-top:2em">
 <form method="POST" action="{{ path('card_review_post') }}" style="clear:right" id="faq-edit-form">
@@ -41,6 +40,8 @@
 
 {% endif %}
 </div>
+
+{% if card.available == true %}
 
 <div class="col-md-12" style="margin-top:2em">
 	<div style="line-height:34px" id="reviews-header">
@@ -87,6 +88,9 @@
 	{% endif %}
 </div>
 {% else %}
+<div id="reviews-header">
+	
+</div>
 <div class="col-md-12" style="margin-top:2em">
 	<p class="text-muted">Reviews will be enabled for this card when it is officially released.</p>
 </div>

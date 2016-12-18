@@ -77,10 +77,74 @@ function display_card_on_element(card, element, event) {
 tip.display = function display(event) {	
 	var code = $(this).data('code');
 	var card = app.data.cards.findById(code);
-
 	if (!card) return;
+	if ($(this).hasClass('spoiler')){
+		var card = {
+			"name": "Encounter Spoiler",
+			"text": "Encounter cards are hidden by default, click to reveal this card.\n You can also turn off spoiler protection for this session or change the setting in your user preferences\n <i>\"The oldest and strongest emotion of mankind is fear, and the oldest and strongest kind of fear is fear of the unknown\"</i>",
+			"traits": "",
+			"faction_name": "Spoiler",
+			"type_name": "Hidden",
+			"pack_name": "Unseen Horrors",
+			"flavour": "",
+			"position": "???"
+		};
+		display_card_on_element(card, this, event);
+		return
+	}
 	display_card_on_element(card, this, event);
 };
+
+/**
+ * @memberOf tip
+ * @param event
+ */
+tip.reveal = function reveal(event) {	
+	if ($(this).hasClass('spoiler')){
+		$(this).removeClass('spoiler');
+		$('.spoiler', this.parentNode.parentNode).removeClass('spoiler');
+		event.preventDefault();
+	}
+};
+
+/**
+ * @memberOf tip
+ * @param event
+ */
+tip.update_spoiler_cookie = function update_spoiler_cookie(event) {	
+	if ($(this).is(':checked')){
+		createCookie("spoilers", "hide");
+		window.location.reload(false);
+	} else {
+		createCookie("spoilers", "show");
+		window.location.reload(false);
+	}
+};
+
+function createCookie(name,value,days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        var expires = "; expires=" + date.toUTCString();
+    }
+    else var expires = "";
+    document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
+function eraseCookie(name) {
+    createCookie(name,"",-1);
+}
 
 /**
  * @memberOf tip
@@ -113,12 +177,27 @@ tip.set_hide_event = function set_hide_event(opt_hide_event) {
 
 $(document).on('start.app', function () {
 	$('body').on({
-		mouseover : tip.display
+		mouseover : tip.display,
+		click : tip.reveal
 	}, 'a.card-tip');
+	
+	$('body').on({
+		click : tip.reveal
+	}, '.spoiler');
 
 	$('body').on({
 		mouseover : tip.guess
 	}, 'a:not(.card-tip)');
+	
+	$('body').on({
+		change : tip.update_spoiler_cookie
+	}, '#spoilers');
+
+});
+$(document).ready(function () {
+	if (readCookie("spoilers") == "show"){
+		$('#spoilers').prop('checked', false);
+	}
 });
 
 })(app.tip = {}, jQuery);

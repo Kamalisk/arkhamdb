@@ -56,7 +56,7 @@ class CardsData
 			'[seeker]' => '<span class="icon-seeker" title="Seeker"></span>',
 			'[mystic]' => '<span class="icon-mystic" title="Mystic"></span>',
 			'[neutral]' => '<span class="icon-neutral" title="Neutral">Neutral</span>',
-			'[neutral]' => '<span class="icon-per_investigator" title="Per Investigator"></span>'
+			'[per_investigator]' => '<span class="icon-per_investigator" title="Per Investigator"></span>'
 		];
 		
 		return str_replace(array_keys($displayTextReplacements), array_values($displayTextReplacements), $text);
@@ -503,6 +503,10 @@ class CardsData
 	                } else {
         	                $cardinfo['imagesrc'] = null;
                 	}
+		}
+		
+		if(isset($cardinfo['encounter_code']) && $cardinfo['encounter_code']) {
+			$cardinfo['spoiler'] = 1;
 		}
 		
 		if(isset($cardinfo['double_sided']) && $cardinfo['double_sided']) {

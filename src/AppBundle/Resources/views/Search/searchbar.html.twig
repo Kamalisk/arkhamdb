@@ -11,3 +11,8 @@
 		{% include 'AppBundle:Search:searchoptions.html.twig' %}
 	</form>
 </div>
+<div class="row">
+	<div class="col-sm-3 pull-right">
+	<label><input type="checkbox" id="spoilers" name="spoilers" value="hide" {% if not show_spoilers %} checked="checked"{% endif %}> Hide Encounter Spoilers</label>
+	</div>
+</div>

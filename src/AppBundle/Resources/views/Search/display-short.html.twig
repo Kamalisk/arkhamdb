@@ -7,7 +7,9 @@
 <div class="shortlist" style="-webkit-column-count: 3;-moz-column-count: 3;column-count: 3;">
 {% for i in 0..value|length-1 %}
 {% set card = value[i] %}
+<span class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">
 <a href="{{ card.url }}" class="{% if card.available == false %} card-preview{% endif %}">{{ card.name }}</a><br>
+</span>
 {% endfor %}
 </div>
 {% endfor %}

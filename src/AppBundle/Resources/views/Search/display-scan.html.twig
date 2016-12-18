@@ -8,8 +8,8 @@
 {% for col in 0..3 %}{% set index = row*4+col %}
 {% if index in cards|keys %}
 {% set card = cards[index] %}
-<div class="col-sm-3" style="margin-bottom:30px">
-	<a href="{{ card.url }}" class="no-popup"><img src="{{ card.imagesrc }}" alt="{{ card.name }}" style="width:100%" class="img-responsive"></a>
+<div class="col-sm-3{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}" style="margin-bottom:30px">
+	<a href="{{ card.url }}" class="no-popup"><img src="{{ card.imagesrc }}" alt="{{ card.name }}" style="width:100%" class="img-responsive card-view-image"></a>
 </div>
 {% endif %}
 {% endfor %}

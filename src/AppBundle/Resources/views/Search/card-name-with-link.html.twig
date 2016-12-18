@@ -1,4 +1,4 @@
 {% if card.is_unique == true %}<span class="icon-unique"></span> {% endif %}
-<a href="{{ card.url }}" class="card-name card-tip{% if card.available == false %} card-preview{% endif %}" data-code="{{ card.code }}">{{ card.name }}
+<a href="{{ card.url }}" class="card-name card-tip{% if card.available == false %} card-preview{% endif %}{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}" data-code="{{ card.code }}">{{ card.name }}
 </a>
-{% if card.subname %}<div class="card-subname small">{{ card.subname }}</div> {% endif %}
+{% if card.subname %}<div class="card-subname small{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">{{ card.subname }}</div> {% endif %}

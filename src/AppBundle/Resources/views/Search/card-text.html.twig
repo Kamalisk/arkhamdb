@@ -1,6 +1,8 @@
+<div class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">
 <div class="card-text border-{{ card.faction_code }}">
 	{{ card.text|raw }}
 </div>
 {% if card.victory %}
 	<div class="victory">Victory {{card.victory}}.</div>
 {% endif %}
+</div>

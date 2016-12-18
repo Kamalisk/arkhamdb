@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class SearchController extends Controller
 {
@@ -147,7 +148,12 @@ class SearchController extends Controller
 		if(!$pack) {
 			throw $this->createNotFoundException('This pack does not exist');
 		}
-
+		
+		$show_spoilers = false;
+		if ($request->cookies->get('spoilers') && $request->cookies->get('spoilers') == "show"){
+			$show_spoilers = true;
+		}
+		
 		$game_name = $this->container->getParameter('game_name');
 		$publisher_name = $this->container->getParameter('publisher_name');
 		
@@ -169,6 +175,7 @@ class SearchController extends Controller
 				'decks' => $decks,
 				'pagetitle' => $pack->getName(),
 				'meta' => $meta,
+				'show_spoilers' => $show_spoilers
 			)
 		);
 	}
@@ -209,7 +216,7 @@ class SearchController extends Controller
 	{
 		$view = $request->query->get('view') ?: 'list';
 		$sort = $request->query->get('sort') ?: 'name';
-		$decks = $request->query->get('decks') ?: 'player';
+		$decks = $request->query->get('decks') ?: 'all';
 
 		$operators = array(":","!","<",">");
 		$factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findAll();
@@ -246,8 +253,10 @@ class SearchController extends Controller
 		$find = array('q' => implode(" ",$params));
 		if($sort != "name") $find['sort'] = $sort;
 		if($view != "list") $find['view'] = $view;
-		if($decks != "player") $find['decks'] = $decks;
-		return $this->redirect($this->generateUrl('cards_find').'?'.http_build_query($find));
+		if($decks != "all") $find['decks'] = $decks;
+		
+		$response = $this->redirect($this->generateUrl('cards_find').'?'.http_build_query($find));
+		return $response;
 	}
 
 	/**
@@ -260,7 +269,7 @@ class SearchController extends Controller
 		$q = $request->query->get('q');
 		$page = $request->query->get('page') ?: 1;
 		$view = $request->query->get('view') ?: 'list';
-		$decks = $request->query->get('decks') ?: 'player';
+		$decks = $request->query->get('decks') ?: 'all';
 		$sort = $request->query->get('sort') ?: 'name';
 
 		// we may be able to redirect to a better url if the search is on a single set
@@ -280,7 +289,7 @@ class SearchController extends Controller
 		    }
 		}
 
-		return $this->forward(
+		$response = $this->forward(
 			'AppBundle:Search:display',
 			array(
 				'q' => $q,
@@ -291,16 +300,24 @@ class SearchController extends Controller
 				'_route' => $request->get('_route')
 			)
 		);
+		
+		return $response;
 	}
 
-	public function displayAction($q, $view="card", $decks="player", $sort, $page=1, $pagetitle="", $meta="", Request $request)
+	public function displayAction($q, $view="card", $decks="all", $sort, $page=1, $pagetitle="", $meta="", Request $request)
 	{
 		$response = new Response();
 		$response->setPublic();
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-	    static $availability = [];
+		static $availability = [];
+		
+		$show_spoilers = 0;
+		if ($request->cookies->get('spoilers') && $request->cookies->get('spoilers') == "show"){
+			$show_spoilers = 1;
+		}
 
+		
 		$cards = [];
 		$first = 0;
 		$last = 0;
@@ -326,11 +343,14 @@ class SearchController extends Controller
 		// reconstruction de la bonne chaine de recherche pour affichage
 		$q = $this->get('cards_data')->buildQueryFromConditions($conditions);
 		$include_encounter = false;
-		if ($view == "card" || $decks == "all"){
-			$include_encounter = true;
-		}
+		$include_encounter = true;
+		$spoiler_protection = true;
+		
 		if ($decks == "encounter"){
 			$include_encounter = "encounter";
+		}
+		if ($decks == "player"){
+			$include_encounter = false;
 		}
 		
 		if($q && $rows = $this->get('cards_data')->get_search_rows($conditions, $sort, false, $include_encounter))
@@ -368,7 +388,7 @@ class SearchController extends Controller
 			for($rowindex = $first; $rowindex < $last && $rowindex < count($rows); $rowindex++) {
 				$card = $rows[$rowindex];
 				$pack = $card->getPack();
-				$cardinfo = $this->get('cards_data')->getCardInfo($card, false);
+				$cardinfo = $this->get('cards_data')->getCardInfo($card, false, $spoiler_protection);
 				if(empty($availability[$pack->getCode()])) {
 					$availability[$pack->getCode()] = false;
 					if($pack->getDateRelease() && $pack->getDateRelease() <= new \DateTime()) $availability[$pack->getCode()] = true;
@@ -420,6 +440,7 @@ class SearchController extends Controller
 			"view" => $view,
 			"decks" => $decks,
 			"sort" => $sort,
+			"show_spoilers" => $show_spoilers
 		));
 
 		if(empty($pagetitle)) {
@@ -439,6 +460,7 @@ class SearchController extends Controller
 			"pagetitle" => $pagetitle,
 			"metadescription" => $meta,
 			"includeReviews" => $includeReviews,
+			"show_spoilers" => $show_spoilers
 		), $response);
 	}
 

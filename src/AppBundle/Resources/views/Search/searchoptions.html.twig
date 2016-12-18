@@ -16,10 +16,11 @@
 	<option value="short"   {% if view|default('list') == "short"   %}selected{% endif %}>View as Simple List</option>
 </select>
 </div>
+
 <div class="col-sm-3" style="margin-bottom:.5em">
-<select name="decks" class="form-control">
-	<option value="player"    {% if decks|default('player') == "list"    %}selected{% endif %}>Only Player Cards</option>
-	<option value="encounter" {% if decks|default('player') == "encounter" %}selected{% endif %}>Only Encounter Cards</option>
-	<option value="all"    {% if decks|default('player') == "all"    %}selected{% endif %}>All Cards</option>
-</select>
+	<select name="decks" class="form-control">
+		<option value="player"    {% if decks|default('player') == "list"    %}selected{% endif %}>Only Player Cards</option>
+		<option value="encounter" {% if decks|default('player') == "encounter" %}selected{% endif %}>Only Encounter Cards</option>
+		<option value="all"    {% if decks|default('player') == "all"    %}selected{% endif %}>All Cards</option>
+	</select>
 </div>
