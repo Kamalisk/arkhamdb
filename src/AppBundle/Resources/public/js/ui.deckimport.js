@@ -5,38 +5,46 @@ var name_regexp;
 ui.on_content_change = function on_content_change(event) {
 	var text = $(content).val(),
 		slots = {}, 
-		faction_code, 
-		faction_name;
+		investigator_code, 
+		investigator_name;
 	
 	text.match(name_regexp).forEach(function (token) {
 		var qty = 1, name = token.trim(), card;
 		if(token[0] === '(') {
 			return;
 		}
-		if(name.match(/^(\d+)x (.*)/)) {
+		if(name.match(/^(\d+)x ([^()]*)/)) {
 			qty = parseInt(RegExp.$1, 10);
 			name = RegExp.$2.trim();
 		}
-		if(card = app.data.cards.findOne({ name: name })) {
-			slots[card.code] = qty;
-		}
-		else if(faction = app.data.factions.findOne({ name: name })) {
-			faction_code = faction.code;
-			faction_name = faction.name;
+		console.log(name);
+		if(card = app.data.cards.findOne({ name: name })) {			
+			if (card.type_code == "investigator"){
+				investigator_code = card.code;
+				investigator_name = card.name;
+			} else {
+				slots[card.code] = qty;	
+			}
+			
 		}
 		else {
 			console.log('rejecting string ['+name+']');
 		}
 	})
 	
+	if (!investigator_code){
+		window.alert("Unable to locate investigator");
+		return;
+	}
+	
 	app.deck.init({
-		faction_code: faction_code,
-		faction_name: faction_name,
+		investigator_code: investigator_code,
+		investigator_name: investigator_name,
 		slots: slots
 	});
 	app.deck.display('#deck');
-	$('input[name=content').val(app.deck.get_json());
-	$('input[name=faction_code').val(faction_code);
+	$('input[name=content]').val(app.deck.get_json());
+	$('input[name=faction_code]').val(investigator_code);
 }
 
 /**

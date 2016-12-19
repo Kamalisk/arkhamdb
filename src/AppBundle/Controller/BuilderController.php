@@ -222,7 +222,7 @@ class BuilderController extends Controller
         $content = [];
         $lines = explode("\n", $text);
         $identity = null;
-        foreach ($lines as $line) {
+        foreach ($lines as $line) {            
             $matches = [];
             if (preg_match('/^\s*(\d)x?([\pLl\pLu\pN\-\.\'\!\: ]+)/u', $line, $matches)) {
                 $quantity = intval($matches[1]);
@@ -232,22 +232,27 @@ class BuilderController extends Controller
                     $quantity = intval($matches[2]);
                     $name = trim($matches[1]);
                 } else
-                    if (empty($identity) && preg_match('/([^\(]+):([^\(]+)/', $line, $matches)) {
+                    if (empty($identity) && preg_match('/([^\(]+)/', $line, $matches)) {
                         $quantity = 1;
-                        $name = trim($matches[1] . ":" . $matches[2]);
-                        $identity = $name;
+                        $name = trim($matches[1]);
                     } else {
                         continue;
                     }
             $card = $em->getRepository('AppBundle:Card')->findOneBy(array(
                     'name' => $name
             ));
-            if ($card) {
-                $content[$card->getCode()] = $quantity;
+            if ($card) {            		
+            	  if ($card->getType()->getCode() == "investigator"){
+            	  	$identity = $card->getCode();
+            	  }else {
+            	  	$content[$card->getCode()] = $quantity;
+            	  }
+                
             }
         }
         return array(
                 "content" => $content,
+                "faction_code"=> $identity,
                 "description" => ""
         );
 
