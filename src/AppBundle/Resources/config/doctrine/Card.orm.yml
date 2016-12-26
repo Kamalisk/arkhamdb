@@ -118,7 +118,7 @@ AppBundle\Entity\Card:
             type: smallint
             nullable: true
         healthPerInvestigator:
-            type: smallint
+            type: boolean
             nullable: true
         sanity:
             type: smallint
@@ -176,6 +176,14 @@ AppBundle\Entity\Card:
             type: boolean
             nullable: false
             column: is_unique
+        hidden:
+            type: boolean
+            nullable: true
+            column: hidden
+        permanent:
+            type: boolean
+            nullable: true
+            column: permanent
         doubleSided:
             type: boolean
             nullable: true

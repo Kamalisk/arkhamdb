@@ -198,7 +198,7 @@ class CardsData
 		}else {
 			$qb->andWhere("(c.encounter IS NULL)");
 		}
-		
+		$qb->andWhere("c.hidden is null or c.hidden = false");
 
 		
 		foreach($conditions as $condition)

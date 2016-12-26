@@ -46,7 +46,7 @@ class ImportStdCommand extends ContainerAwareCommand
 
 		/* @var $helper \Symfony\Component\Console\Helper\QuestionHelper */
 		$helper = $this->getHelper('question');
-
+		//$this->loadCollection('Card');
 		// factions
 		
 		$output->writeln("Importing Classes...");
@@ -356,7 +356,9 @@ class ImportStdCommand extends ContainerAwareCommand
 					'pack_code',
 					'type_code',
 					'subtype_code',
-					'encounter_code'
+					'encounter_code',
+					'back_card_code',
+					'front_card_code'
 			], [
 					'deck_limit',
 					'encounter_position',
@@ -394,7 +396,9 @@ class ImportStdCommand extends ContainerAwareCommand
 					'stage',
 					'is_unique',
 					'health_per_investigator',
-					'clues_fixed'
+					'clues_fixed',
+					'hidden',
+					'permanent'
 
 			]);
 			if($card) {				
@@ -438,6 +442,8 @@ class ImportStdCommand extends ContainerAwareCommand
 		
 		$different = ($currentJsonValue !== $newJsonValue);
 		if($different) {
+			print_r(gettype($currentJsonValue));
+			print_r(gettype($newJsonValue));
 			$this->output->writeln("Changing the <info>$fieldName</info> of <info>".$entity->toString()."</info> ($currentJsonValue => $newJsonValue)");
 			$setter = 'set'.ucfirst($fieldName);
 			$entity->$setter($newTypedValue);
@@ -461,8 +467,16 @@ class ImportStdCommand extends ContainerAwareCommand
 				$value = false;
 			}
 		}
-		//$key = str_replace("skill_", "", $key);
 		
+		if ($key == "deck_options" && $value){
+			//print_r($value);
+		}
+		
+		if ($key == "health_per_investigator" || $key == "is_unique"){
+			if ($value){
+				//echo $key." ".$value."\n";
+			}
+		}
 		if(!key_exists($key, $metadata->fieldNames)) {
 			throw new \Exception("Missing column [$key] in entity ".$entityName);
 		}
@@ -504,9 +518,11 @@ class ImportStdCommand extends ContainerAwareCommand
 		
 		foreach($foreignKeys as $key) {
 			$foreignEntityShortName = ucfirst(str_replace('_code', '', $key));
-	
+			if ($key === "front_card_code"){
+				$foreignEntityShortName = "Card";
+			}
 			if(!key_exists($key, $data)) {
-				if ($key === "subtype_code" || $key === "encounter_code"){
+				if ($key === "subtype_code" || $key === "encounter_code" || $key === "back_card_code" || $key === "front_card_code"){
 					continue;
 				}
 				throw new \Exception("Missing key [$key] in ".json_encode($data));
@@ -714,13 +730,13 @@ class ImportStdCommand extends ContainerAwareCommand
 		$this->collections[$entityShortName] = [];
 
 		$entities = $this->em->getRepository('AppBundle:'.$entityShortName)->findAll();
-		echo $entityShortName."\n";
+		//echo $entityShortName."\n";
 		foreach($entities as $entity) {
 			$this->collections[$entityShortName][$entity->getCode()] = $entity;
-			echo $entity->getCode()."\n";
+			//echo $entity->getCode()."\n";
 		}
 		if(isset($this->collections['Encounter']['cultists'])){
-			echo "wtf\n";
+			//echo "wtf\n";
 		}
 	}
 	

@@ -33,7 +33,9 @@ class Card implements \Serializable
 				'deck_limit',
 				'back_text',
 				'back_name',
-				'back_flavor'
+				'back_flavor',
+				'permanent',
+				'hidden'
 		];
 	
 		$externalFields = [
@@ -376,6 +378,18 @@ class Card implements \Serializable
      * @var boolean
      */
     private $isUnique;
+    
+    
+    /**
+     * @var boolean
+     */
+    private $hidden;
+    
+    
+    /**
+     * @var boolean
+     */
+    private $permanent;
     
     /**
      * @var boolean
@@ -1460,6 +1474,55 @@ class Card implements \Serializable
         return $this->isUnique;
     }
 
+
+
+    /**
+     * Set hidden
+     *
+     * @param boolean $hidden
+     *
+     * @return Card
+     */
+    public function setHidden($hidden)
+    {
+        $this->hidden = $hidden;
+
+        return $this;
+    }
+
+    /**
+     * Get hidden
+     *
+     * @return boolean
+     */
+    public function getHidden()
+    {
+        return $this->hidden;
+    }
+
+    /**
+     * Set permanent
+     *
+     * @param boolean $permanent
+     *
+     * @return Card
+     */
+    public function setPermanent($permanent)
+    {
+        $this->permanent = $permanent;
+
+        return $this;
+    }
+
+    /**
+     * Get permanent
+     *
+     * @return boolean
+     */
+    public function getPermanent()
+    {
+        return $this->permanent;
+    }
 
 
     /**
