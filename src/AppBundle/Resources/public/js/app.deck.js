@@ -174,7 +174,8 @@ deck.get_draw_deck = function get_draw_deck(sort) {
 		},
 		xp: {
 			'$exists': true
-		}
+		},
+		permanent: false
 	});
 }
 
@@ -290,7 +291,7 @@ deck.get_layout_data = function get_layout_data(options) {
 	var req_count = 0;
 	var req_met_count = 0;
 	
-	if (card.deck_requirements){
+	if (card && card.deck_requirements){
 		if (card.deck_requirements.size){
 			size = card.deck_requirements.size;
 		}
@@ -341,13 +342,21 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 	var query = {};
 	query[sortKey] = sortValue;
 	if (out == true){
-		query.xp = {
-			'$exists': false
-		};
+		query["$or"] = [
+			{
+				xp: {
+					'$exists': false
+				}
+			},
+			{
+				permanent: true
+			}
+		];
 	} else {
 		query.xp = {
 			'$in': [0,1,2,3,4,5]
-		};	
+		};
+		query.permanent = false;
 	}
 	
 	var cards = deck.get_cards({ name: 1 }, query);
@@ -502,7 +511,7 @@ deck.get_problem = function get_problem() {
 	// get investigator data
 	var card = app.data.cards.findById(this.get_investigator_code());
 	var size = 30;
-	if (card.deck_requirements){
+	if (card && card.deck_requirements){
 		if (card.deck_requirements.size){
 			size = card.deck_requirements.size;
 		}
@@ -522,6 +531,8 @@ deck.get_problem = function get_problem() {
 				return "investigator";
 			}
 		}
+	} else {
+		
 	}
 	
 	// at least 60 others cards
@@ -572,32 +583,29 @@ deck.can_include_card = function can_include_card(card) {
 	}
 	
 	var investigator = app.data.cards.findById(investigator_code);
-	if (investigator.deck_options) {
+	if (investigator && investigator.deck_options) {
 		if (investigator.deck_options.faction && investigator.deck_options.faction[card.faction_code]){
-			return true;
+			var allowed = investigator.deck_options.faction[card.faction_code];
+			if (card.xp && allowed.min && allowed.max){
+				if (card.xp >= allowed.min && card.xp <= allowed.max){
+					return true;
+				}
+			} else if (card.xp && allowed.min){
+				if (card.xp == allowed.min){
+					return true;
+				}
+			}else {
+				return true;
+			}
 		}
+
 		if (investigator.deck_options.cards && investigator.deck_options.cards.any){
-			return true;
+			var allowed = investigator.deck_options.cards.any;
+			if (card.xp >= allowed.min && card.xp <= allowed.max){
+				return true;
+			}
 		}
 	}
-	
-	// allow all cards
-	// XXX
-	return false;
-	// neutral card => yes
-	//if(card.faction_code === 'neutral') return true;
-
-	// in-house card => yes
-	//if(card.faction_code === faction_code) return true;
-
-	// out-of-house and loyal => no
-	//if(card.is_loyal) return false;
-
-	// minor faction => yes
-	//var minor_faction_code = deck.get_minor_faction_code();
-	//if(minor_faction_code && minor_faction_code === card.faction_code) return true;
-
-	// if none above => no
 	return false;
 }
 
