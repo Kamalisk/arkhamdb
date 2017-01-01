@@ -509,6 +509,7 @@ class CardsData
 			$cardinfo['spoiler'] = 1;
 		}
 		
+		
 		if(isset($cardinfo['double_sided']) && $cardinfo['double_sided']) {
 			$imageurl = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'_back.png');
 			$imagepath= $this->rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl);
@@ -533,7 +534,7 @@ class CardsData
 				$cardinfo['deck_requirements'] = $this->deckValidationHelper->parseReqString($cardinfo['deck_requirements']);
 			}
 			if (isset($cardinfo['deck_options']) && $cardinfo['deck_options']){
-				$cardinfo['deck_options'] = $this->deckValidationHelper->parseReqString($cardinfo['deck_options']);
+				$cardinfo['deck_options'] = json_decode($cardinfo['deck_options']);
 			}
 			if (isset($cardinfo['restrictions']) && $cardinfo['restrictions']){
 				$cardinfo['restrictions'] = $this->deckValidationHelper->parseReqString($cardinfo['restrictions']);

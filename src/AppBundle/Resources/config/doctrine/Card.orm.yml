@@ -159,7 +159,7 @@ AppBundle\Entity\Card:
             nullable: true
         deckOptions:
             type: string
-            length: 255
+            length: 500
             nullable: true
         restrictions:
             type: string
@@ -178,12 +178,14 @@ AppBundle\Entity\Card:
             column: is_unique
         hidden:
             type: boolean
-            nullable: true
             column: hidden
+            options:
+                default: false
         permanent:
             type: boolean
-            nullable: true
             column: permanent
+            options:
+                default: false
         doubleSided:
             type: boolean
             nullable: true

@@ -258,10 +258,11 @@ ui.build_pack_selector = function build_pack_selector() {
 ui.init_selectors = function init_selectors() {
 	$('[data-filter=faction_code]').find('input[name=neutral]').prop("checked", true).parent().addClass('active');
 	var investigator = app.data.cards.findById(app.deck.get_investigator_code());
-	if (investigator.deck_options && investigator.deck_options.faction){
-		$.each(investigator.deck_options.faction, function(key, value){
-			$('[data-filter=faction_code]').find('input[name='+key+']').prop("checked", true).parent().addClass('active');
-		})
+	//console.log(investigator);
+	if (investigator.faction_code){		
+		//$.each(investigator.deck_options.faction, function(key, value){
+			$('[data-filter=faction_code]').find('input[name='+investigator.faction_code+']').prop("checked", true).parent().addClass('active');
+		//})
 	}
 	$('[data-filter=subtype_code]').find('input[name=basicweakness]').prop("checked", true).parent().addClass('active');
 	$('[data-filter=xp]').find('input[name=xp0]').prop("checked", true).parent().addClass('active');

@@ -583,29 +583,96 @@ deck.can_include_card = function can_include_card(card) {
 	}
 	
 	var investigator = app.data.cards.findById(investigator_code);
-	if (investigator && investigator.deck_options) {
-		if (investigator.deck_options.faction && investigator.deck_options.faction[card.faction_code]){
-			var allowed = investigator.deck_options.faction[card.faction_code];
-			if (card.xp && allowed.min && allowed.max){
-				if (card.xp >= allowed.min && card.xp <= allowed.max){
-					return true;
+	
+	if (investigator && investigator.deck_options && investigator.deck_options.length) {
+		
+		//console.log(card);
+		for (var i = 0; i < investigator.deck_options.length; i++){
+			var option = investigator.deck_options[i];
+			//console.log(option);
+			
+			var valid = false;
+			
+			if (option.faction){
+				// needs to match at least one faction				
+				var faction_valid = false;
+				for(var j = 0; j < option.faction.length; j++){
+					var faction = option.faction[j];
+					if (card.faction_code == faction){
+						faction_valid = true;
+					}
 				}
-			} else if (card.xp && allowed.min){
-				if (card.xp == allowed.min){
-					return true;
+				
+				if (!faction_valid){
+					continue;
 				}
+				//console.log("faction valid");
+			}
+			
+			if (option.type){
+				// needs to match at least one faction				
+				var type_valid = false;
+				for(var j = 0; j < option.type.length; j++){
+					var type = option.type[j];
+					if (card.type_code == type){
+						type_valid = true;
+					}
+				}
+				
+				if (!type_valid){
+					continue;
+				}
+				//console.log("faction valid");
+			}
+			
+			if (option.trait){
+				// needs to match at least one faction				
+				var trait_valid = false;				
+				
+				for(var j = 0; j < option.trait.length; j++){
+					var trait = option.trait[j];
+					//console.log(card.traits, trait.toUpperCase()+".");
+					
+					if (card.traits.toUpperCase().indexOf(trait.toUpperCase()+".") !== -1){
+						trait_valid = true;
+					}
+				}
+				
+				if (!trait_valid){
+					continue;
+				}
+				//console.log("faction valid");
+			}
+			
+			if (option.level){
+				// needs to match at least one faction
+				var level_valid = false;
+				//console.log(option.level, card.xp, card.xp >= option.level.min, card.xp <= option.level.max);
+				
+				if (typeof card.xp !== 'undefined' && option.level){
+					if (card.xp >= option.level.min && card.xp <= option.level.max){
+						level_valid = true;
+					}else {
+						continue;	
+					}
+				}
+				//console.log("level valid");
+			}
+			
+			
+			if (option.not){
+				return false;
 			}else {
 				return true;
 			}
-		}
-
-		if (investigator.deck_options.cards && investigator.deck_options.cards.any){
-			var allowed = investigator.deck_options.cards.any;
-			if (card.xp >= allowed.min && card.xp <= allowed.max){
-				return true;
-			}
+			
 		}
 	}
+	
+	if (!card.xp){
+		
+	}
+	
 	return false;
 }
 
