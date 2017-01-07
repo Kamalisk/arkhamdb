@@ -15,6 +15,7 @@ var date_creation,
 	problem_labels = {
 		too_few_cards: "Contains too few cards",
 		too_many_cards: "Contains too many cards",
+		deck_options_limit: "Contains too many limited cards", 
 		too_many_copies: "Contains too many copies of a card (by title)",
 		invalid_cards: "Contains forbidden cards (cards not permitted by Investigator)",
 		investigator: "Doesn't comply with the Investigator requirements"
@@ -43,6 +44,7 @@ deck.init = function init(data) {
 	tags = data.tags;
 	investigator_code = data.investigator_code;
 	investigator_name = data.investigator_name;
+	investigator = false;
 	unsaved = data.unsaved;
 	user_id = data.user_id;
 	xp = data.xp;
@@ -51,9 +53,13 @@ deck.init = function init(data) {
 	
 	if(app.data.isLoaded) {
 		deck.set_slots(data.slots);
+		investigator = app.data.cards.findById(investigator_code);
 	} else {
 		console.log("deck.set_slots put on hold until data.app");
-		$(document).on('data.app', function () { deck.set_slots(data.slots); });
+		$(document).on('data.app', function () { 
+			deck.set_slots(data.slots); 
+			investigator = app.data.cards.findById(investigator_code);
+		});
 	}
 }
 
@@ -285,7 +291,8 @@ deck.get_layout_data = function get_layout_data(options) {
 	
 	//var investigator = deck.get_investigator();
 	var problem = deck.get_problem();
-
+	$("input[name=problem]").val(problem);
+	
 	var card = app.data.cards.findById(this.get_investigator_code());
 	var size = 30;
 	var req_count = 0;
@@ -534,16 +541,6 @@ deck.get_problem = function get_problem() {
 	} else {
 		
 	}
-	
-	// at least 60 others cards
-	if(deck.get_draw_deck_size() < size) {
-		return 'too_few_cards';
-	}
-	
-	// at least 60 others cards
-	if(deck.get_draw_deck_size() > size) {
-		return 'too_many_cards';
-	}
 
 	// too many copies of one card
 	if(_.findKey(deck.get_copies_and_deck_limit(), function(value) {
@@ -554,12 +551,37 @@ deck.get_problem = function get_problem() {
 	if(deck.get_invalid_cards().length > 0) {
 		return 'invalid_cards';
 	}
+		
+	//console.log(investigator);
+	for (var i = 0; i < investigator.deck_options.length; i++){		
+		if (investigator.deck_options[i].limit_count && investigator.deck_options[i].limit){
+			if (investigator.deck_options[i].limit_count > investigator.deck_options[i].limit){
+				return 'investigator';
+			}
+		}
+	}
+	
+		// at least 60 others cards
+	if(deck.get_draw_deck_size() < size) {
+		return 'too_few_cards';
+	}
+	
+	// at least 60 others cards
+	if(deck.get_draw_deck_size() > size) {
+		return 'too_many_cards';
+	}
 	
 }
 
 deck.get_invalid_cards = function get_invalid_cards() {
+	//var investigator = app.data.cards.findById(investigator_code);
+	if (investigator){
+		for (var i = 0; i < investigator.deck_options.length; i++){
+			investigator.deck_options[i].limit_count = 0;
+		}
+	}
 	return _.filter(deck.get_cards(), function (card) {
-		return ! deck.can_include_card(card);
+		return ! deck.can_include_card(card, true);
 	});
 }
 
@@ -567,7 +589,7 @@ deck.get_invalid_cards = function get_invalid_cards() {
  * returns true if the deck can include the card as parameter
  * @memberOf deck
  */
-deck.can_include_card = function can_include_card(card) {
+deck.can_include_card = function can_include_card(card, limit_count) {
 	
 	// hide investigators
 	if (card.type_code === "investigator") {
@@ -582,7 +604,7 @@ deck.can_include_card = function can_include_card(card) {
 		return false;
 	}
 	
-	var investigator = app.data.cards.findById(investigator_code);
+	//var investigator = app.data.cards.findById(investigator_code);
 	
 	if (investigator && investigator.deck_options && investigator.deck_options.length) {
 		
@@ -663,6 +685,10 @@ deck.can_include_card = function can_include_card(card) {
 			if (option.not){
 				return false;
 			}else {
+				if (limit_count && option.limit){
+					//console.log(card);
+					option.limit_count += card.indeck;
+				}
 				return true;
 			}
 			

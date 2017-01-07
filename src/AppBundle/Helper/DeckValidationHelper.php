@@ -165,8 +165,11 @@ class DeckValidationHelper
 		}
 		$labels = [
 				'too_few_cards' => "Contains too few cards",
+				'too_many_cards' => "Contains too many cards",
 				'too_many_copies' => "Contains too many copies of a card (by title)",
 				'invalid_cards' => "Contains forbidden cards (cards no permitted by Faction or Agenda)",
+				'deck_options_limit' => "Contains too many limited cards", 
+				'investigator' => "Doesn't comply with the Investigator requirements"
 		];
 		if(isset($labels[$problem])) {
 			return $labels[$problem];
