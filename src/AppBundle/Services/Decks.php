@@ -143,6 +143,8 @@ class Decks
 		}
 		if ($problem){
 			$deck->setProblem($problem);
+		} else {
+			$deck->setProblem("");
 		}
 		//$deck->setProblem($this->deck_validation_helper->findProblem($deck));
 
