@@ -84,6 +84,8 @@ user.anonymous = function anonymous() {
 user.update = function update() {
 	user.store();
 	user.dropdown('<ul class="dropdown-menu"><li><a href="'
+			+ Routing.generate('collection_packs')
+			+ '">My Collection</a></li><li><a href="'
 			+ Routing.generate('user_profile_edit')
 			+ '">Edit account</a></li><li><a href="'
 			+ user.data.public_profile_url
@@ -121,7 +123,7 @@ user.display_ads = function display_ads() {
 user.loaded.done(user.update).fail(user.anonymous).always(user.display_ads);
 
 $(function() {
-	if($.isEmptyObject(user.params)) {
+	if($.isEmptyObject(user.params) && !user.forceReload) {
 		user.retrieve();
 	} else {
 		user.query();

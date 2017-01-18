@@ -44,7 +44,7 @@ class Decks
 	 * @param unknown $content
 	 * @param unknown $source_deck
 	 */
-	public function saveDeck($user, $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck)
+	public function saveDeck($user, $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck, $problem="")
 	{
 		$deck_content = [ ];
 
@@ -141,8 +141,12 @@ class Decks
 					'qty' => $qty
 			);
 		}
-
-		$deck->setProblem($this->deck_validation_helper->findProblem($deck));
+		if ($problem){
+			$deck->setProblem($problem);
+		} else {
+			$deck->setProblem(null);
+		}
+		//$deck->setProblem($this->deck_validation_helper->findProblem($deck));
 
 		return $deck->getId ();
 	}

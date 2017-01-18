@@ -75,6 +75,11 @@ class User extends BaseUser
     private $isShareDecks = false;
 
     /**
+     * @var string
+     */
+    private $ownedPacks;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $decks;
@@ -260,6 +265,27 @@ class User extends BaseUser
     {
         return $this->donation;
     }
+
+    /**
+     * Set ownedPacks
+     *
+     * @param string $ownedPacks
+     *
+     * @return User
+     */
+    public function setOwnedPacks($ownedPacks) {
+        $this->ownedPacks = $ownedPacks;
+        return $this;
+    }
+    /**
+     * Get ownedPacks
+     *
+     * @return string
+     */
+    public function getOwnedPacks() {
+        return $this->ownedPacks;
+    }
+
 
     /**
      * Set isNotifAuthor

@@ -119,6 +119,7 @@ class UserController extends Controller
                     'name' => $user->getUsername(),
                     'faction' => $user->getColor(),
                     'donation' => $user->getDonation(),
+                    'owned_packs' => $user->getOwnedPacks()
             );
 
             if(isset($decklist_id)) {
@@ -163,8 +164,13 @@ class UserController extends Controller
                     /* @var $review \AppBundle\Entity\Review */
                     foreach($reviews as $review) {
                         if($review->getUser()->getId() === $user->getId()) {
-                            $content['review_id'] = $review->getId();
-                            $content['review_text'] = $review->getTextMd();
+                            if ($review->getFaq()){
+                            	$content['faq_id'] = $review->getId();
+	                            $content['faq_text'] = $review->getTextMd();
+                            } else {
+	                            $content['review_id'] = $review->getId();
+	                            $content['review_text'] = $review->getTextMd();
+	                          }
                         }
                     }
                 }

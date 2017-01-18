@@ -53,28 +53,28 @@ ui.init_config_buttons = function init_config_buttons() {
 }
 
 /**
- * removes titles, which cannot be used in decks
- * @memberOf ui
- */
-ui.remove_melee_titles = function remove_melee_titles() {
-	app.data.cards.remove({
-		'type_code': 'title'
-	});
-}
-
-/**
  * sets the maxqty of each card
  * @memberOf ui
  */
 ui.set_max_qty = function set_max_qty() {
+	var cores = 0;
+	if($("[name=core]").is(":checked")){
+		cores++;
+	}
+	if($("[name=core-2]").is(":checked")){
+		cores++;
+	}
+	
 	app.data.cards.find().forEach(function(record) {
 		var max_qty = Math.min(2, record.deck_limit);
-		if (record.pack_code == 'core')
-			max_qty = Math.min(max_qty, record.quantity * Config['core-set']);
+		if (record.pack_code == 'core') {
+			max_qty = Math.min(max_qty, record.quantity * cores);
+		}
 		app.data.cards.updateById(record.code, {
 			maxqty : max_qty
 		});
 	});
+	
 }
 
 /**
@@ -110,16 +110,11 @@ ui.build_faction_selector = function build_faction_selector() {
 	$('[data-filter=subtype_code]').append(label);
 	
 	var label = $('<label class="btn btn-default btn-sm" data-code="'
-			+ "special" + '" title="'+"Special"+'"><input type="checkbox" name="' + "special"
-			+ '"><span class="icon-' + "special" + '"></span>' + "Special" + '</label>');
+			+ "special" + '" title="'+"Character"+'"><input type="checkbox" name="' + "special"
+			+ '"><span class="icon-' + "special" + '"></span>' + "Character" + '</label>');
 	label.tooltip({container: 'body'});
 	$('[data-filter=subtype_code]').append(label);
 	
-	var label = $('<label class="btn btn-default btn-sm" data-code="'
-			+ "specialweakness" + '" title="'+"Special Weakness"+'"><input type="checkbox" name="' + "specialweakness"
-			+ '"><span class="icon-' + "specialweakness" + '"></span>' + "Special Weakness" + '</label>');
-	label.tooltip({container: 'body'});
-	$('[data-filter=subtype_code]').append(label);
 	
 	var label = $('<label class="btn btn-default btn-sm" data-code="'
 			+ "campaign" + '" title="'+"Campaign"+'"><input type="checkbox" name="' + "campaign"
@@ -171,6 +166,22 @@ ui.build_type_selector = function build_type_selector() {
  */
 ui.build_pack_selector = function build_pack_selector() {
 	$('[data-filter=pack_code]').empty();
+	
+	//$('<li><h2>Defaults to packs in your collection</p></h2>').appendTo('[data-filter=pack_code]');
+	
+	// parse pack owner string
+	var collection = {};
+	var no_collection = true;
+	if (app.user.data && app.user.data.owned_packs) {
+      var packs = app.user.data.owned_packs.split(',');
+      _.forEach(packs, function(str) {
+          collection[str] = 1;
+          no_collection = false;
+      });
+			//console.log(app.user.data.owned_packs, collection);
+  }
+	
+	
 	app.data.packs.find({
 		name: {
 			'$exists': true
@@ -182,21 +193,61 @@ ui.build_pack_selector = function build_pack_selector() {
 	    }
 	}).forEach(function(record) {
 		// checked or unchecked ? checked by default
-		var checked = true;
+		var checked = false;
+		if (collection[record.id]){
+			checked = true;
+		}
 		// if not yet available, uncheck pack
-		if(record.available === "") checked = false;
+		//if(record.available === "") checked = false;
 		// if user checked it previously, check pack
-		if(localStorage && localStorage.getItem('set_code_' + record.code) !== null) checked = true;
+		// if(localStorage && localStorage.getItem('set_code_' + record.code) !== null) checked = true;
 		// if pack used by cards in deck, check pack
+		
+		if (no_collection && localStorage && localStorage.getItem('set_code_' + record.code) === "true"){
+			checked = true;
+		} else if (no_collection && localStorage && localStorage.getItem('set_code_' + record.code) === "false"){
+			checked = false;
+		} else if (no_collection && record.available !== ""){
+			checked = true;
+		}
+
 		var cards = app.data.cards.find({
 			pack_code: record.code,
 			indeck: {
 				'$gt': 0
 			}
 		});
-		if(cards.length) checked = true;
+		if(cards.length) {
+			checked = true;
+		}
 
 		$('<li><a href="#"><label><input type="checkbox" name="' + record.code + '"' + (checked ? ' checked="checked"' : '') + '>' + record.name + '</label></a></li>').appendTo('[data-filter=pack_code]');
+		// special case for core set 2
+		if (record.code == "core"){
+			if (collection[record.id+"-2"]){
+				checked = true;
+			}else {
+				checked = false;
+			}
+			
+			if (no_collection && localStorage && localStorage.getItem('set_code_' + record.code) === "true"){
+				checked = true;
+			} else if (no_collection && localStorage && localStorage.getItem('set_code_' + record.code) === "false"){
+				checked = false;
+			} else if (no_collection && record.available !== ""){
+				//checked = true;
+			}
+			
+			var cards = app.data.cards.find({
+				pack_code: record.code,
+				indeck: {
+					'$gt': 1
+				}
+			});
+			if(cards.length) checked = true;
+
+			$('<li><a href="#"><label><input type="checkbox" name="' + record.code + '-2"' + (checked ? ' checked="checked"' : '') + '>Second ' + record.name + '</label></a></li>').appendTo('[data-filter=pack_code]');
+		}
 	});
 }
 
@@ -207,18 +258,14 @@ ui.build_pack_selector = function build_pack_selector() {
 ui.init_selectors = function init_selectors() {
 	$('[data-filter=faction_code]').find('input[name=neutral]').prop("checked", true).parent().addClass('active');
 	var investigator = app.data.cards.findById(app.deck.get_investigator_code());
-	if (investigator.deck_options && investigator.deck_options.faction){
-		$.each(investigator.deck_options.faction, function(key, value){
-			$('[data-filter=faction_code]').find('input[name='+key+']').prop("checked", true).parent().addClass('active');
-		})
+	//console.log(investigator);
+	if (investigator.faction_code){		
+		//$.each(investigator.deck_options.faction, function(key, value){
+			$('[data-filter=faction_code]').find('input[name='+investigator.faction_code+']').prop("checked", true).parent().addClass('active');
+		//})
 	}
 	$('[data-filter=subtype_code]').find('input[name=basicweakness]').prop("checked", true).parent().addClass('active');
 	$('[data-filter=xp]').find('input[name=xp0]').prop("checked", true).parent().addClass('active');
-	//$('[data-filter=mode_filter]').find('input[name=playercards]').prop("checked", true).parent().addClass('active');
-	//$('[data-filter=faction_code]').find('input[name='+app.deck.get_faction_code()+']').prop("checked", true).parent().addClass('active');
-	//var minor_faction_code = app.deck.get_minor_faction_code();
-	//if(minor_faction_code) $('[data-filter=faction_code]').find('input[name='+minor_faction_code+']').prop("checked", true).parent().addClass('active');
-	//$('[data-filter=type_code]').find('input[name=character]').prop("checked", true).parent().addClass('active');
 }
 
 function uncheck_all_others() {
@@ -243,7 +290,7 @@ function check_all_inactive() {
  * @memberOf ui
  * @param event
  */
-ui.on_click_filter = function on_click_filter(event) {
+ui.on_click_filter = function on_click_filter(event) {	
 	var dropdown = $(this).closest('ul').hasClass('dropdown-menu');
 	if (dropdown) {
 		if (event.shiftKey) {
@@ -255,15 +302,11 @@ ui.on_click_filter = function on_click_filter(event) {
 		}
 		event.stopPropagation();
 	} else {
-		if ($(event.target).closest('[data-filter]').attr("data-filter") == "subtype_code"){
-			uncheck_all_active.call(this);
-		} else {
-			if (!event.shiftKey && Config['buttons-behavior'] === 'exclusive' || event.shiftKey && Config['buttons-behavior'] === 'cumulative') {
-				if (!event.altKey) {
-					uncheck_all_active.call(this);
-				} else {
-					check_all_inactive.call(this);
-				}
+		if (!event.shiftKey && Config['buttons-behavior'] === 'exclusive' || event.shiftKey && Config['buttons-behavior'] === 'cumulative') {
+			if (!event.altKey) {
+				uncheck_all_active.call(this);
+			} else {
+				check_all_inactive.call(this);
 			}
 		}
 	}
@@ -309,6 +352,7 @@ ui.on_submit_form = function on_submit_form(event) {
 ui.on_config_change = function on_config_change(event) {
 	var name = $(this).attr('name');
 	var type = $(this).prop('type');
+	console.log(name, type);
 	switch(type) {
 	case 'radio':
 		var value = $(this).val();
@@ -323,10 +367,6 @@ ui.on_config_change = function on_config_change(event) {
 	switch(name) {
 		case 'buttons-behavior':
 		break;
-		case 'core-set':
-		ui.set_max_qty();
-		ui.reset_list();
-		break;
 		case 'display-column':
 		ui.update_list_template();
 		ui.refresh_list();
@@ -336,6 +376,29 @@ ui.on_config_change = function on_config_change(event) {
 		ui.toggle_suggestions();
 		ui.refresh_list();
 		ui.refresh_list2();
+		break;
+		default:
+		ui.refresh_list();
+		ui.refresh_list2();
+	}
+}
+
+
+/**
+ * @memberOf ui
+ * @param event
+ */
+ui.on_core_change = function on_core_change(event) {
+	var name = $(this).attr('name');
+	var type = $(this).prop('type');
+	if (localStorage) {
+		localStorage.setItem('set_code_' + name, $(this).is(":checked")  );
+	}
+	switch(name) {
+		case 'core':
+		case 'core-2':
+		ui.set_max_qty();
+		ui.reset_list();
 		break;
 		default:
 		ui.refresh_list();
@@ -441,12 +504,10 @@ ui.on_quantity_change = function on_quantity_change(card_code, quantity) {
 ui.setup_event_handlers = function setup_event_handlers() {
 	
 	$('#global_filters [data-filter]').on({
-		change : ui.refresh_list,
+		
 		click : ui.on_click_filter
 	}, 'label');
-	$('#global_filters [data-filter]').on({
-		change : ui.refresh_list2
-	}, 'label');
+	
 	$('#build_filters [data-filter]').on({
 		change : ui.refresh_list,
 		click : ui.on_click_filter
@@ -481,10 +542,12 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	});
 
 	$('#config-options').on('change', 'input', ui.on_config_change);
+	$('#global_filters [data-filter=pack_code]').on('change', 'input', ui.on_core_change);
 	$('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 	$('#special-collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 	
-
+	$('#deck').on('click', 'a[data-random]', ui.select_basic_weakness);
+	
 	$('#cardModal').on('keypress', function(event) {
 		var num = parseInt(event.which, 10) - 48;
 		$('#cardModal input[type=radio][value=' + num + ']').trigger('change');
@@ -494,6 +557,29 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	$('thead').on('click', 'a[data-sort]', ui.on_table_sort_click);
 
 }
+
+
+ui.select_basic_weakness = function select_basic_weakness() {
+	// replace the random weakness card in the deck with a random weakness
+	var weaknesses = app.data.cards.find({"subtype_code" : "basicweakness"});
+	var filtered_weaknesses = [];
+	weaknesses.forEach(function (card){
+		//console.log(card);
+		
+		if($("[name="+card.pack_code+"]").is(":checked") && card.name != "Random Basic Weakness" && card.indeck < card.maxqty){
+			filtered_weaknesses.push(card);
+		}
+	});
+	if (filtered_weaknesses.length > 0){
+		var weakness = filtered_weaknesses[ Math.round(Math.random(0, 1) * (filtered_weaknesses.length-1)) ];
+		if ($(this) && $(this).data("random")){
+			ui.on_quantity_change($(this).data("random"), 0);	
+		}
+		ui.on_quantity_change(weakness.code, weakness.indeck+1);
+	}
+	
+}
+
 
 /**
  * returns the current card filters as an array
@@ -515,9 +601,14 @@ ui.get_filters = function get_filters(prefix) {
 						'$in': ['basicweakness']
 					};
 				} else if($("input[name=special]").prop('checked')) {
-					filters['type_code'] = {
-						'$in': ['asset','event','skill']
+					filters['encounter_code'] = {
+						'$exists': false
 					};
+					filters['subtype_code'] = {
+						'$nin': ['basicweakness']
+					};
+					
+					console.log(filters);
 				} else if($("input[name=specialweakness]").prop('checked')) {
 					filters['subtype_code'] = {
 						'$in': ['weakness']
@@ -546,7 +637,12 @@ ui.get_filters = function get_filters(prefix) {
 							if($(elt).prop('checked')) arr.push(4);
 							if($(elt).prop('checked')) arr.push(5);
 						} else {
-							if($(elt).prop('checked')) arr.push($(elt).attr('name'));
+							if ($(elt).attr('name') == "core-2"){
+								if($(elt).prop('checked')) arr.push("core");
+							}else {
+								if($(elt).prop('checked')) arr.push($(elt).attr('name'));	
+							}
+							
 						}
 					}
 				);
@@ -850,8 +946,7 @@ ui.on_dom_loaded = function on_dom_loaded() {
  * called when the app data is loaded
  * @memberOf ui
  */
-ui.on_data_loaded = function on_data_loaded() {
-	ui.set_max_qty();
+ui.on_data_loaded = function on_data_loaded() {	
 	app.draw_simulator && app.draw_simulator.on_data_loaded();
 };
 
@@ -859,12 +954,14 @@ ui.on_data_loaded = function on_data_loaded() {
  * called when both the DOM and the data app have finished loading
  * @memberOf ui
  */
-ui.on_all_loaded = function on_all_loaded() {
+ui.on_all_loaded = function on_all_loaded() {	
 	ui.update_list_template();
 	ui.build_faction_selector();
 	ui.build_type_selector();
 	ui.build_pack_selector();
 	ui.init_selectors();
+	// for now this needs to be done here
+	ui.set_max_qty();
 	ui.refresh_deck();
 	ui.refresh_list();
 	ui.refresh_list2();

@@ -25,9 +25,14 @@ class BuilderController extends Controller
 
 		/* @var $em \Doctrine\ORM\EntityManager */
 		$em = $this->getDoctrine()->getManager();
-
+		
+		$user = $this->getUser();
+		//$collection = $user->getPacksOwned();
+		
 		$type = $em->getRepository('AppBundle:Type')->findOneBy(['code' => 'investigator']);
 		$investigators = $em->getRepository('AppBundle:Card')->findBy(['type' => $type], ["name"=>"ASC" ]);
+		$my_investigators = [];
+		$other_investigators = [];
 		foreach($investigators as $investigator){
 			
 			$deck_requirements = $this->get('DeckValidationHelper')->parseReqString($investigator->getDeckRequirements());
@@ -48,13 +53,17 @@ class BuilderController extends Controller
 			];
 			
 			$investigator->setDeckRequirements($req);
+			//$my_investigators[] = $investigator;
+			//$other_investigators[] = $investigator;
 		}
 
-		return $this->render('AppBundle:Builder:initbuild.html.twig', [
-				'pagetitle' => "New deck",
-				'investigators' => $investigators
-		], $response);
-    }
+			return $this->render('AppBundle:Builder:initbuild.html.twig', [
+					'pagetitle' => "New deck",
+					'investigators' => $investigators
+					//'my_investigators' => $my_investigators,
+					//'other_investigators' => $other_investigators
+			], $response);
+  }
 
     public function initbuildAction (Request $request)
     {
@@ -99,10 +108,12 @@ class BuilderController extends Controller
 							if (isset($random['target']) && $random['target']){
 								if ($random['target'] === "subtype"){
 									$subtype = $em->getRepository('AppBundle:Subtype')->findOneBy(array("code" => $random['value']));
-									$valid_targets = $em->getRepository('AppBundle:Card')->findBy(array("subtype" => $subtype->getId() ));
-									print_r($subtype->getId());
+									//$valid_targets = $em->getRepository('AppBundle:Card')->findBy(array("subtype" => $subtype->getId() ));
+									$valid_targets = $em->getRepository('AppBundle:Card')->findBy(array("name" => "Random Basic Weakness" ));
+									//print_r($subtype->getId());
 									if ($valid_targets){
 										$key = array_rand($valid_targets);
+										// should disable adding random weakness
 										$cards_to_add[] = $valid_targets[$key];
 									}
 								}
@@ -211,7 +222,7 @@ class BuilderController extends Controller
         $content = [];
         $lines = explode("\n", $text);
         $identity = null;
-        foreach ($lines as $line) {
+        foreach ($lines as $line) {            
             $matches = [];
             if (preg_match('/^\s*(\d)x?([\pLl\pLu\pN\-\.\'\!\: ]+)/u', $line, $matches)) {
                 $quantity = intval($matches[1]);
@@ -221,22 +232,27 @@ class BuilderController extends Controller
                     $quantity = intval($matches[2]);
                     $name = trim($matches[1]);
                 } else
-                    if (empty($identity) && preg_match('/([^\(]+):([^\(]+)/', $line, $matches)) {
+                    if (empty($identity) && preg_match('/([^\(]+)/', $line, $matches)) {
                         $quantity = 1;
-                        $name = trim($matches[1] . ":" . $matches[2]);
-                        $identity = $name;
+                        $name = trim($matches[1]);
                     } else {
                         continue;
                     }
             $card = $em->getRepository('AppBundle:Card')->findOneBy(array(
                     'name' => $name
             ));
-            if ($card) {
-                $content[$card->getCode()] = $quantity;
+            if ($card) {            		
+            	  if ($card->getType()->getCode() == "investigator"){
+            	  	$identity = $card->getCode();
+            	  }else {
+            	  	$content[$card->getCode()] = $quantity;
+            	  }
+                
             }
         }
         return array(
                 "content" => $content,
+                "faction_code"=> $identity,
                 "description" => ""
         );
 
@@ -493,12 +509,13 @@ class BuilderController extends Controller
         }
 
         $name = filter_var($request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $problem = filter_var($request->get('problem'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $decklist_id = filter_var($request->get('decklist_id'), FILTER_SANITIZE_NUMBER_INT);
         $xp_spent = filter_var($request->get('xp_spent'), FILTER_SANITIZE_NUMBER_INT);
         $description = trim($request->get('description'));
         $tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-        $this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $content, $source_deck ? $source_deck : null);
+        $this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $content, $source_deck ? $source_deck : null, $problem);
         if ($source_deck){
         	$source_deck->setXpSpent($xp_spent);
         }

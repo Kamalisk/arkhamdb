@@ -31,6 +31,10 @@ app_user:
     resource: "@AppBundle/Resources/config/routing/routing_user.yml"
     prefix: /user
 
+app_collection:
+    resource: "@AppBundle/Resources/config/routing/routing_collection.yml"
+    prefix: /collection
+
 index:
     path: /
     methods: [GET]

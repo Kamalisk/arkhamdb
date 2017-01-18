@@ -4,7 +4,7 @@ cards_list:
     defaults:
         _controller: AppBundle:Search:list
         view: list
-        decks: player
+        decks: all
         sort: set
         page: 1
 

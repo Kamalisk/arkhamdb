@@ -544,3 +544,26 @@ article.review .review-comment {
 .rules-reference div#rules li            { margin-bottom: 20!important; }
 
 
+
+/** collection manager **/
+
+.btn-inner-group {
+  display: flex !important;
+  flex-direction: row !important;
+
+  :first-child {
+    flex: 1
+  }
+
+  label {
+    width: 15% !important;
+  }
+}
+
+#owned_packs {
+  .btn.active {
+    color: #FFFFFF !important;
+    background-color: #20638F !important;
+    border-color: #194F72 !important;
+  }
+}

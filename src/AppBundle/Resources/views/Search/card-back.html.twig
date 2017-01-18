@@ -1,18 +1,18 @@
 
 {% if card.double_sided %}
 <div class="col-sm-7" style="margin-bottom:2em">
-	<div>
+	<div >
 		<div class="panel panel-default border-{{ card.faction_code }}">
 			{% if card.back_name %}
 			<div class="panel-heading border-{{ card.faction_code }} bg-{{ card.faction_code }}">
 				<h3 class="panel-title">
-					{{card.back_name}} - Back
+					<div class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">{{card.back_name}} - Back</div>
 				</h3>
   		</div>
   		{% else %}
   		<div class="panel-heading border-{{ card.faction_code }} bg-{{ card.faction_code }}">
 				<h3 class="panel-title">
-					{{card.name}} - Back
+					<div class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">{{card.name}} - Back</div>
 				</h3>
   		</div>
   		{% endif %}
@@ -21,23 +21,23 @@
   			<span class="card-type">{{ card.type_name }}</span>
   			{% if card.type_code == 'agenda' or card.type_code == 'act' %}	
 					{% if card.back_flavor %}
-					<div class="card-flavor small">
+					<div class="card-flavor small{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">
 					{{ card.back_flavor|raw|nl2br }}
 					</div>
 					{% endif %}
 					{% if card.back_text %}
-					<div class="card-text border-{{ card.faction_code }}">
+					<div class="card-text border-{{ card.faction_code }}{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">
 					{{ card.back_text|raw }}
 					</div>
 					{% endif %}
 				{% else %}
 					{% if card.back_text %}
-					<div class="card-text border-{{ card.faction_code }}">
+					<div class="card-text border-{{ card.faction_code }}{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">
 					{{ card.back_text|raw }}
 					</div>
 					{% endif %}
 					{% if card.back_flavor %}
-					<div class="card-flavor small">
+					<div class="card-flavor small{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">
 					{{ card.back_flavor|raw|nl2br }}
 					</div>
 					{% endif %}
@@ -48,7 +48,7 @@
 	</div>
 </div>
 <div class="col-sm-5" style="margin-bottom:2em">
-	<div>
+	<div class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">
 		{% if card.backimagesrc %}
 		   <img src="{{ card.backimagesrc }}" alt="{{ card.name }}" class="img-responsive" style="margin:auto">
 		{% endif %}

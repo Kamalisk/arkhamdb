@@ -56,7 +56,7 @@ class CardsData
 			'[seeker]' => '<span class="icon-seeker" title="Seeker"></span>',
 			'[mystic]' => '<span class="icon-mystic" title="Mystic"></span>',
 			'[neutral]' => '<span class="icon-neutral" title="Neutral">Neutral</span>',
-			'[neutral]' => '<span class="icon-per_investigator" title="Per Investigator"></span>'
+			'[per_investigator]' => '<span class="icon-per_investigator" title="Per Investigator"></span>'
 		];
 		
 		return str_replace(array_keys($displayTextReplacements), array_values($displayTextReplacements), $text);
@@ -187,6 +187,7 @@ class CardsData
 			->leftJoin('p.cycle', 'y')
 			->leftJoin('c.type', 't')
 			->leftJoin('c.subtype', 'b')
+			->leftJoin('c.encounter', 'm')
 			->leftJoin('c.faction', 'f');
 		$qb2 = null;
 		$qb3 = null;
@@ -197,6 +198,8 @@ class CardsData
 		}else {
 			$qb->andWhere("(c.encounter IS NULL)");
 		}
+		$qb->andWhere("c.hidden is null or c.hidden = false");
+
 		
 		foreach($conditions as $condition)
 		{
@@ -311,13 +314,13 @@ class CardsData
 						{
 							$or = [];
 							foreach($condition as $arg) {
-								$code = preg_match('/^\d\d(\d\d\d|_[a-zA-Z0-9]+)$/u', $arg);
-								$acronym = preg_match('/^[A-Z]{2,}$/', $arg);
+								$code = preg_match('/^\d\d(\d\d\d[ab]?|_[a-zA-Z0-9]+)$/u', $arg);
+								$acronym = false;////preg_match('/^[A-Z]{2,}$/', $arg);
 								if($code) {
 									$or[] = "(c.code = ?$i)";
 									$qb->setParameter($i++, $arg);
 								} else if($acronym) {
-									$or[] = "(BINARY(c.name) like ?$i or BINARY(c.backName) like ?$i)";
+									$or[] = "(c.name like ?$i or c.backName like ?$i)";
 									$qb->setParameter($i++, "%$arg%");
 									$like = implode('% ', str_split($arg));
 									$or[] = "(REPLACE(c.name, '-', ' ') like ?$i or REPLACE(c.backName, '-', ' ') like ?$i)";
@@ -502,6 +505,11 @@ class CardsData
                 	}
 		}
 		
+		if(isset($cardinfo['encounter_code']) && $cardinfo['encounter_code']) {
+			$cardinfo['spoiler'] = 1;
+		}
+		
+		
 		if(isset($cardinfo['double_sided']) && $cardinfo['double_sided']) {
 			$imageurl = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'_back.png');
 			$imagepath= $this->rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl);
@@ -526,7 +534,7 @@ class CardsData
 				$cardinfo['deck_requirements'] = $this->deckValidationHelper->parseReqString($cardinfo['deck_requirements']);
 			}
 			if (isset($cardinfo['deck_options']) && $cardinfo['deck_options']){
-				$cardinfo['deck_options'] = $this->deckValidationHelper->parseReqString($cardinfo['deck_options']);
+				$cardinfo['deck_options'] = json_decode($cardinfo['deck_options']);
 			}
 			if (isset($cardinfo['restrictions']) && $cardinfo['restrictions']){
 				$cardinfo['restrictions'] = $this->deckValidationHelper->parseReqString($cardinfo['restrictions']);
@@ -665,7 +673,16 @@ class CardsData
 
     public function get_reviews($card)
     {
-        $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(array('card' => $card), array('nbVotes' => 'DESC'));
+        $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(array('card' => $card, 'faq' => false), array('nbVotes' => 'DESC'));
+
+        $response = $reviews;
+
+        return $response;
+    }
+    
+    public function get_faqs($card)
+    {
+        $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(array('card' => $card, 'faq' => true), array('nbVotes' => 'DESC'));
 
         $response = $reviews;
 

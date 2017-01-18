@@ -15,6 +15,7 @@ var date_creation,
 	problem_labels = {
 		too_few_cards: "Contains too few cards",
 		too_many_cards: "Contains too many cards",
+		deck_options_limit: "Contains too many limited cards", 
 		too_many_copies: "Contains too many copies of a card (by title)",
 		invalid_cards: "Contains forbidden cards (cards not permitted by Investigator)",
 		investigator: "Doesn't comply with the Investigator requirements"
@@ -43,6 +44,7 @@ deck.init = function init(data) {
 	tags = data.tags;
 	investigator_code = data.investigator_code;
 	investigator_name = data.investigator_name;
+	investigator = false;
 	unsaved = data.unsaved;
 	user_id = data.user_id;
 	xp = data.xp;
@@ -51,9 +53,13 @@ deck.init = function init(data) {
 	
 	if(app.data.isLoaded) {
 		deck.set_slots(data.slots);
+		investigator = app.data.cards.findById(investigator_code);
 	} else {
 		console.log("deck.set_slots put on hold until data.app");
-		$(document).on('data.app', function () { deck.set_slots(data.slots); });
+		$(document).on('data.app', function () { 
+			deck.set_slots(data.slots); 
+			investigator = app.data.cards.findById(investigator_code);
+		});
 	}
 }
 
@@ -174,7 +180,8 @@ deck.get_draw_deck = function get_draw_deck(sort) {
 		},
 		xp: {
 			'$exists': true
-		}
+		},
+		permanent: false
 	});
 }
 
@@ -284,13 +291,14 @@ deck.get_layout_data = function get_layout_data(options) {
 	
 	//var investigator = deck.get_investigator();
 	var problem = deck.get_problem();
-
+	$("input[name=problem]").val(problem);
+	
 	var card = app.data.cards.findById(this.get_investigator_code());
 	var size = 30;
 	var req_count = 0;
 	var req_met_count = 0;
 	
-	if (card.deck_requirements){
+	if (card && card.deck_requirements){
 		if (card.deck_requirements.size){
 			size = card.deck_requirements.size;
 		}
@@ -323,7 +331,6 @@ deck.get_layout_data = function get_layout_data(options) {
 	deck.update_layout_section(data, 'assets', deck.get_layout_data_one_section('type_code', 'asset', 'type_name', false));
 	deck.update_layout_section(data, 'events', deck.get_layout_data_one_section('type_code', 'event', 'type_name', false));
 	deck.update_layout_section(data, 'skills', deck.get_layout_data_one_section('type_code', 'skill', 'type_name', false));
-	//deck.update_layout_section(data, 'treachery', deck.get_layout_data_one_section('type_code', 'treachery', 'type_name', false));
 	
 	deck.update_layout_section(data, 'outassets', deck.get_layout_data_one_section('type_code', 'asset', 'type_name', true));
 	deck.update_layout_section(data, 'outevents', deck.get_layout_data_one_section('type_code', 'event', 'type_name', true));
@@ -342,13 +349,21 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 	var query = {};
 	query[sortKey] = sortValue;
 	if (out == true){
-		query.xp = {
-			'$exists': false
-		};
+		query["$or"] = [
+			{
+				xp: {
+					'$exists': false
+				}
+			},
+			{
+				permanent: true
+			}
+		];
 	} else {
 		query.xp = {
 			'$in': [0,1,2,3,4,5]
-		};	
+		};
+		query.permanent = false;
 	}
 	
 	var cards = deck.get_cards({ name: 1 }, query);
@@ -357,8 +372,10 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 		if (sortValue == "asset"){
 			$(header_tpl({code: sortValue, name: name, quantity: deck.get_nb_cards(cards)})).appendTo(section);
 			var slots = {
-				'1-Handed': [],
-				'2-Handed': [],
+				'Hand': [],
+				'Hand x2': [],
+				'Arcane': [],
+				'Arcane x2': [],
 				'Accessory': [],
 				'Accessory': [],
 				'Body': [],
@@ -367,11 +384,11 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 			};
 			cards.forEach(function (card) {
 				var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
-				if (card.slot){
-					$div.append($(card_line_tpl({card:card})+' <span class="small slot-header">'+card.slot+'</span>'));
-				}else {
-					$div.append($(card_line_tpl({card:card})));
-				}
+				//if (card.slot){
+				//	$div.append($(card_line_tpl({card:card})+' <span class="small slot-header">'+card.slot+'</span>'));
+				//}else {
+				$div.append($(card_line_tpl({card:card})));
+				//}
 				$div.prepend(card.indeck+'x ');
 				if(card.xp && card.xp > 0) {
 					$div.append(' <span class="xp-'+card.xp+'">('+card.xp+')</span>');
@@ -387,7 +404,7 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 			});
 			$.each(slots,function (index, slot) {
 				if(slot.length > 0){
-					//$('<div class="slot-header small">'+index+'</div>').appendTo(section);
+					$('<div class="slot-header small">'+index+'</div>').appendTo(section);
 					$.each(slot,function (index, div) {
 						div.appendTo(section);
 					});
@@ -398,21 +415,17 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 			cards.forEach(function (card) {
 				var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
 				
-				if (sortValue == "asset"){
-					if (card.slot){
-						$div.append($(card_line_tpl({card:card})+' <span class="small slot-header">'+card.slot+'</span>'));
-					}else {
-						$div.append($(card_line_tpl({card:card})));
-					}
-				}else {
-					$div.append($(card_line_tpl({card:card})));
-				}
+				$div.append($(card_line_tpl({card:card})));
+				
 				$div.prepend(card.indeck+'x ');
 				if(card.xp && card.xp > 0) {
 					$div.append(' <span class="xp-'+card.xp+'">('+card.xp+')</span>');
 				}
 				if(app.data.cards.find({'name': card.name}).length > 1) {
 					//$div.append(' ('+card.pack_code+')');
+				}
+				if (card.name == "Random Basic Weakness" && $("#special-collection").length > 0 ){
+					$div.append(' <a class="fa fa-random" title="Replace with randomly selected weakness from currently selected packs" data-random="'+card.code+'"> <span ></span></a> ');
 				}
 				$div.appendTo(section);
 			});
@@ -505,7 +518,7 @@ deck.get_problem = function get_problem() {
 	// get investigator data
 	var card = app.data.cards.findById(this.get_investigator_code());
 	var size = 30;
-	if (card.deck_requirements){
+	if (card && card.deck_requirements){
 		if (card.deck_requirements.size){
 			size = card.deck_requirements.size;
 		}
@@ -525,16 +538,8 @@ deck.get_problem = function get_problem() {
 				return "investigator";
 			}
 		}
-	}
-	
-	// at least 60 others cards
-	if(deck.get_draw_deck_size() < size) {
-		return 'too_few_cards';
-	}
-	
-	// at least 60 others cards
-	if(deck.get_draw_deck_size() > size) {
-		return 'too_many_cards';
+	} else {
+		
 	}
 
 	// too many copies of one card
@@ -546,12 +551,37 @@ deck.get_problem = function get_problem() {
 	if(deck.get_invalid_cards().length > 0) {
 		return 'invalid_cards';
 	}
+		
+	//console.log(investigator);
+	for (var i = 0; i < investigator.deck_options.length; i++){		
+		if (investigator.deck_options[i].limit_count && investigator.deck_options[i].limit){
+			if (investigator.deck_options[i].limit_count > investigator.deck_options[i].limit){
+				return 'investigator';
+			}
+		}
+	}
+	
+		// at least 60 others cards
+	if(deck.get_draw_deck_size() < size) {
+		return 'too_few_cards';
+	}
+	
+	// at least 60 others cards
+	if(deck.get_draw_deck_size() > size) {
+		return 'too_many_cards';
+	}
 	
 }
 
 deck.get_invalid_cards = function get_invalid_cards() {
+	//var investigator = app.data.cards.findById(investigator_code);
+	if (investigator){
+		for (var i = 0; i < investigator.deck_options.length; i++){
+			investigator.deck_options[i].limit_count = 0;
+		}
+	}
 	return _.filter(deck.get_cards(), function (card) {
-		return ! deck.can_include_card(card);
+		return ! deck.can_include_card(card, true);
 	});
 }
 
@@ -559,7 +589,7 @@ deck.get_invalid_cards = function get_invalid_cards() {
  * returns true if the deck can include the card as parameter
  * @memberOf deck
  */
-deck.can_include_card = function can_include_card(card) {
+deck.can_include_card = function can_include_card(card, limit_count) {
 	
 	// hide investigators
 	if (card.type_code === "investigator") {
@@ -574,33 +604,101 @@ deck.can_include_card = function can_include_card(card) {
 		return false;
 	}
 	
-	var investigator = app.data.cards.findById(investigator_code);
-	if (investigator.deck_options) {
-		if (investigator.deck_options.faction && investigator.deck_options.faction[card.faction_code]){
-			return true;
-		}
-		if (investigator.deck_options.cards && investigator.deck_options.cards.any){
-			return true;
+	//var investigator = app.data.cards.findById(investigator_code);
+	
+	if (investigator && investigator.deck_options && investigator.deck_options.length) {
+		
+		//console.log(card);
+		for (var i = 0; i < investigator.deck_options.length; i++){
+			var option = investigator.deck_options[i];
+			//console.log(option);
+			
+			var valid = false;
+			
+			if (option.faction){
+				// needs to match at least one faction				
+				var faction_valid = false;
+				for(var j = 0; j < option.faction.length; j++){
+					var faction = option.faction[j];
+					if (card.faction_code == faction){
+						faction_valid = true;
+					}
+				}
+				
+				if (!faction_valid){
+					continue;
+				}
+				//console.log("faction valid");
+			}
+			
+			if (option.type){
+				// needs to match at least one faction				
+				var type_valid = false;
+				for(var j = 0; j < option.type.length; j++){
+					var type = option.type[j];
+					if (card.type_code == type){
+						type_valid = true;
+					}
+				}
+				
+				if (!type_valid){
+					continue;
+				}
+				//console.log("faction valid");
+			}
+			
+			if (option.trait){
+				// needs to match at least one faction				
+				var trait_valid = false;				
+				
+				for(var j = 0; j < option.trait.length; j++){
+					var trait = option.trait[j];
+					//console.log(card.traits, trait.toUpperCase()+".");
+					
+					if (card.traits.toUpperCase().indexOf(trait.toUpperCase()+".") !== -1){
+						trait_valid = true;
+					}
+				}
+				
+				if (!trait_valid){
+					continue;
+				}
+				//console.log("faction valid");
+			}
+			
+			if (option.level){
+				// needs to match at least one faction
+				var level_valid = false;
+				//console.log(option.level, card.xp, card.xp >= option.level.min, card.xp <= option.level.max);
+				
+				if (typeof card.xp !== 'undefined' && option.level){
+					if (card.xp >= option.level.min && card.xp <= option.level.max){
+						level_valid = true;
+					}else {
+						continue;	
+					}
+				}
+				//console.log("level valid");
+			}
+			
+			
+			if (option.not){
+				return false;
+			}else {
+				if (limit_count && option.limit){
+					//console.log(card);
+					option.limit_count += card.indeck;
+				}
+				return true;
+			}
+			
 		}
 	}
 	
-	// allow all cards
-	// XXX
-	return false;
-	// neutral card => yes
-	//if(card.faction_code === 'neutral') return true;
-
-	// in-house card => yes
-	//if(card.faction_code === faction_code) return true;
-
-	// out-of-house and loyal => no
-	//if(card.is_loyal) return false;
-
-	// minor faction => yes
-	//var minor_faction_code = deck.get_minor_faction_code();
-	//if(minor_faction_code && minor_faction_code === card.faction_code) return true;
-
-	// if none above => no
+	if (!card.xp){
+		
+	}
+	
 	return false;
 }
 

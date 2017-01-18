@@ -1,4 +1,46 @@
-{% if card.available == true %}
+
+<div class="col-md-12" style="margin-top:2em">
+<form method="POST" action="{{ path('card_review_post') }}" style="clear:right" id="faq-edit-form">
+	<input type="hidden" name="card_id" value="{{ card.id }}">
+	<input type="hidden" name="review_id" value="">
+</form>
+{% if card.faqs|length %}
+	<div style="line-height:34px" id="faq-header">
+		<span style="font-size:24px">FAQs</span>
+	</div>
+
+		{% for review in card.faqs %}
+		<article class="review" data-id="{{ review.id }}" id="review-{{ review.id }}">
+			<div class="review-like">
+				<a id="review-social-icon-like" href="#" class="social-icon-like" data-toggle="tooltip" data-placement="bottom" title="Like that review">
+					<span class="fa fa-heart"></span> <span class="num">{{ review.nbVotes }}</span>
+				</a>
+			</div>
+			<div class="review-content">
+				<div class="review-text">
+					{{ review.textHtml|raw }}
+				</div>
+				<div class="review-date">
+					<time datetime="{{ review.dateCreation|date('c') }}" title="{{ review.dateCreation|date('F jS, Y') }}">{{ review.dateCreation|date('n/j/y') }}</time>
+				</div>
+				<div class="review-author">
+					<span class="username">{{ macros.username(review.user) }}</span>
+				</div>
+				{% for comment in review.comments %}
+				<div class="review-comment text-muted small">{{ comment.text|raw }}
+					&mdash;
+					<span class="username">{{ macros.username(comment.user) }}</span>
+					<time datetime="{{ comment.dateCreation|date('c') }}" title="{{ comment.dateCreation|date('F jS, Y') }}">{{ comment.dateCreation|date('n/j/y') }}</time>
+				</div>
+				{% endfor %}
+				
+			</div>
+		</article>
+		{% endfor %}
+
+{% endif %}
+</div>
+
 <div class="col-md-12" style="margin-top:2em">
 	<div style="line-height:34px" id="reviews-header">
 		<span style="font-size:24px">Reviews</span>
@@ -43,9 +85,5 @@
 	<p><i>No review yet for this card.</i></p>
 	{% endif %}
 </div>
-{% else %}
-<div class="col-md-12" style="margin-top:2em">
-	<p class="text-muted">Reviews will be enabled for this card when it is officially released.</p>
-</div>
-{% endif %}
+
            

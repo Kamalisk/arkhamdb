@@ -23,7 +23,7 @@
 	</div>
 </div>
 <div class="col-sm-5" style="margin-bottom:2em">
-	<div>
+	<div class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">
 		{% if card.imagesrc %}
 		   <img src="{{ card.imagesrc }}" alt="{{ card.name }}" class="img-responsive" style="margin:auto">
 		{% else %}
