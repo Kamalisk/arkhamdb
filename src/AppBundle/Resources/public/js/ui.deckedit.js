@@ -230,9 +230,9 @@ ui.build_pack_selector = function build_pack_selector() {
 				checked = false;
 			}
 			
-			if (no_collection && localStorage && localStorage.getItem('set_code_' + record.code) === "true"){
+			if (no_collection && localStorage && localStorage.getItem('set_code_' + record.code+"-2") === "true"){
 				checked = true;
-			} else if (no_collection && localStorage && localStorage.getItem('set_code_' + record.code) === "false"){
+			} else if (no_collection && localStorage && localStorage.getItem('set_code_' + record.code+"-2") === "false"){
 				checked = false;
 			} else if (no_collection && record.available !== ""){
 				//checked = true;
