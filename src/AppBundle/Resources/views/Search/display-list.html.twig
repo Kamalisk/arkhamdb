@@ -7,26 +7,27 @@
 <tr>
 <th>Name</th>
 <th>Class</th>
-<th>Cost</th>
+<th title="Cost">C.</th>
 <th>Type</th>
-<th>Skill Icons</th>
+<th>Icons</th>
 <th>Traits</th>
 <th>Set</th>
+<th>Encounter</th>
 </tr>
 </thead>
 {% for i in 0..cards|length-1 %}
 <tr class="{% if i%2==0 %}even{% else %}odd{% endif %}">
    {% set card = cards[i] %}
-	<td data-th="Name" style="width : 200px;">
+	<td data-th="Name">
 		<span class="icon icon-{{ card.type_code}} fg-{{ card.faction_code }}"></span>
 		<a href="{{ card.url }}" class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %} card-tip{% if card.available == false %} card-preview{% endif %}" data-code="{{ card.code }}">
 		{{ card.name }}{% if card.subname%}: {{ card.subname }}{% endif %}</a>
 		{% if card.xp %}<span class="xp-{{ card.xp }}"> ({{ card.xp }})</span>{% endif %}
 	</td>
-	<td data-th="Faction" class="fg-{{ card.faction_code }}"><span class="icon-{{card.faction_code}}"></span> {{ card.faction_name }} </td>
+	<td data-th="Faction" style="width : 100px;" class="fg-{{ card.faction_code }}"><span class="icon-{{card.faction_code}}"></span> {{ card.faction_name }} </td>
 	<td data-th="Cost" style="width : 30px;">{{ card.cost }}</td>
-	<td data-th="Type" >{{ card.type_name }}</td>
-	<td data-th="Stats">
+	<td data-th="Type" style="width : 80px;">{{ card.type_name }}</td>
+	<td data-th="Stats" style="width : 70px;">
 	<span class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">
 	{% if card.type_code == "investigator" %}
 	
@@ -42,16 +43,17 @@
 	{% elseif card.type_code == "act2" %}
 	{% if card.clues %}<b>Clues</b>: {{ card.clues }}<span title="Clues" class="icon icon-clues color-clues"></span>{% endif %}	
 	{% else %}
-	{% if card.skill_willpower %}{% for i in 1..card.skill_willpower %}<span title="Willpower" class="icon icon-willpower color-willpower"></span>{% endfor %}{% endif %}
-	{% if card.skill_intellect %}{% for i in 1..card.skill_intellect %}<span title="Intellect" class="icon icon-intellect color-intellect"></span>{% endfor %}{% endif %}
-	{% if card.skill_combat %}{% for i in 1..card.skill_combat %}<span title="Combat" class="icon icon-combat color-combat"></span>{% endfor %}{% endif %}
-	{% if card.skill_agility %}{% for i in 1..card.skill_agility %}<span title="Agility" class="icon icon-agility color-agility"></span>{% endfor %}{% endif %}
-	{% if card.skill_wild %}{% for i in 1..card.skill_wild %}<span title="Wild" class="icon icon-wild color-wild"></span>{% endfor %}{% endif %}
+	{% if card.skill_willpower %}{% for i in 1..card.skill_willpower %}<span title="Willpower" class="icon icon-willpower color-willpower"></span> {% endfor %}{% endif %}
+	{% if card.skill_intellect %}{% for i in 1..card.skill_intellect %}<span title="Intellect" class="icon icon-intellect color-intellect"></span> {% endfor %}{% endif %}
+	{% if card.skill_combat %}{% for i in 1..card.skill_combat %}<span title="Combat" class="icon icon-combat color-combat"></span> {% endfor %}{% endif %}
+	{% if card.skill_agility %}{% for i in 1..card.skill_agility %}<span title="Agility" class="icon icon-agility color-agility"></span> {% endfor %}{% endif %}
+	{% if card.skill_wild %}{% for i in 1..card.skill_wild %}<span title="Wild" class="icon icon-wild color-wild"></span> {% endfor %}{% endif %}
 	{% endif %}
 	</span>
 	</td>
-	<td data-th="Traits"><span class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">{{ card.traits }}</span></td>
-	<td data-th="Set" style="width : 300px;">{{ card.pack_name }} {{ card.position }}{% if card.encounter_code is defined %} - <a href="/find?q=m:{{card.encounter_code}}&sort=set&view=list&decks=encounter">{{card.encounter_name}}</a> {% if card.encounter_position %}{{card.encounter_position}}{% if card.quantity > 1 %}-{{card.encounter_position+card.quantity-1}}{% endif %}{% endif %}{% endif %}</td>
+	<td data-th="Traits" style="width : 170px;"><span class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">{{ card.traits }}</span></td>
+	<td data-th="Set" style="width : 180px;">{{ card.pack_name }} {{ card.position }}</td>
+	<td data-th="Encounter" style="width : 180px;">{% if card.encounter_code is defined %}<a href="/find?q=m:{{card.encounter_code}}&sort=set&view=list&decks=encounter">{{card.encounter_name}}</a> {% if card.encounter_position %}{{card.encounter_position}}{% if card.quantity > 1 %}-{{card.encounter_position+card.quantity-1}}{% endif %}{% endif %}{% endif %}</td>
 </tr>
 {% endfor %}
 </table>
