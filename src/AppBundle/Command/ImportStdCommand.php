@@ -19,6 +19,8 @@ class ImportStdCommand extends ContainerAwareCommand
 	/* @var $em EntityManager */
 	private $em;
 
+	private $links = [];
+
 	/* @var $output OutputInterface */
 	private $output;
 	
@@ -161,6 +163,20 @@ class ImportStdCommand extends ContainerAwareCommand
 			}
 		}
 		$this->em->flush();
+		// reload the cards so we can link cards
+		if ($this->links && count($this->links) > 0){
+			$this->loadCollection('Card');
+			foreach($this->links as $link){
+				$card = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $link['card_id']]);
+				$target = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $link['target_id']]);
+				if ($card && $target){
+					$card->setLinkedTo($target);
+					$output->writeln("Importing link between ".$card->getName()." and ".$target->getName().".");
+				}
+			}
+			$this->em->flush();
+		}
+		
 		$output->writeln("Done.");
 		
 	}
@@ -401,9 +417,13 @@ class ImportStdCommand extends ContainerAwareCommand
 					'permanent'
 
 			]);
-			if($card) {				
+			if($card) {
 				$result[] = $card;
 				$this->em->persist($card);
+				if (isset($cardData['back_link'])){
+					// if we have back link, store the reference here
+					$this->links[] = ['card_id'=> $card->getCode(), 'target_id'=> $cardData['back_link']];
+				}
 			}
 		}
 		
@@ -465,6 +485,22 @@ class ImportStdCommand extends ContainerAwareCommand
 		if ($key == "is_unique"){
 			if (!$value){
 				$value = false;
+			}
+		}
+		if ($key == "hidden"){
+			if (!$value){
+				$value = false;
+			}
+		}
+		if ($key == "permanent"){
+			if (!$value){
+				$value = false;
+			}
+		}
+		
+		if ($key == "deck_options"){
+			if ($value){
+				$value = json_encode($value);
 			}
 		}
 		
