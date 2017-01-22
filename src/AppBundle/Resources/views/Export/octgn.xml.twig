@@ -23,5 +23,10 @@
     <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnId }}">{{ slot.card.name }}</card>
 {% endfor %}
   </section>
+  <section name="Enemy" shared="False">
+{% for slot in deck.slots_by_type.enemy %}
+    <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnId }}">{{ slot.card.name }}</card>
+{% endfor %}
+  </section>
 <notes><![CDATA[]]></notes>
 </deck>

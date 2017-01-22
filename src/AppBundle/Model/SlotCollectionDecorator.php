@@ -86,7 +86,7 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
 	}
 	
 	public function getSlotsByType() {
-		$slotsByType = [ 'asset' => [], 'event' => [], 'skill' => [], 'treachery' => []];
+		$slotsByType = [ 'asset' => [], 'event' => [], 'skill' => [], 'treachery' => [], 'enemy' => []];
 		foreach($this->slots as $slot) {
 			if(array_key_exists($slot->getCard()->getType()->getCode(), $slotsByType)) {
 				$slotsByType[$slot->getCard()->getType()->getCode()][] = $slot;
@@ -96,7 +96,7 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
 	}
 	
 	public function getCountByType() {
-		$countByType = [ 'asset' => 0, 'event' => 0, 'skill' => 0, 'treachery' => 0 ];
+		$countByType = [ 'asset' => 0, 'event' => 0, 'skill' => 0, 'treachery' => 0, 'enemy' => 0 ];
 		foreach($this->slots as $slot) {
 			if(array_key_exists($slot->getCard()->getType()->getCode(), $countByType)) {
 				$countByType[$slot->getCard()->getType()->getCode()] += $slot->getQuantity();
