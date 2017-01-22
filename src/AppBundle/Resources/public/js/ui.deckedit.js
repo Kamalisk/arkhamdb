@@ -662,6 +662,8 @@ ui.get_filters = function get_filters(prefix) {
 	} else {
 		filters['xp']['$exists'] = true;
 	}
+	filters['deck_limit'] = {};
+	filters['deck_limit']['$exists'] = true;
 	//console.log(filters);
 	return filters;
 }
