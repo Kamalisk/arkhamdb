@@ -383,7 +383,6 @@ class ImportStdCommand extends ContainerAwareCommand
 					'traits',
 					'text',
 					'cost',
-					'octgn_id',
 					'skill_willpower',
 					'skill_intellect',
 					'skill_combat',
