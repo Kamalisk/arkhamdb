@@ -34,8 +34,8 @@ class ImportGuidsCommand extends ContainerAwareCommand
 
         $setid = $input->getArgument('setid');
         
-        $xmlstr = file_get_contents("https://raw.githubusercontent.com/TassLehoff/AGoTv2-OCTGN/master/GameDatabase/30c200c9-6c98-49a4-a293-106c06295c05/sets/$setid/set.xml");
-        
+        //$xmlstr = file_get_contents("https://raw.githubusercontent.com/TassLehoff/AGoTv2-OCTGN/master/GameDatabase/30c200c9-6c98-49a4-a293-106c06295c05/sets/$setid/set.xml");
+        $xmlstr = file_get_contents("https://raw.githubusercontent.com/GeckoTH/arkham-horror/master/o8g/Sets/Core%20Set/set.xml");
         $set = new \SimpleXMLElement($xmlstr);
         $cards = $set->cards[0];
         
@@ -44,14 +44,24 @@ class ImportGuidsCommand extends ContainerAwareCommand
         	$attributes = $card->attributes();
         	$name = (string)$attributes->name;
         	$guid = (string)$attributes->id;
+        	foreach($card->children() as $props) {
+        		$prop_atr = $props->attributes();
+        		if ((string)$prop_atr->name == "Level"){
+        			$name .= (string) $prop_atr->value;
+        		}
+        	}
+
         	$name  = str_replace('’', '\'', $name);
         	$guids[$name] = $guid;
         }
         
-        $cards = $repo->findBy(['octgnId' => null], ['code' => 'ASC']);
+        $cards = $repo->findBy(['octgnId' => null, 'encounter' => null], ['code' => 'ASC']);
 
         foreach($cards as $card) {
         	$name = $card->getName();
+        	if ($card->getXp()){
+        		$name .= $card->getXp();
+        	}
         	if(key_exists($name, $guids)) {
             	$card->setOctgnId($guids[$name]);
             	unset($guids[$name]);
