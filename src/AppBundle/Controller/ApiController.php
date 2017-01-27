@@ -328,7 +328,7 @@ class ApiController extends Controller
 
 		$cards = array();
 		$last_modified = null;
-		if($query && $rows = $this->get('cards_data')->get_search_rows($conditions, "set"))
+		if($query && $rows = $this->get('cards_data')->get_search_rows($conditions, "set", false, true))
 		{
 			for($rowindex = 0; $rowindex < count($rows); $rowindex++) {
 				if(empty($last_modified) || $last_modified < $rows[$rowindex]->getDateUpdate()) $last_modified = $rows[$rowindex]->getDateUpdate();
