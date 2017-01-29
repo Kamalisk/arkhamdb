@@ -165,12 +165,14 @@ class ImportStdCommand extends ContainerAwareCommand
 		$this->em->flush();
 		// reload the cards so we can link cards
 		if ($this->links && count($this->links) > 0){
+			$output->writeln("Resolving Links");
 			$this->loadCollection('Card');
 			foreach($this->links as $link){
 				$card = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $link['card_id']]);
 				$target = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $link['target_id']]);
 				if ($card && $target){
 					$card->setLinkedTo($target);
+					$target->setLinkedTo();
 					$output->writeln("Importing link between ".$card->getName()." and ".$target->getName().".");
 				}
 			}
@@ -596,7 +598,7 @@ class ImportStdCommand extends ContainerAwareCommand
 			$this->$functionName($entity, $data);
 		}
 
-		if($entity->serialize() !== $orig) return $entity;
+		if($entity->serialize() !== $orig || (isset($data['back_link']) && (!$entity->getLinkedTo() || $entity->getLinkedTo()->getCode() != $data['back_link']) )) return $entity;
 	}
 
 	protected function importAssetData(Card $card, $data)

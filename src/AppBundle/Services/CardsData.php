@@ -188,6 +188,7 @@ class CardsData
 			->leftJoin('c.type', 't')
 			->leftJoin('c.subtype', 'b')
 			->leftJoin('c.encounter', 'm')
+			->leftJoin('c.linked_to', 'l')
 			->leftJoin('c.faction', 'f');
 		$qb2 = null;
 		$qb3 = null;
@@ -497,12 +498,12 @@ class CardsData
 			$cardinfo['imagesrc'] = $imageurl;
 		} else {
 			$imageurl = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'.jpg');
-	                $imagepath= $this->rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl);
-        	        if(file_exists($imagepath)) {
-                	        $cardinfo['imagesrc'] = $imageurl;
-	                } else {
-        	                $cardinfo['imagesrc'] = null;
-                	}
+			$imagepath= $this->rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl);
+			if(file_exists($imagepath)) {
+				$cardinfo['imagesrc'] = $imageurl;
+			} else {
+				$cardinfo['imagesrc'] = null;
+			}
 		}
 		
 		if(isset($cardinfo['encounter_code']) && $cardinfo['encounter_code']) {
@@ -517,15 +518,19 @@ class CardsData
 				$cardinfo['backimagesrc'] = $imageurl;
 			}else {
 				$imageurl = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'_back.jpg');
-	                        $imagepath= $this->rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl);
-        	                if ( file_exists($imagepath)){
-                	                $cardinfo['backimagesrc'] = $imageurl;
-                        	}else {
-                                	$cardinfo['backimagesrc'] = null;
-	                        }
+				$imagepath= $this->rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl);
+				if ( file_exists($imagepath)){
+					$cardinfo['backimagesrc'] = $imageurl;
+				}else {
+					$cardinfo['backimagesrc'] = null;
+				}
 			}
 		}else {
 			$cardinfo['double_sided'] = false;
+		}
+
+		if (isset($cardinfo['linked_to_code']) && $cardinfo['linked_to_code']){
+			$cardinfo['linked_card'] = $this->getCardInfo($card->getLinkedTo());
 		}
 
 		if($api) {

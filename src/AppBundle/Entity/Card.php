@@ -42,7 +42,8 @@ class Card implements \Serializable
 				'faction',
 				'pack',
 				'type',
-				'encounter'
+				'encounter',
+				'linked_to'
 		];
 	
 		switch($this->type->getCode()) {
@@ -429,7 +430,12 @@ class Card implements \Serializable
     /**
      * @var \AppBundle\Entity\Card
      */
-    private $upgrade;
+    private $linked_from;
+
+    /**
+     * @var \AppBundle\Entity\Card
+     */
+    private $linked_to;
 
     /**
     * @var \AppBundle\Entity\Encounter
@@ -1705,27 +1711,26 @@ class Card implements \Serializable
     }
     
         /**
-     * set Upgrade
+     * set linkedTo
      *
      * @param \AppBundle\Entity\Card $card
      *
      * @return Card
      */
-    public function setUpgrade(\AppBundle\Entity\Card $upgrade = null)
+    public function setLinkedTo(\AppBundle\Entity\Card $linkedTo = null)
     {
-        $this->upgrade = $upgrade;
-
+        $this->linked_to = $linkedTo;
         return $this;
     }
 
     /**
-     * Get upgrade
+     * Get linkedTo
      *
      * @return \AppBundle\Entity\Card
      */
-    public function getUpgrade()
+    public function getLinkedTo()
     {
-        return $this->upgrade;
+        return $this->linked_to;
     }
     
      /**

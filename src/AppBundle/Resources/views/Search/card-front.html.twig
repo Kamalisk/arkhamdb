@@ -1,3 +1,4 @@
+
 <div class="col-sm-7">
 	<div>
 		<div class="panel panel-default border-{{ card.faction_code }}">
@@ -31,3 +32,10 @@
 		{% endif %}
 	</div>
 </div>
+
+{% block cardbackblock %} 
+{% if card.linked_card is defined %}
+{% set card = card.linked_card %}
+{% include 'AppBundle:Search:card-front.html.twig' %}
+{% endif %}
+{% endblock %}

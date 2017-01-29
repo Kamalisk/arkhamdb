@@ -394,6 +394,9 @@ class SearchController extends Controller
 					if($pack->getDateRelease() && $pack->getDateRelease() <= new \DateTime()) $availability[$pack->getCode()] = true;
 				}
 				$cardinfo['available'] = $availability[$pack->getCode()];
+				if (isset($cardinfo['linked_card'])){
+					$cardinfo['linked_card']['available'] = $availability[$pack->getCode()];
+				}
 				if($includeReviews) {
 				    $cardinfo['reviews'] = $this->get('cards_data')->get_reviews($card);
 				    $cardinfo['faqs'] = $this->get('cards_data')->get_faqs($card);
