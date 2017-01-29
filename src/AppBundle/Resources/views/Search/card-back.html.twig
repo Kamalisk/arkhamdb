@@ -1,7 +1,7 @@
 
 {% if card.double_sided %}
 <div class="col-sm-7" style="margin-bottom:2em">
-	<div >
+	<div>
 		<div class="panel panel-default border-{{ card.faction_code }}">
 			{% if card.back_name %}
 			<div class="panel-heading border-{{ card.faction_code }} bg-{{ card.faction_code }}">
@@ -50,7 +50,7 @@
 <div class="col-sm-5" style="margin-bottom:2em">
 	<div class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">
 		{% if card.backimagesrc %}
-		   <img src="{{ card.backimagesrc }}" alt="{{ card.name }}" class="img-responsive" style="margin:auto">
+		   <img src="{{ card.backimagesrc }}" alt="{{ card.name }}" class="img-responsive img-vertical-card" style="margin:auto">
 		{% endif %}
 	</div>
 </div>

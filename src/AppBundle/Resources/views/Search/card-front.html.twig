@@ -26,7 +26,7 @@
 <div class="col-sm-5" style="margin-bottom:2em">
 	<div class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">
 		{% if card.imagesrc %}
-		   <img src="{{ card.imagesrc }}" alt="{{ card.name }}" class="img-responsive" style="margin:auto">
+		   <img src="{{ card.imagesrc }}" alt="{{ card.name }}" class="img-responsive img-vertical-card" style="margin:auto">
 		{% else %}
 		   <div class="no-image" style="margin:auto"><div class="no-image-text">No image</div></div>
 		{% endif %}

@@ -253,6 +253,17 @@ div.tags span.tag:not(:first-child)::before {
 .qtip-thronesdb-text{font-size:15px }
 .qtip-thronesdb-image{}
 
+
+/***************** CARD IMAGE **************/
+
+.img-vertical-card {
+	width : auto;
+	max-width : 419px;
+	max-height : 419px;
+	border-radius : 14px;
+}
+
+
 /***************** THUMBNAIL CARD IMAGE **************/
 
 .card-thumbnail{background-attachment:scroll;background-origin:padding-box;background-clip:border-box;background-repeat:no-repeat;margin:0 0 5px 5px;position:relative;border:1px solid #000;float:right}
