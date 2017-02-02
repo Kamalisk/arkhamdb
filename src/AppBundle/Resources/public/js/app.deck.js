@@ -371,11 +371,14 @@ deck.get_layout_data = function get_layout_data(options) {
 	} else if (deck.sort_type == "factionnumber"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_code': 1, "pack_code":1, "position": 1}, {'faction_name': 1}, null));
 		options.cols = 1;
+	} else if (deck.sort_type == "factionxp"){
+		deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_code': 1, "xp":1, "name": 1}, {'faction_name': 1}, null));
+		options.cols = 1;
 	} else if (deck.sort_type == "number"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'code': 1}, null, null));
 		options.cols = 1;
 	} else if (deck.sort_type == "xp"){
-		deck.update_layout_section(data, "cards", deck.get_layout_section({'xp': 1, 'name': 1}, null, null));
+		deck.update_layout_section(data, "cards", deck.get_layout_section({'xp': -1, 'name': 1}, {xp: 1}, null));
 		options.cols = 1;
 	} else if (deck.sort_type == "cost"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'cost': 1, 'name': 1}, {'cost':1}, null));
