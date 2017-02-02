@@ -48,6 +48,17 @@
 					
 					</div>
 					<div>
+					<div class="btn-group">
+						<button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown">
+							<span class="fa fa-sort"></span> <span class="hidden-xs">Sort</span> <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" role="menu" id="menu-sort">
+							<li><a href="#" onclick="app.deck.change_sort('default')" id="btn-sort-default">by Type</a></li>
+							<li><a href="#" onclick="app.deck.change_sort('name')" id="btn-sort-name">by Name</a></li>
+							<li><a href="#" onclick="app.deck.change_sort('set')" id="btn-sort-position">by Set</a></li>
+							<li><a href="#" onclick="app.deck.change_sort('faction')" id="btn-sort-faction">by Faction</a></li>
+						</ul>
+					</div>
 					<button type="button" id="btn-print" class="btn btn-default"><span class="fa fa-print"></span> Print</button>
 					<div class="btn-group">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">

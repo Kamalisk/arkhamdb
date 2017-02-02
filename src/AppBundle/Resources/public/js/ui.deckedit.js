@@ -865,7 +865,7 @@ ui.on_deck_modified = function on_deck_modified() {
 	ui.refresh_deck();
 	ui.refresh_list();
 	ui.refresh_list2();
-	app.suggestions && app.suggestions.compute();
+	//app.suggestions && app.suggestions.compute();
 	//app.deck_history.all_changes();
 }
 
@@ -877,6 +877,7 @@ ui.refresh_deck = function refresh_deck() {
 	app.deck.display('#deck');
 	app.draw_simulator && app.draw_simulator.reset();
 	app.deck_charts && app.deck_charts.setup();
+	//app.suggestions && app.suggestions.compute();
 }
 
 /**
@@ -970,6 +971,9 @@ ui.on_all_loaded = function on_all_loaded() {
 	ui.setup_typeahead();
 	ui.setup_dataupdate();
 	app.deck_history && app.deck_history.setup('#history');
+	var investigator = app.data.cards.findById(app.deck.get_investigator_code());
+	//app.suggestions.query("sugg-"+investigator.code);
+	
 };
 
 ui.read_config_from_storage();

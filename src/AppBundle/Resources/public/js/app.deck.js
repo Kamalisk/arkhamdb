@@ -12,6 +12,8 @@ var date_creation,
 	investigator_name,
 	unsaved,
 	user_id,
+	sort_type = "default",
+	sort_dir = 1,
 	problem_labels = {
 		too_few_cards: "Contains too few cards",
 		too_many_cards: "Contains too many cards",
@@ -28,7 +30,7 @@ var date_creation,
 /*
  * Templates for the different deck layouts, see deck.get_layout_data
  */
-layouts[1] = _.template('<div class="deck-content"><%= meta %><%= assets %><%= events %><%= skills %> <%= outassets %> <%= outevents %> <%= outskills %> <%= outtreachery %> <%= outenemy %> </div>');
+layouts[1] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><div class="col-sm-6 col-print-6"><%= cards %></div></div></div>'); 
 layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><div class="col-sm-6 col-print-6"><%= assets %></div><div class="col-sm-6 col-print-6"><%= events %> <%= skills %></div></div> <hr> <div class="row"><div class="col-sm-6 col-print-6"> <%= outassets %> <%= outevents %> <%= outskills %> </div><div class="col-sm-6 col-print-6"><%= outtreachery %> <%= outenemy %></div> </div><div id="upgrade_changes"></div></div>');
 layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= images %><%= meta %></div><div class="col-sm-4"><%= assets %><%= skills %></div><div class="col-sm-4"><%= events %><%= treachery %></div></div></div>');
 
@@ -36,6 +38,7 @@ layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="
  * @memberOf deck
  */
 deck.init = function init(data) {
+	console.log(data);
 	date_creation = data.date_creation;
 	date_update = data.date_update;
 	description_md = data.description_md;
@@ -51,11 +54,14 @@ deck.init = function init(data) {
 	next_deck = data.next_deck;
 	previous_deck = data.previous_deck;
 	
+	
+	
 	if(app.data.isLoaded) {
 		deck.set_slots(data.slots);
 		investigator = app.data.cards.findById(investigator_code);
+		
 	} else {
-		console.log("deck.set_slots put on hold until data.app");
+		//console.log("deck.set_slots put on hold until data.app");
 		$(document).on('data.app', function () { 
 			deck.set_slots(data.slots); 
 			investigator = app.data.cards.findById(investigator_code);
@@ -156,18 +162,23 @@ deck.get_description_md = function get_description_md() {
 /**
  * @memberOf deck
  */
-deck.get_cards = function get_cards(sort, query) {
+deck.get_cards = function get_cards(sort, query, group) {
 	sort = sort || {};
 	sort['code'] = 1;
-
+	
 	query = query || {};
 	query.indeck = {
 		'$gt': 0
 	};
-
-	return app.data.cards.find(query, {
+	
+	var options = {
 		'$orderBy': sort
-	});
+	};
+	if (group){
+		options.$groupBy = group;
+	}
+	//console.log(query, options);
+	return app.data.cards.find(query, options);
 }
 
 /**
@@ -257,15 +268,28 @@ deck.get_included_packs = function get_included_packs() {
 	return packs;
 }
 
+
+deck.change_sort = function(sort_type){
+	deck.sort_type = sort_type;
+	if ($("#deck")){
+		deck.display('#deck');
+	}
+	if ($("#deck-content")){
+		deck.display('#deck-content');
+	}
+	
+}
+
 /**
  * @memberOf deck
  */
 deck.display = function display(container, options) {
-	
+	// XXX fetch the selected sort here
+	// default is 2 it seems
+	//console.log(options);
 	options = _.extend({sort: 'type', cols: 2}, options);
 
-	var layout_data = deck.get_layout_data(options);
-	var deck_content = layouts[options.cols](layout_data);
+	var deck_content = deck.get_layout_data(options);
 
 	$(container)
 		.removeClass('deck-loading')
@@ -286,7 +310,8 @@ deck.get_layout_data = function get_layout_data(options) {
 			outevents: '',
 			outskills: '',
 			outtreachery: '',
-			outenemy: ''
+			outenemy: '',
+			cards: ''
 	};
 	
 	//var investigator = deck.get_investigator();
@@ -316,9 +341,8 @@ deck.get_layout_data = function get_layout_data(options) {
 			}
 		}
 	}
-	
+
 	deck.update_layout_section(data, 'images', $('<div style="margin-bottom:10px"><img src="/bundles/cards/'+deck.get_investigator_code()+'.png" class="img-responsive">'));
-	
 	deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold"><a class="card card-tip data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="'+deck.get_investigator_code()+'">'+investigator_name+'</a></h4>'));
 	//deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold">'+investigator_name+'</h4>'));
 	deck.update_layout_section(data, 'meta', $('<div>'+deck.get_draw_deck_size()+' cards ('+deck.get_real_draw_deck_size()+' total)</div>').addClass(deck.get_draw_deck_size() < size ? 'text-danger': ''));
@@ -327,18 +351,87 @@ deck.get_layout_data = function get_layout_data(options) {
 	if(problem) {
 		deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+problem_labels[problem]+'</div>'));
 	}
-
-	deck.update_layout_section(data, 'assets', deck.get_layout_data_one_section('type_code', 'asset', 'type_name', false));
-	deck.update_layout_section(data, 'events', deck.get_layout_data_one_section('type_code', 'event', 'type_name', false));
-	deck.update_layout_section(data, 'skills', deck.get_layout_data_one_section('type_code', 'skill', 'type_name', false));
+	//deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+problem_labels[problem]+'</div>'));
 	
-	deck.update_layout_section(data, 'outassets', deck.get_layout_data_one_section('type_code', 'asset', 'type_name', true));
-	deck.update_layout_section(data, 'outevents', deck.get_layout_data_one_section('type_code', 'event', 'type_name', true));
-	deck.update_layout_section(data, 'outskills', deck.get_layout_data_one_section('type_code', 'skill', 'type_name', true));
-	deck.update_layout_section(data, 'outtreachery', deck.get_layout_data_one_section('type_code', 'treachery', 'type_name', true));
-	deck.update_layout_section(data, 'outenemy', deck.get_layout_data_one_section('type_code', 'enemy', 'type_name', true));
-	return data;
+	//var sort = "default";
+	//sort = $("#sort_deck_view").val();
+	if (deck.sort_type == "name"){
+		deck.update_layout_section(data, "cards", deck.get_layout_section({'name': 1}, null, null));
+		//deck.update_layout_section(data, "cards", deck.get_layout_section({'name': 1}, {"type_name":1}, null));
+		options.cols = 1;
+	} else if (deck.sort_type == "set"){
+		deck.update_layout_section(data, "cards", deck.get_layout_section({'pack_code': 1, "position": 1}, {'pack_name':1}, null));
+		options.cols = 1;
+	} else if (deck.sort_type == "faction"){
+		deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_code': 1}, {'faction_name': 1}, null));
+		options.cols = 1;
+	} else {
+
+		deck.update_layout_section(data, 'assets', deck.get_layout_data_one_section('type_code', 'asset', 'type_name', false));
+		deck.update_layout_section(data, 'events', deck.get_layout_data_one_section('type_code', 'event', 'type_name', false));
+		deck.update_layout_section(data, 'skills', deck.get_layout_data_one_section('type_code', 'skill', 'type_name', false));
+		
+		deck.update_layout_section(data, 'outassets', deck.get_layout_data_one_section('type_code', 'asset', 'type_name', true));
+		deck.update_layout_section(data, 'outevents', deck.get_layout_data_one_section('type_code', 'event', 'type_name', true));
+		deck.update_layout_section(data, 'outskills', deck.get_layout_data_one_section('type_code', 'skill', 'type_name', true));
+		deck.update_layout_section(data, 'outtreachery', deck.get_layout_data_one_section('type_code', 'treachery', 'type_name', true));
+		deck.update_layout_section(data, 'outenemy', deck.get_layout_data_one_section('type_code', 'enemy', 'type_name', true));
+	}
+	
+	return layouts[options.cols](data);
 }
+
+deck.get_layout_section = function(sort, group, filter){
+	var section = $('<div>');
+	var query = {};
+	var groups = {};
+	// if we have a group, then send the group by to the query
+	if (group){
+		var cards = deck.get_cards(sort, query, group);	
+		//console.log(group);
+	} else {
+		var cards = deck.get_cards(sort, query);
+	}
+	
+	if(cards.length) {
+		//console.log(cards);
+		//$(header_tpl({code: "Cards", name: "Cards", quantity: deck.get_nb_cards(cards)})).appendTo(section);
+		//'<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'
+		// run through each card and display display it
+		deck.create_card_group(cards).appendTo(section);
+			
+	} else if (cards.constructor !== Array){		
+		$.each(cards, function (index, group_cards) {
+		//cards.forEach(function (group_cards) {			
+			if (group_cards.constructor === Array){
+				console.log(group_cards);
+				$(header_tpl({code: index, name: index, quantity: group_cards.reduce(function(a,b){ return a + b.indeck}, 0) })).appendTo(section);
+				deck.create_card_group(group_cards).appendTo(section);
+			}
+		});
+	}
+	return section;
+}
+
+deck.create_card_group = function(cards){
+	var section = $('<div>');
+	cards.forEach(function (card) {
+		var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
+			
+		$div.append($(card_line_tpl({card:card})));
+		$div.prepend(card.indeck+'x ');
+		if(card.xp && card.xp > 0) {
+			$div.append(' <span class="xp-'+card.xp+'">('+card.xp+')</span>');
+		}
+		// add special random selection button for the random basic weakness item
+		if (card.name == "Random Basic Weakness" && $("#special-collection").length > 0 ){
+			$div.append(' <a class="fa fa-random" title="Replace with randomly selected weakness from currently selected packs" data-random="'+card.code+'"> <span ></span></a> ');
+		}
+		$div.appendTo(section);
+	});
+	return section;
+}
+
 
 deck.update_layout_section = function update_layout_section(data, section, element) {
 	data[section] = data[section] + element[0].outerHTML;
@@ -443,18 +536,6 @@ deck.set_card_copies = function set_card_copies(card_code, nb_copies) {
 	if(!card) return false;
 
 	var updated_other_card = false;
-
-	// card-specific rules
-	switch(card.type_code) {
-		case 'agenda':
-		app.data.cards.update({
-			type_code: 'agenda'
-		}, {
-			indeck: 0
-		});
-		updated_other_card = true;
-		break;
-	}
 
 	app.data.cards.updateById(card_code, {
 		indeck: nb_copies
@@ -598,6 +679,8 @@ deck.can_include_card = function can_include_card(card, limit_count) {
 	if (card.faction_code === "mythos") {
 		return false;
 	}
+	
+	
 	
 	// reject cards restricted
 	if (card.restrictions && card.restrictions.investigator &&  card.restrictions.investigator[0] !== investigator_code){
