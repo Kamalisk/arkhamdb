@@ -38,7 +38,6 @@ layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="
  * @memberOf deck
  */
 deck.init = function init(data) {
-	console.log(data);
 	date_creation = data.date_creation;
 	date_update = data.date_update;
 	description_md = data.description_md;
@@ -53,7 +52,9 @@ deck.init = function init(data) {
 	xp = data.xp;
 	next_deck = data.next_deck;
 	previous_deck = data.previous_deck;
-	
+	if (localStorage && localStorage.getItem('ui.deck.sort')) {
+		deck.sort_type = localStorage.getItem('ui.deck.sort');
+	}
 	
 	
 	if(app.data.isLoaded) {
@@ -270,6 +271,9 @@ deck.get_included_packs = function get_included_packs() {
 
 
 deck.change_sort = function(sort_type){
+	if (localStorage) {
+		localStorage.setItem('ui.deck.sort', sort_type);
+	}
 	deck.sort_type = sort_type;
 	if ($("#deck")){
 		deck.display('#deck');
