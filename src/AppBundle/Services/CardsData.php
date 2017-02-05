@@ -512,12 +512,12 @@ class CardsData
 		
 		
 		if(isset($cardinfo['double_sided']) && $cardinfo['double_sided']) {
-			$imageurl = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'_back.png');
+			$imageurl = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'b.png');
 			$imagepath= $this->rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl);
 			if ( file_exists($imagepath)){
 				$cardinfo['backimagesrc'] = $imageurl;
 			}else {
-				$imageurl = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'_back.jpg');
+				$imageurl = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'b.jpg');
 				$imagepath= $this->rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl);
 				if ( file_exists($imagepath)){
 					$cardinfo['backimagesrc'] = $imageurl;
