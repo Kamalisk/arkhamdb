@@ -197,13 +197,17 @@ class DecklistManager
 				foreach ($cards_code as $i => $card_code) {
 					/* @var $card \AppBundle\Entity\Card */
 					$card = $this->doctrine->getRepository('AppBundle:Card')->findOneBy(array('code' => $card_code));
-					if(!$card) continue;
-
-					$qb->innerJoin('d.slots', "s$i");
-					$qb->andWhere("s$i.card = :card$i");
-					$qb->setParameter("card$i", $card);
-
-					$packs[] = $card->getPack()->getId();
+					if ($card->getType()->getCode() == "investigator"){
+						$qb->innerJoin('d.character', "s$i");
+						$qb->andWhere("s$i.code = :card$i");
+						$qb->setParameter("card$i", $card_code);
+						$packs[] = $card->getPack()->getId();
+					} else {						
+						$qb->innerJoin('d.slots', "s$i");
+						$qb->andWhere("s$i.card = :card$i");
+						$qb->setParameter("card$i", $card);
+						$packs[] = $card->getPack()->getId();
+					}
 				}
 			}
 			if (!empty($packs)) {
