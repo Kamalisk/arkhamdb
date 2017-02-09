@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<deck game="30c200c9-6c98-49a4-a293-106c06295c05" sleeveid="0">
+<deck game="a6d114c7-2e2a-4896-ad8c-0330605c90bf" sleeveid="0">
   <section name="Investigator" shared="False">
     <card qty="1" id="{{ deck.investigator.octgnId }}">{{ deck.investigator.name }}</card>
   </section>
-  <section name="Assets" shared="False">
+  <section name="Asset" shared="False">
 {% for slot in deck.slots_by_type.asset %}
     <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnId }}">{{ slot.card.name }}</card>
 {% endfor %}
   </section>
-  <section name="Events" shared="False">
+  <section name="Event" shared="False">
 {% for slot in deck.slots_by_type.event %}
     <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnId }}">{{ slot.card.name }}</card>
 {% endfor %}
   </section>
-  <section name="Skills" shared="False">
+  <section name="Skill" shared="False">
 {% for slot in deck.slots_by_type.skill %}
     <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnId }}">{{ slot.card.name }}</card>
 {% endfor %}
   </section>
-  <section name="Treachery" shared="False">
+  <section name="Weakness" shared="False">
 {% for slot in deck.slots_by_type.treachery %}
     <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnId }}">{{ slot.card.name }}</card>
 {% endfor %}
-  </section>
-  <section name="Enemy" shared="False">
 {% for slot in deck.slots_by_type.enemy %}
     <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnId }}">{{ slot.card.name }}</card>
 {% endfor %}
