@@ -45,7 +45,7 @@ class ExportableDeck
 		return $array;
 	}
 	
-	public function getTextExport() 
+	public function getTextExport($exclude=0) 
 	{
 		$slots = $this->getSlots();
 		return [
@@ -54,6 +54,20 @@ class ExportableDeck
 				'draw_deck_size' => $slots->getDrawDeck()->countCards(),
 				'included_packs' => $slots->getIncludedPacks(),
 				'slots_by_type' => $slots->getSlotsByType()
+		];
+	}
+	
+	public function getOctgnExport() 
+	{
+		$slots = $this->getSlots();
+		return [
+				'name' => $this->getName(),
+				'investigator' => $this->getCharacter(),
+				'draw_deck_size' => $slots->getDrawDeck()->countCards(),
+				'included_packs' => $slots->getIncludedPacks(),
+				'slots_by_type' => $slots->getSlotsByType(1),
+				'basicweakness' => $slots->getSlotsBySubType("basicweakness"),
+				'weakness' => $slots->getSlotsBySubType("weakness")
 		];
 	}
 }

@@ -360,7 +360,7 @@ class BuilderController extends Controller
         }
         
 		$content = $this->renderView('AppBundle:Export:octgn.xml.twig', [
-        	"deck" => $deck->getTextExport()
+        	"deck" => $deck->getOctgnExport()
       	]);
         
 		$response = new Response();

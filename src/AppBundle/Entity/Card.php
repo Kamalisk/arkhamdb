@@ -1575,9 +1575,17 @@ class Card implements \Serializable
      *
      * @return boolean
      */
-    public function getOctgnId()
+    public function getOctgnId($part=0)
     {
-        return $this->octgnId;
+        if ($part){
+            $parts = explode(":", $this->octgnId);
+            if (isset($parts[$part-1])){
+                return $parts[$part-1];
+            }
+            return "";
+        } else {
+            return $this->octgnId;
+        }
     }
 
     /**

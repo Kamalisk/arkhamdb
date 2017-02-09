@@ -85,14 +85,30 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
 		return array_values($packs);
 	}
 	
-	public function getSlotsByType() {
+	public function getSlotsByType($excludeWeakness=0) {
 		$slotsByType = [ 'asset' => [], 'event' => [], 'skill' => [], 'treachery' => [], 'enemy' => []];
 		foreach($this->slots as $slot) {
 			if(array_key_exists($slot->getCard()->getType()->getCode(), $slotsByType)) {
-				$slotsByType[$slot->getCard()->getType()->getCode()][] = $slot;
+				if ($excludeWeakness){
+					if (!$slot->getCard()->getSubtype() || ($slot->getCard()->getSubtype()->getCode() != "weakness" && $slot->getCard()->getSubtype()->getCode() != "basicweakness") ){
+						$slotsByType[$slot->getCard()->getType()->getCode()][] = $slot;
+					}
+				} else {
+					$slotsByType[$slot->getCard()->getType()->getCode()][] = $slot;
+				}
 			}
 		}
 		return $slotsByType;
+	}
+	
+	public function getSlotsBySubType($subtype) {
+		$slots = [];
+		foreach($this->slots as $slot) {
+			if($slot->getCard()->getSubtype() && $slot->getCard()->getSubtype()->getCode() == $subtype) {
+				$slots[] = $slot;
+			}
+		}
+		return $slots;
 	}
 	
 	public function getCountByType() {

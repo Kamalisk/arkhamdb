@@ -52,10 +52,14 @@ class ImportGuidsCommand extends ContainerAwareCommand
         	}
 
         	$name  = str_replace('’', '\'', $name);
-        	$guids[$name] = $guid;
+        	if (isset($guids[$name])){
+        		$guids[$name] .= ":".$guid;
+        	} else {
+        		$guids[$name] = $guid;
+        	}
         }
         
-        $cards = $repo->findBy(['octgnId' => null, 'encounter' => null], ['code' => 'ASC']);
+        $cards = $repo->findBy(['encounter' => null], ['code' => 'ASC']);
 
         foreach($cards as $card) {
         	$name = $card->getName();
