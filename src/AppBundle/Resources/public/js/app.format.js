@@ -7,6 +7,18 @@ format.traits = function traits(card) {
 	return card.traits || '';
 };
 
+format.xp = function xp(xp, qty) {
+	var string = "";
+	qty = 1;
+	if (xp && xp > 0){
+		for (var i = 0; i < qty; i++){
+			string += ' <span class="card-xp xp-'+xp+'">'+"•".repeat(xp)+"</span>";
+		}
+	}
+	return string;
+};
+
+
 
 /**
  * @memberOf format

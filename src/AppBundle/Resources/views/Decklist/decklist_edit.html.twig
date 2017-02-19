@@ -21,12 +21,11 @@
 					<input type="text" class="form-control" name="name" id="name" value="{{ decklist.name }}">
 				</div>
 				<div class="form-group">
-					<label for="tournament">Placed high in a tournament?</label>
-					<select class="form-control" name="tournament" id="tournament">
-						<option value="">No</option>
-						{% for tournament in tournaments %}
-						<option value="{{ tournament.id }}"{% if decklist.tournament and tournament.id == decklist.tournament.id %} selected{% endif %}>{{ tournament.description }}</option>
-						{% endfor %}
+					<label>Tags</label><br>
+					<label><input type="checkbox" name="tags[]" value="solo" {% if decklist.tags.solo is defined %}checked="checked"{% endif %}> Solo</label>
+					<label><input type="checkbox" name="tags[]" value="multiplayer" {% if decklist.tags.multiplayer is defined %}checked="checked"{% endif %}> Multiplayer</label>
+					<label><input type="checkbox" name="tags[]" value="theme" {% if decklist.tags.theme is defined %}checked="checked"{% endif %}> Theme</label>
+					<label><input type="checkbox" name="tags[]" value="beginner" {% if decklist.tags.beginner is defined %}checked="checked"{% endif %}> Beginner</label>
 					</select>
 				</div>
 				<div class="form-group">

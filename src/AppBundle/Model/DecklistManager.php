@@ -63,7 +63,7 @@ class DecklistManager
 	{
 		$qb = $this->doctrine->createQueryBuilder();
 		$qb->select('d');
-		$qb->from('AppBundle:Decklist', 'd');
+		$qb->from('AppBundle:Decklist', 'd');		
 		if($this->faction) {
 			$qb->join('d.character', 'c');
 			$qb->where('c.faction = :faction');
@@ -72,6 +72,7 @@ class DecklistManager
 		$qb->setFirstResult($this->start);
 		$qb->setMaxResults($this->limit);
 		$qb->distinct();
+		$qb->andWhere('d.nextDeck IS NULL');
 		return $qb;
 	}
 
@@ -221,7 +222,7 @@ class DecklistManager
 				$qb->andWhere($qb->expr()->not($qb->expr()->exists($sub->getDQL())));
 			}
 		}
-
+		
 		switch($sort) {
 			case 'date':
 				$qb->orderBy('d.dateCreation', 'DESC');

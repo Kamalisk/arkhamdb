@@ -17,7 +17,7 @@ var tbody,
  * @memberOf deck_history
  */
 deck_history.all_changes = function all_changes() {
-	
+	//console.log("ch ch changes", app.deck.get_content());
 	if (snapshots.length <= 0){		
 		//console.log("boo");
 		return;
@@ -267,6 +267,7 @@ deck_history.is_changed_since_last_autosave = function is_changed_since_last_aut
 
 deck_history.init = function init(data) 
 {
+	// console.log("ch ch changes", app.deck.get_content());
 	snapshots_init = data;
 }
 

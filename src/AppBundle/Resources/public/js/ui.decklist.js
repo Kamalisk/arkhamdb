@@ -244,7 +244,7 @@
 	ui.on_all_loaded = function on_all_loaded() {
 		ui.refresh_deck();
 		app.draw_simulator && app.draw_simulator.reset();
-		
+		app.deck_upgrades.setup();
 		app.user.loaded.done(function () {
 			ui.setup_comment_form();
 			ui.add_author_actions();

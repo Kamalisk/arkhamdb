@@ -103,6 +103,15 @@ deck.get_name = function get_name() {
 	return name;
 }
 
+
+/**
+ * @memberOf deck
+ * @returns string
+ */
+deck.get_tags = function get_tags() {
+	return tags;
+}
+
 /**
  * @memberOf deck
  * @returns integer
@@ -352,6 +361,9 @@ deck.get_layout_data = function get_layout_data(options) {
 	deck.update_layout_section(data, 'meta', $('<div>'+deck.get_draw_deck_size()+' cards ('+deck.get_real_draw_deck_size()+' total)</div>').addClass(deck.get_draw_deck_size() < size ? 'text-danger': ''));
 	deck.update_layout_section(data, 'meta', $('<div>'+deck.get_xp_usage()+' experience required.</div>'));
 	deck.update_layout_section(data, 'meta', $('<div>Packs: ' + _.map(deck.get_included_packs(), function (pack) { return pack.name+(pack.quantity > 1 ? ' ('+pack.quantity+')' : ''); }).join(', ') + '</div>'));
+	if(deck.get_tags && deck.get_tags() ) {
+		deck.update_layout_section(data, 'meta', $('<div>'+deck.get_tags().replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})+'</div>'));
+	}
 	if(problem) {
 		deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+problem_labels[problem]+'</div>'));
 	}
@@ -443,7 +455,7 @@ deck.create_card_group = function(cards){
 		$div.append($(card_line_tpl({card:card})));
 		$div.prepend(card.indeck+'x ');
 		if(card.xp && card.xp > 0) {
-			$div.append(' <span class="xp-'+card.xp+'">('+card.xp+')</span>');
+			$div.append(app.format.xp(card.xp));
 		}
 		// add special random selection button for the random basic weakness item
 		if (card.name == "Random Basic Weakness" && $("#special-collection").length > 0 ){
@@ -506,7 +518,8 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 				//}
 				$div.prepend(card.indeck+'x ');
 				if(card.xp && card.xp > 0) {
-					$div.append(' <span class="xp-'+card.xp+'">('+card.xp+')</span>');
+					$div.append(app.format.xp(card.xp, card.indeck));
+					
 				}
 				if(app.data.cards.find({'name': card.name}).length > 1) {
 					//$div.append(' ('+card.pack_code+')');
@@ -534,7 +547,7 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 				
 				$div.prepend(card.indeck+'x ');
 				if(card.xp && card.xp > 0) {
-					$div.append(' <span class="xp-'+card.xp+'">('+card.xp+')</span>');
+					$div.append(app.format.xp(card.xp, card.indeck));
 				}
 				if(app.data.cards.find({'name': card.name}).length > 1) {
 					//$div.append(' ('+card.pack_code+')');

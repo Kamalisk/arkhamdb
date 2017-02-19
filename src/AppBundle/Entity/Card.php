@@ -35,7 +35,8 @@ class Card implements \Serializable
 				'back_name',
 				'back_flavor',
 				'permanent',
-				'hidden'
+				'hidden',
+				'double_sided'
 		];
 	
 		$externalFields = [

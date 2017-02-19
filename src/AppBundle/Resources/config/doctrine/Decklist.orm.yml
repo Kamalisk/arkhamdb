@@ -36,6 +36,7 @@ AppBundle\Entity\Decklist:
             joinColumn:
                 name: precedent_decklist_id
                 referencedColumnName: id
+                onDelete: SET NULL
         tournament:
             targetEntity: Tournament
             nullable: true
@@ -64,15 +65,19 @@ AppBundle\Entity\Decklist:
         nextDeck:
             targetEntity: Decklist
             nullable: true
+            cascade: ["persist","remove"]            
             joinColumn:
                 name: next_deck
                 referencedColumnName: id
+                onDelete: CASCADE
         previousDeck:
             targetEntity: Decklist
             nullable: true
+            cascade: ["persist","remove"]
             joinColumn:
                 name: previous_deck
                 referencedColumnName: id
+                onDelete: CASCADE
     manyToMany:
         favorites:
             targetEntity: User
@@ -129,10 +134,20 @@ AppBundle\Entity\Decklist:
             type: text
             nullable: true
             column: description_md
+        tags:
+            type: string
+            length: 4000
+            nullable: true
         descriptionHtml:
             type: text
             nullable: true
             column: description_html
+        xp:
+            type: integer
+            nullable: true
+        xpSpent:
+            type: integer
+            nullable: true
         signature:
             type: string
             length: 32

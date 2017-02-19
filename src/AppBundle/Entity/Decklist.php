@@ -5,6 +5,30 @@ namespace AppBundle\Entity;
 class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
 {
 
+	/**
+	 * @return array
+	 */
+	public function getUpgrades()
+	{
+		
+		$upgrades = [];
+		$previousDeck = $this->getPreviousDeck();
+		while ($previousDeck){
+			$slots = $previousDeck->getSlots();
+			$cards = $slots->getContent();
+			$upgrade = [
+					'content' => $cards,
+					'xp' => $previousDeck->getNextDeck()->getXpSpent(),
+					'xp_left' => $previousDeck->getNextDeck()->getXp() - $previousDeck->getNextDeck()->getXpSpent(),
+					'date_creation' => $previousDeck->getDateCreation()->format('c')
+			];
+			$upgrades[] = $upgrade;
+			$previousDeck = $previousDeck->getPreviousDeck();
+		}
+
+		return $upgrades;
+	}
+
 	public function jsonSerialize()
 	{
 		$array = parent::getArrayExport();
@@ -26,6 +50,16 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      * @var string
      */
     private $nameCanonical;
+
+    /**
+     * @var integer
+     */
+    private $xp;
+
+     /**
+     * @var integer
+     */
+    private $xpSpent;
 
     /**
      * @var \DateTime
@@ -85,6 +119,11 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      * @var \Doctrine\Common\Collections\Collection
      */
     private $slots;
+
+    /**
+     * @var string
+     */
+    private $tags;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -404,6 +443,31 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
         return $this->nbComments;
     }
 
+
+    /**
+     * Set tags
+     *
+     * @param string $tags
+     *
+     * @return Decklist
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+        return $this;
+    }
+
+    /**
+     * Get tags
+     *
+     * @return string
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+
     /**
      * Add slot
      *
@@ -553,6 +617,58 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
     public function getNextDeck()
     {
         return $this->nextDeck;
+    }
+
+
+    /**
+     * Get xp
+     *
+     * @return integer
+     */
+    public function getXp()
+    {
+        return $this->xp;
+    }
+    
+    
+    /**
+     * Set xp
+     *
+     * @param integer $xp
+     *
+     * @return Deck
+     */
+    public function setXp($xp)
+    {
+        $this->xp = $xp;
+
+        return $this;
+    }
+
+
+        /**
+     * Get xpSpent
+     *
+     * @return integer
+     */
+    public function getXpSpent()
+    {
+        return $this->xpSpent;
+    }
+    
+    
+    /**
+     * Set xpSpent
+     *
+     * @param integer $xpSpent
+     *
+     * @return Deck
+     */
+    public function setXpSpent($xpSpent)
+    {
+        $this->xpSpent = $xpSpent;
+
+        return $this;
     }
 
     /**

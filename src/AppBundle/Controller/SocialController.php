@@ -47,7 +47,7 @@ class SocialController extends Controller
             return $this->redirect($this->generateUrl('deck_view', [ 'deck_id' => $deck->getId() ]));
         }
 
-        $query = $em->createQuery("SELECT COUNT(d) FROM AppBundle:Decklist d WHERE d.dateCreation>:date AND d.user=:user");
+        $query = $em->createQuery("SELECT COUNT(d) FROM AppBundle:Decklist d WHERE d.dateCreation>:date AND d.user=:user AND d.nextDeck IS NULL");
         $query->setParameter('date', $yesterday);
         $query->setParameter('user', $user);
         $decklistsSinceYesterday = $query->getSingleScalarResult();
@@ -87,13 +87,12 @@ class SocialController extends Controller
     	// decklist for the form ; won't be persisted
     	$decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $deck->getName(), $deck->getDescriptionMd());
     	    	
-    	$tournaments = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->findAll();
+    	//$tournaments = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->findAll();
     
     	return $this->render('AppBundle:Decklist:decklist_edit.html.twig', [
     			'url' => $this->generateUrl('decklist_create'),
     			'deck' => $deck,
-    			'decklist' => $decklist,
-    			'tournaments' => $tournaments,
+    			'decklist' => $decklist
     	]);
     }
     
@@ -138,9 +137,24 @@ class SocialController extends Controller
         $name = filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $descriptionMd = trim($request->request->get('descriptionMd'));
 
-        $tournament_id = filter_var($request->request->get('tournament'), FILTER_SANITIZE_NUMBER_INT);
-        $tournament = $em->getRepository('AppBundle:Tournament')->find($tournament_id);
+        // $tournament_id = filter_var($request->request->get('tournament'), FILTER_SANITIZE_NUMBER_INT);
+        // $tournament = $em->getRepository('AppBundle:Tournament')->find($tournament_id);
 
+				$validated_tags = [];
+				if ($request->request->get('tags')){
+					$tags = $request->request->get('tags');
+					if(is_array($tags)){
+						foreach($tags as $tag){
+							if (filter_var($tag, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)){
+								if ($tag == "multiplayer" || $tag == "solo" || $tag == "beginner" || $tag == "theme"){
+									$validated_tags[] = $tag;
+								}
+							}
+						}
+					}
+				}
+				$tag_string = implode(",", $validated_tags);
+				
         $precedent_id = trim($request->request->get('precedent'));
         if(!preg_match('/^\d+$/', $precedent_id)) 
         {
@@ -168,9 +182,14 @@ class SocialController extends Controller
         	]);
         }
         
-        $decklist->setTournament($tournament);
+        //$decklist->setTournament($tournament);
         $decklist->setPrecedent($precedent);
+        if ($tag_string){
+        	$decklist->setTags($tag_string);
+        }
+        
         $em->persist($decklist);
+        
         $em->flush();
 
         return $this->redirect($this->generateUrl('decklist_detail', array(
@@ -291,6 +310,9 @@ class SocialController extends Controller
     		throw new UnauthorizedHttpException("You don't have access to this decklist.");
     
     	if ($decklist->getnbVotes() || $decklist->getNbfavorites() || $decklist->getNbcomments())
+    		throw new UnauthorizedHttpException("Cannot delete this decklist.");
+    		
+    	if ($decklist->getNextDeck())
     		throw new UnauthorizedHttpException("Cannot delete this decklist.");
     
     	$precedent = $decklist->getPrecedent();
@@ -509,12 +531,12 @@ class SocialController extends Controller
         	return $comment->getUser()->getUsername();
         }, $decklist->getComments()->getValues());
         
-        $versions = $this->getDoctrine()->getManager()->getRepository('AppBundle:Decklist')->findBy([ 'parent' => $decklist->getParent() ], [ 'version' => 'DESC' ]);
-        
+        //$versions = $this->getDoctrine()->getManager()->getRepository('AppBundle:Decklist')->findBy([ 'parent' => $decklist->getParent() ], [ 'version' => 'DESC' ]);
+				$versions = [];
         return $this->render('AppBundle:Decklist:decklist.html.twig',
                 array(
-                        'pagetitle' => $decklist->getName(),
-                        'decklist' => $decklist,
+                    'pagetitle' => $decklist->getName(),
+                    'decklist' => $decklist,
                 		'duplicate' => $duplicate,
                 		'commenters' => $commenters,
                 		'versions' => $versions,

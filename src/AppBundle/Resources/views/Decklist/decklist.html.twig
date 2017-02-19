@@ -2,13 +2,14 @@
 {% import "AppBundle::macros.html.twig" as macros %}
 
 {% block javascripts %}
-	{% javascripts '@AppBundle/Resources/public/js/ui.decklist.js' %}
+	{% javascripts '@AppBundle/Resources/public/js/ui.decklist.js' '@AppBundle/Resources/public/js/app.deck_upgrades.js' %}
 	<script src="{{ asset_url }}"></script>
 	{% endjavascripts %}
 	<script type="text/javascript">
 	var Commenters = {{ commenters|json_encode|raw }};
 	app.deck.init({{ decklist|json_encode|raw }});
 	app.user.params.decklist_id = {{ decklist.id }};
+	app.deck_upgrades && app.deck_upgrades.init({{ decklist.upgrades|json_encode|raw }});
 	</script>
 {% endblock %}
 
@@ -19,22 +20,6 @@
 			<h1 class="decklist-name text-center">
 				<span class="icon icon-"></span>
 				{{ decklist.name }}
-				<span class="dropdown">
-				  <button class="btn dropdown-toggle bg-" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" id="dropdownVersions">
-				    {{ decklist.version }}
-				    <span class="caret"></span>
-				  </button>
-				  <ul class="dropdown-menu" aria-labelledby="dropdownVersions">
-				  	<li class="dropdown-header">Versions</li>
-				  	{% for other_decklist in versions %}
-				  		<li class="{% if other_decklist.id == decklist.id %}disabled{% endif %}">
-				  			<a href="{{ path('decklist_detail', { 'decklist_id': other_decklist.id, 'decklist_name': other_decklist.nameCanonical|e('url') }) }}">
-				  				{{ other_decklist.version }}
-				  			</a>
-				  		</li>
-				    {% endfor %}
-				  </ul>
-				</span>
 			</h1>
 		</div>
 		<div class="col-xs-12">
@@ -44,11 +29,7 @@
 					<time datetime="{{ decklist.dateCreation|date('c') }}">{{ decklist.dateCreation|date('M d, Y') }}</time>
 					{{ macros.decklist_social_icons(decklist) }}
 				</div>
-				{% if duplicate %}
-				<small>Duplicate of <a href="{{ path('decklist_detail', { 'decklist_id': duplicate.id, 'decklist_name': duplicate.nameCanonical|e('url') }) }}">
-					{{ duplicate.name }} {{ duplicate.version }}
-				</a></small>
-				{% endif %}
+				
 			</div>
 		</div>
 	</div>

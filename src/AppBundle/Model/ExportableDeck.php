@@ -25,6 +25,12 @@ class ExportableDeck
 		} else {
 			$xp = null;
 		}
+		if (method_exists($this, "getPrecedent") && method_exists($this, "getTags")){
+			$tags = $this->getTags();
+			$tags = str_replace(",",", ", $tags);
+		} else {
+			$tags = null;
+		}
 		
 		$array = [
 				'id' => $this->getId(),
@@ -38,6 +44,7 @@ class ExportableDeck
 				'slots' => $slots->getContent(),
 				'version' => $this->getVersion(),
 				'xp' => $xp,
+				'tags' => $tags,
 				'previous_deck' => $previousDeck,
 				'next_deck' => $nextDeck
 		];

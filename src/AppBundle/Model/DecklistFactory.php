@@ -18,7 +18,7 @@ class DecklistFactory
 		$this->texts = $texts;
 	}
 
-	public function createDecklistFromDeck(Deck $deck, $name = null, $descriptionMd = null)
+	public function createDecklistFromDeck(Deck $deck, $name = null, $descriptionMd = null, $nextDecklist = null)
 	{
 		$lastPack = $deck->getLastPack();
 		if(!$lastPack->getDateRelease() || $lastPack->getDateRelease() > new \DateTime()) {
@@ -51,6 +51,8 @@ class DecklistFactory
 		
 		$decklist = new Decklist();
 		$decklist->setName($name);
+		$decklist->setXp($deck->getXp());
+		$decklist->setXpSpent($deck->getXpSpent());
 		$decklist->setVersion($deck->getVersion());
 		$decklist->setNameCanonical($this->texts->slugify($name) . '-' . $decklist->getVersion());
 		$decklist->setDescriptionMd($descriptionMd);
@@ -78,9 +80,19 @@ class DecklistFactory
 				$decklist->setPrecedent($deck->getParent());
 			}
 		}
-		$decklist->setParent($deck);
+		//$decklist->setParent($deck);
 
 		$deck->setMinorVersion(1);
+		
+		// try to connect decks backwards 
+		if ($nextDecklist){
+			$decklist->setNextdeck($nextDecklist);
+		}
+
+		if ($deck->getPreviousDeck()){
+			$previousDeckList = $this->createDecklistFromDeck($deck->getPreviousDeck(), $name, $descriptionMd, $decklist);
+			$decklist->setPreviousDeck($previousDeckList);
+		}
 
 		return $decklist;
 	}

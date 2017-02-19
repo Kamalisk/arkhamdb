@@ -47,6 +47,11 @@ body {
 	/* en dash followed by non-breaking zero-width space */
 	content: "\2013\FEFF";
 }
+.card-xp {
+	font-weight : bold;
+	font-size : 16px;
+	vertical-align : middle;
+}
 .victory {
 	font-weight : bold;
 }
