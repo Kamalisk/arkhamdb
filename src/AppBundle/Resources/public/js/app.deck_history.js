@@ -59,6 +59,15 @@ deck_history.all_changes = function all_changes() {
 		cards_added.push(card_change);
 	});
 	
+	// find adaptable
+	var adaptable = app.data.cards.findById("02110");
+	var free_0_cards = 0;
+	var removed_0_cards = 0;
+	if (adaptable && adaptable.indeck){
+		free_0_cards = 2 * adaptable.indeck;
+	}
+	
+	
 	// first check for same named cards
 	_.each(cards_added, function (addition) {
 		_.each(cards_removed, function (removal) {
@@ -67,11 +76,25 @@ deck_history.all_changes = function all_changes() {
 				cost = cost + ((addition.card.xp - removal.card.xp) * removal.qty);
 				removal.qty = Math.abs(addition.qty);
 			}
+			if (removal.card.xp === 0){
+				removed_0_cards += removal.qty;
+			}
 		});
 	});
-	// first check for same named cards
+	
+	console.log(removed_0_cards);
+	// then pay for all changes
 	_.each(cards_added, function (addition) {
 		if (addition.card.xp >= 0){			
+			if (addition.card.xp === 0 && removed_0_cards > 0 && free_0_cards > 0){
+				free_0_cards -= addition.qty;
+				removed_0_cards -= addition.qty;
+				if (removed_0_cards < 0 || free_0_cards < 0){
+					addition.qty = 1;
+				} else {
+					addition.qty = 0;
+				}
+			}
 			cost = cost + (Math.max(addition.card.xp, 1) * addition.qty);
 			addition.qty = 0;
 		}
