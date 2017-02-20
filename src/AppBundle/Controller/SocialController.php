@@ -885,7 +885,7 @@ class SocialController extends Controller
             throw new NotFoundHttpException("Unable to find decklist.");
 
         $content = $this->renderView('AppBundle:Export:octgn.xml.twig', [
-        	"deck" => $decklist->getTextExport()
+        	"deck" => $decklist->getOctgnExport()
       	]);
 
         $response = new Response();
