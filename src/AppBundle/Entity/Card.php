@@ -17,8 +17,7 @@ class Card implements \Serializable
 				'code',
 				'position',
 				'quantity',
-				'name',
-				'is_unique'
+				'name'
 		];
 	
 		$optionalFields = [
@@ -36,7 +35,8 @@ class Card implements \Serializable
 				'back_flavor',
 				'permanent',
 				'hidden',
-				'double_sided'
+				'double_sided',
+				'is_unique'
 		];
 	
 		$externalFields = [

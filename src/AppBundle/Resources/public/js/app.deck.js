@@ -287,8 +287,13 @@ deck.change_sort = function(sort_type){
 	if ($("#deck")){
 		deck.display('#deck');
 	}
+
 	if ($("#deck-content")){
 		deck.display('#deck-content');
+	}
+	
+	if ($("#decklist")){
+		deck.display('#decklist');
 	}
 	
 }
@@ -308,6 +313,7 @@ deck.display = function display(container, options) {
 		.removeClass('deck-loading')
 		.empty();
 
+	console.log(deck_content, container);
 	$(container).append(deck_content);
 }
 
@@ -368,39 +374,42 @@ deck.get_layout_data = function get_layout_data(options) {
 		deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+problem_labels[problem]+'</div>'));
 	}
 	//deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+problem_labels[problem]+'</div>'));
+	//console.log("reload", deck.sort_type);
+	
 	
 	//var sort = "default";
 	//sort = $("#sort_deck_view").val();
+	var layout_template = 2;
 	if (deck.sort_type == "name"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'name': 1}, null, null));
 		//deck.update_layout_section(data, "cards", deck.get_layout_section({'name': 1}, {"type_name":1}, null));
-		options.cols = 1;
+		layout_template = 1;
 	} else if (deck.sort_type == "set"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'pack_code': 1, "name": 1}, {'pack_name':1}, null));
-		options.cols = 1;
+		layout_template = 1;
 	} else if (deck.sort_type == "setnumber"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'pack_code': 1, "position": 1}, {'pack_name':1}, null));
-		options.cols = 1;
+		layout_template = 1;
 	} else if (deck.sort_type == "faction"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_code': 1, "name":1}, {'faction_name': 1}, null));
-		options.cols = 1;
+		layout_template = 1;
 	} else if (deck.sort_type == "factionnumber"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_code': 1, "pack_code":1, "position": 1}, {'faction_name': 1}, null));
-		options.cols = 1;
+		layout_template = 1;
 	} else if (deck.sort_type == "factionxp"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_code': 1, "xp":1, "name": 1}, {'faction_name': 1}, null));
-		options.cols = 1;
+		layout_template = 1;
 	} else if (deck.sort_type == "number"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'code': 1}, null, null));
-		options.cols = 1;
+		layout_template = 1;
 	} else if (deck.sort_type == "xp"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'xp': -1, 'name': 1}, {xp: 1}, null));
-		options.cols = 1;
+		layout_template = 1;
 	} else if (deck.sort_type == "cost"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'cost': 1, 'name': 1}, {'cost':1}, null));
-		options.cols = 1;
+		layout_template = 1;
 	} else {
-
+		layout_template = 2;
 		deck.update_layout_section(data, 'assets', deck.get_layout_data_one_section('type_code', 'asset', 'type_name', false));
 		deck.update_layout_section(data, 'events', deck.get_layout_data_one_section('type_code', 'event', 'type_name', false));
 		deck.update_layout_section(data, 'skills', deck.get_layout_data_one_section('type_code', 'skill', 'type_name', false));
@@ -412,7 +421,7 @@ deck.get_layout_data = function get_layout_data(options) {
 		deck.update_layout_section(data, 'outenemy', deck.get_layout_data_one_section('type_code', 'enemy', 'type_name', true));
 	}
 	
-	return layouts[options.cols](data);
+	return layouts[layout_template](data);
 }
 
 deck.get_layout_section = function(sort, group, filter){
@@ -438,7 +447,7 @@ deck.get_layout_section = function(sort, group, filter){
 		$.each(cards, function (index, group_cards) {
 		//cards.forEach(function (group_cards) {			
 			if (group_cards.constructor === Array){
-				console.log(group_cards);
+				//console.log(group_cards);
 				$(header_tpl({code: index, name: index == "undefined" ? "Null" : index, quantity: group_cards.reduce(function(a,b){ return a + b.indeck}, 0) })).appendTo(section);
 				deck.create_card_group(group_cards).appendTo(section);
 			}
