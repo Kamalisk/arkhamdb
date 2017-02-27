@@ -115,4 +115,8 @@ AppBundle\Entity\Deck:
         upgrades:
             type: integer
             nullable: true
+        exiles:
+            type: string
+            length: 255
+            nullable: true
 

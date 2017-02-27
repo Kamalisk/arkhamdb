@@ -185,6 +185,9 @@ AppBundle\Entity\Card:
             type: boolean
             nullable: false
             column: is_unique
+        exile:
+            type: boolean
+            nullable: true
         hidden:
             type: boolean
             column: hidden

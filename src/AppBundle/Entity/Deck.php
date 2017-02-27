@@ -163,6 +163,12 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
     /**
      * @var string
      */
+    private $exiles;
+
+
+    /**
+     * @var string
+     */
     private $tags;
     
     /**
@@ -358,6 +364,31 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
     }
 
     /**
+     * Set exiles
+     *
+     * @param string $exiles
+     *
+     * @return Deck
+     */
+    public function setExiles($exiles)
+    {
+        $this->exiles = $exiles;
+
+        return $this;
+    }
+
+    /**
+     * Get exiles
+     *
+     * @return string
+     */
+    public function getExiles()
+    {
+        return $this->exiles;
+    }
+
+
+    /**
      * Set problem
      *
      * @param string $problem
@@ -380,6 +411,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
     {
         return $this->problem;
     }
+
 
     /**
      * Set tags

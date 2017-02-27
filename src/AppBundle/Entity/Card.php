@@ -381,6 +381,11 @@ class Card implements \Serializable
      */
     private $isUnique;
     
+     /**
+     * @var boolean
+     */
+    private $exile;
+    
     
     /**
      * @var boolean
@@ -1481,7 +1486,29 @@ class Card implements \Serializable
         return $this->isUnique;
     }
 
+    /**
+     * Set exile
+     *
+     * @param boolean $exile
+     *
+     * @return Card
+     */
+    public function setExile($exile)
+    {
+        $this->exile = $exile;
 
+        return $this;
+    }
+
+    /**
+     * Get exile
+     *
+     * @return boolean
+     */
+    public function getExile()
+    {
+        return $this->exile;
+    }
 
     /**
      * Set hidden
