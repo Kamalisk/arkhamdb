@@ -151,12 +151,27 @@ class Decks
 		return $deck->getId ();
 	}
 
-public function upgradeDeck($deck, $xp, $previous_deck, $upgrades)
+public function upgradeDeck($deck, $xp, $previous_deck, $upgrades, $exiles)
 	{
 
 		$deck->setXp ( $xp );
 		$deck->setPreviousDeck ( $previous_deck );
 		$deck->setUpgrades ( $upgrades+1 );
+		
+		// if any cards exiled, remove them from the deck
+		foreach ( $exiles as $exile ) {
+			foreach ( $deck->getSlots () as $slot ) {
+				if ($slot->getCard()->getCode() == $exile->getCode()){
+					if ($slot->getQuantity() <= 1){
+						$deck->removeSlot ( $slot );
+						$this->doctrine->remove ( $slot );	
+					} else {
+						$slot->setQuantity ( 1 );
+					}					
+					break;
+				}
+			}
+		}
 		
 		$previous_deck->setNextDeck($deck);
 		$this->doctrine->persist ( $deck );
@@ -170,12 +185,6 @@ public function upgradeDeck($deck, $xp, $previous_deck, $upgrades)
 		$changes = $this->getUnsavedChanges ( $deck );
 		foreach ( $changes as $change ) {
 			$this->doctrine->remove ( $change );
-		}
-		// if deck has only one card and it's an agenda, we delete it
-		if(count($deck->getSlots()) === 0 || (
-			count($deck->getSlots()) === 1 && $deck->getSlots()->getAgenda()
-		) ) {
-			$this->doctrine->remove($deck);
 		}
 		$this->doctrine->flush ();
 	}

@@ -145,7 +145,8 @@ ui.on_data_loaded = function on_data_loaded() {
  */
 ui.on_all_loaded = function on_all_loaded() {
 	app.textcomplete.setup('#descriptionMd');
-	app.deck.display('#decklist', { cols: 1 });
+	app.deck.display('#decklist');
+	app.deck_upgrades.setup();
 };
 
 

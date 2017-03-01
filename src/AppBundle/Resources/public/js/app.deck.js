@@ -8,6 +8,8 @@ var date_creation,
 	tags,
 	xp,
 	xp_spent = 0, 
+	exile_string = "",
+	exiles = [],
 	investigator_code,
 	investigator_name,
 	unsaved,
@@ -49,6 +51,10 @@ deck.init = function init(data) {
 	investigator = false;
 	unsaved = data.unsaved;
 	user_id = data.user_id;
+	exile_string = data.exile_string;
+	if (exile_string){
+		exiles = exile_string.split(",");
+	}
 	xp = data.xp;
 	next_deck = data.next_deck;
 	previous_deck = data.previous_deck;
@@ -159,6 +165,22 @@ deck.set_xp_spent = function set_xp_spent(spent_xp) {
  */
 deck.get_investigator_code = function get_investigator_code() {
 	return investigator_code;
+}
+
+/**
+ * @memberOf deck
+ * @returns string
+ */
+deck.get_exiles = function get_exiles() {
+	return exiles;
+}
+
+/**
+ * @memberOf deck
+ * @returns string
+ */
+deck.get_exile_string = function get_exile_string() {
+	return exile_string;
 }
 
 /**
@@ -313,7 +335,7 @@ deck.display = function display(container, options) {
 		.removeClass('deck-loading')
 		.empty();
 
-	console.log(deck_content, container);
+	//console.log(deck_content, container);
 	$(container).append(deck_content);
 }
 

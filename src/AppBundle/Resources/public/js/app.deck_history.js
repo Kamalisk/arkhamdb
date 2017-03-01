@@ -36,6 +36,7 @@ deck_history.all_changes = function all_changes() {
 	
 	var cards_removed = [];
 	var cards_added = [];
+	var cards_exiled = {};
 	var cost = 0;
 	_.each(diff[1], function (qty, code) {
 		var card = app.data.cards.findById(code);
@@ -64,9 +65,19 @@ deck_history.all_changes = function all_changes() {
 	var free_0_cards = 0;
 	var removed_0_cards = 0;
 	if (adaptable && adaptable.indeck){
-		free_0_cards = 2 * adaptable.indeck;
+		free_0_cards += 2 * adaptable.indeck;
 	}
-	
+	if (app.deck.get_exiles() && app.deck.get_exiles().length > 0){
+		free_0_cards += app.deck.get_exiles().length;
+		removed_0_cards = app.deck.get_exiles().length;
+		_.each(app.deck.get_exiles(), function (code, id) {
+			if (cards_exiled[code]){
+				cards_exiled[code] = 2;
+			} else {
+				cards_exiled[code] = 1;
+			}
+		});
+	}
 	
 	// first check for same named cards
 	_.each(cards_added, function (addition) {
@@ -82,7 +93,7 @@ deck_history.all_changes = function all_changes() {
 		});
 	});
 	
-	console.log(removed_0_cards);
+	//console.log(removed_0_cards);
 	// then pay for all changes
 	_.each(cards_added, function (addition) {
 		if (addition.card.xp >= 0){			
@@ -103,6 +114,7 @@ deck_history.all_changes = function all_changes() {
 	
 	var add_list = [];
 	var remove_list = [];
+	var exile_list = [];
 	// run through the changes and show them
 	_.each(diff[0], function (qty, code) {
 		var card = app.data.cards.findById(code);
@@ -114,6 +126,12 @@ deck_history.all_changes = function all_changes() {
 		var card = app.data.cards.findById(code);
 		if(!card) return;
 		remove_list.push('&minus;'+qty+' '+'<a href="'+card.url+'" class="card card-tip fg-'+card.faction_code+'" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="'+card.code+'">'+card.name+'</a>'+(card.xp >= 0 ? ' ('+card.xp+')' : '')+'</a>');
+		//remove_list.push('&minus;'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card-tip" data-code="'+code+'">'+card.name+'</a>');
+	});
+	_.each(cards_exiled, function (qty, code) {
+		var card = app.data.cards.findById(code);
+		if(!card) return;
+		exile_list.push('&minus;'+qty+' '+'<a href="'+card.url+'" class="card card-tip fg-'+card.faction_code+'" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="'+card.code+'">'+card.name+'</a>'+(card.xp >= 0 ? "•".repeat(card.xp) : '')+'</a>');
 		//remove_list.push('&minus;'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card-tip" data-code="'+code+'">'+card.name+'</a>');
 	});
 	if (cost && app.deck.get_previous_deck()){
@@ -134,6 +152,10 @@ deck_history.all_changes = function all_changes() {
 			$("#upgrade_changes").append('<div class="deck-content">No Changes</div>');
 		}else {
 			$("#upgrade_changes").append('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6">'+add_list.join('<br>')+'</div><div class="col-sm-6 col-print-6">'+remove_list.join('<br>')+'</div></div></div>');	
+		}
+		if (exile_list.length > 0){
+			$("#upgrade_changes").append('<b>Exiled Cards</b>');
+			$("#upgrade_changes").append('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6">'+exile_list.join('<br>')+'</div></div></div>');	
 		}
 	} else if (app.deck.get_next_deck()){
 		if (app.deck.get_next_deck()){

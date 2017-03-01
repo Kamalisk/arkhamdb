@@ -118,7 +118,7 @@ AppBundle\Entity\Card:
             type: smallint
             nullable: true
         cluesFixed:
-            type: smallint
+            type: boolean
             nullable: true
         doom:
             type: smallint

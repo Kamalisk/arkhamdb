@@ -52,6 +52,7 @@ class DecklistFactory
 		$decklist = new Decklist();
 		$decklist->setName($name);
 		$decklist->setXp($deck->getXp());
+		$decklist->setExiles($deck->getExiles());
 		$decklist->setXpSpent($deck->getXpSpent());
 		$decklist->setVersion($deck->getVersion());
 		$decklist->setNameCanonical($this->texts->slugify($name) . '-' . $decklist->getVersion());

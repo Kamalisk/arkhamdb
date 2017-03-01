@@ -29,12 +29,41 @@ ui.do_action_deck = function do_action_deck(event) {
 }
 
 ui.upgrade = function upgrade(deck_id) {
-	console.log(deck_id);
+	//console.log(deck_id);
 	$('#upgrade_deck').val(deck_id);
+	var list = this.create_exile_list();
+	if (list){
+		$('#upgrade-exile-list').empty();
+		$('#upgrade-exile-list').append(list);
+	}
 	$('#upgrade_xp').val(0);
 	$('#upgradeModal').modal('show');
 	setTimeout(function() { $('#upgrade_xp').focus(); }, 500);
 }
+
+ui.create_exile_list = function create_exile_list(){
+	var exile_cards = app.data.cards.find({
+		exile: {
+			'$eq': true
+		},
+		indeck: {
+			'$gt': 0
+		}
+	});
+	if (exile_cards.length){
+		var list = $('<ul>');
+		exile_cards.forEach(function (card) {
+			list.append('<li><label><input type="checkbox" name="exiles[]" value="'+card.code+'"> '+card.name+'</label></li>');
+			if (card.indeck > 1){
+				list.append('<li><label><input type="checkbox" name="exiles[]" value="'+card.code+'"> '+card.name+'</label></li>');
+			}
+		});
+		return list;
+	} else {
+		return false;
+	}
+}
+
 
 ui.upgrade_process = function upgrade_process(event) {
 	return true;
@@ -55,7 +84,7 @@ ui.upgrade_process = function upgrade_process(event) {
 			// redirect here 
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
-			console.log('['+moment().format('YYYY-MM-DD HH:mm:ss')+'] Error on '+this.url, textStatus, errorThrown);
+			//console.log('['+moment().format('YYYY-MM-DD HH:mm:ss')+'] Error on '+this.url, textStatus, errorThrown);
 			alert('An error occured while upgrading the deck.');
 		}
 	});
@@ -67,7 +96,6 @@ ui.upgrade_process = function upgrade_process(event) {
  * @memberOf ui
  */
 ui.setup_event_handlers = function setup_event_handlers() {
-
 	$('#btn-group-deck').on({
 		click: ui.do_action_deck
 	}, 'button[id],a[id]');

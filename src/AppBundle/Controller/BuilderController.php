@@ -416,6 +416,18 @@ class BuilderController extends Controller
 				
 				$deck_id = filter_var($request->get('upgrade_deck'), FILTER_SANITIZE_NUMBER_INT);
 				$xp = filter_var($request->get('xp'), FILTER_SANITIZE_NUMBER_INT);
+				$exiles = filter_var_array($request->get('exiles'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+				$filtered_exiles = [];
+				$filtered_exile_card = [];
+				if ($exiles){
+					foreach ($exiles as $exile) {
+            $exile_card = $em->getRepository('AppBundle:Card')->findOneBy(array("code" => $exile));
+            if ($exile_card){
+            	$filtered_exile_cards[] = $exile_card;
+            	$filtered_exiles[] = $exile_card->getCode();
+            }
+        	}	
+				}
 
         /* @var $deck \AppBundle\Entity\Deck */
         $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
@@ -453,7 +465,9 @@ class BuilderController extends Controller
                 'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null,
                 'xp' => $xp,
                 'previous_deck' => $deck,
-                'upgrades' => $deck->getUpgrades()
+                'upgrades' => $deck->getUpgrades(),
+                'exiles_string' => implode(",",$filtered_exiles),
+                'exiles' => $filtered_exile_cards
             ));
 
     }
@@ -516,11 +530,16 @@ class BuilderController extends Controller
         $tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
         $this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $content, $source_deck ? $source_deck : null, $problem);
+        
+        if ($request->get('exiles') && $request->get('exiles_string')){
+        	$deck->setExiles($request->get('exiles_string'));
+        }
+        
         if ($source_deck){
         	$source_deck->setXpSpent($xp_spent);
         }
         if ($request->get('previous_deck')){
-        	$this->get('decks')->upgradeDeck($deck, $request->get('xp'), $request->get('previous_deck'), $request->get('upgrades'));
+        	$this->get('decks')->upgradeDeck($deck, $request->get('xp'), $request->get('previous_deck'), $request->get('upgrades'), $request->get('exiles'));
         }
         $em->flush();
         

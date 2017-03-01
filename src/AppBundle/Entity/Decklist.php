@@ -18,6 +18,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
 			$cards = $slots->getContent();
 			$upgrade = [
 					'content' => $cards,
+					'exile_string' => $previousDeck->getExiles(),
 					'xp' => $previousDeck->getNextDeck()->getXpSpent(),
 					'xp_left' => $previousDeck->getNextDeck()->getXp() - $previousDeck->getNextDeck()->getXpSpent(),
 					'date_creation' => $previousDeck->getDateCreation()->format('c')
@@ -80,6 +81,11 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      * @var string
      */
     private $descriptionHtml;
+
+    /**
+     * @var string
+     */
+    private $exiles;
 
     /**
      * @var string
@@ -345,6 +351,30 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
     public function getDescriptionHtml()
     {
         return $this->descriptionHtml;
+    }
+
+    /**
+     * Set exiles
+     *
+     * @param string $exiles
+     *
+     * @return Deck
+     */
+    public function setExiles($exiles)
+    {
+        $this->exiles = $exiles;
+
+        return $this;
+    }
+
+    /**
+     * Get exiles
+     *
+     * @return string
+     */
+    public function getExiles()
+    {
+        return $this->exiles;
     }
 
     /**

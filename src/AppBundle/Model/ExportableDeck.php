@@ -44,6 +44,7 @@ class ExportableDeck
 				'slots' => $slots->getContent(),
 				'version' => $this->getVersion(),
 				'xp' => $xp,
+				'exile_string' => $this->getExiles(),
 				'tags' => $tags,
 				'previous_deck' => $previousDeck,
 				'next_deck' => $nextDeck

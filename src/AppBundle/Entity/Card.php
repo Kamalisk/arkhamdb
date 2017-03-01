@@ -36,7 +36,8 @@ class Card implements \Serializable
 				'permanent',
 				'hidden',
 				'double_sided',
-				'is_unique'
+				'is_unique',
+				'exile'
 		];
 	
 		$externalFields = [

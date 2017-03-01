@@ -163,3 +163,7 @@ AppBundle\Entity\Decklist:
         version:
             type: string
             length: 8
+        exiles:
+            type: string
+            length: 255
+            nullable: true
