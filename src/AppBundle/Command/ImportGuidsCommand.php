@@ -34,8 +34,7 @@ class ImportGuidsCommand extends ContainerAwareCommand
 
         $setid = $input->getArgument('setid');
         
-        //$xmlstr = file_get_contents("https://raw.githubusercontent.com/TassLehoff/AGoTv2-OCTGN/master/GameDatabase/30c200c9-6c98-49a4-a293-106c06295c05/sets/$setid/set.xml");
-        $xmlstr = file_get_contents("https://raw.githubusercontent.com/GeckoTH/arkham-horror/master/o8g/Sets/Core%20Set/set.xml");
+        $xmlstr = file_get_contents("https://raw.githubusercontent.com/GeckoTH/arkham-horror/master/o8g/Sets/".rawurlencode($setid)."/set.xml");
         $set = new \SimpleXMLElement($xmlstr);
         $cards = $set->cards[0];
         
@@ -46,7 +45,7 @@ class ImportGuidsCommand extends ContainerAwareCommand
         	$guid = (string)$attributes->id;
         	foreach($card->children() as $props) {
         		$prop_atr = $props->attributes();
-        		if ((string)$prop_atr->name == "Level"){
+        		if ((string)$prop_atr->name == "Level" && intval($prop_atr->value) > 0){
         			$name .= (string) $prop_atr->value;
         		}
         	}
@@ -59,7 +58,7 @@ class ImportGuidsCommand extends ContainerAwareCommand
         	}
         }
         
-        $cards = $repo->findBy(['encounter' => null], ['code' => 'ASC']);
+        $cards = $repo->findBy([], ['code' => 'ASC']);
 
         foreach($cards as $card) {
         	$name = $card->getName();
@@ -69,9 +68,9 @@ class ImportGuidsCommand extends ContainerAwareCommand
         	if(key_exists($name, $guids)) {
             	$card->setOctgnId($guids[$name]);
             	unset($guids[$name]);
-            	$output->writeln("<info>Updating octgn id for $name</info>");
+            	$output->writeln("<info>Updating octgn id for $name (".$card->getName().")</info>");
         	} else {
-        		$output->writeln("<error>Cannot find $name</error>");
+        		$output->writeln("<error>Cannot find $name (".$card->getName().")</error>");
         	}
         }
         
