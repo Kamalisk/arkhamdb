@@ -416,9 +416,13 @@ class BuilderController extends Controller
 				
 				$deck_id = filter_var($request->get('upgrade_deck'), FILTER_SANITIZE_NUMBER_INT);
 				$xp = filter_var($request->get('xp'), FILTER_SANITIZE_NUMBER_INT);
-				$exiles = filter_var_array($request->get('exiles'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+				if ($request->get('exiles')){
+					$exiles = filter_var_array($request->get('exiles'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+				} else {
+					$exiles = false;
+				}
 				$filtered_exiles = [];
-				$filtered_exile_card = [];
+				$filtered_exile_cards = [];
 				if ($exiles){
 					foreach ($exiles as $exile) {
             $exile_card = $em->getRepository('AppBundle:Card')->findOneBy(array("code" => $exile));

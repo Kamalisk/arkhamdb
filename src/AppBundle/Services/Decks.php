@@ -157,6 +157,7 @@ public function upgradeDeck($deck, $xp, $previous_deck, $upgrades, $exiles)
 		$deck->setXp ( $xp );
 		$deck->setPreviousDeck ( $previous_deck );
 		$deck->setUpgrades ( $upgrades+1 );
+		$deck->setDescriptionMd ( $previous_deck->getDescriptionMd() );
 		
 		// if any cards exiled, remove them from the deck
 		foreach ( $exiles as $exile ) {
