@@ -7,13 +7,11 @@ format.traits = function traits(card) {
 	return card.traits || '';
 };
 
-format.xp = function xp(xp, qty) {
+format.xp = function xp(xp) {
 	var string = "";
-	qty = 1;
-	if (xp && xp > 0){
-		for (var i = 0; i < qty; i++){
-			string += ' <span class="card-xp xp-'+xp+'">'+("•".repeat(xp))+"</span>";
-		}
+	if (xp && xp > 0)
+	{
+ 		string += ' <span class="card-xp xp-'+xp+'">'+("••••••".slice(-xp))+"</span>";
 	}
 	return string;
 };
