@@ -415,7 +415,8 @@ class ImportStdCommand extends ContainerAwareCommand
 					'health_per_investigator',
 					'clues_fixed',
 					'hidden',
-					'permanent'
+					'permanent',
+					'exile'
 
 			]);
 			if($card) {
