@@ -20,15 +20,22 @@ class SuggestionsCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+    		$dbh = $this->getContainer()->get('doctrine')->getConnection();
         ini_set('memory_limit', '1G');
         $webdir = $this->getContainer()->get('kernel')->getRootDir() . "/../web";
+				// generate suggestions per investigator
+				$investigators = $dbh->executeQuery(
+          "SELECT
+					c.id,
+          c.code
+          from card c
+          where c.type_id = 1
+          order by c.id")->fetchAll();
 
-        $runner = $this->getSuggestionsForSide(1);
-        file_put_contents($webdir."/runner.json", json_encode($runner));
-
-        $corp = $this->getSuggestionsForSide(2);
-        file_put_contents($webdir."/corp.json", json_encode($corp));
-
+        foreach($investigators as $index => $card) {
+	        $runner = $this->getSuggestionsForSide($card['id']);
+	        file_put_contents($webdir."/sugg-".$card['code'].".json", json_encode($runner));
+				}
         $output->writeln('done');
     }
 
@@ -59,14 +66,14 @@ class SuggestionsCommand extends ContainerAwareCommand
 
         $cardsByIndex = $dbh->executeQuery(
                 "SELECT
-				c.id,
+								c.id,
                 c.code,
                 count(*) nbdecks
                 from card c
                 join deckslot d on d.card_id=c.id
-                where c.side_id=?
+                where c.xp is not null
                 group by c.id, c.code, c.faction_id
-                order by c.id", array($side_id))->fetchAll();
+                order by c.id")->fetchAll();
 
         $cardIndexById = array();
         $maxnbdecks = 0;
@@ -85,16 +92,17 @@ class SuggestionsCommand extends ContainerAwareCommand
 
         $decks = $dbh->executeQuery(
                 "SELECT
-				d.id
+									d.id
                 from deck d
-                where d.side_id=?
+                where d.character_id = '".$side_id."'
                 order by d.id", array($side_id))->fetchAll();
 
         $stmt = $dbh->prepare(
                 "SELECT
-				d.card_id
+									d.card_id
                 from deckslot d
-                where d.deck_id=?
+                inner join card on d.card_id = card.id 
+                where d.deck_id=? and card.xp is not null 
                 order by d.card_id");
 
         foreach($decks as $deck_id) {
