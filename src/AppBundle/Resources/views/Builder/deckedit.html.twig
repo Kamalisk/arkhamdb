@@ -7,7 +7,9 @@
 	{% endjavascripts %}
 	<script type="text/javascript">
 	app.deck && app.deck.init({{ deck|json_encode|raw }});
-	app.deck_history && app.deck_history.init({{ deck.history|json_encode|raw }});		
+	$( document ).ready(function() {
+		app.deck_history && app.deck_history.init({{ deck.history|json_encode|raw }});
+	});
 	</script>
 {% endblock %}
 
