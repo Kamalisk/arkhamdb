@@ -260,7 +260,7 @@ deck.get_real_draw_deck_size = function get_real_draw_deck_size(sort) {
  */
 deck.get_xp_usage = function get_xp_usage(sort) {
 	var xp = 0;
-	deck.get_draw_deck().forEach(function (card) {
+	deck.get_real_draw_deck().forEach(function (card) {
 		if (card && card.xp){
 			xp += card.xp * card.indeck;
 		}
