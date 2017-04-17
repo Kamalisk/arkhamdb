@@ -42,6 +42,10 @@ $(function () {
 {% set linkurl = path('decklists_list', {type:'popular'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Popular</a></li>
 {% set linkurl = path('decklists_list', {type:'recent'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Recent</a></li>
 {% set linkurl = path('decklists_list', {type:'hottopics'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Hot topics</a></li>
+{% set linkurl = path('decklists_list', {type:'solo'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Solo</a></li>
+{% set linkurl = path('decklists_list', {type:'multiplayer'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Multiplayer</a></li>
+{% set linkurl = path('decklists_list', {type:'beginner'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Beginner</a></li>
+{% set linkurl = path('decklists_list', {type:'theme'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Theme</a></li>
 {% set linkurl = path('decklists_list', {type:'halloffame'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">Hall of Fame</a></li>
 {% set linkurl = path('decklists_list', {type:'favorites'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">My favorites</a></li>
 {% set linkurl = path('decklists_list', {type:'mine'}) %}<li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}">My decklists</a></li>
@@ -77,18 +81,16 @@ $(function () {
 		<a class="decklist-name" href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.nameCanonical|e('url') }) }}">{{ decklist.name }}</a>
 	</h4>
 	<h5>
-		<time class="pull-right" datetime="{{ decklist.dateCreation|date('c') }}">{{ decklist.dateCreation|date('M d') }}</time>
+		<time class="pull-right" datetime="{{ decklist.dateCreation|date('c') }}">{{ decklist.dateCreation|date('M d') }}</time>		
 		<span class="username">
     		<a href="{{ path('user_profile_public', {user_id:decklist.user.id,user_name:decklist.user.username|e('url')}) }}" class="{{ decklist.user.color }}">{{ decklist.user.username }}</a>
-    		{% if decklist.user.donation > 0 %}<span class="fa fa-gift donator" title="ThronesDB Gracious Donator"></span>{% endif %}
     		<small class="reputation">{{ decklist.user.reputation }}</small>
 		</span>
-        {% if decklist.tournament %}
-		<span class="text-success" style="margin-left:1em">
-            <span class="fa fa-certificate"></span> {{ decklist.tournament.description }}
-        </span>
-	    {% endif %}
+		{% if decklist.tags %}
+		<span>[{{decklist.tags}}]</span>
+		{% endif %}
 	</h5>
+	
 	</article>
 </td>
 </tr>

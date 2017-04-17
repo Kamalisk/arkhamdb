@@ -152,6 +152,38 @@ class DecklistManager
 		return $this->getPaginator($qb->getQuery());
 	}
 
+	public function findDecklistsInSolo()
+	{
+		$qb = $this->getQueryBuilder();
+		$qb->andWhere("d.tags like '%solo%'");
+		$qb->orderBy('d.dateCreation', 'DESC');
+		return $this->getPaginator($qb->getQuery());
+	}
+	
+	public function findDecklistsInMultiplayer()
+	{
+		$qb = $this->getQueryBuilder();
+		$qb->andWhere("d.tags like '%multiplayer%'");
+		$qb->orderBy('d.dateCreation', 'DESC');
+		return $this->getPaginator($qb->getQuery());
+	}
+	
+	public function findDecklistsInBeginner()
+	{
+		$qb = $this->getQueryBuilder();
+		$qb->andWhere("d.tags like '%beginner%'");
+		$qb->orderBy('d.dateCreation', 'DESC');
+		return $this->getPaginator($qb->getQuery());
+	}
+	
+	public function findDecklistsInTheme()
+	{
+		$qb = $this->getQueryBuilder();
+		$qb->andWhere("d.tags like '%theme%'");
+		$qb->orderBy('d.dateCreation', 'DESC');
+		return $this->getPaginator($qb->getQuery());
+	}
+
 	public function findDecklistsWithComplexSearch()
 	{
 		$request = $this->request_stack->getCurrentRequest();

@@ -486,6 +486,22 @@ class SocialController extends Controller
             	$paginator = $decklist_manager->findDecklistsInTournaments();
                 $pagetitle = "Tournaments";
                 break;
+            case 'solo':
+            	$paginator = $decklist_manager->findDecklistsInSolo();
+                $pagetitle = "Solo";
+                break;
+            case 'multiplayer':
+            	$paginator = $decklist_manager->findDecklistsInMultiplayer();
+                $pagetitle = "Multiplayer";
+                break;
+            case 'beginner':
+            	$paginator = $decklist_manager->findDecklistsInBeginner();
+                $pagetitle = "Beginner";
+                break;
+            case 'theme':
+            	$paginator = $decklist_manager->findDecklistsInTheme();
+                $pagetitle = "Theme";
+                break;
             case 'popular':
             default:
             	$paginator = $decklist_manager->findDecklistsByPopularity();
