@@ -32,7 +32,7 @@ var date_creation,
 /*
  * Templates for the different deck layouts, see deck.get_layout_data
  */
-layouts[1] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><div class="col-sm-6 col-print-6"><%= cards %></div></div></div>'); 
+layouts[1] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><div class="col-sm-10 col-print-10"><%= cards %></div></div></div>'); 
 layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><div class="col-sm-6 col-print-6"><%= assets %></div><div class="col-sm-6 col-print-6"><%= events %> <%= skills %></div></div> <hr> <div class="row"><div class="col-sm-6 col-print-6"> <%= outassets %> <%= outevents %> <%= outskills %> </div><div class="col-sm-6 col-print-6"><%= outtreachery %> <%= outenemy %></div> </div><div id="upgrade_changes"></div></div>');
 layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= images %><%= meta %></div><div class="col-sm-4"><%= assets %><%= skills %></div><div class="col-sm-4"><%= events %><%= treachery %></div></div></div>');
 
@@ -450,6 +450,13 @@ deck.get_layout_section = function(sort, group, filter){
 	var section = $('<div>');
 	var query = {};
 	var groups = {};
+	var context = "";
+	if (sort && sort.code){
+		context = "number";
+	}
+	if (sort && sort.position){
+		context = "number";
+	}
 	// if we have a group, then send the group by to the query
 	if (group){
 		var cards = deck.get_cards(sort, query, group);	
@@ -459,11 +466,12 @@ deck.get_layout_section = function(sort, group, filter){
 	}
 	
 	if(cards.length) {
+		
 		//console.log(cards);
 		//$(header_tpl({code: "Cards", name: "Cards", quantity: deck.get_nb_cards(cards)})).appendTo(section);
 		//'<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'
 		// run through each card and display display it
-		deck.create_card_group(cards).appendTo(section);
+		deck.create_card_group(cards, context).appendTo(section);
 			
 	} else if (cards.constructor !== Array){		
 		$.each(cards, function (index, group_cards) {
@@ -471,14 +479,14 @@ deck.get_layout_section = function(sort, group, filter){
 			if (group_cards.constructor === Array){
 				//console.log(group_cards);
 				$(header_tpl({code: index, name: index == "undefined" ? "Null" : index, quantity: group_cards.reduce(function(a,b){ return a + b.indeck}, 0) })).appendTo(section);
-				deck.create_card_group(group_cards).appendTo(section);
+				deck.create_card_group(group_cards, context).appendTo(section);
 			}
 		});
 	}
 	return section;
 }
 
-deck.create_card_group = function(cards){
+deck.create_card_group = function(cards, context){
 	var section = $('<div>');
 	cards.forEach(function (card) {
 		var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
@@ -488,6 +496,11 @@ deck.create_card_group = function(cards){
 		if(card.xp && card.xp > 0) {
 			$div.append(app.format.xp(card.xp));
 		}
+		
+		if (context && context == "number"){
+			$div.append(" | "+card.pack_name+" #"+card.position);
+		}
+
 		// add special random selection button for the random basic weakness item
 		if (card.name == "Random Basic Weakness" && $("#special-collection").length > 0 ){
 			$div.append(' <a class="fa fa-random" title="Replace with randomly selected weakness from currently selected packs" data-random="'+card.code+'"> <span ></span></a> ');
