@@ -68,6 +68,11 @@ AppBundle\Entity\User:
         reputation:
             type: integer
             nullable: false
+        faq:
+            type: boolean
+            nullable: false
+            options:
+                default: false
         resume:
             type: text
             nullable: true

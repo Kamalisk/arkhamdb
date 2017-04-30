@@ -56,15 +56,18 @@ class ReviewController extends Controller
 
         // checking the user didn't already write a review for that card
 	      if ($is_faq){
-	      	$review = $em->getRepository('AppBundle:Review')->findOneBy(array('card' => $card, 'user' => $user, 'faq' => true));	
+	      	if ($user->getFaq()){
+	      		$review = $em->getRepository('AppBundle:Review')->findOneBy(array('card' => $card, 'faq' => true));		
+	      	} else {
+	      		throw new \Exception("You cannot create faqs.");
+	      	}
 	      } else {
 	      	$review = $em->getRepository('AppBundle:Review')->findOneBy(array('card' => $card, 'user' => $user, 'faq' => false));
+	      	if($review) 
+	        {
+	            throw new \Exception("You cannot write more than 1 review for a given card.");
+	        }
 	      }
-        
-        if($review) 
-        {
-            throw new \Exception("You cannot write more than 1 review for a given card.");
-        }
 
         $review_raw = trim($request->get('review'));
 

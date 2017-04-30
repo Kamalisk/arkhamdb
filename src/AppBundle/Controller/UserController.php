@@ -123,34 +123,34 @@ class UserController extends Controller
             );
 
             if(isset($decklist_id)) {
-                /* @var $em \Doctrine\ORM\EntityManager */
-                $em = $this->getDoctrine()->getManager();
-                /* @var $decklist \AppBundle\Entity\Decklist */
-                $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
+              /* @var $em \Doctrine\ORM\EntityManager */
+              $em = $this->getDoctrine()->getManager();
+              /* @var $decklist \AppBundle\Entity\Decklist */
+              $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
 
-				if ($decklist) {
-    				$decklist_id = $decklist->getId();
+							if ($decklist) {
+			    				$decklist_id = $decklist->getId();
 
-    				$dbh = $this->getDoctrine()->getConnection();
+			    				$dbh = $this->getDoctrine()->getConnection();
 
-    			    $content['is_liked'] = (boolean) $dbh->executeQuery("SELECT
-        				count(*)
-        				from decklist d
-        				join vote v on v.decklist_id=d.id
-        				where v.user_id=?
-        				and d.id=?", array($user_id, $decklist_id))->fetch(\PDO::FETCH_NUM)[0];
+			    			    $content['is_liked'] = (boolean) $dbh->executeQuery("SELECT
+			        				count(*)
+			        				from decklist d
+			        				join vote v on v.decklist_id=d.id
+			        				where v.user_id=?
+			        				and d.id=?", array($user_id, $decklist_id))->fetch(\PDO::FETCH_NUM)[0];
 
-    			    $content['is_favorite'] = (boolean) $dbh->executeQuery("SELECT
-        				count(*)
-        				from decklist d
-        				join favorite f on f.decklist_id=d.id
-        				where f.user_id=?
-        				and d.id=?", array($user_id, $decklist_id))->fetch(\PDO::FETCH_NUM)[0];
+			    			    $content['is_favorite'] = (boolean) $dbh->executeQuery("SELECT
+			        				count(*)
+			        				from decklist d
+			        				join favorite f on f.decklist_id=d.id
+			        				where f.user_id=?
+			        				and d.id=?", array($user_id, $decklist_id))->fetch(\PDO::FETCH_NUM)[0];
 
-    			    $content['is_author'] = ($user_id == $decklist->getUser()->getId());
+			    			    $content['is_author'] = ($user_id == $decklist->getUser()->getId());
 
-    			    $content['can_delete'] = ($decklist->getNbcomments() == 0) && ($decklist->getNbfavorites() == 0) && ($decklist->getnbVotes() == 0);
-				}
+			    			    $content['can_delete'] = ($decklist->getNbcomments() == 0) && ($decklist->getNbfavorites() == 0) && ($decklist->getnbVotes() == 0);
+							}
             }
 
             if(isset($card_id)) {
@@ -163,15 +163,18 @@ class UserController extends Controller
                     $reviews = $card->getReviews();
                     /* @var $review \AppBundle\Entity\Review */
                     foreach($reviews as $review) {
-                        if($review->getUser()->getId() === $user->getId()) {
-                            if ($review->getFaq()){
-                            	$content['faq_id'] = $review->getId();
-	                            $content['faq_text'] = $review->getTextMd();
-                            } else {
-	                            $content['review_id'] = $review->getId();
-	                            $content['review_text'] = $review->getTextMd();
-	                          }
-                        }
+                    		if ($review->getFaq()){
+                    			// if the user has faq access set the faq id
+                    			if($user->getFaq()) {
+                    				$content['faq_id'] = $review->getId();
+	                          $content['faq_text'] = $review->getTextMd();
+                    			}
+                    		} else {
+                    			if($review->getUser()->getId() === $user->getId()) {
+                    				$content['review_id'] = $review->getId();
+	                          $content['review_text'] = $review->getTextMd();
+                    			}
+                    		}
                     }
                 }
             }

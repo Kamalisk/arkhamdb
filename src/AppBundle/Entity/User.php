@@ -11,7 +11,7 @@ class User extends BaseUser
 {
 	public function getMaxNbDecks()
 	{
-		return 2*(100+floor($this->reputation/ 10));
+		return 2*(200+floor($this->reputation/ 10));
 	}
 
     /**
@@ -28,6 +28,12 @@ class User extends BaseUser
      * @var integer
      */
     private $reputation;
+
+    /**
+     * @var boolean
+     */
+    private $faq;
+
 
     /**
      * @var string
@@ -192,6 +198,31 @@ class User extends BaseUser
     public function getReputation()
     {
         return $this->reputation;
+    }
+
+
+    /**
+     * Set faq
+     *
+     * @param boolean $faq
+     *
+     * @return User
+     */
+    public function setFaq($faq)
+    {
+        $this->faq = $faq;
+
+        return $this;
+    }
+
+    /**
+     * Get faq
+     *
+     * @return boolean
+     */
+    public function getFaq()
+    {
+        return $this->faq;
     }
 
     /**

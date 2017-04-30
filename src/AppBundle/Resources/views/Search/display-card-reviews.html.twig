@@ -11,21 +11,14 @@
 
 		{% for review in card.faqs %}
 		<article class="review" data-id="{{ review.id }}" id="review-{{ review.id }}">
-			<div class="review-like">
-				<a id="review-social-icon-like" href="#" class="social-icon-like" data-toggle="tooltip" data-placement="bottom" title="Like that review">
-					<span class="fa fa-heart"></span> <span class="num">{{ review.nbVotes }}</span>
-				</a>
-			</div>
 			<div class="review-content">
 				<div class="review-text">
 					{{ review.textHtml|raw }}
 				</div>
 				<div class="review-date">
-					<time datetime="{{ review.dateCreation|date('c') }}" title="{{ review.dateCreation|date('F jS, Y') }}">{{ review.dateCreation|date('n/j/y') }}</time>
+					Last updated <time datetime="{{ review.dateCreation|date('c') }}" title="{{ review.dateCreation|date('F jS, Y') }}">{{ review.dateCreation|date('n/j/y') }}</time>
 				</div>
-				<div class="review-author">
-					<span class="username">{{ macros.username(review.user) }}</span>
-				</div>
+
 				{% for comment in review.comments %}
 				<div class="review-comment text-muted small">{{ comment.text|raw }}
 					&mdash;
