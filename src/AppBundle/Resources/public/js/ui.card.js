@@ -109,7 +109,7 @@
 			var form = $("#review-edit-form"); 	
 		}
 		
-		if (faq && app.user && (app.user.data.name == "mplain" || app.user.data.name == "Kamalisk") ){
+		if (faq && app.user && app.user.data.can_faq ){
 			form.append('<div><div class="form-group">'
 				+ '<textarea id="faq-form-text" class="form-control" rows="20" name="review" placeholder="Write your analysis of the card, in at least 200 characters. You can write a number of card reviews equal to your reputation. This is not a place for questions or comments. Type # to enter a card name. Type $ to enter a symbol."></textarea>'
 				+ '</div><div class="well text-muted" id="faq-form-preview"><small>Preview. Look <a href="http://daringfireball.net/projects/markdown/dingus">here</a> for a Markdown syntax reference.</small></div>'

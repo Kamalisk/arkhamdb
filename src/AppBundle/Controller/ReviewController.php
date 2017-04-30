@@ -119,9 +119,16 @@ class ReviewController extends Controller
         if(!$review) {
             throw new BadRequestHttpException("Unable to find review.");
         }
-        if($review->getUser()->getId() !== $user->getId()) {
-            throw new UnauthorizedHttpException("You cannot edit this review.");
+        if ($review->getFaq()){
+        	if (!$user->getFaq()){
+        		throw new UnauthorizedHttpException("You cannot edit faqs.");
+        	}
+        } else {
+        	if($review->getUser()->getId() !== $user->getId()) {
+          	throw new UnauthorizedHttpException("You cannot edit this review.");
+        	}
         }
+        
 
         $review_raw = trim($request->get('review'));
 

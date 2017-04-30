@@ -160,6 +160,9 @@ class UserController extends Controller
                 $card = $em->getRepository('AppBundle:Card')->find($card_id);
 
                 if($card) {
+                		if ($user->getFaq()){
+                			$content['can_faq'] = true;
+                		}
                     $reviews = $card->getReviews();
                     /* @var $review \AppBundle\Entity\Review */
                     foreach($reviews as $review) {
