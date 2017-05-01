@@ -214,7 +214,7 @@
 			if(!app.user.data.review_id) {
 				ui.setup_write();				
 			}
-			if (app.user && (app.user.data.name == "mplain" || app.user.data.name == "Kamalisk") ){
+			if (app.user && app.user.data.can_faq ){
 				if(!app.user.data.faq_id) {
 					ui.setup_write(true);				
 				}
