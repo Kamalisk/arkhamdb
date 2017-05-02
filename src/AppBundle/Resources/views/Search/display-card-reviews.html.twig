@@ -16,7 +16,7 @@
 					{{ review.textHtml|raw }}
 				</div>
 				<div class="review-date">
-					Last updated <time datetime="{{ review.dateCreation|date('c') }}" title="{{ review.dateCreation|date('F jS, Y') }}">{{ review.dateCreation|date('n/j/y') }}</time>
+					Last updated <time datetime="{{ review.dateUpdate|date('c') }}" title="{{ review.dateUpdate|date('F jS, Y') }}">{{ review.dateUpdate|date('n/j/y') }}</time>
 				</div>
 
 				{% for comment in review.comments %}
