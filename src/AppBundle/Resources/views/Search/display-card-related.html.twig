@@ -1,0 +1,32 @@
+
+
+
+{% if card.related and card.related|length > 1 %}
+<div class="col-md-12" style="margin-top:2em">
+<div class="row">
+    <div class="col-md-9">
+
+        <div style="line-height:34px" id="related-header">
+					<span style="font-size:24px">Related Cards</span>
+				</div>
+        <ul>
+				{% for related in card.related %}
+					{% if card.code != related.code %}
+					<li>
+						<span class="icon icon-{{ related.getType().getCode()}} fg-{{ related.getFaction().getCode() }}"></span>
+						<a href="{{ path('cards_zoom',{card_code:related.code}) }}" class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %} card-tip" data-code="{{ related.code }}">
+						{{ related.name }}{% if related.subname%}: {{ related.subname }}{% endif %}
+						{% if related.backname %}: {{ related.backname }}{% endif %}</a>
+						{% if related.xp %}<span class="xp-{{ related.xp }}"> ({{ related.xp }})</span>{% endif %} 
+						{{related.getPack().getName()}} #{{related.position}}
+						</li>
+					{% endif %}
+				{% endfor %}
+					</ul>
+
+    </div>
+</div>
+</div>
+{% endif %}
+
+
