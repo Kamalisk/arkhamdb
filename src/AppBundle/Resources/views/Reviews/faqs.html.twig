@@ -1,0 +1,88 @@
+{% extends 'AppBundle::layout.html.twig' %}
+{% import "AppBundle::macros.html.twig" as macros %}
+
+{% block javascripts %}
+	{% javascripts '@AppBundle/Resources/public/js/ui.card.js' %}
+	<script src="{{ asset_url }}"></script>
+	{% endjavascripts %}
+{% endblock %}
+
+{% block body %}
+
+<div class="main white container">
+
+<div class="text-center">
+<ul class="pagination pagination-sm" style="margin-top:0">
+{% if prevurl is null %}
+  <li class="disabled"><a href="#">&laquo;</a></li>
+{% else %}
+  <li class=""><a href="{{ prevurl }}">&laquo;</a></li>
+{% endif %}
+{% for page in pages %}
+{% if page.current %}
+  <li class="active"><a href="{{ page.url }}">{{ page.numero }} <span class="sr-only">(current)</span></a></li>
+{% else %}
+  <li><a href="{{ page.url }}">{{ page.numero }}</a></li>
+{% endif %}
+{% endfor %}
+{% if nexturl is null %}
+  <li class="disabled"><a href="#">&raquo;</a></li>
+{% else %}
+  <li class=""><a href="{{ nexturl }}">&raquo;</a></li>
+{% endif %}
+  </ul>
+</div>
+
+<div class="reviews row">
+	<div class="col-lg-8 col-lg-push-2">
+{% if reviews|length > 0 %}{% for i in 0..reviews|length-1 %}{% set review = reviews[i] %}{% set card = review.card %}
+<div class="row" style="margin-bottom:1em;padding-bottom:1em;border-bottom:1px solid #ddd"><div class="col-lg-12">
+    <div class="review-header">
+      <h4><a href="{{ path('cards_zoom',{card_code:review.card.code}) }}#review-{{ review.id }}" data-code="{{ review.card.code }}" class="card-tip card-name">{{ review.card.name }}</a></h4>
+    </div>
+		<article class="review" data-id="{{ review.id }}" id="review-{{ review.id }}">
+			<div>
+				<div style="overflow: hidden;" class="pull-left card-thumbnail-static card-thumbnail-2x card-thumbnail-{{review.card.type.getCode()}}">
+					<img src="/web/bundles/cards/{{ review.card.code }}.jpg" alt="{{ review.card.name }}" class="card-img-thumbnail card-img-thumbnail-{{review.card.type.getCode()}}" style="" onerror="this.onerror=null;this.src='/web/bundles/cards/{{ review.card.code }}.png';">
+				</div>
+				<div style="margin-left : 90px;">
+					<div class="review-text2">
+						{{ review.textHtml|raw }}
+					</div>
+					<div class="review-date">
+						Last updated <time datetime="{{ review.dateUpdate|date('c') }}" title="{{ review.dateUpdate|date('F jS, Y') }}">{{ review.dateUpdate|date('n/j/y') }}</time>
+					</div>
+				</div>
+			</div>
+		</article>
+</div></div>
+{% endfor %}{% endif %}
+</div>
+</div>
+
+
+<div class="text-center">
+<ul class="pagination pagination-sm" style="margin:0">
+{% if prevurl is null %}
+  <li class="disabled"><a href="#">&laquo;</a></li>
+{% else %}
+  <li class=""><a href="{{ prevurl }}">&laquo;</a></li>
+{% endif %}
+{% for page in pages %}
+{% if page.current %}
+  <li class="active"><a href="{{ page.url }}">{{ page.numero }} <span class="sr-only">(current)</span></a></li>
+{% else %}
+  <li><a href="{{ page.url }}">{{ page.numero }}</a></li>
+{% endif %}
+{% endfor %}
+{% if nexturl is null %}
+  <li class="disabled"><a href="#">&raquo;</a></li>
+{% else %}
+  <li class=""><a href="{{ nexturl }}">&raquo;</a></li>
+{% endif %}
+  </ul>
+</div>
+
+</div>
+
+{% endblock %}

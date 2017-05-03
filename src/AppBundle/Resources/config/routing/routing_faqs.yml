@@ -1,0 +1,30 @@
+
+card_faq_post:
+    path: /post
+    methods: [POST]
+    defaults: 
+        _controller: AppBundle:Review:post
+
+card_faq_edit:
+    path: /edit
+    methods: [POST]
+    defaults: 
+        _controller: AppBundle:Review:edit
+
+card_faq_like:
+    path: /like
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Review:like
+
+card_faq_remove:
+    path: /remove/{id}
+    defaults:
+        _controller: AppBundle:Review:remove
+        
+card_faqcomment_post:
+    path: /comment
+    methods: [POST]
+    defaults: 
+        _controller: AppBundle:Review:comment
+        

@@ -273,7 +273,6 @@ div.tags span.tag:not(:first-child)::before {
 
 .card-thumbnail{background-attachment:scroll;background-origin:padding-box;background-clip:border-box;background-repeat:no-repeat;margin:0 0 5px 5px;position:relative;border:1px solid #000;float:right}
 .card-thumbnail-static{background-attachment:scroll;background-origin:padding-box;background-clip:border-box;background-repeat:no-repeat;margin:0 0 5px 5px;position:relative;border:1px solid #000;}
-.card-thumbnail-plot{margin-top:5px}
 .card-thumbnail-1x{background-repeat:no-repeat;width:200px;height:200px;background-size:300px 418px}
 .card-thumbnail-2x{background-repeat:no-repeat;width:100px;height:100px;background-size:150px 209px}
 .card-thumbnail-3x{width:67px;height:67px;background-size:100px 139px}
@@ -304,11 +303,11 @@ div.tags span.tag:not(:first-child)::before {
 .card-thumbnail-3x.card-thumbnail-treachery{background-position:-23.3px -2.7px;background-size:120px 159px}
 .card-thumbnail-4x.card-thumbnail-treachery{background-position:-20.5px -6.5px}
 .card-thumbnail-5x.card-thumbnail-treachery{background-position:-16.4px -5.2px}
-.card-thumbnail-1x.card-thumbnail-plot{width:400px;height:100px;background-size:418px 300px;background-position:-9px -25px}
-.card-thumbnail-2x.card-thumbnail-plot{width:200px;height:50px;background-size:209px 150px;background-position:-4.5px -12.5px}
-.card-thumbnail-3x.card-thumbnail-plot{width:133px;height:33px;background-size:139px 100px;background-position:-3px -8.3px}
-.card-thumbnail-4x.card-thumbnail-plot{width:100px;height:25px;background-size:105px 75px;background-position:-2.25px -6.25px}
-.card-thumbnail-5x.card-thumbnail-plot{width:80px;height:20px;background-size:84px 60px;background-position:-1.8px -5px}
+.card-thumbnail-1x.card-thumbnail-agenda{}
+.card-thumbnail-2x.card-thumbnail-agenda{}
+.card-thumbnail-3x.card-thumbnail-agenda{}
+.card-thumbnail-4x.card-thumbnail-agenda{}
+.card-thumbnail-5x.card-thumbnail-agenda{}
 .card-thumbnail-1x.card-thumbnail-location{background-position:-51px -31px}
 .card-thumbnail-2x.card-thumbnail-location{background-position:-25.5px -15.5px}
 .card-thumbnail-3x.card-thumbnail-location{background-position:-17px -10.3px}
@@ -319,6 +318,55 @@ div.tags span.tag:not(:first-child)::before {
 .card-thumbnail-3x.card-thumbnail-enemy{background-position:-35px -100.3px; background-size:130px 169px}
 .card-thumbnail-4x.card-thumbnail-enemy{background-position:-12.75px -7.75px}
 .card-thumbnail-5x.card-thumbnail-enemy{background-position:-10.2px -6.2px}
+
+.card-img-thumbnail {
+	margin-left: -50%;
+	margin-top: -50%;
+	width: 300px;
+	height: 419px;
+}
+.card-img-thumbnail-asset {
+	margin-left: -110px;
+	margin-top: -50px;
+}
+.card-img-thumbnail-event {
+	margin-left: -110px;
+	margin-top: -50px;
+}
+.card-img-thumbnail-skill {
+	margin-left: -110px;
+	margin-top: -50px;
+}
+.card-img-thumbnail-location {
+	margin-left: -120px;
+	margin-top: -70px;
+}
+.card-img-thumbnail-treachery {
+	margin-left: -120px;
+	margin-top: -70px;
+}
+.card-img-thumbnail-enemy {
+	margin-left: -100px;
+	margin-top: -260px;
+}
+.card-img-thumbnail-investigator {
+	height: 300px;
+	width: 419px;
+	margin-left: -10px;
+	margin-top: -80px;
+}
+.card-img-thumbnail-agenda {
+	height: 300px;
+	width: 419px;
+	margin-left: -10px;
+	margin-top: -140px;
+}
+.card-img-thumbnail-act {
+	height: 300px;
+	width: 419px;
+	margin-left: -10px;
+	margin-top: -140px;
+}
 
 /************** INDEX PAGE ***************/
 

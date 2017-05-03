@@ -23,6 +23,10 @@ app_review:
     resource: "@AppBundle/Resources/config/routing/routing_review.yml"
     prefix: /review
 
+app_faqs:
+    resource: "@AppBundle/Resources/config/routing/routing_faqs.yml"
+    prefix: /faqs
+
 app_tag:
     resource: "@AppBundle/Resources/config/routing/routing_tag.yml"
     prefix: /tag
@@ -73,6 +77,14 @@ card_reviews_list:
     path: /reviews/{page}
     defaults:
         _controller: AppBundle:Review:list
+        page: 1
+    requirements:
+        page: \d+
+
+card_faqs_list:
+    path: /faqs/{page}
+    defaults:
+        _controller: AppBundle:Review:listfaqs
         page: 1
     requirements:
         page: \d+

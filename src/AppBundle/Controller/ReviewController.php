@@ -226,12 +226,16 @@ class ReviewController extends Controller
         ]);
     }
 
-    public function listAction($page = 1, Request $request)
+		public function listFaqsAction($page = 1, Request $request, $faqs=false){
+			return $this->listAction($page, $request, true);
+		}
+
+    public function listAction($page = 1, Request $request, $faqs=false)
     {
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
-
+        
         $limit = 5;
         if ($page < 1)
             $page = 1;
@@ -241,8 +245,11 @@ class ReviewController extends Controller
 
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getDoctrine()->getManager();
-
-        $dql = "SELECT r FROM AppBundle:Review r JOIN r.card c JOIN c.pack p WHERE p.dateRelease IS NOT NULL AND r.faq = false ORDER BY r.dateCreation DESC";
+				if ($faqs){
+					$dql = "SELECT r FROM AppBundle:Review r JOIN r.card c JOIN c.pack p WHERE p.dateRelease IS NOT NULL AND r.faq = true ORDER BY r.dateCreation DESC";
+				} else {
+        	$dql = "SELECT r FROM AppBundle:Review r JOIN r.card c JOIN c.pack p WHERE p.dateRelease IS NOT NULL AND r.faq = false ORDER BY r.dateCreation DESC";
+        }
         $query = $em->createQuery($dql)->setFirstResult($start)->setMaxResults($limit);
 
         $paginator = new Paginator($query, false);
@@ -275,8 +282,11 @@ class ReviewController extends Controller
                     "current" => $page == $currpage
             );
         }
-
-        return $this->render('AppBundle:Reviews:reviews.html.twig',
+				$template = 'AppBundle:Reviews:reviews.html.twig';
+				if ($faqs){
+					$template = 'AppBundle:Reviews:faqs.html.twig';
+				}
+        return $this->render($template,
                 array(
                         'pagetitle' => $pagetitle,
                         'pagedescription' => "Read the latest user-submitted reviews on the cards.",
