@@ -400,6 +400,7 @@ class SearchController extends Controller
 				if($includeReviews) {
 				    $cardinfo['reviews'] = $this->get('cards_data')->get_reviews($card);
 				    $cardinfo['faqs'] = $this->get('cards_data')->get_faqs($card);
+				    $cardinfo['related'] = $this->get('cards_data')->get_related($card);
 				}
 				$cards[] = $cardinfo;
 			}

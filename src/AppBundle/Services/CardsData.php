@@ -694,6 +694,15 @@ class CardsData
         return $response;
     }
     
+    public function get_related($card)
+    {
+        $cards = $this->doctrine->getRepository('AppBundle:Card')->findBy(array('name' => $card->getName()), array('position' => 'ASC'));
+
+        $response = $cards;
+
+        return $response;
+    }
+    
     public function getDistinctTraits()
     {
     	/**
