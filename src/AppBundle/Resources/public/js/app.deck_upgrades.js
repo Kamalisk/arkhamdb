@@ -96,7 +96,7 @@ deck_upgrades.display = function display() {
 		// then pay for all changes
 		_.each(cards_added, function (addition) {
 			if (addition.card.xp >= 0){			
-				console.log("CARD", 		addition);
+				//console.log("CARD", 		addition);
 				if (addition.card.xp === 0 && removed_0_cards > 0 && free_0_cards > 0){
 					free_0_cards -= addition.qty;
 					removed_0_cards -= addition.qty;
@@ -106,7 +106,8 @@ deck_upgrades.display = function display() {
 						addition.qty = 0;
 					}
 				}
-				cost = cost + (Math.max(addition.card.xp, 1) * addition.qty);
+				
+				cost = cost + (Math.max(addition.card.xp * (addition.card.exceptional ? 2: 1), 1) * addition.qty);
 				addition.qty = 0;
 			}
 		});

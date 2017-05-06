@@ -55,6 +55,11 @@ AppBundle\Entity\Card:
         position:
             type: smallint
             nullable: false
+        exceptional:
+            type: boolean
+            column: exceptional
+            options:
+                default: false
         encounterPosition:
             type: smallint
             nullable: true

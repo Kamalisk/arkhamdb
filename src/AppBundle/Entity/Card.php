@@ -37,7 +37,8 @@ class Card implements \Serializable
 				'hidden',
 				'double_sided',
 				'is_unique',
-				'exile'
+				'exile',
+				'exceptional'
 		];
 	
 		$externalFields = [
@@ -387,6 +388,10 @@ class Card implements \Serializable
      */
     private $exile;
     
+     /**
+     * @var boolean
+     */
+    private $exceptional;
     
     /**
      * @var boolean
@@ -1557,6 +1562,31 @@ class Card implements \Serializable
     public function getPermanent()
     {
         return $this->permanent;
+    }
+
+
+    /**
+     * Set Exceptional
+     *
+     * @param boolean $exceptional
+     *
+     * @return Card
+     */
+    public function setExceptional($exceptional)
+    {
+        $this->exceptional = $exceptional;
+
+        return $this;
+    }
+
+    /**
+     * Get exceptional
+     *
+     * @return boolean
+     */
+    public function getExceptional()
+    {
+        return $this->exceptional;
     }
 
 

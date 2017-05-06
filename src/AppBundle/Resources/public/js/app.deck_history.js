@@ -106,7 +106,8 @@ deck_history.all_changes = function all_changes() {
 					addition.qty = 0;
 				}
 			}
-			cost = cost + (Math.max(addition.card.xp, 1) * addition.qty);
+			
+			cost = cost + (Math.max(addition.card.xp * (addition.card.exceptional ? 2: 1), 1) * addition.qty);
 			addition.qty = 0;
 		}
 	});

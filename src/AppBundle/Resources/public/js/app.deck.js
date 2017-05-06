@@ -262,7 +262,7 @@ deck.get_xp_usage = function get_xp_usage(sort) {
 	var xp = 0;
 	deck.get_real_draw_deck().forEach(function (card) {
 		if (card && card.xp){
-			xp += card.xp * card.indeck;
+			xp += card.xp * card.indeck * (card.exceptional ? 2: 1);
 		}
 	});
 	return xp;
