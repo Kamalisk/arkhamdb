@@ -11,32 +11,38 @@
 <div class="main container">
     <div class="row">
     {% for data in decklists_by_faction %}
-    <div class="col-md-6" style="margin-bottom:30px">
-        <div class="bg-faction bg-{{ data.faction.code }}" style="padding:10px 10px 5px 10px">
+    <div class="col-md-6" style="margin-bottom:15px; ">
+        <div class="bg-faction bg-{{ data.faction.code }}" style="padding:10px 10px 4px 8px">
             <div class="media">
-              <div class="media-left" style="font-size:30px">
+              <div class="media-left" style="font-size:16px">
                   <span class="icon icon-{{ data.faction.code }}"></span>
               </div>
               <div class="media-body">
-                  <h4 class="media-heading" style="white-space:nowrap"><a href="{{ path('decklist_detail',{decklist_id:data.decklist.id,decklist_name:data.decklist.nameCanonical}) }}">{{ data.decklist.name }}</a></h4>
-                  <div class="small">by <span class="username">{{ macros.username_colorless(data.decklist.user) }}</span> &middot; <time datetime="{{ data.decklist.dateCreation|date('c') }}">{{ data.decklist.dateCreation|date('M d, Y') }}</time></div>
-              </div>
+                  <h4 class="media-heading" style="white-space:nowrap"><a href="{{ path('decklist_detail',{decklist_id:data.decklist.id,decklist_name:data.decklist.nameCanonical}) }}">{{ data.decklist.name }}</a></h4>                  
+              </div>              
             </div>
         </div>
-        <div style="background-color: white; padding: 10px 20px 20px 20px">
-            <div class="small pull-right">
+        <div style="background-color: white; background-position: -50px -250px; background-size: 1200px 800px; background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png);">
+            <div style="padding: 5px 10px 10px 10px; background-color: rgba(255, 255, 255, 0.92);">
+							<div class="small pull-right">
               {{ macros.decklist_social_icons(data.decklist ) }}
+							</div>
+	            {% set character = data.decklist.getCharacter() %}
+	            <div class="pull-left" style="margin-right : 10px; margin-top : 5px;">
+	            	<div class="card-thumbnail-static card-thumbnail-wide card-thumbnail-investigator" style="background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png)"></div>
+	            </div>
+	            <h4 style="margin-bottom : 2px;"><a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.decklist.getCharacter().getName()}}</a></h4>	            
+	            <div class="padding-left : 10px;">
+	            <p>Experience Required: {{ data.decklist.xp|number_format }}
+	            <br>
+	            {{ data.decklist.tags }} &nbsp;
+	            </p>            
+	            </div>
+	            <div class="small pull-right" >by <span class="username">{{ macros.username_colorless(data.decklist.user) }}</span> &middot; <time datetime="{{ data.decklist.dateCreation|date('c') }}">{{ data.decklist.dateCreation|date('M d, Y') }}</time></div>
+
+	            <div style="clear:both"></div>
             </div>
-            <div class="pull-left" style="margin-right : 10px;">
-            	<div class="card-thumbnail-static card-thumbnail-2x card-thumbnail-investigator" style="background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png)"></div>
-            </div>
-            <div class="padding-left : 10px;">
-            {% set character = data.decklist.getCharacter() %}
-            <h3><a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.decklist.getCharacter().getName()}}</a></h3>
-            <p>{{ data.count_by_type|raw }}</p>
-            <!-- <div class="text-center small"><a href="{{ path('decklists_list',{type:'find',faction:data.faction.code}) }}">More in this faction</a></div>-->
-            </div>
-            <div style="clear:both"></div>
+            
         </div>
     </div>
     {% endfor %}

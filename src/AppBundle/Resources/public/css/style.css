@@ -319,6 +319,17 @@ div.tags span.tag:not(:first-child)::before {
 .card-thumbnail-4x.card-thumbnail-enemy{background-position:-12.75px -7.75px}
 .card-thumbnail-5x.card-thumbnail-enemy{background-position:-10.2px -6.2px}
 
+.card-thumbnail-wide.card-thumbnail-investigator {
+	background-repeat:no-repeat;
+	width:140px;height:80px;
+	background-size:270px 180px;
+	background-position: -1px -42px
+}
+
+.card-faded-background {
+	
+}
+
 .card-img-thumbnail {
 	margin-left: -50%;
 	margin-top: -50%;
