@@ -148,7 +148,7 @@ class BuilderController extends Controller
 				
 				foreach ( $cards_to_add as $card) {
 					$slot = new Deckslot ();
-					$slot->setQuantity ( 1 );
+					$slot->setQuantity ( $card->getDeckLimit() );
 					$slot->setCard ( $card );
 					$slot->setDeck ( $deck );
 					//$slot->setIgnoreDeckRestrictions ( true );
