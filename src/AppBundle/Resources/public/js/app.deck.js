@@ -713,10 +713,25 @@ deck.get_problem = function get_problem() {
 	}
 		
 	//console.log(investigator);
-	for (var i = 0; i < investigator.deck_options.length; i++){		
+	for (var i = 0; i < investigator.deck_options.length; i++){
+		console.log(investigator.deck_options);
 		if (investigator.deck_options[i].limit_count && investigator.deck_options[i].limit){
 			if (investigator.deck_options[i].limit_count > investigator.deck_options[i].limit){
 				return 'investigator';
+			}
+		}
+		
+		if (investigator.deck_options[i].atleast_count && investigator.deck_options[i].atleast){
+			if (investigator.deck_options[i].atleast.factions && investigator.deck_options[i].atleast.min){
+				var faction_count = 0;
+				$.each(investigator.deck_options[i].atleast_count, function(key, value){
+					if (value >= investigator.deck_options[i].atleast.min){
+						faction_count++;
+					}
+				})
+				if (faction_count < investigator.deck_options[i].atleast.factions){
+					return 'investigator';
+				}
 			}
 		}
 	}
@@ -738,6 +753,7 @@ deck.get_invalid_cards = function get_invalid_cards() {
 	if (investigator){
 		for (var i = 0; i < investigator.deck_options.length; i++){
 			investigator.deck_options[i].limit_count = 0;
+			investigator.deck_options[i].atleast_count = {};
 		}
 	}
 	return _.filter(deck.get_cards(), function (card) {
@@ -850,6 +866,12 @@ deck.can_include_card = function can_include_card(card, limit_count) {
 				if (limit_count && option.limit){
 					//console.log(card);
 					option.limit_count += card.indeck;
+				}
+				if (limit_count && option.atleast){
+					if (!option.atleast_count[card.faction_code]){
+						option.atleast_count[card.faction_code] = 0;
+					}
+					option.atleast_count[card.faction_code] += card.indeck;
 				}
 				return true;
 			}
