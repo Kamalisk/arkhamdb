@@ -416,7 +416,8 @@ class ImportStdCommand extends ContainerAwareCommand
 					'clues_fixed',
 					'hidden',
 					'permanent',
-					'exile'
+					'exile',
+					'exceptional'
 
 			]);
 			if($card) {
@@ -495,6 +496,11 @@ class ImportStdCommand extends ContainerAwareCommand
 			}
 		}
 		if ($key == "permanent"){
+			if (!$value){
+				$value = false;
+			}
+		}
+		if ($key == "exceptional"){
 			if (!$value){
 				$value = false;
 			}
