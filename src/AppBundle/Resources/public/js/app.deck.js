@@ -16,6 +16,7 @@ var date_creation,
 	user_id,
 	sort_type = "default",
 	sort_dir = 1,
+	problem_list = [],
 	problem_labels = {
 		too_few_cards: "Contains too few cards",
 		too_many_cards: "Contains too many cards",
@@ -275,6 +276,9 @@ deck.get_nb_cards = function get_nb_cards(cards) {
 	return _.reduce(quantities, function(memo, num) { return memo + num; }, 0);
 }
 
+
+
+
 /**
  * @memberOf deck
  */
@@ -388,12 +392,18 @@ deck.get_layout_data = function get_layout_data(options) {
 	//deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold">'+investigator_name+'</h4>'));
 	deck.update_layout_section(data, 'meta', $('<div>'+deck.get_draw_deck_size()+' cards ('+deck.get_real_draw_deck_size()+' total)</div>').addClass(deck.get_draw_deck_size() < size ? 'text-danger': ''));
 	deck.update_layout_section(data, 'meta', $('<div>'+deck.get_xp_usage()+' experience required.</div>'));
-	deck.update_layout_section(data, 'meta', $('<div>Packs: ' + _.map(deck.get_included_packs(), function (pack) { return pack.name+(pack.quantity > 1 ? ' ('+pack.quantity+')' : ''); }).join(', ') + '</div>'));
+	deck.update_layout_section(data, 'meta', $('<div><span style="border-bottom: 1px dashed #cfcfcf;" title="' + _.map(deck.get_included_packs(), function (pack) { return pack.name+(pack.quantity > 1 ? ' ('+pack.quantity+')' : ''); }).join(', ') + '">' + deck.get_included_packs().length + ' packs required </span>' + '</div>'));
 	if(deck.get_tags && deck.get_tags() ) {
 		deck.update_layout_section(data, 'meta', $('<div>'+deck.get_tags().replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})+'</div>'));
 	}
 	if(problem) {
-		deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+problem_labels[problem]+'</div>'));
+		console.log(deck.problem_list);
+		if (deck.problem_list && deck.problem_list.length > 0){
+			deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+deck.problem_list.join(', ')+'</div>'));
+		} else {
+			deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+problem_labels[problem]+'</div>'));
+		}
+		
 	}
 	//deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+problem_labels[problem]+'</div>'));
 	//console.log("reload", deck.sort_type);
@@ -678,6 +688,8 @@ deck.get_problem = function get_problem() {
 	// get investigator data
 	var card = app.data.cards.findById(this.get_investigator_code());
 	var size = 30;
+	// store list of all problems 
+	deck.problem_list = [];
 	if (card && card.deck_requirements){
 		if (card.deck_requirements.size){
 			size = card.deck_requirements.size;
@@ -717,6 +729,9 @@ deck.get_problem = function get_problem() {
 		console.log(investigator.deck_options);
 		if (investigator.deck_options[i].limit_count && investigator.deck_options[i].limit){
 			if (investigator.deck_options[i].limit_count > investigator.deck_options[i].limit){
+				if (investigator.deck_options[i].error){
+					deck.problem_list.push(investigator.deck_options[i].error);
+				}
 				return 'investigator';
 			}
 		}
@@ -730,6 +745,9 @@ deck.get_problem = function get_problem() {
 					}
 				})
 				if (faction_count < investigator.deck_options[i].atleast.factions){
+					if (investigator.deck_options[i].error){
+						deck.problem_list.push(investigator.deck_options[i].error);
+					}
 					return 'investigator';
 				}
 			}
