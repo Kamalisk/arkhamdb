@@ -95,6 +95,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
 				$postversion[$code] = $postversion[$code] + $qty;
 			}
 			foreach ( $variation[1] as $code => $qty ) {
+				if (! isset ( $postversion[$code] )) $postversion[$code] = 0;
 				$postversion[$code] = $postversion[$code] - $qty;
 				if ($postversion[$code] == 0) unset ( $postversion[$code] );
 			}
