@@ -844,14 +844,14 @@ deck.can_include_card = function can_include_card(card, limit_count) {
 			}
 			
 			if (option.trait){
-				// needs to match at least one faction				
+				// needs to match at least one trait				
 				var trait_valid = false;				
 				
 				for(var j = 0; j < option.trait.length; j++){
 					var trait = option.trait[j];
 					//console.log(card.traits, trait.toUpperCase()+".");
 					
-					if (card.traits.toUpperCase().indexOf(trait.toUpperCase()+".") !== -1){
+					if (card.traits && card.traits.toUpperCase().indexOf(trait.toUpperCase()+".") !== -1){
 						trait_valid = true;
 					}
 				}
