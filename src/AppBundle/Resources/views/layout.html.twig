@@ -7,6 +7,11 @@
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="icon" sizes="192x192" href="/icon-192.png" />
     <link rel="apple-touch-icon" sizes="120x120" href="/icon-120.png" />
+    {% if app.request.locale != "en" and app.request.attributes.get('_route') != "" %}
+      {% set _route_params = app.request.attributes.get('_route_params')|default({}) %}
+      {% set _get_params = app.request.query.all()|default({}) %}
+      <link rel="canonical" href="{{ url(app.request.attributes.get('_route'), _route_params|merge(_get_params)|merge({'_locale': 'en'})) }}"/>
+    {% endif %}
     {% if pagedescription is defined %}<meta name="description" content="{{ pagedescription }}">{% endif %}
 
     <link href='https://fonts.googleapis.com/css?family=Amiri:400,400italic,700,700italic|Julius+Sans+One|Open+Sans:400,400italic,700,700italic|Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
@@ -17,6 +22,7 @@
     	'bundles/app/css/bootstrap.css'
     	'bundles/app/css/style.css'
     	'bundles/app/css/icons.css'
+      'bundles/app/css/languages.css'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
 	{% endstylesheets %}
@@ -63,6 +69,27 @@
             <li id="login">
                 <a href="#" class="disabled"><span class="fa fa-user"></span></a>
             </li>
+            <!-- locale selection -->
+            {% if _route is not defined or _route is not empty %}
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown">
+                <span class="lang-sm" lang="{{ app.request.locale | default(default_locale) }}"></span>
+                <span class="caret">
+              </a>
+              <ul class="dropdown-menu">
+                {% for supported_locale in supported_locales %}
+                  {% set _route = app.request.attributes.get('_route') %}
+                  {% set _route_params = app.request.attributes.get('_route_params')|default({})|merge(app.request.query.all) %}
+                  {% set _get_params = app.request.attributes.get('_get_params')|default({}) %}
+                  <li>
+                    <a href="{{ path(_route, _route_params|merge(_get_params)|merge({'_locale': supported_locale})) }}">
+                      <span lang="{{ supported_locale }}" class="lang-sm lang-lbl lang-lbl-full"></span>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
+            {% endif %}
           </ul>
           <form class="navbar-form navbar-right visible-lg-block visible-xs-block external" action="{{ path('cards_find') }}" target="_blank">
             <div class="form-group">
@@ -124,8 +151,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.1.7/highcharts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-markdown/2.9.0/js/bootstrap-markdown.min.js"></script>
     <script type="text/javascript">
-	var app = {};
-    moment.locale('en-US');
+    var app = {};
+    moment.locale('{{ app.request.locale }}');
     $(function() {
     {% for flashMessage in app.session.flashbag.get('notice') %}
     	app.ui.insert_alert_message('success', {{ flashMessage|json_encode|raw }});

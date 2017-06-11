@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-class Card implements \Serializable
+class Card implements \Gedmo\Translatable\Translatable, \Serializable
 {
 	private function snakeToCamel($snake) {
 		$parts = explode('_', $snake);
@@ -1823,5 +1823,14 @@ class Card implements \Serializable
     {
         return $this->encounter;
     }
-    
+
+    /*
+    * I18N vars
+    */
+    private $locale = 'en';
+
+    public function setTranslatableLocale($locale)
+    {
+        $this->locale = $locale;
+    }    
 }
