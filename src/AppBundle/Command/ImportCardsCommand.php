@@ -121,7 +121,7 @@ class ImportCardsCommand extends ContainerAwareCommand
         	$only = "encounter";
         }
         
-        $fileUrl = "http://www.cardgamedb.com/deckbuilders/arkhamhorror/database/AHC06-db.jgz";
+        $fileUrl = "http://www.cardgamedb.com/deckbuilders/arkhamhorror/database/AHC08-db.jgz";
         //$output->writeln("Trying to download the file...");
         $file = file_get_contents($fileUrl);
         if(!preg_match('/^cards = (.*);$/', $file, $matches)) {
