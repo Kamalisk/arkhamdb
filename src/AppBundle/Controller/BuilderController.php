@@ -27,7 +27,8 @@ class BuilderController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		
 		$user = $this->getUser();
-		//$collection = $user->getPacksOwned();
+		$collection = $user->getOwnedPacks();
+		$packs_owned = explode(",", $collection);
 		
 		$type = $em->getRepository('AppBundle:Type')->findOneBy(['code' => 'investigator']);
 		$investigators = $em->getRepository('AppBundle:Card')->findBy(['type' => $type], ["name"=>"ASC" ]);
@@ -53,13 +54,17 @@ class BuilderController extends Controller
 			];
 			
 			$investigator->setDeckRequirements($req);
-			//$my_investigators[] = $investigator;
-			//$other_investigators[] = $investigator;
+			if (in_array($investigator->getPack()->getId(), $packs_owned)){
+				$my_investigators[] = $investigator;
+			}
+
+			$all_investigators[] = $investigator;
 		}
 
 			return $this->render('AppBundle:Builder:initbuild.html.twig', [
 					'pagetitle' => "New deck",
-					'investigators' => $investigators
+					'investigators' => $all_investigators,
+					'my_investigators' => $my_investigators
 					//'my_investigators' => $my_investigators,
 					//'other_investigators' => $other_investigators
 			], $response);
