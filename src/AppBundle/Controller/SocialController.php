@@ -355,27 +355,30 @@ class SocialController extends Controller
 
         $categories = [];
         $on = 0; $off = 0;
-        $categories[] = array("label" => "Core / Deluxe", "packs" => []);
+        $categories = array();
         $list_cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findBy([], array("position" => "ASC"));
         foreach($list_cycles as $cycle) {
             $size = count($cycle->getPacks());
             if($cycle->getPosition() == 0 || $size == 0) continue;
             $first_pack = $cycle->getPacks()[0];
-            if($size === 1 && $first_pack->getName() == $cycle->getName()) {
-                $checked = count($packs) ? in_array($first_pack->getId(), $packs) : true;
+
+            $category = array("label" => $cycle->getName(), "packs" => []);
+            foreach($cycle->getPacks() as $pack) {
+                $checked = count($packs) ? in_array($pack->getId(), $packs) : true;
                 if($checked) $on++;
                 else $off++;
-                $categories[0]["packs"][] = array("id" => $first_pack->getId(), "label" => $first_pack->getName(), "checked" => $checked, "future" => $first_pack->getDateRelease() === NULL);
-            } else {
-                $category = array("label" => $cycle->getName(), "packs" => []);
-                foreach($cycle->getPacks() as $pack) {
-                    $checked = count($packs) ? in_array($pack->getId(), $packs) : true;
-                    if($checked) $on++;
-                    else $off++;
-                    $category['packs'][] = array("id" => $pack->getId(), "label" => $pack->getName(), "checked" => $checked, "future" => $pack->getDateRelease() === NULL);
+                $category['packs'][] = array("id" => $pack->getId(), "label" => $pack->getName(), "checked" => $checked, "future" => $pack->getDateRelease() === NULL);
+                if ($pack->getCode() == "core"){
+                	$checked = count($packs) ? in_array("1-2", $packs) : true;
+	                if($checked) {
+	                	$on++;
+	                } else {
+	                	$off++;
+	                }
+	                $category['packs'][] = array("id" => "1-2", "label" => "Second Core Set", "checked" => $checked, "future" => $pack->getDateRelease() === NULL);
                 }
-                $categories[] = $category;
-            }
+            } 	
+            $categories[] = $category;
         }
 
         $params = array(
