@@ -1,84 +1,153 @@
 (function app_draw_simulator(draw_simulator, $) {
 
-var deck = null,
-	hand = null,
+var deck = [],
+	hand = [],
 	initial_size = 0,
 	draw_count = 0,
 	container = null;
 
-/**
- * @memberOf draw_simulator
- */
-draw_simulator.reset = function reset() {
-	$(container).empty();
-	draw_simulator.on_data_loaded();
-	draw_count = 0;
-	draw_simulator.update_odds();
-	$('#draw-simulator-clear').prop('disabled', true);
-	$('[data-command=redraw]').prop('disabled', true);
-};
-
 
 /**
  * @memberOf draw_simulator
  */
-draw_simulator.redraw2 = function redraw2() {
-	$('[data-command=redraw]').prop('disabled', true);
-	$('[data-subtype="weakness"]',container).remove();
-	$('[data-subtype="basicweakness"]',container).remove();
-	var count = 0;
-	var keys_to_clear = [];
-	$.each(hand, function(key, value){
-		if (value && (value.subtype_code == "weakness" || value.subtype_code == "basicweakness")){
-			keys_to_clear.push(key);
-			deck.push(value);
-			count++;
-			draw_count--;
-		}
-	});
-	$.each(keys_to_clear, function(key, value){
-		var spliced = hand.splice(value, 1);
-	});
-	
-	draw_simulator.do_draw(count);
-	draw_simulator.update_odds();
-};
-
-
-/**
- * @memberOf draw_simulator
- */
-draw_simulator.redraw3 = function redraw2() {
-	$('[data-command=redraw]').prop('disabled', true);
-	$('[data-selected=true]',container).remove();
-	var count = 0;
-	var keys_to_clear = [];
-	$.each(hand, function(key, value){
-		if (value && (value.subtype_code == "weakness" || value.subtype_code == "basicweakness")){
-			keys_to_clear.push(key);
-			deck.push(value);
-			count++;
-			draw_count--;
-		}
-	});
-	$.each(keys_to_clear, function(key, value){
-		var spliced = hand.splice(value, 1);
-	});
-	
-	draw_simulator.do_draw(count);
-	draw_simulator.update_odds();
-};
+draw_simulator.on_data_loaded = function on_data_loaded() {
+	draw_simulator.init();
+}
 
 /**
  * @memberOf draw_simulator
  */
 draw_simulator.on_dom_loaded = function on_dom_loaded() {
-	$('#table-draw-simulator').on('click', 'button.btn', draw_simulator.handle_click);
-	$('#table-draw-simulator').on('click', 'img, div.card-proxy', draw_simulator.toggle_opacity);
 	container = $('#table-draw-simulator-content');
-	
+	$('#table-draw-simulator').on('click', 'button.btn', draw_simulator.handle_click);
+	$('#table-draw-simulator').on('click', 'div.simulator-hand-card', draw_simulator.select_card);
 	$('#oddsModal').on({change: draw_simulator.compute_odds}, 'input');
 }
+
+draw_simulator.select_card = function select_card(event) {
+	var index = $(this).attr('data-hand-id');
+	if (hand[index]){
+		if (hand[index].selected){
+			hand[index].selected = false;
+		} else {
+			hand[index].selected = true;
+		}
+	}
+	draw_simulator.render();
+}
+
+/**
+ * @memberOf draw_simulator
+ */
+draw_simulator.init = function init() {
+	deck = [];
+	hand = [];
+	draw_count = 0;
+	var cards = app.deck.get_real_draw_deck();
+	cards.forEach(function (card) {
+		for(var ex = 0; ex < card.indeck; ex++) {
+			if (card.name == "Duke"){
+				return;
+			}
+			var new_card = {};
+			new_card.data = card;
+			deck.push(new_card);
+		}
+	});
+	initial_size = deck.length;
+	draw_simulator.render();
+}
+
+
+// store the deck and hand in an object, and just use this to draw the cards
+draw_simulator.render = function() {
+	$(container).empty();
+	$.each(hand, function(key, card){
+		if (card.data){
+			var card_element = $('<div class="simulator-hand-card" data-hand-id="'+(key)+'" data-type="'+card.data.type_code+'" data-subtype="'+card.data.subtype_code+'"></div>');
+			if (card.selected){
+				card_element.css('opacity', 0.6);
+				$('[data-command=redraw]').prop('disabled', false);
+			}
+			if(card.data.imagesrc) {
+				card_element.append('<img src="'+card.data.imagesrc+'">');
+			} else {
+				card_element.append('<div>'+card.data.name+'</div>');
+			}
+			container.append(card_element);
+			if (card.data.subtype_code && (card.data.subtype_code == "weakness" || card.data.subtype_code == "basicweakness") ){
+				//$('[data-command=redraw]').prop('disabled', false);
+			}
+		}
+	});
+	draw_simulator.update_odds();
+}
+
+/**
+ * @memberOf draw_simulator
+ * @param draw integer
+ */
+draw_simulator.draw = function draw(qty) {
+	for(var pick = 0; pick < qty && deck.length > 0; pick++) {
+		var rand = Math.floor(Math.random() * deck.length);
+		var spliced = deck.splice(rand, 1);
+		var card = spliced[0];
+		hand.push(card);
+		draw_count++;
+	}
+	draw_simulator.render();
+}
+
+
+/**
+ * @memberOf draw_simulator
+ */
+draw_simulator.reset = function reset() {
+	draw_simulator.init();
+};
+
+
+/**
+ * @memberOf draw_simulator
+ */
+draw_simulator.redraw = function redraw() {
+	$('[data-command=redraw]').prop('disabled', true);
+	
+	var count = 0;
+	var keys_to_clear = [];
+	$.each(hand, function(key, value){
+		//if (value && (value.subtype_code == "weakness" || value.subtype_code == "basicweakness")){
+		if (value.selected){
+			value.selected = false;
+			deck.push(value);
+			keys_to_clear.push(key);
+			count++;
+			draw_count--;
+		}
+	});
+	keys_to_clear = keys_to_clear.reverse();
+	$.each(keys_to_clear, function(key, value){
+		var spliced = hand.splice(value, 1);
+	});
+	draw_simulator.shuffle_deck(deck);
+	draw_simulator.draw(count);
+};
+
+
+/**
+ * Randomize array element order in-place.
+ * Using Durstenfeld shuffle algorithm.
+ */
+draw_simulator.shuffle_deck = function(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+}
+
 
 /**
  * @memberOf draw_simulator
@@ -91,20 +160,7 @@ draw_simulator.compute_odds = function compute_odds() {
 	$('#odds-calculator-p').text( Math.round( 100 * app.hypergeometric.get_cumul(inputs.k, inputs.N, inputs.K, inputs.n) ) );
 }
 
-/**
- * @memberOf draw_simulator
- */
-draw_simulator.on_data_loaded = function on_data_loaded() {
-	deck = [];
-	hand = [];
-	var cards = app.deck.get_real_draw_deck();
-	cards.forEach(function (card) {
-		for(var ex = 0; ex < card.indeck; ex++) {
-			deck.push(card);
-		}
-	});
-	initial_size = deck.length;
-}
+
 
 /**
  * @memberOf draw_simulator
@@ -116,30 +172,7 @@ draw_simulator.update_odds = function update_odds() {
 	}
 }
 
-/**
- * @memberOf draw_simulator
- * @param draw integer
- */
-draw_simulator.do_draw = function do_draw(draw) {
-	for(var pick = 0; pick < draw && deck.length > 0; pick++) {
-		var rand = Math.floor(Math.random() * deck.length);
-		var spliced = deck.splice(rand, 1);
-		var card = spliced[0];
-		var card_element;
-		hand.push(card);
-		if(card.imagesrc) {
-			card_element = $('<div data-hand-id="'+(hand.length-1)+'" data-type="'+card.type_code+'" data-subtype="'+card.subtype_code+'"><img src="'+card.imagesrc+'"></div>');
-		} else {
-			card_element = $('<div data-hand-id="'+(hand.length-1)+'" data-type="'+card.type_code+'" class="card-proxy" data-subtype="'+card.subtype_code+'"><div>'+card.name+'</div></div>');
-		}
-		if (card.subtype_code && (card.subtype_code == "weakness" || card.subtype_code == "basicweakness") ){
-			$('[data-command=redraw]').prop('disabled', false);
-		}
-		container.append(card_element);
-		draw_count++;
-	}
-	draw_simulator.update_odds();
-}
+
 
 /**
  * @memberOf draw_simulator
@@ -149,9 +182,8 @@ draw_simulator.handle_click = function handle_click(event) {
 	event.preventDefault();
 
 	var command = $(this).data('command');
-	
 	if(command === 'redraw') {
-		draw_simulator.redraw2();
+		draw_simulator.redraw();
 		return;
 	}
 	
@@ -172,21 +204,8 @@ draw_simulator.handle_click = function handle_click(event) {
 	}
 
 	if(isNaN(draw)) return;
-	draw_simulator.do_draw(draw);
+	draw_simulator.draw(draw);
 
-};
-
-/**
- * @memberOf draw_simulator
- */
-draw_simulator.toggle_opacity = function toggle_opacity(event) {
-	$(this).css('opacity', 1.5 - parseFloat($(this).css('opacity')));
-	if ($(this).attr('data-selected') == "true"){
-		$(this).attr('data-selected', "false" );	
-	} else {
-		$(this).attr('data-selected', "true" );
-	}
-	
 };
 
 })(app.draw_simulator = {}, jQuery);
