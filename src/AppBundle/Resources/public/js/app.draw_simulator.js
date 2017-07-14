@@ -46,7 +46,7 @@ draw_simulator.init = function init() {
 	var cards = app.deck.get_real_draw_deck();
 	cards.forEach(function (card) {
 		for(var ex = 0; ex < card.indeck; ex++) {
-			if (card.name == "Duke"){
+			if (card.name == "Duke" || card.permanent){
 				return;
 			}
 			var new_card = {};
