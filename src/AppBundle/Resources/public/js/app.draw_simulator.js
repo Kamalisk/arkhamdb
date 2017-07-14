@@ -68,6 +68,7 @@ draw_simulator.render = function() {
 			if (card.selected){
 				card_element.css('opacity', 0.6);
 				$('[data-command=redraw]').prop('disabled', false);
+				$('[data-command=reshuffle]').prop('disabled', false);
 			}
 			if(card.data.imagesrc) {
 				card_element.append('<img src="'+card.data.imagesrc+'">');
@@ -110,8 +111,9 @@ draw_simulator.reset = function reset() {
 /**
  * @memberOf draw_simulator
  */
-draw_simulator.redraw = function redraw() {
+draw_simulator.reshuffle = function reshuffle(redraw) {
 	$('[data-command=redraw]').prop('disabled', true);
+	$('[data-command=reshuffle]').prop('disabled', true);
 	
 	var count = 0;
 	var keys_to_clear = [];
@@ -130,7 +132,11 @@ draw_simulator.redraw = function redraw() {
 		var spliced = hand.splice(value, 1);
 	});
 	draw_simulator.shuffle_deck(deck);
-	draw_simulator.draw(count);
+	if (redraw) {
+		draw_simulator.draw(count);
+	} else {
+		draw_simulator.render();
+	}
 };
 
 
@@ -183,7 +189,12 @@ draw_simulator.handle_click = function handle_click(event) {
 
 	var command = $(this).data('command');
 	if(command === 'redraw') {
-		draw_simulator.redraw();
+		draw_simulator.reshuffle(true);
+		return;
+	}
+	
+	if(command === 'reshuffle') {
+		draw_simulator.reshuffle(false);
 		return;
 	}
 	
