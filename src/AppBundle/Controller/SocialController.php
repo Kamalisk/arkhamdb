@@ -1078,28 +1078,33 @@ class SocialController extends Controller
 				order by f.name asc")
             ->fetchAll();
 
+
         $categories = []; $on = 0; $off = 0;
-        $categories[] = array("label" => "Core / Deluxe", "packs" => []);
         $list_cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findBy([], array("position" => "ASC"));
         foreach($list_cycles as $cycle) {
             $size = count($cycle->getPacks());
             if($cycle->getPosition() == 0 || $size == 0) continue;
-            $first_pack = $cycle->getPacks()[0];
-            if($size === 1 && $first_pack->getName() == $cycle->getName()) {
-                $checked = $first_pack->getDateRelease() !== NULL;
-                if($checked) $on++;
-                else $off++;
-                $categories[0]["packs"][] = array("id" => $first_pack->getId(), "label" => $first_pack->getName(), "checked" => $checked, "future" => $first_pack->getDateRelease() === NULL);
-            } else {
-                $category = array("label" => $cycle->getName(), "packs" => []);
-                foreach($cycle->getPacks() as $pack) {
-                    $checked = $pack->getDateRelease() !== NULL;
-                    if($checked) $on++;
-                    else $off++;
-                    $category['packs'][] = array("id" => $pack->getId(), "label" => $pack->getName(), "checked" => $checked, "future" => $pack->getDateRelease() === NULL);
+
+            $category = array("label" => $cycle->getName(), "packs" => []);
+            foreach($cycle->getPacks() as $pack) {
+                $checked = $pack->getDateRelease() !== NULL;
+                if($checked) {
+                	$on++;
+                } else {
+                	$off++;
                 }
-                $categories[] = $category;
+                $category['packs'][] = array("id" => $pack->getId(), "label" => $pack->getName(), "checked" => $checked, "future" => $pack->getDateRelease() === NULL);
+                if ($pack->getCode() == "core"){
+	                if($checked) {
+	                	$on++;
+	                } else {
+	                	$off++;
+	                }
+	                $category['packs'][] = array("id" => "1-2", "label" => "Second Core Set", "checked" => $checked, "future" => $pack->getDateRelease() === NULL);
+                }
             }
+            $categories[] = $category;
+        
         }
         
         $searchForm = $this->renderView('AppBundle:Search:form.html.twig',
