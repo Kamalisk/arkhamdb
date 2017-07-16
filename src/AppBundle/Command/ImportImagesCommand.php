@@ -45,8 +45,8 @@ class ImportImagesCommand extends ContainerAwareCommand
           $imagepath_back = $rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl_back);
           $imagepath2_back = $rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl2_back);
           $pack_id = $card->getPack()->getId();
-          if ($card->getPack()->getCode() == "uau"){
-          	$pack_id = 6;
+          if ($card->getPack()->getCode() == "litas"){
+          	$pack_id = 8;
           } else {
           	continue;
           }
