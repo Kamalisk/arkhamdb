@@ -36,7 +36,7 @@ AppBundle\Entity\Scenario:
             nullable: false
         position:
             type: smallint
-            nullable: false
+            nullable: true
     uniqueConstraints:
         scenario_code_idx:
             columns: [ code ]
