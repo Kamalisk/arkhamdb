@@ -1,4 +1,4 @@
-
+{% import "AppBundle::macros.html.twig" as macros %}
 <div class="col-md-12" style="margin-top:2em">
 <form method="POST" action="{{ path('card_review_post') }}" style="clear:right" id="faq-edit-form">
 	<input type="hidden" name="card_id" value="{{ card.id }}">

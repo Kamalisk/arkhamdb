@@ -1,3 +1,4 @@
+{% import "AppBundle::macros.html.twig" as macros %}
 <div class="col-md-4 faint-{{investigator.faction.code}}" style="padding : 2px; padding-top : 10px; border : solid white 1px;">					
 	<div class="col-md-4">
 	<span class="deck-list-investigator-image card-thumbnail-2x card-thumbnail-investigator" title="{{ investigator.name }}" style="background-image:url({{ asset('/bundles/cards/'~investigator.code~'.png') }})"></span>
