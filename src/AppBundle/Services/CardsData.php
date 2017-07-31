@@ -132,7 +132,7 @@ class CardsData
 	
 	public function allsetsdata()
 	{
-		$list_cycles = $this->doctrine->getRepository('AppBundle:Cycle')->findBy(array(), array("position" => "ASC"));
+		$list_cycles = $this->doctrine->getRepository('AppBundle:Cycle')->findAll();
 		$cycles = array();
 		foreach($list_cycles as $cycle) {
 			$packs = array();
@@ -173,7 +173,7 @@ class CardsData
 	
 	public function getPrimaryFactions()
 	{
-		$factions = $this->doctrine->getRepository('AppBundle:Faction')->findBy(array("isPrimary" => TRUE), array("code" => "ASC"));
+		$factions = $this->doctrine->getRepository('AppBundle:Faction')->findPrimaries();
 		return $factions;
 	}
 
@@ -182,8 +182,10 @@ class CardsData
 		$i=0;
 
 		// construction de la requete sql
-		$qb = $this->doctrine->getRepository('AppBundle:Card')->createQueryBuilder('c');
-		$qb->leftJoin('c.pack', 'p')
+		$repo = $this->doctrine->getRepository('AppBundle:Card');
+		$qb = $repo->createQueryBuilder('c');
+		$qb->select('c', 'p', 'y', 't', 'b', 'm', 'l', 'f')
+		    ->leftJoin('c.pack', 'p')
 			->leftJoin('p.cycle', 'y')
 			->leftJoin('c.type', 't')
 			->leftJoin('c.subtype', 'b')
@@ -442,8 +444,7 @@ class CardsData
 		}
 		$qb->addOrderBy('c.name');
 		$qb->addOrderBy('c.code');
-		$query = $qb->getQuery();
-		$rows = $query->getResult();
+		$rows = $repo->getResult($qb);
 
 		return $rows;
 	}
