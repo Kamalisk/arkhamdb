@@ -1,6 +1,10 @@
 AppBundle\Entity\Faction:
     type: entity
     table: faction
+    repositoryClass: AppBundle\Repository\FactionRepository
+    gedmo:
+        translation:
+            locale: locale
     oneToMany:
         cards:
             targetEntity: Card
@@ -20,6 +24,8 @@ AppBundle\Entity\Faction:
             type: string
             length: 1024
             nullable: false
+            gedmo:
+                - translatable
         isPrimary:
             type: boolean
             nullable: false

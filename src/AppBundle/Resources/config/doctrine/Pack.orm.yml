@@ -1,6 +1,10 @@
 AppBundle\Entity\Pack:
     type: entity
     table: pack
+    repositoryClass: AppBundle\Repository\PackRepository
+    gedmo:
+        translation:
+            locale: locale
     manyToOne:
         cycle:
             targetEntity: Cycle
@@ -27,6 +31,8 @@ AppBundle\Entity\Pack:
             type: string
             length: 1024
             nullable: false
+            gedmo:
+                - translatable
         position:
             type: smallint
             nullable: false

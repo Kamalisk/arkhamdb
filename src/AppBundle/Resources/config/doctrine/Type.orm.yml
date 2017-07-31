@@ -1,6 +1,10 @@
 AppBundle\Entity\Type:
     type: entity
     table: type
+    repositoryClass: AppBundle\Repository\TypeRepository
+    gedmo:
+        translation:
+            locale: locale
     oneToMany:
         cards:
             targetEntity: Card
@@ -20,6 +24,8 @@ AppBundle\Entity\Type:
             type: string
             length: 1024
             nullable: false
+            gedmo:
+                - translatable
     uniqueConstraints:
         type_code_idx:
             columns: [ code ]

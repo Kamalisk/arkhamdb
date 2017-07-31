@@ -22,6 +22,7 @@ parameters:
     
     # Branding
     website_name: ~
+    website_url: ~
     game_name: ~
     publisher_name: ~ 
     

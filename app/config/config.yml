@@ -8,6 +8,13 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    locale_names:
+        en: English
+        es: Español
+    supported_locales:
+        - en
+        - es
+    default_locale: en
 
 framework:
     #esi:             ~
@@ -37,6 +44,8 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     globals:
+        default_locale: %default_locale%
+        supported_locales: %supported_locales%
         cards_data: "@cards_data"
         deck_validation_helper: "@deck_validation_helper"
         google_analytics_tracking_code: "%google_analytics_tracking_code%"
@@ -77,12 +86,34 @@ doctrine:
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
-        naming_strategy: doctrine.orm.naming_strategy.underscore
-        auto_mapping: true
-        dql:
-            numeric_functions:
-                power: AppBundle\DQL\PowerFunction
+        entity_managers:
+            default:
+                auto_mapping: true
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                dql:
+                    string_functions:
+                        replace: AppBundle\DQL\ReplaceFunction
+                        binary: AppBundle\DQL\BinaryFunction
+                    numeric_functions:
+                        power: AppBundle\DQL\PowerFunction
+                mappings:
+                    gedmo_translatable:
+                        type: annotation
+                        prefix: Gedmo\Translatable\Entity
+                        dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity"
+                        alias: GedmoTranslatable # (optional) it will default to the name set for the mapping
+                        is_bundle: false
 
+# JMSI18nRoutingBundle
+jms_i18n_routing:
+    default_locale: %default_locale%
+    locales: %supported_locales%
+    strategy: custom
+    hosts:
+        en: "%website_url%"
+        es: "es.%website_url%" 
+    redirect_to_host: true
+    
 # Swiftmailer Configuration
 swiftmailer:
     transport: "%mailer_transport%"

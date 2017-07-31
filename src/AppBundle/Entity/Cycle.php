@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-class Cycle implements \Serializable
+class Cycle implements \Gedmo\Translatable\Translatable, \Serializable
 {
 	public function serialize() {
 		return [
@@ -294,5 +294,15 @@ class Cycle implements \Serializable
     public function getCampaigns()
     {
         return $this->campaigns;
+    }
+
+    /*
+    * I18N vars
+    */
+    private $locale = 'en';
+
+    public function setTranslatableLocale($locale)
+    {
+        $this->locale = $locale;
     }
 }

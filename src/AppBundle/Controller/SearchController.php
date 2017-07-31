@@ -76,11 +76,11 @@ class SearchController extends Controller
 
 		//$packs = $this->get('cards_data')->allsetsdata();
 
-		$cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findBy([], array("position" => "ASC"));
-		$types = $this->getDoctrine()->getRepository('AppBundle:Type')->findBy([], array("name" => "ASC"));
-		$packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findBy([], array("name" => "ASC"));
-		$subtypes = $this->getDoctrine()->getRepository('AppBundle:Subtype')->findBy([], array("name" => "ASC"));
-		$factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findBy([], array("id" => "ASC"));
+		$cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findAll();
+		$types = $this->getDoctrine()->getRepository('AppBundle:Type')->findAll();
+		$packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findAll();
+		$subtypes = $this->getDoctrine()->getRepository('AppBundle:Subtype')->findAll();
+		$factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findAllAndOrderByName();
 		$encounters = $this->getDoctrine()->getRepository('AppBundle:Encounter')->findBy([], array("id" => "ASC"));
 
 		$list_traits = $dbh->executeQuery("SELECT DISTINCT c.traits FROM card c WHERE c.traits != ''")->fetchAll();

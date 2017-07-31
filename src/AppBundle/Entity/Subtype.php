@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-class Subtype implements \Serializable
+class Subtype implements \Gedmo\Translatable\Translatable, \Serializable
 {
 	public function serialize() {
 		return [
@@ -14,6 +14,10 @@ class Subtype implements \Serializable
 	public function unserialize($serialized) {
 		throw new \Exception("unserialize() method unsupported");
 	}
+
+    public function toString() {
+        return $this->name;
+    }
 	
 	/**
      * @var integer
@@ -133,5 +137,15 @@ class Subtype implements \Serializable
     public function getCards()
     {
         return $this->cards;
+    }
+
+    /*
+    * I18N vars
+    */
+    private $locale = 'en';
+
+    public function setTranslatableLocale($locale)
+    {
+        $this->locale = $locale;
     }
 }

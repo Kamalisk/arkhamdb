@@ -28,14 +28,19 @@ class ApiController extends Controller
 	 */
 	public function listPacksAction(Request $request)
 	{
+		$locale = $request->getLocale();
+
 		$response = new Response();
 		$response->setPublic();
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
-		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
+		$response->headers->add(array(
+            'Access-Control-Allow-Origin' => '*',
+            'Content-Language' => $locale
+        ));
 
 		$jsonp = $request->query->get('jsonp');
 
-		$list_packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findBy(array(), array("dateRelease" => "ASC", "position" => "ASC"));
+		$list_packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findAll();
 
 		// check the last-modified-since header
 
@@ -169,15 +174,19 @@ class ApiController extends Controller
 	 */
 	public function listFactionsAction(Request $request)
 	{
+		$locale = $request->getLocale();
 
 		$response = new Response();
 		$response->setPublic();
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
-		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
+		$response->headers->add(array(
+            'Access-Control-Allow-Origin' => '*',
+            'Content-Language' => $locale
+        ));
 
 		$jsonp = $request->query->get('jsonp');
 
-		$list_factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findBy(array(), array("code" => "ASC"));
+		$list_factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findAll();
 
 		// check the last-modified-since header
 
@@ -226,19 +235,23 @@ class ApiController extends Controller
 	 */
 	public function listCardsAction(Request $request)
 	{
+		$locale = $request->getLocale();
 
 		$response = new Response();
 		$response->setPublic();
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
-		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
+		$response->headers->add(array(
+            'Access-Control-Allow-Origin' => '*',
+            'Content-Language' => $locale
+        ));
 
 		$jsonp = $request->query->get('jsonp');
 		$include_encounter = $request->query->get('encounter');
 		
 		if ($include_encounter){
-			$list_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(array(), array("code" => "ASC"));
+			$list_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findAll();
 		}else {
-			$list_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(array("encounter" => null), array("code" => "ASC"));
+			$list_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findAllWithoutEncounter();
 		}
 
 		// check the last-modified-since header
