@@ -397,7 +397,7 @@ deck.get_layout_data = function get_layout_data(options) {
 		deck.update_layout_section(data, 'meta', $('<div>'+deck.get_tags().replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})+'</div>'));
 	}
 	if(problem) {
-		console.log(deck.problem_list);
+		//console.log(deck.problem_list);
 		if (deck.problem_list && deck.problem_list.length > 0){
 			deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+deck.problem_list.join(', ')+'</div>'));
 		} else {
@@ -726,7 +726,7 @@ deck.get_problem = function get_problem() {
 		
 	//console.log(investigator);
 	for (var i = 0; i < investigator.deck_options.length; i++){
-		console.log(investigator.deck_options);
+		//console.log(investigator.deck_options);
 		if (investigator.deck_options[i].limit_count && investigator.deck_options[i].limit){
 			if (investigator.deck_options[i].limit_count > investigator.deck_options[i].limit){
 				if (investigator.deck_options[i].error){
@@ -857,6 +857,25 @@ deck.can_include_card = function can_include_card(card, limit_count) {
 				}
 				
 				if (!trait_valid){
+					continue;
+				}
+				//console.log("faction valid");
+			}
+			
+			if (option.uses){
+				// needs to match at least one trait	
+				var uses_valid = false;
+				
+				for(var j = 0; j < option.uses.length; j++){
+					var uses = option.uses[j];
+					//console.log(card.traits, trait.toUpperCase()+".");
+					
+					if (card.text && card.text.toUpperCase().indexOf(""+uses.toUpperCase()+").") !== -1){
+						uses_valid = true;
+					}
+				}
+				
+				if (!uses_valid){
 					continue;
 				}
 				//console.log("faction valid");
