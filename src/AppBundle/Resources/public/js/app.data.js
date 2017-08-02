@@ -12,7 +12,9 @@ data.load = function load() {
 	data.isLoaded = false;
 
 	var fdb = new ForerunnerDB();
-	data.db = fdb.db('thronesdb');
+	data.db = fdb.db('arkhamdb');
+	// seems that indexedDB is failing in chrome, so switching to localstorage for now
+	data.db.persist.driver("LocalStorage");
 
 	data.masters = {
 		packs: data.db.collection('master_pack', {primaryKey:'code', changeTimestamp: true}),
@@ -26,11 +28,13 @@ data.load = function load() {
 
 	$.when(data.dfd.packs, data.dfd.cards).done(data.update_done).fail(data.update_fail);
 
+	// load pack data 
 	data.masters.packs.load(function (err) {
 		if(err) {
 			console.log('error when loading packs', err);
 			force_update = true;
 		}
+		// loading cards
 		data.masters.cards.load(function (err) {
 			if(err) {
 				console.log('error when loading cards', err);
@@ -47,15 +51,14 @@ data.load = function load() {
 			var age_of_database = new Date() - new Date(data.masters.cards.metaData().lastChange);
 			if(age_of_database > 864000000) {
 				console.log('database is older than 10 days => refresh it');
-				data.masters.packs.setData([]);
-				data.masters.cards.setData([]);
+				force_update = true;
 			}
 
 			/*
 			 * if database is empty, we will wait for the new data
 			 */
 			if(data.masters.packs.count() === 0 || data.masters.cards.count() === 0) {
-				console.log('database is empty => load it');
+				console.log('database is empty => load it', data.masters.packs.count(), data.masters.cards.count());
 				force_update = true;
 			}
 
@@ -189,7 +192,7 @@ data.update_collection = function update_collection(data, collection, lastModifi
 
 	collection.save(function (err) {
 		if(err) {
-			console.log('error when saving '+collection.name(), err);
+			console.log('error when saving '+collection.name(), err, collection);
 			deferred.reject(true)
 		} else {
 			deferred.resolve(isCollectionUpdated);

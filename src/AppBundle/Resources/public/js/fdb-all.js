@@ -194,9 +194,9 @@ ActiveBucket.prototype.insert = function (obj) {
 /**
  * Removes a document from the active bucket.
  * @param {Object} obj The document to remove.
- * @returns {boolean} True if the document was removed
- * successfully or false if it wasn't found in the active
- * bucket.
+ * @returns {Number} The index of the document if the document
+ * was removed successfully or -1 if it wasn't found in the
+ * active bucket.
  */
 ActiveBucket.prototype.remove = function (obj) {
 	var key,
@@ -212,13 +212,13 @@ ActiveBucket.prototype.remove = function (obj) {
 			delete this._objLookup[obj[this._primaryKey]];
 
 			this._count--;
-			return true;
+			return keyIndex;
 		} else {
-			return false;
+			return keyIndex;
 		}
 	}
 
-	return false;
+	return -1;
 };
 
 /**
@@ -251,22 +251,33 @@ ActiveBucket.prototype.documentKey = function (obj) {
 	var key = '',
 		arr = this._keyArr,
 		count = arr.length,
+		val,
 		index,
 		sortType;
-
+	
 	for (index = 0; index < count; index++) {
 		sortType = arr[index];
-
+		
 		if (key) {
 			key += '.:.';
 		}
-
-		key += sharedPathSolver.get(obj, sortType.path);
+		
+		val = sharedPathSolver.get(obj, sortType.path);
+		
+		if (val !== undefined) {
+			// The value of the sort path in the object is not undefined
+			key += val;
+		} else {
+			// The value of the sort path in the object is undefined. This
+			// will cause sorting issues. undefined is therefore recorded
+			// as string zero which will sort to low value.
+			key += "0";
+		}
 	}
-
+	
 	// Add the unique identifier on the end of the key
 	key += '.:.' + obj[this._primaryKey];
-
+	
 	return key;
 };
 
@@ -492,9 +503,9 @@ BinaryTree.prototype._compareFunc = function (a, b) {
 		indexData = this._keys[i];
 
 		if (indexData.value === 1) {
-			result = this.sortAsc(sharedPathSolver.get(a, indexData.path), sharedPathSolver.get(b, indexData.path));
+			result = this.sortAscIgnoreUndefined(sharedPathSolver.get(a, indexData.path), sharedPathSolver.get(b, indexData.path));
 		} else if (indexData.value === -1) {
-			result = this.sortDesc(sharedPathSolver.get(a, indexData.path), sharedPathSolver.get(b, indexData.path));
+			result = this.sortDescIgnoreUndefined(sharedPathSolver.get(a, indexData.path), sharedPathSolver.get(b, indexData.path));
 		}
 
 		if (this.debug()) {
@@ -859,7 +870,7 @@ BinaryTree.prototype.startsWith = function (path, val, regex, resultArr) {
 	resultArr._visitedNodes = resultArr._visitedNodes || [];
 	resultArr._visitedNodes.push(thisDataPathVal);
 
-	result = this.sortAsc(thisDataPathValSubStr, val);
+	result = this.sortAscIgnoreUndefined(thisDataPathValSubStr, val);
 	reTest = thisDataPathValSubStr === val;
 
 	if (result === 0) {
@@ -943,8 +954,8 @@ BinaryTree.prototype.findRange = function (type, key, from, to, resultArr, pathR
 
 	// Check if this node's data is greater or less than the from value
 	var pathVal = pathResolver.value(this._data),
-		fromResult = this.sortAsc(pathVal, from),
-		toResult = this.sortAsc(pathVal, to);
+		fromResult = this.sortAscIgnoreUndefined(pathVal, from),
+		toResult = this.sortAscIgnoreUndefined(pathVal, to);
 
 	if ((fromResult === 0 || fromResult === 1) && (toResult === 0 || toResult === -1)) {
 		// This data node is greater than or equal to the from value,
@@ -1671,10 +1682,11 @@ Collection.prototype.truncate = function () {
  * @param {Object} obj The document object to upsert or an array
  * containing documents to upsert.
  * @param {Function=} callback Optional callback method.
- * @returns {Object} An object containing two keys, "op" contains
- * either "insert" or "update" depending on the type of operation
- * that was performed and "result" contains the return data from
- * the operation used.
+ * @returns {Array} An array containing an object for each operation
+ * performed. Each object contains two keys, "op" contains either "none",
+ * "insert" or "update" depending on the type of operation that was
+ * performed and "result" contains the return data from the operation
+ * used.
  */
 Collection.prototype.upsert = function (obj, callback) {
 	if (this.isDropped()) {
@@ -1704,10 +1716,10 @@ Collection.prototype.upsert = function (obj, callback) {
 				returnData = [];
 
 				for (i = 0; i < obj.length; i++) {
-					returnData.push(this.upsert(obj[i]));
+					returnData.push(this.upsert(obj[i])[0]);
 				}
 
-				if (callback) { callback.call(this); }
+				if (callback) { callback.call(this, returnData); }
 
 				return returnData;
 			}
@@ -1743,10 +1755,12 @@ Collection.prototype.upsert = function (obj, callback) {
 			default:
 				break;
 		}
+		
+		if (callback) { callback.call(this, [returnData]); }
 
-		return returnData;
+		return [returnData];
 	} else {
-		if (callback) { callback.call(this); }
+		if (callback) { callback.call(this, {op: 'none'}); }
 	}
 
 	return {};
@@ -2254,6 +2268,7 @@ Collection.prototype.updateObject = function (doc, update, query, options, path,
 							if (doc[i] instanceof Date) {
 								// The doc key is a date object, assign the new date
 								this._updateProperty(doc, i, update[i]);
+								updated = true;
 							} else {
 								// The doc key is an object so traverse the
 								// update further
@@ -6482,6 +6497,7 @@ module.exports = Db;
 // TODO: methods like we already do with collection
 var Shared,
 	Collection,
+	Overload,
 	Db,
 	Path;
 
@@ -6515,6 +6531,7 @@ Shared.mixin(FdbDocument.prototype, 'Mixin.Matching');
 Shared.mixin(FdbDocument.prototype, 'Mixin.Updating');
 Shared.mixin(FdbDocument.prototype, 'Mixin.Tags');
 
+Overload = _dereq_('./Overload');
 Collection = _dereq_('./Collection');
 Db = Shared.modules.Db;
 Path = _dereq_('./Path');
@@ -6722,8 +6739,8 @@ FdbDocument.prototype.update = function (query, update, options) {
  * @param {Object} update The object with key/value pairs to update the document with.
  * @param {Object} query The query object that we need to match to perform an update.
  * @param {Object} options An options object.
- * @param {String} path The current recursive path.
- * @param {String} opType The type of update operation to perform, if none is specified
+ * @param {String=} path The current recursive path.
+ * @param {String=} opType The type of update operation to perform, if none is specified
  * default is to set new data against matching fields.
  * @returns {Boolean} True if the document was updated with new / changed data or
  * false if it was not updated because the data was the same.
@@ -6953,42 +6970,123 @@ FdbDocument.prototype.drop = function (callback) {
 	return false;
 };
 
-/**
- * Creates a new document instance or returns an existing
- * instance if one already exists with the passed name.
- * @func document
- * @memberOf Db
- * @param {String} name The name of the instance.
- * @returns {*}
- */
-Db.prototype.document = function (name) {
-	var self = this;
-
-	if (name) {
+Db.prototype.document = new Overload('Db.prototype.document', {
+	/**
+	 * Get a document with no name (generates a random name). If the
+	 * document does not already exist then one is created for that
+	 * name automatically.
+	 * @name document
+	 * @method Db.document
+	 * @func document
+	 * @memberof Db
+	 * @returns {Document}
+	 */
+	'': function () {
+		return this.$main.call(this, {
+			name: this.objectId()
+		});
+	},
+	
+	/**
+	 * Get a document by name. If the document does not already exist
+	 * then one is created for that name automatically.
+	 * @name document
+	 * @method Db.document
+	 * @func document
+	 * @memberof Db
+	 * @param {Object} data An options object or a document instance.
+	 * @returns {Document}
+	 */
+	'object': function (data) {
 		// Handle being passed an instance
-		if (name instanceof FdbDocument) {
-			if (name.state() !== 'droppped') {
-				return name;
+		if (data instanceof FdbDocument) {
+			if (data.state() !== 'droppped') {
+				return data;
 			} else {
-				name = name.name();
+				return this.$main.call(this, {
+					name: data.name()
+				});
 			}
 		}
-
+		
+		return this.$main.call(this, data);
+	},
+	
+	/**
+	 * Get a document by name. If the document does not already exist
+	 * then one is created for that name automatically.
+	 * @name document
+	 * @method Db.document
+	 * @func document
+	 * @memberof Db
+	 * @param {String} documentName The name of the document.
+	 * @returns {Document}
+	 */
+	'string': function (documentName) {
+		return this.$main.call(this, {
+			name: documentName
+		});
+	},
+	
+	/**
+	 * Get a document by name. If the document does not already exist
+	 * then one is created for that name automatically.
+	 * @name document
+	 * @method Db.document
+	 * @func document
+	 * @memberof Db
+	 * @param {String} documentName The name of the document.
+	 * @param {Object} options An options object.
+	 * @returns {Document}
+	 */
+	'string, object': function (documentName, options) {
+		options.name = documentName;
+		
+		return this.$main.call(this, options);
+	},
+	
+	'$main': function (options) {
+		var self = this,
+			name = options.name;
+		
+		if (!name) {
+			if (!options || (options && options.throwError !== false)) {
+				throw(this.logIdentifier() + ' Cannot get document with undefined name!');
+			}
+			
+			return;
+		}
+		
 		if (this._document && this._document[name]) {
 			return this._document[name];
 		}
-
+		
+		if (options && options.autoCreate === false) {
+			if (options && options.throwError !== false) {
+				throw(this.logIdentifier() + ' Cannot get document ' + name + ' because it does not exist and auto-create has been disabled!');
+			}
+			
+			return undefined;
+		}
+		
+		if (this.debug()) {
+			console.log(this.logIdentifier() + ' Creating document ' + name);
+		}
+		
 		this._document = this._document || {};
-		this._document[name] = new FdbDocument(name).db(this);
-
+		this._document[name] = this._document[name] || new FdbDocument(name, options).db(this);
+		
+		// Listen for events on this document so we can fire global events
+		// on the database in response to it
+		self._document[name].on('change', function () {
+			self.emit('change', self._document[name], 'document', name);
+		});
+		
 		self.deferEmit('create', self._document[name], 'document', name);
-
+		
 		return this._document[name];
-	} else {
-		// Return an object of document data
-		return this._document;
 	}
-};
+});
 
 /**
  * Returns an array of documents the DB currently has.
@@ -7018,7 +7116,7 @@ Db.prototype.documents = function () {
 
 Shared.finishModule('Document');
 module.exports = FdbDocument;
-},{"./Collection":6,"./Path":34,"./Shared":40}],12:[function(_dereq_,module,exports){
+},{"./Collection":6,"./Overload":32,"./Path":34,"./Shared":40}],12:[function(_dereq_,module,exports){
 // geohash.js
 // Geohash library for Javascript
 // (c) 2008 David Troy
@@ -11542,19 +11640,36 @@ var Matching = {
 				break;
 
 			case '$distinct':
+				var lookupPath,
+					value,
+					finalDistinctProp;
+				
 				// Ensure options holds a distinct lookup
 				options.$rootData['//distinctLookup'] = options.$rootData['//distinctLookup'] || {};
-
+				
 				for (var distinctProp in test) {
 					if (test.hasOwnProperty(distinctProp)) {
-						options.$rootData['//distinctLookup'][distinctProp] = options.$rootData['//distinctLookup'][distinctProp] || {};
+						if (typeof test[distinctProp] === 'object') {
+							// Get the path string from the object
+							lookupPath = this.sharedPathSolver.parse(test)[0].path;
+							
+							// Use the path string to find the lookup value from the source data
+							value = this.sharedPathSolver.get(source, lookupPath);
+							finalDistinctProp = lookupPath;
+						} else {
+							value = source[distinctProp];
+							finalDistinctProp = distinctProp;
+						}
+						
+						options.$rootData['//distinctLookup'][finalDistinctProp] = options.$rootData['//distinctLookup'][finalDistinctProp] || {};
+						
 						// Check if the options distinct lookup has this field's value
-						if (options.$rootData['//distinctLookup'][distinctProp][source[distinctProp]]) {
+						if (options.$rootData['//distinctLookup'][finalDistinctProp][value]) {
 							// Value is already in use
 							return false;
 						} else {
 							// Set the value in the lookup
-							options.$rootData['//distinctLookup'][distinctProp][source[distinctProp]] = true;
+							options.$rootData['//distinctLookup'][finalDistinctProp][value] = true;
 
 							// Allow the item in the results
 							return true;
@@ -11912,7 +12027,7 @@ var Sorting = {
 	 * @param {*} b The second value to compare.
 	 * @returns {*} 1 if a is sorted after b, -1 if a is sorted before b.
 	 */
-	sortAsc: function (a, b) {
+	sortAsc: function mixinSortingSortAsc (a, b) {
 		if (typeof(a) === 'string' && typeof(b) === 'string') {
 			return a.localeCompare(b);
 		} else {
@@ -11921,6 +12036,14 @@ var Sorting = {
 			} else if (a < b) {
 				return -1;
 			}
+		}
+		
+		if (a === undefined && b !== undefined) {
+			return -1;
+		}
+		
+		if (b === undefined && a !== undefined) {
+			return 1;
 		}
 
 		return 0;
@@ -11932,7 +12055,7 @@ var Sorting = {
 	 * @param {*} b The second value to compare.
 	 * @returns {*} 1 if a is sorted after b, -1 if a is sorted before b.
 	 */
-	sortDesc: function (a, b) {
+	sortDesc: function mixinSortingSortDesc (a, b) {
 		if (typeof(a) === 'string' && typeof(b) === 'string') {
 			return b.localeCompare(a);
 		} else {
@@ -11942,7 +12065,59 @@ var Sorting = {
 				return 1;
 			}
 		}
+		
+		if (a === undefined && b !== undefined) {
+			return 1;
+		}
+		
+		if (b === undefined && a !== undefined) {
+			return -1;
+		}
 
+		return 0;
+	},
+	
+	/**
+	 * Sorts the passed value a against the passed value b ascending. This variant
+	 * of the sortAsc method will not consider undefined values as lower than any
+	 * other value.
+	 * @param {*} a The first value to compare.
+	 * @param {*} b The second value to compare.
+	 * @returns {*} 1 if a is sorted after b, -1 if a is sorted before b.
+	 */
+	sortAscIgnoreUndefined: function (a, b) {
+		if (typeof(a) === 'string' && typeof(b) === 'string') {
+			return a.localeCompare(b);
+		} else {
+			if (a > b) {
+				return 1;
+			} else if (a < b) {
+				return -1;
+			}
+		}
+		
+		return 0;
+	},
+	
+	/**
+	 * Sorts the passed value a against the passed value b descending. This variant
+	 * of the sortDesc method will not consider undefined values as lower than any
+	 * other value.
+	 * @param {*} a The first value to compare.
+	 * @param {*} b The second value to compare.
+	 * @returns {*} 1 if a is sorted after b, -1 if a is sorted before b.
+	 */
+	sortDescIgnoreUndefined: function (a, b) {
+		if (typeof(a) === 'string' && typeof(b) === 'string') {
+			return b.localeCompare(a);
+		} else {
+			if (a > b) {
+				return -1;
+			} else if (a < b) {
+				return 1;
+			}
+		}
+		
 		return 0;
 	}
 };
@@ -16285,7 +16460,7 @@ var Overload = _dereq_('./Overload');
  * @mixin
  */
 var Shared = {
-	version: '1.3.935',
+	version: '2.0.5',
 	modules: {},
 	plugins: {},
 	index: {},
@@ -17086,6 +17261,10 @@ View.prototype.findSub = function (match, path, subDocQuery, subDocOptions) {
 	return this._data.findSub(match, path, subDocQuery, subDocOptions);
 };
 
+View.prototype._findSub = function (docArr, path, subDocQuery, subDocOptions) {
+	return this._data._findSub(docArr, path, subDocQuery, subDocOptions);
+};
+
 /**
  * Queries the view data in a sub-array and returns first match.
  * @see Collection::findSubOne()
@@ -17093,6 +17272,10 @@ View.prototype.findSub = function (match, path, subDocQuery, subDocOptions) {
  */
 View.prototype.findSubOne = function (match, path, subDocQuery, subDocOptions) {
 	return this._data.findSubOne(match, path, subDocQuery, subDocOptions);
+};
+
+View.prototype._findSubOne = function (docArr, path, subDocQuery, subDocOptions) {
+	return this._data._findSubOne(docArr, path, subDocQuery, subDocOptions);
 };
 
 /**
@@ -17288,10 +17471,10 @@ View.prototype._chainHandler = function (chainPacket) {
 					item = updates[index];
 
 					// Remove the item from the active bucket (via it's id)
-					this._activeBucket.remove(item);
+					currentIndex = this._activeBucket.remove(item);
 
 					// Get the current location of the item
-					currentIndex = this._data._data.indexOf(item);
+					//currentIndex = this._data._data.indexOf(item);
 
 					// Add the item back in to the active bucket
 					insertIndex = this._activeBucket.insert(item);
