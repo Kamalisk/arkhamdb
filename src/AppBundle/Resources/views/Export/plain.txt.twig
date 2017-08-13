@@ -10,32 +10,50 @@ From {{ first_pack.pack.name }}{% if first_pack.nb > 1 %} ({{ first_pack.nb }}){
 {{ first_pack.pack.name }}{% if first_pack.nb > 1 %} ({{ first_pack.nb }}){% endif %}
 {% endif %}
 
+
 {% set assets = deck.slots_by_type.asset %}
+{% if assets|length > 0 %}
 Asset{% if assets|length > 1 %}s{% endif %}
 
 {% for slot in assets %}
 {{ slot.quantity }}x {{ slot.card.name }}{% if slot.card.xp %}[{{slot.card.xp}}]{% endif %} ({{ slot.card.pack.name }})
 {% endfor %}
+{% endif %}
 
 {% set events = deck.slots_by_type.event %}
-Event{% if assets|length > 1 %}s{% endif %}
+{% if events|length > 0 %}
+Event{% if events|length > 1 %}s{% endif %}
 
 {% for slot in events %}
 {{ slot.quantity }}x {{ slot.card.name }}{% if slot.card.xp %}[{{slot.card.xp}}]{% endif %} ({{ slot.card.pack.name }})
 {% endfor %}
+{% endif %}
 
 {% set skills = deck.slots_by_type.skill %}
-Skill{% if assets|length > 1 %}s{% endif %}
+{% if skills|length > 0 %}
+Skill{% if skills|length > 1 %}s{% endif %}
 
 {% for slot in skills %}
 {{ slot.quantity }}x {{ slot.card.name }}{% if slot.card.xp %}[{{slot.card.xp}}]{% endif %} ({{ slot.card.pack.name }})
 {% endfor %}
+{% endif %}
 
 {% set treachery = deck.slots_by_type.treachery %}
-Treachery{% if assets|length > 1 %}s{% endif %}
+{% if treachery|length > 0 %}
+{% if treachery|length > 1 %}Treacheries{% else %}Treachery{% endif %}
 
 {% for slot in treachery %}
 {{ slot.quantity }}x {{ slot.card.name }}{% if slot.card.xp %}[{{slot.card.xp}}]{% endif %} ({{ slot.card.pack.name }})
 {% endfor %}
+{% endif %}
+
+{% set enemy = deck.slots_by_type.enemy %}
+{% if enemy|length > 0 %}
+{% if enemy|length > 1 %}Enemies{% else %}Enemy{% endif %}
+
+{% for slot in enemy %}
+{{ slot.quantity }}x {{ slot.card.name }}{% if slot.card.xp %}[{{slot.card.xp}}]{% endif %} ({{ slot.card.pack.name }})
+{% endfor %}
+{% endif %}
 
 {{ footer|default('') }}
