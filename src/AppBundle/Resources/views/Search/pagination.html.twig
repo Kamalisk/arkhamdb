@@ -1,18 +1,11 @@
-<div class="row">
-<div class="col-sm-2">
-</div>
-<div class="col-sm-8 text-center">
-<ul class="pagination">
-  {{ first|raw }} 
-  {% if ellipsisbefore %}<li class="disabled"><a href="#">...</a></li>{% endif %}
-  {{ prev|raw }}
-  {{ current|raw }}
-  {{ next|raw }}
-  {% if ellipsisafter %}<li class="disabled"><a href="#">...</a></li>{% endif %}
-  {{ last|raw }}
-</ul>
-</div>
-<div class="col-sm-2 text-right">
-	<p style="margin:27px 0">{{ count }} cards</p>
-</div>
+<div class="text-center">
+	<ul class="pagination pagination-sm">
+	  {{ first|raw }} 
+	  {% if ellipsisbefore %}<li class="disabled"><a href="#">...</a></li>{% endif %}
+	  {{ prev|raw }}
+	  {{ current|raw }}
+	  {{ next|raw }}
+	  {% if ellipsisafter %}<li class="disabled"><a href="#">...</a></li>{% endif %}
+	  {{ last|raw }}
+	</ul>
 </div>

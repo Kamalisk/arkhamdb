@@ -352,7 +352,7 @@ ui.on_submit_form = function on_submit_form(event) {
 ui.on_config_change = function on_config_change(event) {
 	var name = $(this).attr('name');
 	var type = $(this).prop('type');
-	console.log(name, type);
+	//console.log(name, type);
 	switch(type) {
 	case 'radio':
 		var value = $(this).val();
@@ -504,7 +504,6 @@ ui.on_quantity_change = function on_quantity_change(card_code, quantity) {
 ui.setup_event_handlers = function setup_event_handlers() {
 	
 	$('#global_filters [data-filter]').on({
-		
 		click : ui.on_click_filter
 	}, 'label');
 	
@@ -608,7 +607,7 @@ ui.get_filters = function get_filters(prefix) {
 						'$nin': ['basicweakness']
 					};
 					
-					console.log(filters);
+					//console.log(filters);
 				} else if($("input[name=specialweakness]").prop('checked')) {
 					filters['subtype_code'] = {
 						'$in': ['weakness']
