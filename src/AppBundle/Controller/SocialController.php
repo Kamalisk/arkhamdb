@@ -52,7 +52,7 @@ class SocialController extends Controller
         $query->setParameter('user', $user);
         $decklistsSinceYesterday = $query->getSingleScalarResult();
 
-        if($decklistsSinceYesterday > $user->getReputation()) {
+        if($decklistsSinceYesterday > $user->getReputation() + 3) {
             $this->get('session')->getFlashBag()->set('error', "To prevent spam, accounts cannot publish more decklists than their reputation per 24 hours.");
             return $this->redirect($this->generateUrl('deck_view', [ 'deck_id' => $deck->getId() ]));
         }
@@ -119,7 +119,7 @@ class SocialController extends Controller
         $query->setParameter('user', $user);
         $decklistsSinceYesterday = $query->getSingleScalarResult();
 
-        if($decklistsSinceYesterday > $user->getReputation()) {
+        if($decklistsSinceYesterday > $user->getReputation() + 3) {
             return $this->render('AppBundle:Default:error.html.twig', [
                 'pagetitle' => "Spam prevention",
                 'error' => "To prevent spam, accounts cannot publish more decklists than their reputation per 24 hours.",
