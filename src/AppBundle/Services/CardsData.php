@@ -317,7 +317,7 @@ class CardsData
 						{
 							$or = [];
 							foreach($condition as $arg) {
-								$code = preg_match('/^\d\d(\d\d\d[ab]?|_[a-zA-Z0-9]+)$/u', $arg);
+								$code = preg_match('/^\d\d(\d\d\d[abcdefgh]?|_[a-zA-Z0-9]+)$/u', $arg);
 								$acronym = false;////preg_match('/^[A-Z]{2,}$/', $arg);
 								if($code) {
 									$or[] = "(c.code = ?$i)";
