@@ -4,7 +4,21 @@ namespace AppBundle\Entity;
 
 class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
 {
-
+	/**
+	 * @return array
+	 */
+	public function isOctgnable()
+	{
+		// run through all cards and see if they have an ocgtn ID
+		$slots = $this->getSlots();
+		$cards = $slots->getContent();
+		foreach($slots as $slot){
+			if (!$slot->getCard()->getOctgnID()){
+				return false;
+			}
+		}
+		return true;
+	}
 	/**
 	 * @return array
 	 */

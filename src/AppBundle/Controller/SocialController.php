@@ -550,16 +550,22 @@ class SocialController extends Controller
         	return $comment->getUser()->getUsername();
         }, $decklist->getComments()->getValues());
         
+        $octgnable = false;
+				if ($decklist->isOctgnable()){
+					$octgnable = true;
+				}
+        
         //$versions = $this->getDoctrine()->getManager()->getRepository('AppBundle:Decklist')->findBy([ 'parent' => $decklist->getParent() ], [ 'version' => 'DESC' ]);
 				$versions = [];
         return $this->render('AppBundle:Decklist:decklist.html.twig',
-                array(
-                    'pagetitle' => $decklist->getName(),
-                    'decklist' => $decklist,
-                		'duplicate' => $duplicate,
-                		'commenters' => $commenters,
-                		'versions' => $versions,
-                ), $response);
+	        array(
+	            'pagetitle' => $decklist->getName(),
+	            'decklist' => $decklist,
+	        		'duplicate' => $duplicate,
+	        		'commenters' => $commenters,
+	        		'versions' => $versions,
+							'octgnable' => $octgnable
+	        ), $response);
 
     }
 

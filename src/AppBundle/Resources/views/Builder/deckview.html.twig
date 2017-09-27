@@ -72,7 +72,7 @@
 						</button>
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="{{ path('deck_export_text', {deck_id:deck_id}) }}">Text file</a></li>
-							<li><a href="{{ path('deck_export_octgn', {deck_id:deck_id}) }}">Octgn file</a></li>
+							<li><a {% if not octgnable %} onclick="window.alert('Warning: Some cards from this deck are missing OCTGN IDs (most likely the latest cards or the special random basic weakness card)')" {% endif %}href="{{ path('deck_export_octgn', {deck_id:deck_id}) }}">Octgn file</a></li>
 						</ul>
 					</div>
 				</div>

@@ -13,7 +13,7 @@
 	</button>
 	<ul class="dropdown-menu" role="menu">
 		<li><a href="#" id="btn-download-text">Text file</a></li>
-		<li><a href="#" id="btn-download-octgn">Octgn file</a></li>
+		<li><a {% if not octgnable %} onclick="window.alert('Warning: Some cards from this deck are missing OCTGN IDs (most likely the latest cards or the special random basic weakness card)')" {% endif %}href="#" id="btn-download-octgn">Octgn file</a></li>
 	</ul>
 </div>
 {#
