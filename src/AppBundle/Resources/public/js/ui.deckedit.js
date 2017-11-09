@@ -443,6 +443,14 @@ ui.on_list_quantity_change = function on_list_quantity_change(event) {
 //	row[quantity ? "addClass" : "removeClass"]('in-deck');
 	ui.on_quantity_change(code, quantity);
 }
+ui.on_suggestion_quantity_change = function on_suggestion_quantity_change(event) {
+	console.log(event);
+	var row = $(event.target).closest('.card-container');
+	var code = row.data('code');
+	var quantity = parseInt($(event.target).val(), 10);
+//	row[quantity ? "addClass" : "removeClass"]('in-deck');
+	ui.on_quantity_change(code, quantity);
+}
 
 /**
  * @memberOf ui
@@ -486,7 +494,7 @@ ui.refresh_row = function refresh_row(card_code, quantity) {
 ui.on_quantity_change = function on_quantity_change(card_code, quantity) {
 	var update_all = app.deck.set_card_copies(card_code, quantity);
 	ui.refresh_deck();
-	
+	app.suggestions.compute();
 	if(update_all) {
 		ui.refresh_list();
 		ui.refresh_list2();
@@ -971,7 +979,7 @@ ui.on_all_loaded = function on_all_loaded() {
 	ui.setup_dataupdate();
 	app.deck_history && app.deck_history.setup('#history');
 	var investigator = app.data.cards.findById(app.deck.get_investigator_code());
-	//app.suggestions.query("sugg-"+investigator.code);
+	app.suggestions.query("sugg-"+investigator.code);
 	
 };
 

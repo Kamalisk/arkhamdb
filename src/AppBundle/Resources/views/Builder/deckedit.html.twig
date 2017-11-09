@@ -2,7 +2,7 @@
 {% import "AppBundle::macros.html.twig" as macros %}
 
 {% block javascripts %}
-	{% javascripts '@AppBundle/Resources/public/js/ui.deckedit.js' %}
+	{% javascripts '@AppBundle/Resources/public/js/ui.deckedit.js' '@AppBundle/Resources/public/js/app.suggestions.js' %}
 	<script src="{{ asset_url }}"></script>
 	{% endjavascripts %}
 	<script type="text/javascript">

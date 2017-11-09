@@ -48,9 +48,10 @@ suggestions.compute = function compute() {
 			};
 		});
 		// find used cards
-		var indexes = app.data.cards({indeck:{'gt':0}}).select('code').map(function (code) {
-			return suggestions.indexFromCodes[code];
+		var indexes = app.data.cards.find({"indeck":{'$gt':0}}).map(function (card) {
+			return suggestions.indexFromCodes[card.code];
 		});
+		console.log(indexes);
 		// add suggestions of all used cards
 		indexes.forEach(function (i) {
 			if(suggestions.matrix[i]) {
@@ -64,8 +65,8 @@ suggestions.compute = function compute() {
 			if(suggestions.current[i]) suggestions.current[i].proba = 0;
 		});
 		// remove suggestions of identity 
-		app.data.cards({type_code:'character'}).select('code').map(function (code) {
-			return suggestions.indexFromCodes[code];
+		app.data.cards.find({type_code:'character'}).map(function (card) {
+			return suggestions.indexFromCodes[card.code];
 		}).forEach(function (i) {
 			if(suggestions.current[i]) suggestions.current[i].proba = 0;
 		});
@@ -98,12 +99,16 @@ suggestions.show = function show() {
 	}
 	var nb = 0;
 	for(var i=0; i<suggestions.current.length; i++) {
-		var card = app.data.get_card_by_code(suggestions.current[i].code);
-		if(is_card_usable(card) && Filters.set_code.indexOf(card.set_code) > -1) {
-			var div = suggestions.div(card);
-			div.on('click', 'button.close', suggestions.exclude.bind(this, card.code));
-			tbody.append(div);
-			if(++nb == suggestions.number) break;
+		var card = app.data.cards.findById(suggestions.current[i].code);
+		if ($('input[name="'+card.pack_code+'"]').is(":checked")){
+			if(app.deck.can_include_card(card) && !card.indeck && card.xp === 0) {
+				var div = suggestions.div(card);
+				div.on('click', 'button.close', suggestions.exclude.bind(this, card.code));
+				tbody.append(div);
+				if(++nb == suggestions.number) {
+					break;
+				}
+			}
 		}
 	}
 };
@@ -124,10 +129,6 @@ suggestions.div = function div(record) {
 				+ '"><input type="radio" name="qty-' + record.code
 				+ '" value="' + i + '">' + i + '</label>';
 	}
-	
-	var imgsrc = record.faction_code == "neutral" ? "" : '<img src="'
-				+ Url_FactionImage.replace('xxx', record.faction_code)
-				+ '.png" alt="'+record.name+'">';
 	var div = $('<tr class="card-container" data-code="'
 				+ record.code
 				+ '"><td><button type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Remove</span></button></td>'
@@ -138,10 +139,8 @@ suggestions.div = function div(record) {
 				+ '" data-target="#cardModal" data-remote="false" data-toggle="modal">'
 				+ record.name + '</a></td><td class="influence-' + faction
 				+ '">' + influ + '</td><td class="type" title="' + record.type
-				+ '"><img src="/web/bundles/app/images/types/'
-				+ record.type_code + '.png" alt="'+record.type+'">'
-				+ '</td><td class="faction" title="' + record.faction + '">'
-				+ imgsrc + '</td></tr>');
+				+ '">'
+				+ '</td></tr>');
 	
 	return div;
 };
@@ -161,14 +160,14 @@ suggestions.pick = function pick(event) {
 	InputByTitle = false;
 	var input = this;
 	$(input).closest('tr').animate({
-		opacity: 0
+		opacity: 0.1
 	}, function() {
-		handle_quantity_change.call(input, event);
+		app.ui.on_suggestion_quantity_change.call(this, event);
 	});
 };
 
 $(function() {
-	suggestions.query("base");
+	//suggestions.query("base");
 
 	console.log("suggestions fired");	
 
