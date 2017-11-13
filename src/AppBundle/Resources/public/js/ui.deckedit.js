@@ -611,9 +611,18 @@ ui.get_filters = function get_filters(prefix) {
 					filters['encounter_code'] = {
 						'$exists': false
 					};
-					filters['subtype_code'] = {
-						'$nin': ['basicweakness']
-					};
+
+					filters['$or'] = [
+						{
+							"subtype_code": {
+								'$nin': ['basicweakness']
+							}
+						},{
+							"subtype_code": {
+								'$exists': false
+							}
+						}
+					];
 					
 					//console.log(filters);
 				} else if($("input[name=specialweakness]").prop('checked')) {
