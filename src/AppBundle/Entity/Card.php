@@ -189,6 +189,11 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     /**
      * @var string
      */
+    private $realName;
+    
+    /**
+     * @var string
+     */
     private $backName;
 
     /**
@@ -570,6 +575,29 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
         return $this->name;
     }
     
+    /**
+     * Set realName
+     *
+     * @param string $realname
+     *
+     * @return Card
+     */
+    public function setRealName($realName)
+    {
+        $this->realName = $realName;
+
+        return $this;
+    }
+
+    /**
+     * Get realName
+     *
+     * @return string
+     */
+    public function getRealName()
+    {
+        return $this->realName;
+    }
     
      /**
      * Set backName
