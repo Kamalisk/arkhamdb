@@ -96,7 +96,7 @@ class BuilderController extends Controller
 		if ($investigator->getDeckRequirements()){
 			$deck_requirements = $this->get('DeckValidationHelper')->parseReqString($investigator->getDeckRequirements());
 			if (isset($deck_requirements['card']) && $deck_requirements['card']){
-				foreach($deck_requirements['card'] as $card_code){
+				foreach($deck_requirements['card'] as $card_code => $alternates){
 					if ($card_code){
 						$card_to_add = $em->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
 						if ($card_to_add){

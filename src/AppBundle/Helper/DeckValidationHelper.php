@@ -78,8 +78,10 @@ class DeckValidationHelper
 							break;
 						}
 						case "card":{
-							if ($param1){
-								$return_requirements[$type][$param1] = $param1;
+							if ($param2){
+								$return_requirements[$type][$param1] = [$param1 => $param1, $param2 => $param2];
+							}else if ($param1){
+								$return_requirements[$type][$param1] = [$param1 => $param1];
 							}
 							break;
 						}

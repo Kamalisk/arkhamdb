@@ -699,10 +699,16 @@ deck.get_problem = function get_problem() {
 		if (card.deck_requirements.card){
 			var req_count = 0;
 			var req_met_count = 0;
-			$.each(card.deck_requirements.card, function (key, value){
+			$.each(card.deck_requirements.card, function (key, possible){
 				req_count++;
-				var req = app.data.cards.findById(value);
-				if (req && req.indeck){
+				var found_match = false;
+				$.each(possible, function (code, code2){
+					var req = app.data.cards.findById(code);
+					if (req && req.indeck){
+						found_match = true;
+					}
+				});
+				if (found_match){
 					req_met_count++;
 				}
 			});
