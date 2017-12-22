@@ -666,9 +666,9 @@ deck.get_export = function get_export(format) {
 deck.get_copies_and_deck_limit = function get_copies_and_deck_limit() {
 	var copies_and_deck_limit = {};
 	deck.get_draw_deck().forEach(function (card) {
-		var value = copies_and_deck_limit[card.name];
+		var value = copies_and_deck_limit[card.real_name];
 		if(!value) {
-			copies_and_deck_limit[card.name] = {
+			copies_and_deck_limit[card.real_name] = {
 					nb_copies: card.indeck,
 					deck_limit: card.deck_limit
 			};

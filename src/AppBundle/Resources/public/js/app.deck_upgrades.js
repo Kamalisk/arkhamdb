@@ -81,8 +81,8 @@ deck_upgrades.display = function display() {
 		// first check for same named cards
 		_.each(cards_added, function (addition) {
 			_.each(cards_removed, function (removal) {
-				if (addition.qty > 0 && removal.qty > 0 && addition.card.xp >= 0 && addition.card.name == removal.card.name && addition.card.xp > removal.card.xp){
-					addition.qty = addition.qty - removal.qty;				
+				if (addition.qty > 0 && removal.qty > 0 && addition.card.xp >= 0 && addition.card.real_name == removal.card.real_name && addition.card.xp > removal.card.xp){
+					addition.qty = addition.qty - removal.qty;
 					cost = cost + ((addition.card.xp - removal.card.xp) * removal.qty);
 					removal.qty = Math.abs(addition.qty);
 				}
@@ -95,7 +95,7 @@ deck_upgrades.display = function display() {
 		//console.log(last_deck, free_0_cards, removed_0_cards);
 		// then pay for all changes
 		_.each(cards_added, function (addition) {
-			if (addition.card.xp >= 0){			
+			if (addition.card.xp >= 0){
 				//console.log("CARD", 		addition);
 				if (addition.card.xp === 0 && removed_0_cards > 0 && free_0_cards > 0){
 					free_0_cards -= addition.qty;
