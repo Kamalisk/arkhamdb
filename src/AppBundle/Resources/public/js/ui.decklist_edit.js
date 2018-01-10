@@ -24,7 +24,7 @@ ui.on_dom_loaded = function on_dom_loaded() {
 				data: [{
 					name: "cmdSymbol",
 					title: "Insert a game symbol",
-					icon: "icon-power",
+					icon: "icon-elder_sign",
 					callback: ui.on_button_symbol
 				}]
 			},{
@@ -93,7 +93,7 @@ ui.on_button_symbol = function ui_on_button_symbol(e)
 		$(button).off('click');
 	});
 	
-	var icons = 'baratheon greyjoy intrigue lannister martell military thenightswatch power stark targaryen tyrell unique plot attachment location character event agenda neutral'.split(' ');
+	var icons = 'guardian survivor rogue mystic seeker action reaction fast free unique per_investigator null elder_sign elder_thing auto_fail skull cultist tablet willpower intellect combat agility wild'.split(' ');
 	icons.forEach(function (icon) {
 		menu.append('<li data-icon="'+icon+'"><a href="#"><span style="display:inline-block;width:2em;text-align:center" class="icon-'+icon+'"></span> '+icon+'</a></li>');
 	});
