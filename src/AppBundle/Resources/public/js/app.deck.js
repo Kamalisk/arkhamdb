@@ -236,7 +236,8 @@ deck.get_real_draw_deck = function get_real_draw_deck(sort) {
 	return deck.get_cards(sort, {
 		type_code: {
 			'$nin' : []
-		}
+		},
+		permanent: false
 	});
 }
 
