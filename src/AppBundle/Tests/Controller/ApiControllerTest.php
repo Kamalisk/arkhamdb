@@ -99,17 +99,18 @@ class ApiControllerTest extends WebTestCase
     	}
     }
 
-    public function testGetPublicDeck()
-    {
-        $client = static::createClient();
-        $client->request('GET', '/api/deck/1');
-        $response = $client->getResponse();
-        $json = $response->getContent();
-        $this->assertJson($json);
-        $data = json_decode($json, true);
-        $this->assertNotNull($data);
-        $this->assertInternalType('array', $data);
-        $this->assertArrayHasKey("id", $data);
-        $this->assertEquals(1, $data['id']);
-    }
+    // TODO: Reenable if default deck is added to initial data payload
+    // public function testGetPublicDeck()
+    // {
+    //     $client = static::createClient();
+    //     $client->request('GET', '/api/deck/1');
+    //     $response = $client->getResponse();
+    //     $json = $response->getContent();
+    //     $this->assertJson($json);
+    //     $data = json_decode($json, true);
+    //     $this->assertNotNull($data);
+    //     $this->assertInternalType('array', $data);
+    //     $this->assertArrayHasKey("id", $data);
+    //     $this->assertEquals(1, $data['id']);
+    // }
 }
