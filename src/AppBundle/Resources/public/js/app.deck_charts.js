@@ -25,7 +25,7 @@ var charts = [],
 
 deck_charts.chart_faction = function chart_faction() {
 	var factions = {};
-	var draw_deck = app.deck.get_real_draw_deck();
+	var draw_deck = app.deck.get_physical_draw_deck();
 	draw_deck.forEach(function (card) {
 		if(!factions[card.faction_code]) factions[card.faction_code] = { code: card.faction_code, name: card.faction_name, count: 0};
 		factions[card.faction_code].count += card.indeck;
@@ -91,7 +91,7 @@ deck_charts.chart_cost = function chart_cost() {
 
 	var data = [];
 
-	var draw_deck = app.deck.get_real_draw_deck();
+	var draw_deck = app.deck.get_physical_draw_deck();
 	draw_deck.forEach(function (card) {
 		if(typeof card.cost === 'number') {
 			data[card.cost] = data[card.cost] || 0;
@@ -147,7 +147,7 @@ deck_charts.chart_skill = function chart_skill() {
 	icons['combat'] = {code: "combat", "name": "Combat", count: 0};
 	icons['agility'] = {code: "agility", "name": "Agility", count: 0};
 	icons['wild'] = {code: "wild", "name": "Wild", count: 0};
-	var draw_deck = app.deck.get_real_draw_deck();
+	var draw_deck = app.deck.get_physical_draw_deck();
 	draw_deck.forEach(function (card) {
 		if (card.skill_willpower && card.skill_willpower > 0){
 			icons['willpower'].count += card.indeck * card.skill_willpower;
@@ -226,7 +226,7 @@ deck_charts.chart_skill = function chart_skill() {
 deck_charts.chart_slot = function chart_slot() {
 
 	var slots = {};
-	var draw_deck = app.deck.get_real_draw_deck();
+	var draw_deck = app.deck.get_physical_draw_deck();
 	draw_deck.forEach(function (card) {
 		if (card.type_code != "asset"){
 			return;
