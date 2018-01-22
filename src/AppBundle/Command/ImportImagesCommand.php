@@ -45,8 +45,8 @@ class ImportImagesCommand extends ContainerAwareCommand
           $imagepath_back = $rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl_back);
           $imagepath2_back = $rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl2_back);
           $pack_id = $card->getPack()->getId();
-          if ($card->getPack()->getCode() == "litas"){
-          	$pack_id = 8;
+          if ($card->getPack()->getCode() == "apot"){
+          	$pack_id = 14;
           } else {
           	continue;
           }
@@ -55,12 +55,12 @@ class ImportImagesCommand extends ContainerAwareCommand
           }
           else {
           		// AHC01_121a.jpg
-          		echo $card->getPack()->getName()." ".$card->getPack()->getId()."\n";          		
-          		if ($card->getType()->getCode() == "location"){
-              	$cgdbfile = sprintf('AHC%02d_%db.jpg', $pack_id, $card->getPosition());
-              }else {
-              	$cgdbfile = sprintf('AHC%02d_%d.jpg', $pack_id, $card->getPosition());
-              }
+	   	echo $card->getPack()->getName()." ".$card->getPack()->getId()."\n";          		
+          	if ($card->getType()->getCode() == "location" && $card->getDoubleSided()){
+              		$cgdbfile = sprintf('AHC%02d_%db.jpg', $pack_id, $card->getPosition());
+	        }else {
+        	      	$cgdbfile = sprintf('AHC%02d_%d.jpg', $pack_id, $card->getPosition());
+		}
               
               $cgdburl = "http://lcg-cdn.fantasyflightgames.com/ahlcg/" . $cgdbfile;
 

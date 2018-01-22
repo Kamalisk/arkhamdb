@@ -125,6 +125,16 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
 		return $snapshots;
 	}
 	
+	public function getUpgradePath()
+	{
+		$pointer = $this;
+		$decks = [];
+		while ($pointer = $pointer->getPreviousDeck()){
+			$decks[] = $pointer;
+		}
+		return $pointer;
+	}
+	
 	public function jsonSerialize()
 	{
 		$array = parent::getArrayExport();

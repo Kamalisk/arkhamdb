@@ -151,10 +151,14 @@ class ImportStdCommand extends ContainerAwareCommand
 		// third, cards
 		
 		$output->writeln("Importing Cards...");
-		$fileSystemIterator = $this->getFileSystemIterator($path);
 		$imported = [];
-		foreach ($fileSystemIterator as $fileinfo) {
-			$imported = array_merge($imported, $this->importCardsJsonFile($fileinfo));
+		// get subdirs of files and do this for each file
+		$scanned_directory = array_diff(scandir($path."/pack"), array('..', '.'));
+		foreach($scanned_directory as $dir){
+			$fileSystemIterator = $this->getFileSystemIterator($path."pack/".$dir);
+			foreach ($fileSystemIterator as $fileinfo) {
+				$imported = array_merge($imported, $this->importCardsJsonFile($fileinfo));
+			}
 		}
 		if(count($imported)) {
 			$question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
@@ -421,6 +425,9 @@ class ImportStdCommand extends ContainerAwareCommand
 
 			]);
 			if($card) {
+				if ($card->getName() && !$card->getRealName()){
+					$card->setRealName($card->getName());
+				}
 				$result[] = $card;
 				$this->em->persist($card);
 				if (isset($cardData['back_link'])){
@@ -476,7 +483,6 @@ class ImportStdCommand extends ContainerAwareCommand
 	protected function copyKeyToEntity($entity, $entityName, $data, $key, $isMandatory = TRUE)
 	{
 		$metadata = $this->em->getClassMetadata($entityName);
-		
 		if(!key_exists($key, $data)) {
 			if($isMandatory) {
 				throw new \Exception("Missing key [$key] in ".json_encode($data));
@@ -484,6 +490,7 @@ class ImportStdCommand extends ContainerAwareCommand
 				$data[$key] = null;
 			}
 		}
+		
 		$value = $data[$key];
 		if ($key == "is_unique"){
 			if (!$value){
@@ -536,17 +543,20 @@ class ImportStdCommand extends ContainerAwareCommand
 		}
 		
 		$entity = $this->em->getRepository($entityName)->findOneBy(['code' => $data['code']]);
+
 		if(!$entity) {
 			// if we cant find it, try more complex methods just to check
 			// the only time this should work is if the existing name also has an _ meaning it was temporary. 
 			
 			if ($entityName == "AppBundle\Entity\Card"){
+				
 				if (isset($data['xp'])){
 					$entity = $this->em->getRepository($entityName)->findOneBy(['name' => $data['name'], 'type'=> $data['type_code'], 'xp' => $data['xp']]);				
 				}else {
 					$entity = $this->em->getRepository($entityName)->findOneBy(['name' => $data['name'], 'type'=> $data['type_code'], 'xp' => null]);
 				}
 			}
+			
 			if (!$entity){
 				$entity = new $entityName();
 			}			
@@ -556,7 +566,7 @@ class ImportStdCommand extends ContainerAwareCommand
 			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
 		}
 
-		foreach($optionalKeys as $key) {
+		foreach($optionalKeys as $key) {			
 			$this->copyKeyToEntity($entity, $entityName, $data, $key, FALSE);
 		}
 		
@@ -571,19 +581,17 @@ class ImportStdCommand extends ContainerAwareCommand
 				}
 				throw new \Exception("Missing key [$key] in ".json_encode($data));
 			}
-
+			
 			$foreignCode = $data[$key];
 			if(!key_exists($foreignEntityShortName, $this->collections)) {
 				throw new \Exception("No collection for [$foreignEntityShortName] in ".json_encode($data));
 			}
 
-			//echo "\n".$foreignCode." ".$key." ".$foreignEntityShortName;
 			if (!$foreignCode){
 				continue;
 			} 
 			//echo "\n";
 			//print("hvor mange ".count($this->collections[$foreignEntityShortName]));
-			//echo "\n".gettype($this->collections[$foreignEntityShortName][$foreignCode])."\n";
 			if(!key_exists($foreignCode, $this->collections[$foreignEntityShortName])) {
 				throw new \Exception("Invalid code [$foreignCode] for key [$key] in ".json_encode($data));
 			}
@@ -597,7 +605,7 @@ class ImportStdCommand extends ContainerAwareCommand
 				$entity->$setter($foreignEntity);
 			}
 		}
-	
+
 		// special case for Card
 		if($entityName === 'AppBundle\Entity\Card') {
 			// calling a function whose name depends on the type_code
@@ -606,6 +614,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		}
 
 		if($entity->serialize() !== $orig || (isset($data['back_link']) && (!$entity->getLinkedTo() || $entity->getLinkedTo()->getCode() != $data['back_link']) )) return $entity;
+
 	}
 
 	protected function importAssetData(Card $card, $data)
@@ -653,6 +662,12 @@ class ImportStdCommand extends ContainerAwareCommand
 			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
 		}
 	}
+	
+	protected function importStoryData(Card $card, $data)
+	{
+
+	}
+	
 
 	protected function importActData(Card $card, $data)
 	{
@@ -753,15 +768,9 @@ class ImportStdCommand extends ContainerAwareCommand
 		if(!$fs->exists($path)) {
 			throw new \Exception("No repository found at [$path]");
 		}
-		
-		$directory = 'pack';
-		
-		if(!$fs->exists("$path/$directory")) {
-			throw new \Exception("No '$directory' directory found at [$path]");
-		}
-		
-		$iterator = new \GlobIterator("$path/$directory/*.json");
-		
+
+		$iterator = new \GlobIterator("$path/*.json");
+
 		if(!$iterator->count()) {
 			throw new \Exception("No json file found at [$path/set]");
 		}
