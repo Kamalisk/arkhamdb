@@ -1,6 +1,6 @@
 {
-    "name": "alsciende/thronesdb",
-    "description": "A Game of Thrones LCG deckbuilder",
+    "name": "kamalisk/arkhamdb",
+    "description": "An Arkham Horror LCG deckbuilder",
     "license": "proprietary",
     "type": "project",
     "autoload": {
