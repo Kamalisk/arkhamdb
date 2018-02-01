@@ -870,7 +870,7 @@ deck.can_include_card = function can_include_card(card, limit_count) {
 					var trait = option.trait[j];
 					//console.log(card.traits, trait.toUpperCase()+".");
 					
-					if (card.traits && card.traits.toUpperCase().indexOf(trait.toUpperCase()+".") !== -1){
+					if (card.real_traits && card.real_traits.toUpperCase().indexOf(trait.toUpperCase()+".") !== -1){
 						trait_valid = true;
 					}
 				}
@@ -889,7 +889,7 @@ deck.can_include_card = function can_include_card(card, limit_count) {
 					var uses = option.uses[j];
 					//console.log(card.traits, trait.toUpperCase()+".");
 					
-					if (card.text && card.text.toUpperCase().indexOf(""+uses.toUpperCase()+").") !== -1){
+					if (card.real_text && card.real_text.toUpperCase().indexOf(""+uses.toUpperCase()+").") !== -1){
 						uses_valid = true;
 					}
 				}
