@@ -67,11 +67,9 @@
                   </form>
               </div>
             </li>
-            <li id="login">
-                <a href="#" class="disabled"><span class="fa fa-user"></span></a>
-            </li>
+            
             <!-- locale selection -->
-{#
+
             {% if _route is not defined or _route is not empty %}
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown">
@@ -92,7 +90,12 @@
               </ul>
             </li>
             {% endif %}
-#}
+            
+            <li id="login">
+                <a href="#" class="disabled"><span class="fa fa-user"></span></a>
+            </li>
+
+
           </ul>
           <form class="navbar-form navbar-right visible-lg-block visible-xs-block external" action="{{ path('cards_find') }}" target="_blank">
             <div class="form-group">
