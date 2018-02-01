@@ -95,6 +95,9 @@ AppBundle\Entity\Card:
             nullable: true
             gedmo:
                 - translatable
+        realText:
+            type: text
+            nullable: true
         dateCreation:
             type: datetime
             nullable: false
@@ -183,6 +186,10 @@ AppBundle\Entity\Card:
             nullable: true
             gedmo:
                 - translatable
+        realTraits:
+            type: string
+            length: 255
+            nullable: true
         deckRequirements:
             type: string
             length: 255

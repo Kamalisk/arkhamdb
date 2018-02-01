@@ -211,6 +211,11 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
      */
     private $text;
     
+    /**
+     * @var string
+     */
+    private $realText;
+    
     
     /**
      * @var string
@@ -342,6 +347,13 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
      * @var string
      */
     private $traits;
+
+
+    /**
+     * @var string
+     */
+    private $realTraits;
+
 
     /**
      * @var string
@@ -696,6 +708,30 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
         return $this->text;
     }
     
+    
+     /**
+     * Set real text
+     *
+     * @param string $text
+     *
+     * @return Card
+     */
+    public function setRealText($text)
+    {
+        $this->realText = $text;
+
+        return $this;
+    }
+
+    /**
+     * Get real text
+     *
+     * @return string
+     */
+    public function getRealText()
+    {
+        return $this->realText;
+    }
     
         /**
      * Set backText
@@ -1290,6 +1326,30 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     }
 
     /**
+     * Get real traits
+     *
+     * @return string
+     */
+    public function getRealTraits()
+    {
+        return $this->realTraits;
+    }
+    
+    /**
+     * Set traits
+     *
+     * @param string $traits
+     *
+     * @return Card
+     */
+    public function setRealTraits($traits)
+    {
+        $this->realTraits = $traits;
+
+        return $this;
+    }
+
+    /**
      * Get traits
      *
      * @return string
@@ -1298,7 +1358,6 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->traits;
     }
-    
     
     /**
      * Set deckRequirements

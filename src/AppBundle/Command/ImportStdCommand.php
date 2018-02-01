@@ -428,6 +428,12 @@ class ImportStdCommand extends ContainerAwareCommand
 				if ($card->getName() && !$card->getRealName()){
 					$card->setRealName($card->getName());
 				}
+				if ($card->getTraits() && !$card->getRealTraits()){
+					$card->setRealTraits($card->getTraits());
+				}
+				if ($card->getText() && !$card->getRealText()){
+					$card->setRealText($card->getText());
+				}
 				$result[] = $card;
 				$this->em->persist($card);
 				if (isset($cardData['back_link'])){
