@@ -323,13 +323,13 @@ class CardsData
 									$or[] = "(c.code = ?$i)";
 									$qb->setParameter($i++, $arg);
 								} else if($acronym) {
-									$or[] = "(c.name like ?$i or c.backName like ?$i or l.name like ?$i)";
+									$or[] = "(c.name like ?$i or c.backName like ?$i or c.subname like ?$i or l.name like ?$i)";
 									$qb->setParameter($i++, "%$arg%");
 									$like = implode('% ', str_split($arg));
-									$or[] = "(REPLACE(c.name, '-', ' ') like ?$i or REPLACE(c.backName, '-', ' ') like ?$i or REPLACE(l.name, '-', ' ') like ?$i)";
+									$or[] = "(REPLACE(c.name, '-', ' ') like ?$i or REPLACE(c.backName, '-', ' ') like ?$i or REPLACE(c.subname, '-', ' ') like ?$i or REPLACE(l.name, '-', ' ') like ?$i)";
 									$qb->setParameter($i++, "$like%");
 								} else {
-									$or[] = "(c.name like ?$i or c.backName like ?$i or l.name like ?$i)";
+									$or[] = "(c.name like ?$i or c.backName like ?$i or c.subname like ?$i or l.name like ?$i)";
 									$qb->setParameter($i++, "%$arg%");
 								}
 							}
