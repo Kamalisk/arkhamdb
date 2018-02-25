@@ -16,7 +16,7 @@ From {{ first_pack.pack.name }}{% if first_pack.nb > 1 %} ({{ first_pack.nb }}){
 Asset{% if assets|length > 1 %}s{% endif %}
 
 {% for slot in assets %}
-{{ slot.quantity }}x {{ slot.card.name }}{% if slot.card.xp %}[{{slot.card.xp}}]{% endif %} ({{ slot.card.pack.name }})
+{{ slot.quantity }}x {{ slot.card.name }}{% if slot.card.subname %}:{{slot.card.subname}}{% endif %}{% if slot.card.xp %} [{{slot.card.xp}}]{% endif %} ({{ slot.card.pack.name }})
 {% endfor %}
 {% endif %}
 
@@ -25,7 +25,7 @@ Asset{% if assets|length > 1 %}s{% endif %}
 Event{% if events|length > 1 %}s{% endif %}
 
 {% for slot in events %}
-{{ slot.quantity }}x {{ slot.card.name }}{% if slot.card.xp %}[{{slot.card.xp}}]{% endif %} ({{ slot.card.pack.name }})
+{{ slot.quantity }}x {{ slot.card.name }}{% if slot.card.subname %}:{{slot.card.subname}}{% endif %}{% if slot.card.xp %} [{{slot.card.xp}}]{% endif %} ({{ slot.card.pack.name }})
 {% endfor %}
 {% endif %}
 
@@ -34,7 +34,7 @@ Event{% if events|length > 1 %}s{% endif %}
 Skill{% if skills|length > 1 %}s{% endif %}
 
 {% for slot in skills %}
-{{ slot.quantity }}x {{ slot.card.name }}{% if slot.card.xp %}[{{slot.card.xp}}]{% endif %} ({{ slot.card.pack.name }})
+{{ slot.quantity }}x {{ slot.card.name }}{% if slot.card.subname %}:{{slot.card.subname}}{% endif %}{% if slot.card.xp %} [{{slot.card.xp}}]{% endif %} ({{ slot.card.pack.name }})
 {% endfor %}
 {% endif %}
 
@@ -43,7 +43,7 @@ Skill{% if skills|length > 1 %}s{% endif %}
 {% if treachery|length > 1 %}Treacheries{% else %}Treachery{% endif %}
 
 {% for slot in treachery %}
-{{ slot.quantity }}x {{ slot.card.name }}{% if slot.card.xp %}[{{slot.card.xp}}]{% endif %} ({{ slot.card.pack.name }})
+{{ slot.quantity }}x {{ slot.card.name }}{% if slot.card.subname %}:{{slot.card.subname}}{% endif %}{% if slot.card.xp %} [{{slot.card.xp}}]{% endif %} ({{ slot.card.pack.name }})
 {% endfor %}
 {% endif %}
 
@@ -52,7 +52,7 @@ Skill{% if skills|length > 1 %}s{% endif %}
 {% if enemy|length > 1 %}Enemies{% else %}Enemy{% endif %}
 
 {% for slot in enemy %}
-{{ slot.quantity }}x {{ slot.card.name }}{% if slot.card.xp %}[{{slot.card.xp}}]{% endif %} ({{ slot.card.pack.name }})
+{{ slot.quantity }}x {{ slot.card.name }}{% if slot.card.subname %}:{{slot.card.subname}}{% endif %}{% if slot.card.xp %} [{{slot.card.xp}}]{% endif %} ({{ slot.card.pack.name }})
 {% endfor %}
 {% endif %}
 
