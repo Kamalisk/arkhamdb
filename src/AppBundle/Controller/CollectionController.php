@@ -64,9 +64,7 @@ class CollectionController extends Controller {
         $em->persist($user);
         $em->flush();
         $this->get('session')->getFlashBag()->set('notice', "Collection saved.");
-        return $this->forward('AppBundle:Collection:packs', [
-            'reloaduser' => true
-        ]);
+        return $this->redirect($this->get('router')->generate('collection_packs'));
     }
 }
 
