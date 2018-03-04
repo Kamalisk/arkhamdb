@@ -54,8 +54,8 @@ api_decklists_by_date:
         _format: json
         date: \d\d\d\d-\d\d-\d\d
 
-api_public_decks:
-    path: /decks/{deck_id}.{_format}
+api_public_deck:
+    path: /deck/{deck_id}.{_format}
     methods: [GET]
     defaults:
         _controller: AppBundle:Api:getPublicDeck
