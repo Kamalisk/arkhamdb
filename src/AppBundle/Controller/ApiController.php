@@ -514,4 +514,57 @@ class ApiController extends Controller
 		return $response;
 		
 	}
+
+
+	/**
+	 * Get the description of one public Deck
+	 *
+	 * @ApiDoc(
+	 *  section="Deck",
+	 *  resource=true,
+	 *  description="Load One Deck",
+	 	 *  parameters={
+	 *      {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+	 *  },
+	 *  requirements={
+	 *      {
+	 *          "name"="deck_id",
+	 *          "dataType"="integer",
+	 *          "requirement"="\d+",
+	 *          "description"="The numeric identifier of the deck"
+	 *      },
+	 *      {
+	 *          "name"="_format",
+	 *          "dataType"="string",
+	 *          "requirement"="json",
+	 *          "description"="The format of the returned data. Only 'json' is supported at the moment."
+	 *      }
+	 *  },
+	 * )
+	 * @param Request $request
+	 */
+	public function getPublicDeckAction($deck_id, Request $request)
+	{
+		$response = new Response();
+		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
+		
+		/* @var $deck \AppBundle\Entity\Deck */
+		$deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->find($id);
+
+		if(!$deck->getUser()->isShareDecks())
+		{
+			throw $this->createAccessDeniedException("Access denied to this object.");
+		}
+		
+		$response->setLastModified($deck->getDateUpdate());
+		if ($response->isNotModified($request)) {
+			return $response;
+		}
+
+		$content = json_encode($deck);
+		
+		$response->headers->set('Content-Type', 'application/json');
+		$response->setContent($content);
+		return $response;
+	}
 }
