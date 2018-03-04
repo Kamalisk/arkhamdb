@@ -549,10 +549,9 @@ class ApiController extends Controller
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 		
 		/* @var $deck \AppBundle\Entity\Deck */
-		$deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->find($id);
+		$deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->find($deck_id);
 
-		if(!$deck->getUser()->isShareDecks())
-		{
+		if(!$deck || !$deck->getUser() || !$deck->getUser()->getIsShareDecks()) {
 			throw $this->createAccessDeniedException("Access denied to this object.");
 		}
 		
@@ -560,7 +559,9 @@ class ApiController extends Controller
 		if ($response->isNotModified($request)) {
 			return $response;
 		}
-
+		
+		$deck->setUser(null);
+		
 		$content = json_encode($deck);
 		
 		$response->headers->set('Content-Type', 'application/json');

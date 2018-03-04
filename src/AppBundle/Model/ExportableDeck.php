@@ -38,7 +38,7 @@ class ExportableDeck
 				'date_creation' => $this->getDateCreation()->format('c'),
 				'date_update' => $this->getDateUpdate()->format('c'),
 				'description_md' => $this->getDescriptionMd(),
-				'user_id' => $this->getUser()->getId(),
+				'user_id' => $this->getUser() ? $this->getUser()->getId() : null,
 				'investigator_code' => $this->getCharacter()->getCode(),
 				'investigator_name' => $this->getCharacter()->getName(),
 				'slots' => $slots->getContent(),
