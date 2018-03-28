@@ -159,6 +159,77 @@ class ApiController extends Controller
 	}
 
 
+
+	/**
+	 * Get the faq entry for a given card
+	 *
+	 * @ApiDoc(
+	 *  section="Faq",
+	 *  resource=true,
+	 *  description="One Faq Entry",
+	 *  parameters={
+	 *      {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+	 *  },
+	 *  requirements={
+     *      {
+     *          "name"="card_code",
+     *          "dataType"="string",
+     *          "description"="The code of the card to get the faq for, e.g. '01001'"
+     *      },
+     *      {
+     *          "name"="_format",
+     *          "dataType"="string",
+     *          "requirement"="json",
+     *          "description"="The format of the returned data. Only 'json' is supported at the moment."
+     *      }
+     *  },
+	 * )
+	 * @param Request $request
+	 */
+	public function getFaqAction($card_code, Request $request)
+	{
+
+		$response = new Response();
+		$response->setPublic();
+		$response->setMaxAge($this->container->getParameter('cache_expiration'));
+		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
+
+		$jsonp = $request->query->get('jsonp');
+
+		$card = $this->getDoctrine()->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
+		$faqs = $this->get('cards_data')->get_faqs($card);
+		// check the last-modified-since header
+
+		$lastModified = NULL;
+		/* @var $card \AppBundle\Entity\Card */
+		if(!$lastModified || $lastModified < $card->getDateUpdate()) {
+			$lastModified = $card->getDateUpdate();
+		}
+		$response->setLastModified($lastModified);
+		if ($response->isNotModified($request)) {
+			return $response;
+		}
+
+		// build the response
+
+		/* @var $card \AppBundle\Entity\Card */
+		$card = $this->get('cards_data')->getCardInfo($card, true, "en");
+		
+		$content = json_encode($faqs);
+		if(isset($jsonp))
+		{
+			$content = "$jsonp($content)";
+			$response->headers->set('Content-Type', 'application/javascript');
+		} else
+		{
+			$response->headers->set('Content-Type', 'application/json');
+		}
+		$response->setContent($content);
+		return $response;
+
+	}
+
+
 	/**
 	 * Get the description of all the factions as an array of JSON objects.
 	 *

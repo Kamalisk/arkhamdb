@@ -5,8 +5,17 @@ namespace AppBundle\Entity;
 /**
  * Review
  */
-class Review
+class Review implements \JsonSerializable
 {
+
+    public function jsonSerialize(){
+        $obj = [];
+        $obj['code'] = $this->getCard()->getCode();
+        $obj['html'] = $this->getTextHtml();
+        $obj['text'] = $this->getTextMd();
+        $obj['updated'] = $this->getDateUpdate();
+        return $obj;
+    }
     /**
      * @var integer
      */

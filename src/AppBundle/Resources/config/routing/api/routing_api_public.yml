@@ -19,6 +19,15 @@ api_card:
     requirements:
         _format: json
 
+api_faq:
+    path: /faq/{card_code}.{_format}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Api:getFaq
+        _format: json
+    requirements:
+        _format: json
+
 api_cards:
     path: /cards/
     methods: [GET]
