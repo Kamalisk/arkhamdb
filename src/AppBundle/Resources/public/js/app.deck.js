@@ -900,6 +900,25 @@ deck.can_include_card = function can_include_card(card, limit_count) {
 				//console.log("faction valid");
 			}
 			
+			if (option.text){
+				// match a regular custom expression on the text
+				var text_valid = false;
+				
+				for(var j = 0; j < option.text.length; j++){
+					var text = option.text[j];
+					//console.log(card.traits, trait.toUpperCase()+".");
+					
+					if (card.real_text && card.real_text.toLowerCase().match(text)){
+						text_valid = true;
+					}
+				}
+				
+				if (!text_valid){
+					continue;
+				}
+				//console.log("faction valid");
+			}
+			
 			if (option.level){
 				// needs to match at least one faction
 				var level_valid = false;
