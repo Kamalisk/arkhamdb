@@ -33,6 +33,9 @@ AppBundle\Entity\Pack:
             nullable: false
             gedmo:
                 - translatable
+        cgdbId:
+            type: smallint
+            nullable: true
         position:
             type: smallint
             nullable: false

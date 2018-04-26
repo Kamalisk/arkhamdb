@@ -29,6 +29,11 @@ class Pack implements \Gedmo\Translatable\Translatable, \Serializable
     private $id;
 
     /**
+     * @var integer
+     */
+    private $cgdbId;
+
+    /**
      * @var string
      */
     private $code;
@@ -137,6 +142,30 @@ class Pack implements \Gedmo\Translatable\Translatable, \Serializable
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set cgdb_id
+     *
+     * @param integer $cgdbId
+     *
+     * @return Pack
+     */
+    public function setCgdbId($cgdbId)
+    {
+        $this->cgdbId = $cgdbId;
+
+        return $this;
+    }
+
+    /**
+     * Get cgdbId
+     *
+     * @return integer
+     */
+    public function getCgdbId()
+    {
+        return $this->cgdbId;
     }
 
     /**

@@ -347,7 +347,9 @@ class ImportStdCommand extends ContainerAwareCommand
 					'date_release'
 			], [
 					'cycle_code'
-			], []);
+			], [
+					'cgdb_id'
+			]);
 			if($pack) {
 				$result[] = $pack;
 				$this->em->persist($pack);
@@ -425,13 +427,13 @@ class ImportStdCommand extends ContainerAwareCommand
 
 			]);
 			if($card) {
-				if ($card->getName() && !$card->getRealName()){
+				if ($card->getName()){
 					$card->setRealName($card->getName());
 				}
-				if ($card->getTraits() && !$card->getRealTraits()){
+				if ($card->getTraits()){
 					$card->setRealTraits($card->getTraits());
 				}
-				if ($card->getText() && !$card->getRealText()){
+				if ($card->getText()){
 					$card->setRealText($card->getText());
 				}
 				$result[] = $card;
