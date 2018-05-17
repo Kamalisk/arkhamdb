@@ -32,7 +32,7 @@ class SearchController extends Controller
 			's' => 'sanity',
 			'x' => 'text',
 			'p' => 'xp',
-			'q' => 'quantity',
+			'qt' => 'quantity',
 			'z' => 'slot',
 			'j' => 'victory',
 			'm' => 'encounter'
@@ -58,7 +58,7 @@ class SearchController extends Controller
 			's' => 'integer',
 			'x' => 'string',
 			'p' => 'integer',
-			'q' => 'integer',
+			'qt' => 'integer',
 			'l' => 'string',
 			'd' => 'integer',
 			'z' => 'string',
