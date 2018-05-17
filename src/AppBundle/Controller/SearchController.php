@@ -35,7 +35,14 @@ class SearchController extends Controller
 			'qt' => 'quantity',
 			'z' => 'slot',
 			'j' => 'victory',
-			'm' => 'encounter'
+			'm' => 'encounter',
+			'cl' => 'clues',
+			'dm' => 'doom',
+			'sh' => 'shroud',
+			'ed' => 'enemyDamage',
+			'eh' => 'enemyHorror',
+			'ef' => 'enemyFight',
+			'ee' => 'enemyEvade'
 	);
 
 	public static $searchTypes = array(
@@ -63,7 +70,14 @@ class SearchController extends Controller
 			'd' => 'integer',
 			'z' => 'string',
 			'j' => 'integer',
-			'm' => 'code'
+			'm' => 'code',
+			'cl' => 'integer',
+			'dm' => 'integer',
+			'sh' => 'integer',
+			'ed' => 'integer',
+			'eh' => 'integer',
+			'ee' => 'integer',
+			'ee' => 'integer'
 	);
 
 	public function formAction()
