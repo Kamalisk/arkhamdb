@@ -227,7 +227,7 @@ class ImportTransCommand extends ContainerAwareCommand
 		$data = json_decode($content, true);
 	
 		if($data === null) {
-			throw new \Exception("File [".$fileinfo->getPathname()."] contains incorrect JSON (error code ".json_last_error().")");
+			throw new \Exception("File [".$fileinfo->getPathname()."] contains incorrect JSON (error code ".json_last_error_msg().")");
 		}
 	
 		return $data;
@@ -276,8 +276,19 @@ class ImportTransCommand extends ContainerAwareCommand
 		$iterator = new \GlobIterator("$path/$directory/*.json");
 		
 		if(!$iterator->count()) {
-			throw new \Exception("No json file found at [$path/set]");
+			//throw new \Exception("No json file found at [$path/set]");
 		}
+		
+		
+		$rii = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator("$path/$directory/"));
+
+		$files = array(); 
+		foreach ($rii as $file){
+			if (!$file->isDir()){
+				$files[] = $file;
+			}
+		}
+		return $files;
 		
 		return $iterator;
 	}
