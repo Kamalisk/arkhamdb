@@ -50,7 +50,7 @@ class ImportImagesCommand extends ContainerAwareCommand
 				$output->writeln("Skip ".$card_code);
 				continue;
 			}
-			fwrite($logfile, $card_code.": ");
+			fwrite($logfile, $card_code." - ".$card->getName().": ");
 			// if we know the cgdb pack id then import it
 			if ($card->getPack()->getCgdbId()){
 				$pack_id = $card->getPack()->getCgdbId();
