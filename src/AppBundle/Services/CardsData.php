@@ -58,7 +58,7 @@ class CardsData
 			'[neutral]' => '<span class="icon-neutral" title="Neutral">Neutral</span>',
 			'[per_investigator]' => '<span class="icon-per_investigator" title="Per Investigator"></span>'
 		];
-		
+		$text = preg_replace("/\[\[(\w+)\]\]/", '<b><i>${1}</i></b>', $text);
 		return str_replace(array_keys($displayTextReplacements), array_values($displayTextReplacements), $text);
 	}
 	
