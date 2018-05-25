@@ -46,6 +46,12 @@ class ImportGuidsCommand extends ContainerAwareCommand
 
 		foreach($sets as $set) {
 			$setname = $set->getName();
+			if ($setname == "Books"){
+				$setname = "Book Series";
+			}
+			if ($setname == "The Dunwich Legacy"){
+				$setname = "Dunwich Legacy";
+			}
 			$url = "https://raw.githubusercontent.com/GeckoTH/arkham-horror/master/o8g/Sets/".rawurlencode($setname)."/set.xml";
 			
 			// check url exists 
