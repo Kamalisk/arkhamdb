@@ -105,16 +105,18 @@ class DeckValidationHelper
 	public function getInvalidCards($deck)
 	{
 		$invalidCards = [];
+		$deck_options = json_decode($deck->getCharacter()->getdeckOptions());
 		foreach ( $deck->getSlots() as $slot ) {
-			if(! $this->canIncludeCard($deck, $slot->getCard())) {
+			if(! $this->canIncludeCard($deck, $slot, $deck_options)) {
 				$invalidCards[] = $slot->getCard();
 			}
 		}
 		return $invalidCards;
 	}
 	
-	public function canIncludeCard($deck, $card, $req = []) {
-		
+	public function canIncludeCard($deck, $slot, $deck_options = []) {
+		$card = $slot->getCard();
+		$indeck = $slot->getQuantity();
 		// hide investigators
 		if ($card->getType()->getCode() === "investigator") {
 			return false;
@@ -128,14 +130,117 @@ class DeckValidationHelper
 				return false;
 			}
 		}
-		/*
-		var investigator = app.data.cards.findById(investigator_code);
-		if (investigator.deck_options) {
-			if (investigator.deck_options.faction && investigator.deck_options.faction[card.faction_code]){
-				return true;
+		// validate deck. duplicating code from app.deck.js but in php
+		if ($deck_options){
+			foreach($deck_options as $option) {
+				$valid = false;
+				
+				if (isset($option->faction) && $option->faction) {
+					$faction_valid = false;
+					foreach($option->faction as $faction) {
+						if ($card->getFaction()->getCode() == $faction) {
+							$faction_valid = true;
+						}
+					}
+					if (!$faction_valid) {
+						continue;
+					}
+				}
+				
+				if (isset($option->type) && $option->type) {
+					// needs to match at least one type
+					$type_valid = false;
+					foreach($option->type as $type) {
+						if ($card->type_code == $type){
+							$type_valid = true;
+						}
+					}
+					if (!$type_valid){
+						continue;
+					}
+				}
+				
+				if (isset($option->trait) && $option->trait) {
+					// needs to match at least one type
+					$trait_valid = false;
+					foreach($option->trait as $trait) {
+						if (strpos(strtoupper($card->getRealTraits()), strtoupper($trait)."." ) !== false){
+							$trait_valid = true;
+						}
+					}
+					if (!$trait_valid){
+						continue;
+					}
+				}
+				
+				if (isset($option->uses) && $option->uses) {
+					// needs to match at least one type
+					$uses_valid = false;
+					foreach($option->uses as $uses) {
+						if (strpos(strtoupper($card->getRealText()), strtoupper($uses).")." ) !== false){
+							$uses_valid = true;
+						}
+					}
+					if (!$uses_valid){
+						continue;
+					}
+				}
+				
+				if (isset($option->text) && $option->text) {
+					// needs to match at least one type
+					$text_valid = false;
+					foreach($option->text as $text) {
+						if (preg_match( "/".$text."/", strtolower($card->getRealText()) ) === 1){
+							$text_valid = true;
+						}
+					}
+					if (!$text_valid){
+						continue;
+					}
+				}
+				
+				
+				if (isset($option->level) && $option->level) {
+					// needs to match at least one type
+					$level_valid = false;
+					foreach($option->level as $level) {
+						if ($card->getXp() != null && $option->level){
+							if ($card->getXp() >= $option->level->min && $card->getXp() <= $option->level->max) {
+								$level_valid = true;
+							} else {
+								continue;
+							}
+						}
+					}
+				}
+				
+				if (isset($option->not) && $option->not){
+					return false;
+				}else {
+					if (isset($option->limit) && $option->limit){
+						if (!isset($option->limit_count)){
+							$option->limit_count = 0;
+						}
+						$option->limit_count += $indeck;
+					}
+					if (isset($option->atleast) && $option->atleast){
+						if (!$option->atleast_count[$card->getFaction()->getCode()]){
+							$option->atleast_count[$card->getFaction()->getCode()] = 0;
+						}
+						$option->atleast_count[$card->getFaction()->getCode()] += $indeck;
+					}
+					
+					// if we exceed the limit, the deck is invalid 
+					if (isset($option->limit_count) && $option->limit_count && $option->limit) {
+						if ($option->limit_count > $option->limit) {
+							return false;
+						}
+					}
+					return true;
+				}
+				
 			}
 		}
-		*/
 		return false;
 	}
 	
@@ -154,9 +259,9 @@ class DeckValidationHelper
 		//foreach($deck->getSlots()->getCopiesAndDeckLimit() as $cardName => $value) {
 		//	if($value['copies'] > $value['deck_limit']) return 'too_many_copies';
 		//}
-		//if(!empty($this->getInvalidCards($deck))) {
-		//	return 'invalid_cards';
-		//}
+		if(!empty($this->getInvalidCards($deck))) {
+			return 'invalid_cards';
+		}
 		
 		return null;
 	}

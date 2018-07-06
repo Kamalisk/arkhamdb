@@ -144,9 +144,9 @@ class Decks
 		if ($problem){
 			$deck->setProblem($problem);
 		} else {
-			$deck->setProblem(null);
+			$deck->setProblem($this->deck_validation_helper->findProblem($deck));
+			//$deck->setProblem(null);
 		}
-		//$deck->setProblem($this->deck_validation_helper->findProblem($deck));
 
 		return $deck->getId ();
 	}
