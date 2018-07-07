@@ -13,11 +13,27 @@ api_oauth2_load_deck:
     requirements:
         id: \d+
 
+api_oauth2_new_deck:
+    path: /deck/new
+    methods: [POST]
+    defaults:
+        _controller: AppBundle:Oauth2:newDeck
+    requirements:
+        id: \d+
+
 api_oauth2_save_deck:
     path: /deck/save/{id}
     methods: [PUT]
     defaults:
         _controller: AppBundle:Oauth2:saveDeck
+    requirements:
+        id: \d+
+
+api_oauth2_upgrade_deck:
+    path: /deck/upgrade/{id}
+    methods: [PUT]
+    defaults:
+        _controller: AppBundle:Oauth2:upgradeDeck
     requirements:
         id: \d+
 
