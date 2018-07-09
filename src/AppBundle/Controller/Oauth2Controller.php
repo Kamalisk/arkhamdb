@@ -90,12 +90,13 @@ class Oauth2Controller extends Controller
 	 * Create a new deck for the authenticated user.
 	 * An investigator is required, and the deck will be created empty with only
 	 * the 'required' cards for that investigator.
-	 * If successful, id of new Deck is in the msg
+	 * If successful, id of new Deck is in the msg.
 	 *
 	 * @ApiDoc(
 	 *  section="Deck",
 	 *  resource=true,
 	 *  description="Create a New Deck",
+ 	 *  requirements={},
 	 *  parameters={
 	 *      {"name"="investigator", "dataType"="string", "required"=true, "description"="Code of the investigator card."},
 	 *      {"name"="name", "dataType"="string", "required"=false, "description"="Name of the Deck. A default name will be generated if it is not specified."},
@@ -219,7 +220,7 @@ class Oauth2Controller extends Controller
 	 *          "name"="id",
 	 *          "dataType"="integer",
 	 *          "requirement"="\d+",
-	 *          "description"="The numeric identifier of the Deck to update.
+	 *          "description"="The numeric identifier of the Deck to update.",
 	 *      },
 	 *  },
 	 *  parameters={
@@ -372,7 +373,7 @@ class Oauth2Controller extends Controller
 	 *          "name"="id",
 	 *          "dataType"="integer",
 	 *          "requirement"="\d+",
-	 *          "description"="The numeric identifier of the Deck to update.
+	 *          "description"="The numeric identifier of the Deck to update.",
 	 *      },
 	 *  },
 	 *  parameters={
@@ -381,7 +382,7 @@ class Oauth2Controller extends Controller
 	 *      {"name"="description_md", "dataType"="string", "required"=false, "description"="Description of the Decklist in Markdown"},
 	 *      {"name"="tags", "dataType"="string", "required"=false, "description"="Space-separated list of tags"},
 	 *      {"name"="slots", "dataType"="string", "required"=true, "description"="Content of the Decklist as a JSON object"},
-	 *      {"name"="problem", "dataType"="string", "required"=true, "description"="A short code description of the problem with the provided slots, if one exists. Must be one of: too_few_cards,too_many_cards,too_many_copies,invalid_cards,deck_options_limit,investigator"}
+	 *      {"name"="problem", "dataType"="string", "required"=true, "description"="A short code description of the problem with the provided slots, if one exists. Must be one of: too_few_cards,too_many_cards,too_many_copies,invalid_cards,deck_options_limit,investigator"},
 	 *  },
 	 * )
 	 * @param Request $request
@@ -472,7 +473,7 @@ class Oauth2Controller extends Controller
 			$decklist_id = $deck->getParent();
 		}
 
-		$description = trim($request->get('description'));
+		$description = trim($request->get('description_md'));
 		if (!$description && $deck->getDescriptionMd()) {
 			// Leave description alone if it was not specified (or was blank?).
 			$description = $deck->getDescriptionMd();
