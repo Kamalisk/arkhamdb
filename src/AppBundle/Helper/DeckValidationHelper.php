@@ -203,7 +203,8 @@ class DeckValidationHelper
 				if (isset($option->level) && $option->level) {
 					// needs to match at least one type
 					$level_valid = false;
-					if ($card->getXp() != null && $option->level){
+
+					if (!is_null($card->getXp()) && $option->level){
 						if ($card->getXp() >= $option->level->min && $card->getXp() <= $option->level->max) {
 							$level_valid = true;
 						} else {
