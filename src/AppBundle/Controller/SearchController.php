@@ -98,6 +98,7 @@ class SearchController extends Controller
 		$encounters = $this->getDoctrine()->getRepository('AppBundle:Encounter')->findBy([], array("id" => "ASC"));
 
 		$list_traits = $dbh->executeQuery("SELECT DISTINCT c.traits FROM card c WHERE c.traits != ''")->fetchAll();
+		//$list_traits = $dbh->executeQuery("SELECT DISTINCT c.content as traits FROM ext_translations c WHERE c.field = 'traits' and c.content != ''")->fetchAll();
 		$traits = [];
 		foreach($list_traits as $card) {
 			$subs = explode('.', $card["traits"]);
@@ -194,7 +195,7 @@ class SearchController extends Controller
 		);
 	}
 
-	public function cycleAction($cycle_code, $view, $sort, $page, Request $request)
+	public function cycleAction($cycle_code, $view, $decks, $sort, $page, Request $request)
 	{
 		$cycle = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findOneBy(array("code" => $cycle_code));
 		if(!$cycle) throw $this->createNotFoundException('This cycle does not exist');
@@ -209,13 +210,14 @@ class SearchController extends Controller
 		return $this->forward(
 			'AppBundle:Search:display',
 			array(
-			    '_route' => $request->attributes->get('_route'),
-			    '_route_params' => $request->attributes->get('_route_params'),
-			    'q' => $key.':'.$cycle->getPosition(),
+				'_route' => $request->attributes->get('_route'),
+				'_route_params' => $request->attributes->get('_route_params'),
+				'q' => $key.':'.$cycle->getPosition(),
 				'view' => $view,
 				'sort' => $sort,
-			    'page' => $page,
-			    'pagetitle' => $cycle->getName(),
+				'decks' => $decks,
+				'page' => $page,
+				'pagetitle' => $cycle->getName(),
 				'meta' => $meta,
 			)
 		);
@@ -285,7 +287,7 @@ class SearchController extends Controller
 		$view = $request->query->get('view') ?: 'list';
 		$decks = $request->query->get('decks') ?: 'all';
 		$sort = $request->query->get('sort') ?: 'name';
-
+		
 		// we may be able to redirect to a better url if the search is on a single set
 		$conditions = $this->get('cards_data')->syntax($q);
 		if(count($conditions) == 1 && count($conditions[0]) == 3 && $conditions[0][1] == ":") {
@@ -350,7 +352,9 @@ class SearchController extends Controller
 		{
 			$view = 'list';
 		}
+		
 
+		
 		$conditions = $this->get('cards_data')->syntax($q);
 		$conditions = $this->get('cards_data')->validateConditions($conditions);
 
@@ -366,7 +370,7 @@ class SearchController extends Controller
 		if ($decks == "player"){
 			$include_encounter = false;
 		}
-		
+
 		if($q && $rows = $this->get('cards_data')->get_search_rows($conditions, $sort, false, $include_encounter))
 		{
 			if(count($rows) == 1)

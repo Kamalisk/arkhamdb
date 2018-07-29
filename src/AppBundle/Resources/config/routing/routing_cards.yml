@@ -14,10 +14,11 @@ cards_zoom:
         _controller: AppBundle:Search:zoom
 
 cards_cycle:
-    path: /cycle/{cycle_code}/{view}/{sort}/{page}
+    path: /cycle/{cycle_code}/{view}/{decks}/{sort}/{page}
     defaults:
         _controller: AppBundle:Search:cycle
         view: list
+        decks: all
         sort: faction
         page: 1
 
