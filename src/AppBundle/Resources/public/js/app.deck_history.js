@@ -60,6 +60,13 @@ deck_history.all_changes = function all_changes() {
 		cards_added.push(card_change);
 	});
 	
+	// find arcane research
+	var arcane_research = app.data.cards.findById("04109");
+	var spell_upgrade_discounts = 0;
+	if (arcane_research && arcane_research.indeck) {
+		spell_upgrade_discounts += arcane_research.indeck;
+	}
+		
 	// find adaptable
 	var adaptable = app.data.cards.findById("02110");
 	var free_0_cards = 0;
@@ -82,9 +89,19 @@ deck_history.all_changes = function all_changes() {
 	// first check for same named cards
 	_.each(cards_added, function (addition) {
 		_.each(cards_removed, function (removal) {
-			if (addition.qty > 0 && removal.qty > 0 && addition.card.xp >= 0 && addition.card.name == removal.card.name && addition.card.xp > removal.card.xp){
-				addition.qty = addition.qty - removal.qty;				
-				cost = cost + ((addition.card.xp - removal.card.xp) * removal.qty);
+			if (addition.qty > 0 && removal.qty > 0 && addition.card.xp >= 0 && addition.card.real_name == removal.card.real_name && addition.card.xp > removal.card.xp){
+				addition.qty = addition.qty - removal.qty;
+				if (spell_upgrade_discounts > 0 && removal.card.traits && removal.card.traits.indexOf('Spell.') !== -1 && addition.card.traits && addition.card.traits.indexOf('Spell.') !== -1) {
+					// It's a spell card, and we have arcane research discounts remaining.
+					var upgradeCost = ((addition.card.xp - removal.card.xp) * removal.qty)
+					while (spell_upgrade_discounts > 0 && upgradeCost > 0) {
+						upgradeCost--;
+						spell_upgrade_discounts--;
+					}
+					cost = cost + upgradeCost;
+				} else {
+					cost = cost + ((addition.card.xp - removal.card.xp) * removal.qty);
+				}
 				removal.qty = Math.abs(addition.qty);
 			}
 			if (removal.card.xp === 0){
