@@ -33,6 +33,9 @@ class ImportImagesCommand extends ContainerAwareCommand
 		$output->writeln($rootDir);
 		$logfile = fopen("missing.txt", "w") or die("Unable to open file!");
 		$cards = $repo->findBy([], ['code' => 'ASC']);
+		
+		$backlinksCache = [];
+		
 		foreach($cards as $card) {
 			$card_code = $card->getCode();
 			$imageurl = $assets_helper->getUrl('bundles/cards/'.$card_code.'.png');
@@ -45,6 +48,10 @@ class ImportImagesCommand extends ContainerAwareCommand
 			$imagepath_back = $rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl_back);
 			$imagepath2_back = $rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl2_back);
 			$pack_id = $card->getPack()->getId();
+
+			if ($card->getLinkedTo()){
+				$backlinksCache[$card->getLinkedTo()->getCode()] = $card->getLinkedTo()->getCode();
+			}
 
 			if(file_exists($imagepath) || file_exists($imagepath2)) {
 				$output->writeln("Skip ".$card_code);
@@ -62,7 +69,9 @@ class ImportImagesCommand extends ContainerAwareCommand
 			echo $card->getPack()->getName()." ".$card->getPack()->getId()."\n";
 			if ($card->getType()->getCode() == "location" && $card->getDoubleSided()){
 				$cgdbfile = sprintf('AHC%02d_%db.jpg', $pack_id, $card->getPosition());
-			}else {
+			} else if (isset($backlinksCache[$card->getCode()])) {
+				$cgdbfile = sprintf('AHC%02d_%db.jpg', $pack_id, $card->getPosition());
+			} else {
 				$cgdbfile = sprintf('AHC%02d_%d.jpg', $pack_id, $card->getPosition());
 			}
 
@@ -76,8 +85,19 @@ class ImportImagesCommand extends ContainerAwareCommand
 				file_put_contents($outputfile, $image);
 				$output->writeln("New file at $outputfile");
 			}else {
-				$output->writeln("NO Image for $card_code");
-				fwrite($logfile, "no image found");
+				$cgdbfile = sprintf('AHC%02d_%da.jpg', $pack_id, $card->getPosition());
+				$cgdburl2 = "http://lcg-cdn.fantasyflightgames.com/ahlcg/" . $cgdbfile;
+				$dirname = dirname($imagepath);
+				$outputfile = $dirname . DIRECTORY_SEPARATOR . $card_code . ".jpg";
+
+				$image = @file_get_contents($cgdburl2);
+				if($image !== FALSE) {
+					file_put_contents($outputfile, $image);
+					$output->writeln("New file at $outputfile");
+				}else {
+					$output->writeln("NO Image for $card_code");
+					fwrite($logfile, "no image found");
+				}
 			}
 
 			if ($card->getDoubleSided()){
