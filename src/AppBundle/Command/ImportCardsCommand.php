@@ -68,7 +68,7 @@ class ImportCardsCommand extends ContainerAwareCommand
           $text = str_replace("-&gt;", "→", $text);
           $text = str_replace("&ldquo;", '"', $text);
           $text = str_replace("&rdquo;", '"', $text);
-          $text = preg_replace("/<em class='bbc'><b>([^<]+)<\/b><\/em>/", "<i>\\1</i>", $text);
+          $text = preg_replace("/<em class='bbc'><b>([^<]+)<\/b><\/em>/", "[[\\1]]", $text);
           $text = preg_replace("/<em class='bbc'>([^<]+)<\/em>/", "", $text);
           $text = preg_replace_callback("/\[(.*?)\]/", function ($matches) use ($allFactions) {
           $token = str_replace(['“', '”', '’', '&rsquo;'], ['"', '"', '\'', '\''], $matches[1]);
@@ -121,7 +121,7 @@ class ImportCardsCommand extends ContainerAwareCommand
         	$only = "encounter";
         }
         
-        $fileUrl = "http://www.cardgamedb.com/deckbuilders/arkhamhorror/database/AHC14-db.jgz";
+        $fileUrl = "http://www.cardgamedb.com/deckbuilders/arkhamhorror/database/AHC21-db.jgz";
         //$output->writeln("Trying to download the file...");
         $file = file_get_contents($fileUrl);
         if(!preg_match('/^cards = (.*);$/', $file, $matches)) {
@@ -157,8 +157,8 @@ class ImportCardsCommand extends ContainerAwareCommand
           $pack = $em->getRepository('AppBundle:Pack')->findOneBy(array('name' => $setname));
           if(!$pack)
           {
-          	$output->writeln("<error>Cannot find pack [".$setname."]</error>");
-          	die();
+          	//$output->writeln("<error>Cannot find pack [".$setname."]</error>");
+          	continue;
           }
           if ($filename != $pack->getCode()){
           	continue;
