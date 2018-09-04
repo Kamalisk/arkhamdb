@@ -151,7 +151,7 @@ format.info = function info(card) {
  */
 format.text = function text(card) {
 	var text = card.text || '';
-	text = text.replace(/\[\[(\w+)\]\]/g, '<b><i>$1</i></b>');
+	text = text.replace(/\[\[([\w-]+)\]\]/g, '<b><i>$1</i></b>');
 	text = text.replace(/\[(\w+)\]/g, '<span title="$1" class="icon-$1"></span>');
 	text = text.split("\n").join('</p><p>');
 	return '<p>'+text+'</p>';
@@ -162,7 +162,7 @@ format.text = function text(card) {
  */
 format.back_text = function back_text(card) {
 	var text = card.back_text || '';
-	text = text.replace(/\[\[(\w+)\]\]/g, '<b><i>$1</i></b>');
+	text = text.replace(/\[\[([\w-]+)\]\]/g, '<b><i>$1</i></b>');
 	text = text.replace(/\[(\w+)\]/g, '<span title="$1" class="icon-$1"></span>')
 	text = text.split("\n").join('</p><p>');
 	return '<p>'+text+'</p>';
@@ -173,7 +173,7 @@ format.back_text = function back_text(card) {
  */
 format.html_page = function back_text(element) {
 	var curInnerHTML = element.innerHTML;
-	curInnerHTML = curInnerHTML.replace(/\[\[(\w+)\]\]/g, '<b><i>$1</i></b>');
+	curInnerHTML = curInnerHTML.replace(/\[\[([\w-]+)\]\]/g, '<b><i>$1</i></b>');
 	curInnerHTML = curInnerHTML.replace(/\[(\w+)\]/g, '<span title="$1" class="icon-$1"></span>');
 	element.innerHTML = curInnerHTML;
 };
