@@ -141,6 +141,10 @@
         <source>Reputation</source>
         <target>__Reputation</target>
       </trans-unit>
+      <trans-unit id="0c69b6dc91876b91f43a07306badebf3" resname="&lt;/">
+        <source>&lt;/</source>
+        <target><![CDATA[__</]]></target>
+      </trans-unit>
       <trans-unit id="8b9c006d512295284b651b36cd6349a6" resname="Something about you">
         <source>Something about you</source>
         <target>__Something about you</target>
@@ -168,14 +172,6 @@
       <trans-unit id="c9cc8cce247e49bae79f15173ce97354" resname="Save">
         <source>Save</source>
         <target>__Save</target>
-      </trans-unit>
-      <trans-unit id="f6039d44b29456b20f8f373155ae4973" resname="Username">
-        <source>Username</source>
-        <target>__Username</target>
-      </trans-unit>
-      <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d" resname="Email">
-        <source>Email</source>
-        <target>__Email</target>
       </trans-unit>
     </body>
   </file>
