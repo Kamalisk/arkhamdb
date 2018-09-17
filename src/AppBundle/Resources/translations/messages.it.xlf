@@ -6,176 +6,176 @@
     </header>
     <body>
       <trans-unit id="a54df7f0b810414467735acc4f3ca4f9" resname="My Decks">
-        <source>I Miei Mazzi</source>
-        <target>__I Miei Mazzi</target>
+        <source>My Decks</source>
+        <target>I Miei Mazzi</target>
       </trans-unit>
       <trans-unit id="41bee85f0a581e16440caf695024e618" resname="My Teams">
-        <source>Le Mie Squadre</source>
-        <target>__Le Mie Squadre</target>
+        <source>My Teams</source>
+        <target>Le Mie Squadre</target>
       </trans-unit>
       <trans-unit id="e002169a321adf2814cd157a8dd0ecc5" resname="Decklists">
-        <source>Liste dei Mazzi</source>
-        <target>__Liste dei Mazzi</target>
+        <source>Decklists</source>
+        <target>Liste dei Mazzi</target>
       </trans-unit>
       <trans-unit id="cd81f9f55969c822377f076017bb3484" resname="Cards">
-        <source>Carte</source>
-        <target>__Carte</target>
+        <source>Cards</source>
+        <target>Carte</target>
       </trans-unit>
       <trans-unit id="34e80a799d144cfe4af46815e103f017" resname="Reviews">
-        <source>Recensioni</source>
-        <target>__Recensioni</target>
+        <source>Reviews</source>
+        <target>Recensioni</target>
       </trans-unit>
       <trans-unit id="1f4da964f8eab62e96e8cfe406e44364" resname="Rules">
-        <source>Regole</source>
-        <target>__Regole</target>
+        <source>Rules</source>
+        <target>Regole</target>
       </trans-unit>
       <trans-unit id="483a5da192f46e3cfe8391d3ef234fc4" resname="FAQs">
         <source>FAQs</source>
-        <target>__FAQs</target>
+        <target>FAQs</target>
       </trans-unit>
       <trans-unit id="8f7f4c1ce7a4f933663d10543562b096" resname="About">
-        <source>Chi siamo?</source>
-        <target>__Chi siamo?</target>
+        <source>About</source>
+        <target>Chi siamo</target>
       </trans-unit>
       <trans-unit id="db974238714ca8de634a7ce1d083a14f" resname="API">
         <source>API</source>
-        <target>__API</target>
+        <target>API</target>
       </trans-unit>
       <trans-unit id="20b4f77bd00b4f63a49ec8e08f3bf6a6" resname="Cost">
-        <source>Costi</source>
-        <target>__Costi</target>
+        <source>Cost</source>
+        <target>Costi</target>
       </trans-unit>
       <trans-unit id="9b57db6e9d84ba5f537ce97b13079736" resname="XP">
         <source>XP</source>
-        <target>__XP</target>
+        <target>XP</target>
       </trans-unit>
       <trans-unit id="5b388583a8c29ad05de31c7b1ca38146" resname="Willpower">
-        <source>Volontà</source>
-        <target>__Volontà</target>
+        <source>Willpower</source>
+        <target>Volontà</target>
       </trans-unit>
       <trans-unit id="591a90c34f2dc753830b9bd6b5c6c815" resname="Intellect">
-        <source>Intelletto</source>
-        <target>__Intelletto</target>
+        <source>Intellect</source>
+        <target>Intelletto</target>
       </trans-unit>
       <trans-unit id="30ad1054cf7ad7636a26844a6f782e1f" resname="Combat">
-        <source>Scontro</source>
-        <target>__Scontro</target>
+        <source>Combat</source>
+        <target>Scontro</target>
       </trans-unit>
       <trans-unit id="241bb470b0110efc8b5609f7311b0bb1" resname="Agility">
-        <source>Agilità</source>
-        <target>__Agilità</target>
+        <source>Agility</source>
+        <target>Agilità</target>
       </trans-unit>
       <trans-unit id="605669cab962bf944d99ce89cf9e58d9" resname="Health">
-        <source>Salute</source>
-        <target>__Salute</target>
+        <source>Health</source>
+        <target>Salute</target>
       </trans-unit>
       <trans-unit id="ad34a9d5d87691c743dc42cbc5e8b783" resname="Sanity">
-        <source>Sanità Mentale</source>
-        <target>__Sanità Mentale</target>
+        <source>Sanity</source>
+        <target>Sanità Mentale</target>
       </trans-unit>
       <trans-unit id="c8b01a3184580b42a0bfbc05d2dab784" resname="Fight">
-        <source>Combatti</source>
-        <target>__Combatti</target>
+        <source>Fight</source>
+        <target>Combatti</target>
       </trans-unit>
       <trans-unit id="fcebb8bec493a6678a2758580bee43f9" resname="Evade">
-        <source>Eludi</source>
-        <target>__Eludi</target>
+        <source>Evade</source>
+        <target>Eludi</target>
       </trans-unit>
       <trans-unit id="b9f24e83531326204197015b2f43a93f" resname="Damage">
-        <source>Danni</source>
-        <target>__Danni</target>
+        <source>Damage</source>
+        <target>Danni</target>
       </trans-unit>
       <trans-unit id="6dd1b5ddcf2d141fa924bb9207874c6d" resname="Horror">
-        <source>Orrori</source>
-        <target>__Orrori</target>
+        <source>Horror</source>
+        <target>Orrori</target>
       </trans-unit>
       <trans-unit id="63af23acea82542bd29f7e5d19361805" resname="Doom">
-        <source>Destini</source>
-        <target>__Destini</target>
+        <source>Doom</source>
+        <target>Destini</target>
       </trans-unit>
       <trans-unit id="60deea80d2e908af97e2c8c0da66949a" resname="Shroud">
-        <source>Oscurità</source>
-        <target>__Oscurità</target>
+        <source>Shroud</source>
+        <target>Oscurità</target>
       </trans-unit>
       <trans-unit id="140e5f509e8ff4ac1413a3170063af27" resname="Clues">
-        <source>Indizi</source>
-        <target>__Indizi</target>
+        <source>Clues</source>
+        <target>Indizi</target>
       </trans-unit>
       <trans-unit id="9046fcdec95378ce88a0879ebfc44475" resname="Test Icons">
-        <source>Icone Abilità</source>
-        <target>__Icone Abilità</target>
+        <source>Test Icons</source>
+        <target>Icone Abilità</target>
       </trans-unit>
       <trans-unit id="0557fa923dcee4d0f86b1409f5c2167f" resname="Back">
-        <source>Retro</source>
-        <target>__Retro</target>
+        <source>Back</source>
+        <target>Retro</target>
       </trans-unit>
       <trans-unit id="b7a772bd89d5f4413e9e6373f8dede2d" resname="Your query didn't match any card.">
-        <source>La ricerca non corrisponde ad alcuna carta.</source>
-        <target>__La ricerca non corrisponde ad alcuna carta.</target>
+        <source>Your query didn't match any card.</source>
+        <target>La ricerca non corrisponde ad alcuna carta.</target>
       </trans-unit>
       <trans-unit id="681aa47f963747cc19ec382e0c7944df" resname="Related Cards">
-        <source>Carte Correlate</source>
-        <target>__Carte Correlate</target>
+        <source>Related Cards</source>
+        <target>Carte Correlate</target>
       </trans-unit>
       <trans-unit id="d9ed9cfb2b4c0bc9bc7e2208ee80aec0" resname="Member since">
-        <source>Membro da</source>
-        <target>__Membro da</target>
+        <source>Member since</source>
+        <target>Membro da</target>
       </trans-unit>
       <trans-unit id="3b8dacebcabd4075dc1dbd89f13a0178" resname="published decklists">
-        <source>mazzi pubblicati</source>
-        <target>__mazzi pubblicati</target>
+        <source>published decklists</source>
+        <target>mazzi pubblicati</target>
       </trans-unit>
       <trans-unit id="55ec6e23814c55c69572b48aafd4faf9" resname="One published decklist">
         <source>One published decklist</source>
         <target>__One published decklist</target>
       </trans-unit>
       <trans-unit id="1c5bc0508822392420c374b729785958" resname="published reviews">
-        <source>recensioni pubblicate</source>
-        <target>__recensioni pubblicate</target>
+        <source>published reviews</source>
+        <target>recensioni pubblicate</target>
       </trans-unit>
       <trans-unit id="f1b4b1a6504086c413e446914bcfee1d" resname="One published reviews">
         <source>One published reviews</source>
         <target>__One published reviews</target>
       </trans-unit>
       <trans-unit id="8d9bec4f224970e231041639de877092" resname="Reputation">
-        <source>Reputazione</source>
-        <target>__Reputazione</target>
+        <source>Reputation</source>
+        <target>Reputazione</target>
       </trans-unit>
       <trans-unit id="8b9c006d512295284b651b36cd6349a6" resname="Something about you">
-        <source>Dicci qualcosa di te</source>
-        <target>__Dicci qualcosa di te</target>
+        <source>Something about you</source>
+        <target>Dicci qualcosa di te</target>
       </trans-unit>
       <trans-unit id="ae3ef38738579f5c872777896ac4e8a0" resname="Be notified when a user comments one of your decklists">
-        <source>Ricevi una notifica quando un utente lascia un commento su uno dei tuoi mazzi</source>
-        <target>__Ricevi una notifica quando un utente lascia un commento su uno dei tuoi mazzi</target>
+        <source>Be notified when a user comments one of your decklists</source>
+        <target>Ricevi una notifica quando un utente lascia un commento su uno dei tuoi mazzi</target>
       </trans-unit>
       <trans-unit id="d67d9db427c85b89f10737cdc923b611" resname="Be notified when a user also comments a decklist you commented">
-        <source>Ricevi una notifica anche quando un utente lascia un commento su un mazzo che hai commentato</source>
-        <target>__Ricevi una notifica anche quando un utente lascia un commento su un mazzo che hai commentato</target>
+        <source>Be notified when a user also comments a decklist you commented</source>
+        <target>Ricevi una notifica anche quando un utente lascia un commento su un mazzo che hai commentato</target>
       </trans-unit>
       <trans-unit id="c46d2731d32c14fd9b5b8d6372021d19" resname="Be notified when a user mentions you in a comment">
-        <source>Ricevi una notifica quando un utente ti menziona in un commento</source>
-        <target>__Ricevi una notifica quando un utente ti menziona in un commento</target>
+        <source>Be notified when a user mentions you in a comment</source>
+        <target>Ricevi una notifica quando un utente ti menziona in un commento</target>
       </trans-unit>
       <trans-unit id="ef54f55d1717398848fc37eb0e1b309f" resname="Share your decks.">
-        <source>Condividi i tuoi mazzi.</source>
-        <target>__Condividi i tuoi mazzi.</target>
+        <source>Share your decks.</source>
+        <target>Condividi i tuoi mazzi.</target>
       </trans-unit>
       <trans-unit id="808fc528a81ffee00ce69ee6c57ce9d6" resname="Select a faction color for your username">
-        <source>Seleziona il colore di una fazione per il tuo nome utente</source>
-        <target>__Seleziona il colore di una fazione per il tuo nome utente</target>
+        <source>Select a faction color for your username</source>
+        <target>Seleziona il colore di una fazione per il tuo nome utente</target>
       </trans-unit>
       <trans-unit id="c9cc8cce247e49bae79f15173ce97354" resname="Save">
-        <source>Salva</source>
-        <target>__Salva</target>
+        <source>Save</source>
+        <targetSalva</target>
       </trans-unit>
       <trans-unit id="f6039d44b29456b20f8f373155ae4973" resname="Username">
-        <source>Nome Utente</source>
-        <target>__Nome Utente</target>
+        <source>Username</source>
+        <target>Nome Utente</target>
       </trans-unit>
       <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d" resname="Email">
         <source>Email</source>
-        <target>__Email</target>
+        <target>Email</target>
       </trans-unit>
     </body>
   </file>
