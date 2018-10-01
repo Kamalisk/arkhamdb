@@ -15,7 +15,7 @@
     {% if pagedescription is defined %}<meta name="description" content="{{ pagedescription }}">{% endif %}
 
     <link href='https://fonts.googleapis.com/css?family=Amiri:400,400italic,700,700italic|Julius+Sans+One|Open+Sans:400,400italic,700,700italic|Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-markdown/2.9.0/css/bootstrap-markdown.min.css">
     {% stylesheets filter="cssrewrite,scssphp" output="css/app.css"
@@ -51,12 +51,13 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li><a href="{{ path('decks_list') }}">My Decks</a></li>
-            <li><a href="{{ path('decklists_list') }}">Decklists</a></li>
-            <li><a href="{{ path('cards_search') }}">Cards</a></li>
-            <li class="hidden-sm"><a href="{{ path('card_reviews_list') }}">Reviews</a></li>
-            <li class="hidden-sm"><a href="{{ path('rules') }}">Rules</a></li>
-            <li class="hidden-sm"><a href="{{ path('card_faqs_list') }}">FAQs</a></li>
+            <li><a href="{{ path('decks_list') }}">{% trans %}My Decks{% endtrans %}</a></li>
+            <!-- <li><a href="{{ path('campaign_list') }}">{% trans %}My Teams{% endtrans %}</a></li> --> 
+            <li><a href="{{ path('decklists_list') }}">{% trans %}Decklists{% endtrans %}</a></li>
+            <li><a href="{{ path('cards_search') }}">{% trans %}Cards{% endtrans %}</a></li>
+            <li class="hidden-sm"><a href="{{ path('card_reviews_list') }}">{% trans %}Reviews{% endtrans %}</a></li>
+            <li class="hidden-sm"><a href="{{ path('rules') }}">{% trans %}Rules{% endtrans %}</a></li>
+            <li class="hidden-sm"><a href="{{ path('card_faqs_list') }}">{% trans %}FAQs{% endtrans %}</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown hidden-xs hidden-lg">
@@ -118,8 +119,8 @@
     <div class="col-xs-12">
 
     <ul class="list-inline">
-    <li><a href="{{ path('about') }}">About</a></li>
-    <li><a href="{{ path('api_intro') }}">API</a></li>
+    <li><a href="{{ path('about') }}">{% trans %}About{% endtrans %}</a></li>
+    <li><a href="{{ path('api_intro') }}">{% trans %}API{% endtrans %}</a></li>
     </ul>
 
     <p>
