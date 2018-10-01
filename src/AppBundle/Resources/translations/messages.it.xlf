@@ -167,7 +167,7 @@
       </trans-unit>
       <trans-unit id="c9cc8cce247e49bae79f15173ce97354" resname="Save">
         <source>Save</source>
-        <targetSalva</target>
+        <target>Salva</target>
       </trans-unit>
       <trans-unit id="f6039d44b29456b20f8f373155ae4973" resname="Username">
         <source>Username</source>
