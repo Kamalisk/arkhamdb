@@ -78,7 +78,7 @@
 	ui.setup_comment_form = function setup_comment_form() {
 
 		var form = $('<form method="POST" action="'+Routing.generate('decklist_comment')+'"><input type="hidden" name="id" value="'+app.deck.get_id()+'"><div class="form-group">'
-				+ '<textarea id="comment-form-text" class="form-control" rows="4" name="comment" placeholder="Enter your comment in Markdown format. Type # to enter a card name. Type $ to enter a symbol. Type @ to enter a user name."></textarea>'
+				+ '<textarea id="comment-form-text" class="form-control" rows="4" name="comment" placeholder="Enter your comment in Markdown format. Type # to enter a card name. Type $ to enter a symbol. Type ^ to enter a rules reference. Type @ to enter a user name."></textarea>'
 				+ '</div><div class="well text-muted" id="comment-form-preview"><small>Preview. Look <a href="http://daringfireball.net/projects/markdown/dingus">here</a> for a Markdown syntax reference.</small></div>'
 				+ '<button type="submit" class="btn btn-success">Submit comment</button></form>').insertAfter('#comment-form');
 
