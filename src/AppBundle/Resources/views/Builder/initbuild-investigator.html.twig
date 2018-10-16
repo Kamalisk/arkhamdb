@@ -1,19 +1,21 @@
 {% import "AppBundle::macros.html.twig" as macros %}
-<div class="col-md-4 faint-{{investigator.faction.code}}" style="padding : 2px; padding-top : 10px; border : solid white 1px;">					
-	<div class="col-md-4">
-	<span class="deck-list-investigator-image card-thumbnail-2x card-thumbnail-investigator" title="{{ investigator.name }}" style="background-image:url({{ asset('/bundles/cards/'~investigator.code~'.png') }})"></span>
+<div style="width: 380px; padding : 2px; padding-top : 10px; border : solid #dfdfdf 1px; background-color: rgba(255, 255, 255, 0.4)">
+	<div style="display: flex;">
+		<div>
+		<span class="deck-list-investigator-image card-thumbnail-2x card-thumbnail-investigator" title="{{ investigator.name }}" style="background-image:url({{ asset('/bundles/cards/'~investigator.code~'.png') }})"></span>
+		</div>
+		<div style="height : 119px; padding-left : 0.2em;">
+			<h4 style="padding : 2px; margin: 0;">{{ macros.card_name_no_link(investigator) }}</h4>
+			<ul style="padding-left : 17px; ">
+				<li>Deck Size: {{investigator.deckRequirements.size}}</li>
+				{% for card in investigator.deckRequirements.cards %}
+				<li>{{ macros.card_name_no_link(card) }}</li>
+				{% endfor %}
+				<li>1 Random Basic Weakness</li>
+			</ul>
+		</div>
 	</div>
-	<div class="col-md-8" style="height : 109px; padding-left : 0.2em;">
-	<h4 style="padding : 2px; margin: 0;">{{ macros.card_name_no_link(investigator) }}</h4>
-	<ul style="padding-left : 17px;">
-	<li>Deck Size: {{investigator.deckRequirements.size}}</li>
-	{% for card in investigator.deckRequirements.cards %}					
-	<li>{{ macros.card_name_no_link(card) }}</li>
-	{% endfor %}
-	<li>1 Random Basic Weakness</li>
-	</ul>										
-	</div>
-	<div class="col-md-12">
+	<div>
 	<p><button name="investigator" value="{{ investigator.code }}" type="submit" class="btn btn-primary btn-block">Create {{investigator.name}} Deck</button></p>
 	</div>
 </div>

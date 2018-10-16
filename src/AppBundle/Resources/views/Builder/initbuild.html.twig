@@ -10,14 +10,21 @@
 {% block body %}
 
 <style>
-	.investigator-select-item {
-		padding-top : 8px; border : solid white 2px;
+	.investigator-selection {
+		display: flex;
+		vertical-align: center;
+		align-items: center;
+		margin-bottom: 5px;
+		flex-wrap: wrap;
 	}
-	.investigator-select-item:hover {
-		border : solid rgba(100, 100, 100, 0.2) 2px;
+	.investigator-selection > div {
+		padding: 5px;
 	}
-	.investigator-select-item:hover  {
-		background-color : rgba(100, 100, 100, 0.2);
+	.investigator-attributes span {
+	}
+	h4 {
+		padding: 5px;
+		margin: 0;
 	}
 </style>
 
@@ -32,15 +39,29 @@
 			<option value="all">All Investigators</option>
 		</select>
 		</h2>
-		<div class="row" id="my_inv">
-			{% for investigator in my_investigators %}
-				{% include 'AppBundle:Builder:initbuild-investigator.html.twig' %}
+		<div>
+			<div id="my_inv">
+			{% for class, investigators in my_investigators_by_class %}
+				<h4 class="faint-{{class|lower}}"> <span class="icon icon-{{class|lower}}"></span> {{class}}</h4>
+				<div style="display: flex; flex-wrap: wrap;" class="faint-{{class|lower}}">
+				{% for investigator in investigators %}
+					{% include 'AppBundle:Builder:initbuild-investigator.html.twig' %}
+				{% endfor %}
+				</div>
 			{% endfor %}
-		</div>
-		<div class="row hidden" id="all_inv">
-			{% for investigator in investigators %}
-				{% include 'AppBundle:Builder:initbuild-investigator.html.twig' %}
-			{% endfor %}
+			</div>
+			
+
+			<div class="hidden" id="all_inv">
+				{% for class, investigators in all_investigators_by_class %}
+					<h4 class="faint-{{class|lower}}"> <span class="icon icon-{{class|lower}}"></span> {{class}}</h4>
+					<div style="display: flex; flex-wrap: wrap;" class="faint-{{class|lower}}">
+					{% for investigator in investigators %}
+						{% include 'AppBundle:Builder:initbuild-investigator.html.twig' %}
+					{% endfor %}
+					</div>
+				{% endfor %}
+			</div>
 		</div>
 	</div>
 </div>

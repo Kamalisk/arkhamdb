@@ -35,6 +35,7 @@ class BuilderController extends Controller
 		$my_investigators = [];
 		$other_investigators = [];
 		$all_investigators = [];
+		$all_investigators_by_class = [];
 		foreach($investigators as $investigator){
 			$deck_requirements = $this->get('DeckValidationHelper')->parseReqString($investigator->getDeckRequirements());
 			if (isset($deck_requirements['size']) && $deck_requirements['size']){
@@ -57,16 +58,28 @@ class BuilderController extends Controller
 				$investigator->setDeckRequirements($req);
 				if (in_array($investigator->getPack()->getId(), $packs_owned)){
 					$my_investigators[] = $investigator;
+					if (!isset($my_investigators_by_class[$investigator->getFaction()->getName()]) ) {
+						$my_investigators_by_class[$investigator->getFaction()->getName()] = [];
+					}
+					$my_investigators_by_class[$investigator->getFaction()->getName()][] = $investigator;
 				}
-
+				if (!isset($all_investigators_by_class[$investigator->getFaction()->getName()]) ) {
+					$all_investigators_by_class[$investigator->getFaction()->getName()] = [];
+				}
+				$all_investigators_by_class[$investigator->getFaction()->getName()][] = $investigator;
+				
 				$all_investigators[] = $investigator;
 			}
 		}
-
+		arsort($all_investigators_by_class);
+		arsort($my_investigators_by_class);
+		
 		return $this->render('AppBundle:Builder:initbuild.html.twig', [
 			'pagetitle' => "New deck",
 			'investigators' => $all_investigators,
-			'my_investigators' => $my_investigators
+			'my_investigators' => $my_investigators,
+			'all_investigators_by_class' => $all_investigators_by_class,
+			'my_investigators_by_class' => $my_investigators_by_class
 			//'my_investigators' => $my_investigators,
 			//'other_investigators' => $other_investigators
 		], $response);
