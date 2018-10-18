@@ -27,7 +27,6 @@ body {
 	font-weight: 700;
 }
 .card-traits, .card-text i {
-	font-weight: 700;
 	font-style: italic;
 }
 .card-text {
@@ -533,7 +532,11 @@ div.site-slogan {
 .icon-survivor {
 	background-image : url("/bundles/app/images/factions/survivor.png");
 }
-
+.icon-big {
+	background-position: 100%;
+	width: 32px;
+	height: 32px;
+}
 /**************** REVIEW ON CARD PAGE ******************/
 
 article.review {
