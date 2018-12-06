@@ -601,11 +601,15 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 				//if (card.slot){
 				//	$div.append($(card_line_tpl({card:card})+' <span class="small slot-header">'+card.slot+'</span>'));
 				//}else {
+
 				$div.append($(card_line_tpl({card:card})));
 				//}
 				$div.prepend(card.indeck+'x ');
 				if(card.xp && card.xp > 0) {
 					$div.append(app.format.xp(card.xp, card.indeck));
+				}
+				if(card.xp === undefined) {
+					$div.append(' <span class="fa fa-star" title="Does not count towards deck size"></span>');
 				}
 				//console.log(card.pack_code);
 				if (card.slot && slots[card.slot]){
@@ -630,12 +634,19 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 			}
 			cards.forEach(function (card) {
 				var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
+
+
 				$div.append($(card_line_tpl({card:card})));
 				
 				$div.prepend(card.indeck+'x ');
 				if(card.xp && card.xp > 0) {
 					$div.append(app.format.xp(card.xp, card.indeck));
 				}
+				if(card.xp === undefined) {
+					$div.append(' <span class="fa fa-star" title="Does not count towards deck size"></span>');
+				}
+				console.log("xp", card.xp);
+				
 				if (card.name == "Random Basic Weakness" && $("#special-collection").length > 0 ){
 					$div.append(' <a class="fa fa-random" title="Replace with randomly selected weakness from currently selected packs" data-random="'+card.code+'"> <span ></span></a> ');
 				}
