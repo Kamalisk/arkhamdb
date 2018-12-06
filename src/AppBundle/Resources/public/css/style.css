@@ -173,6 +173,11 @@ div.tags span.tag:not(:first-child)::before {
 	border-bottom : solid 1px rgba(100, 100, 100, 0.1);
 }
 
+h4.deck-section {
+	border-bottom: solid 1px rgba(130, 160, 200, 0.5);
+	font-size: 15px;
+}
+
 /********** DECK EDITOR ************/
 
 #collection-grid .col-sm-6 .media, #collection-grid .col-sm-4 .media {

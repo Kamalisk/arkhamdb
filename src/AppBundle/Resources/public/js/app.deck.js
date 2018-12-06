@@ -12,11 +12,14 @@ var date_creation,
 	exiles = [],
 	investigator_code,
 	investigator_name,
+	investigator,
 	unsaved,
 	user_id,
 	sort_type = "default",
 	sort_dir = 1,
 	problem_list = [],
+	no_collection = true,
+	collection = {},
 	problem_labels = {
 		too_few_cards: "Contains too few cards",
 		too_many_cards: "Contains too many cards",
@@ -33,10 +36,10 @@ var date_creation,
 /*
  * Templates for the different deck layouts, see deck.get_layout_data
  */
-layouts[1] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><div class="col-sm-10 col-print-10"><%= cards %></div></div></div>'); 
-layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><div class="col-sm-6 col-print-6"><%= assets %></div><div class="col-sm-6 col-print-6"><%= events %> <%= skills %></div></div> <hr> <div class="row"><div class="col-sm-6 col-print-6"> <%= outassets %> <%= outevents %> <%= outskills %> </div><div class="col-sm-6 col-print-6"><%= outtreachery %> <%= outenemy %></div> </div><div id="upgrade_changes"></div></div>');
-layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= images %><%= meta %></div><div class="col-sm-4"><%= assets %><%= skills %></div><div class="col-sm-4"><%= events %><%= treachery %></div></div></div>');
-
+layouts[1] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><h4 class="deck-section">Deck</h4><div class="col-sm-10 col-print-10"><%= cards %></div></div></div>'); 
+layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><h4 class="deck-section">Deck</h4><div class="col-sm-6 col-print-6"><%= assets %> <%= permanent %></div><div class="col-sm-6 col-print-6"><%= events %> <%= skills %> <%= treachery %></div></div> <div id="upgrade_changes"></div></div>');
+layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= images %><%= meta %></div><h4 class="deck-section">Deck</h4><div class="col-sm-4"><%= assets %><%= skills %></div><div class="col-sm-4"><%= events %><%= treachery %></div></div></div>');
+layouts[4] = _.template('<div class="deck-content"><div class="row"><%= images %></div><div class="row"><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><h4 class="deck-section">Deck</h4><div class="col-sm-12 col-print-12"><%= assets %> <%= events %> <%= skills %></div></div> <hr> <div class="row"><div class="col-sm-6 col-print-6"> <%= outassets %> <%= outevents %> <%= outskills %> </div><div class="col-sm-6 col-print-6"><%= outtreachery %> <%= outenemy %></div> </div><div id="upgrade_changes"></div></div>');
 /**
  * @memberOf deck
  */
@@ -57,12 +60,24 @@ deck.init = function init(data) {
 		exiles = exile_string.split(",");
 	}
 	xp = data.xp;
+	xp_adjustment = data.xp_adjustment;
 	next_deck = data.next_deck;
 	previous_deck = data.previous_deck;
 	if (localStorage && localStorage.getItem('ui.deck.sort')) {
 		deck.sort_type = localStorage.getItem('ui.deck.sort');
 	}
 	
+	// parse pack owner string
+	collection = {};
+	no_collection = true;
+	if (app.user.data && app.user.data.owned_packs) {
+		var packs = app.user.data.owned_packs.split(',');
+		_.forEach(packs, function(str) {
+			collection[str] = 1;
+			no_collection = false;
+		});
+		//console.log(app.user.data.owned_packs, collection);
+	}
 	
 	if(app.data.isLoaded) {
 		deck.set_slots(data.slots);
@@ -158,6 +173,23 @@ deck.get_xp_spent = function get_xp_spent() {
  */
 deck.set_xp_spent = function set_xp_spent(spent_xp) {
 	xp_spent = spent_xp;
+}
+
+
+/**
+ * @memberOf deck
+ * @returns integer
+ */
+deck.get_xp_adjustment = function get_xp_adjustment() {
+	return xp_adjustment;
+}
+
+/**
+ * @memberOf deck
+ * @returns integer
+ */
+deck.set_xp_adjustment = function set_xp_adjustment(xp_adj) {
+	xp_adjustment = xp_adj;
 }
 
 /**
@@ -364,11 +396,8 @@ deck.get_layout_data = function get_layout_data(options) {
 			assets: '',
 			events: '',
 			skills: '',
-			outassets: '',
-			outevents: '',
-			outskills: '',
-			outtreachery: '',
-			outenemy: '',
+			treachery: '',
+			permanent: '',
 			cards: ''
 	};
 	
@@ -458,12 +487,11 @@ deck.get_layout_data = function get_layout_data(options) {
 		deck.update_layout_section(data, 'assets', deck.get_layout_data_one_section('type_code', 'asset', 'type_name', false));
 		deck.update_layout_section(data, 'events', deck.get_layout_data_one_section('type_code', 'event', 'type_name', false));
 		deck.update_layout_section(data, 'skills', deck.get_layout_data_one_section('type_code', 'skill', 'type_name', false));
-		
-		deck.update_layout_section(data, 'outassets', deck.get_layout_data_one_section('type_code', 'asset', 'type_name', true));
-		deck.update_layout_section(data, 'outevents', deck.get_layout_data_one_section('type_code', 'event', 'type_name', true));
-		deck.update_layout_section(data, 'outskills', deck.get_layout_data_one_section('type_code', 'skill', 'type_name', true));
-		deck.update_layout_section(data, 'outtreachery', deck.get_layout_data_one_section('type_code', 'treachery', 'type_name', true));
-		deck.update_layout_section(data, 'outenemy', deck.get_layout_data_one_section('type_code', 'enemy', 'type_name', true));
+		deck.update_layout_section(data, 'treachery', deck.get_layout_data_one_section('type_code', 'treachery', 'type_name', false));
+		deck.update_layout_section(data, 'permanent', deck.get_layout_data_one_section('', '', 'type_name', true));
+	}
+	if (options && options.layout) {
+		layout_template = options.layout;
 	}
 	
 	return layouts[layout_template](data);
@@ -538,27 +566,18 @@ deck.update_layout_section = function update_layout_section(data, section, eleme
 	data[section] = data[section] + element[0].outerHTML;
 }
 
-deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey, sortValue, displayLabel, out) {
+deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey, sortValue, displayLabel, permanent) {
 	var section = $('<div>');
 	var query = {};
-	query[sortKey] = sortValue;
-	if (out == true){
-		query["$or"] = [
-			{
-				xp: {
-					'$exists': false
-				}
-			},
-			{
-				permanent: true
-			}
-		];
+	if (sortKey) {
+		query[sortKey] = sortValue;
+	}
+	if (permanent == true){
+		query.permanent = true;
 	} else {
-		query.xp = {
-			'$in': [0,1,2,3,4,5]
-		};
 		query.permanent = false;
 	}
+	
 	
 	var cards = deck.get_cards({ name: 1 }, query);
 	if(cards.length) {
@@ -576,6 +595,7 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 				'Ally': [],
 				'Other': []
 			};
+			
 			cards.forEach(function (card) {
 				var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
 				//if (card.slot){
@@ -586,11 +606,8 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 				$div.prepend(card.indeck+'x ');
 				if(card.xp && card.xp > 0) {
 					$div.append(app.format.xp(card.xp, card.indeck));
-					
 				}
-				if(app.data.cards.find({'name': card.name}).length > 1) {
-					//$div.append(' ('+card.pack_code+')');
-				}
+				//console.log(card.pack_code);
 				if (card.slot && slots[card.slot]){
 					slots[card.slot].push($div);
 				} else {
@@ -606,18 +623,18 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 				}
 			});
 		} else {
-			$(header_tpl({code: sortValue, name: name, quantity: deck.get_nb_cards(cards)})).appendTo(section);
+			if (permanent) {
+				$(header_tpl({code: "Permanent", name: "Permanent", quantity: deck.get_nb_cards(cards)})).appendTo(section);
+			} else {
+				$(header_tpl({code: sortValue, name: name, quantity: deck.get_nb_cards(cards)})).appendTo(section);
+			}
 			cards.forEach(function (card) {
 				var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
-				
 				$div.append($(card_line_tpl({card:card})));
 				
 				$div.prepend(card.indeck+'x ');
 				if(card.xp && card.xp > 0) {
 					$div.append(app.format.xp(card.xp, card.indeck));
-				}
-				if(app.data.cards.find({'name': card.name}).length > 1) {
-					//$div.append(' ('+card.pack_code+')');
 				}
 				if (card.name == "Random Basic Weakness" && $("#special-collection").length > 0 ){
 					$div.append(' <a class="fa fa-random" title="Replace with randomly selected weakness from currently selected packs" data-random="'+card.code+'"> <span ></span></a> ');
