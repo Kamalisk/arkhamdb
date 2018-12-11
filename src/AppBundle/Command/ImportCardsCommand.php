@@ -55,6 +55,7 @@ class ImportCardsCommand extends ContainerAwareCommand
         	$text = $t;
           $text = str_replace(['“', '”', '’', '&rsquo;'], ['"', '"', '\'', '\''], $text);
           $text = str_replace(['<br />'], ["\n"], $text);
+          $text = str_replace(['<br/>'], ["\n"], $text);
           $text = str_replace('<i>[', "[", $text);
           $text = str_replace(']</i>', "]", $text);
           $text = preg_replace("/<strong class='bbc'>([^<]+)<\/strong>/", "<b>\\1</b>", $text);
@@ -121,12 +122,16 @@ class ImportCardsCommand extends ContainerAwareCommand
         	$only = "encounter";
         }
         
-        $fileUrl = "http://www.cardgamedb.com/deckbuilders/arkhamhorror/database/AHC21-db.jgz";
+        $fileUrl = "http://www.cardgamedb.com/deckbuilders/arkhamhorror/database/AHC25-db.jgz";
         //$output->writeln("Trying to download the file...");
         $file = file_get_contents($fileUrl);
         if(!preg_match('/^cards = (.*);$/', $file, $matches)) {
-          $output->writeln("<error>Error while parsing js file</error>");
-          return;
+		$file = gzdecode($file);
+	        if(!preg_match('/^cards = (.*);$/', $file, $matches)) {
+			$file = gzdecode($file);
+			$output->writeln("<error>Error while parsing js file</error>");
+			return;
+        	}
         }
         //$output->writeln("File successfully downloaded");
 
