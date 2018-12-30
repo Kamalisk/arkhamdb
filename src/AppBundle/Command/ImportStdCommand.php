@@ -41,7 +41,8 @@ class ImportStdCommand extends ContainerAwareCommand
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output)
-	{
+  {
+    ini_set('memory_limit', '2G');
 		$path = $input->getArgument('path');
 		$this->em = $this->getContainer()->get('doctrine')->getEntityManager();
 		$this->output = $output;
