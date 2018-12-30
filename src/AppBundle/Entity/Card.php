@@ -1952,4 +1952,38 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         $this->locale = $locale;
     }    
+
+    /**
+     * Add linkedFrom
+     *
+     * @param \AppBundle\Entity\Card $linkedFrom
+     *
+     * @return Card
+     */
+    public function addLinkedFrom(\AppBundle\Entity\Card $linkedFrom)
+    {
+        $this->linked_from[] = $linkedFrom;
+
+        return $this;
+    }
+
+    /**
+     * Remove linkedFrom
+     *
+     * @param \AppBundle\Entity\Card $linkedFrom
+     */
+    public function removeLinkedFrom(\AppBundle\Entity\Card $linkedFrom)
+    {
+        $this->linked_from->removeElement($linkedFrom);
+    }
+
+    /**
+     * Get linkedFrom
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLinkedFrom()
+    {
+        return $this->linked_from;
+    }
 }

@@ -33,7 +33,8 @@
         "nelmio/api-doc-bundle": "^2.9",
         "erusev/parsedown": "^1.6",
         "stof/doctrine-extensions-bundle": "^1.2",
-        "jms/i18n-routing-bundle": "^2.0"
+        "jms/i18n-routing-bundle": "^2.0",
+        "doctrine/doctrine-migrations-bundle": "^1.3"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
