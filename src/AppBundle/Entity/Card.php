@@ -101,12 +101,14 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				$optionalFields[] = 'enemy_fight';
 				$optionalFields[] = 'enemy_evade';
 				$optionalFields[] = 'victory';
+				$optionalFields[] = 'vengeance';
 				$optionalFields[] = 'health';
 				$optionalFields[] = 'health_per_investigator';
 				$optionalFields[] = 'encounter_position';
 				break;
 			case "location":
 				$optionalFields[] = 'victory';
+				$optionalFields[] = 'vengeance';
 				$optionalFields[] = 'shroud';
 				$optionalFields[] = 'clues';
 				$optionalFields[] = 'clues_fixed';
@@ -337,6 +339,10 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
      */
     private $victory;
     
+    /**
+     * @var integer
+     */
+    private $vengeance;
 
     /**
      * @var integer
@@ -1028,6 +1034,32 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     public function getVictory()
     {
         return $this->victory;
+    }
+
+
+
+    /**
+     * Set vengeance
+     *
+     * @param integer $vengeance
+     *
+     * @return Card
+     */
+    public function setVengeance($vengeance)
+    {
+        $this->vengeance = $vengeance;
+
+        return $this;
+    }
+
+    /**
+     * Get vengeance
+     *
+     * @return integer
+     */
+    public function getVengeance()
+    {
+        return $this->vengeance;
     }
 
 
