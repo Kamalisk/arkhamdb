@@ -154,7 +154,7 @@ class Decks
 public function upgradeDeck($deck, $xp, $previous_deck, $upgrades, $exiles)
 	{
 
-		$deck->setXp ( $xp );
+		$deck->setXp ( $xp + $previous_deck->getXpAdjustment());
 		$deck->setPreviousDeck ( $previous_deck );
 		$deck->setUpgrades ( $upgrades+1 );
 		$deck->setDescriptionMd ( $previous_deck->getDescriptionMd() );
