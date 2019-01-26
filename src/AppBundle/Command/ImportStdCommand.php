@@ -4,6 +4,7 @@ namespace AppBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -35,14 +36,20 @@ class ImportStdCommand extends ContainerAwareCommand
 				'path',
 				InputArgument::REQUIRED,
 				'Path to the repository'
-				)
-		
-		;
+				);
+
+        	$this->addOption(
+                        'player',
+                        null,
+                        InputOption::VALUE_NONE,
+                        'Only player cards'
+	        );
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		$path = $input->getArgument('path');
+		$player_only = $input->getOption('player');
 		$this->em = $this->getContainer()->get('doctrine')->getEntityManager();
 		$this->output = $output;
 
@@ -157,7 +164,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		foreach($scanned_directory as $dir){
 			$fileSystemIterator = $this->getFileSystemIterator($path."pack/".$dir);
 			foreach ($fileSystemIterator as $fileinfo) {
-				$imported = array_merge($imported, $this->importCardsJsonFile($fileinfo));
+				$imported = array_merge($imported, $this->importCardsJsonFile($fileinfo, $player_only));
 			}
 		}
 		if(count($imported)) {
@@ -364,7 +371,11 @@ class ImportStdCommand extends ContainerAwareCommand
 		$result = [];
 	
 		$code = $fileinfo->getBasename('.json');
+		if (stristr($code, "_encounter") !== FALSE && $special){
+			return $result;
+		}
 		$code = str_replace("_encounter", "", $code);
+
 		$pack = $this->em->getRepository('AppBundle:Pack')->findOneBy(['code' => $code]);
 		if(!$pack) throw new \Exception("Unable to find Pack [$code]");
 		
