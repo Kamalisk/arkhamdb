@@ -406,6 +406,7 @@ class ImportStdCommand extends ContainerAwareCommand
 					'xp',
 					'enemy_evade',
 					'enemy_fight',
+					'vengeance',
 					'victory',
 					'enemy_damage',
 					'enemy_horror',
