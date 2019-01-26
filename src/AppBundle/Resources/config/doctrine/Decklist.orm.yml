@@ -148,6 +148,9 @@ AppBundle\Entity\Decklist:
         xpSpent:
             type: integer
             nullable: true
+        xpAdjustment:
+            type: integer
+            nullable: true
         signature:
             type: string
             length: 32

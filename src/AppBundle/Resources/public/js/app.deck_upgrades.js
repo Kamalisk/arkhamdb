@@ -24,7 +24,7 @@ deck_upgrades.display = function display() {
 	var last_deck = current_deck;
 	$("#upgrade_changes").empty();
 	var counter = upgrades.length;
-	$("#upgrade_changes").append('<h4>History</h4>');
+	$("#upgrade_changes").append('<h4 class="deck-section>History</h4>');
 	_.each(upgrades, function (deck) {		
 		//console.log(last_deck, deck.content);
 		var result = app.diff.compute_simple([last_deck.content, deck.content]);
@@ -163,8 +163,10 @@ deck_upgrades.display = function display() {
 		
 		var div = $('<div class="deck-upgrade-changes">');
 		if (edit_mode){
-			div.append('<h4>Progress</h4>');
-			div.append('<div>Available experience: '+app.deck.get_xp()+'. Spent experience: '+cost+'</div>');
+			div.append('<h4 class="deck-section">Progress</h4>');
+			
+			div.append('<div>Available experience: '+app.deck.get_xp()+' <span class="fa fa-plus-circle"></span><span class="fa fa-minus-circle"></span></div>');
+			div.append('<div>Spent experience: '+cost+'</div>');
 			if (app.deck.get_previous_deck() && $('#save_form').length <= 0){
 				div.append('<div><a href="'+Routing.generate('deck_view', {deck_id:app.deck.get_previous_deck()})+'">View Previous Deck</a></div>');
 			}
@@ -172,11 +174,11 @@ deck_upgrades.display = function display() {
 				div.append('<div><a href="'+Routing.generate('deck_view', {deck_id:app.deck.get_next_deck()})+'">View Next Deck</a></div>');
 			}
 		}
-		
-		if (deck.xp){
-			div.append('<h5>Scenario '+counter+' complete: '+deck.xp+' xp spent. '+deck.xp_left+' xp remaining</h5>');
+
+		if (deck.xp_adjustment){
+			div.append('<h5>Scenario '+counter+' complete: '+deck.xp+' xp spent. '+deck.xp_left+' xp remaining ('+deck.xp_adjustment+')</h5>');
 		} else {
-			div.append('<h5>Scenario '+counter+' complete: 0 xp spent.</h5>');	
+			div.append('<h5>Scenario '+counter+' complete: '+deck.xp+' xp spent. '+deck.xp_left+' xp remaining</h5>');
 		}
 		
 		if (add_list.length <= 0 && remove_list.length <= 0){

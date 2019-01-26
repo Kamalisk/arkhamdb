@@ -34,7 +34,8 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
 					'content' => $cards,
 					'exile_string' => $previousDeck->getExiles(),
 					'xp' => $previousDeck->getNextDeck()->getXpSpent(),
-					'xp_left' => $previousDeck->getNextDeck()->getXp() - $previousDeck->getNextDeck()->getXpSpent(),
+					'xp_left' => $previousDeck->getNextDeck()->getXp() - $previousDeck->getNextDeck()->getXpSpent() + $previousDeck->getNextDeck()->getXpAdjustment(),
+					'xp_adjustment' => $previousDeck->getNextDeck()->getXpAdjustment(),
 					'date_creation' => $previousDeck->getDateCreation()->format('c')
 			];
 			$upgrades[] = $upgrade;
@@ -75,6 +76,12 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      * @var integer
      */
     private $xpSpent;
+
+    /**
+     * @var integer
+     */
+    private $xpAdjustment;
+    
 
     /**
      * @var \DateTime
@@ -711,6 +718,32 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
     public function setXpSpent($xpSpent)
     {
         $this->xpSpent = $xpSpent;
+
+        return $this;
+    }
+
+
+    /**
+     * Get xpSpent
+     *
+     * @return integer
+     */
+    public function getXpAdjustment()
+    {
+        return $this->xpAdjustment;
+    }
+    
+    
+    /**
+     * Set xpSpent
+     *
+     * @param integer $xpSpent
+     *
+     * @return Deck
+     */
+    public function setXpAdjustment($xpAdjustment)
+    {
+        $this->xpAdjustment = $xpAdjustment;
 
         return $this;
     }

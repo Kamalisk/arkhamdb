@@ -157,15 +157,22 @@ deck_history.all_changes = function all_changes() {
 	}
 	if(app.deck.get_previous_deck()){
 		$("#upgrade_changes").empty();
-		$("#upgrade_changes").append('<h4>Progress</h4>');
-		$("#upgrade_changes").append('<div>Available experience: '+app.deck.get_xp()+'. Spent experience: '+cost+'</div>');
+		$("#upgrade_changes").append('<h4 class="deck-section">Progress</h4>');
+		
+		if (app.deck.get_xp_adjustment()){
+			$("#upgrade_changes").append('<div>Available experience: <span id="xp_up" class="fa fa-plus-circle xp_up"></span> '+app.deck.get_xp()+' <span id="xp_down" class="fa fa-minus-circle xp_down"></span> ('+app.deck.get_xp_adjustment()+')</div>');	
+		} else {
+			$("#upgrade_changes").append('<div>Available experience: <span id="xp_up" class="fa fa-plus-circle xp_up"></span> '+app.deck.get_xp()+' <span id="xp_down" class="fa fa-minus-circle xp_down"></span></div>');
+		}
+		
+		$("#upgrade_changes").append('<div>Spent experience: '+cost+'</div>');
 		if (app.deck.get_previous_deck() && $('#save_form').length <= 0){
 			$("#upgrade_changes").append('<div><a href="'+Routing.generate('deck_view', {deck_id:app.deck.get_previous_deck()})+'">View Previous Deck</a></div>');
 		}
 		if (app.deck.get_next_deck()){
 			$("#upgrade_changes").append('<div><a href="'+Routing.generate('deck_view', {deck_id:app.deck.get_next_deck()})+'">View Next Deck</a></div>');
 		}
-		$("#upgrade_changes").append('<h4>Changes</h4>');
+		$("#upgrade_changes").append('<h4 class="deck-section">Changes</h4>');
 		if (add_list.length <= 0 && remove_list.length <= 0){
 			$("#upgrade_changes").append('<div class="deck-content">No Changes</div>');
 		}else {
@@ -178,7 +185,7 @@ deck_history.all_changes = function all_changes() {
 	} else if (app.deck.get_next_deck()){
 		if (app.deck.get_next_deck()){
 			$("#upgrade_changes").empty();
-			$("#upgrade_changes").append('<h4>Progress</h4>');
+			$("#upgrade_changes").append('<h4 class="deck-section">Progress</h4>');
 			$("#upgrade_changes").append('<div><a href="'+Routing.generate('deck_view', {deck_id:app.deck.get_next_deck()})+'">View Next Deck</a></div>');
 		}
 	}

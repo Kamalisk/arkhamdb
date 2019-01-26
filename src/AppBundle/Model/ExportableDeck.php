@@ -25,6 +25,11 @@ class ExportableDeck
 		} else {
 			$xp = null;
 		}
+		if (method_exists($this, "getXpAdjustment")){
+			$xp_adjustment = $this->getXpAdjustment();
+		} else {
+			$xp_adjustment = null;
+		}
 		if (method_exists($this, "getPrecedent") && method_exists($this, "getTags")){
 			$tags = $this->getTags();
 			$tags = str_replace(",",", ", $tags);
@@ -44,6 +49,7 @@ class ExportableDeck
 				'slots' => $slots->getContent(),
 				'version' => $this->getVersion(),
 				'xp' => $xp,
+				'xp_adjustment' => $xp_adjustment,
 				'exile_string' => $this->getExiles(),
 				'tags' => $tags,
 				'previous_deck' => $previousDeck,

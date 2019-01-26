@@ -165,4 +165,6 @@ class Campaign implements \Serializable
     {
         return $this->cycle;
     }
+    
+
 }

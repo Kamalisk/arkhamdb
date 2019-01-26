@@ -34,6 +34,17 @@ class Usercampaign implements \Serializable
     private $user_scenarios;
 
     /**
+     * @var \AppBundle\Entity\User
+     */
+    private $user;
+
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $decks;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -73,6 +84,63 @@ class Usercampaign implements \Serializable
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \AppBundle\Entity\User $user
+     *
+     * @return Campaign
+     */
+    public function setUser(\AppBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Add deck
+     *
+     * @param \AppBundle\Entity\Deck $deck
+     *
+     * @return User
+     */
+    public function addDeck(\AppBundle\Entity\Deck $deck)
+    {
+        $this->decks[] = $deck;
+        return $this;
+    }
+
+    /**
+     * Remove deck
+     *
+     * @param \AppBundle\Entity\Deck $deck
+     */
+    public function removeDeck(\AppBundle\Entity\Deck $deck)
+    {
+        $this->decks->removeElement($deck);
+    }
+
+    /**
+     * Get decks
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDecks()
+    {
+        return $this->decks;
     }
 
 }

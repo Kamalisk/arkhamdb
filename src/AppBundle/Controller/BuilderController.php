@@ -553,6 +553,7 @@ class BuilderController extends Controller
 		$problem = filter_var($request->get('problem'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		$decklist_id = filter_var($request->get('decklist_id'), FILTER_SANITIZE_NUMBER_INT);
 		$xp_spent = filter_var($request->get('xp_spent'), FILTER_SANITIZE_NUMBER_INT);
+		$xp_adjustment = filter_var($request->get('xp_adjustment'), FILTER_SANITIZE_NUMBER_INT);
 		$description = trim($request->get('description'));
 		$tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
@@ -564,6 +565,7 @@ class BuilderController extends Controller
 
 		if ($source_deck){
 			$source_deck->setXpSpent($xp_spent);
+			$source_deck->setXpAdjustment($xp_adjustment);
 		}
 		if ($request->get('previous_deck')){
 			$this->get('decks')->upgradeDeck($deck, $request->get('xp'), $request->get('previous_deck'), $request->get('upgrades'), $request->get('exiles'));

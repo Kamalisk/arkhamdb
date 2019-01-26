@@ -7,6 +7,19 @@ AppBundle\Entity\Usercampaign:
             targetEntity: Userscenario
             orderBy: {'id':'ASC'}
             mappedBy: user_campaigns
+        decks:
+            targetEntity: Deck
+            orderBy: {'dateUpdate':'DESC'}
+            mappedBy: usercampaign
+            cascade: ["remove"]
+    manyToOne:
+        user:
+            targetEntity: User
+            nullable: false
+            inversedBy: decks
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
     fields:
         id:
             type: integer

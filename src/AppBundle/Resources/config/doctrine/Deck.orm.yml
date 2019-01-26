@@ -17,6 +17,7 @@ AppBundle\Entity\Deck:
                 referencedColumnName: id
         usercampaign:
             targetEntity: Usercampaign
+            inversedBy: decks
             nullable: false
             joinColumn:
                 name: usercampaign_id
@@ -110,6 +111,9 @@ AppBundle\Entity\Deck:
             type: integer
             nullable: true
         xpSpent:
+            type: integer
+            nullable: true
+        xpAdjustment:
             type: integer
             nullable: true
         upgrades:

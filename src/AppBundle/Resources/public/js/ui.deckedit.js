@@ -341,6 +341,7 @@ ui.on_submit_form = function on_submit_form(event) {
 	var deck_json = app.deck.get_json();
 	$('input[name=content]').val(deck_json);
 	$('input[name=xp_spent]').val(app.deck.get_xp_spent());
+	$('input[name=xp_adjustment]').val(app.deck.get_xp_adjustment());
 	$('input[name=description]').val($('textarea[name=description_]').val());
 	$('input[name=tags]').val($('input[name=tags_]').val());
 }
@@ -553,7 +554,9 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	$('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 	$('#special-collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 	
-	$('#deck').on('click', 'a[data-random]', ui.select_basic_weakness);
+	$('#upgrade_changes').on('click', 'a[data-random]', ui.select_basic_weakness);
+	$('#deck').on('click', '#xp_up', ui.on_adjust_xp_up);
+	$('#deck').on('click', '#xp_down', ui.on_adjust_xp_down);
 	
 	$('#cardModal').on('keypress', function(event) {
 		var num = parseInt(event.which, 10) - 48;
@@ -565,6 +568,14 @@ ui.setup_event_handlers = function setup_event_handlers() {
 
 }
 
+ui.on_adjust_xp_up = function on_adjust_xp_up() {
+	app.deck.set_xp_adjustment(app.deck.get_xp_adjustment()+1);
+	app.deck_history && app.deck_history.setup('#history');
+}
+ui.on_adjust_xp_down = function on_adjust_xp_down() {
+	app.deck.set_xp_adjustment(app.deck.get_xp_adjustment()-1);
+	app.deck_history && app.deck_history.setup('#history');
+}
 
 ui.select_basic_weakness = function select_basic_weakness() {
 	// replace the random weakness card in the deck with a random weakness

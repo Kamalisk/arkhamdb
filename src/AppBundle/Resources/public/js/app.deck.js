@@ -36,10 +36,13 @@ var date_creation,
 /*
  * Templates for the different deck layouts, see deck.get_layout_data
  */
+// one block view
 layouts[1] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><h4 class="deck-section">Deck</h4><div class="col-sm-10 col-print-10"><%= cards %></div></div></div>'); 
+// two colum view
 layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><h4 class="deck-section">Deck</h4><div class="row"><div class="col-sm-6 col-print-6"><%= assets %> <%= permanent %></div><div class="col-sm-6 col-print-6"><%= events %> <%= skills %> <%= treachery %> <%= enemy %></div></div> <div id="upgrade_changes"></div></div>');
 layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= images %><%= meta %></div><h4 class="deck-section">Deck</h4><div class="col-sm-4"><%= assets %><%= skills %></div><div class="col-sm-4"><%= events %><%= treachery %></div></div></div>');
-layouts[4] = _.template('<div class="deck-content"><div class="row"><%= images %></div><div class="row"><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><h4 class="deck-section">Deck</h4><div class="col-sm-12 col-print-12"><%= assets %> <%= events %> <%= skills %></div></div> <hr> <div class="row"><div class="col-sm-6 col-print-6"> <%= outassets %> <%= outevents %> <%= outskills %> </div><div class="col-sm-6 col-print-6"><%= outtreachery %> <%= outenemy %></div> </div><div id="upgrade_changes"></div></div>');
+// single column view
+layouts[4] = _.template('<div class="deck-content"><div class="row"><%= images %></div><div class="row"><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><h4 class="deck-section">Deck</h4><div class="col-sm-12 col-print-12"><%= assets %> <%= permanent %><%= events %> <%= skills %> <%= treachery %> <%= enemy %></div></div> <div id="upgrade_changes"></div></div>');
 /**
  * @memberOf deck
  */
@@ -156,7 +159,12 @@ deck.get_previous_deck = function get_previous_deck() {
  * @returns integer
  */
 deck.get_xp = function get_xp() {
-	return xp;
+	if (xp_adjustment) {
+		return xp + xp_adjustment;
+		
+	} else {
+		return xp;
+	}
 }
 
 /**
@@ -181,6 +189,9 @@ deck.set_xp_spent = function set_xp_spent(spent_xp) {
  * @returns integer
  */
 deck.get_xp_adjustment = function get_xp_adjustment() {
+	if (!xp_adjustment) {
+		xp_adjustment = 0;
+	}
 	return xp_adjustment;
 }
 
@@ -189,6 +200,10 @@ deck.get_xp_adjustment = function get_xp_adjustment() {
  * @returns integer
  */
 deck.set_xp_adjustment = function set_xp_adjustment(xp_adj) {
+	if (!xp_adjustment) {
+		xp_adjustment = 0;
+	}
+	
 	xp_adjustment = xp_adj;
 }
 

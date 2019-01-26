@@ -20,6 +20,12 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
 		}
 		return true;
 	}
+	
+	public function __clone() {
+		if ($this->id) {
+			$this->id = null;
+		}
+	}
 	/**
 	 * @return array
 	 */
@@ -217,6 +223,11 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
      * @var integer
      */
     private $xpSpent;
+    
+    /**
+     * @var integer
+     */
+    private $xpAdjustment;
     
     /**
      * @var \AppBundle\Entity\Deck
@@ -836,6 +847,33 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
         return $this;
     }
     
+    
+    
+    /**
+     * Get xpSpent
+     *
+     * @return integer
+     */
+    public function getXpAdjustment()
+    {
+        return $this->xpAdjustment;
+    }
+    
+    
+    /**
+     * Set xpSpent
+     *
+     * @param integer $xpSpent
+     *
+     * @return Deck
+     */
+    public function setXpAdjustment($xpAdjustment)
+    {
+        $this->xpAdjustment = $xpAdjustment;
+
+        return $this;
+    }
+    
     /**
      * Get upgrades
      *
@@ -845,6 +883,9 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
     {
         return $this->upgrades;
     }
+    
+    
+    
     
     
     /**
