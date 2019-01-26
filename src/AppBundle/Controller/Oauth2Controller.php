@@ -489,9 +489,15 @@ class Oauth2Controller extends Controller
 		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $slots, $deck , $problem);
 
 		// xp_spent is only read/set if there was a previousDeck.
-		if ($deck->getPreviousDeck() && $request->get('xp_spent') !== null) {
-			$xp_spent = filter_var($request->get('xp_spent'), FILTER_SANITIZE_NUMBER_INT);
-			$deck->setXpSpent($xp_spent);
+		if ($deck->getPreviousDeck()) {
+			if ($request->get('xp_spent') !== null) {
+				$xp_spent = filter_var($request->get('xp_spent'), FILTER_SANITIZE_NUMBER_INT);
+				$deck->setXpSpent($xp_spent);
+			}
+			if ($request->get('xp_adjustment') !== null) {
+				$xp_adjustment = filter_var($request->get('xp_adjustment'), FILTER_SANITIZE_NUMBER_INT);
+				$deck->setXpAdjustment($xp_adjustment);
+			}
 		}
 
 		// Actually flush the database edits.
