@@ -44,6 +44,9 @@ function display_card_on_element(card, element, event) {
 			content += '<div class="card-type">Victory ' + card.victory + '.</div>'
 		}
 
+		if (card.vengeance){
+			content += '<div class="card-type">Vengeance ' + card.vengeance + '.</div>'
+		}
 		
 		content += '<div class="card-pack">' + app.format.pack(card) + '</div>';
 	

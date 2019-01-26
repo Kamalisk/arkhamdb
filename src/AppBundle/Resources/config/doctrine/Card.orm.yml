@@ -169,6 +169,9 @@ AppBundle\Entity\Card:
         victory:
             type: smallint
             nullable: true
+        vengeance:
+            type: smallint
+            nullable: true
         deckLimit:
             type: smallint
             nullable: true
