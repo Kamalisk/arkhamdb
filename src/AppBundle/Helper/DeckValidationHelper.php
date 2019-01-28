@@ -77,6 +77,14 @@ class DeckValidationHelper
 							}
 							break;
 						}
+						case "investigator":{
+							if ($param2){
+								$return_requirements[$type] = [$param1 => $param1, $param2 => $param2];
+							}else if ($param1){
+								$return_requirements[$type] = [$param1 => $param1];
+							}
+							break;
+						}
 						case "card":{
 							if ($param2){
 								$return_requirements[$type][$param1] = [$param1 => $param1, $param2 => $param2];
@@ -126,7 +134,7 @@ class DeckValidationHelper
 		$restrictions = $card->getRestrictions();
 		if ($restrictions){
 			$parsed = $this->parseReqString($restrictions);
-			if ($parsed && $parsed['investigator'] && $parsed['investigator'][0] !== $investigator->getCode()){
+			if ($parsed && $parsed['investigator'] && !isset($parsed['investigator'][$investigator->getCode()]) ){
 				return false;
 			}
 		}

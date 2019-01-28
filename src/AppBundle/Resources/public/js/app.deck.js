@@ -860,8 +860,8 @@ deck.can_include_card = function can_include_card(card, limit_count) {
 	
 	
 	// reject cards restricted
-	if (card.restrictions && card.restrictions.investigator &&  card.restrictions.investigator[0] !== investigator_code){
-		return false;
+	if (card.restrictions && card.restrictions.investigator && !card.restrictions.investigator[investigator_code]) {
+			return false;
 	}
 	
 	//var investigator = app.data.cards.findById(investigator_code);
