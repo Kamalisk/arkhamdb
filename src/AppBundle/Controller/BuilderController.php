@@ -36,6 +36,9 @@ class BuilderController extends Controller
 		$other_investigators = [];
 		$all_investigators = [];
 		$all_investigators_by_class = [];
+		$my_investigators_by_class = [];
+		$all_unique_investigators = [];
+		$my_unique_investigators = [];
 		foreach($investigators as $investigator){
 			$deck_requirements = $this->get('DeckValidationHelper')->parseReqString($investigator->getDeckRequirements());
 			if (isset($deck_requirements['size']) && $deck_requirements['size']){
@@ -56,19 +59,25 @@ class BuilderController extends Controller
 				];
 
 				$investigator->setDeckRequirements($req);
-				if (in_array($investigator->getPack()->getId(), $packs_owned)){
+				if (in_array($investigator->getPack()->getId(), $packs_owned) && !isset($my_unique_investigators[$investigator->getName()]) ){
 					$my_investigators[] = $investigator;
+					$my_unique_investigators[$investigator->getName()] = true;
 					if (!isset($my_investigators_by_class[$investigator->getFaction()->getName()]) ) {
 						$my_investigators_by_class[$investigator->getFaction()->getName()] = [];
 					}
 					$my_investigators_by_class[$investigator->getFaction()->getName()][] = $investigator;
 				}
-				if (!isset($all_investigators_by_class[$investigator->getFaction()->getName()]) ) {
-					$all_investigators_by_class[$investigator->getFaction()->getName()] = [];
-				}
-				$all_investigators_by_class[$investigator->getFaction()->getName()][] = $investigator;
 				
-				$all_investigators[] = $investigator;
+				// only have one investigator per name
+				if (!isset($all_unique_investigators[$investigator->getName()])) {
+					$all_unique_investigators[$investigator->getName()] = true;
+					if (!isset($all_investigators_by_class[$investigator->getFaction()->getName()]) ) {
+						$all_investigators_by_class[$investigator->getFaction()->getName()] = [];
+					}
+					$all_investigators_by_class[$investigator->getFaction()->getName()][] = $investigator;
+					
+					$all_investigators[] = $investigator;
+				}
 			}
 		}
 		arsort($all_investigators_by_class);
