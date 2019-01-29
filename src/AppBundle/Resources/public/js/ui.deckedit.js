@@ -433,6 +433,56 @@ ui.on_table_sort_click = function on_table_sort_click(event) {
 	ui.update_sort_caret();
 }
 
+ui.chaos = function() {
+
+	if (!window.confirm("This will replace your deck with an Ultimatum of Chaos deck, are you sure you wish to continue? (This may not work for all investigators)")){
+		return;
+	}
+
+	var counter = 0;
+	var	filters = ui.get_filters("potato");
+	var query = app.smart_filter.get_query(filters);
+	//query['subtype_code'] = {'$ne': 'basicweakness'};
+	query['xp'] = 0;
+	query['permanent'] = false;
+	
+	var cards = app.data.cards.find(query);
+	var valid_cards = [];
+	
+	cards.forEach(function (card) {
+		card.indeck = 0;
+		if (app.deck.can_include_card(card)){
+			valid_cards.push(card);
+		}
+	});
+	app.deck.reset_limit_count();
+	
+	var size = valid_cards.length;
+	var deck_size = app.data.cards.findById(app.deck.get_investigator_code()).deck_requirements.size;
+	if (size >= deck_size){
+		while (counter < deck_size){
+			var random_id = Math.floor(Math.random() * size)
+			var random_card = valid_cards[random_id];
+			if (random_card.indeck < random_card.deck_limit){
+				if (app.deck.can_include_card(random_card, true, true)){
+					random_card.indeck++;
+					//console.log(random_card.name, random_card.indeck, counter);
+					counter++;
+					//console.log(random_card.name, random_card.indeck, counter);
+				}
+			}
+		}
+	}
+	
+	valid_cards.forEach(function(card){
+		app.deck.set_card_copies(card.code, card.indeck);
+	})
+	
+	ui.on_deck_modified();
+};
+
+
+
 /**
  * @memberOf ui
  * @param event
@@ -554,9 +604,12 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	$('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 	$('#special-collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 	
-	$('#upgrade_changes').on('click', 'a[data-random]', ui.select_basic_weakness);
+	$('#deck').on('click', 'a[data-random]', ui.select_basic_weakness);
 	$('#deck').on('click', '#xp_up', ui.on_adjust_xp_up);
 	$('#deck').on('click', '#xp_down', ui.on_adjust_xp_down);
+	
+	$('#global_filters').on('click', '#chaos', ui.chaos);
+	
 	
 	$('#cardModal').on('keypress', function(event) {
 		var num = parseInt(event.which, 10) - 48;

@@ -504,14 +504,14 @@ deck.get_layout_data = function get_layout_data(options) {
 		deck.update_layout_section(data, 'assets', deck.get_layout_data_one_section({'type_code':'asset'}, 'type_name'));
 		
 		if (investigator_name == "Joe Diamond") {			
-			deck.update_layout_section(data, 'events', deck.get_layout_data_one_section({'type_code': 'event', '$not': {'traits':/Insight./} }, 'type_name'));
-			deck.update_layout_section(data, 'hunches', deck.get_layout_data_one_section({'type_code': 'event', 'traits':/Insight./}, 'hunches'));
+			deck.update_layout_section(data, 'events', deck.get_layout_data_one_section({'type_code': 'event', '$not': {'traits':/Insight./}, permanent: false }, 'type_name'));
+			deck.update_layout_section(data, 'hunches', deck.get_layout_data_one_section({'type_code': 'event', 'traits':/Insight./, permanent: false}, 'hunches'));
 		} else {
-			deck.update_layout_section(data, 'events', deck.get_layout_data_one_section({'type_code': 'event'}, 'type_name'));	
+			deck.update_layout_section(data, 'events', deck.get_layout_data_one_section({'type_code': 'event', permanent: false}, 'type_name'));	
 		}
-		deck.update_layout_section(data, 'skills', deck.get_layout_data_one_section({'type_code': 'skill'}, 'type_name'));
-		deck.update_layout_section(data, 'treachery', deck.get_layout_data_one_section({'type_code': 'treachery'}, 'type_name'));
-		deck.update_layout_section(data, 'enemy', deck.get_layout_data_one_section({'type_code': 'enemy'}, 'type_name'));
+		deck.update_layout_section(data, 'skills', deck.get_layout_data_one_section({'type_code': 'skill', permanent: false}, 'type_name'));
+		deck.update_layout_section(data, 'treachery', deck.get_layout_data_one_section({'type_code': 'treachery', permanent: false}, 'type_name'));
+		deck.update_layout_section(data, 'enemy', deck.get_layout_data_one_section({'type_code': 'enemy', permanent: false}, 'type_name'));
 		deck.update_layout_section(data, 'permanent', deck.get_layout_data_one_section({permanent: true}, 'type_name'));
 	}
 	if (options && options.layout) {
@@ -833,14 +833,18 @@ deck.get_problem = function get_problem() {
 	
 }
 
-deck.get_invalid_cards = function get_invalid_cards() {
-	//var investigator = app.data.cards.findById(investigator_code);
+deck.reset_limit_count = function (){
 	if (investigator){
 		for (var i = 0; i < investigator.deck_options.length; i++){
 			investigator.deck_options[i].limit_count = 0;
 			investigator.deck_options[i].atleast_count = {};
 		}
 	}
+}
+
+deck.get_invalid_cards = function get_invalid_cards() {
+	//var investigator = app.data.cards.findById(investigator_code);
+	deck.reset_limit_count();
 	return _.filter(deck.get_cards(), function (card) {
 		return ! deck.can_include_card(card, true);
 	});
@@ -850,7 +854,7 @@ deck.get_invalid_cards = function get_invalid_cards() {
  * returns true if the deck can include the card as parameter
  * @memberOf deck
  */
-deck.can_include_card = function can_include_card(card, limit_count) {
+deck.can_include_card = function can_include_card(card, limit_count, hard_count) {
 	
 	// hide investigators
 	if (card.type_code === "investigator") {
@@ -859,9 +863,7 @@ deck.can_include_card = function can_include_card(card, limit_count) {
 	if (card.faction_code === "mythos") {
 		return false;
 	}
-	
-	
-	
+
 	// reject cards restricted
 	if (card.restrictions && card.restrictions.investigator && !card.restrictions.investigator[investigator_code]) {
 			return false;
@@ -987,8 +989,16 @@ deck.can_include_card = function can_include_card(card, limit_count) {
 				return false;
 			}else {
 				if (limit_count && option.limit){
-					//console.log(card);
-					option.limit_count += card.indeck;
+					if (hard_count){
+						if (option.limit_count >= option.limit) {
+							//console.log(hard_count, investigator, card);
+							return false;
+						}
+						option.limit_count += 1;
+					} else {
+						option.limit_count += card.indeck;
+					}
+					
 				}
 				if (limit_count && option.atleast){
 					if (!option.atleast_count[card.faction_code]){
@@ -996,14 +1006,11 @@ deck.can_include_card = function can_include_card(card, limit_count) {
 					}
 					option.atleast_count[card.faction_code] += card.indeck;
 				}
+				
 				return true;
 			}
 			
 		}
-	}
-	
-	if (!card.xp){
-		
 	}
 	
 	return false;
