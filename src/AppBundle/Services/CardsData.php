@@ -241,6 +241,8 @@ class CardsData
 								switch($operator) {
 									case ':': $or[] = "(y.position = ?$i)"; break;
 									case '!': $or[] = "(y.position != ?$i)"; break;
+									case '<': $or[] = "(y.position < ?$i)"; break;
+									case '>': $or[] = "(y.position > ?$i)"; break;
 								}
 								$qb->setParameter($i++, $arg);
 							}
