@@ -77,7 +77,6 @@ deck.init = function init(data) {
 	if(app.data.isLoaded) {
 		deck.onloaded(data);
 	} else {
-		//console.log("deck.set_slots put on hold until data.app");
 		$(document).on('data.app', function () { 
 			deck.onloaded(data);
 		});
@@ -104,7 +103,7 @@ deck.set_slots = function set_slots(slots) {
 	app.data.cards.update({}, {
 		indeck: 0
 	});
-	//console.log(slots);
+
 	for(code in slots) {
 		if(slots.hasOwnProperty(code)) {
 			app.data.cards.updateById(code, {indeck: slots[code]});			
@@ -258,7 +257,7 @@ deck.get_cards = function get_cards(sort, query, group) {
 	if (group){
 		options.$groupBy = group;
 	}
-	//console.log(query, options);
+
 	return app.data.cards.find(query, options);
 }
 
@@ -391,7 +390,7 @@ deck.change_sort = function(sort_type){
 deck.display = function display(container, options) {
 	// XXX fetch the selected sort here
 	// default is 2 it seems
-	//console.log(options);
+
 	options = _.extend({sort: 'type', cols: 2}, options);
 
 	var deck_content = deck.get_layout_data(options);
@@ -400,7 +399,6 @@ deck.display = function display(container, options) {
 		.removeClass('deck-loading')
 		.empty();
 
-	//console.log(deck_content, container);
 	$(container).append(deck_content);
 }
 
@@ -457,7 +455,6 @@ deck.get_layout_data = function get_layout_data(options) {
 		deck.update_layout_section(data, 'meta', $('<div>'+deck.get_tags().replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})+'</div>'));
 	}
 	if(problem) {
-		//console.log(deck.problem_list);
 		if (deck.problem_list && deck.problem_list.length > 0){
 			deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+deck.problem_list.join(', ')+'</div>'));
 		} else {
@@ -466,8 +463,6 @@ deck.get_layout_data = function get_layout_data(options) {
 		
 	}
 	//deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+problem_labels[problem]+'</div>'));
-	//console.log("reload", deck.sort_type);
-	
 	
 	//var sort = "default";
 	//sort = $("#sort_deck_view").val();
@@ -536,14 +531,12 @@ deck.get_layout_section = function(sort, group, filter){
 	// if we have a group, then send the group by to the query
 	if (group){
 		var cards = deck.get_cards(sort, query, group);	
-		//console.log(group);
 	} else {
 		var cards = deck.get_cards(sort, query);
 	}
 	
 	if(cards.length) {
 		
-		//console.log(cards);
 		//$(header_tpl({code: "Cards", name: "Cards", quantity: deck.get_nb_cards(cards)})).appendTo(section);
 		//'<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'
 		// run through each card and display display it
@@ -553,7 +546,6 @@ deck.get_layout_section = function(sort, group, filter){
 		$.each(cards, function (index, group_cards) {
 		//cards.forEach(function (group_cards) {			
 			if (group_cards.constructor === Array){
-				//console.log(group_cards);
 				$(header_tpl({code: index, name: index == "undefined" ? "Null" : index, quantity: group_cards.reduce(function(a,b){ return a + b.indeck}, 0) })).appendTo(section);
 				deck.create_card_group(group_cards, context).appendTo(section);
 			}
@@ -632,7 +624,7 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(query, d
 				if(card.xp === undefined) {
 					$div.append(' <span class="fa fa-star" title="Does not count towards deck size"></span>');
 				}
-				//console.log(card.pack_code);
+
 				if (card.slot && slots[card.slot]){
 					slots[card.slot].push($div);
 				} else {
@@ -668,7 +660,6 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(query, d
 				}
 				if (!no_collection){
 					var pack = app.data.packs.findById(card.pack_code);
-					console.log(collection);
 					if (!collection[pack.id]) {
 						$div.append(' <span class="fa fa-question" title="This card is not part of your collection"></span>');
 					}
@@ -762,7 +753,7 @@ deck.get_problem = function get_problem() {
 		if (card.deck_requirements.size){
 			size = card.deck_requirements.size;
 		}
-		//console.log(card.deck_requirements);
+
 		// must have the required cards
 		if (card.deck_requirements.card){
 			var req_count = 0;
@@ -798,9 +789,9 @@ deck.get_problem = function get_problem() {
 		return 'invalid_cards';
 	}
 		
-	//console.log(investigator);
+
 	for (var i = 0; i < investigator.deck_options.length; i++){
-		//console.log(investigator.deck_options);
+
 		if (investigator.deck_options[i].limit_count && investigator.deck_options[i].limit){
 			if (investigator.deck_options[i].limit_count > investigator.deck_options[i].limit){
 				if (investigator.deck_options[i].error){
@@ -880,10 +871,8 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 	
 	if (investigator && investigator.deck_options && investigator.deck_options.length) {
 		
-		//console.log(card);
 		for (var i = 0; i < investigator.deck_options.length; i++){
 			var option = investigator.deck_options[i];
-			//console.log(option);
 			
 			var valid = false;
 			
@@ -900,7 +889,6 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 				if (!faction_valid){
 					continue;
 				}
-				//console.log("faction valid");
 			}
 			
 			if (option.type){
@@ -916,7 +904,6 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 				if (!type_valid){
 					continue;
 				}
-				//console.log("faction valid");
 			}
 			
 			if (option.trait){
@@ -925,7 +912,6 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 				
 				for(var j = 0; j < option.trait.length; j++){
 					var trait = option.trait[j];
-					//console.log(card.traits, trait.toUpperCase()+".");
 					
 					if (card.real_traits && card.real_traits.toUpperCase().indexOf(trait.toUpperCase()+".") !== -1){
 						trait_valid = true;
@@ -935,7 +921,6 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 				if (!trait_valid){
 					continue;
 				}
-				//console.log("faction valid");
 			}
 			
 			if (option.uses){
@@ -944,7 +929,6 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 				
 				for(var j = 0; j < option.uses.length; j++){
 					var uses = option.uses[j];
-					//console.log(card.traits, trait.toUpperCase()+".");
 					
 					if (card.real_text && card.real_text.toUpperCase().indexOf(""+uses.toUpperCase()+").") !== -1){
 						uses_valid = true;
@@ -954,7 +938,7 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 				if (!uses_valid){
 					continue;
 				}
-				//console.log("faction valid");
+
 			}
 			
 			if (option.text){
@@ -963,7 +947,6 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 				
 				for(var j = 0; j < option.text.length; j++){
 					var text = option.text[j];
-					//console.log(card.traits, trait.toUpperCase()+".");
 					
 					if (card.real_text && card.real_text.toLowerCase().match(text)){
 						text_valid = true;
@@ -973,13 +956,12 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 				if (!text_valid){
 					continue;
 				}
-				//console.log("faction valid");
+
 			}
 			
 			if (option.level){
 				// needs to match at least one faction
 				var level_valid = false;
-				//console.log(option.level, card.xp, card.xp >= option.level.min, card.xp <= option.level.max);
 				
 				if (typeof card.xp !== 'undefined' && option.level){
 					if (card.xp >= option.level.min && card.xp <= option.level.max){
@@ -988,7 +970,6 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 						continue;	
 					}
 				}
-				//console.log("level valid");
 			}
 			
 			
@@ -998,7 +979,7 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 				if (limit_count && option.limit){
 					if (hard_count){
 						if (option.limit_count >= option.limit) {
-							//console.log(hard_count, investigator, card);
+
 							return false;
 						}
 						option.limit_count += 1;
