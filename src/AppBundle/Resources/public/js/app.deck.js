@@ -73,24 +73,25 @@ deck.init = function init(data) {
 	// parse pack owner string
 	collection = {};
 	no_collection = true;
+	
+	if(app.data.isLoaded) {
+		deck.onloaded(data);
+	} else {
+		//console.log("deck.set_slots put on hold until data.app");
+		$(document).on('data.app', function () { 
+			deck.onloaded(data);
+		});
+	}
+}
+
+deck.onloaded = function(data){
+	deck.set_slots(data.slots);
+	investigator = app.data.cards.findById(investigator_code);
 	if (app.user.data && app.user.data.owned_packs) {
 		var packs = app.user.data.owned_packs.split(',');
 		_.forEach(packs, function(str) {
 			collection[str] = 1;
 			no_collection = false;
-		});
-		//console.log(app.user.data.owned_packs, collection);
-	}
-	
-	if(app.data.isLoaded) {
-		deck.set_slots(data.slots);
-		investigator = app.data.cards.findById(investigator_code);
-		
-	} else {
-		//console.log("deck.set_slots put on hold until data.app");
-		$(document).on('data.app', function () { 
-			deck.set_slots(data.slots); 
-			investigator = app.data.cards.findById(investigator_code);
 		});
 	}
 }
@@ -665,7 +666,13 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(query, d
 				if(card.xp === undefined) {
 					$div.append(' <span class="fa fa-star" title="Does not count towards deck size"></span>');
 				}
-				//console.log("xp", card.xp);
+				if (!no_collection){
+					var pack = app.data.packs.findById(card.pack_code);
+					console.log(collection);
+					if (!collection[pack.id]) {
+						$div.append(' <span class="fa fa-question" title="This card is not part of your collection"></span>');
+					}
+				}
 				
 				if (card.name == "Random Basic Weakness" && $("#special-collection").length > 0 ){
 					$div.append(' <a class="fa fa-random" title="Replace with randomly selected weakness from currently selected packs" data-random="'+card.code+'"> <span ></span></a> ');
