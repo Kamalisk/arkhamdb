@@ -501,7 +501,7 @@ deck.get_layout_data = function get_layout_data(options) {
 		layout_template = 1;
 	} else {
 		layout_template = 2;
-		deck.update_layout_section(data, 'assets', deck.get_layout_data_one_section({'type_code':'asset'}, 'type_name'));
+		deck.update_layout_section(data, 'assets', deck.get_layout_data_one_section({'type_code':'asset', permanent: false}, 'type_name'));
 		
 		if (investigator_name == "Joe Diamond") {			
 			deck.update_layout_section(data, 'events', deck.get_layout_data_one_section({'type_code': 'event', '$not': {'traits':/Insight./}, permanent: false }, 'type_name'));
