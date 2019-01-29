@@ -117,15 +117,19 @@ class ApiController extends Controller
 	 */
 	public function getCardAction($card_code, Request $request)
 	{
+		$locale = $request->getLocale();
 
 		$response = new Response();
 		$response->setPublic();
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
-		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
-
+		$response->headers->add(array(
+			'Access-Control-Allow-Origin' => '*',
+			'Content-Language' => $locale
+		));
 		$jsonp = $request->query->get('jsonp');
 
-		$card = $this->getDoctrine()->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
+		//$card = $this->getDoctrine()->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
+		$card = $this->getDoctrine()->getRepository('AppBundle:Card')->findByCode($card_code);
 
 		// check the last-modified-since header
 
@@ -138,8 +142,6 @@ class ApiController extends Controller
 		if ($response->isNotModified($request)) {
 			return $response;
 		}
-
-		// build the response
 
 		/* @var $card \AppBundle\Entity\Card */
 		$card = $this->get('cards_data')->getCardInfo($card, true, "en");
