@@ -39,7 +39,7 @@ var date_creation,
 // one block view
 layouts[1] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><h4 class="deck-section">Deck</h4><div class="col-sm-10 col-print-10"><%= cards %></div></div></div>'); 
 // two colum view
-layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><h4 class="deck-section">Deck</h4><div class="row"><div class="col-sm-6 col-print-6"><%= assets %> <%= permanent %></div><div class="col-sm-6 col-print-6"><%= events %> <%= skills %> <%= treachery %> <%= enemy %></div></div> <div id="upgrade_changes"></div></div>');
+layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><h4 class="deck-section">Deck</h4><div class="row"><div class="col-sm-6 col-print-6"><%= assets %> <%= permanent %></div><div class="col-sm-6 col-print-6"><%= events %> <%= skills %> <%= treachery %> <%= enemy %> <%= hunches %></div></div> <div id="upgrade_changes"></div></div>');
 layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= images %><%= meta %></div><h4 class="deck-section">Deck</h4><div class="col-sm-4"><%= assets %><%= skills %></div><div class="col-sm-4"><%= events %><%= treachery %></div></div></div>');
 // single column view
 layouts[4] = _.template('<div class="deck-content"><div class="row"><%= images %></div><div class="row"><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><h4 class="deck-section">Deck</h4><div class="col-sm-12 col-print-12"><%= assets %> <%= permanent %><%= events %> <%= skills %> <%= treachery %> <%= enemy %></div></div> <div id="upgrade_changes"></div></div>');
@@ -414,6 +414,7 @@ deck.get_layout_data = function get_layout_data(options) {
 			treachery: '',
 			enemy: '',
 			permanent: '',
+			hunches: '',
 			cards: ''
 	};
 	
@@ -500,12 +501,18 @@ deck.get_layout_data = function get_layout_data(options) {
 		layout_template = 1;
 	} else {
 		layout_template = 2;
-		deck.update_layout_section(data, 'assets', deck.get_layout_data_one_section('type_code', 'asset', 'type_name', false));
-		deck.update_layout_section(data, 'events', deck.get_layout_data_one_section('type_code', 'event', 'type_name', false));
-		deck.update_layout_section(data, 'skills', deck.get_layout_data_one_section('type_code', 'skill', 'type_name', false));
-		deck.update_layout_section(data, 'treachery', deck.get_layout_data_one_section('type_code', 'treachery', 'type_name', false));
-		deck.update_layout_section(data, 'enemy', deck.get_layout_data_one_section('type_code', 'enemy', 'type_name', false));
-		deck.update_layout_section(data, 'permanent', deck.get_layout_data_one_section('', '', 'type_name', true));
+		deck.update_layout_section(data, 'assets', deck.get_layout_data_one_section({'type_code':'asset'}, 'type_name'));
+		
+		if (investigator_name == "Joe Diamond") {			
+			deck.update_layout_section(data, 'events', deck.get_layout_data_one_section({'type_code': 'event', '$not': {'traits':/Insight./} }, 'type_name'));
+			deck.update_layout_section(data, 'hunches', deck.get_layout_data_one_section({'type_code': 'event', 'traits':/Insight./}, 'hunches'));
+		} else {
+			deck.update_layout_section(data, 'events', deck.get_layout_data_one_section({'type_code': 'event'}, 'type_name'));	
+		}
+		deck.update_layout_section(data, 'skills', deck.get_layout_data_one_section({'type_code': 'skill'}, 'type_name'));
+		deck.update_layout_section(data, 'treachery', deck.get_layout_data_one_section({'type_code': 'treachery'}, 'type_name'));
+		deck.update_layout_section(data, 'enemy', deck.get_layout_data_one_section({'type_code': 'enemy'}, 'type_name'));
+		deck.update_layout_section(data, 'permanent', deck.get_layout_data_one_section({permanent: true}, 'type_name'));
 	}
 	if (options && options.layout) {
 		layout_template = options.layout;
@@ -583,24 +590,20 @@ deck.update_layout_section = function update_layout_section(data, section, eleme
 	data[section] = data[section] + element[0].outerHTML;
 }
 
-deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey, sortValue, displayLabel, permanent) {
+deck.get_layout_data_one_section = function get_layout_data_one_section(query, displayLabel) {
 	var section = $('<div>');
-	var query = {};
-	if (sortKey) {
-		query[sortKey] = sortValue;
-	}
-	if (permanent == true){
-		query.permanent = true;
-	} else {
-		query.permanent = false;
-	}
-	
-	
+
 	var cards = deck.get_cards({ name: 1 }, query);
 	if(cards.length) {
-		var name = cards[0][displayLabel];
-		if (sortValue == "asset"){
-			$(header_tpl({code: sortValue, name: name, quantity: deck.get_nb_cards(cards)})).appendTo(section);
+		var name = "";
+		if (displayLabel == "hunches") {
+			name = "Hunches";
+		} else {
+			name = cards[0][displayLabel];
+		}
+		
+		if (query.type_code == "asset"){
+			$(header_tpl({code: name, name: name, quantity: deck.get_nb_cards(cards)})).appendTo(section);
 			var slots = {
 				'Hand': [],
 				'Hand x2': [],
@@ -644,10 +647,10 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 				}
 			});
 		} else {
-			if (permanent) {
+			if (query.permanent) {
 				$(header_tpl({code: "Permanent", name: "Permanent", quantity: deck.get_nb_cards(cards)})).appendTo(section);
 			} else {
-				$(header_tpl({code: sortValue, name: name, quantity: deck.get_nb_cards(cards)})).appendTo(section);
+				$(header_tpl({code: name, name: name, quantity: deck.get_nb_cards(cards)})).appendTo(section);
 			}
 			cards.forEach(function (card) {
 				var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
@@ -662,7 +665,7 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey,
 				if(card.xp === undefined) {
 					$div.append(' <span class="fa fa-star" title="Does not count towards deck size"></span>');
 				}
-				console.log("xp", card.xp);
+				//console.log("xp", card.xp);
 				
 				if (card.name == "Random Basic Weakness" && $("#special-collection").length > 0 ){
 					$div.append(' <a class="fa fa-random" title="Replace with randomly selected weakness from currently selected packs" data-random="'+card.code+'"> <span ></span></a> ');

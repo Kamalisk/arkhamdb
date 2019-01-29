@@ -2199,12 +2199,33 @@ Collection.prototype.updateObject = function (doc, update, query, options, path,
 						}
 						break;
 
-					default:
+					case '$overwrite':
+					case '$inc':
+					case '$push':
+					case '$splicePush':
+					case '$splicePull':
+					case '$addToSet':
+					case '$pull':
+					case '$pop':
+					case '$move':
+					case '$cast':
+					case '$unset':
+					case '$pullAll':
+					case '$mul':
+					case '$rename':
+					case '$toggle':
 						operation = true;
 
 						// Now run the operation
 						recurseUpdated = this.updateObject(doc, update[i], query, options, path, i);
 						updated = updated || recurseUpdated;
+						break;
+
+					default:
+						// This is an unknown operator or just
+						// a normal field with a dollar starting
+						// character so ignore it
+						operation = false;
 						break;
 				}
 			}
@@ -3202,28 +3223,32 @@ Collection.prototype.isSubsetOf = function (collection) {
 
 /**
  * Find the distinct values for a specified field across a single collection and
- * returns the results in an array.
- * @param {String} key The field path to return distinct values for e.g. "person.name".
+ * returns the values as a results array.
+ * @param {String} path The field path to return distinct values for e.g. "person.name".
  * @param {Object=} query The query to use to filter the documents used to return values from.
  * @param {Object=} options The query options to use when running the query.
  * @returns {Array}
  */
-Collection.prototype.distinct = function (key, query, options) {
+Collection.prototype.distinct = function (path, query, options) {
 	if (this.isDropped()) {
 		throw(this.logIdentifier() + ' Cannot operate in a dropped state!');
 	}
 
 	var data = this.find(query, options),
-		pathSolver = new Path(key),
+		pathSolver = new Path(),
 		valueUsed = {},
 		distinctValues = [],
+		aggregatedValues,
 		value,
 		i;
-
+	
+	// Get path values as an array
+	aggregatedValues = pathSolver.aggregate(data, path);
+	
 	// Loop the data and build array of distinct values
-	for (i = 0; i < data.length; i++) {
-		value = pathSolver.value(data[i])[0];
-
+	for (i = 0; i < aggregatedValues.length; i++) {
+		value = aggregatedValues[i];
+		
 		if (value && !valueUsed[value]) {
 			valueUsed[value] = true;
 			distinctValues.push(value);
@@ -3731,8 +3756,8 @@ Collection.prototype._find = function (query, options) {
 	if (options.$aggregate) {
 		op.data('flag.aggregate', true);
 		op.time('aggregate');
-		pathSolver = new Path(options.$aggregate);
-		resultArr = pathSolver.value(resultArr);
+		pathSolver = new Path();
+		resultArr = pathSolver.aggregate(resultArr, options.$aggregate);
 		op.time('aggregate');
 	}
 
@@ -4413,7 +4438,8 @@ Collection.prototype._findSub = function (docArr, path, subDocQuery, subDocOptio
 		if (subDocArr) {
 			subDocCollection.setData(subDocArr);
 			subDocResults = subDocCollection.find(subDocQuery, subDocOptions);
-			if (subDocOptions.returnFirst && subDocResults.length) {
+			
+			if (subDocOptions.$returnFirst && subDocResults.length) {
 				return subDocResults[0];
 			}
 
@@ -6677,7 +6703,7 @@ FdbDocument.prototype._findSub = function (docArr, path, subDocQuery, subDocOpti
 		if (subDocArr) {
 			subDocCollection.setData(subDocArr);
 			subDocResults = subDocCollection.find(subDocQuery, subDocOptions);
-			if (subDocOptions.returnFirst && subDocResults.length) {
+			if (subDocOptions.$returnFirst && subDocResults.length) {
 				return subDocResults[0];
 			}
 			
@@ -11564,6 +11590,9 @@ var Matching = {
 
 			case '$nee': // Not equals equals
 				return source !== test;
+				
+			case '$not': // Not operator
+				return !this._match(source, test, queryOptions, 'and', options);
 
 			case '$or':
 				// Match true on ANY check to pass
@@ -14712,6 +14741,49 @@ Path.prototype.set = function (obj, path, val) {
 };
 
 /**
+ * Retrieves all the values inside an object based on the passed
+ * path string. Will automatically traverse any arrays it encounters
+ * and assumes array indexes are not part of the specifed path.
+ * @param {Object|Array} obj An object or array of objects to
+ * scan paths for.
+ * @param {String} path The path string delimited by a period.
+ * @return {Array} An array of values found at the end of each path
+ * termination.
+ */
+Path.prototype.aggregate = function (obj, path) {
+	var pathParts,
+		part,
+		values = [],
+		i;
+	
+	// First, check if the object we are given
+	// is an array. If so, loop it and work on
+	// the objects inside
+	if (obj instanceof Array) {
+		// Loop array and get path data from each sub object
+		for (i = 0; i < obj.length; i++) {
+			values = values.concat(this.aggregate(obj[i], path));
+		}
+		
+		return values;
+	}
+	
+	if (path.indexOf('.') === -1) {
+		// No further parts to navigate
+		// Return an array so the value can be concatenated on return via array.concat()
+		return [obj[path]];
+	}
+	
+	pathParts = path.split('.');
+	
+	// Grab the next part of our path
+	part = pathParts.shift();
+	values = values.concat(this.aggregate(obj[part], pathParts.join('.')));
+	
+	return values;
+};
+
+/**
  * Gets a single value from the passed object and given path.
  * @param {Object} obj The object to inspect.
  * @param {String} path The path to retrieve data from.
@@ -14740,7 +14812,13 @@ Path.prototype.value = function (obj, path, options) {
 
 	// Detect early exit
 	if (path && path.indexOf('.') === -1) {
-		return [obj[path]];
+		if (options && options.skipArrCheck) {
+			return [obj[path]];
+		}
+		
+		if (!(obj instanceof Array)) {
+			return [obj[path]];
+		}
 	}
 
 	if (obj !== undefined && typeof obj === 'object') {
@@ -15020,7 +15098,7 @@ Shared.synthesize(Persist.prototype, 'auto', function (val) {
 			this._db.off('change', this._autoSave);
 
 			if (this._db.debug()) {
-				console.log(this._db.logIdentifier() + ' Automatic load/save disbled');
+				console.log(this._db.logIdentifier() + ' Automatic load/save disabled');
 			}
 		}
 	}
@@ -16460,7 +16538,7 @@ var Overload = _dereq_('./Overload');
  * @mixin
  */
 var Shared = {
-	version: '2.0.5',
+	version: '2.0.22',
 	modules: {},
 	plugins: {},
 	index: {},
