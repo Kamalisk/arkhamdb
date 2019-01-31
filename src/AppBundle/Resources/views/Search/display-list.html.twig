@@ -24,7 +24,7 @@
 		{{ card.name }}{% if card.subname%}: {{ card.subname }}{% endif %}</a>
 		{% if card.xp %}<span class="xp-{{ card.xp }}"> ({{ card.xp }})</span>{% endif %}
 	</td>
-	<td data-th="Faction" style="width : 100px;" class="fg-{{ card.faction_code }}"><span class="icon-{{card.faction_code}}"></span> {{ card.faction_name }} </td>
+	<td data-th="Faction" style="width : 100px;" class="fg-{{ card.faction_code }}"><span class="icon-{{card.faction_code}}"></span>{% if card.faction2_code is defined %}<span class="icon-{{card.faction2_code}}"></span> {% else %} {{ card.faction_name }} {% endif %}  </td>
 	<td data-th="Cost" style="width : 30px;">{{ card.cost }}</td>
 	<td data-th="Type" style="width : 80px;">{{ card.type_name }}</td>
 	<td data-th="Stats" style="width : 70px;">

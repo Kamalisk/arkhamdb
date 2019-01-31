@@ -69,6 +69,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		}
 		$this->em->flush();
 		$this->loadCollection('Faction');
+		$this->collections['Faction2'] = $this->collections['Faction'];
 		$output->writeln("Done.");
 		
 		// types
@@ -388,6 +389,7 @@ class ImportStdCommand extends ContainerAwareCommand
 					'name'
 			], [
 					'faction_code',
+					'faction2_code',
 					'pack_code',
 					'type_code',
 					'subtype_code',
@@ -595,8 +597,10 @@ class ImportStdCommand extends ContainerAwareCommand
 			if ($key === "front_card_code"){
 				$foreignEntityShortName = "Card";
 			}
+
 			if(!key_exists($key, $data)) {
-				if ($key === "subtype_code" || $key === "encounter_code" || $key === "back_card_code" || $key === "front_card_code"){
+				// optional links to other tables 
+				if ($key === "faction2_code" || $key === "subtype_code" || $key === "encounter_code" || $key === "back_card_code" || $key === "front_card_code"){
 					continue;
 				}
 				throw new \Exception("Missing key [$key] in ".json_encode($data));
@@ -807,9 +811,6 @@ class ImportStdCommand extends ContainerAwareCommand
 		foreach($entities as $entity) {
 			$this->collections[$entityShortName][$entity->getCode()] = $entity;
 			//echo $entity->getCode()."\n";
-		}
-		if(isset($this->collections['Encounter']['cultists'])){
-			//echo "wtf\n";
 		}
 	}
 	

@@ -2,17 +2,17 @@
 {% if card.double_sided %}
 <div class="col-sm-7" style="margin-bottom:2em">
 	<div>
-		<div class="panel panel-default border-{{ card.faction_code }}">
+		<div class="panel panel-default border-{{ card.faction_code }} {% if card.faction2_code is defined %} border-dual {% endif %}">
 			{% if card.back_name %}
-			<div class="panel-heading border-{{ card.faction_code }} bg-{{ card.faction_code }}">
+			<div class="panel-heading border-{{ card.faction_code }} bg-{{ card.faction_code }} {% if card.faction2_code is defined %} bg-dual border-dual{% endif %}">
 				<h3 class="panel-title">
-					<div class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">{{card.back_name}} - Back</div>
+					<div class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">{{card.back_name}} - {% trans %}Back{% endtrans %}</div>
 				</h3>
   		</div>
   		{% else %}
   		<div class="panel-heading border-{{ card.faction_code }} bg-{{ card.faction_code }}">
 				<h3 class="panel-title">
-					<div class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">{{card.name}} - Back</div>
+					<div class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">{{card.name}} - {% trans %}Back{% endtrans %}</div>
 				</h3>
   		</div>
   		{% endif %}

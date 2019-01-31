@@ -1,8 +1,8 @@
 
 <div class="col-sm-7">
 	<div>
-		<div class="panel panel-default border-{{ card.faction_code }}">
-			<div class="panel-heading border-{{ card.faction_code }} bg-{{ card.faction_code }}">
+		<div class="panel panel-default border-{{ card.faction_code }} {% if card.faction2_code is defined %} border-dual {% endif %}">
+			<div class="panel-heading border-{{ card.faction_code }} bg-{{ card.faction_code }} {% if card.faction2_code is defined %} bg-dual border-dual{% endif %}">
 				<h3 class="panel-title">
 					{% include 'AppBundle:Search:card-name-with-link.html.twig' %}
 				</h3>

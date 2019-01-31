@@ -464,6 +464,10 @@ div.site-slogan {
 	background-color: #808080 !important;
 	color: white !important;
 }
+.bg-dual {
+	background-color: #c0c000 !important;
+	color: white !important;
+}
 
 
 .faint-faction a, .faint-faction span {
@@ -508,6 +512,9 @@ div.site-slogan {
 .fg-neutral {
 	color: #606060 !important;
 }
+.fg-dual {
+	color: #c0c000 !important;
+}
 
 
 .border-guardian {
@@ -527,6 +534,9 @@ div.site-slogan {
 }
 .border-neutral {
 	border-color: #808080 !important;
+}
+.border-dual {
+	border-color: #c0c000 !important;
 }
 
 .icon-guardian, .icon-mystic, .icon-seeker, .icon-rogue, .icon-survivor {
