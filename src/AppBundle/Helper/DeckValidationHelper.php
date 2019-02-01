@@ -146,7 +146,7 @@ class DeckValidationHelper
 				if (isset($option->faction) && $option->faction) {
 					$faction_valid = false;
 					foreach($option->faction as $faction) {
-						if ($card->getFaction()->getCode() == $faction) {
+						if ($card->getFaction()->getCode() == $faction || ($card->getFaction2() && $card->getFaction2()->getCode() == $faction) ) {
 							$faction_valid = true;
 						}
 					}
