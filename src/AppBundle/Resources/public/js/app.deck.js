@@ -781,7 +781,7 @@ deck.get_problem = function get_problem() {
 
 	// too many copies of one card
 	if(_.findKey(deck.get_copies_and_deck_limit(), function(value) {
-	    return value.nb_copies > value.deck_limit;
+		return value.nb_copies > value.deck_limit;
 	}) != null) return 'too_many_copies';
 
 	// no invalid card
@@ -993,6 +993,12 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 						option.atleast_count[card.faction_code] = 0;
 					}
 					option.atleast_count[card.faction_code] += card.indeck;
+					if (card.faction2_code) {
+						if (!option.atleast_count[card.faction2_code]) {
+							options.atleast_count[card.faction2_code] = 0;
+						}
+						option.atleast_count[card.faction2_code] += card.indeck;
+					}
 				}
 				
 				return true;
