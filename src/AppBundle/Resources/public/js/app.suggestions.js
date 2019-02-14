@@ -89,6 +89,7 @@ suggestions.compute = function compute() {
 suggestions.show = function show() {
 	var table = $('#table-suggestions');
 	var tbody = table.children('tbody');
+	
 	tbody.empty();
 	if(!suggestions.number && table.is(':visible')) {
 		table.hide();
@@ -169,7 +170,7 @@ suggestions.pick = function pick(event) {
 $(function() {
 	//suggestions.query("base");
 
-	console.log("suggestions fired");	
+	//console.log("suggestions fired");	
 
 	$('#table-suggestions').on({
 		change : suggestions.pick

@@ -408,12 +408,10 @@ ui.on_core_change = function on_core_change(event) {
 }
 
 ui.toggle_suggestions = function toggle_suggestions() {
-	if(Config['show-suggestions'] == 0) {
-		$('#table-suggestions').hide();
-	}
-	else {
-		$('#table-suggestions').show();
-	}
+	app.suggestions.number = Config['show-suggestions'];
+	app.suggestions.show();
+	
+
 }
 
 /**
