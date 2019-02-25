@@ -38,22 +38,23 @@ class ExportableDeck
 		}
 		
 		$array = [
-				'id' => $this->getId(),
-				'name' => $this->getName(),
-				'date_creation' => $this->getDateCreation()->format('c'),
-				'date_update' => $this->getDateUpdate()->format('c'),
-				'description_md' => $this->getDescriptionMd(),
-				'user_id' => $this->getUser() ? $this->getUser()->getId() : null,
-				'investigator_code' => $this->getCharacter()->getCode(),
-				'investigator_name' => $this->getCharacter()->getName(),
-				'slots' => $slots->getContent(),
-				'version' => $this->getVersion(),
-				'xp' => $xp,
-				'xp_adjustment' => $xp_adjustment,
-				'exile_string' => $this->getExiles(),
-				'tags' => $tags,
-				'previous_deck' => $previousDeck,
-				'next_deck' => $nextDeck
+			'id' => $this->getId(),
+			'name' => $this->getName(),
+			'date_creation' => $this->getDateCreation()->format('c'),
+			'date_update' => $this->getDateUpdate()->format('c'),
+			'description_md' => $this->getDescriptionMd(),
+			'user_id' => $this->getUser() ? $this->getUser()->getId() : null,
+			'investigator_code' => $this->getCharacter()->getCode(),
+			'investigator_name' => $this->getCharacter()->getName(),
+			'slots' => $slots->getContent(),
+			'ignoreDeckLimitSlots' => $slots->getIgnoreDeckLimitContent(),
+			'version' => $this->getVersion(),
+			'xp' => $xp,
+			'xp_adjustment' => $xp_adjustment,
+			'exile_string' => $this->getExiles(),
+			'tags' => $tags,
+			'previous_deck' => $previousDeck,
+			'next_deck' => $nextDeck
 		];
 	
 		return $array;

@@ -162,7 +162,18 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
 	{
 		$arr = array ();
 		foreach ( $this->slots as $slot ) {
-			$arr [$slot->getCard ()->getCode ()] = $slot->getQuantity ();
+			$arr [$slot->getCard()->getCode()] = $slot->getQuantity();
+		}
+		ksort ( $arr );
+		return $arr;
+	}
+	public function getIgnoreDeckLimitContent()
+	{
+		$arr = array ();
+		foreach ( $this->slots as $slot ) {
+			if ($slot->getIgnoreDeckLimit()){
+				$arr [$slot->getCard()->getCode()] = $slot->getIgnoreDeckLimit();
+			}
 		}
 		ksort ( $arr );
 		return $arr;

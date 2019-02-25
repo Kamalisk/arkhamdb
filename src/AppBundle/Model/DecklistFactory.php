@@ -71,6 +71,7 @@ class DecklistFactory
 		foreach ($deck->getSlots() as $slot) {
 			$decklistslot = new Decklistslot();
 			$decklistslot->setQuantity($slot->getQuantity());
+			$decklistslot->setIgnoreDeckLimit($slot->getIgnoreDeckLimit());
 			$decklistslot->setCard($slot->getCard());
 			$decklistslot->setDecklist($decklist);
 			$decklist->getSlots()->add($decklistslot);

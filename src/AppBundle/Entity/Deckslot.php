@@ -15,6 +15,11 @@ class Deckslot implements \AppBundle\Model\SlotInterface
      */
     private $quantity;
 
+    /**
+     * @var integer
+     */
+    private $ignoreDeckLimit;
+
 
     /**
      * @var \AppBundle\Entity\Deck
@@ -60,6 +65,32 @@ class Deckslot implements \AppBundle\Model\SlotInterface
     {
         return $this->quantity;
     }
+    
+    
+        /**
+     * Set ignoreDeckLimit
+     *
+     * @param integer $ignoreDeckLimit
+     *
+     * @return Deckslot
+     */
+    public function setIgnoreDeckLimit($ignoreDeckLimit)
+    {
+        $this->ignoreDeckLimit = $ignoreDeckLimit;
+
+        return $this;
+    }
+
+    /**
+     * Get ignoreDeckLimit
+     *
+     * @return integer
+     */
+    public function getIgnoreDeckLimit()
+    {
+        return $this->ignoreDeckLimit;
+    }
+    
     
     /**
      * Set deck

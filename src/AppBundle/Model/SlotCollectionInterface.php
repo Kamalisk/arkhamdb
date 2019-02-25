@@ -43,4 +43,11 @@ interface SlotCollectionInterface extends \Countable, \IteratorAggregate, \Array
 	 * @return array
 	 */
 	public function getContent();
+	
+	/**
+	 * Get the cards which ignore deck limit as an array card_code => qty
+	 * @return array
+	 */
+	public function getIgnoreDeckLimitContent();
+	
 }

@@ -19,5 +19,10 @@ interface SlotInterface
 	 * @return integer
 	 */
 	public function getQuantity();
-	
+
+	/**
+	 * Get ignoreDeckLimit
+	 * @return integer
+	 */
+	public function getIgnoreDeckLimit();
 }
