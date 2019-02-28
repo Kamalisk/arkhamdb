@@ -86,6 +86,8 @@ deck_history.all_changes = function all_changes() {
 		});
 	}
 	
+	//console.log(cards_added);
+	
 	// first check for same named cards
 	_.each(cards_added, function (addition) {
 		_.each(cards_removed, function (removal) {
@@ -124,7 +126,7 @@ deck_history.all_changes = function all_changes() {
 				}
 			}
 			
-			cost = cost + (Math.max(addition.card.xp * (addition.card.exceptional ? 2: 1), 1) * addition.qty);
+			cost = cost + (Math.max(addition.card.xp * (addition.card.exceptional ? 2: 1), 1) * (addition.qty - addition.card.ignore) );
 			addition.qty = 0;
 		}
 	});

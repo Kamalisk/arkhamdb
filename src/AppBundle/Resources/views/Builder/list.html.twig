@@ -1,0 +1,126 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block javascripts %}
+	{% javascripts '@AppBundle/Resources/public/js/ui.decks.js' %}
+	<script src="{{ asset_url }}"></script>
+	{% endjavascripts %}
+{% endblock %}
+
+{% block body %}
+
+<div class="main white container">
+
+<div class="row">
+
+<!-- Right-side column -->
+<div class="col-md-4 col-md-push-8">
+
+<div class="row" style="margin-bottom:10px">
+<div class="col-md-12">
+	<a href="{{ path('deck_buildform') }}" class="btn btn-default btn-sm"{% if cannotcreate %} disabled="disabled"{% endif %}><span class="fa fa-plus"></span> New Deck</a>
+	<div class="btn-group">
+		<button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown"{% if cannotcreate %} disabled="disabled"{% endif %}>
+			<span class="fa fa-upload"></span> Import Deck <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="{{ path('deck_import') }}" id="btn-import-paste">Copy/paste</a></li>
+			<li><a href="#" onclick="$('#fileModal').modal('show')" id="btn-import-file">File</a></li>
+		</ul>
+	</div>
+</div>
+</div>
+
+<div class="row" style="margin-bottom:10px">
+<div class="col-md-12">
+	<div class="btn-group" id="btn-group-selection">
+		<button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
+			<span class="fa fa-check-square-o"></span> With Selection <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			<li class="dropdown-header"><span class="fa fa-exchange"></span> Compare</li>
+		    <li><a href="#" id="btn-compare">Compare two decks</a></li>
+		    <li class="dropdown-header"><span class="fa fa-tag"></span> Tags</li>
+		    <li><a href="#" id="btn-tag-add">Add one or more tags</a></li>
+			<li><a href="#" id="btn-tag-remove-one">Remove one or more tags</a></li>
+			<li><a href="#" id="btn-tag-remove-all">Clear all tags</a></li>
+			<li class="dropdown-header"><span class="fa fa-trash-o"></span> Delete</li>
+			<li><a href="#" id="btn-delete-selected"><span style="color:red" class="fa fa-exclamation-triangle"></span> Delete all decks selected</a></li>
+		</ul>
+	</div>
+</div>
+</div>
+<div class="row" style="margin-bottom:10px">
+<div class="col-md-12" id="tag_toggles" title="Click to switch to this tag. Shift-click to toggle this tag."></div>
+</div>
+
+</div>
+<!-- / Right-side column -->
+
+<!-- Left-side column -->
+<div class="col-md-8 col-md-pull-4">
+
+<h1>My private decks <small style="font-size:16px" class="hidden-xs {% if cannotcreate %}text-danger{% endif %}">({{ nbdecks }}/{{ nbmax }} slots)</small></h1>
+
+<table class="table table-expanded list-decks">
+<tbody id="decks">
+{% for deck in decks %}
+	<tr data-id="{{ deck.id }}">
+		<td style="width : 30px"><input id="deck_select_{{deck.id}}" type="checkbox"></td>
+		<td class="hidden-xs" style="width : 60px">
+			<label for="deck_select_{{deck.id}}">
+			<div class="deck-list-investigator-image card-thumbnail-3x card-thumbnail-investigator hidden-xs" title="{{ deck.character.name }}" style="background-image:url({{ asset('/bundles/cards/'~deck.character.code~'.png') }})"></div>
+			</label>
+		</td>
+		<td>
+			<a href="{{ path('deck_view',{deck_id:deck.id}) }}" class="deck-name">{{ deck.name }}</a> {{ deck.version }}
+			{% if deck.problem is not null %}
+			<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> {{ deck_validation_helper.getProblemLabel(deck.problem) }}</div>
+			{% endif %}
+			<div class="tags">
+			{% for tag in deck.tags|split(' ') %}
+			<span class="tag" data-tag="{{ tag }}">{{ tag }}</span>
+			{% endfor %}
+			</div>
+			{% if deck.upgrades is not null %}
+			<div>
+			<span>{{ deck.upgrades }} scenarios. Experience:  {{ deck.xp }} available. {{ deck.xpSpent ? deck.xpSpent : 0}} spent</span>
+			</div>
+			{% endif %}
+			{% if previousdecks[deck.id] is not null and previousdecks[deck.id] %}			
+			<ul style="padding-left : 20px; font-size : 0.8em">
+			{% for previousdeck in previousdecks[deck.id] %}
+			<li style="margin-left : 10px;"><a href="{{ path('deck_view',{deck_id:previousdeck.id}) }}" class="deck-name">{{ previousdeck.name }}</a></li>
+			{% endfor %}
+			</ul>
+			{% endif %}
+		</td>
+		<td class="decks-actions text-right">
+			<a href="{{ path('deck_edit',{deck_id:deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit"><span class="fa fa-pencil fa-fw"></span></a>
+			<a href="{{ path('deck_publish_form',{deck_id:deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Publish"><span class="fa fa-share fa-fw"></span></a>
+			<button class="btn btn-xs btn-default btn-delete-deck" data-toggle="tooltip" title="Delete"><span class="fa fa-trash-o fa-fw"></span></button>
+		</td>
+	</tr>
+{% endfor %}
+</tbody>
+</table>
+
+<div id="deck"></div>
+
+</div>
+<!-- / Left-side column -->
+
+</div>
+</div><!-- /.container -->
+
+{% include 'AppBundle:Modale:file.html.twig' %}
+{% include 'AppBundle:Modale:delete.html.twig' %}
+{% include 'AppBundle:Modale:delete_list.html.twig' %}
+{% include 'AppBundle:Modale:export.html.twig' %}
+{% include 'AppBundle:Modale:odds.html.twig' %}
+{% include 'AppBundle:Modale:tag_add.html.twig' %}
+{% include 'AppBundle:Modale:tag_remove.html.twig' %}
+{% include 'AppBundle:Modale:tag_clear.html.twig' %}
+{% include 'AppBundle:Modale:diff.html.twig' %}
+{% include 'AppBundle:Modale:archive.html.twig' %}
+
+{% endblock %}

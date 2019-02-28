@@ -15,24 +15,22 @@
 <div class="main white container">
 	
 	<div class="row">
-	    <div class="col-md-12">
-	        <h1 style="border-bottom:1px solid lightgray">{{ deck.name }}</h1>
-	        {% if deck.problem %}
-	        <div class="alert alert-danger" role="alert">{{ deck_validation_helper.problemLabel(deck.problem) }}</div>
-	        {% endif %}
-	    </div>
+		<div class="col-md-12">
+			<h1 style="border-bottom:1px solid lightgray">{{ deck.name }}</h1>
+			{% if deck.problem %}
+			<div class="alert alert-danger" role="alert">{{ deck_validation_helper.problemLabel(deck.problem) }}</div>
+			{% endif %}
+		</div>
 	</div>
 
 	<div class="row">
 
-		<!-- Left-side Column -->
+		<!-- Deck Contents -->
 		<div class="col-md-6" id="deck">
-		</div><!-- /#deck -->
+		</div>
+		<!-- End Deck Contents -->
 
-		
-		<!-- Left-side Column -->
-
-		<!-- Right-side Column -->
+		<!-- Build Controls -->
 		<div class="col-md-6 hidden-print">
 
 			<div style="margin-bottom:20px" id="btn-group-deck">
@@ -113,7 +111,7 @@
 			<!-- Published decklists Table -->
 
 		</div>
-		<!-- Right-side Column -->
+		<!-- End Build Controls -->
 
 	</div><!-- .row -->
 </div><!-- .container -->

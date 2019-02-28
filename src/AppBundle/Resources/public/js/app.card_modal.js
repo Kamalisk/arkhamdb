@@ -36,13 +36,13 @@ function fill_modal (code) {
 			+ '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>'
 			+ '<div class="card-pack">' + app.format.pack(card) + '</div>'
 	);
-
+	console.log(card);
+	
 	var qtyelt = modal.find('.modal-qty');
-	if(qtyelt) {
-
+	if(qtyelt && card.maxqty) {
 		var qty = '';
 	  	for(var i=0; i<=card.maxqty; i++) {
-	  		qty += '<label class="btn btn-default"><input type="radio" name="qty" value="'+i+'">'+i+'</label>';
+	  		qty += '<label class="btn btn-sm btn-default"><input type="radio" name="qty" value="'+i+'">'+i+'</label>';
 	  	}
 	  	qtyelt.html(qty);
 
@@ -53,6 +53,22 @@ function fill_modal (code) {
 
 	} else {
 		if(qtyelt) qtyelt.closest('.row').remove();
+	}
+	var qtyelt = modal.find('.modal-ignore');
+	
+	if(qtyelt && card.maxqty && card.code == "05040") {
+		qtyelt.closest('.modal-deck-ignore').show();
+		var qty = '';
+		for(var i=0; i<=card.maxqty; i++) {
+			if (card.ignore == i) {
+				qty += '<label class="btn btn-sm btn-default active"><input type="radio" name="ignoreqty" value="'+i+'">'+i+'</label>';
+			} else {
+				qty += '<label class="btn btn-sm btn-default"><input type="radio" name="ignoreqty" value="'+i+'">'+i+'</label>';
+			}
+		}
+		qtyelt.html(qty);
+	} else {
+		if(qtyelt) qtyelt.closest('.modal-deck-ignore').hide();
 	}
 }
 

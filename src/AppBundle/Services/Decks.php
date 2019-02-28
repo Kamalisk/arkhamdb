@@ -44,7 +44,7 @@ class Decks
 	 * @param unknown $content
 	 * @param unknown $source_deck
 	 */
-	public function saveDeck($user, $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck, $problem="")
+	public function saveDeck($user, $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck, $problem="", $ignored=false)
 	{
 		$deck_content = [ ];
 
@@ -135,6 +135,10 @@ class Decks
 			$slot->setQuantity ( $qty );
 			$slot->setCard ( $card );
 			$slot->setDeck ( $deck );
+			$slot->setIgnoreDeckLimit(0);
+			if ($ignored && isset($ignored[$card_code]) && $ignored[$card_code] > 0){
+				$slot->setIgnoreDeckLimit($ignored[$card_code]);
+			}
 			$deck->addSlot ( $slot );
 			$deck_content [$card_code] = array (
 					'card' => $card,

@@ -489,8 +489,12 @@ class BuilderController extends Controller
 		}
 
 		$content = [];
+		$ignored = [];
 		foreach ($deck->getSlots() as $slot) {
 			$content[$slot->getCard()->getCode()] = $slot->getQuantity();
+			if ($slot->getIgnoreDeckLimit()){
+				$ignored[$slot->getCard()->getCode()] = $slot->getIgnoreDeckLimit();
+			}
 		}
 		return $this->forward('AppBundle:Builder:save',
 		array(
@@ -498,6 +502,7 @@ class BuilderController extends Controller
 			'faction_code' => $deck->getCharacter()->getCode(),
 			'tags' => $deck->getTags(),
 			'content' => json_encode($content),
+			'ignored' => json_encode($ignored),
 			'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null,
 			'xp' => $xp,
 			'previous_deck' => $deck,
@@ -532,8 +537,6 @@ class BuilderController extends Controller
 			}
 		}
 
-
-
 		// XXX
 		// check for investigator here
 		$investigator = false;
@@ -557,7 +560,15 @@ class BuilderController extends Controller
 		if (! count($content)) {
 			return new Response('Cannot import empty deck');
 		}
-
+		
+		$ignored = false;
+		if ($request->get('ignored')){
+			$ignored_array = (array) json_decode($request->get('ignored'));
+			if (count($ignored_array)) {
+				$ignored = $ignored_array;
+			}
+		}
+		
 		$name = filter_var($request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		$problem = filter_var($request->get('problem'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		$decklist_id = filter_var($request->get('decklist_id'), FILTER_SANITIZE_NUMBER_INT);
@@ -566,7 +577,7 @@ class BuilderController extends Controller
 		$description = trim($request->get('description'));
 		$tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $content, $source_deck ? $source_deck : null, $problem);
+		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $content, $source_deck ? $source_deck : null, $problem, $ignored);
 
 		if ($request->get('exiles') && $request->get('exiles_string')){
 			$deck->setExiles($request->get('exiles_string'));
@@ -584,7 +595,7 @@ class BuilderController extends Controller
 		if ($request->get('previous_deck')){
 			return $this->redirect($this->generateUrl('deck_edit', ["deck_id"=>$deck->getId()]));
 		} else {
-			return $this->redirect($this->generateUrl('decks_list'));
+			return $this->redirect($this->generateUrl('deck_view', ["deck_id"=>$deck->getId()]));
 		}
 
 	}
@@ -848,14 +859,19 @@ class BuilderController extends Controller
 		$decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
 
 		$content = [];
+		$ignored = [];
 		foreach ($decklist->getSlots() as $slot) {
 			$content[$slot->getCard()->getCode()] = $slot->getQuantity();
+			if ($slot->getIgnoreDeckLimit()){
+				$ignored[$slot->getCard()->getCode()] = $slot->getIgnoreDeckLimit();
+			}
 		}
 		return $this->forward('AppBundle:Builder:save',
 			array(
 				'name' => $decklist->getName(),
 				'faction_code' => $decklist->getCharacter()->getCode(),
 				'content' => json_encode($content),
+				'ignored' => json_encode($ignored),
 				'decklist_id' => $decklist_id
 			)
 		);

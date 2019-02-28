@@ -339,7 +339,9 @@ ui.on_input_smartfilter2 = function on_input_smartfilter2(event) {
  */
 ui.on_submit_form = function on_submit_form(event) {
 	var deck_json = app.deck.get_json();
+	var ignored_json = app.deck.get_ignored_json();
 	$('input[name=content]').val(deck_json);
+	$('input[name=ignored]').val(ignored_json);
 	$('input[name=xp_spent]').val(app.deck.get_xp_spent());
 	$('input[name=xp_adjustment]').val(app.deck.get_xp_adjustment());
 	$('input[name=description]').val($('textarea[name=description_]').val());
@@ -410,8 +412,6 @@ ui.on_core_change = function on_core_change(event) {
 ui.toggle_suggestions = function toggle_suggestions() {
 	app.suggestions.number = Config['show-suggestions'];
 	app.suggestions.show();
-	
-
 }
 
 /**
@@ -510,7 +510,11 @@ ui.on_modal_quantity_change = function on_modal_quantity_change(event) {
 	var code =  modal.data('code');
 	var quantity = parseInt($(this).val(), 10);
 	modal.modal('hide');
-	ui.on_quantity_change(code, quantity);
+	if ($(this).attr("name") == "ignoreqty"){
+		ui.on_ignore_quantity_change(code, quantity);
+	} else {
+		ui.on_quantity_change(code, quantity);
+	}
 
 	setTimeout(function () {
 		$('#filter-text').typeahead('val', '').focus();
@@ -551,6 +555,11 @@ ui.on_quantity_change = function on_quantity_change(card_code, quantity) {
 	else {
 		ui.refresh_row(card_code, quantity);
 	}
+	app.deck_history.all_changes();
+}
+ui.on_ignore_quantity_change = function on_ignore_quantity_change(card_code, quantity) {
+	var update_all = app.deck.set_card_ignores(card_code, quantity);
+	ui.refresh_deck();
 	app.deck_history.all_changes();
 }
 
@@ -858,7 +867,7 @@ ui.refresh_list = _.debounce(function refresh_list() {
 	if(SortKey !== 'name') orderBy['name'] = 1;
 	var cards = app.data.cards.find(query, {'$orderBy': orderBy});
 	var divs = CardDivs[ Config['display-column'] - 1 ];
-
+	
 	cards.forEach(function (card) {
 		if (Config['show-only-deck'] && !card.indeck) return;
 		var unusable = !app.deck.can_include_card(card);
@@ -919,10 +928,11 @@ ui.refresh_list2 = _.debounce(function refresh_list2() {
 		if (Config['show-only-deck'] && !card.indeck) return;
 		var unusable = !app.deck.can_include_card(card);
 		if (!Config['show-unusable'] && unusable) return;
-
+		console.log(card);
+		
 		var row = divs[card.code];
 		if(!row) row = divs[card.code] = ui.build_row(card);
-
+		
 		row.data("code", card.code).addClass('card-container');
 
 		row.find('input[name="qty-' + card.code + '"]').each(

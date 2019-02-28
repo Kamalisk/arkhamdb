@@ -84,7 +84,7 @@ deck.init = function init(data) {
 }
 
 deck.onloaded = function(data){
-	deck.set_slots(data.slots);
+	deck.set_slots(data.slots, data.ignoreDeckLimitSlots);
 	investigator = app.data.cards.findById(investigator_code);
 	if (app.user.data && app.user.data.owned_packs) {
 		var packs = app.user.data.owned_packs.split(',');
@@ -99,9 +99,10 @@ deck.onloaded = function(data){
  * Sets the slots of the deck
  * @memberOf deck
  */
-deck.set_slots = function set_slots(slots) {
+deck.set_slots = function set_slots(slots, ignoreSlots) {
 	app.data.cards.update({}, {
-		indeck: 0
+		indeck: 0,
+		ignore: 0
 	});
 
 	for(code in slots) {
@@ -109,7 +110,11 @@ deck.set_slots = function set_slots(slots) {
 			app.data.cards.updateById(code, {indeck: slots[code]});			
 		}
 	}
-
+	for(code in ignoreSlots) {
+		if(ignoreSlots.hasOwnProperty(code)) {
+			app.data.cards.updateById(code, {ignore: ignoreSlots[code]});			
+		}
+	}
 }
 
 /**
@@ -322,18 +327,22 @@ deck.get_real_draw_deck_size = function get_real_draw_deck_size(sort) {
 deck.get_xp_usage = function get_xp_usage(sort) {
 	var xp = 0;
 	deck.get_real_draw_deck().forEach(function (card) {
-		if (card && card.xp){
-			xp += card.xp * card.indeck * (card.exceptional ? 2: 1);
+		if (card && card.xp && card.ignore < card.indeck) {
+			xp += card.xp * (card.indeck - card.ignore) * (card.exceptional ? 2: 1);
 		}
 	});
 	return xp;
+	
 }
 
 
 deck.get_nb_cards = function get_nb_cards(cards) {
 	if(!cards) cards = deck.get_cards();
 	var quantities = _.pluck(cards, 'indeck');
-	return _.reduce(quantities, function(memo, num) { return memo + num; }, 0);
+	var ignores = _.pluck(cards, 'ignore');
+	var total = _.reduce(quantities, function(memo, num) { return memo + num; }, 0);
+	total -= _.reduce(ignores, function(memo, num) { return memo + num; }, 0);
+	return total;
 }
 
 
@@ -607,6 +616,7 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(query, d
 				'Accessory': [],
 				'Body': [],
 				'Ally': [],
+				'Tarot': [],
 				'Other': []
 			};
 			
@@ -624,6 +634,9 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(query, d
 				}
 				if(card.xp === undefined) {
 					$div.append(' <span class="fa fa-star" title="Does not count towards deck size"></span>');
+				}
+				if(card.ignore) {
+					$div.append(' <span class="fa fa-star" style="color:green;" title="'+card.ignore+' of these do not count towards deck size"></span>');
 				}
 
 				if (card.slot && slots[card.slot]){
@@ -659,6 +672,10 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(query, d
 				if(card.xp === undefined) {
 					$div.append(' <span class="fa fa-star" title="Does not count towards deck size"></span>');
 				}
+				if(card.ignore) {
+					$div.append(' <span class="fa fa-star" style="color:green;" title="'+card.ignore+' of these do not count towards deck size"></span>');
+				}
+				
 				if (!no_collection){
 					var pack = app.data.packs.findById(card.pack_code);
 					if (!collection[pack.id]) {
@@ -696,6 +713,23 @@ deck.set_card_copies = function set_card_copies(card_code, nb_copies) {
 
 /**
  * @memberOf deck
+ * @return boolean true if at least one other card quantity was updated
+ */
+deck.set_card_ignores = function set_card_ignores(card_code, nb_copies) {
+	var card = app.data.cards.findById(card_code);
+	if(!card) return false;
+
+	var updated_other_card = false;
+
+	app.data.cards.updateById(card_code, {
+		ignore: nb_copies
+	});
+
+	return updated_other_card;
+}
+
+/**
+ * @memberOf deck
  */
 deck.get_content = function get_content() {
 	var cards = deck.get_cards();
@@ -709,8 +743,28 @@ deck.get_content = function get_content() {
 /**
  * @memberOf deck
  */
+deck.get_ignored_cards = function get_ignored_cards() {
+	var cards = deck.get_cards();
+	var ignored = {};
+	cards.forEach(function (card) {
+		if (card.ignore > 0){
+			ignored[card.code] = card.ignore;
+		}
+	});
+	return ignored;
+}
+
+/**
+ * @memberOf deck
+ */
 deck.get_json = function get_json() {
 	return JSON.stringify(deck.get_content());
+}
+/**
+ * @memberOf deck
+ */
+deck.get_ignored_json = function get_ignored_json() {
+	return JSON.stringify(deck.get_ignored_cards());
 }
 
 /**
