@@ -9,59 +9,123 @@
 </div> <!-- .container -->
 
 <div class="main container">
-    <div class="row">
-    {% for data in decklists_by_faction %}
-    <div class="col-md-6" style="margin-bottom:15px; ">
-        <div class="bg-faction bg-{{ data.faction.code }}" style="padding:10px 10px 4px 8px">
-            <div class="media">
-              <div class="media-left" style="font-size:16px">
-                  <span class="icon icon-{{ data.faction.code }}"></span>
-              </div>
-              <div class="media-body">
-                  <h4 class="media-heading" style="white-space:nowrap"><a href="{{ path('decklist_detail',{decklist_id:data.decklist.id,decklist_name:data.decklist.nameCanonical}) }}">{{ data.decklist.name }}</a></h4>                  
-              </div>              
-            </div>
-        </div>
-        <div style="background-color: white; background-position: -50px -250px; background-size: 1200px 800px; background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png);">
-            <div style="padding: 5px 10px 10px 10px; background-color: rgba(255, 255, 255, 0.92);">
-							<div class="small pull-right">
-              {{ macros.decklist_social_icons(data.decklist ) }}
-							</div>
-	            {% set character = data.decklist.getCharacter() %}
-	            <div class="pull-left" style="margin-right : 10px; margin-top : 5px;">
-	            	<div class="card-thumbnail-static card-thumbnail-wide card-thumbnail-investigator" style="background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png)"></div>
-	            </div>
-	            <h4 style="margin-bottom : 2px;"><a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.decklist.getCharacter().getName()}}</a></h4>	            
-	            <div class="padding-left : 10px;">
-	            <p>Experience Required: {{ data.decklist.xp|number_format }}
-	            <br>
-	            {{ data.decklist.tags }} &nbsp;
-	            </p>            
-	            </div>
-	            <div class="small pull-right" >by <span class="username">{{ macros.username_colorless(data.decklist.user) }}</span> &middot; <time datetime="{{ data.decklist.dateCreation|date('c') }}">{{ data.decklist.dateCreation|date('M d, Y') }}</time></div>
+	<div class="row col-md-6">
+		<h3>Popular Decks</h3>
+		{% for data in decklists_by_popular %}
+		<div style="margin-bottom:10px; ">
+			<div class="bg-faction faint-{{ data.faction.code }}" style="padding:4px; height: 24px;">
+				<div class="media">
+					<div class="media-body">
+							<h4 class="media-heading" style="white-space:nowrap; font-size: 1.15em; line-height: 14px;vertical-align: top;">
+								<span class="icon icon-{{ data.faction.code }}"></span>
+								<a href="{{ path('decklist_detail',{decklist_id:data.decklist.id,decklist_name:data.decklist.nameCanonical}) }}">{{ data.decklist.name }}</a>
+							</h4>
+					</div>              
+				</div>
+			</div>
+			<div style="background-color: white; background-position: -50px -250px; background-size: 1200px 800px; background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png);">
+				<div style="padding: 2px 5px 5px 5px; background-color: rgba(255, 255, 255, 0.88);">					
+					{% set character = data.decklist.getCharacter() %}					
+					<div class="pull-left" style="margin-right : 5px; margin-top : 2px;">
+						<div class="card-thumbnail-static card-thumbnail-wide card-thumbnail-investigator" style="background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png)"></div>
+					</div>
+					<div>
+						Investigator: <a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.decklist.getCharacter().getName()}}</a>
+						<div class="small pull-right">
+						{{ macros.decklist_social_icons(data.decklist ) }}						
+						</div>
+					</div>
+					<div>
+					Tags: {{ data.decklist.tags }}
+					</div>
+					<div>
+						Author: <span class="username">{{ macros.username_colorless(data.decklist.user) }}</span>
+						<div class="small pull-right">
+						<time datetime="{{ data.decklist.dateCreation|date('c') }}">{{ data.decklist.dateCreation|date('M d, Y') }}</time>
+						</div>
+					</div>					
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+	
+	<div class="row col-md-6" style="margin-left: 5px;">
+		<h3>Recent Decks</h3>
+		{% for data in decklists_by_recent %}
+		<div style="margin-bottom:10px; ">
+			<div class="bg-faction faint-{{ data.faction.code }}" style="padding:4px; height: 24px;">
+				<div class="media">
+					<div class="media-body">
+							<h4 class="media-heading" style="white-space:nowrap; font-size: 1.15em; line-height: 14px;vertical-align: top;">
+								<span class="icon icon-{{ data.faction.code }}"></span>
+								<a href="{{ path('decklist_detail',{decklist_id:data.decklist.id,decklist_name:data.decklist.nameCanonical}) }}">{{ data.decklist.name }}</a>
+							</h4>
+					</div>              
+				</div>
+			</div>
+			<div style="background-color: white; background-position: -50px -250px; background-size: 1200px 800px; background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png);">
+				<div style="padding: 2px 5px 5px 5px; background-color: rgba(255, 255, 255, 0.88);">					
+					{% set character = data.decklist.getCharacter() %}					
+					<div class="pull-left" style="margin-right : 5px; margin-top : 2px;">
+						<div class="card-thumbnail-static card-thumbnail-wide card-thumbnail-investigator" style="background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png)"></div>
+					</div>
+					<div>
+						Investigator: <a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.decklist.getCharacter().getName()}}</a>
+						<div class="small pull-right">
+						{{ macros.decklist_social_icons(data.decklist ) }}						
+						</div>
+					</div>
+					<div>
+					Tags: {{ data.decklist.tags }}
+					</div>
+					<div>
+						Author: <span class="username">{{ macros.username_colorless(data.decklist.user) }}</span>
+						<div class="small pull-right">
+						<time datetime="{{ data.decklist.dateCreation|date('c') }}">{{ data.decklist.dateCreation|date('M d, Y') }}</time>
+						</div>
+					</div>					
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
 
-	            <div style="clear:both"></div>
-            </div>
-            
-        </div>
-    </div>
-    {% endfor %}
-    </div>
 </div>
+
+<div class="main container">
+<h3>Recent Updates</h3>
+<ul>
+	<li>
+		<h4>Campaign Rewards</h4> 
+		If a campaign lets you add a regular player card that does not count towards your deck limit, you can do so by opening the card popup 
+		and manually adjust how many of that card ignore your deck limit.
+	</li>
+	<li>
+		<h4>Ultimatum of Chaos</h4> 
+		You can create random decks with the chaos button found in the deck builder. 
+	</li>
+	<li>
+		<h4>Card Ownership</h4> 
+		You can set which packs you own in the collection manager (see My Collection in the user menu). When looking at decks, any 
+		cards in packs you do not own will be highlighted with a <span class="fa fa-question"></span>
+	</li>
+</ul>
+</div> <!-- .container -->
 
 {% endblock %}
 
 {% block javascripts %}
 <script type="application/ld+json">
 {
-   "@context": "http://schema.org",
-   "@type": "WebSite",
-   "url": "https://arkhamdb.com/",
-   "potentialAction": {
-     "@type": "SearchAction",
-     "target": "http://arkhamdb.com/find?q={search_term_string}",
-     "query-input": "required name=search_term_string"
-   }
+	 "@context": "http://schema.org",
+	 "@type": "WebSite",
+	 "url": "https://arkhamdb.com/",
+	 "potentialAction": {
+		 "@type": "SearchAction",
+		 "target": "http://arkhamdb.com/find?q={search_term_string}",
+		 "query-input": "required name=search_term_string"
+	 }
 }
 </script>
 {% endblock %}

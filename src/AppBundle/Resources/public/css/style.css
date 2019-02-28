@@ -92,9 +92,9 @@ td.type, td.faction {
 	text-align:center;
 }
 .container.main {
-	margin-bottom: 20px;
-	padding-top: 20px;
-	padding-bottom: 20px;
+	margin-bottom: 5px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 .container.main.white {
 	background-color: #fff;
@@ -337,9 +337,9 @@ h4.deck-section {
 
 .card-thumbnail-wide.card-thumbnail-investigator {
 	background-repeat:no-repeat;
-	width:140px;height:80px;
+	width:120px;height:55px;
 	background-size:270px 180px;
-	background-position: -1px -42px
+	background-position: -5px -45px
 }
 
 .card-faded-background {
@@ -400,14 +400,16 @@ h4.deck-section {
 h1.site-title {
 	font-family: 'Julius Sans One', sans-serif;
 	position:relative;
-	font-size:116px;
+	font-size:110px;
 	text-align:center;
 	margin-top: 0;
+	margin: 0;
+	padding: 0;
 }
 div.site-slogan {
 	font-family: 'Open Sans Condensed', sans-serif;
 	position:relative;
-	font-size:40px;
+	font-size:30px;
 	text-align:center;
 }
 
@@ -545,7 +547,7 @@ div.site-slogan {
 	height : 16px;
 	display : inline-block;
 	vertical-align : top;
-	margin-top : 2px;
+	margin-top: 1px;
 }
 .icon-mystic {
 	background-image : url("/bundles/app/images/factions/mystic.png");
@@ -558,6 +560,7 @@ div.site-slogan {
 }
 .icon-survivor {
 	background-image : url("/bundles/app/images/factions/survivor.png");
+	margin-top: -1px;
 }
 .icon-big {
 	background-position: 100%;
