@@ -262,8 +262,12 @@ class Oauth2Controller extends Controller
 
 
 		$slots = [];
+		$ignored = [];
 		foreach ($deck->getSlots() as $slot) {
 			$slots[$slot->getCard()->getCode()] = $slot->getQuantity();
+			if ($slot->getIgnoreDeckLimit()){
+				$ignored[$slot->getCard()->getCode()] = $slot->getIgnoreDeckLimit();
+			}
 		}
 
 		if ($request->get('exiles')){
@@ -331,7 +335,8 @@ class Oauth2Controller extends Controller
 			$deck->getTags(),
 			$slots,
 			null, // no source deck, we want it to be new.
-			$deck->getProblem()
+			$deck->getProblem(), 
+			$ignored
 		);
 
 		if ($filtered_exiles) {
@@ -441,6 +446,23 @@ class Oauth2Controller extends Controller
 				]);
 			}
 		}
+		
+		$ignored = false;
+		if ($request->get('ignored')){
+			$ignored_array = (array) json_decode($request->get('ignored'));
+			if (count($ignored_array)) {
+				$ignored = $ignored_array;
+				foreach($ignored as $card_code => $qty) {
+					if(!is_string($card_code) || !is_integer($qty)) {
+						return new JsonResponse([
+								'success' => FALSE,
+								'msg' => "Ignored slots invalid"
+						]);
+					}
+				}
+			}
+		}
+		
 		// We expect all requests to include problem.
 		$problem = filter_var($request->get('problem'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if (!empty($problem) && !in_array($problem, [
@@ -486,7 +508,7 @@ class Oauth2Controller extends Controller
 		}
 
 		// Save the deck.
-		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $slots, $deck , $problem);
+		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $slots, $deck , $problem, $ignored);
 
 		// xp_spent is only read/set if there was a previousDeck.
 		if ($deck->getPreviousDeck()) {

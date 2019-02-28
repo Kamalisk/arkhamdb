@@ -6,7 +6,6 @@ body {
 }
 .card-content {
 	font: 16px/20px 'Amiri', serif;
-	border-top : solid 1px;
 }
 .card-content abbr[title] {
 	border-bottom: none;

@@ -928,7 +928,6 @@ ui.refresh_list2 = _.debounce(function refresh_list2() {
 		if (Config['show-only-deck'] && !card.indeck) return;
 		var unusable = !app.deck.can_include_card(card);
 		if (!Config['show-unusable'] && unusable) return;
-		console.log(card);
 		
 		var row = divs[card.code];
 		if(!row) row = divs[card.code] = ui.build_row(card);

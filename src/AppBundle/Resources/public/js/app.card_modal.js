@@ -36,7 +36,6 @@ function fill_modal (code) {
 			+ '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>'
 			+ '<div class="card-pack">' + app.format.pack(card) + '</div>'
 	);
-	console.log(card);
 	
 	var qtyelt = modal.find('.modal-qty');
 	if(qtyelt && card.maxqty) {

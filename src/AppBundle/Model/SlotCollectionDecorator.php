@@ -176,6 +176,9 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
 			}
 		}
 		ksort ( $arr );
+		if (count($arr) <= 0){
+			$arr = null;
+		}
 		return $arr;
 	}
 	
