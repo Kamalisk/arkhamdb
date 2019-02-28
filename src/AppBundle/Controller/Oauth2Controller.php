@@ -193,7 +193,7 @@ class Oauth2Controller extends Controller
 			$slot->setQuantity ( $card->getDeckLimit() );
 			$slot->setCard ( $card );
 			$slot->setDeck ( $deck );
-			//$slot->setIgnoreDeckRestrictions ( true );
+			$slot->setIgnoreDeckLimit (0);
 			$deck->addSlot ( $slot );
 		}
 		$em->persist($deck);
