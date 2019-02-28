@@ -175,13 +175,13 @@ class BuilderController extends Controller
 		$deck->setTags(join(' ', array_unique($tags)));
 		$deck->setUser($this->getUser());
 
-		foreach ( $cards_to_add as $card) {
-			$slot = new Deckslot ();
-			$slot->setQuantity ( $card->getDeckLimit() );
-			$slot->setCard ( $card );
-			$slot->setDeck ( $deck );
-			//$slot->setIgnoreDeckRestrictions ( true );
-			$deck->addSlot ( $slot );
+		foreach ($cards_to_add as $card) {
+			$slot = new Deckslot();
+			$slot->setQuantity( $card->getDeckLimit() );
+			$slot->setCard( $card );
+			$slot->setDeck( $deck );
+			$slot->setIgnoreDeckLimit(0);
+			$deck->addSlot( $slot );
 		}
 
 		$em->persist($deck);
