@@ -9,13 +9,13 @@
   {% if user.donation > 0 %}<span class="fa fa-gift donator" title="ThronesDB Gracious Donator"></span>{% endif %}
     <small>{{ user.reputation }}</small></h1>
 	<p>
-        Member since {{ user.dateCreation|date('Y-m-d') }}.
+        {% trans %}Member since{% endtrans %} {{ user.dateCreation|date('Y-m-d') }}.
         <div>
         {% if user.decklists|length > 1 %}
-            <a href="{{ path('decklists_list',{type:'find',page:1,author:user.username}) }}">{{ user.decklists|length }} published decklists.</a>
+            <a href="{{ path('decklists_list',{type:'find',page:1,author:user.username}) }}">{{ user.decklists|length }} {% trans %}published decklists{% endtrans %}.</a>
         {% else %}
             {% if user.decklists|length == 1 %}
-                <a href="{{ path('decklists_list',{type:'find',page:1,author:user.username}) }}">One published decklist.</a>
+                <a href="{{ path('decklists_list',{type:'find',page:1,author:user.username}) }}">{% trans %}One published decklist{% endtrans %}.</a>
             {% else %}
                 No published decklist.
             {% endif %}
@@ -23,10 +23,10 @@
         </div>
         <div>
         {% if user.reviews|length > 1 %}
-            <a href="{{ path('card_reviews_list_byauthor',{page:1,user_id:user.id}) }}">{{ user.reviews|length }} published reviews.</a>
+            <a href="{{ path('card_reviews_list_byauthor',{page:1,user_id:user.id}) }}">{{ user.reviews|length }} {% trans %}published reviews{% endtrans %}.</a>
         {% else %}
             {% if user.reviews|length == 1 %}
-                <a href="{{ path('card_reviews_list_byauthor',{page:1,user_id:user.id}) }}">One published reviews.</a>
+                <a href="{{ path('card_reviews_list_byauthor',{page:1,user_id:user.id}) }}">{% trans %}One published reviews{% endtrans %}.</a>
             {% else %}
                 No published reviews.
             {% endif %}

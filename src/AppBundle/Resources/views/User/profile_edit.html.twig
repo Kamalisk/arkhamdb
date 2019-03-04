@@ -15,56 +15,56 @@
 <form role="form" action="{{ path('user_profile_save') }}" method="POST">
 
   <div class="form-group">
-    <label>Reputation</label>
+    <label>{% trans %}Reputation{% endtrans %}</label>
     <p>{{ user.reputation }}</p>
   </div>
 
   <div class="form-group">
-    <label for="username">Username</label>
+    <label for="username">{% trans %}Username{% endtrans %}label>
     <input type="text" name="username" id="username" value="{{ user.username }}" class="form-control">
   </div>
 
   <div class="form-group">
-    <label for="email">Email</label>
+    <label for="email">{% trans %}Email{% endtrans %}label>
     <input type="text" name="email" id="email" value="{{ user.email }}" class="form-control">
   </div>
 
   <div class="form-group">
-    <label for="resume">Something about you</label>
+    <label for="resume">{% trans %}Something about you{% endtrans %}</label>
     <textarea id="resume" name="resume" class="form-control">{{ user.resume }}</textarea>
   </div>
 
   <div class="checkbox">
     <label>
         <input type="checkbox" name="notif_author" value="1" {% if user.isNotifAuthor %}checked{% endif %}>
-        Be notified when a user comments one of your decklists
+        {% trans %}Be notified when a user comments one of your decklists{% endtrans %}
     </label>
   </div>
 
   <div class="checkbox">
     <label>
         <input type="checkbox" name="notif_commenter" value="1" {% if user.isNotifCommenter %}checked{% endif %}>
-        Be notified when a user also comments a decklist you commented
+        {% trans %}Be notified when a user also comments a decklist you commented{% endtrans %}
     </label>
   </div>
 
   <div class="checkbox">
     <label>
         <input type="checkbox" name="notif_mention" value="1" {% if user.isNotifMention %}checked{% endif %}>
-        Be notified when a user mentions you in a comment
+        {% trans %}Be notified when a user mentions you in a comment{% endtrans %}
     </label>
   </div>
 
   <div class="checkbox">
     <label>
         <input type="checkbox" name="share_decks" value="1" {% if user.isShareDecks %}checked{% endif %}>
-        Share your decks.
+        {% trans %}Share your decks.{% endtrans %}
     </label>
     <p class="help-block">If you check this box, the "View" page of your decks will be public instead of private. You can then send the link to your friends. If you uncheck the box, all your decks become private immediately.</p>
   </div>
 
   <div class="form-group">
-    <label for="color">Select a faction color for your username</label>
+    <label for="color">{% trans %}Select a faction color for your username{% endtrans %}</label>
     {% for faction in factions %}
     <div class="radio">
       <label class="{{ faction.code }}">
@@ -75,7 +75,7 @@
 	{% endfor %}
   </div>
 
-  <button type="submit" class="btn btn-primary">Save</button>
+  <button type="submit" class="btn btn-primary">{% trans %}Save{% endtrans %}</button>
 </form>
 
 </div>

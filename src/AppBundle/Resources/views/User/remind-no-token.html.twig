@@ -3,6 +3,6 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 {% block form %}
-<p>Your account is not awaiting confirmation.</p>
-<p>If you forgot your password, <a href="{{ path('fos_user_resetting_request') }}">click here</a>, otherwise log in <a href="{{ path('fos_user_security_login') }}">here</a>.</p> 
+<p>{% trans %}Your account is not awaiting confirmation{% endtrans %}.</p>
+<p>{% trans %}If you forgot your password{% endtrans %}, <a href="{{ path('fos_user_resetting_request') }}">{% trans %}click here{% endtrans %}</a>, {% trans %}otherwise log in{% endtrans %} <a href="{{ path('fos_user_security_login') }}">here</a>.</p> 
 {% endblock %}
