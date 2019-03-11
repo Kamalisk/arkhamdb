@@ -620,7 +620,7 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	
 	$('#cardModal').on('keypress', function(event) {
 		var num = parseInt(event.which, 10) - 48;
-		$('#cardModal input[type=radio][value=' + num + ']').trigger('change');
+		$('#cardModal .modal-qty input[type=radio][value=' + num + ']').trigger('change');
 	});
 	$('#cardModal').on('change', 'input[type=radio]', ui.on_modal_quantity_change);
 
