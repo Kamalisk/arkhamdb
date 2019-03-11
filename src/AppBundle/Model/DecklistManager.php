@@ -277,7 +277,8 @@ class DecklistManager
 				if(!in_array('d.user', $joinTables)) {
 					$qb->innerJoin('d.user', 'u');
 				}
-				$qb->orderBy('u.reputation', 'DESC');
+				$qb->addSelect('u.reputation AS HIDDEN reputation');
+				$qb->orderBy('reputation', 'DESC');
 				break;
 			case 'popularity':
 			default:
