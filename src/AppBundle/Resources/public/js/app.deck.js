@@ -1050,7 +1050,7 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 					option.atleast_count[card.faction_code] += card.indeck;
 					if (card.faction2_code) {
 						if (!option.atleast_count[card.faction2_code]) {
-							options.atleast_count[card.faction2_code] = 0;
+							option.atleast_count[card.faction2_code] = 0;
 						}
 						option.atleast_count[card.faction2_code] += card.indeck;
 					}
