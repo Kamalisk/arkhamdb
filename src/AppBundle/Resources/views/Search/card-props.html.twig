@@ -42,7 +42,7 @@
 	{% if card.doom or card.clues is not null or card.shroud %}
 	<div>
 	{% if card.doom %}<span title="Doom" class="icon icon-doom color-doom"></span>{% trans %}Doom{% endtrans %}: {{card.doom}}.{% endif %}
-	{% if card.shroud %}<span title="Shroud" class="icon icon-shroud color-shroud"></span>{% trans %}Shroud{% endtrans %}: {{card.shroud}}.{% endif %}
+	{% if card.shroud %}<span title="Shroud" class="icon icon-shroud color-shroud"></span>{% trans %}Shroud{% endtrans %}: {{macros.integer_or_x(card.shroud)}}.{% endif %}
 	{% if card.clues %}<span title="Clues" class="icon icon-clues color-clues"></span>{% trans %}Clues{% endtrans %}: {{card.clues}}{% if not card.clues_fixed %}<span class="icon icon-per_investigator" title="Per Investigator"></span>{% endif %}.{% endif %}
 	{% if card.clues == 0 %}<span title="Clues" class="icon icon-clues color-clues"></span>{% trans %}Clues{% endtrans %}: {{card.clues}}{% endif %}
 	</div>
