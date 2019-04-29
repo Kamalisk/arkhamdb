@@ -34,6 +34,12 @@ api_cards:
     defaults:
         _controller: AppBundle:Api:listCards
 
+api_taboos:
+    path: /taboos/
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Api:listTaboos
+
 api_cards_pack:
     path: /cards/{pack_code}.{_format}
     methods: [GET]

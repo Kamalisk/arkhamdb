@@ -1,0 +1,32 @@
+AppBundle\Entity\Taboo:
+    type: entity
+    table: taboo
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO    
+    fields:
+        code:
+            type: string
+            length: 255
+        name:
+            type: string
+            length: 255
+        active:
+            type: smallint
+            nullable: true
+        dateStart:
+            type: date
+            nullable: false
+            column: date_start
+        dateUpdate:
+            type: date
+            nullable: true
+            column: date_update
+            gedmo:
+                timestampable:
+                    on: update
+        cards:
+            type: text

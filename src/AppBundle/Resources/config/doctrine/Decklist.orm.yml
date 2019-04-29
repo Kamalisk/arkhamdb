@@ -15,6 +15,12 @@ AppBundle\Entity\Decklist:
             joinColumn:
                 name: card_id
                 referencedColumnName: id
+        taboo:
+            targetEntity: Taboo
+            nullable: true
+            joinColumn:
+                name: taboo_id
+                referencedColumnName: id
         lastPack:
             targetEntity: Pack
             nullable: false

@@ -119,6 +119,21 @@ class ImportStdCommand extends ContainerAwareCommand
 		
 		
 
+		
+		// cycles
+
+		$output->writeln("Importing Taboos...");
+		$taboosFileInfo = $this->getFileInfo($path, 'taboos.json');
+		$imported = $this->importTaboosJsonFile($taboosFileInfo);
+		if(count($imported)) {
+			$question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
+			if(!$helper->ask($input, $output, $question)) {
+				die();
+			}
+		}
+		$this->em->flush();
+		$this->loadCollection('Taboo');
+		$output->writeln("Done.");
 
 
 		
@@ -341,6 +356,30 @@ class ImportStdCommand extends ContainerAwareCommand
 		return $result;
 	}
 
+	protected function importTaboosJsonFile(\SplFileInfo $fileinfo)
+	{
+		$result = [];
+	
+		$taboosData = $this->getDataFromFile($fileinfo);
+		foreach($taboosData as $tabooData) {
+			$tabooData['cards'] = json_encode($tabooData['cards']);
+			$taboo = $this->getEntityFromData('AppBundle\Entity\Taboo', $tabooData, [
+					'code', 
+					'name', 
+					'date_start', 
+					'active',
+					'cards'
+			], [], []);
+			if($taboo) {
+				$result[] = $taboo;
+				$this->em->persist($taboo);
+			}
+		}
+		
+		return $result;
+	}
+
+
 	protected function importPacksJsonFile(\SplFileInfo $fileinfo)
 	{
 		$result = [];
@@ -477,7 +516,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		// if the field is a data, the default assumptions above are wrong
 		if(in_array($type, ['date', 'datetime'])) {
 			if($newJsonValue !== null) {
-				$newTypedValue = new \DateTime($newJsonValue);				
+				$newTypedValue = new \DateTime($newJsonValue);
 			}
 			if($currentTypedValue !== null) {
 				switch($type) {
@@ -494,9 +533,13 @@ class ImportStdCommand extends ContainerAwareCommand
 		
 		$different = ($currentJsonValue !== $newJsonValue);
 		if($different) {
-			print_r(gettype($currentJsonValue));
-			print_r(gettype($newJsonValue));
-			$this->output->writeln("Changing the <info>$fieldName</info> of <info>".$entity->toString()."</info> ($currentJsonValue => $newJsonValue)");
+			//print_r(gettype($currentJsonValue));
+			//print_r(gettype($newJsonValue));
+			if (is_array($currentJsonValue) || is_array($newJsonValue)){
+				$this->output->writeln("Changing the <info>$fieldName</info> of <info>".$entity->toString()."</info>");
+			} else {
+				$this->output->writeln("Changing the <info>$fieldName</info> of <info>".$entity->toString()."</info> ($currentJsonValue => $newJsonValue)");
+			}
 			$setter = 'set'.ucfirst($fieldName);
 			$entity->$setter($newTypedValue);
 		}

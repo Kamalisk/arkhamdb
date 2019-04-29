@@ -178,6 +178,11 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
     private $character;
 
     /**
+     * @var \AppBundle\Entity\Taboo
+     */
+    private $taboo;
+
+    /**
      * @var \AppBundle\Entity\Pack
      */
     private $lastPack;

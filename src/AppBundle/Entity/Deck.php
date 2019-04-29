@@ -274,6 +274,11 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
     private $character;
 
     /**
+     * @var \AppBundle\Entity\Taboo
+     */
+    private $taboo;
+
+    /**
      * @var \AppBundle\Entity\Pack
      */
     private $lastPack;

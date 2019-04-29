@@ -292,6 +292,63 @@ class ApiController extends Controller
 
 	}
 
+	/**
+	 * Get the cards for all Taboo lists 
+	 *
+	 * @ApiDoc(
+	 *  section="Taboo",
+	 *  resource=true,
+	 *  description="All the Taboo Data",
+	 *  parameters={
+	 *      {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+	 *  },
+	 * )
+	 * @param Request $request
+	 */
+	public function listTaboosAction(Request $request)
+	{
+		$locale = $request->getLocale();
+
+		$response = new Response();
+		$response->setPublic();
+		$response->setMaxAge($this->container->getParameter('cache_expiration'));
+		$response->headers->add(array(
+        'Access-Control-Allow-Origin' => '*',
+        'Content-Language' => $locale
+    ));
+
+		$jsonp = $request->query->get('jsonp');
+		
+		$list_taboos = $this->getDoctrine()->getRepository('AppBundle:Taboo')->findAll();
+
+		// check the last-modified-since header
+
+		$lastModified = NULL;
+		/* @var $card \AppBundle\Entity\Card */
+		foreach($list_taboos as $taboo) {
+			if(!$lastModified || $lastModified < $taboo->getDateUpdate()) {
+				$lastModified = $taboo->getDateUpdate();
+			}
+		}
+		$response->setLastModified($lastModified);
+		if ($response->isNotModified($request)) {
+			return $response;
+		}
+
+		$content = json_encode($list_taboos);
+		if(isset($jsonp))
+		{
+			$content = "$jsonp($content)";
+			$response->headers->set('Content-Type', 'application/javascript');
+		} else
+		{
+			$response->headers->set('Content-Type', 'application/json');
+		}
+		$response->setContent($content);
+		return $response;
+
+	}
+
 
 	/**
 	 * Get the description of all the cards as an array of JSON objects.
