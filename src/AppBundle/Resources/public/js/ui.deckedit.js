@@ -164,6 +164,28 @@ ui.build_type_selector = function build_type_selector() {
  * builds the pack selector
  * @memberOf ui
  */
+ui.build_taboo_selector = function build_taboo_selector() {
+	$('[data-filter=taboo_code]').empty();
+	
+	app.data.taboos.find({
+		active: {
+			'$eq': 1
+		}
+	}, {
+		$orderBy: {
+			id: 1
+		}
+	}).forEach(function(record) {
+		$('<option value="'+record.id+'">' + record.name + ' (' + record.date_start +')</option>').appendTo('[data-filter=taboo_code]');
+	});
+	$('<option value="">None</option>').appendTo('[data-filter=taboo_code]');
+}
+
+
+/**
+ * builds the pack selector
+ * @memberOf ui
+ */
 ui.build_pack_selector = function build_pack_selector() {
 	$('[data-filter=pack_code]').empty();
 	
@@ -266,6 +288,13 @@ ui.init_selectors = function init_selectors() {
 	}
 	$('[data-filter=subtype_code]').find('input[name=basicweakness]').prop("checked", true).parent().addClass('active');
 	$('[data-filter=xp]').find('input[name=xp0]').prop("checked", true).parent().addClass('active');
+	
+	if (app.deck.taboo_id){
+		$('[data-filter=taboo_code]').val(app.deck.taboo_id);
+	} else {
+		$('[data-filter=taboo_code]').val("");
+	}
+
 }
 
 function uncheck_all_others() {
@@ -407,6 +436,23 @@ ui.on_core_change = function on_core_change(event) {
 		ui.refresh_list();
 		ui.refresh_list2();
 	}
+}
+
+/**
+ * @memberOf ui
+ * @param event
+ */
+ui.on_taboo_change = function on_taboo_change(event) {
+	var name = $(this).attr('name');
+	var type = $(this).prop('type');
+	var value = $(this).prop('value');
+
+	//console.log(name, value);
+	//app.data.apply_taboos(value);
+	app.deck.taboo_id = parseInt(value);
+	ui.refresh_list();
+	ui.refresh_list2();
+	ui.on_deck_modified();
 }
 
 ui.toggle_suggestions = function toggle_suggestions() {
@@ -608,6 +654,7 @@ ui.setup_event_handlers = function setup_event_handlers() {
 
 	$('#config-options').on('change', 'input', ui.on_config_change);
 	$('#global_filters [data-filter=pack_code]').on('change', 'input', ui.on_core_change);
+	$('[data-filter=taboo_code]').on('change',  ui.on_taboo_change);
 	$('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 	$('#special-collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 	
@@ -1062,15 +1109,16 @@ ui.on_all_loaded = function on_all_loaded() {
 	ui.build_faction_selector();
 	ui.build_type_selector();
 	ui.build_pack_selector();
+	ui.build_taboo_selector();
 	ui.init_selectors();
 	// for now this needs to be done here
 	ui.set_max_qty();
-	ui.refresh_deck();
+	ui.refresh_deck(); // now updates the deck changes and history too
 	ui.refresh_list();
 	ui.refresh_list2();
 	ui.setup_typeahead();
 	ui.setup_dataupdate();
-	app.deck_history && app.deck_history.setup('#history');
+	
 	var investigator = app.data.cards.findById(app.deck.get_investigator_code());
 	app.suggestions.query("sugg-"+investigator.code);
 	

@@ -57,6 +57,10 @@ body {
 	font-weight : bold;
 }
 
+.taboo {
+	color : purple;
+}
+
 .table-expanded>thead>tr>th, .table-expanded>tbody>tr>th, .table-expanded>tfoot>tr>th, .table-expanded>thead>tr>td, .table-expanded>tbody>tr>td, .table-expanded>tfoot>tr>td {
 	padding: 8px 8px;
 }

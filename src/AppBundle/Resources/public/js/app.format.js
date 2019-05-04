@@ -7,11 +7,17 @@ format.traits = function traits(card) {
 	return card.traits || '';
 };
 
-format.xp = function xp(xp) {
+
+
+format.xp = function xp(xp, in_deck, css) {
 	var string = "";
 	if (xp && xp > 0)
 	{
- 		string += ' <span class="card-xp xp-'+xp+'">'+("••••••".slice(-xp))+"</span>";
+ 		string += ' <span class="card-xp xp-'+xp+'';
+ 		if (css){
+ 			string += ' '+css;
+ 		}
+ 		string += '">'+("••••••".slice(-xp))+"</span>";
 	}
 	return string;
 };
@@ -152,8 +158,11 @@ format.info = function info(card) {
 /**
  * @memberOf format
  */
-format.text = function text(card) {
+format.text = function text(card, alternate) {
 	var text = card.text || '';
+	if (alternate){
+		text = card[alternate];
+	}
 	text = text.replace(/\[\[([^\]]+)\]\]/g, '<b><i>$1</i></b>');
 	text = text.replace(/\[(\w+)\]/g, '<span title="$1" class="icon-$1"></span>');
 	text = text.split("\n").join('</p><p>');

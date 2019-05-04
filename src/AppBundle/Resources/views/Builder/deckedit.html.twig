@@ -45,13 +45,19 @@
 	<input type="hidden" name="xp_spent">
 	<input type="hidden" name="faction_code" value="{{ deck.character.code }}">
 	<input type="hidden" name="tags">
-		<div class="form-group">
-			<label for="name">Name</label>
-			<input type="text" class="form-control decklist-name" name="name" value="{{ deck.name }}">
-		</div>
-	<button type="submit" class="btn btn-success">Save</button>
-{#	<button type="submit" id="btn-save-as-copy" class="btn btn-default">Save as Copy</button> #}
-	<button type="submit" id="btn-cancel-edits" class="btn btn-link">Cancel edits</button>
+	<div class="form-group">
+		<label for="name">Name</label>
+		<input type="text" class="form-control decklist-name" name="name" value="{{ deck.name }}">
+	</div>
+	<div class="form-group">
+		<label for="taboo">Taboo List</label>
+		<select class="form-control" name="taboo" data-filter="taboo_code"></select>
+	</div>
+	<div class="form-group">
+		<button type="submit" class="btn btn-success">Save</button>
+		{#<button type="submit" id="btn-save-as-copy" class="btn btn-default">Save as Copy</button>#}
+		<button type="submit" id="btn-cancel-edits" class="btn btn-link">Cancel edits</button>
+	</div>
 </form>
 
 </div>

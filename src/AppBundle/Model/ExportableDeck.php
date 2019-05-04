@@ -36,7 +36,7 @@ class ExportableDeck
 		} else {
 			$tags = null;
 		}
-		
+
 		$array = [
 			'id' => $this->getId(),
 			'name' => $this->getName(),
@@ -52,6 +52,7 @@ class ExportableDeck
 			'xp' => $xp,
 			'xp_adjustment' => $xp_adjustment,
 			'exile_string' => $this->getExiles(),
+			'taboo_id' => $this->getTaboo() ? $this->getTaboo()->getId() : null,
 			'tags' => $tags,
 			'previous_deck' => $previousDeck,
 			'next_deck' => $nextDeck

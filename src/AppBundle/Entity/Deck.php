@@ -606,6 +606,29 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
         return $this->user;
     }
 
+    /**
+     * Set user
+     *
+     * @param \AppBundle\Entity\Taboo $taboo
+     *
+     * @return Deck
+     */
+    public function setTaboo(\AppBundle\Entity\Taboo $taboo = null)
+    {
+        $this->taboo = $taboo;
+
+        return $this;
+    }
+
+    /**
+     * Get Taboo
+     *
+     * @return \AppBundle\Entity\Taboo
+     */
+    public function getTaboo()
+    {
+        return $this->taboo;
+    }
 
     /**
      * Set usercampaign

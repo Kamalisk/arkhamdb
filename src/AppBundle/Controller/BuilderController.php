@@ -163,6 +163,8 @@ class BuilderController extends Controller
 			$name = sprintf("The %s Job", $investigator->getName());
 		} else if ($investigator->getFaction()->getCode() == "survivor"){
 			$name = sprintf("%s on the Road", $investigator->getName());
+		} else {
+			$name = sprintf("%s is the best investigator", $investigator->getName());
 		}
 
 
@@ -434,6 +436,7 @@ class BuilderController extends Controller
 				'name' => $deck->getName().' (clone)',
 				'faction_code' => $deck->getCharacter()->getCode(),
 				'tags' => $deck->getTags(),
+				'taboo' => $deck->getTaboo(),
 				'content' => json_encode($content),
 				'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null
 			)
@@ -506,6 +509,7 @@ class BuilderController extends Controller
 			'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null,
 			'xp' => $xp,
 			'previous_deck' => $deck,
+			'taboo' => $deck->getTaboo(),
 			'upgrades' => $deck->getUpgrades(),
 			'exiles_string' => implode(",",$filtered_exiles),
 			'exiles' => $filtered_exile_cards
@@ -576,9 +580,16 @@ class BuilderController extends Controller
 		$xp_adjustment = filter_var($request->get('xp_adjustment', 0), FILTER_SANITIZE_NUMBER_INT);
 		$description = trim($request->get('description'));
 		$tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-
+		$taboo = filter_var($request->get('taboo', 0), FILTER_SANITIZE_NUMBER_INT);
+		if ($taboo){
+			$taboo = $em->getRepository('AppBundle:Taboo')->find($taboo);
+		}
+		if (!$taboo){
+			$taboo = null;
+		}
 		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $content, $source_deck ? $source_deck : null, $problem, $ignored);
-
+		
+		$deck->setTaboo($taboo);
 		if ($request->get('exiles') && $request->get('exiles_string')){
 			$deck->setExiles($request->get('exiles_string'));
 		}

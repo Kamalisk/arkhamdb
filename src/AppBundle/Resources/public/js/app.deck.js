@@ -15,6 +15,7 @@ var date_creation,
 	investigator,
 	unsaved,
 	user_id,
+	taboo_id, 
 	sort_type = "default",
 	sort_dir = 1,
 	problem_list = [],
@@ -32,6 +33,7 @@ var date_creation,
 	card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> icon-<%= card.faction_code %>"></span><% if (typeof(card.faction2_code) !== "undefined") { %><span class="icon icon-<%= card.faction2_code %>"></span> <% } %> <a href="<%= card.url %>" class="card card-tip fg-<%= card.faction_code %> <% if (typeof(card.faction2_code) !== "undefined") { %> fg-dual <% } %>" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a>'),
 	layouts = {},
 	layout_data = {};
+	
 
 /*
  * Templates for the different deck layouts, see deck.get_layout_data
@@ -59,6 +61,7 @@ deck.init = function init(data) {
 	unsaved = data.unsaved;
 	user_id = data.user_id;
 	exile_string = data.exile_string;
+	taboo_id = null;
 	if (exile_string){
 		exiles = exile_string.split(",");
 	}
@@ -86,6 +89,10 @@ deck.init = function init(data) {
 deck.onloaded = function(data){
 	deck.set_slots(data.slots, data.ignoreDeckLimitSlots);
 	investigator = app.data.cards.findById(investigator_code);
+	if (data.taboo_id){
+		deck.taboo_id = data.taboo_id;
+	}
+
 	if (app.user.data && app.user.data.owned_packs) {
 		var packs = app.user.data.owned_packs.split(',');
 		_.forEach(packs, function(str) {
@@ -327,8 +334,8 @@ deck.get_real_draw_deck_size = function get_real_draw_deck_size(sort) {
 deck.get_xp_usage = function get_xp_usage(sort) {
 	var xp = 0;
 	deck.get_real_draw_deck().forEach(function (card) {
-		if (card && card.xp && card.ignore < card.indeck) {
-			xp += card.xp * (card.indeck - card.ignore) * (card.exceptional ? 2: 1);
+		if (card && (card.xp || card.taboo_xp) && card.ignore < card.indeck) {
+			xp += (card.xp + (card.taboo_xp ? card.taboo_xp : 0)) * (card.indeck - card.ignore) * (card.exceptional ? 2: 1);
 		}
 	});
 	return xp;
@@ -399,7 +406,8 @@ deck.change_sort = function(sort_type){
 deck.display = function display(container, options) {
 	// XXX fetch the selected sort here
 	// default is 2 it seems
-
+	// before displaying a deck, apply the currently active taboo list
+	app.data.apply_taboos(deck.taboo_id);
 	options = _.extend({sort: 'type', cols: 2}, options);
 
 	var deck_content = deck.get_layout_data(options);
@@ -409,6 +417,10 @@ deck.display = function display(container, options) {
 		.empty();
 
 	$(container).append(deck_content);
+	if (app.deck_history){
+		app.deck_history.setup('#history');
+	} 
+
 }
 
 deck.get_layout_data = function get_layout_data(options) {
@@ -464,6 +476,10 @@ deck.get_layout_data = function get_layout_data(options) {
 	if(deck.get_tags && deck.get_tags() ) {
 		deck.update_layout_section(data, 'meta', $('<div>'+deck.get_tags().replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})+'</div>'));
 	}
+	if(deck.taboo_id && app.data.taboos.findOne({'id':deck.taboo_id})) {
+		var taboo = app.data.taboos.findOne({'id':deck.taboo_id});
+		deck.update_layout_section(data, 'meta', $('<div>'+taboo.name+' ('+taboo.date_start+')</div>'));
+	}
 	if(problem) {
 		if (deck.problem_list && deck.problem_list.length > 0){
 			deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> '+deck.problem_list.join(', ')+'</div>'));
@@ -509,7 +525,7 @@ deck.get_layout_data = function get_layout_data(options) {
 		layout_template = 2;
 		deck.update_layout_section(data, 'assets', deck.get_layout_data_one_section({'type_code':'asset', permanent: false}, 'type_name'));
 		
-		if (investigator_name == "Joe Diamond") {			
+		if (investigator_name == "Joe Diamond") {
 			deck.update_layout_section(data, 'events', deck.get_layout_data_one_section({'type_code': 'event', '$not': {'traits':/Insight./}, permanent: false }, 'type_name'));
 			deck.update_layout_section(data, 'hunches', deck.get_layout_data_one_section({'type_code': 'event', 'traits':/Insight./, permanent: false}, 'hunches'));
 		} else {
@@ -564,30 +580,6 @@ deck.get_layout_section = function(sort, group, filter){
 	return section;
 }
 
-deck.create_card_group = function(cards, context){
-	var section = $('<div>');
-	cards.forEach(function (card) {
-		var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
-			
-		$div.append($(card_line_tpl({card:card})));
-		$div.prepend(card.indeck+'x ');
-		if(card.xp && card.xp > 0) {
-			$div.append(app.format.xp(card.xp));
-		}
-		
-		if (context && context == "number"){
-			$div.append(" | "+card.pack_name+" #"+card.position);
-		}
-
-		// add special random selection button for the random basic weakness item
-		if (card.name == "Random Basic Weakness" && $("#special-collection").length > 0 ){
-			$div.append(' <a class="fa fa-random" title="Replace with randomly selected weakness from currently selected packs" data-random="'+card.code+'"> <span ></span></a> ');
-		}
-		$div.appendTo(section);
-	});
-	return section;
-}
-
 
 deck.update_layout_section = function update_layout_section(data, section, element) {
 	data[section] = data[section] + element[0].outerHTML;
@@ -621,23 +613,8 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(query, d
 			};
 			
 			cards.forEach(function (card) {
-				var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
-				//if (card.slot){
-				//	$div.append($(card_line_tpl({card:card})+' <span class="small slot-header">'+card.slot+'</span>'));
-				//}else {
+				var $div = deck.create_card(card);
 
-				$div.append($(card_line_tpl({card:card})));
-				//}
-				$div.prepend(card.indeck+'x ');
-				if(card.xp && card.xp > 0) {
-					$div.append(app.format.xp(card.xp, card.indeck));
-				}
-				if(card.xp === undefined) {
-					$div.append(' <span class="fa fa-star" title="Does not count towards deck size"></span>');
-				}
-				if(card.ignore) {
-					$div.append(' <span class="fa fa-star" style="color:green;" title="'+card.ignore+' of these do not count towards deck size"></span>');
-				}
 
 				if (card.slot && slots[card.slot]){
 					slots[card.slot].push($div);
@@ -660,37 +637,60 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(query, d
 				$(header_tpl({code: name, name: name, quantity: deck.get_nb_cards(cards)})).appendTo(section);
 			}
 			cards.forEach(function (card) {
-				var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
-
-
-				$div.append($(card_line_tpl({card:card})));
-				
-				$div.prepend(card.indeck+'x ');
-				if(card.xp && card.xp > 0) {
-					$div.append(app.format.xp(card.xp, card.indeck));
-				}
-				if(card.xp === undefined) {
-					$div.append(' <span class="fa fa-star" title="Does not count towards deck size"></span>');
-				}
-				if(card.ignore) {
-					$div.append(' <span class="fa fa-star" style="color:green;" title="'+card.ignore+' of these do not count towards deck size"></span>');
-				}
-				
-				if (!no_collection){
-					var pack = app.data.packs.findById(card.pack_code);
-					if (!collection[pack.id]) {
-						$div.append(' <span class="fa fa-question" title="This card is not part of your collection"></span>');
-					}
-				}
-				
-				if (card.name == "Random Basic Weakness" && $("#special-collection").length > 0 ){
-					$div.append(' <a class="fa fa-random" title="Replace with randomly selected weakness from currently selected packs" data-random="'+card.code+'"> <span ></span></a> ');
-				}
-				$div.appendTo(section);
+				var div = deck.create_card(card);
+				div.appendTo(section);
 			});
 		}
 	}
 	return section;
+}
+
+
+deck.create_card_group = function(cards, context){
+	var section = $('<div>');
+	cards.forEach(function (card) {
+		var $div = deck.create_card(card);
+		$div.appendTo(section);
+	});
+	return section;
+}
+
+deck.create_card = function create_card(card){
+	var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
+
+	$div.append($(card_line_tpl({card:card})));
+	
+	$div.prepend(card.indeck+'x ');
+	if(card.xp && card.xp > 0) {
+		$div.append(app.format.xp(card.xp, card.indeck));
+	}
+	if(card.taboo_xp && card.taboo_xp > 0) {
+		$div.append(app.format.xp(card.taboo_xp, card.indeck, "taboo"));
+	}
+	if(card.xp === undefined) {
+		$div.append(' <span class="fa fa-star" title="Does not count towards deck size"></span>');
+	}
+	if(card.ignore) {
+		$div.append(' <span class="fa fa-star" style="color:green;" title="'+card.ignore+' of these do not count towards deck size"></span>');
+	}
+	if(card.taboo === true) {
+		$div.append(' <span class="icon-tablet" style="color:purple;" title="Is mutated by the current taboo list"></span>');
+	}
+	if(card.exceptional === true) {
+		$div.append(' <span class="icon-eldersign" style="color:orange;" title="Is mutated by the current taboo list"></span>');
+	}
+	
+	if (!no_collection){
+		var pack = app.data.packs.findById(card.pack_code);
+		if (!collection[pack.id]) {
+			$div.append(' <span class="fa fa-question" title="This card is not part of your collection"></span>');
+		}
+	}
+	
+	if (card.name == "Random Basic Weakness" && $("#special-collection").length > 0 ){
+		$div.append(' <a class="fa fa-random" title="Replace with randomly selected weakness from currently selected packs" data-random="'+card.code+'"> <span ></span></a> ');
+	}
+	return $div;
 }
 
 /**
@@ -947,7 +947,7 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 			}
 			
 			if (option.type){
-				// needs to match at least one faction				
+				// needs to match at least one faction
 				var type_valid = false;
 				for(var j = 0; j < option.type.length; j++){
 					var type = option.type[j];
