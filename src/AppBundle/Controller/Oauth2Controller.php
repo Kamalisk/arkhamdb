@@ -100,6 +100,7 @@ class Oauth2Controller extends Controller
 	 *  parameters={
 	 *      {"name"="investigator", "dataType"="string", "required"=true, "description"="Code of the investigator card."},
 	 *      {"name"="name", "dataType"="string", "required"=false, "description"="Name of the Deck. A default name will be generated if it is not specified."},
+	 *      {"name"="taboo", "dataType"="integer", "required"=false, "description"="Taboo set that this deck conforms to."},
 	 *  },
 	 * )
 	 * @param Request $request
@@ -177,6 +178,13 @@ class Oauth2Controller extends Controller
 				$name = sprintf("%s on the Road", $investigator->getName());
 			}
 		}
+		$taboo = filter_var($request->get('taboo', 0), FILTER_SANITIZE_NUMBER_INT);
+		if ($taboo){
+			$taboo = $em->getRepository('AppBundle:Taboo')->find($taboo);
+		}
+		if (!$taboo){
+			$taboo = null;
+		}
 
 		$deck = new Deck();
 		// Make most of these fields empty by default, they can be set later.
@@ -184,6 +192,7 @@ class Oauth2Controller extends Controller
 		$deck->setCharacter($investigator);
 		$deck->setLastPack($pack);
 		$deck->setName($name);
+		$deck->setTaboo($taboo);
 		$deck->setProblem('too_few_cards');
 		$deck->setTags(join(' ', array_unique($tags)));
 		$deck->setUser($this->getUser());
@@ -335,7 +344,7 @@ class Oauth2Controller extends Controller
 			$deck->getTags(),
 			$slots,
 			null, // no source deck, we want it to be new.
-			$deck->getProblem(), 
+			$deck->getProblem(),
 			$ignored
 		);
 
@@ -388,6 +397,7 @@ class Oauth2Controller extends Controller
 	 *      {"name"="tags", "dataType"="string", "required"=false, "description"="Space-separated list of tags"},
 	 *      {"name"="slots", "dataType"="string", "required"=true, "description"="Content of the Decklist as a JSON object"},
 	 *      {"name"="problem", "dataType"="string", "required"=true, "description"="A short code description of the problem with the provided slots, if one exists. Must be one of: too_few_cards,too_many_cards,too_many_copies,invalid_cards,deck_options_limit,investigator"},
+	 *      {"name"="taboo", "dataType"="integer", "required"=false, "description"="Taboo set this deck conforms to"},
 	 *  },
 	 * )
 	 * @param Request $request
@@ -446,7 +456,7 @@ class Oauth2Controller extends Controller
 				]);
 			}
 		}
-		
+
 		$ignored = false;
 		if ($request->get('ignored')){
 			$ignored_array = (array) json_decode($request->get('ignored'));
@@ -462,7 +472,7 @@ class Oauth2Controller extends Controller
 				}
 			}
 		}
-		
+
 		// We expect all requests to include problem.
 		$problem = filter_var($request->get('problem'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if (!empty($problem) && !in_array($problem, [
@@ -477,6 +487,15 @@ class Oauth2Controller extends Controller
 					'msg' => "Invalid problem"
 			]);
 		}
+
+		$taboo = filter_var($request->get('taboo', 0), FILTER_SANITIZE_NUMBER_INT);
+		if ($taboo){
+			$taboo = $em->getRepository('AppBundle:Taboo')->find($taboo);
+		}
+		if (!$taboo){
+			$taboo = null;
+		}
+
 		$name = filter_var($request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(!$name) {
 			if ($deck->getName()) {
@@ -509,6 +528,8 @@ class Oauth2Controller extends Controller
 
 		// Save the deck.
 		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $slots, $deck , $problem, $ignored);
+
+		$deck->setTaboo($taboo);
 
 		// xp_spent is only read/set if there was a previousDeck.
 		if ($deck->getPreviousDeck()) {
