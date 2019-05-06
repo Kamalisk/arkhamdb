@@ -428,16 +428,21 @@ class BuilderController extends Controller
 		}
 
 		$content = [];
+		$ignored = [];
 		foreach ($deck->getSlots() as $slot) {
 			$content[$slot->getCard()->getCode()] = $slot->getQuantity();
+			if ($slot->getIgnoreDeckLimit()){
+				$ignored[$slot->getCard()->getCode()] = $slot->getIgnoreDeckLimit();
+			}
 		}
 		return $this->forward('AppBundle:Builder:save',
 			array(
 				'name' => $deck->getName().' (clone)',
 				'faction_code' => $deck->getCharacter()->getCode(),
 				'tags' => $deck->getTags(),
-				'taboo' => $deck->getTaboo(),
+				'taboo' => $deck->getTaboo() ? $deck->getTaboo()->getId() : "",
 				'content' => json_encode($content),
+				'ignored' => json_encode($ignored),
 				'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null
 			)
 		);
@@ -509,7 +514,7 @@ class BuilderController extends Controller
 			'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null,
 			'xp' => $xp,
 			'previous_deck' => $deck,
-			'taboo' => $deck->getTaboo(),
+			'taboo' => $deck->getTaboo() ? $deck->getTaboo()->getId() : "",
 			'upgrades' => $deck->getUpgrades(),
 			'exiles_string' => implode(",",$filtered_exiles),
 			'exiles' => $filtered_exile_cards
@@ -883,10 +888,10 @@ class BuilderController extends Controller
 				'faction_code' => $decklist->getCharacter()->getCode(),
 				'content' => json_encode($content),
 				'ignored' => json_encode($ignored),
-				'decklist_id' => $decklist_id
+				'decklist_id' => $decklist_id,
+				'taboo' => $decklist->getTaboo() ? $decklist->getTaboo()->getId() : ""
 			)
 		);
-
 	}
 
 	public function downloadallAction()

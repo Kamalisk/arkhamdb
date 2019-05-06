@@ -198,8 +198,8 @@ class SocialController extends Controller
 		$em->flush();
 
 		return $this->redirect($this->generateUrl('decklist_detail', array(
-		'decklist_id' => $decklist->getId(),
-		'decklist_name' => $decklist->getNameCanonical()
+			'decklist_id' => $decklist->getId(),
+			'decklist_name' => $decklist->getNameCanonical()
 		)));
 	}
 
