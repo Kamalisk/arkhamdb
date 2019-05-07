@@ -677,7 +677,7 @@ deck.create_card = function create_card(card){
 		$div.append(' <span class="icon-tablet" style="color:purple;" title="Is mutated by the current taboo list"></span>');
 	}
 	if(card.exceptional === true) {
-		$div.append(' <span class="icon-eldersign" style="color:orange;" title="Is mutated by the current taboo list"></span>');
+		$div.append(' <span class="icon-eldersign" style="color:orange;" title="Exceptional. Double xp cost and limit one per deck."></span>');
 	}
 	
 	if (!no_collection){
