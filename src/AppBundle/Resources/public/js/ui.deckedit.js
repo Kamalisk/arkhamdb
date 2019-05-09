@@ -144,15 +144,16 @@ ui.build_type_selector = function build_type_selector() {
 	});
 	$('[data-filter=type_code]').button();
 	
+
 	var label = $('<label class="btn btn-default btn-sm" data-code="'
-			+ "xp" + '" title="'+"0 XP"+'"><input type="checkbox" name="' + "xp0"
-			+ '"><span class="icon-' + "xp" + '"></span>' + "0 XP" + '</label>');
+			+ "xp" + '" title="'+"Level 0"+'"><input type="checkbox" name="' + "xp0"
+			+ '"><span class="icon-' + "xp" + '"></span>' + "Level 0" + '</label>');
 	label.tooltip({container: 'body'});
 	$('[data-filter=xp]').append(label);
 	
 	var label = $('<label class="btn btn-default btn-sm" data-code="'
-			+ "xp" + '" title="'+"1-5 XP"+'"><input type="checkbox" name="' + "xp15"
-			+ '"><span class="icon-' + "xp" + '"></span>' + "1-5 XP" + '</label>');
+			+ "xp" + '" title="'+"Level 1-5"+'"><input type="checkbox" name="' + "xp15"
+			+ '"><span class="icon-' + "xp" + '"></span>' + "Level 1-5" + '</label>');
 	label.tooltip({container: 'body'});
 	$('[data-filter=xp]').append(label);
 	
@@ -282,9 +283,7 @@ ui.init_selectors = function init_selectors() {
 	var investigator = app.data.cards.findById(app.deck.get_investigator_code());
 	//console.log(investigator);
 	if (investigator.faction_code){		
-		//$.each(investigator.deck_options.faction, function(key, value){
-			$('[data-filter=faction_code]').find('input[name='+investigator.faction_code+']').prop("checked", true).parent().addClass('active');
-		//})
+		$('[data-filter=faction_code]').find('input[name='+investigator.faction_code+']').prop("checked", true).parent().addClass('active');
 	}
 	$('[data-filter=subtype_code]').find('input[name=basicweakness]').prop("checked", true).parent().addClass('active');
 	$('[data-filter=xp]').find('input[name=xp0]').prop("checked", true).parent().addClass('active');
@@ -401,17 +400,14 @@ ui.on_config_change = function on_config_change(event) {
 		break;
 		case 'display-column':
 		ui.update_list_template();
-		ui.refresh_list();
-		ui.refresh_list2();
+		ui.refresh_lists();
 		break;
 		case 'show-suggestions':
 		ui.toggle_suggestions();
-		ui.refresh_list();
-		ui.refresh_list2();
+		ui.refresh_lists();
 		break;
 		default:
-		ui.refresh_list();
-		ui.refresh_list2();
+		ui.refresh_lists();
 	}
 }
 
@@ -433,8 +429,7 @@ ui.on_core_change = function on_core_change(event) {
 		ui.reset_list();
 		break;
 		default:
-		ui.refresh_list();
-		ui.refresh_list2();
+		ui.refresh_lists();
 	}
 }
 
@@ -450,8 +445,7 @@ ui.on_taboo_change = function on_taboo_change(event) {
 	//console.log(name, value);
 	//app.data.apply_taboos(value);
 	app.deck.taboo_id = parseInt(value);
-	ui.refresh_list();
-	ui.refresh_list2();
+	ui.refresh_lists();
 	ui.on_deck_modified();
 }
 
@@ -595,8 +589,7 @@ ui.on_quantity_change = function on_quantity_change(card_code, quantity) {
 	ui.refresh_deck();
 	app.suggestions.compute();
 	if(update_all) {
-		ui.refresh_list();
-		ui.refresh_list2();
+		ui.refresh_lists();
 	}
 	else {
 		ui.refresh_row(card_code, quantity);
@@ -824,7 +817,11 @@ ui.update_list_template = function update_list_template() {
 		DisplayColumnsTpl = _.template(
 			'<tr>'
 				+ '<td><div class="btn-group" data-toggle="buttons"><%= radios %></div></td>'
-				+ '<td><a class="card card-tip fg-<%= card.faction_code %> <% if (typeof(card.faction2_code) !== "undefined") { %> fg-dual <% } %>" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></td>'
+				+ '<td><a class="card card-tip fg-<%= card.faction_code %> <% if (typeof(card.faction2_code) !== "undefined") { %> fg-dual <% } %>" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal">'
+				+ '<%= card.name %></a>'
+				+ '<% if (card.taboo) { %> <span class="icon-tablet" style="color:purple;" title="Is mutated by the current taboo list"></span> <% } %>'
+				+ '<% if (card.exceptional) { %> <span class="icon-eldersign" style="color:orange;" title="Exceptional. Double xp cost and limit one per deck."></span> <% } %>'
+				+ '</td>'
 				+ '<td class="xp"><%= card.xp %></td>'
 				+ '<td class="cost"><%= card.cost %></td>'
 				+ '<td class="type" style="text-align : left;"><span class="" title="<%= card.type_name %>"><%= card.type_name %></span> <% if (card.slot) { %> - <%= card.slot %> <% } %></td>'
@@ -889,6 +886,11 @@ ui.build_row = function build_row(card) {
 
 ui.reset_list = function reset_list() {
 	CardDivs = [[],[],[]];
+	ui.refresh_lists();
+}
+
+
+ui.refresh_lists = function refresh_lists() {
 	ui.refresh_list();
 	ui.refresh_list2();
 }
@@ -1010,8 +1012,7 @@ ui.refresh_list2 = _.debounce(function refresh_list2() {
  */
 ui.on_deck_modified = function on_deck_modified() {	
 	ui.refresh_deck();
-	ui.refresh_list();
-	ui.refresh_list2();
+	ui.refresh_lists();
 	//app.suggestions && app.suggestions.compute();
 	//app.deck_history.all_changes();
 }
@@ -1114,8 +1115,7 @@ ui.on_all_loaded = function on_all_loaded() {
 	// for now this needs to be done here
 	ui.set_max_qty();
 	ui.refresh_deck(); // now updates the deck changes and history too
-	ui.refresh_list();
-	ui.refresh_list2();
+	ui.refresh_lists(); // update the card selection lists
 	ui.setup_typeahead();
 	ui.setup_dataupdate();
 	
