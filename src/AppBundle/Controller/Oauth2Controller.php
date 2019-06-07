@@ -347,7 +347,9 @@ class Oauth2Controller extends Controller
 			$deck->getProblem(),
 			$ignored
 		);
-
+		if ($deck->getTaboo()) {
+			$newDeck->setTaboo($deck->getTaboo());
+		}
 		if ($filtered_exiles) {
 			// Set exiled cards if there were any sent in the request.
 			$newDeck->setExiles(implode(",",$filtered_exiles));
