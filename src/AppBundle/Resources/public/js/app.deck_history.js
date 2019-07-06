@@ -130,7 +130,7 @@ deck_history.all_changes = function all_changes() {
 		if (addition.card.taboo_xp){
 			addition_xp += addition.card.taboo_xp;
 		}
-		if (addition_xp){			
+		if (addition_xp >= 0){
 			if (addition.card.xp === 0 && removed_0_cards > 0 && free_0_cards > 0){
 				free_0_cards -= addition.qty;
 				removed_0_cards -= addition.qty;
