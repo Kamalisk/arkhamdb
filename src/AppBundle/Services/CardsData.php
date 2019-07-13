@@ -214,6 +214,72 @@ class CardsData
 
 			switch($searchType)
 			{
+				case 'special':{
+					// for now this is just parsing the investigator special requirements and then making it a query magically somehow
+					$card_code = $condition[0];
+					$card = $this->doctrine->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
+					if ($card && $card->getDeckOptions()){
+						$where = [];
+						// parse the json options
+						$json_options = json_decode($card->getDeckOptions());
+						$nots = [];
+						foreach ($json_options as $option){
+							$sub_where = [];
+							if (isset($option->faction)){
+								$sub_where[] = " f.code IN ('".implode("','",$option->faction)."')";
+							}
+							if (isset($option->type)){
+								$sub_where[] = " t.code IN ('".implode("','",$option->type)."')";
+							}
+							if (isset($option->trait)){
+								// for traits it is string match
+								$trait_or = [];
+								foreach($option->trait as $trait){
+									$trait_or[] = " c.traits LIKE '%".$trait.".%' ";
+								}
+								$sub_where[] = " ( ".implode(" OR ", $trait_or). " ) ";
+							}
+							if (isset($option->uses)){
+								// basically a string match mother f***
+								$uses_or = [];
+								foreach($option->uses as $use){
+									$uses_or[] = " c.realText LIKE '%".$use.").%' ";
+								}
+								$sub_where[] = " ( ".implode(" OR ", $uses_or)." ) ";
+							}
+							if (isset($option->text)){
+								// basically a string match mother f***
+								$text_or = [];
+								foreach($option->text as $text){
+									//$text_or[] = " REGEXP(c.realText, '".$text."') = true ";
+								}
+								//$sub_where[] = " ( ".implode(" OR ", $text_or)." ) ";
+								$sub_where[] = " true = false  ";
+							}
+							if (isset($option->level)){
+								if (isset($option->level->min)){
+									$sub_where[] = " c.xp >= ".$option->level->min." ";
+								}
+								if (isset($option->level->max)){
+									$sub_where[] = " c.xp <= ".$option->level->max." ";
+								}
+							}
+							if (isset($option->not)){
+								$nots[] = " NOT (  ".implode(" AND ", $sub_where). " ) ";
+								$sub_where[] = " true = false  ";
+								continue;
+							}
+							$where[] = implode(" AND ", $sub_where);
+						}
+						$where_string = "(".implode(" OR ", $where).") AND c.encounter IS NULL";
+						if (count($nots) > 0){
+							$where_string .= " AND ".implode(" AND ", $nots);
+						}
+						$qb->andWhere($where_string);
+						$i++;
+					}
+					break;
+				}
 				case 'boolean':
 				{
 					switch($searchCode)
@@ -695,7 +761,7 @@ class CardsData
 
     public function get_reviews($card)
     {
-        $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(array('card' => $card, 'faq' => false), array('nbVotes' => 'DESC'));
+        $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(array('card' => $card, 'faq' => false, 'question' => false), array('nbVotes' => 'DESC'));
 
         $response = $reviews;
 
@@ -710,7 +776,16 @@ class CardsData
 
         return $response;
     }
-    
+
+    public function get_questions($card)
+    {
+        $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(array('card' => $card, 'question' => true), array('nbVotes' => 'DESC'));
+
+        $response = $reviews;
+
+        return $response;
+    }
+
     public function get_related($card)
     {
         $cards = $this->doctrine->getRepository('AppBundle:Card')->findBy(array('realName' => $card->getRealName()), array('position' => 'ASC'));
