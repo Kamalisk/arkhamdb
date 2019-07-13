@@ -204,7 +204,7 @@ class CardsData
 		}
 		$qb->andWhere("c.hidden is null or c.hidden = false");
 
-		
+		$cheat = false;
 		foreach($conditions as $condition)
 		{
 			$searchCode = array_shift($condition);
@@ -276,7 +276,7 @@ class CardsData
 							$where_string .= " AND ".implode(" AND ", $nots);
 						}
 						$qb->andWhere($where_string);
-						$i++;
+						$cheat = true;
 					}
 					break;
 				}
@@ -515,7 +515,7 @@ class CardsData
 			}
 		}
 
-		if(!$i && !$forceempty) {
+		if(!$i && !$forceempty && !$cheat) {
 			return;
 		}
 		switch($sortorder) {
