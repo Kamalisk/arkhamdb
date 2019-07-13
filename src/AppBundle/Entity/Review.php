@@ -72,6 +72,11 @@ class Review implements \JsonSerializable
     private $faq;
 
     /**
+     * @var boolean
+     */
+    private $question;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -232,6 +237,30 @@ class Review implements \JsonSerializable
     public function getFaq()
     {
         return $this->faq;
+    }
+
+    /**
+     * Set question
+     *
+     * @param boolean $question
+     *
+     * @return Review
+     */
+    public function setQuestion($question)
+    {
+        $this->question = $question;
+
+        return $this;
+    }
+
+    /**
+     * Get question
+     *
+     * @return integer
+     */
+    public function getQuestion()
+    {
+        return $this->question;
     }
 
     /**
