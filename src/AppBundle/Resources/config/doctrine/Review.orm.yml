@@ -68,3 +68,9 @@ AppBundle\Entity\Review:
             type: boolean
             nullable: false
             column: is_faq
+        question:
+            type: boolean
+            nullable: false
+            column: is_question
+            options:
+                default: false
