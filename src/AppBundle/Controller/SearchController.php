@@ -42,7 +42,8 @@ class SearchController extends Controller
 			'ed' => 'enemyDamage',
 			'eh' => 'enemyHorror',
 			'ef' => 'enemyFight',
-			'ee' => 'enemyEvade'
+			'ee' => 'enemyEvade',
+			'do' => 'options'
 	);
 
 	public static $searchTypes = array(
@@ -77,7 +78,8 @@ class SearchController extends Controller
 			'ed' => 'integer',
 			'eh' => 'integer',
 			'ee' => 'integer',
-			'ee' => 'integer'
+			'ee' => 'integer',
+			'do' => 'special'
 	);
 
 	public function formAction()
@@ -418,6 +420,7 @@ class SearchController extends Controller
 				if($includeReviews) {
 				    $cardinfo['reviews'] = $this->get('cards_data')->get_reviews($card);
 				    $cardinfo['faqs'] = $this->get('cards_data')->get_faqs($card);
+				    $cardinfo['questions'] = $this->get('cards_data')->get_questions($card);
 				    $cardinfo['related'] = $this->get('cards_data')->get_related($card);
 				}
 				$cards[] = $cardinfo;
