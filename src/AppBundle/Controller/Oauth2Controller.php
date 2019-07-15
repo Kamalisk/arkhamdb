@@ -101,6 +101,7 @@ class Oauth2Controller extends Controller
 	 *      {"name"="investigator", "dataType"="string", "required"=true, "description"="Code of the investigator card."},
 	 *      {"name"="name", "dataType"="string", "required"=false, "description"="Name of the Deck. A default name will be generated if it is not specified."},
 	 *      {"name"="taboo", "dataType"="integer", "required"=false, "description"="Taboo set that this deck conforms to."},
+	 *      {"name"="meta", "dataType"="string", "required"=false, "description"="JSON formatted meta data"},
 	 *  },
 	 * )
 	 * @param Request $request
@@ -254,6 +255,7 @@ class Oauth2Controller extends Controller
 	 *  parameters={
 	 *      {"name"="xp", "dataType"="integer", "required"=true, "description"="Number of XP earned to apply to the upgrade"},
 	 *      {"name"="exiles", "dataType"="string", "required"=false, "description"="Optional comma separated list of card codes to 'exile'. All passed codes must be present in the existing deck and must be exilable cards."},
+	 *      {"name"="meta", "dataType"="string", "required"=false, "description"="JSON formatted meta data"},
 	 *  },
 	 * )
 	 * @param Request $request
@@ -288,6 +290,19 @@ class Oauth2Controller extends Controller
 			]);
 		}
 
+		$meta = filter_var($request->get('meta', ""), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		$meta_json = "";
+		if ($meta){
+			// if meta is set, we only allow valid json
+			try {
+				$meta_json = json_decode($meta);
+			} catch (Exception $e){
+				$meta_json = "";
+			}
+			if (!$meta_json){
+				$meta_json = "";
+			}
+		}
 
 		$slots = [];
 		$ignored = [];
@@ -366,6 +381,11 @@ class Oauth2Controller extends Controller
 			$deck->getProblem(),
 			$ignored
 		);
+		if ($meta_json){
+			$newDeck->setMeta($meta);
+		} else {
+			$newDeck->setMeta($deck->getMeta())
+		}
 		if ($deck->getTaboo()) {
 			$newDeck->setTaboo($deck->getTaboo());
 		}
@@ -419,7 +439,8 @@ class Oauth2Controller extends Controller
 	 *      {"name"="slots", "dataType"="string", "required"=true, "description"="Content of the Decklist as a JSON object"},
 	 *      {"name"="problem", "dataType"="string", "required"=true, "description"="A short code description of the problem with the provided slots, if one exists. Must be one of: too_few_cards,too_many_cards,too_many_copies,invalid_cards,deck_options_limit,investigator"},
 	 *      {"name"="taboo", "dataType"="integer", "required"=false, "description"="Taboo set this deck conforms to"},
-	 *  },
+	 *      {"name"="meta", "dataType"="string", "required"=false, "description"="JSON formatted meta data"},
+   *  },
 	 * )
 	 * @param Request $request
 	 */
@@ -458,6 +479,20 @@ class Oauth2Controller extends Controller
 				'success' => FALSE,
 				'msg' => "Investigator code invalid"
 			]);
+		}
+
+		$meta = filter_var($request->get('meta', ""), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		$meta_json = "";
+		if ($meta){
+			// if meta is set, we only allow valid json
+			try {
+				$meta_json = json_decode($meta);
+			} catch (Exception $e){
+				$meta_json = "";
+			}
+			if (!$meta_json){
+				$meta_json = "";
+			}
 		}
 
 		// Slots is the one required parameter.
@@ -549,7 +584,9 @@ class Oauth2Controller extends Controller
 
 		// Save the deck.
 		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $slots, $deck , $problem, $ignored);
-
+		if ($meta_json) {
+			$deck->setMeta($meta_json);
+		}
 		$deck->setTaboo($taboo);
 
 		// xp_spent is only read/set if there was a previousDeck.
