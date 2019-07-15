@@ -82,11 +82,31 @@ ui.set_max_qty = function set_max_qty() {
  * @memberOf ui
  */
 ui.build_faction_selector = function build_faction_selector() {
+	//app.deck.choices.push({'faction_select':["guardian","seeker"]});
+	
+	$('[data-filter=faction_selector]').hide();
+	
+	$('[data-filter=faction_selector]').empty();
+	if (app.deck.choices && app.deck.choices.length > 0){
+		$('[data-filter=faction_selector]').show();
+		for (var i = 0; i < app.deck.choices.length; i++){
+			var choice = app.deck.choices[i];
+			if (choice.faction_select) {
+				choice.faction_select.forEach(function(faction_code){
+					var example = app.data.cards.find({"faction_code": faction_code})[0];
+					var label = $('<option value="' + faction_code + '" title="'+example.faction_name+'"><span class="icon-' + faction_code + '"></span> ' + example.faction_name + '</option>');
+					//label.tooltip({container: 'body'});
+					$('[data-filter=faction_selector]').append(label);
+				});
+			}
+		}
+	}
+	
 	$('[data-filter=faction_code]').empty();
 	var faction_codes = app.data.cards.distinct('faction_code').sort();
 	var neutral_index = faction_codes.indexOf('neutral');
 	faction_codes.splice(neutral_index, 1);
-	faction_codes.unshift('neutral');
+	faction_codes.push('neutral');
 	
 	faction_codes.forEach(function(faction_code) {
 		if (faction_code == "mythos"){
@@ -282,7 +302,7 @@ ui.init_selectors = function init_selectors() {
 	$('[data-filter=faction_code]').find('input[name=neutral]').prop("checked", true).parent().addClass('active');
 	var investigator = app.data.cards.findById(app.deck.get_investigator_code());
 	//console.log(investigator);
-	if (investigator.faction_code){		
+	if (investigator.faction_code){
 		$('[data-filter=faction_code]').find('input[name='+investigator.faction_code+']').prop("checked", true).parent().addClass('active');
 	}
 	$('[data-filter=subtype_code]').find('input[name=basicweakness]').prop("checked", true).parent().addClass('active');
@@ -293,7 +313,10 @@ ui.init_selectors = function init_selectors() {
 	} else {
 		$('[data-filter=taboo_code]').val("");
 	}
-
+	if (app.deck.meta && app.deck.meta.faction_selected){
+		$('[data-filter=faction_selector]').val(app.deck.meta.faction_selected);
+	}
+	
 }
 
 function uncheck_all_others() {
@@ -368,8 +391,10 @@ ui.on_input_smartfilter2 = function on_input_smartfilter2(event) {
 ui.on_submit_form = function on_submit_form(event) {
 	var deck_json = app.deck.get_json();
 	var ignored_json = app.deck.get_ignored_json();
+	var meta_json = app.deck.get_meta_json();
 	$('input[name=content]').val(deck_json);
 	$('input[name=ignored]').val(ignored_json);
+	$('input[name=meta]').val(meta_json);
 	$('input[name=xp_spent]').val(app.deck.get_xp_spent());
 	$('input[name=xp_adjustment]').val(app.deck.get_xp_adjustment());
 	$('input[name=description]').val($('textarea[name=description_]').val());
@@ -620,6 +645,14 @@ ui.setup_event_handlers = function setup_event_handlers() {
 		change : ui.refresh_list2,
 		click : ui.on_click_filter
 	}, 'label');
+	
+	$('#build_filters [data-filter=faction_selector]').on({
+		change : function(event){
+			app.deck.meta.faction_selected = event.target.value;
+			ui.refresh_deck();
+			ui.refresh_lists();
+		}
+	});
 
 	$('#filter-text').on('input', ui.on_input_smartfilter);
 	$('#filter-text-personal').on('input', ui.on_input_smartfilter2);

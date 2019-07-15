@@ -592,11 +592,31 @@ class BuilderController extends Controller
 		if (!$taboo){
 			$taboo = null;
 		}
+		$meta = filter_var($request->get('meta', ""), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		$meta_json = "";
+		if ($meta){
+			// if meta is set, we only allow valid json
+			try {
+				$meta_json = json_decode($meta);
+			} catch (Exception $e){
+				$meta_json = "";
+			}
+			if (!$meta_json){
+				$meta_json = "";
+			}
+		}
+		
 		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $content, $source_deck ? $source_deck : null, $problem, $ignored);
 		
 		$deck->setTaboo($taboo);
 		if ($request->get('exiles') && $request->get('exiles_string')){
 			$deck->setExiles($request->get('exiles_string'));
+		}
+
+		if ($meta_json){
+			$deck->setMeta($meta);
+		} else {
+			$deck->setMeta("");
 		}
 
 		if ($source_deck){
@@ -889,7 +909,8 @@ class BuilderController extends Controller
 				'content' => json_encode($content),
 				'ignored' => json_encode($ignored),
 				'decklist_id' => $decklist_id,
-				'taboo' => $decklist->getTaboo() ? $decklist->getTaboo()->getId() : ""
+				'taboo' => $decklist->getTaboo() ? $decklist->getTaboo()->getId() : "",
+				'meta' => $decklist->getMeta() ? $decklist->getMeta() : ""
 			)
 		);
 	}

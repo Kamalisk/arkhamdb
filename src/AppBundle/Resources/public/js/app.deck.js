@@ -6,6 +6,8 @@ var date_creation,
 	id,
 	name,
 	tags,
+	meta,
+	choices,
 	xp,
 	xp_spent = 0, 
 	exile_string = "",
@@ -55,6 +57,8 @@ deck.init = function init(data) {
 	id = data.id;
 	name = data.name;
 	tags = data.tags;
+	meta = data.meta;
+	choices = [];
 	investigator_code = data.investigator_code;
 	investigator_name = data.investigator_name;
 	investigator = false;
@@ -72,7 +76,7 @@ deck.init = function init(data) {
 	if (localStorage && localStorage.getItem('ui.deck.sort')) {
 		deck.sort_type = localStorage.getItem('ui.deck.sort');
 	}
-	
+	deck.choices = [];
 	// parse pack owner string
 	collection = {};
 	no_collection = true;
@@ -89,6 +93,27 @@ deck.init = function init(data) {
 deck.onloaded = function(data){
 	deck.set_slots(data.slots, data.ignoreDeckLimitSlots);
 	investigator = app.data.cards.findById(investigator_code);
+	
+	if (data.meta){
+		deck.meta = JSON.parse(data.meta);
+	}
+	if (!deck.meta){
+		deck.meta = {};
+	}
+	// check for special deck building rules
+	// for now only if they need to select a class
+	if (investigator && investigator.deck_options && investigator.deck_options.length) {
+		for (var i = 0; i < investigator.deck_options.length; i++){
+			var option = investigator.deck_options[i];
+			if (option.faction_select){
+				deck.choices.push(option);
+				if (!deck.meta || !deck.meta.faction_selected){
+					deck.meta.faction_selected = option.faction_select[0];
+				} 
+			}
+		}
+	}
+
 	if (data.taboo_id){
 		deck.taboo_id = data.taboo_id;
 	}
@@ -766,6 +791,12 @@ deck.get_json = function get_json() {
 deck.get_ignored_json = function get_ignored_json() {
 	return JSON.stringify(deck.get_ignored_cards());
 }
+/**
+ * @memberOf deck
+ */
+deck.get_meta_json = function get_meta_json() {
+	return JSON.stringify(deck.meta);
+}
 
 /**
  * @memberOf deck
@@ -930,6 +961,13 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 			var option = investigator.deck_options[i];
 			
 			var valid = false;
+
+
+			if (option.faction_select && app.deck.meta && app.deck.meta.faction_selected){
+				// if the user has selected a faction, update this option with the correct choice
+				option.faction = [];
+				option.faction.push(app.deck.meta.faction_selected);
+			}
 			
 			if (option.faction){
 				// needs to match at least one faction

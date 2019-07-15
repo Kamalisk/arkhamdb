@@ -198,6 +198,10 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
      */
     private $exiles;
 
+    /**
+     * @var string
+     */
+    private $meta;
 
     /**
      * @var string
@@ -430,6 +434,29 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
         return $this->exiles;
     }
 
+    /**
+     * Set meta
+     *
+     * @param string $meta
+     *
+     * @return Deck
+     */
+    public function setMeta($meta)
+    {
+        $this->meta = $meta;
+
+        return $this;
+    }
+
+    /**
+     * Get meta
+     *
+     * @return string
+     */
+    public function getMeta()
+    {
+        return $this->meta;
+    }
 
     /**
      * Set problem

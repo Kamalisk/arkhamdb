@@ -186,6 +186,20 @@ class Oauth2Controller extends Controller
 			$taboo = null;
 		}
 
+		$meta = filter_var($request->get('meta', ""), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		$meta_json = "";
+		if ($meta){
+			// if meta is set, we only allow valid json
+			try {
+				$meta_json = json_decode($meta);
+			} catch (Exception $e){
+				$meta_json = "";
+			}
+			if (!$meta_json){
+				$meta_json = "";
+			}
+		}
+
 		$deck = new Deck();
 		// Make most of these fields empty by default, they can be set later.
 		$deck->setDescriptionMd("");
@@ -193,6 +207,11 @@ class Oauth2Controller extends Controller
 		$deck->setLastPack($pack);
 		$deck->setName($name);
 		$deck->setTaboo($taboo);
+		if ($meta_json){
+			$deck->setMeta($meta);
+		} else {
+			$deck->setMeta("");
+		}
 		$deck->setProblem('too_few_cards');
 		$deck->setTags(join(' ', array_unique($tags)));
 		$deck->setUser($this->getUser());

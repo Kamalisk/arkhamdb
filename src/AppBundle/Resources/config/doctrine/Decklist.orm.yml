@@ -176,3 +176,6 @@ AppBundle\Entity\Decklist:
             type: string
             length: 255
             nullable: true
+        meta:
+            type: text
+            nullable: true

@@ -111,6 +111,11 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
     /**
      * @var string
      */
+    private $meta;
+
+    /**
+     * @var string
+     */
     private $signature;
 
     /**
@@ -401,6 +406,30 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
     public function getExiles()
     {
         return $this->exiles;
+    }
+
+    /**
+     * Set meta
+     *
+     * @param string $meta
+     *
+     * @return Deck
+     */
+    public function setMeta($meta)
+    {
+        $this->meta = $meta;
+
+        return $this;
+    }
+
+    /**
+     * Get meta
+     *
+     * @return string
+     */
+    public function getMeta()
+    {
+        return $this->meta;
     }
 
     /**

@@ -159,7 +159,7 @@ class DeckValidationHelper
 					// needs to match at least one type
 					$type_valid = false;
 					foreach($option->type as $type) {
-						if ($card->type_code == $type){
+						if ($card->getType()->getCode() == $type){
 							$type_valid = true;
 						}
 					}
