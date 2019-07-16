@@ -585,7 +585,7 @@ class Oauth2Controller extends Controller
 		// Save the deck.
 		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $slots, $deck , $problem, $ignored);
 		if ($meta_json) {
-			$deck->setMeta($meta_json);
+			$deck->setMeta($meta);
 		}
 		$deck->setTaboo($taboo);
 
