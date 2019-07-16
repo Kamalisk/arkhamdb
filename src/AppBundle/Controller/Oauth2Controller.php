@@ -384,7 +384,7 @@ class Oauth2Controller extends Controller
 		if ($meta_json){
 			$newDeck->setMeta($meta);
 		} else {
-			$newDeck->setMeta($deck->getMeta())
+			$newDeck->setMeta($deck->getMeta());
 		}
 		if ($deck->getTaboo()) {
 			$newDeck->setTaboo($deck->getTaboo());
