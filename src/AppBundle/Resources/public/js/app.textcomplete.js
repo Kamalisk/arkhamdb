@@ -84,6 +84,7 @@ var rules = [
 	{key:"Gains", value:"Gains"},
 	{key:"Game", value:"Game"},
 	{key:"Hand_Size", value:"Hand Size"},
+	{key:"Haunted", value:"Haunted"},
 	{key:"Heal", value:"Heal"},
 	{key:"Health_and_Damage", value:"Health and Damage"},
 	{key:"Hidden", value:"Hidden"},
