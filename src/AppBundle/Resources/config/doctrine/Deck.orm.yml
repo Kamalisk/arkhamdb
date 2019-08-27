@@ -76,6 +76,15 @@ AppBundle\Entity\Deck:
             id: true
             generator:
                 strategy: AUTO
+        uuid:
+            type: string
+            length: 36
+            unique: true
+            nullable: true
+        shared:
+            type: boolean
+            options:
+                default: false
         name:
             type: string
             length: 255

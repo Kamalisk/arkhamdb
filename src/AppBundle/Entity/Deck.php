@@ -25,6 +25,9 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
 		if ($this->id) {
 			$this->id = null;
 		}
+		if ($this->uuid) {
+			$this->uuid = null;
+		}
 	}
 	/**
 	 * @return array
@@ -167,6 +170,18 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
      * @var integer
      */
     private $id;
+
+	/**
+     * @var string
+          */
+    private $uuid;
+
+	/**
+     * @var boolean
+          */
+    private $shared = false;
+
+
 
     /**
      * @var string
@@ -336,6 +351,58 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
     public function getName()
     {
         return $this->name;
+    }
+
+
+
+    /**
+     * Set uuid
+     *
+     * @param string $uuid
+     *
+     * @return Deck
+     */
+    public function setUuid($uuid)
+    {
+        $this->uuid = $uuid;
+
+        return $this;
+    }
+
+    /**
+     * Get uuid
+     *
+     * @return string
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
+
+
+    /**
+     * Set shared
+     *
+     * @param boolean $shared
+     *
+     * @return Deck
+     */
+    public function setShared($shared)
+    {
+        $this->shared = $shared;
+
+        return $this;
+    }
+
+    /**
+     * Get shared
+     *
+     * @return boolean
+     */
+    public function getShared()
+    {
+        return $this->shared;
     }
 
     /**
