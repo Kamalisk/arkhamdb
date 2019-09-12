@@ -48,6 +48,12 @@ AppBundle\Entity\Card:
             joinColumn:
                 name: linked_id
                 referencedColumnName: id
+        bonded_to:
+            targetEntity: Card
+            inversedBy: bonded_from
+            joinColumn:
+                name: bonded_id
+                referencedColumnName: id
     oneToMany:
         reviews:
             targetEntity: Review
@@ -56,6 +62,9 @@ AppBundle\Entity\Card:
         linked_from:
             targetEntity: Card
             mappedBy: linked_to
+        bonded_from:
+            targetEntity: Card
+            mappedBy: bonded_to
     fields:
         id:
             type: integer
@@ -70,6 +79,10 @@ AppBundle\Entity\Card:
             column: exceptional
             options:
                 default: false
+        myriad:
+            type: boolean
+            column: myriad            
+            nullable: true
         encounterPosition:
             type: smallint
             nullable: true
