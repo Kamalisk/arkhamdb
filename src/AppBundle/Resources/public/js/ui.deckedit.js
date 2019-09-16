@@ -66,7 +66,7 @@ ui.set_max_qty = function set_max_qty() {
 	}
 	
 	app.data.cards.find().forEach(function(record) {
-		var max_qty = Math.min(2, record.deck_limit);
+		var max_qty = Math.min(3, record.deck_limit);
 		if (record.pack_code == 'core') {
 			max_qty = Math.min(max_qty, record.quantity * cores);
 		}
