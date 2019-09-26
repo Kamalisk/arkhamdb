@@ -34,6 +34,7 @@ deck_upgrades.display = function display() {
 		var cards_removed = [];
 		var cards_added = [];
 		var cards_exiled = {};
+		var myriad_buys = {};
 		var cost = 0;
 		_.each(diff[1], function (qty, code) {
 			var card = app.data.cards.findById(code);
@@ -86,21 +87,28 @@ deck_upgrades.display = function display() {
 		
 		// first check for same named cards
 		_.each(cards_added, function (addition) {
+			const myriad = addition.card.real_text.indexOf('Myriad.') !== -1;
 			_.each(cards_removed, function (removal) {
 				if (addition.qty > 0 && removal.qty > 0 && addition.card.xp >= 0 && addition.card.real_name == removal.card.real_name && addition.card.xp > removal.card.xp){
 					addition.qty = addition.qty - removal.qty;
-					if (spell_upgrade_discounts > 0 && removal.card.traits && removal.card.traits.indexOf('Spell.') !== -1 && addition.card.traits && addition.card.traits.indexOf('Spell.') !== -1) {
+					if (spell_upgrade_discounts > 0 && removal.card.real_traits && removal.card.real_traits.indexOf('Spell.') !== -1 && addition.card.real_traits && addition.card.real_traits.indexOf('Spell.') !== -1) {
 						// It's a spell card, and we have arcane research discounts remaining.
-						var upgradeCost = ((addition.card.xp - removal.card.xp) * removal.qty)
+						var upgradeCost = ((addition.card.xp - removal.card.xp) * (myriad ? 1 : removal.qty));
+						if (myriad) {
+							myriad_buys[addition.card.real_name] = true;
+						}
 						while (spell_upgrade_discounts > 0 && upgradeCost > 0) {
 							upgradeCost--;
 							spell_upgrade_discounts--;
 						}
 						cost = cost + upgradeCost;
 					} else {
-						cost = cost + ((addition.card.xp - removal.card.xp) * removal.qty);
+						cost = cost + ((addition.card.xp - removal.card.xp) * (myriad ? 1 : removal.qty));
 					}
 					removal.qty = Math.abs(addition.qty);
+					if (myriad) {
+						myriad_buys[addition.card.real_name] = true;
+					}
 				}
 				if (removal.card.xp === 0){
 					removed_0_cards += removal.qty;
@@ -111,19 +119,30 @@ deck_upgrades.display = function display() {
 		//console.log(last_deck, free_0_cards, removed_0_cards);
 		// then pay for all changes
 		_.each(cards_added, function (addition) {
-			if (addition.card.xp >= 0){
+			const myriad = addition.card.real_text.indexOf('Myriad.') !== -1;
+			if (myriad) {
+				if (myriad_buys[addition.card.real_name]) {
+					addition.qty = 0;
+				}
+				myriad_buys[addition.card.real_name] = true;
+			}
+			if (addition.card.xp >= 0) {
 				//console.log("CARD", 		addition);
 				if (addition.card.xp === 0 && removed_0_cards > 0 && free_0_cards > 0){
-					free_0_cards -= addition.qty;
-					removed_0_cards -= addition.qty;
-					if (removed_0_cards < 0 || free_0_cards < 0){
-						addition.qty = 1;
-					} else {
-						addition.qty = 0;
+					//Update this loop to work with more than 1 copy of card.
+					while (removed_0_cards > 0 && free_0_cards > 0 && addition.qty > 0){
+						removed_0_cards--;
+						free_0_cards--;
+						addition.qty--;
+						if (myriad) {
+							// Only pay for first one with myriad, even with adaptable.
+							addition.qty = 0;
+							break;
+						}
 					}
 				}
 				
-				cost = cost + (Math.max(addition.card.xp * (addition.card.exceptional ? 2: 1), 1) * addition.qty);
+				cost = cost + (Math.max(addition.card.xp * (addition.card.exceptional ? 2: 1), 1) * (addition.qty > 0 && myriad ? 1 : addition.qty));
 				addition.qty = 0;
 			}
 		});
