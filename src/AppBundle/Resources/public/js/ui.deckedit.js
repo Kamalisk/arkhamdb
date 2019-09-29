@@ -85,8 +85,11 @@ ui.build_faction_selector = function build_faction_selector() {
 	//app.deck.choices.push({'faction_select':["guardian","seeker"]});
 	
 	$('[data-filter=faction_selector]').hide();
+	$('[data-filter=deck_size_selector]').hide();
 	
 	$('[data-filter=faction_selector]').empty();
+	$('[data-filter=deck_size_selector]').empty();
+	
 	if (app.deck.choices && app.deck.choices.length > 0){
 		for (var i = 0; i < app.deck.choices.length; i++){
 			var choice = app.deck.choices[i];
@@ -97,6 +100,14 @@ ui.build_faction_selector = function build_faction_selector() {
 					var label = $('<option value="' + faction_code + '" title="'+example.faction_name+'"><span class="icon-' + faction_code + '"></span> ' + example.faction_name + '</option>');
 					//label.tooltip({container: 'body'});
 					$('[data-filter=faction_selector]').append(label);
+				});
+			}
+			if (choice.deck_size_select) {
+				$('[data-filter=deck_size_selector]').show();
+				choice.deck_size_select.forEach(function(size){
+					var label = $('<option value="' + size + '" title="'+size+' Cards"> ' + size + ' Cards</option>');
+					//label.tooltip({container: 'body'});
+					$('[data-filter=deck_size_selector]').append(label);
 				});
 			}
 		}
@@ -145,30 +156,6 @@ ui.build_faction_selector = function build_faction_selector() {
 	$('[data-filter=subtype_code]').button();
 }
 
-/**
- * builds the deck_size selector
- * @memberOf ui
- */
-ui.build_deck_size_selector = function build_deck_size_selector() {
-	//app.deck.choices.push({'deck_size_select':["30","40"]});
-	
-	$('[data-filter=deck_size_selector]').hide();
-	
-	$('[data-filter=deck_size_selector]').empty();
-	if (app.deck.choices && app.deck.choices.length > 0){
-		for (var i = 0; i < app.deck.choices.length; i++){
-			var choice = app.deck.choices[i];
-			if (choice.deck_size_select) {
-				$('[data-filter=deck_size_selector]').show();
-				choice.deck_size_select.forEach(function(size){
-					var label = $('<option value="' + size + '" title="'+size+' Cards"> ' + size + ' Cards</option>');
-					//label.tooltip({container: 'body'});
-					$('[data-filter=deck_size_selector]').append(label);
-				});
-			}
-		}
-	}
-}
 
 /**
  * builds the type selector
@@ -1181,7 +1168,6 @@ ui.on_data_loaded = function on_data_loaded() {
  */
 ui.on_all_loaded = function on_all_loaded() {	
 	ui.update_list_template();
-	ui.build_deck_size_selector();
 	ui.build_faction_selector();
 	ui.build_type_selector();
 	ui.build_pack_selector();
