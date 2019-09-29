@@ -111,6 +111,12 @@ deck.onloaded = function(data){
 					deck.meta.faction_selected = option.faction_select[0];
 				} 
 			}
+			if (option.deck_size_select){
+				deck.choices.push(option);
+				if (!deck.meta || !deck.meta.deck_size_selected){
+					deck.meta.deck_size_selected = option.deck_size_select[0];
+				} 
+			}
 		}
 	}
 
@@ -476,6 +482,9 @@ deck.get_layout_data = function get_layout_data(options) {
 		if (card.deck_requirements.size){
 			size = card.deck_requirements.size;
 		}
+		if (deck.meta && deck.meta.deck_size_selected){
+			size = parseInt(deck.meta.deck_size_selected, 10);
+		}
 		// must have the required cards
 		if (card.deck_requirements.card){
 			$.each(card.deck_requirements.card, function (key, value){
@@ -838,6 +847,9 @@ deck.get_problem = function get_problem() {
 	if (card && card.deck_requirements){
 		if (card.deck_requirements.size){
 			size = card.deck_requirements.size;
+		}
+		if (deck.meta && deck.meta.deck_size_selected){
+			size = parseInt(deck.meta.deck_size_selected, 10);
 		}
 
 		// must have the required cards

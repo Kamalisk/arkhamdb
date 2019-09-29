@@ -88,10 +88,10 @@ ui.build_faction_selector = function build_faction_selector() {
 	
 	$('[data-filter=faction_selector]').empty();
 	if (app.deck.choices && app.deck.choices.length > 0){
-		$('[data-filter=faction_selector]').show();
 		for (var i = 0; i < app.deck.choices.length; i++){
 			var choice = app.deck.choices[i];
 			if (choice.faction_select) {
+				$('[data-filter=faction_selector]').show();
 				choice.faction_select.forEach(function(faction_code){
 					var example = app.data.cards.find({"faction_code": faction_code})[0];
 					var label = $('<option value="' + faction_code + '" title="'+example.faction_name+'"><span class="icon-' + faction_code + '"></span> ' + example.faction_name + '</option>');
@@ -143,6 +143,31 @@ ui.build_faction_selector = function build_faction_selector() {
 	$('[data-filter=subtype_code]').append(label);
 	
 	$('[data-filter=subtype_code]').button();
+}
+
+/**
+ * builds the deck_size selector
+ * @memberOf ui
+ */
+ui.build_deck_size_selector = function build_deck_size_selector() {
+	//app.deck.choices.push({'deck_size_select':["30","40"]});
+	
+	$('[data-filter=deck_size_selector]').hide();
+	
+	$('[data-filter=deck_size_selector]').empty();
+	if (app.deck.choices && app.deck.choices.length > 0){
+		for (var i = 0; i < app.deck.choices.length; i++){
+			var choice = app.deck.choices[i];
+			if (choice.deck_size_select) {
+				$('[data-filter=deck_size_selector]').show();
+				choice.deck_size_select.forEach(function(size){
+					var label = $('<option value="' + size + '" title="'+size+' Cards"> ' + size + ' Cards</option>');
+					//label.tooltip({container: 'body'});
+					$('[data-filter=deck_size_selector]').append(label);
+				});
+			}
+		}
+	}
 }
 
 /**
@@ -313,8 +338,13 @@ ui.init_selectors = function init_selectors() {
 	} else {
 		$('[data-filter=taboo_code]').val("");
 	}
-	if (app.deck.meta && app.deck.meta.faction_selected){
-		$('[data-filter=faction_selector]').val(app.deck.meta.faction_selected);
+	if (app.deck.meta){
+		if (app.deck.meta.faction_selected){
+			$('[data-filter=faction_selector]').val(app.deck.meta.faction_selected);
+		}
+		if (app.deck.meta.deck_size_selected){
+			$('[data-filter=deck_size_selector]').val(app.deck.meta.deck_size_selected);
+		}
 	}
 	
 }
@@ -522,6 +552,9 @@ ui.chaos = function() {
 	
 	var size = valid_cards.length;
 	var deck_size = app.data.cards.findById(app.deck.get_investigator_code()).deck_requirements.size;
+	if (app.deck.meta.deck_size_selected) {
+		deck_size = parseInt(app.deck.meta.deck_size_selected);
+	}
 	if (size >= deck_size){
 		while (counter < deck_size){
 			var random_id = Math.floor(Math.random() * size)
@@ -649,6 +682,14 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	$('#build_filters [data-filter=faction_selector]').on({
 		change : function(event){
 			app.deck.meta.faction_selected = event.target.value;
+			ui.refresh_deck();
+			ui.refresh_lists();
+		}
+	});
+
+	$('#build_filters [data-filter=deck_size_selector]').on({
+		change : function(event){
+			app.deck.meta.deck_size_selected = event.target.value;
 			ui.refresh_deck();
 			ui.refresh_lists();
 		}
@@ -1140,6 +1181,7 @@ ui.on_data_loaded = function on_data_loaded() {
  */
 ui.on_all_loaded = function on_all_loaded() {	
 	ui.update_list_template();
+	ui.build_deck_size_selector();
 	ui.build_faction_selector();
 	ui.build_type_selector();
 	ui.build_pack_selector();
