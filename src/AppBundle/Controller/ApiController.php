@@ -684,7 +684,7 @@ class ApiController extends Controller
 		if (!$deck) {
 			$deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->findOneBy(["uuid"=> $deck_id]);
 		}
-		if(!$deck || !$deck->getUser() || !$deck->getUser()->getIsShareDecks() || !$deck->getShared()) {
+		if(!$deck || !$deck->getUser() || (!$deck->getUser()->getIsShareDecks() && !$deck->getShared()) ) {
 			throw $this->createAccessDeniedException("Access denied to this object.");
 		}
 		
