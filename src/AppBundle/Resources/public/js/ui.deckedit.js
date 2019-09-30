@@ -206,7 +206,7 @@ ui.build_taboo_selector = function build_taboo_selector() {
 		}
 	}, {
 		$orderBy: {
-			id: 1
+			id: -1
 		}
 	}).forEach(function(record) {
 		$('<option value="'+record.id+'">' + record.name + ' (' + record.date_start +')</option>').appendTo('[data-filter=taboo_code]');
