@@ -93,6 +93,12 @@ deck_history.all_changes = function all_changes() {
 		_.each(cards_removed, function (removal) {
 			var addition_xp = addition.card.xp;
 			var removal_xp = removal.card.xp;
+			if (addition.card.real_text.indexOf('Myriad.') !== -1) {
+				addition.qty = 1;
+			}
+			if (removal.card.real_text.indexOf('Myriad.') !== -1) {
+				removal.qty = 1;
+			}
 			if (addition.card.taboo_xp){
 				addition_xp += addition.card.taboo_xp;
 			}
@@ -101,7 +107,7 @@ deck_history.all_changes = function all_changes() {
 			}
 			if (addition.qty > 0 && removal.qty > 0 && addition_xp >= 0 && addition.card.real_name == removal.card.real_name && addition_xp > removal_xp){
 				addition.qty = addition.qty - removal.qty;
-				if (spell_upgrade_discounts > 0 && removal.card.traits && removal.card.traits.indexOf('Spell.') !== -1 && addition.card.traits && addition.card.traits.indexOf('Spell.') !== -1) {
+				if (spell_upgrade_discounts > 0 && removal.card.real_traits && removal.card.real_traits.indexOf('Spell.') !== -1 && addition.card.real_traits && addition.card.real_traits.indexOf('Spell.') !== -1) {
 					// It's a spell card, and we have arcane research discounts remaining.
 					var upgradeCost = ((addition_xp - removal_xp) * removal.qty)
 					while (spell_upgrade_discounts > 0 && upgradeCost > 0) {
@@ -124,6 +130,10 @@ deck_history.all_changes = function all_changes() {
 	// then pay for all changes
 	_.each(cards_added, function (addition) {
 		var addition_xp = addition.card.xp;
+		
+		if (addition.card.real_text.indexOf('Myriad.') !== -1) {
+			addition.qty = 1;
+		}
 		if (addition.card.exceptional){
 			addition_xp *= 2;
 		}
