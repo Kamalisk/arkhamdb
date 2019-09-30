@@ -34,9 +34,11 @@ class Oauth2Controller extends Controller
 			return $deck->getDateUpdate();
 		}, $decks);
 
-		$response->setLastModified(max($dateUpdates));
-		if ($response->isNotModified($request)) {
-			return $response;
+		if (!empty($dateUpdates)) {
+			$response->setLastModified(max($dateUpdates));
+			if ($response->isNotModified($request)) {
+				return $response;
+			}
 		}
 
 		$content = json_encode($decks);
