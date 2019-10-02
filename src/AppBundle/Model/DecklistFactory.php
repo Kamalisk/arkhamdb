@@ -64,6 +64,7 @@ class DecklistFactory
 		$decklist->setSignature($new_signature);
 		$decklist->setCharacter($deck->getCharacter());
 		$decklist->setTaboo($deck->getTaboo());
+		$decklist->setMeta($deck->getMeta());
 		$decklist->setLastPack($deck->getLastPack());
 		$decklist->setNbVotes(0);
 		$decklist->setNbfavorites(0);
