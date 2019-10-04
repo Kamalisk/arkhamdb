@@ -300,7 +300,6 @@ deck.get_cards = function get_cards(sort, query, group) {
 	if (group){
 		options.$groupBy = group;
 	}
-
 	return app.data.cards.find(query, options);
 }
 
@@ -535,13 +534,13 @@ deck.get_layout_data = function get_layout_data(options) {
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'pack_code': 1, "name": 1}, {'pack_name':1}, null));
 		layout_template = 1;
 	} else if (deck.sort_type == "setnumber"){
-		deck.update_layout_section(data, "cards", deck.get_layout_section({'pack_code': 1, "position": 1}, {'pack_name':1}, null));
+		deck.update_layout_section(data, "cards", deck.get_layout_section({'code': 1, "position": 1}, {'pack_name':1}, null));
 		layout_template = 1;
 	} else if (deck.sort_type == "faction"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_code': 1, "name":1}, {'faction_name': 1}, null));
 		layout_template = 1;
 	} else if (deck.sort_type == "factionnumber"){
-		deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_code': 1, "pack_code":1, "position": 1}, {'faction_name': 1}, null));
+		deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_code': 1, "code": 1, "position": 1}, {'faction_name': 1}, null));
 		layout_template = 1;
 	} else if (deck.sort_type == "factionxp"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_code': 1, "xp":1, "name": 1}, {'faction_name': 1}, null));
