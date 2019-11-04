@@ -365,7 +365,11 @@ deck.get_xp_usage = function get_xp_usage(sort) {
 	var xp = 0;
 	deck.get_real_draw_deck().forEach(function (card) {
 		if (card && (card.xp || card.taboo_xp) && card.ignore < card.indeck) {
-			xp += (card.xp + (card.taboo_xp ? card.taboo_xp : 0)) * (card.indeck - card.ignore) * (card.exceptional ? 2: 1);
+			var qty = card.indeck;
+			if (card.real_text.indexOf('Myriad.') !== -1) {
+				qty = 1;
+			}
+			xp += (card.xp + (card.taboo_xp ? card.taboo_xp : 0)) * (qty - card.ignore) * (card.exceptional ? 2: 1);
 		}
 	});
 	return xp;
