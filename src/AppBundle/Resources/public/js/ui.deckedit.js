@@ -297,6 +297,9 @@ ui.build_pack_selector = function build_pack_selector() {
 				pack_code: record.code,
 				indeck: {
 					'$gt': 1
+				},
+				quantity: {
+					'$eq': 1
 				}
 			});
 			if(cards.length) checked = true;
