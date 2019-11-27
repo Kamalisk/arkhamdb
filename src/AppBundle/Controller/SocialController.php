@@ -134,11 +134,18 @@ class SocialController extends Controller
 			throw $this->createAccessDeniedException("Access denied to this object.");
 		}
 
+
+		$lastPack = $deck->getLastPack();
+		if(!$lastPack->getDateRelease() || $lastPack->getDateRelease() > new \DateTime()) {
+			$this->get('session')->getFlashBag()->set('error', "You cannot publish this deck yet, because it has unreleased cards.");
+			return $this->redirect($this->generateUrl('deck_view', [ 'deck_id' => $deck->getId() ]));
+		}
+
 		$name = filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		$descriptionMd = trim($request->request->get('descriptionMd'));
-		if (!$descriptionMd || strlen($descriptionMd) < 10){
+		if (!$descriptionMd || strlen($descriptionMd) < 20){
 			return $this->render('AppBundle:Default:error.html.twig', [
-			'pagetitle' => "Missing Description. ",
+			'pagetitle' => "Description too short. ",
 			'error' => "Please provide at least a quick write up of your deck or ask what you need help with. If you just want to share decks, you can do show by enabling sharing in your options and then share the regular deck link.",
 			]);
 		}

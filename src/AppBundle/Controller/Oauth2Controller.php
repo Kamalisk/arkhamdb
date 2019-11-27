@@ -646,7 +646,13 @@ class Oauth2Controller extends Controller
 
 		$name = filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		$descriptionMd = trim($request->request->get('description_md'));
-
+		if (!$descriptionMd || strlen($descriptionMd) < 20){
+			// description too short
+			return new JsonResponse([
+				'success' => FALSE,
+				'msg' => "Description too short"
+			]);
+		}
 		$tournament_id = intval(filter_var($request->request->get('tournament_id'), FILTER_SANITIZE_NUMBER_INT));
 		$tournament = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->find($tournament_id);
 
