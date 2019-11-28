@@ -488,6 +488,13 @@ deck.get_layout_data = function get_layout_data(options) {
 		if (deck.meta && deck.meta.deck_size_selected){
 			size = parseInt(deck.meta.deck_size_selected, 10);
 		}
+		var versatile = app.data.cards.findById("06167");//06167
+		if (versatile && versatile.indeck) {
+			size = size + 5;
+			if (versatile.indeck > 1) {
+				size = size + 5;
+			}
+		}
 		// must have the required cards
 		if (card.deck_requirements.card){
 			$.each(card.deck_requirements.card, function (key, value){
@@ -854,7 +861,13 @@ deck.get_problem = function get_problem() {
 		if (deck.meta && deck.meta.deck_size_selected){
 			size = parseInt(deck.meta.deck_size_selected, 10);
 		}
-
+		var versatile = app.data.cards.findById("06167");//06167
+		if (versatile && versatile.indeck) {
+			size = size + 5;
+			if (versatile.indeck > 1) {
+				size = size + 5;
+			}
+		}
 		// must have the required cards
 		if (card.deck_requirements.card){
 			var req_count = 0;
@@ -934,10 +947,25 @@ deck.get_problem = function get_problem() {
 
 deck.reset_limit_count = function (){
 	if (investigator){
-		for (var i = 0; i < investigator.deck_options.length; i++){
-			investigator.deck_options[i].limit_count = 0;
-			investigator.deck_options[i].atleast_count = {};
+		var versatile = app.data.cards.findById("06167");//06167
+		
+		for (var i = investigator.deck_options.length - 1; i >= 0 ; i--){
+			if (investigator.deck_options[i] && investigator.deck_options[i].name == "versatile") {
+				investigator.deck_options.splice(i, 1);
+			} else {
+				investigator.deck_options[i].limit_count = 0;
+				investigator.deck_options[i].atleast_count = {};
+			}
 		}
+		if (versatile && versatile.indeck) {
+			var new_option = {name: "versatile", faction:["guardian", "seeker", "survivor", "mystic", "rogue"], limit: 1, level:{"min":0, "max":0} };
+			investigator.deck_options.push(new_option);
+			if (versatile.indeck > 1) {
+				new_option = {name: "versatile", faction:["guardian", "seeker", "survivor", "mystic", "rogue"], limit: 1, level:{"min":0, "max":0} };
+				investigator.deck_options.push(new_option);
+			}
+		}
+		console.log(investigator);
 	}
 }
 
