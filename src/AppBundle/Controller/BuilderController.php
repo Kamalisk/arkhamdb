@@ -14,6 +14,17 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Deckchange;
 use AppBundle\Helper\DeckValidationHelper;
 
+// function to create uuid v4
+function guidv4() {
+	if (function_exists('com_create_guid') === true)
+		return trim(com_create_guid(), '{}');
+
+	$data = openssl_random_pseudo_bytes(16);
+	$data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
+	$data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
+	return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+}
+
 class BuilderController extends Controller
 {
 
@@ -58,7 +69,9 @@ class BuilderController extends Controller
 					"size" => $deck_requirements['size']
 				];
 
+				
 				$investigator->setDeckRequirements($req);
+				
 				if (in_array($investigator->getPack()->getId(), $packs_owned) && !isset($my_unique_investigators[$investigator->getName()]) ){
 					$my_investigators[] = $investigator;
 					$my_unique_investigators[$investigator->getName()] = true;
@@ -68,14 +81,19 @@ class BuilderController extends Controller
 					$my_investigators_by_class[$investigator->getFaction()->getName()][] = $investigator;
 				}
 				
+				
 				// only have one investigator per name
 				if (!isset($all_unique_investigators[$investigator->getName()])) {
 					$all_unique_investigators[$investigator->getName()] = true;
 					if (!isset($all_investigators_by_class[$investigator->getFaction()->getName()]) ) {
 						$all_investigators_by_class[$investigator->getFaction()->getName()] = [];
 					}
+					if (in_array($investigator->getPack()->getId(), $packs_owned) ){
+						$investigator->owned = 1;
+					} else {
+						$investigator->owned = 0;
+					}
 					$all_investigators_by_class[$investigator->getFaction()->getName()][] = $investigator;
-					
 					$all_investigators[] = $investigator;
 				}
 			}
@@ -441,6 +459,7 @@ class BuilderController extends Controller
 				'faction_code' => $deck->getCharacter()->getCode(),
 				'tags' => $deck->getTags(),
 				'taboo' => $deck->getTaboo() ? $deck->getTaboo()->getId() : "",
+				'meta' => $deck->getMeta() ? $deck->getMeta() : "",
 				'content' => json_encode($content),
 				'ignored' => json_encode($ignored),
 				'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null
@@ -515,6 +534,7 @@ class BuilderController extends Controller
 			'xp' => $xp,
 			'previous_deck' => $deck,
 			'taboo' => $deck->getTaboo() ? $deck->getTaboo()->getId() : "",
+			'meta' => $deck->getMeta() ? $deck->getMeta() : "", 
 			'upgrades' => $deck->getUpgrades(),
 			'exiles_string' => implode(",",$filtered_exiles),
 			'exiles' => $filtered_exile_cards
@@ -633,6 +653,44 @@ class BuilderController extends Controller
 		} else {
 			return $this->redirect($this->generateUrl('deck_view', ["deck_id"=>$deck->getId()]));
 		}
+
+	}
+
+
+	public function shareAction (Request $request)
+	{
+
+		/* @var $em \Doctrine\ORM\EntityManager */
+		$em = $this->getDoctrine()->getManager();
+
+		$user = $this->getUser();
+
+		$id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
+		$deck = null;
+		if($id) {
+			$deck = $em->getRepository('AppBundle:Deck')->find($id);
+			if (!$deck || $user->getId() != $deck->getUser()->getId()) {
+				throw new UnauthorizedHttpException("You don't have access to this deck.");
+			}
+			$is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
+		}
+
+		if(!$deck || !$is_owner) {
+			return $this->render(
+				'AppBundle:Default:error.html.twig',
+				array(
+					'pagetitle' => "Error",
+					'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
+				)
+			);
+		}
+
+		$deck->setShared(!$deck->getShared());
+		$deck->setUuid(guidv4());
+
+		$em->flush();
+
+		return $this->redirect($this->generateUrl('deck_view', ["deck_id"=>$deck->getId()]));
 
 	}
 
