@@ -42,3 +42,15 @@ api_oauth2_publish_deck:
         _controller: AppBundle:Oauth2:publishDeck
     requirements:
         id: \d+
+
+api_oauth2_list_collection:
+    path: /collection
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Oauth2:listCollection
+
+api_oauth2_update_collection:
+    path: /collection
+    methods: [PUT]
+    defaults:
+        _controller: AppBundle:Oauth2:updateCollection

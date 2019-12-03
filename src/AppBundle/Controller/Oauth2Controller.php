@@ -693,4 +693,75 @@ class Oauth2Controller extends Controller
         		'msg' => $decklist->getId()
         ]);
     }
+
+    /**
+     * Get the list of all the Collections of the authenticated user
+     *
+     * @ApiDoc(
+     *  section="Collection",
+     *  resource=true,
+     *  description="All the Collections",
+     * )
+     * @return Response
+     */
+    public function listCollectionAction()
+    {
+        $collection = null;
+        if ($owned_packs = $this->getUser()->getOwnedPacks()) {
+            $collection = explode(',', $owned_packs);
+        }
+
+        return new JsonResponse($collection);
+    }
+
+    /**
+     * Update the list of Collections of the authenticated user
+     *
+     * @ApiDoc(
+     *  section="Collection",
+     *  resource=true,
+     *  description="Update the list of Collections",
+     *  parameters={
+     *      {"name"="collection", "dataType"="string", "required"=true, "format"="JSON", "description"="Comma separated list of collection pack ids"},
+     *  },
+     * )
+     * @param Request $request
+     * @return Response
+     */
+    public function updateCollectionAction(Request $request)
+    {
+        $success = false;
+        if (!$request->query->has('collection')) {
+            return new JsonResponse([
+                'success' => $success,
+                'msg'     => 'Collection parameter is required.'
+            ]);
+        }
+
+        $collection = json_decode($request->query->get('collection'));
+
+        if ($collection === null) {
+            return new JsonResponse([
+                'success' => $success,
+                'msg'     => 'Collection parameter must be a JSON object of pack ids.'
+            ]);
+        }
+
+        $collection = implode(',', $collection);
+
+        if (preg_match('/[^0-9\-,]/', $collection)) {
+            return new JsonResponse([
+                'success' => $success,
+                'msg'     => 'Invalid pack selection.'
+            ]);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $user->setOwnedPacks($collection);
+        $em->persist($user);
+        $em->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
 }
