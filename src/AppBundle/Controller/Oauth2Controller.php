@@ -482,61 +482,6 @@ class Oauth2Controller extends Controller
     }
 
 	/**
-	 * Delete one Deck of the authenticated user.
-	 *
-	 * @ApiDoc(
-	 *  section="Deck",
-	 *  resource=true,
-	 *  description="Delete One Deck",
-	 *  requirements={
-	 *      {
-	 *          "name"="id",
-	 *          "dataType"="integer",
-	 *          "requirement"="\d+",
-	 *          "description"="The numeric identifier of the Deck to delete.",
-	 *      },
-	 *  },
-	 *  parameters={
-	 *  },
-	 * )
-	 * @param Request $request
-	 */
-	public function deleteDeckAction($id, Request $request)
-	{
-		/* @var $deck \AppBundle\Entity\Deck */
-		$em = $this->getDoctrine()->getManager();
-
-		if(!$id) {
-			return new JsonResponse([
-				'success' => FALSE,
-				'msg' => 'id of deck is required.'
-			]);
-		}
-
-		// A deck ID was provided, so we lookup the deck that is being modified.
-		$deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->find($id);
-		if($deck->getUser()->getId() !== $this->getUser()->getId()) {
-			return new JsonResponse([
-				'success' => FALSE,
-				'msg' => 'You are not allowed to delete this deck, you are not the owner.'
-			]);
-		}
-		if ($deck->getPreviousDeck()){
-			$deck->getPreviousDeck()->setNextDeck(null);
-			$deck->setPreviousDeck(null);
-		}
-		foreach ($deck->getChildren() as $decklist) {
-			$decklist->setParent(null);
-		}
-		$em->remove($deck);
-		$em->flush();
-
-		return new JsonResponse([
-				'success' => TRUE
-		]);
-	}
-
-	/**
 	 * Save one Deck of the authenticated user. The parameters are the same as in the response to the load method, but only a few are writable.
 	 * So you can parse the result from the load, change a few values, then send the object as the param of an ajax request.
 	 * If successful, id of Deck is in the msg
@@ -807,7 +752,7 @@ class Oauth2Controller extends Controller
         		'msg' => $decklist->getId()
         ]);
     }
-    
+
     /**
      * Delete Deck
      *
