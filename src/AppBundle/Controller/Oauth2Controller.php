@@ -27,7 +27,7 @@ class Oauth2Controller extends Controller
 		$response = new Response();
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 
-		/* @var $decks \AppBundle\Entity\Deck[] */
+		/* @var $decks Deck[] */
 		$decks = $this->getDoctrine()->getRepository('AppBundle:Deck')->findBy(['user' => $this->getUser()]);
 
 		$dateUpdates = array_map(function ($deck) {
@@ -70,7 +70,7 @@ class Oauth2Controller extends Controller
 		$response = new Response();
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 
-		/* @var $deck \AppBundle\Entity\Deck */
+		/* @var $deck Deck */
 		$deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->find($id);
 
 		if($deck->getUser()->getId() !== $this->getUser()->getId() &&
@@ -271,7 +271,7 @@ class Oauth2Controller extends Controller
 			]);
 		}
 
-		/* @var $deck \AppBundle\Entity\Deck */
+		/* @var $deck Deck */
 		$deck = $em->getRepository('AppBundle:Deck')->find($id);
 		if (!$deck){
 			return false;
@@ -414,6 +414,73 @@ class Oauth2Controller extends Controller
 		]);
 	}
 
+    /**
+     * Delete the latest or all versions of a Deck of the authenticated user.
+     *
+     * @ApiDoc(
+     *  section="Deck",
+     *  resource=true,
+     *  description="Delete One Deck",
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="The numeric identifier of the Deck to delete.",
+     *      },
+     *  },
+     *  parameters={
+     *    {"name"="all", "dataType"="boolean", "required"=false, "description"="Delete all versions of deck."}
+     *  },
+     * )
+     *
+     * @param int     $id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function deleteDeckAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if (!$id) {
+            return new JsonResponse([
+                'success' => false,
+                'msg'     => 'The ID of deck is required.'
+            ], 400);
+        }
+        // A deck ID was provided, so we lookup the deck that is being modified.
+        /* @var $deck Deck */
+        $deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->find($id);
+        if (!$deck) {
+            return new JsonResponse([
+                'success' => false,
+                'msg' => 'The deck could not be found'
+            ], 404);
+        }
+
+        if ($deck->getUser()->getId() !== $this->getUser()->getId()) {
+            return new JsonResponse([
+                'success' => false,
+                'msg'     => 'You are not allowed to delete this deck, you are not the owner.'
+            ], 401);
+        }
+
+        if ($deck->getNextDeck()) {
+            return new JsonResponse([
+                'success' => false,
+                'msg'     => 'You can only delete the latest deck.'
+            ], 401);
+        }
+
+        $all = $request->query->has('all');
+
+        $this->deleteDeck($deck, $all);
+        $em->flush();
+
+        return new JsonResponse([
+            'success' => true
+        ]);
+    }
+
 	/**
 	 * Delete one Deck of the authenticated user.
 	 *
@@ -501,7 +568,7 @@ class Oauth2Controller extends Controller
 	 */
 	public function saveDeckAction($id, Request $request)
 	{
-		/* @var $deck \AppBundle\Entity\Deck */
+		/* @var $deck Deck */
 		$em = $this->getDoctrine()->getManager();
 
 		if(!$id) {
@@ -691,7 +758,7 @@ class Oauth2Controller extends Controller
 	 */
 	public function publishDeckAction($id, Request $request)
 	{
-		/* @var $deck \AppBundle\Entity\Deck */
+		/* @var $deck Deck */
 		$deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->find($id);
 		if ($this->getUser()->getId() !== $deck->getUser()->getId()) {
 			throw $this->createAccessDeniedException("Access denied to this object.");
@@ -740,4 +807,32 @@ class Oauth2Controller extends Controller
         		'msg' => $decklist->getId()
         ]);
     }
+    
+    /**
+     * Delete Deck
+     *
+     * Recursive method to delete previous
+     * versions of a deck
+     *
+     * @param Deck $deck
+     * @param bool $recursive
+     */
+    private function deleteDeck(Deck $deck, $recursive = false)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if ($previousDeck = $deck->getPreviousDeck()) {
+            $previousDeck->setNextDeck(null);
+            $deck->setPreviousDeck(null);
+            if ($recursive) {
+                $this->deleteDeck($previousDeck, $recursive);
+            }
+        }
+
+        foreach ($deck->getChildren() as $decklist) {
+            $decklist->setParent(null);
+        }
+
+        $em->remove($deck);
+    }
+
 }

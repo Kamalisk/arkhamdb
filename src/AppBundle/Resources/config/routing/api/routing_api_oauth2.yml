@@ -42,3 +42,11 @@ api_oauth2_publish_deck:
         _controller: AppBundle:Oauth2:publishDeck
     requirements:
         id: \d+
+
+api_oauth2_delete_deck:
+    path: /deck/delete/{id}
+    methods: [DELETE]
+    defaults:
+        _controller: AppBundle:Oauth2:deleteDeck
+    requirements:
+        id: \d+
