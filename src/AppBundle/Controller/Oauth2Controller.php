@@ -731,16 +731,10 @@ class Oauth2Controller extends Controller
     public function updateCollectionAction(Request $request)
     {
         $success = false;
-        if (!$request->query->has('collection')) {
-            return new JsonResponse([
-                'success' => $success,
-                'msg'     => 'Collection parameter is required.'
-            ]);
-        }
 
-        $collection = json_decode($request->query->get('collection'));
+        $collection = (array) json_decode($request->get('collection'));
 
-        if ($collection === null) {
+        if (!count($collection)) {
             return new JsonResponse([
                 'success' => $success,
                 'msg'     => 'Collection parameter must be a JSON object of pack ids.'
