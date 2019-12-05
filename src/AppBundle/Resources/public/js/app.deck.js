@@ -965,7 +965,6 @@ deck.reset_limit_count = function (){
 				investigator.deck_options.push(new_option);
 			}
 		}
-		console.log(investigator);
 	}
 }
 

@@ -93,10 +93,10 @@ deck_history.all_changes = function all_changes() {
 		_.each(cards_removed, function (removal) {
 			var addition_xp = addition.card.xp;
 			var removal_xp = removal.card.xp;
-			if (addition.card.real_text.indexOf('Myriad.') !== -1) {
+			if (typeof addition.card.real_text !== 'undefined' && addition.card.real_text.indexOf('Myriad.') !== -1) {
 				addition.qty = 1;
 			}
-			if (removal.card.real_text.indexOf('Myriad.') !== -1) {
+			if (typeof removal.card.real_text !== 'undefined' && removal.card.real_text.indexOf('Myriad.') !== -1) {
 				removal.qty = 1;
 			}
 			if (addition.card.taboo_xp){
@@ -130,8 +130,7 @@ deck_history.all_changes = function all_changes() {
 	// then pay for all changes
 	_.each(cards_added, function (addition) {
 		var addition_xp = addition.card.xp;
-		
-		if (addition.card.real_text.indexOf('Myriad.') !== -1) {
+		if (typeof addition.card.real_text !== 'undefined' && addition.card.real_text.indexOf('Myriad.') !== -1) {
 			addition.qty = 1;
 		}
 		if (addition.card.exceptional){
