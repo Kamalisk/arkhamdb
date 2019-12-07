@@ -34,9 +34,11 @@ class Oauth2Controller extends Controller
 			return $deck->getDateUpdate();
 		}, $decks);
 
-		$response->setLastModified(max($dateUpdates));
-		if ($response->isNotModified($request)) {
-			return $response;
+		if (!empty($dateUpdates)) {
+			$response->setLastModified(max($dateUpdates));
+			if ($response->isNotModified($request)) {
+				return $response;
+			}
 		}
 
 		$content = json_encode($decks);
@@ -711,7 +713,13 @@ class Oauth2Controller extends Controller
 
 		$name = filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		$descriptionMd = trim($request->request->get('description_md'));
-
+		if (!$descriptionMd || strlen($descriptionMd) < 20){
+			// description too short
+			return new JsonResponse([
+				'success' => FALSE,
+				'msg' => "Description too short"
+			]);
+		}
 		$tournament_id = intval(filter_var($request->request->get('tournament_id'), FILTER_SANITIZE_NUMBER_INT));
 		$tournament = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->find($tournament_id);
 
@@ -780,4 +788,67 @@ class Oauth2Controller extends Controller
         $em->remove($deck);
     }
 
+     * Get the list of all the Collections of the authenticated user
+     *
+     * @ApiDoc(
+     *  section="Collection",
+     *  resource=true,
+     *  description="All the Collections",
+     * )
+     * @return Response
+     */
+    public function listCollectionAction()
+    {
+        $collection = null;
+        if ($owned_packs = $this->getUser()->getOwnedPacks()) {
+            $collection = explode(',', $owned_packs);
+        }
+
+        return new JsonResponse($collection);
+    }
+
+    /**
+     * Update the list of Collections of the authenticated user
+     *
+     * @ApiDoc(
+     *  section="Collection",
+     *  resource=true,
+     *  description="Update the list of Collections",
+     *  parameters={
+     *      {"name"="collection", "dataType"="string", "required"=true, "format"="JSON", "description"="Comma separated list of collection pack ids"},
+     *  },
+     * )
+     * @param Request $request
+     * @return Response
+     */
+    public function updateCollectionAction(Request $request)
+    {
+        $success = false;
+
+        $collection = (array) json_decode($request->get('collection'));
+
+        if (!count($collection)) {
+            return new JsonResponse([
+                'success' => $success,
+                'msg'     => 'Collection parameter must be a JSON object of pack ids.'
+            ]);
+        }
+
+        $collection = implode(',', $collection);
+
+        if (preg_match('/[^0-9\-,]/', $collection)) {
+            return new JsonResponse([
+                'success' => $success,
+                'msg'     => 'Invalid pack selection.'
+            ]);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $user->setOwnedPacks($collection);
+        $em->persist($user);
+        $em->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
 }

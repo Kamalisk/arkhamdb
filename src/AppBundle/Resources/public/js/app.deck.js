@@ -111,6 +111,12 @@ deck.onloaded = function(data){
 					deck.meta.faction_selected = option.faction_select[0];
 				} 
 			}
+			if (option.deck_size_select){
+				deck.choices.push(option);
+				if (!deck.meta || !deck.meta.deck_size_selected){
+					deck.meta.deck_size_selected = option.deck_size_select[0];
+				} 
+			}
 		}
 	}
 
@@ -294,7 +300,6 @@ deck.get_cards = function get_cards(sort, query, group) {
 	if (group){
 		options.$groupBy = group;
 	}
-
 	return app.data.cards.find(query, options);
 }
 
@@ -360,7 +365,11 @@ deck.get_xp_usage = function get_xp_usage(sort) {
 	var xp = 0;
 	deck.get_real_draw_deck().forEach(function (card) {
 		if (card && (card.xp || card.taboo_xp) && card.ignore < card.indeck) {
-			xp += (card.xp + (card.taboo_xp ? card.taboo_xp : 0)) * (card.indeck - card.ignore) * (card.exceptional ? 2: 1);
+			var qty = card.indeck;
+			if (card.real_text.indexOf('Myriad.') !== -1) {
+				qty = 1;
+			}
+			xp += (card.xp + (card.taboo_xp ? card.taboo_xp : 0)) * (qty - card.ignore) * (card.exceptional ? 2: 1);
 		}
 	});
 	return xp;
@@ -476,6 +485,16 @@ deck.get_layout_data = function get_layout_data(options) {
 		if (card.deck_requirements.size){
 			size = card.deck_requirements.size;
 		}
+		if (deck.meta && deck.meta.deck_size_selected){
+			size = parseInt(deck.meta.deck_size_selected, 10);
+		}
+		var versatile = app.data.cards.findById("06167");//06167
+		if (versatile && versatile.indeck) {
+			size = size + 5;
+			if (versatile.indeck > 1) {
+				size = size + 5;
+			}
+		}
 		// must have the required cards
 		if (card.deck_requirements.card){
 			$.each(card.deck_requirements.card, function (key, value){
@@ -526,13 +545,13 @@ deck.get_layout_data = function get_layout_data(options) {
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'pack_code': 1, "name": 1}, {'pack_name':1}, null));
 		layout_template = 1;
 	} else if (deck.sort_type == "setnumber"){
-		deck.update_layout_section(data, "cards", deck.get_layout_section({'pack_code': 1, "position": 1}, {'pack_name':1}, null));
+		deck.update_layout_section(data, "cards", deck.get_layout_section({'code': 1, "position": 1}, {'pack_name':1}, null));
 		layout_template = 1;
 	} else if (deck.sort_type == "faction"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_code': 1, "name":1}, {'faction_name': 1}, null));
 		layout_template = 1;
 	} else if (deck.sort_type == "factionnumber"){
-		deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_code': 1, "pack_code":1, "position": 1}, {'faction_name': 1}, null));
+		deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_code': 1, "code": 1, "position": 1}, {'faction_name': 1}, null));
 		layout_template = 1;
 	} else if (deck.sort_type == "factionxp"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_code': 1, "xp":1, "name": 1}, {'faction_name': 1}, null));
@@ -839,7 +858,16 @@ deck.get_problem = function get_problem() {
 		if (card.deck_requirements.size){
 			size = card.deck_requirements.size;
 		}
-
+		if (deck.meta && deck.meta.deck_size_selected){
+			size = parseInt(deck.meta.deck_size_selected, 10);
+		}
+		var versatile = app.data.cards.findById("06167");//06167
+		if (versatile && versatile.indeck) {
+			size = size + 5;
+			if (versatile.indeck > 1) {
+				size = size + 5;
+			}
+		}
 		// must have the required cards
 		if (card.deck_requirements.card){
 			var req_count = 0;
@@ -919,9 +947,23 @@ deck.get_problem = function get_problem() {
 
 deck.reset_limit_count = function (){
 	if (investigator){
-		for (var i = 0; i < investigator.deck_options.length; i++){
-			investigator.deck_options[i].limit_count = 0;
-			investigator.deck_options[i].atleast_count = {};
+		var versatile = app.data.cards.findById("06167");//06167
+		
+		for (var i = investigator.deck_options.length - 1; i >= 0 ; i--){
+			if (investigator.deck_options[i] && investigator.deck_options[i].name == "versatile") {
+				investigator.deck_options.splice(i, 1);
+			} else {
+				investigator.deck_options[i].limit_count = 0;
+				investigator.deck_options[i].atleast_count = {};
+			}
+		}
+		if (versatile && versatile.indeck) {
+			var new_option = {name: "versatile", faction:["guardian", "seeker", "survivor", "mystic", "rogue"], limit: 1, level:{"min":0, "max":0} };
+			investigator.deck_options.push(new_option);
+			if (versatile.indeck > 1) {
+				new_option = {name: "versatile", faction:["guardian", "seeker", "survivor", "mystic", "rogue"], limit: 1, level:{"min":0, "max":0} };
+				investigator.deck_options.push(new_option);
+			}
 		}
 	}
 }

@@ -17,6 +17,7 @@
 	<div class="row">
 		<div class="col-sm-8">
 			<form action="{{ url|raw }}" method="post" enctype="application/x-www-form-urlencoded">
+				{% if deck.id %} <p>Publish a deck to share it with the community or to ask for feedback. DO NOT publish a deck if you just want to make it available for Table Top Simulator (Simply make your deck public instead).</p> {% endif %}
 				<input type="hidden" name="deck_id" value="{% if deck is not null %}{{ deck.id }}{% endif %}">
 				<div class="form-group">
 					<label for="name">Name</label>

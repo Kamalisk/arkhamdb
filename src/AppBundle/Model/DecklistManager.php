@@ -104,6 +104,7 @@ class DecklistManager
 	public function findDecklistsByAge($ignoreEmptyDescriptions = FALSE)
 	{
 		$qb = $this->getQueryBuilder();
+		$qb->andWhere('LENGTH(d.descriptionMd) > 40');
 		$qb->orderBy('d.dateCreation', 'DESC');
 		return $this->getPaginator($qb->getQuery());
 	}

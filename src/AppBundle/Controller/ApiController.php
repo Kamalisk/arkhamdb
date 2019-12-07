@@ -319,7 +319,7 @@ class ApiController extends Controller
 
 		$jsonp = $request->query->get('jsonp');
 		
-		$list_taboos = $this->getDoctrine()->getRepository('AppBundle:Taboo')->findAll();
+		$list_taboos = $this->getDoctrine()->getRepository('AppBundle:Taboo')->findBy([], ['id' => 'DESC']);
 
 		// check the last-modified-since header
 
@@ -680,8 +680,11 @@ class ApiController extends Controller
 		
 		/* @var $deck \AppBundle\Entity\Deck */
 		$deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->find($deck_id);
-
-		if(!$deck || !$deck->getUser() || !$deck->getUser()->getIsShareDecks()) {
+		// if we have no deck, check deck uuid
+		if (!$deck) {
+			$deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->findOneBy(["uuid"=> $deck_id]);
+		}
+		if(!$deck || !$deck->getUser() || (!$deck->getUser()->getIsShareDecks() && !$deck->getShared()) ) {
 			throw $this->createAccessDeniedException("Access denied to this object.");
 		}
 		

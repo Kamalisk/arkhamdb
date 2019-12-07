@@ -85,18 +85,29 @@ ui.build_faction_selector = function build_faction_selector() {
 	//app.deck.choices.push({'faction_select':["guardian","seeker"]});
 	
 	$('[data-filter=faction_selector]').hide();
+	$('[data-filter=deck_size_selector]').hide();
 	
 	$('[data-filter=faction_selector]').empty();
+	$('[data-filter=deck_size_selector]').empty();
+	
 	if (app.deck.choices && app.deck.choices.length > 0){
-		$('[data-filter=faction_selector]').show();
 		for (var i = 0; i < app.deck.choices.length; i++){
 			var choice = app.deck.choices[i];
 			if (choice.faction_select) {
+				$('[data-filter=faction_selector]').show();
 				choice.faction_select.forEach(function(faction_code){
 					var example = app.data.cards.find({"faction_code": faction_code})[0];
 					var label = $('<option value="' + faction_code + '" title="'+example.faction_name+'"><span class="icon-' + faction_code + '"></span> ' + example.faction_name + '</option>');
 					//label.tooltip({container: 'body'});
 					$('[data-filter=faction_selector]').append(label);
+				});
+			}
+			if (choice.deck_size_select) {
+				$('[data-filter=deck_size_selector]').show();
+				choice.deck_size_select.forEach(function(size){
+					var label = $('<option value="' + size + '" title="'+size+' Cards"> ' + size + ' Cards</option>');
+					//label.tooltip({container: 'body'});
+					$('[data-filter=deck_size_selector]').append(label);
 				});
 			}
 		}
@@ -144,6 +155,7 @@ ui.build_faction_selector = function build_faction_selector() {
 	
 	$('[data-filter=subtype_code]').button();
 }
+
 
 /**
  * builds the type selector
@@ -194,7 +206,7 @@ ui.build_taboo_selector = function build_taboo_selector() {
 		}
 	}, {
 		$orderBy: {
-			id: 1
+			id: -1
 		}
 	}).forEach(function(record) {
 		$('<option value="'+record.id+'">' + record.name + ' (' + record.date_start +')</option>').appendTo('[data-filter=taboo_code]');
@@ -285,6 +297,9 @@ ui.build_pack_selector = function build_pack_selector() {
 				pack_code: record.code,
 				indeck: {
 					'$gt': 1
+				},
+				quantity: {
+					'$eq': 1
 				}
 			});
 			if(cards.length) checked = true;
@@ -313,8 +328,13 @@ ui.init_selectors = function init_selectors() {
 	} else {
 		$('[data-filter=taboo_code]').val("");
 	}
-	if (app.deck.meta && app.deck.meta.faction_selected){
-		$('[data-filter=faction_selector]').val(app.deck.meta.faction_selected);
+	if (app.deck.meta){
+		if (app.deck.meta.faction_selected){
+			$('[data-filter=faction_selector]').val(app.deck.meta.faction_selected);
+		}
+		if (app.deck.meta.deck_size_selected){
+			$('[data-filter=deck_size_selector]').val(app.deck.meta.deck_size_selected);
+		}
 	}
 	
 }
@@ -522,6 +542,9 @@ ui.chaos = function() {
 	
 	var size = valid_cards.length;
 	var deck_size = app.data.cards.findById(app.deck.get_investigator_code()).deck_requirements.size;
+	if (app.deck.meta.deck_size_selected) {
+		deck_size = parseInt(app.deck.meta.deck_size_selected);
+	}
 	if (size >= deck_size){
 		while (counter < deck_size){
 			var random_id = Math.floor(Math.random() * size)
@@ -649,6 +672,14 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	$('#build_filters [data-filter=faction_selector]').on({
 		change : function(event){
 			app.deck.meta.faction_selected = event.target.value;
+			ui.refresh_deck();
+			ui.refresh_lists();
+		}
+	});
+
+	$('#build_filters [data-filter=deck_size_selector]').on({
+		change : function(event){
+			app.deck.meta.deck_size_selected = event.target.value;
 			ui.refresh_deck();
 			ui.refresh_lists();
 		}
