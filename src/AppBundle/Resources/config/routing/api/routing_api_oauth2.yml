@@ -43,6 +43,14 @@ api_oauth2_publish_deck:
     requirements:
         id: \d+
 
+api_oauth2_delete_deck:
+    path: /deck/delete/{id}
+    methods: [DELETE]
+    defaults:
+        _controller: AppBundle:Oauth2:deleteDeck
+    requirements:
+        id: \d+
+
 api_oauth2_list_collection:
     path: /collection
     methods: [GET]
@@ -54,3 +62,4 @@ api_oauth2_update_collection:
     methods: [PUT]
     defaults:
         _controller: AppBundle:Oauth2:updateCollection
+
