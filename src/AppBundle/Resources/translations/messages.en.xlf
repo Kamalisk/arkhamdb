@@ -177,6 +177,10 @@
         <source>Email</source>
         <target>Email</target>
       </trans-unit>
+      <trans-unit id="f1b7869e146d6dfec49f5eeb69c6de7d" resname="Deck Building">
+        <source>Deck Building</source>
+        <target>__Deck Building</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

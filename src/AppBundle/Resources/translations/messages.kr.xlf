@@ -1,45 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file source-language="en" target-language="es" datatype="plaintext" original="file.ext">
+  <file source-language="en" target-language="kr" datatype="plaintext" original="file.ext">
     <header>
       <tool tool-id="symfony" tool-name="Symfony"/>
     </header>
     <body>
-      <trans-unit id="a54df7f0b810414467735acc4f3ca4f9" resname="My Decks">
-        <source>My Decks</source>
-        <target>My Decks</target>
+      <trans-unit id="0557fa923dcee4d0f86b1409f5c2167f" resname="Back">
+        <source>Back</source>
+        <target>Back</target>
       </trans-unit>
-      <trans-unit id="41bee85f0a581e16440caf695024e618" resname="My Teams">
-        <source>My Teams</source>
-        <target>My Teams</target>
-      </trans-unit>
-      <trans-unit id="e002169a321adf2814cd157a8dd0ecc5" resname="Decklists">
-        <source>Decklists</source>
-        <target>Decklists</target>
-      </trans-unit>
-      <trans-unit id="cd81f9f55969c822377f076017bb3484" resname="Cards">
-        <source>Cards</source>
-        <target>Cards</target>
-      </trans-unit>
-      <trans-unit id="34e80a799d144cfe4af46815e103f017" resname="Reviews">
-        <source>Reviews</source>
-        <target>Reviews</target>
-      </trans-unit>
-      <trans-unit id="1f4da964f8eab62e96e8cfe406e44364" resname="Rules">
-        <source>Rules</source>
-        <target>Rules</target>
-      </trans-unit>
-      <trans-unit id="483a5da192f46e3cfe8391d3ef234fc4" resname="FAQs">
-        <source>FAQs</source>
-        <target>FAQs</target>
-      </trans-unit>
-      <trans-unit id="8f7f4c1ce7a4f933663d10543562b096" resname="About">
-        <source>About</source>
-        <target>About</target>
-      </trans-unit>
-      <trans-unit id="db974238714ca8de634a7ce1d083a14f" resname="API">
-        <source>API</source>
-        <target>API</target>
+      <trans-unit id="b7a772bd89d5f4413e9e6373f8dede2d" resname="Your query didn't match any card.">
+        <source>Your query didn't match any card.</source>
+        <target>Your query didn't match any card.</target>
       </trans-unit>
       <trans-unit id="20b4f77bd00b4f63a49ec8e08f3bf6a6" resname="Cost">
         <source>Cost</source>
@@ -105,17 +77,49 @@
         <source>Test Icons</source>
         <target>Test Icons</target>
       </trans-unit>
-      <trans-unit id="0557fa923dcee4d0f86b1409f5c2167f" resname="Back">
-        <source>Back</source>
-        <target>Back</target>
-      </trans-unit>
-      <trans-unit id="b7a772bd89d5f4413e9e6373f8dede2d" resname="Your query didn't match any card.">
-        <source>Your query didn't match any card.</source>
-        <target>Your query didn't match any card.</target>
+      <trans-unit id="f1b7869e146d6dfec49f5eeb69c6de7d" resname="Deck Building">
+        <source>Deck Building</source>
+        <target>Deck Building</target>
       </trans-unit>
       <trans-unit id="681aa47f963747cc19ec382e0c7944df" resname="Related Cards">
         <source>Related Cards</source>
         <target>Related Cards</target>
+      </trans-unit>
+      <trans-unit id="a54df7f0b810414467735acc4f3ca4f9" resname="My Decks">
+        <source>My Decks</source>
+        <target>My Decks</target>
+      </trans-unit>
+      <trans-unit id="41bee85f0a581e16440caf695024e618" resname="My Teams">
+        <source>My Teams</source>
+        <target>My Teams</target>
+      </trans-unit>
+      <trans-unit id="e002169a321adf2814cd157a8dd0ecc5" resname="Decklists">
+        <source>Decklists</source>
+        <target>Decklists</target>
+      </trans-unit>
+      <trans-unit id="cd81f9f55969c822377f076017bb3484" resname="Cards">
+        <source>Cards</source>
+        <target>Cards</target>
+      </trans-unit>
+      <trans-unit id="34e80a799d144cfe4af46815e103f017" resname="Reviews">
+        <source>Reviews</source>
+        <target>Reviews</target>
+      </trans-unit>
+      <trans-unit id="1f4da964f8eab62e96e8cfe406e44364" resname="Rules">
+        <source>Rules</source>
+        <target>Rules</target>
+      </trans-unit>
+      <trans-unit id="483a5da192f46e3cfe8391d3ef234fc4" resname="FAQs">
+        <source>FAQs</source>
+        <target>FAQs</target>
+      </trans-unit>
+      <trans-unit id="8f7f4c1ce7a4f933663d10543562b096" resname="About">
+        <source>About</source>
+        <target>About</target>
+      </trans-unit>
+      <trans-unit id="db974238714ca8de634a7ce1d083a14f" resname="API">
+        <source>API</source>
+        <target>API</target>
       </trans-unit>
       <trans-unit id="d9ed9cfb2b4c0bc9bc7e2208ee80aec0" resname="Member since">
         <source>Member since</source>
@@ -140,6 +144,14 @@
       <trans-unit id="8d9bec4f224970e231041639de877092" resname="Reputation">
         <source>Reputation</source>
         <target>Reputation</target>
+      </trans-unit>
+      <trans-unit id="f6039d44b29456b20f8f373155ae4973" resname="Username">
+        <source>Username</source>
+        <target>Username</target>
+      </trans-unit>
+      <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d" resname="Email">
+        <source>Email</source>
+        <target>Email</target>
       </trans-unit>
       <trans-unit id="8b9c006d512295284b651b36cd6349a6" resname="Something about you">
         <source>Something about you</source>
@@ -168,18 +180,6 @@
       <trans-unit id="c9cc8cce247e49bae79f15173ce97354" resname="Save">
         <source>Save</source>
         <target>Save</target>
-      </trans-unit>
-      <trans-unit id="f6039d44b29456b20f8f373155ae4973" resname="Username">
-        <source>Username</source>
-        <target>Username</target>
-      </trans-unit>
-      <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d" resname="Email">
-        <source>Email</source>
-        <target>Email</target>
-      </trans-unit>
-      <trans-unit id="f1b7869e146d6dfec49f5eeb69c6de7d" resname="Deck Building">
-        <source>Deck Building</source>
-        <target>__Deck Building</target>
       </trans-unit>
     </body>
   </file>
