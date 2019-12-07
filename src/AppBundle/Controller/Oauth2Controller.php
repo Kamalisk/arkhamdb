@@ -788,6 +788,7 @@ class Oauth2Controller extends Controller
         $em->remove($deck);
     }
 
+     /*
      * Get the list of all the Collections of the authenticated user
      *
      * @ApiDoc(
