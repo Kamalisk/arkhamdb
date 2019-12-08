@@ -138,6 +138,9 @@ class DeckValidationHelper
 				return false;
 			}
 		}
+		
+		// allow any 2 random faction cards for now
+		$deck_options[] = json_decode("{faction:['guardian','rogue', 'mystic','survivor','seeker'], limit:2}");
 		// validate deck. duplicating code from app.deck.js but in php
 		if ($deck_options){
 			foreach($deck_options as $option) {
@@ -239,8 +242,10 @@ class DeckValidationHelper
 					
 					// if we exceed the limit, the deck is invalid 
 					if (isset($option->limit_count) && $option->limit_count && $option->limit) {
-						if ($option->limit_count > $option->limit) {
+						// for now just complain about horribly wrong decks with double over the limit cards
+						if ($option->limit_count > $option->limit * 2) {
 							return false;
+							//return false;
 						}
 					}
 					return true;

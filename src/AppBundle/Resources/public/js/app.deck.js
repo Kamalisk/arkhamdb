@@ -958,10 +958,10 @@ deck.reset_limit_count = function (){
 			}
 		}
 		if (versatile && versatile.indeck) {
-			var new_option = {name: "versatile", faction:["guardian", "seeker", "survivor", "mystic", "rogue"], limit: 1, level:{"min":0, "max":0} };
+			var new_option = {name: "versatile", faction:["guardian", "seeker", "survivor", "mystic", "rogue"], limit: 1, limit_count: 0, level:{"min":0, "max":0} };
 			investigator.deck_options.push(new_option);
 			if (versatile.indeck > 1) {
-				new_option = {name: "versatile", faction:["guardian", "seeker", "survivor", "mystic", "rogue"], limit: 1, level:{"min":0, "max":0} };
+				new_option = {name: "versatile", faction:["guardian", "seeker", "survivor", "mystic", "rogue"], limit: 1, limit_count: 0, level:{"min":0, "max":0} };
 				investigator.deck_options.push(new_option);
 			}
 		}
@@ -996,14 +996,14 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 	}
 	
 	//var investigator = app.data.cards.findById(investigator_code);
-	
+	// store the overflow from one rule to another for deck limit counting
+	var overflow = 0; 
 	if (investigator && investigator.deck_options && investigator.deck_options.length) {
 		
 		for (var i = 0; i < investigator.deck_options.length; i++){
 			var option = investigator.deck_options[i];
 			
 			var valid = false;
-
 
 			if (option.faction_select && app.deck.meta && app.deck.meta.faction_selected){
 				// if the user has selected a faction, update this option with the correct choice
@@ -1112,14 +1112,24 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 				return false;
 			}else {
 				if (limit_count && option.limit){
+					if (option.limit_count >= option.limit) {
+						continue;
+					} 
 					if (hard_count){
-						if (option.limit_count >= option.limit) {
-
-							return false;
-						}
 						option.limit_count += 1;
 					} else {
-						option.limit_count += card.indeck;
+						// if we have left over from previous options, use that value instead of the qty
+						if (overflow) {
+							option.limit_count += overflow;
+						} else {
+							option.limit_count += card.indeck;
+						}
+						
+					}
+					if (option.limit_count > option.limit) {
+						overflow = option.limit_count - option.limit;
+						option.limit_count = option.limit;
+						continue;
 					}
 					
 				}
