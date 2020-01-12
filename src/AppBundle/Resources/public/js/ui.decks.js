@@ -20,7 +20,9 @@ ui.set_tags = function set_tags(id, tags) {
 	var elt = $('tr[data-id='+id+']');
 	var div = elt.find('div.tags').empty();
 	tags.forEach(function (tag) {
-		div.append($('<span class="tag">'+tag+'</span>'));
+		if (tag) {
+			div.append($('<span class="tag">'+tag+'</span>'));
+		}
 	});
 
 	ui.update_tag_toggles();
@@ -28,41 +30,41 @@ ui.set_tags = function set_tags(id, tags) {
 
 ui.tag_add = function tag_add(ids) {
     $('#tag_add_ids').val(ids);
-	$('#tagAddModal').modal('show');
+		$('#tagAddModal').modal('show');
     setTimeout(function() { $('#tag_add_tags').focus(); }, 500);
 }
 
 ui.tag_add_process = function tag_add_process(event) {
-    event.preventDefault();
-    var ids = $('#tag_add_ids').val().split(/,/);
-    var tags = $('#tag_add_tags').val().split(/\s+/);
-    if(!ids.length || !tags.length) return;
+	event.preventDefault();
+	var ids = $('#tag_add_ids').val().split(/,/);
+	var tags = $('#tag_add_tags').val().split(/\s+/);
+	if(!ids.length || !tags.length) return;
 	ui.tag_process_any('tag_add', { ids: ids, tags: tags });
 }
 
 ui.tag_remove = function tag_remove(ids) {
-    $('#tag_remove_ids').val(ids);
+  $('#tag_remove_ids').val(ids);
 	$('#tagRemoveModal').modal('show');
-    setTimeout(function() { $('#tag_remove_tags').focus(); }, 500);
+  setTimeout(function() { $('#tag_remove_tags').focus(); }, 500);
 }
 
 ui.tag_remove_process = function tag_remove_process(event) {
-    event.preventDefault();
-    var ids = $('#tag_remove_ids').val().split(/,/);
-    var tags = $('#tag_remove_tags').val().split(/\s+/);
-    if(!ids.length || !tags.length) return;
+	event.preventDefault();
+	var ids = $('#tag_remove_ids').val().split(/,/);
+	var tags = $('#tag_remove_tags').val().split(/\s+/);
+	if(!ids.length || !tags.length) return;
 	ui.tag_process_any('tag_remove', { ids: ids, tags: tags });
 }
 
 ui.tag_clear = function tag_clear(ids) {
-    $('#tag_clear_ids').val(ids);
+  $('#tag_clear_ids').val(ids);
 	$('#tagClearModal').modal('show');
 }
 
 ui.tag_clear_process = function tag_clear_process(event) {
-    event.preventDefault();
-    var ids = $('#tag_clear_ids').val().split(/,/);
-    if(!ids.length) return;
+	event.preventDefault();
+	var ids = $('#tag_clear_ids').val().split(/,/);
+	if(!ids.length) return;
 	ui.tag_process_any('tag_clear', { ids: ids });
 }
 
@@ -95,7 +97,9 @@ ui.update_tag_toggles = function update_tag_toggles() {
 	});
 	$('#tag_toggles').empty();
 	_.uniq(tags).forEach(function (tag) {
-		$('<button type="button" class="btn btn-default btn-xs" data-toggle="button" data-tag="'+tag+'">'+tag+'</button>').appendTo('#tag_toggles');
+		if (tag) {
+			$('<button type="button" class="btn btn-default btn-xs" data-toggle="button" data-tag="'+tag+'">'+tag+'</button>').appendTo('#tag_toggles');
+		}
 	});
 }
 
