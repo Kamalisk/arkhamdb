@@ -33,7 +33,8 @@ deck_history.all_changes = function all_changes() {
 	var diff = result[0];
 	//console.log("DIFFF ", diff);
 	
-	
+	var free_0_cards = 0;
+	var removed_0_cards = 0;
 	var cards_removed = [];
 	var cards_added = [];
 	var cards_exiled = {};
@@ -58,6 +59,10 @@ deck_history.all_changes = function all_changes() {
 			"card": card
 		};
 		cards_added.push(card_change);
+		if (card_change.code == "06167") {
+			free_0_cards += card_change.qty * 5;
+			removed_0_cards += card_change.qty * 5;
+		}
 	});
 	
 	// find arcane research
@@ -69,8 +74,6 @@ deck_history.all_changes = function all_changes() {
 		
 	// find adaptable
 	var adaptable = app.data.cards.findById("02110");
-	var free_0_cards = 0;
-	var removed_0_cards = 0;
 	if (adaptable && adaptable.indeck){
 		free_0_cards += 2 * adaptable.indeck;
 	}
@@ -85,9 +88,7 @@ deck_history.all_changes = function all_changes() {
 			}
 		});
 	}
-	
-	//console.log(cards_added);
-	
+		
 	// first check for same named cards
 	_.each(cards_added, function (addition) {
 		_.each(cards_removed, function (removal) {

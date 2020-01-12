@@ -30,6 +30,8 @@ deck_upgrades.display = function display() {
 		var result = app.diff.compute_simple([last_deck.content, deck.content]);
 		if(!result) return;
 		
+		var free_0_cards = 0;
+		var removed_0_cards = 0;
 		var diff = result[0];
 		var cards_removed = [];
 		var cards_added = [];
@@ -55,6 +57,10 @@ deck_upgrades.display = function display() {
 				"card": card
 			};
 			cards_added.push(card_change);
+			if (card_change.code == "06167") {
+				free_0_cards += card_change.qty * 5;
+				removed_0_cards += card_change.qty * 5;
+			}
 		});
 				
 		// find arcane research
@@ -66,8 +72,6 @@ deck_upgrades.display = function display() {
 
 		// find adaptable
 		var adaptable = app.data.cards.findById("02110");
-		var free_0_cards = 0;
-		var removed_0_cards = 0;
 		if (adaptable && adaptable.indeck){
 			free_0_cards += 2 * adaptable.indeck;
 		}
@@ -83,7 +87,6 @@ deck_upgrades.display = function display() {
 				}
 			});
 		}
-		
 		
 		// first check for same named cards
 		_.each(cards_added, function (addition) {
