@@ -88,7 +88,8 @@ deck_history.all_changes = function all_changes() {
 			}
 		});
 	}
-		
+	
+	var myriad_madness = {};
 	// first check for same named cards
 	_.each(cards_added, function (addition) {
 		_.each(cards_removed, function (removal) {
@@ -96,6 +97,10 @@ deck_history.all_changes = function all_changes() {
 			var removal_xp = removal.card.xp;
 			if (typeof addition.card.real_text !== 'undefined' && addition.card.real_text.indexOf('Myriad.') !== -1) {
 				addition.qty = 1;
+				if (myriad_madness[addition.real_name]) {
+					addition.qty = 0;
+				}
+				myriad_madness[addition.real_name] = 1;
 			}
 			if (typeof removal.card.real_text !== 'undefined' && removal.card.real_text.indexOf('Myriad.') !== -1) {
 				removal.qty = 1;
@@ -127,12 +132,17 @@ deck_history.all_changes = function all_changes() {
 		});
 	});
 	
+	myriad_madness = {};
 	//console.log(removed_0_cards);
 	// then pay for all changes
 	_.each(cards_added, function (addition) {
 		var addition_xp = addition.card.xp;
 		if (typeof addition.card.real_text !== 'undefined' && addition.card.real_text.indexOf('Myriad.') !== -1) {
 			addition.qty = 1;
+			if (myriad_madness[addition.real_name]) {
+				addition.qty = 0;
+			}
+			myriad_madness[addition.real_name] = 1;
 		}
 		if (addition.card.exceptional){
 			addition_xp *= 2;

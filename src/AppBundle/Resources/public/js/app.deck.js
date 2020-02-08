@@ -363,11 +363,16 @@ deck.get_real_draw_deck_size = function get_real_draw_deck_size(sort) {
  */
 deck.get_xp_usage = function get_xp_usage(sort) {
 	var xp = 0;
+	var myriad_madness = {};
 	deck.get_real_draw_deck().forEach(function (card) {
 		if (card && (card.xp || card.taboo_xp) && card.ignore < card.indeck) {
 			var qty = card.indeck;
 			if (card.real_text.indexOf('Myriad.') !== -1) {
 				qty = 1;
+				if (myriad_madness[card.title]) {
+					qty = 0;
+				}
+				myriad_madness[card.title] = 1;
 			}
 			xp += (card.xp + (card.taboo_xp ? card.taboo_xp : 0)) * (qty - card.ignore) * (card.exceptional ? 2: 1);
 		}
@@ -836,9 +841,15 @@ deck.get_copies_and_deck_limit = function get_copies_and_deck_limit() {
 					nb_copies: card.indeck,
 					deck_limit: card.deck_limit
 			};
+			if (typeof card.real_text !== 'undefined' && card.real_text.indexOf('Myriad.') !== -1) {
+				copies_and_deck_limit[card.real_name].deck_limit = 3;
+			}
 		} else {
 			value.nb_copies += card.indeck;
 			value.deck_limit = Math.min(card.deck_limit, value.deck_limit);
+			if (typeof card.real_text !== 'undefined' && card.real_text.indexOf('Myriad.') !== -1) {
+				value.deck_limit = 3;
+			}
 		}
 	})
 	return copies_and_deck_limit;
