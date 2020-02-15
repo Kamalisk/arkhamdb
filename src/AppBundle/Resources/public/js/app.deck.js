@@ -369,10 +369,10 @@ deck.get_xp_usage = function get_xp_usage(sort) {
 			var qty = card.indeck;
 			if (card.real_text.indexOf('Myriad.') !== -1) {
 				qty = 1;
-				if (myriad_madness[card.title]) {
+				if (myriad_madness[card.real_name]) {
 					qty = 0;
 				}
-				myriad_madness[card.title] = 1;
+				myriad_madness[card.real_name] = 1;
 			}
 			xp += (card.xp + (card.taboo_xp ? card.taboo_xp : 0)) * (qty - card.ignore) * (card.exceptional ? 2: 1);
 		}
