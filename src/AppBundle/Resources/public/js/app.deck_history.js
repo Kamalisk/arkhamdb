@@ -97,10 +97,10 @@ deck_history.all_changes = function all_changes() {
 			var removal_xp = removal.card.xp;
 			if (typeof addition.card.real_text !== 'undefined' && addition.card.real_text.indexOf('Myriad.') !== -1) {
 				addition.qty = 1;
-				if (myriad_madness[addition.real_name]) {
+				if (myriad_madness[addition.card.real_name]) {
 					addition.qty = 0;
 				}
-				myriad_madness[addition.real_name] = 1;
+				myriad_madness[addition.card.real_name] = 1;
 			}
 			if (typeof removal.card.real_text !== 'undefined' && removal.card.real_text.indexOf('Myriad.') !== -1) {
 				removal.qty = 1;
@@ -139,10 +139,10 @@ deck_history.all_changes = function all_changes() {
 		var addition_xp = addition.card.xp;
 		if (typeof addition.card.real_text !== 'undefined' && addition.card.real_text.indexOf('Myriad.') !== -1) {
 			addition.qty = 1;
-			if (myriad_madness[addition.real_name]) {
+			if (myriad_madness[addition.card.real_name]) {
 				addition.qty = 0;
 			}
-			myriad_madness[addition.real_name] = 1;
+			myriad_madness[addition.card.real_name] = 1;
 		}
 		if (addition.card.exceptional){
 			addition_xp *= 2;
