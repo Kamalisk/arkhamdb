@@ -103,7 +103,7 @@ class UserController extends Controller
 
         $content = null;
 
-        $securityContext = $this->container->get('security.context');
+        $securityContext = $this->container->get('security.authorization_checker');
         if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) 
         {
         	$user = $this->getUser();

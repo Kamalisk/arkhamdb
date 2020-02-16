@@ -51,7 +51,7 @@ class BuilderController extends Controller
 		$all_unique_investigators = [];
 		$my_unique_investigators = [];
 		foreach($investigators as $investigator){
-			$deck_requirements = $this->get('DeckValidationHelper')->parseReqString($investigator->getDeckRequirements());
+			$deck_requirements = $this->get('deck_validation_helper')->parseReqString($investigator->getDeckRequirements());
 			if (isset($deck_requirements['size']) && $deck_requirements['size']){
 				$cards_to_add = [];
 				if (isset($deck_requirements['card']) && $deck_requirements['card']){
@@ -136,7 +136,7 @@ class BuilderController extends Controller
 		$cards_to_add = [];
 		// parse deck requirements and pre-fill deck with needed cards
 		if ($investigator->getDeckRequirements()){
-			$deck_requirements = $this->get('DeckValidationHelper')->parseReqString($investigator->getDeckRequirements());
+			$deck_requirements = $this->get('deck_validation_helper')->parseReqString($investigator->getDeckRequirements());
 			if (isset($deck_requirements['card']) && $deck_requirements['card']){
 				foreach($deck_requirements['card'] as $card_code => $alternates){
 					if ($card_code){

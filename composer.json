@@ -11,24 +11,24 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "symfony/symfony": "~2.8",
+        "symfony/symfony": "~3.0",
         "symfony/assetic-bundle": "~2.3",
         "symfony/swiftmailer-bundle": "~2.3",
         "symfony/monolog-bundle": "~2.4",
-        "sensio/distribution-bundle": "~3.0,>=3.0.12",
-        "sensio/framework-extra-bundle": "~3.0,>=3.0.2",
+        "sensio/distribution-bundle": "*",
+        "sensio/framework-extra-bundle": "*",
         "incenteev/composer-parameter-handler": "~2.0",
-        "friendsofsymfony/user-bundle": "~2.0",
+        "friendsofsymfony/user-bundle": "*",
         "doctrine/dbal": "^2.5",
         "doctrine/orm": "^2.5",
         "doctrine/doctrine-bundle": "^1.5",
-	    "liuggio/ExcelBundle": "^2.0",
-        "friendsofsymfony/jsrouting-bundle": "^1.5",
+        "liuggio/excelbundle": "^2.0",
+        "friendsofsymfony/jsrouting-bundle": "*",
         "twig/extensions": "^1.2",
         "ezyang/htmlpurifier": "^4.6",
         "leafo/scssphp": "^0.2.0",
         "patchwork/jsqueeze": "~1.0",
-        "friendsofsymfony/oauth-server-bundle": "^1.4",
+        "friendsofsymfony/oauth-server-bundle": "*",
         "nelmio/api-doc-bundle": "^2.9",
         "erusev/parsedown": "^1.6",
         "stof/doctrine-extensions-bundle": "^1.2",
@@ -36,7 +36,7 @@
         "doctrine/doctrine-migrations-bundle": "^1.3"
     },
     "require-dev": {
-        "sensio/generator-bundle": "~2.3"
+        "sensio/generator-bundle": "*"
     },
     "scripts": {
         "post-root-package-install": [
@@ -47,7 +47,7 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "php app/console assetic:dump",
+            "php bin/console assetic:dump",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::removeSymfonyStandardFiles",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
@@ -57,7 +57,7 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "php app/console assetic:dump",
+            "php bin/console assetic:dump",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::removeSymfonyStandardFiles",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
@@ -69,6 +69,8 @@
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
+        "symfony-var-dir": "var",
+        "symfony-bin-dir": "bin",
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"

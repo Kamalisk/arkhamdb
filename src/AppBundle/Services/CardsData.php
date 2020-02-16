@@ -6,7 +6,8 @@ namespace AppBundle\Services;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Bundle\FrameworkBundle\Templating\Helper\AssetsHelper;
+use Symfony\Component\Asset\Packages;
+// use Symfony\Bundle\FrameworkBundle\Templating\Helper\AssetsHelper;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use AppBundle\Helper\DeckValidationHelper;
 
@@ -15,7 +16,7 @@ use AppBundle\Helper\DeckValidationHelper;
  */
 class CardsData
 {
-	public function __construct(Registry $doctrine, RequestStack $request_stack, Router $router, AssetsHelper $assets_helper, DeckValidationHelper $deckValidationHelper, $rootDir) {
+	public function __construct(Registry $doctrine, RequestStack $request_stack, Router $router, Packages $assets_helper, DeckValidationHelper $deckValidationHelper, $rootDir) {
 		$this->doctrine = $doctrine;
 		$this->request_stack = $request_stack;
 		$this->router = $router;
