@@ -22,6 +22,7 @@ security:
                 check_path: oauth_server_auth_login_check
                 login_path: oauth_server_auth_login
             anonymous: true
+            logout_on_user_change: true
 
         api_oauth2:
             pattern:    ^/api/oauth2
@@ -40,6 +41,7 @@ security:
                 always_use_default_target_path: false
                 default_target_path: index
             logout:       true
+            logout_on_user_change: true
             anonymous:    true
             remember_me:
                 secret:   "%secret%"

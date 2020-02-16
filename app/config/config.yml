@@ -16,6 +16,10 @@ parameters:
         - es
     default_locale: en
 
+sensio_framework_extra:
+  router:
+    annotations: false
+
 framework:
     #esi:             ~
     translator:      { fallbacks: ["en"] }
@@ -31,7 +35,6 @@ framework:
         engines: ['twig']
     default_locale:  "%locale%"
     trusted_hosts:   ~
-    trusted_proxies: ~
     session:
         # handler_id set to null will use default session handler from php.ini
         handler_id:  ~
@@ -44,8 +47,8 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     globals:
-        default_locale: %default_locale%
-        supported_locales: %supported_locales%
+        default_locale: "%default_locale%"
+        supported_locales: "%supported_locales%"
         cards_data: "@cards_data"
         deck_validation_helper: "@deck_validation_helper"
         google_analytics_tracking_code: "%google_analytics_tracking_code%"
@@ -106,8 +109,8 @@ doctrine:
 
 # JMSI18nRoutingBundle
 jms_i18n_routing:
-    default_locale: %default_locale%
-    locales: %supported_locales%
+    default_locale: "%default_locale%"
+    locales: "%supported_locales%"
     strategy: custom
     hosts:
         en: "%website_url%"
