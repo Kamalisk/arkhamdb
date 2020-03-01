@@ -1087,7 +1087,7 @@ class BuilderController extends Controller
 			throw new BadRequestHttpException("Wrong content ".json_encode($diff));
 		}
 
-		if(count($diff[0]) || count($diff[1])) {
+		if( (isset($diff[0]) && count($diff[0])) || (isset($diff[1]) && count($diff[1])) ) {
 			$change = new Deckchange();
 			$change->setDeck($deck);
 			$change->setVariation(json_encode($diff));
