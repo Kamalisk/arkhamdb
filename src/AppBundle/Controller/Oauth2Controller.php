@@ -131,7 +131,7 @@ class Oauth2Controller extends Controller
 
 		// Parse deck requirements and pre-fill deck with needed cards
 		if ($investigator->getDeckRequirements()){
-			$deck_requirements = $this->get('DeckValidationHelper')->parseReqString($investigator->getDeckRequirements());
+			$deck_requirements = $this->get('deck_validation_helper')->parseReqString($investigator->getDeckRequirements());
 			if (isset($deck_requirements['card']) && $deck_requirements['card']){
 				foreach($deck_requirements['card'] as $card_code => $alternates){
 					if ($card_code){
