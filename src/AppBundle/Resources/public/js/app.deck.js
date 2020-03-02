@@ -367,7 +367,7 @@ deck.get_xp_usage = function get_xp_usage(sort) {
 	deck.get_real_draw_deck().forEach(function (card) {
 		if (card && (card.xp || card.taboo_xp) && card.ignore < card.indeck) {
 			var qty = card.indeck;
-			if (card.real_text.indexOf('Myriad.') !== -1) {
+			if (typeof card.real_text !== 'undefined' && card.real_text.indexOf('Myriad.') !== -1) {
 				qty = 1;
 				if (myriad_madness[card.real_name]) {
 					qty = 0;

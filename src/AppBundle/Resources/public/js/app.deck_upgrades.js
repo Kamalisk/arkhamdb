@@ -95,7 +95,7 @@ deck_upgrades.display = function display() {
 				var addition_xp = addition.card.xp;
 				var removal_xp = removal.card.xp;
 
-				if (addition.card.real_text.indexOf('Myriad.') !== -1) {
+				if (typeof addition.card.real_text !== 'undefined' && addition.card.real_text.indexOf('Myriad.') !== -1) {
 					addition.qty = 1;
 					if (myriad_madness[addition.card.real_name]) {
 						addition.qty = 0;
@@ -138,7 +138,7 @@ deck_upgrades.display = function display() {
 	_.each(cards_added, function (addition) {
 		var addition_xp = addition.card.xp;
 		
-		if (addition.card.real_text.indexOf('Myriad.') !== -1) {
+		if (typeof addition.card.real_text !== 'undefined' && addition.card.real_text.indexOf('Myriad.') !== -1) {
 			addition.qty = 1;
 			if (myriad_madness[addition.card.real_name]) {
 				addition.qty = 0;
@@ -162,6 +162,9 @@ deck_upgrades.display = function display() {
 				}
 			}
 			
+			if (addition.card.indeck - addition.qty > 0 && addition.card.ignore) {
+				addition.card.ignore = addition.card.ignore - (addition.card.indeck - addition.qty);
+			}
 			cost = cost + (Math.max(addition_xp, 1) * (addition.qty - addition.card.ignore) );
 			addition.qty = 0;
 		}

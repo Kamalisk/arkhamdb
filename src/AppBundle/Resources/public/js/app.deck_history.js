@@ -160,7 +160,9 @@ deck_history.all_changes = function all_changes() {
 					addition.qty = 0;
 				}
 			}
-			
+			if (addition.card.indeck - addition.qty > 0 && addition.card.ignore) {
+				addition.card.ignore = addition.card.ignore - (addition.card.indeck - addition.qty);
+			}
 			cost = cost + (Math.max(addition_xp, 1) * (addition.qty - addition.card.ignore) );
 			addition.qty = 0;
 		}
