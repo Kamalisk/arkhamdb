@@ -1081,7 +1081,7 @@ class BuilderController extends Controller
 			throw new BadRequestHttpException("Deck is locked");
 		}
 
-		$diff = (array) json_decode($request->get('diff'));
+		$diff = json_decode($request->get('diff'), true);
 		if (count($diff) != 2) {
 			$this->get('logger')->error("cannot use diff", $diff);
 			throw new BadRequestHttpException("Wrong content ".json_encode($diff));

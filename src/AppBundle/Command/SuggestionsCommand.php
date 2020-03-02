@@ -119,12 +119,13 @@ class SuggestionsCommand extends ContainerAwareCommand
 			* but $matrix is indexed by INDEX, not ID
 			*/
 			foreach($pairs as $pair) {
-				$index1 = $cardIndexById[$pair[0]];
-				$index2 = $cardIndexById[$pair[1]];
-				$matrix[$index1][$index2] = $matrix[$index1][$index2] + 1;
+				if (isset($pair[0]) && isset($pair[1])) {
+					$index1 = $cardIndexById[$pair[0]];
+					$index2 = $cardIndexById[$pair[1]];
+					$matrix[$index1][$index2] = $matrix[$index1][$index2] + 1;
+				}
 			}
 		}
-
 
 		/*
 		* now we have to weight the cards. The numbers in $matrix are the number of decks
