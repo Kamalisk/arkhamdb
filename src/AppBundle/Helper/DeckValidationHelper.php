@@ -234,7 +234,7 @@ class DeckValidationHelper
 						$option->limit_count += $indeck;
 					}
 					if (isset($option->atleast) && $option->atleast){
-						if (!$option->atleast_count[$card->getFaction()->getCode()]){
+						if (!isset($option->atleast_count[$card->getFaction()->getCode()])){
 							$option->atleast_count[$card->getFaction()->getCode()] = 0;
 						}
 						$option->atleast_count[$card->getFaction()->getCode()] += $indeck;
