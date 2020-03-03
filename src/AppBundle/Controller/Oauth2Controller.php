@@ -574,7 +574,8 @@ class Oauth2Controller extends Controller
 		}
 
 		foreach($slots as $card_code => $qty) {
-			if(!is_string($card_code) || !is_integer($qty)) {
+			// type-juggling means codes that don't start with 0 become integers.
+			if((!is_string($card_code) && !is_integer($card_code)) || !is_integer($qty)) {
 				return new JsonResponse([
 						'success' => FALSE,
 						'msg' => "Slots invalid"
@@ -588,7 +589,8 @@ class Oauth2Controller extends Controller
 			if (count($ignored_array)) {
 				$ignored = $ignored_array;
 				foreach($ignored as $card_code => $qty) {
-					if(!is_string($card_code) || !is_integer($qty)) {
+					// type-juggling means codes that don't start with 0 become integers.
+					if((!is_string($card_code) && !is_integer($card_code)) || !is_integer($qty)) {
 						return new JsonResponse([
 								'success' => FALSE,
 								'msg' => "Ignored slots invalid"
