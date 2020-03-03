@@ -21,3 +21,5 @@ tags
 .idea/
 .DS_Store
 /web/*.json
+/var/cache
+/var/logs
