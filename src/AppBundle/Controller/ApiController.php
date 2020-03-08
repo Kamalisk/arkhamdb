@@ -275,7 +275,7 @@ class ApiController extends Controller
 		$factions = array();
 		/* @var $card \AppBundle\Entity\Card */
 		foreach($list_factions as $faction) {
-			$factions[] = $this->get('factions_data')->getfactionInfo($faction, true, "en");
+			$factions[] = $faction->serialize();
 		}
 
 		$content = json_encode($factions);
