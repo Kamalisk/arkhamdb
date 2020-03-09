@@ -77,7 +77,7 @@ class SearchController extends Controller
 			'sh' => 'integer',
 			'ed' => 'integer',
 			'eh' => 'integer',
-			'ee' => 'integer',
+			'ef' => 'integer',
 			'ee' => 'integer',
 			'do' => 'special'
 	);
