@@ -69,9 +69,9 @@ class BuilderController extends Controller
 					"size" => $deck_requirements['size']
 				];
 
-				
+
 				$investigator->setDeckRequirements($req);
-				
+
 				if (in_array($investigator->getPack()->getId(), $packs_owned) && !isset($my_unique_investigators[$investigator->getName()]) ){
 					$my_investigators[] = $investigator;
 					$my_unique_investigators[$investigator->getName()] = true;
@@ -80,8 +80,8 @@ class BuilderController extends Controller
 					}
 					$my_investigators_by_class[$investigator->getFaction()->getName()][] = $investigator;
 				}
-				
-				
+
+
 				// only have one investigator per name
 				if (!isset($all_unique_investigators[$investigator->getName()])) {
 					$all_unique_investigators[$investigator->getName()] = true;
@@ -100,7 +100,7 @@ class BuilderController extends Controller
 		}
 		arsort($all_investigators_by_class);
 		arsort($my_investigators_by_class);
-		
+
 		return $this->render('AppBundle:Builder:initbuild.html.twig', [
 			'pagetitle' => "New deck",
 			'investigators' => $all_investigators,
@@ -534,7 +534,7 @@ class BuilderController extends Controller
 			'xp' => $xp,
 			'previous_deck' => $deck,
 			'taboo' => $deck->getTaboo() ? $deck->getTaboo()->getId() : "",
-			'meta' => $deck->getMeta() ? $deck->getMeta() : "", 
+			'meta' => $deck->getMeta() ? $deck->getMeta() : "",
 			'upgrades' => $deck->getUpgrades(),
 			'exiles_string' => implode(",",$filtered_exiles),
 			'exiles' => $filtered_exile_cards
@@ -549,7 +549,8 @@ class BuilderController extends Controller
 		$em = $this->getDoctrine()->getManager();
 
 		$user = $this->getUser();
-		if (count($user->getDecks()) > $user->getMaxNbDecks())
+		$decks = $em->getRepository('AppBundle:Deck')->findBy(["user"=> $user->getId(), "nextDeck" => null], array("dateUpdate" => "DESC"));
+		if (count($decks) > $user->getMaxNbDecks())
 		return new Response('You have reached the maximum number of decks allowed. Delete some decks or increase your reputation.');
 
 		$id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
@@ -589,7 +590,7 @@ class BuilderController extends Controller
 		if (! count($content)) {
 			return new Response('Cannot import empty deck');
 		}
-		
+
 		$ignored = false;
 		if ($request->get('ignored')){
 			$ignored_array = (array) json_decode($request->get('ignored'));
@@ -597,7 +598,7 @@ class BuilderController extends Controller
 				$ignored = $ignored_array;
 			}
 		}
-		
+
 		$name = filter_var($request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		$problem = filter_var($request->get('problem'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		$decklist_id = filter_var($request->get('decklist_id'), FILTER_SANITIZE_NUMBER_INT);
@@ -625,9 +626,9 @@ class BuilderController extends Controller
 				$meta_json = "";
 			}
 		}
-		
+
 		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $content, $source_deck ? $source_deck : null, $problem, $ignored);
-		
+
 		$deck->setTaboo($taboo);
 		if ($request->get('exiles') && $request->get('exiles_string')){
 			$deck->setExiles($request->get('exiles_string'));
@@ -740,7 +741,7 @@ class BuilderController extends Controller
 			$deck = $em->getRepository('AppBundle:Deck')->find($id);
 			if(!$deck) continue;
 			if ($this->getUser()->getId() != $deck->getUser()->getId()) continue;
-			
+
 			if ($deck->getPreviousDeck()){
 				$deck->getPreviousDeck()->setNextDeck(null);
 			}
@@ -748,7 +749,7 @@ class BuilderController extends Controller
 				$deck->getPreviousDeck()->setNextDeck(null);
 				$deck->setPreviousDeck(null);
 			}
-			
+
 			foreach ($deck->getChildren() as $decklist) {
 				$decklist->setParent(null);
 			}
