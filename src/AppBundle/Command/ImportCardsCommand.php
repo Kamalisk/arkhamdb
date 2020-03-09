@@ -98,7 +98,7 @@ class ImportCardsCommand extends ContainerAwareCommand
         /* @var $helper \Symfony\Component\Console\Helper\QuestionHelper */
         $helper = $this->getHelper('question');
 
-        $assets_helper = $this->getContainer()->get('templating.helper.assets');
+        $assets_helper = $this->getContainer()->get('assets.packages');
         $rootDir = $this->getContainer()->get('kernel')->getRootDir();
         
         /* @var $allFactions \AppBundle\Entity\Faction[] */
@@ -122,7 +122,7 @@ class ImportCardsCommand extends ContainerAwareCommand
         	$only = "encounter";
         }
         
-        $fileUrl = "http://www.cardgamedb.com/deckbuilders/arkhamhorror/database/AHC25-db.jgz";
+        $fileUrl = "http://www.cardgamedb.com/deckbuilders/arkhamhorror/database/AHC43-db.jgz";
         //$output->writeln("Trying to download the file...");
         $file = file_get_contents($fileUrl);
         if(!preg_match('/^cards = (.*);$/', $file, $matches)) {
@@ -346,19 +346,19 @@ class ImportCardsCommand extends ContainerAwareCommand
           $card->setSkillIntellect($data['int'] !== '' && $data['int'] !== '0' ? $data['int']+0 : null);
           $card->setSkillAgility($data['agi'] !== '' && $data['agi'] !== '0' ? $data['agi']+0 : null);
           $card->setSkillWild($data['wild'] !== '' && $data['wild'] !== '0' ? $data['wild']+0 : null);
-          $card->setHealth($data['hlth'] !== '' ? $data['hlth']+0 : null);
-          $card->setSanity($data['snty'] !== '' ? $data['snty']+0 : null);
+          $card->setHealth($data['hlth'] !== '' ? (int)$data['hlth'] : null);
+          $card->setSanity($data['snty'] !== '' ? (int)$data['snty'] : null);
           
-          $card->setEnemyFight($data['fght'] !== '' ? $data['fght']+0 : null);
-          $card->setEnemyEvade($data['evade'] !== '' ? $data['evade']+0 : null);
-          $card->setEnemyDamage($data['dmg'] !== '' ? $data['dmg']+0 : null);
-          $card->setEnemyHorror($data['horr'] !== '' ? $data['horr']+0 : null);
+          $card->setEnemyFight($data['fght'] !== '' ? (int)$data['fght'] : null);
+          $card->setEnemyEvade($data['evade'] !== '' ? (int)$data['evade'] : null);
+          $card->setEnemyDamage($data['dmg'] !== '' ? (int)$data['dmg'] : null);
+          $card->setEnemyHorror($data['horr'] !== '' ? (int)$data['horr'] : null);
           
           
           $card->setShroud($data['shrd'] !== '' ? $data['shrd']+0 : null);
-          $card->setClues($data['clue'] !== '' ? $data['clue']+0 : null);
+          $card->setClues($data['clue'] !== '' ? (int)$data['clue'] : null);
         	if ($data['cluet']){
-        		$card->setClues($data['cluet']+0);
+        		$card->setClues((int)$data['cluet']);
         	}
           $card->setDoom($data['doomt'] !== '' ? $data['doomt']+0 : null);
           
