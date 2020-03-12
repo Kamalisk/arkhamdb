@@ -2,6 +2,45 @@
 (function app_deck_init(deck_init, $) {
 	var deck_init_config = null;
 
+	var faction_selected = "";
+	var owned = false;
+
+	deck_init.show_faction = function(faction) {
+		deck_init.faction_selected = faction;
+		deck_init.update_display();
+	}
+	deck_init.toggle_owned = function() {
+		deck_init.owned = !deck_init.owned;
+		deck_init.update_display();
+		deck_init_config.all = !deck_init.owned;
+		console.log(deck_init_config, deck_init.owned);
+		if (localStorage) {
+			localStorage.setItem('ui.deck.init', JSON.stringify(deck_init_config));
+		}
+	}
+	deck_init.update_display = function () {
+		$(".faction-filter").removeClass("selected");
+		if (deck_init.faction_selected) {
+			$("#filter_title").text(deck_init.faction_selected.charAt(0).toUpperCase() + deck_init.faction_selected.substring(1));
+			$(".faction-"+deck_init.faction_selected).addClass("selected");
+			$(".inv").hide();
+			if (deck_init.owned) {
+				$(".owned.inv-class-"+deck_init.faction_selected).show();
+			} else {
+				$(".inv-class-"+deck_init.faction_selected).show();
+			}
+		} else {
+			$("#filter_title").text("All");
+			$(".faction-all").addClass("selected");
+			$(".inv").hide();
+			if (deck_init.owned) {
+				$(".owned.inv").show();
+			} else {
+				$(".inv").show();
+			}
+		}
+	}
+
 	deck_init.update_build_init = function(){
 		$("#all_inv").toggleClass("hidden");
 		$("#my_inv").toggleClass("hidden");
@@ -15,10 +54,6 @@
 		}
 	}
 	
-	deck_init.on_all_loaded = function() {	
-		window.alert("rah?");
-	}
-	
 	$(document).ready(function(){
 		if (localStorage) {
 			var stored = localStorage.getItem('ui.deck.init');
@@ -27,18 +62,15 @@
 			}
 		}
 		deck_init_config = _.extend({
-			'all': false,
+			'all': true,
 		}, deck_init_config || {});
 		
 		if (deck_init_config.all){
-			$("#all_inv").removeClass("hidden");
-			$("#my_inv").addClass("hidden");
-			$("#deck_init_all").val("all");
+			deck_init.owned = false;
 		} else {
-			$("#all_inv").addClass("hidden");
-			$("#my_inv").removeClass("hidden");
-			$("#deck_init_all").val("your");
+			deck_init.owned = true;
 		}
-		
+		$("#deck_init_all").attr("checked", deck_init.owned);
+		deck_init.show_faction('');
 	});
 })(app.deck_init = {}, jQuery);

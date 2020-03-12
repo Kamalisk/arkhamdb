@@ -14,16 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Deckchange;
 use AppBundle\Helper\DeckValidationHelper;
 
-// function to create uuid v4
-function guidv4() {
-	if (function_exists('com_create_guid') === true)
-		return trim(com_create_guid(), '{}');
-
-	$data = openssl_random_pseudo_bytes(16);
-	$data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
-	$data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
-	return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
-}
 
 class BuilderController extends Controller
 {
@@ -47,6 +37,7 @@ class BuilderController extends Controller
 		$other_investigators = [];
 		$all_investigators = [];
 		$all_investigators_by_class = [];
+		$classes = [];
 		$my_investigators_by_class = [];
 		$all_unique_investigators = [];
 		$my_unique_investigators = [];
@@ -94,19 +85,19 @@ class BuilderController extends Controller
 						$investigator->owned = 0;
 					}
 					$all_investigators_by_class[$investigator->getFaction()->getName()][] = $investigator;
-					$all_investigators[] = $investigator;
+					$all_investigators[preg_replace("/[^A-Za-z0-9 ]/", '', $investigator->getName())] = $investigator;
+					$classes[$investigator->getFaction()->getName()] = $investigator->getFaction()->getName();
 				}
 			}
 		}
+		ksort($all_investigators);
 		arsort($all_investigators_by_class);
 		arsort($my_investigators_by_class);
 
 		return $this->render('AppBundle:Builder:initbuild.html.twig', [
 			'pagetitle' => "New deck",
 			'investigators' => $all_investigators,
-			'my_investigators' => $my_investigators,
-			'all_investigators_by_class' => $all_investigators_by_class,
-			'my_investigators_by_class' => $my_investigators_by_class
+			'classes' => $classes,
 			//'my_investigators' => $my_investigators,
 			//'other_investigators' => $other_investigators
 		], $response);
@@ -687,7 +678,7 @@ class BuilderController extends Controller
 		}
 
 		$deck->setShared(!$deck->getShared());
-		$deck->setUuid(guidv4());
+		$deck->setUuid($this->get("uuid")->create());
 
 		$em->flush();
 

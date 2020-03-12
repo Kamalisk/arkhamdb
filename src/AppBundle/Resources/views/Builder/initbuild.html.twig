@@ -22,45 +22,90 @@
 	}
 	.investigator-attributes span {
 	}
-	h4 {
+	h3 {
 		padding: 5px;
 		margin: 0;
 	}
+	.faction-filter {
+		cursor: pointer;
+		border: solid grey 1px;
+		flex: 1;
+		padding: 3px;
+		padding-right: 1em;
+	}
+	.faction-filter :first {
+		border-radius: 5px 0 0 5px;
+	}
+	.faction-filter img {
+		width: 30px;
+	}
+	.faction-filter:hover {
+		background-color : rgba(200, 200, 200, 0.3);
+	}
+	.selected {
+		background-color : rgba(190, 190, 200, 0.7)!important;
+	}
+	.inv {
+		display: none;
+	}
+	.owned {
+		display: flex;
+	}
+	
+	.inv {
+		width: 355px;
+		display: flex;
+		flex-direction: column;
+		padding : 4px;
+		padding-top : 10px;
+		border : solid #dfdfdf 1px;
+		background-color: rgba(255, 255, 255, 0.4)
+	}
+	.inv h4 img{
+		width: 30px;
+	}
+	@media all and (max-width: 900px) {
+		.faction-filter {
+			overflow: hidden;
+			max-width: 38px;
+			height: 38px;
+		}
+	}
 </style>
+
+<script>
+	
+</script>
 
 <div class="main white container">
 
 <form action="{{ path('deck_initbuild') }}" class="form-inline" method="post" enctype="application/x-www-form-urlencoded">
 <div>
 	<div class="investigator-select">
-		<h2>Choose an investigator
-		<select class="form-control" id="deck_init_all" onchange="app.deck_init.update_build_init();">
-			<option value="your">Your Investigators</option>
-			<option value="all">All Investigators</option>
-		</select>
-		</h2>
+		<h2>Choose an investigator</h2>
 		<div>
-			<div id="my_inv">
-			{% for class, investigators in my_investigators_by_class %}
-				<h4 class="faint-{{class|lower}}"> <span class="icon icon-{{class|lower}}"></span> {{class}}</h4>
-				<div style="display: flex; flex-wrap: wrap;" class="faint-{{class|lower}}">
-				{% for investigator in investigators %}
-					{% include 'AppBundle:Builder:initbuild-investigator.html.twig' %}
-				{% endfor %}
+		<label><input type="checkbox" id="deck_init_all" onchange="app.deck_init.toggle_owned();"> Only investigators in your collection</label>
+		</div>
+		<div>
+			<div style="display: flex;">
+				<div class=" faction-filter faction-all" onclick="app.deck_init.show_faction('');">
+					<img src="/bundles/cards/icons/all.png">
+					All
 				</div>
-			{% endfor %}
+				{% for class in classes %}
+				<div class=" faction-filter faction-{{class|lower}}" onclick="app.deck_init.show_faction('{{class|lower}}');">
+					<img src="/bundles/cards/icons/{{class|lower}}.png">
+					{{class|capitalize}}
+				</div>
+				{% endfor %}
 			</div>
-			
-
-			<div class="hidden" id="all_inv">
-				{% for class, investigators in all_investigators_by_class %}
-					<h4 class="faint-{{class|lower}}"> <span class="icon icon-{{class|lower}}"></span> {{class}}</h4>
-					<div style="display: flex; flex-wrap: wrap;" class="faint-{{class|lower}}">
+			<div>
+			<h3><span id="filter_title">All</span> Investigators</h3>
+				<div style="display: flex; align-items: stretch; flex-wrap: wrap; justify-content: left;">
 					{% for investigator in investigators %}
 						{% include 'AppBundle:Builder:initbuild-investigator.html.twig' %}
 					{% endfor %}
-					</div>
-				{% endfor %}
+				</div>
 			</div>
 		</div>
 	</div>
