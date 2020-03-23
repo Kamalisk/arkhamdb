@@ -264,11 +264,15 @@ class BuilderController extends Controller
 		$content = [];
 		$lines = explode("\n", $text);
 		$identity = null;
+		$subname = "";
+		$level = "";
 		foreach ($lines as $line) {
 			$matches = [];
-			if (preg_match('/^\s*(\d)x?([\pLl\pLu\pN"\-\.\'\!\: ]+)/u', $line, $matches)) {
+			if (preg_match('/^\s*(\d)x?([\pLl\pLu\pN"\-\.\'\! ]+):?([^\[\(]*)(?:\[(\d)\])?/u', $line, $matches)) {
 				$quantity = intval($matches[1]);
 				$name = trim($matches[2]);
+				$subname = isset($matches[3]) ? trim($matches[3]) : '';
+				$level = isset($matches[4]) ? trim($matches[4]) : '';
 			} else
 			if (preg_match('/^([^\(]+).*x(\d)/', $line, $matches)) {
 				$quantity = intval($matches[2]);
@@ -280,10 +284,19 @@ class BuilderController extends Controller
 			} else {
 				continue;
 			}
-			$card = $em->getRepository('AppBundle:Card')->findOneBy(array(
-			'name' => $name
-			));
+			
+			$search = [];
+			$search['name'] = $name;
+			if ($subname) {
+				$search['subname'] = $subname;
+			}
+			if ($level) {
+				$search['xp'] = (int)$level;
+			}
+
+			$card = $em->getRepository('AppBundle:Card')->findOneBy($search);
 			if ($card) {
+				echo $card->getCode();
 				if ($card->getType()->getCode() == "investigator"){
 					$identity = $card->getCode();
 				}else {
@@ -292,6 +305,7 @@ class BuilderController extends Controller
 
 			}
 		}
+
 		return array(
 			"content" => $content,
 			"faction_code"=> $identity,
@@ -322,6 +336,7 @@ class BuilderController extends Controller
 
 		$content = [];
 		$faction = null;
+		$previousId = "";
 		foreach ($octgnIds as $octgnId => $qty) {
 			$card = $em->getRepository('AppBundle:Card')->findOneBy(array(
 				'octgnId' => $octgnId
@@ -330,10 +345,11 @@ class BuilderController extends Controller
 				$content[$card->getCode()] = $qty;
 			}
 			else {
-				$faction = $faction ?: $em->getRepository('AppBundle:Faction')->findOneBy(array(
-					'octgnId' => $octgnId
+				$faction = $faction ?: $em->getRepository('AppBundle:Card')->findOneBy(array(
+					'octgnId' => $previousId.":".$octgnId
 				));
 			}
+			$previousId = $octgnId;
 		}
 
 		$description = implode("\n", $descriptions);
