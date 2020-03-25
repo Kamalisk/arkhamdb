@@ -323,6 +323,14 @@ ui.init_selectors = function init_selectors() {
 	$('[data-filter=subtype_code]').find('input[name=basicweakness]').prop("checked", true).parent().addClass('active');
 	$('[data-filter=xp]').find('input[name=xp0]').prop("checked", true).parent().addClass('active');
 	
+	if (app.deck.get_previous_deck()){
+		$('[data-filter=xp]').find('input[name=xp15]').prop("checked", true).parent().addClass('active');
+		$('[data-filter=xp]').find('input[name=xp0]').prop("checked", false).parent().removeClass('active');
+	} else {
+		$('[data-filter=xp]').find('input[name=xp0]').prop("checked", true).parent().addClass('active');
+		$('[data-filter=xp]').find('input[name=xp15]').prop("checked", false).parent().removeClass('active');
+	}
+
 	if (app.deck.taboo_id){
 		$('[data-filter=taboo_code]').val(app.deck.taboo_id);
 	} else {
