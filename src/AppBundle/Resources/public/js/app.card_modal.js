@@ -34,6 +34,8 @@ function fill_modal (code) {
 			+ '<div class="card-info">' + app.format.info(card) + '</div>'
 			+ '<div class="card-traits">' + app.format.traits(card) + '</div>'
 			+ '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>'
+			+ (card.taboo_text ? '<div class="card-text-taboo border-'+card.faction_code+'">' + app.format.text(card, "taboo_text") + '</div>' : '')
+			+ (card.taboo_xp ? '<div class="card-text-taboo border-'+card.faction_code+'">This card costs ' + card.taboo_xp + ' additional experience</div>' : '')
 			+ '<div class="card-pack">' + app.format.pack(card) + '</div>'
 	);
 	

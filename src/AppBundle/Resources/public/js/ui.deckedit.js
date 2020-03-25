@@ -487,10 +487,9 @@ ui.on_taboo_change = function on_taboo_change(event) {
 	var type = $(this).prop('type');
 	var value = $(this).prop('value');
 
-	//console.log(name, value);
-	//app.data.apply_taboos(value);
 	app.deck.taboo_id = parseInt(value);
-	ui.refresh_lists();
+	app.data.apply_taboos(app.deck.taboo_id);
+	ui.reset_list();
 	ui.on_deck_modified();
 }
 

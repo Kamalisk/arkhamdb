@@ -32,7 +32,10 @@ function display_card_on_element(card, element, event) {
 			content += '<div class="card-info">' + app.format.info(card) + '</div>';
 			content += '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>';
 			if (card.taboo_text){
-				content += '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card, "taboo_text") + '</div>'
+				content += '<div class="card-text-taboo border-'+card.faction_code+'">' + app.format.text(card, "taboo_text") + '</div>'
+			}
+			if (card.taboo_xp){
+				content += '<div class="card-text-taboo border-'+card.faction_code+'">This card costs ' + card.taboo_xp + ' additional experience</div>'
 			}
 			if (card.double_sided){
 				content += '<hr />';
