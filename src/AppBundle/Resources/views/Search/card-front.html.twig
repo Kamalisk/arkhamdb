@@ -19,6 +19,19 @@
 				{% endif %}
 				{% include 'AppBundle:Search:card-illustrator.html.twig' %}
 				{% include 'AppBundle:Search:card-pack.html.twig' %}
+				{% if taboos is defined %}
+					{% if taboos[card.code] is defined %}
+						{% set taboo = taboos[card.code] %}
+						<hr />
+						<h4>Latest Taboo</h4>
+						{% if taboo.xp is defined %}
+							<p>Costs {{taboo.xp}} additional experience.</p>
+						{% endif %}
+						{% if taboo.text is defined %}
+							<p>{{taboo.text|raw}}</p>
+						{% endif %}
+					{% endif %}
+				{% endif %}
 			</div>
 		</div>
 	</div>

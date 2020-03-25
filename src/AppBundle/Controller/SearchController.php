@@ -472,6 +472,20 @@ class SearchController extends Controller
 			$pagetitle = $q;
 		}
 
+		$taboos = [];
+		$taboo = $this->getDoctrine()->getRepository('AppBundle:Taboo')->findBy(array('active'=>1),array('id'=>'DESC'),1,0);
+		if ($taboo && $taboo[0]) {
+			$taboo_cards = json_decode($taboo[0]->getCards(), true);
+			foreach($taboo_cards as $card) {
+				if (isset($card['text'])) {
+					$card['text'] = $this->get('cards_data')->replaceSymbols($card['text']);
+				}
+				if ($card['code']) {
+					$taboos[$card['code']] = $card;
+				}
+			}
+		}
+
 		// attention si $s="short", $cards est un tableau à 2 niveaux au lieu de 1 seul
 		return $this->render('AppBundle:Search:display-'.$view.'.html.twig', array(
 			"view" => $view,
@@ -485,7 +499,8 @@ class SearchController extends Controller
 			"pagetitle" => $pagetitle,
 			"metadescription" => $meta,
 			"includeReviews" => $includeReviews,
-			"show_spoilers" => $show_spoilers
+			"show_spoilers" => $show_spoilers,
+			"taboos" => $taboos
 		), $response);
 	}
 
