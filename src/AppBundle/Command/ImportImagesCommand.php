@@ -4,24 +4,75 @@ namespace AppBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 class ImportImagesCommand extends ContainerAwareCommand
 {
 
+	protected function get_web_page( $url )
+	{
+			$options = array(
+					CURLOPT_RETURNTRANSFER => true,     // return web page
+					CURLOPT_HEADER         => false,    // don't return headers
+					CURLOPT_FOLLOWLOCATION => true,     // follow redirects
+					CURLOPT_ENCODING       => "",       // handle all encodings
+					CURLOPT_USERAGENT      => "spider", // who am i
+					CURLOPT_AUTOREFERER    => true,     // set referer on redirect
+					CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
+					CURLOPT_TIMEOUT        => 120,      // timeout on response
+					CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
+					CURLOPT_SSL_VERIFYPEER => false     // Disabled SSL Cert checks
+			);
+	
+			$ch      = curl_init( $url );
+			curl_setopt_array( $ch, $options );
+			$content = curl_exec( $ch );
+			$err     = curl_errno( $ch );
+			$errmsg  = curl_error( $ch );
+			$header  = curl_getinfo( $ch );
+			curl_close( $ch );
+	
+			$header['errno']   = $err;
+			$header['errmsg']  = $errmsg;
+			$header['content'] = $content;
+			return $header;
+	}
+
 	protected function configure()
 	{
 		$this
 		->setName('app:import:images')
 		->setDescription('Download missing card images from FFG websites')
+		->addArgument(
+			'article',
+			InputArgument::OPTIONAL,
+			'Article download'
+			)
 		;
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 
-		$assets_helper = $this->getContainer()->get('templating.helper.assets');
+		$article = $input->getArgument('article');
+
+		if ($article) {
+			// https://images-cdn.fantasyflightgames.com/filer_public/1b/ea/1bea5697-be8f-4bd1-a1c5-e633de6b19f9/ahc47_nathaniel-cho.png
+			// https://www.fantasyflightgames.com/en/news/2020/3/24/your-investigation-begins/
+			$request = $this->get_web_page($article);
+			//echo $request['content'];
+			$article_cards = [];
+			preg_match_all("/https\:\/\/images-cdn\.fantasyflightgames\.com\/filer_public\/[0-9a-z][0-9a-z]\/[0-9a-z][0-9a-z]\/[0-9a-z\-]+\/([^\"]*)/", $request['content'], $matches);
+			foreach($matches[0] as $index => $match) {
+				$url = $match;
+				$card = $matches[1][$index];
+				$article_cards[$card] = $url;
+			}
+		}
+
+		$assets_helper = $this->getContainer()->get('assets.packages');
 
 		/* @var $em \Doctrine\ORM\EntityManager */
 		$em = $this->getContainer()->get('doctrine')->getManager();
@@ -67,15 +118,29 @@ class ImportImagesCommand extends ContainerAwareCommand
 			}
 			// AHC01_121a.jpg
 			echo $card->getPack()->getName()." ".$card->getPack()->getId()."\n";
-			if ($card->getType()->getCode() == "location" && $card->getDoubleSided()){
-				$cgdbfile = sprintf('AHC%02d_%db.jpg', $pack_id, $card->getPosition());
-			} else if (isset($backlinksCache[$card->getCode()])) {
-				$cgdbfile = sprintf('AHC%02d_%db.jpg', $pack_id, $card->getPosition());
+			
+			if ($article) {
+				// ahc50_jacqueline-fine.png
+				$cgdbfile = sprintf('ahc%02d_%s.png', $pack_id, strtolower(str_replace(" ", "-", $card->getName())));
+				echo $cgdbfile;
 			} else {
-				$cgdbfile = sprintf('AHC%02d_%d.jpg', $pack_id, $card->getPosition());
+				if ($card->getType()->getCode() == "location" && $card->getDoubleSided()){
+					$cgdbfile = sprintf('AHC%02d_%db.jpg', $pack_id, $card->getPosition());
+				} else if (isset($backlinksCache[$card->getCode()])) {
+					$cgdbfile = sprintf('AHC%02d_%db.jpg', $pack_id, $card->getPosition());
+				} else {
+					$cgdbfile = sprintf('AHC%02d_%d.jpg', $pack_id, $card->getPosition());
+				}
 			}
 
-			$cgdburl = "http://lcg-cdn.fantasyflightgames.com/ahlcg/" . $cgdbfile;
+			if ($article) {
+				$cgdburl = "";
+				if (isset($article_cards[$cgdbfile])) {
+					$cgdburl = $article_cards[$cgdbfile];
+				}
+			} else {
+				$cgdburl = "http://lcg-cdn.fantasyflightgames.com/ahlcg/" . $cgdbfile;
+			}
 
 			$dirname = dirname($imagepath);
 			$outputfile = $dirname . DIRECTORY_SEPARATOR . $card_code . ".jpg";
