@@ -8,18 +8,18 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 		$parts = explode('_', $snake);
 		return implode('', array_map('ucfirst', $parts));
 	}
-	
+
 	public function serialize() {
 		$serialized = [];
 		if(empty($this->code)) return $serialized;
-	
+
 		$mandatoryFields = [
 				'code',
 				'position',
 				'quantity',
 				'name'
 		];
-	
+
 		$optionalFields = [
 				'illustrator',
 				'flavor',
@@ -31,7 +31,9 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				'xp',
 				'deck_limit',
 				'back_text',
+                'real_back_text',
 				'back_name',
+                'real_back_name',
 				'back_flavor',
 				'permanent',
 				'hidden',
@@ -40,7 +42,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				'exile',
 				'exceptional'
 		];
-	
+
 		$externalFields = [
 				'faction',
 				'faction2',
@@ -49,7 +51,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				'encounter',
 				'linked_to'
 		];
-	
+
 		switch($this->type->getCode()) {
 			case 'asset':
 				$mandatoryFields[] = 'cost';
@@ -59,7 +61,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				$optionalFields[] = 'skill_agility';
 				$optionalFields[] = 'skill_wild';
 				$optionalFields[] = 'health';
-				$optionalFields[] = 'sanity';				
+				$optionalFields[] = 'sanity';
 				$optionalFields[] = 'restrictions';
 				$optionalFields[] = 'slot';
 				$optionalFields[] = 'encounter_position';
@@ -129,27 +131,27 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				$optionalFields[] = 'encounter_position';
 				break;
 		}
-	
+
 		foreach($optionalFields as $optionalField) {
 			$getterString = $optionalField;
 			$getter = 'get' . $this->snakeToCamel($getterString);
 			$serialized[$optionalField] = $this->$getter();
 			if(!isset($serialized[$optionalField]) || $serialized[$optionalField] === '') unset($serialized[$optionalField]);
 		}
-	
+
 		foreach($mandatoryFields as $mandatoryField) {
 			$getterString = $mandatoryField;
 			$getter = 'get' . $this->snakeToCamel($getterString);
 			$serialized[$mandatoryField] = $this->$getter();
 		}
-	
+
 		foreach($externalFields as $externalField) {
 			$getter = 'get' . $this->snakeToCamel($externalField);
 			if ($this->$getter()){
 				$serialized[$externalField.'_code'] = $this->$getter()->getCode();
 			}
 		}
-	
+
 		ksort($serialized);
 		return $serialized;
 	}
@@ -157,11 +159,11 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	public function unserialize($serialized) {
 		throw new \Exception("unserialize() method unsupported");
 	}
-	
+
   public function toString() {
 		return $this->name;
 	}
-	
+
 	/**
      * @var integer
      */
@@ -188,16 +190,21 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
      * @var string
      */
     private $name;
-    
+
     /**
      * @var string
      */
     private $realName;
-    
+
     /**
      * @var string
      */
     private $backName;
+
+    /**
+     * @var string
+     */
+    private $realBackName;
 
     /**
      * @var string
@@ -213,17 +220,22 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
      * @var string
      */
     private $text;
-    
+
     /**
      * @var string
      */
     private $realText;
-    
-    
+
+
     /**
      * @var string
      */
     private $backText;
+
+    /**
+     * @var string
+     */
+    private $realBackText;
 
     /**
      * @var \DateTime
@@ -308,38 +320,38 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
      * @var integer
      */
     private $sanity;
-    
+
 
     /**
      * @var integer
      */
     private $enemyFight;
-    
+
 
     /**
      * @var integer
      */
     private $enemyEvade;
-    
+
 
     /**
      * @var integer
      */
     private $enemyDamage;
-    
+
 
     /**
      * @var integer
      */
     private $enemyHorror;
-    
+
 
 
     /**
      * @var integer
      */
     private $victory;
-    
+
     /**
      * @var integer
      */
@@ -366,12 +378,12 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
      * @var string
      */
     private $deckRequirements;
-    
+
         /**
      * @var string
      */
     private $deckOptions;
-    
+
     /**
      * @var string
      */
@@ -391,7 +403,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
      * @var string
      */
     private $flavor;
-    
+
      /**
      * @var string
      */
@@ -406,28 +418,28 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
      * @var boolean
      */
     private $isUnique;
-    
+
      /**
      * @var boolean
      */
     private $exile;
-    
+
      /**
      * @var boolean
      */
     private $exceptional;
-    
+
     /**
      * @var boolean
      */
     private $hidden;
-    
-    
+
+
     /**
      * @var boolean
      */
     private $permanent;
-    
+
     /**
      * @var boolean
      */
@@ -462,7 +474,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
      * @var \AppBundle\Entity\Faction
      */
     private $faction2;
-  
+
         /**
      * @var \AppBundle\Entity\Subtype
      */
@@ -598,7 +610,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->name;
     }
-    
+
     /**
      * Set realName
      *
@@ -622,7 +634,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->realName;
     }
-    
+
      /**
      * Set backName
      *
@@ -646,9 +658,32 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->backName;
     }
-    
-    
-        /**
+
+    /**
+     * Set realBackName
+     *
+     * @param string $realBackName
+     *
+     * @return Card
+     */
+    public function setRealBackName($realBackName)
+    {
+        $this->realBackName = $realBackName;
+
+        return $this;
+    }
+
+    /**
+     * Get realBackName
+     *
+     * @return string
+     */
+    public function getRealBackName()
+    {
+        return $this->realBackName;
+    }
+
+    /**
      * Set subname
      *
      * @param string $subname
@@ -719,9 +754,9 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->text;
     }
-    
-    
-     /**
+
+
+    /**
      * Set real text
      *
      * @param string $text
@@ -744,8 +779,8 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->realText;
     }
-    
-        /**
+
+    /**
      * Set backText
      *
      * @param string $backText
@@ -768,7 +803,30 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->backText;
     }
-    
+
+    /**
+     * Set real back text
+     *
+     * @param string $text
+     *
+     * @return Card
+     */
+    public function setRealBackText($text)
+    {
+        $this->realBackText = $text;
+
+        return $this;
+    }
+
+    /**
+     * Get real back text
+     *
+     * @return string
+     */
+    public function getRealBackText()
+    {
+        return $this->realBackText;
+    }
 
     /**
      * Set dateCreation
@@ -1117,7 +1175,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->skillWillpower;
     }
-    
+
         /**
      * Set skillIntellect
      *
@@ -1141,8 +1199,8 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->skillIntellect;
     }
-    
-    
+
+
         /**
      * Set skillCombat
      *
@@ -1166,8 +1224,8 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->skillCombat;
     }
-    
-    
+
+
         /**
      * Set skillAgility
      *
@@ -1191,7 +1249,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->skillAgility;
     }
-    
+
         /**
      * Set skillWild
      *
@@ -1292,7 +1350,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->clues;
     }
-    
+
 
 
     /**
@@ -1372,7 +1430,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->realTraits;
     }
-    
+
     /**
      * Set traits
      *
@@ -1396,7 +1454,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->traits;
     }
-    
+
     /**
      * Set deckRequirements
      *
@@ -1420,8 +1478,8 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->deckRequirements;
     }
-    
-    
+
+
         /**
      * Set deckOptions
      *
@@ -1444,7 +1502,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->deckOptions;
     }
-    
+
         /**
      * Set restrictions
      *
@@ -1468,7 +1526,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->restrictions;
     }
-    
+
         /**
      * Set slot
      *
@@ -1542,9 +1600,9 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->flavor;
     }
-    
-    
-    
+
+
+
      /**
      * Set backFlavor
      *
@@ -1853,7 +1911,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->type;
     }
-    
+
         /**
      * Set subtype
      *
@@ -1926,7 +1984,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
         return $this->faction2;
     }
 
-    
+
         /**
      * set linkedTo
      *
@@ -1949,7 +2007,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->linked_to;
     }
-    
+
      /**
      * set Encounter
      *
@@ -1963,7 +2021,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 
         return $this;
     }
-    
+
     /**
      * Get encounter
      *
@@ -1982,7 +2040,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     public function setTranslatableLocale($locale)
     {
         $this->locale = $locale;
-    }    
+    }
 
     /**
      * Add linkedFrom
