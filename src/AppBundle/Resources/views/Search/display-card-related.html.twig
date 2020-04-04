@@ -13,6 +13,33 @@
 	
 {% endif %}
 
+{% if card.bonded_cards is defined and card.bonded_cards|length > 0 %}
+<div class="col-md-12" style="margin-top:2em">
+<div class="row">
+	<div class="col-md-9">
+		
+		<div style="line-height:34px" id="related-header">
+			<span style="font-size:24px">{% trans %}Bonded Cards{% endtrans %}</span>
+		</div>
+		<ul>
+		{% for bonded in card.bonded_cards %}
+			<li>
+				<span class="icon icon-{{ bonded.getType().getCode()}} fg-{{ bonded.getFaction().getCode() }}"></span>
+				<a href="{{ path('cards_zoom',{card_code:bonded.code}) }}" class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %} card-tip" data-code="{{ bonded.code }}">
+				{{ bonded.name }}{% if bonded.subname%}: {{ bonded.subname }}{% endif %}
+				{% if bonded.backname %}: {{ bonded.backname }}{% endif %}</a>
+				{% if bonded.xp %}<span class="xp-{{ bonded.xp }}"> ({{ bonded.xp }})</span>{% endif %} 
+				{{bonded.getPack().getName()}} #{{bonded.position}}
+			</li>
+		{% endfor %}
+		</ul>
+
+	</div>
+</div>
+</div>
+{% endif %}
+
+
 {% if card.related and card.related|length > 1 %}
 <div class="col-md-12" style="margin-top:2em">
 <div class="row">

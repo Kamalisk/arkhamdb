@@ -548,16 +548,24 @@ class CardsData
 
     foreach($associationMappings as $fieldName => $associationMapping)
     {
-    	if($associationMapping['isOwningSide']) {
-    		$getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
-    		$associationEntity = $card->$getter();
+			$getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
+			if ($fieldName == "bonded_from" || $fieldName == "bonded_to") {
+				$associationEntity = $card->$getter();
+				$bonded_cards = [];
+				if (count($associationEntity)> 0) {
+					foreach($associationEntity as $entity) {
+						$bonded_cards[] = $entity->getCode();
+					}
+					$cardinfo[$fieldName] = $bonded_cards;
+				}
+			} else if($associationMapping['isOwningSide']) {
+				$associationEntity = $card->$getter();
     		if(!$associationEntity) continue;
 
   			$cardinfo[$fieldName.'_code'] = $associationEntity->getCode();
   			$cardinfo[$fieldName.'_name'] = $associationEntity->getName();
     	}
     }
-
     foreach($fieldNames as $fieldName)
     {
     	$getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
@@ -593,7 +601,6 @@ class CardsData
 		if(isset($cardinfo['encounter_code']) && $cardinfo['encounter_code']) {
 			$cardinfo['spoiler'] = 1;
 		}
-		
 		
 		if(isset($cardinfo['double_sided']) && $cardinfo['double_sided']) {
 			$imageurl = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'b.png');
@@ -790,6 +797,15 @@ class CardsData
     public function get_related($card)
     {
         $cards = $this->doctrine->getRepository('AppBundle:Card')->findBy(array('realName' => $card->getRealName()), array('position' => 'ASC'));
+
+        $response = $cards;
+
+        return $response;
+		}
+		
+		public function get_bonded($card)
+    {
+        $cards = $card->getBondedFrom();
 
         $response = $cards;
 

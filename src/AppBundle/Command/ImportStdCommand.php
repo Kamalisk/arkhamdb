@@ -21,6 +21,7 @@ class ImportStdCommand extends ContainerAwareCommand
 	private $em;
 
 	private $links = [];
+	private $bonds = [];
 
 	/* @var $output OutputInterface */
 	private $output;
@@ -48,6 +49,7 @@ class ImportStdCommand extends ContainerAwareCommand
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
+		ini_set('memory_limit', '2G');
 		$path = $input->getArgument('path');
 		$player_only = $input->getOption('player');
 		$this->em = $this->getContainer()->get('doctrine')->getEntityManager();
@@ -201,6 +203,28 @@ class ImportStdCommand extends ContainerAwareCommand
 					$card->setLinkedTo($target);
 					$target->setLinkedTo();
 					$output->writeln("Importing link between ".$card->getName()." and ".$target->getName().".");
+				}
+			}
+			$this->em->flush();
+		}
+		if ($this->bonds && count($this->bonds) > 0){
+			$output->writeln("Resolving Bonds");
+			$this->loadCollection('Card');
+			// clear all bonds
+			foreach($this->bonds as $bond){
+				$card = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $bond['card_id']]);
+				$target = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $bond['target_id']]);
+				$card->removeBondedFrom();
+				$target->removeBondedTo();
+			}
+			$this->em->flush();
+			$this->loadCollection('Card');
+			foreach($this->bonds as $bond){
+				$card = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $bond['card_id']]);
+				$target = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $bond['target_id']]);
+				if ($card && $target){
+					$card->addBondedTo($target);
+					$output->writeln("Importing bond between ".$card->getName()." and ".$target->getName().".");
 				}
 			}
 			$this->em->flush();
@@ -476,7 +500,8 @@ class ImportStdCommand extends ContainerAwareCommand
 					'hidden',
 					'permanent',
 					'exile',
-					'exceptional'
+					'exceptional',
+					'myriad'
 
 			]);
 			if($card) {
@@ -494,6 +519,10 @@ class ImportStdCommand extends ContainerAwareCommand
 				if (isset($cardData['back_link'])){
 					// if we have back link, store the reference here
 					$this->links[] = ['card_id'=> $card->getCode(), 'target_id'=> $cardData['back_link']];
+				}
+				if (isset($cardData['bonded_to'])){
+					// if we have back link, store the reference here
+					$this->bonds[] = ['card_id'=> $card->getCode(), 'target_id'=> $cardData['bonded_to']];
 				}
 			}
 		}
@@ -680,8 +709,15 @@ class ImportStdCommand extends ContainerAwareCommand
 			$this->$functionName($entity, $data);
 		}
 
-		if($entity->serialize() !== $orig || (isset($data['back_link']) && (!$entity->getLinkedTo() || $entity->getLinkedTo()->getCode() != $data['back_link']) )) return $entity;
-
+		if ($entity->serialize() !== $orig) {
+			return $entity;
+		}
+		if (isset($data['back_link']) && $entity->getLinkedTo() && $entity->getLinkedTo()->getCode() !== $data['back_link']){
+			return $entity;
+		}
+		if (isset($data['bonded_to'])){
+			return $entity;
+		}
 	}
 
 	protected function importAssetData(Card $card, $data)

@@ -417,6 +417,9 @@ class SearchController extends Controller
 				if (isset($cardinfo['linked_card'])){
 					$cardinfo['linked_card']['available'] = $availability[$pack->getCode()];
 				}
+				if (isset($cardinfo['bonded_from']) && count($cardinfo['bonded_from']) > 0){
+					$cardinfo['bonded_cards'] = $this->get('cards_data')->get_bonded($card);
+				}
 				if($includeReviews) {
 				    $cardinfo['reviews'] = $this->get('cards_data')->get_reviews($card);
 				    $cardinfo['faqs'] = $this->get('cards_data')->get_faqs($card);

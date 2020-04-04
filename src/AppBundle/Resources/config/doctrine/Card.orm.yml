@@ -5,6 +5,16 @@ AppBundle\Entity\Card:
     gedmo:
         translation:
             locale: locale
+    manyToMany:
+        bonded_to:
+            targetEntity: Card
+            inversedBy: bonded_from
+            joinColumn:
+                name: bonded_id
+                referencedColumnName: id
+        bonded_from:
+            targetEntity: Card
+            mappedBy: bonded_to
     manyToOne:
         pack:
             targetEntity: Pack
@@ -70,6 +80,10 @@ AppBundle\Entity\Card:
             column: exceptional
             options:
                 default: false
+        myriad:
+            type: boolean
+            column: myriad            
+            nullable: true
         encounterPosition:
             type: smallint
             nullable: true
