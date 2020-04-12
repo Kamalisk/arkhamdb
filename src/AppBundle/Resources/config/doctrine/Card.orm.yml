@@ -5,16 +5,6 @@ AppBundle\Entity\Card:
     gedmo:
         translation:
             locale: locale
-    manyToMany:
-        bonded_to:
-            targetEntity: Card
-            inversedBy: bonded_from
-            joinColumn:
-                name: bonded_id
-                referencedColumnName: id
-        bonded_from:
-            targetEntity: Card
-            mappedBy: bonded_to
     manyToOne:
         pack:
             targetEntity: Pack
@@ -107,6 +97,15 @@ AppBundle\Entity\Card:
             nullable: true
             gedmo:
                 - translatable
+        bondedTo:
+            type: string
+            length: 1024
+            column: bonded_to
+            nullable: true
+        bondedCount:
+            type: smallint
+            column: bonded_count
+            nullable: true
         cost:
             type: smallint
             nullable: true

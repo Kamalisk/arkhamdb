@@ -207,29 +207,7 @@ class ImportStdCommand extends ContainerAwareCommand
 			}
 			$this->em->flush();
 		}
-		if ($this->bonds && count($this->bonds) > 0){
-			$output->writeln("Resolving Bonds");
-			$this->loadCollection('Card');
-			// clear all bonds
-			foreach($this->bonds as $bond){
-				$card = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $bond['card_id']]);
-				$target = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $bond['target_id']]);
-				$card->removeBondedFrom();
-				$target->removeBondedTo();
-			}
-			$this->em->flush();
-			$this->loadCollection('Card');
-			foreach($this->bonds as $bond){
-				$card = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $bond['card_id']]);
-				$target = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $bond['target_id']]);
-				if ($card && $target){
-					$card->addBondedTo($target);
-					$output->writeln("Importing bond between ".$card->getName()." and ".$target->getName().".");
-				}
-			}
-			$this->em->flush();
-		}
-		
+
 		$output->writeln("Done.");
 		
 	}
@@ -479,6 +457,8 @@ class ImportStdCommand extends ContainerAwareCommand
 					'deck_options',
 					'deck_requirements',
 					'subname',
+					'bonded_to',
+					'bonded_count',
 					'xp',
 					'enemy_evade',
 					'enemy_fight',
@@ -519,10 +499,6 @@ class ImportStdCommand extends ContainerAwareCommand
 				if (isset($cardData['back_link'])){
 					// if we have back link, store the reference here
 					$this->links[] = ['card_id'=> $card->getCode(), 'target_id'=> $cardData['back_link']];
-				}
-				if (isset($cardData['bonded_to'])){
-					// if we have back link, store the reference here
-					$this->bonds[] = ['card_id'=> $card->getCode(), 'target_id'=> $cardData['bonded_to']];
 				}
 			}
 		}
@@ -713,9 +689,6 @@ class ImportStdCommand extends ContainerAwareCommand
 			return $entity;
 		}
 		if (isset($data['back_link']) && $entity->getLinkedTo() && $entity->getLinkedTo()->getCode() !== $data['back_link']){
-			return $entity;
-		}
-		if (isset($data['bonded_to'])){
 			return $entity;
 		}
 	}

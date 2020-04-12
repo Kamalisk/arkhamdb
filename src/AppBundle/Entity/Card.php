@@ -28,6 +28,8 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				'cost',
 				'octgn_id',
 				'subname',
+				'bonded_to',
+				'bonded_count',
 				'xp',
 				'deck_limit',
 				'back_text',
@@ -2024,15 +2026,14 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	private $myriad = false;
 
 	/**
-	 * @var \Doctrine\Common\Collections\Collection
+	 * @var String
 	 */
-	private $bonded_from;
+	private $bondedTo;
 
 	/**
-	 * @var \Doctrine\Common\Collections\Collection
+	 * @var Integer
 	 */
-	private $bonded_to;
-
+	private $bondedCount;
 
 	/**
 	 * Set myriad
@@ -2059,78 +2060,50 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	}
 
 	/**
-	 * Add bondedFrom
+	 * Set bondedTo
 	 *
-	 * @param \AppBundle\Entity\Card $bondedFrom
-	 *
-	 * @return Card
-	 */
-	public function addBondedFrom(\AppBundle\Entity\Card $bondedFrom)
-	{
-		$this->bonded_from[] = $bondedFrom;
-
-		return $this;
-	}
-
-	/**
-	 * Remove bondedFrom
-	 *
-	 * @param \AppBundle\Entity\Card $bondedFrom
-	 */
-	public function removeBondedFrom(\AppBundle\Entity\Card $bondedFrom = null)
-	{
-		if (!$bondedFrom) {
-			$this->bonded_from->removeElement($bondedFrom);
-		} else {
-			$this->bonded_from = [];
-		}
-	}
-
-	/**
-	 * Get bondedFrom
-	 *
-	 * @return \Doctrine\Common\Collections\Collection
-	 */
-	public function getBondedFrom()
-	{
-		return $this->bonded_from;
-	}
-
-	/**
-	 * Add bondedTo
-	 *
-	 * @param \AppBundle\Entity\Card $bondedTo
+	 * @param $realName
 	 *
 	 * @return Card
 	 */
-	public function addBondedTo(\AppBundle\Entity\Card $bondedTo)
+	public function setBondedTo($realName)
 	{
-		$this->bonded_to[] = $bondedTo;
+		$this->bondedTo = $realName;
 
 		return $this;
-	}
-
-		/**
-	 * Remove bondedTo
-	 *
-	 * @param \AppBundle\Entity\Card $bondedTo
-	 */
-	public function removeBondedTo(\AppBundle\Entity\Card $bondedTo = null)
-	{
-		if (!$bondedTo) {
-			$this->bonded_to->removeElement($bondedTo);
-		} else {
-			$this->bonded_to = [];
-		}
 	}
 
 	/**
 	 * Get bondedTo
 	 *
-	 * @return \Doctrine\Common\Collections\Collection
+	 * @return string
 	 */
 	public function getBondedTo()
 	{
-		return $this->bonded_to;
+		return $this->bondedTo;
+	}
+
+		/**
+	 * Set bondedCount
+	 *
+	 * @param $count
+	 *
+	 * @return Card
+	 */
+	public function setBondedCount($count)
+	{
+		$this->bondedCount = $count;
+
+		return $this;
+	}
+
+	/**
+	 * Get bondedCount
+	 *
+	 * @return integer
+	 */
+	public function getBondedCount()
+	{
+		return $this->bondedCount;
 	}
 }
