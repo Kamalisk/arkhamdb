@@ -595,11 +595,8 @@ class CardsData
 
 		if(isset($cardinfo['bonded_to']) && $cardinfo['bonded_count']) {
 			// fetch the bonded cards
-			$bonded_cards = $this->doctrine->getRepository('AppBundle:Card')->findBy(['realName' => $cardinfo['bonded_to']]);
-			$cardinfo['bonded_cards'] = $bonded_cards;
-		} else {
-			$bonded_cards = $this->doctrine->getRepository('AppBundle:Card')->findBy(['bondedTo' => $cardinfo['real_name']]);
-			$cardinfo['bonded_cards'] = $bonded_cards;
+			//$bonded_cards = $this->doctrine->getRepository('AppBundle:Card')->findBy(['realName' => $cardinfo['bonded_to']]);
+			//$cardinfo['bonded_cards'] = $bonded_cards;
 		}
 
 		if(isset($cardinfo['double_sided']) && $cardinfo['double_sided']) {
@@ -634,6 +631,10 @@ class CardsData
 			}
 			if (isset($cardinfo['restrictions']) && $cardinfo['restrictions']){
 				$cardinfo['restrictions'] = $this->deckValidationHelper->parseReqString($cardinfo['restrictions']);
+			}
+			if (!$cardinfo['bonded_to']) {
+				unset($cardinfo['bonded_to']);
+				unset($cardinfo['bonded_count']);
 			}
 			$cardinfo = array_filter($cardinfo, function ($var) { return isset($var); });
 		} else {
