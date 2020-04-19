@@ -84,6 +84,14 @@
 	<div class="investigator-select">
 		<h2>Choose an investigator</h2>
 		<div>
+		<label><select id="order" class="form-control" onchange="app.deck_init.change_order();">
+			<option value="name">Order by Name</option>
+			<option value="faction">Order by Faction</option>
+			<option value="willpower">Order by Willpower</option>
+			<option value="intellect">Order by Intellect</option>
+			<option value="combat">Order by Combat</option>
+			<option value="agility">Order by Agility</option>
+		</select></label>
 		<label><input type="checkbox" id="deck_init_all" onchange="app.deck_init.toggle_owned();"> Only investigators in your collection</label>
 		</div>
 		<div>
@@ -101,7 +109,7 @@
 			</div>
 			<div>
 			<h3><span id="filter_title">All</span> Investigators</h3>
-				<div style="display: flex; align-items: stretch; flex-wrap: wrap; justify-content: left;">
+				<div id="investigator_divs" style="display: flex; align-items: stretch; flex-wrap: wrap; justify-content: left;">
 					{% for investigator in investigators %}
 						{% include 'AppBundle:Builder:initbuild-investigator.html.twig' %}
 					{% endfor %}
