@@ -593,12 +593,6 @@ class CardsData
 			$cardinfo['spoiler'] = 1;
 		}
 
-		if(isset($cardinfo['bonded_to']) && $cardinfo['bonded_count']) {
-			// fetch the bonded cards
-			//$bonded_cards = $this->doctrine->getRepository('AppBundle:Card')->findBy(['realName' => $cardinfo['bonded_to']]);
-			//$cardinfo['bonded_cards'] = $bonded_cards;
-		}
-
 		if(isset($cardinfo['double_sided']) && $cardinfo['double_sided']) {
 			$imageurl = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'b.png');
 			$imagepath= $this->rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl);
@@ -632,10 +626,6 @@ class CardsData
 			if (isset($cardinfo['restrictions']) && $cardinfo['restrictions']){
 				$cardinfo['restrictions'] = $this->deckValidationHelper->parseReqString($cardinfo['restrictions']);
 			}
-			if (!$cardinfo['bonded_to']) {
-				unset($cardinfo['bonded_to']);
-				unset($cardinfo['bonded_count']);
-			}
 			$cardinfo = array_filter($cardinfo, function ($var) { return isset($var); });
 		} else {
 			$cardinfo['text'] = $this->replaceSymbols($cardinfo['text']);
@@ -654,6 +644,18 @@ class CardsData
 				$cardinfo['restrictions'] = $this->deckValidationHelper->parseReqString($cardinfo['restrictions']);
 			}
 			$cardinfo['flavor'] = $this->replaceSymbols($cardinfo['flavor']);
+			if(isset($cardinfo['bonded_to']) && $cardinfo['bonded_count']) {
+				// fetch the bonded cards
+				$bonded_cards = $this->doctrine->getRepository('AppBundle:Card')->findBy(['realName' => $cardinfo['bonded_to']]);
+				if ($bonded_cards && count($bonded_cards) > 0) {
+					$cardinfo['bonded_cards'] = $bonded_cards;
+				}
+			} else {
+				$bonded_cards = $this->doctrine->getRepository('AppBundle:Card')->findBy(['bondedTo' => $cardinfo['real_name']]);
+				if ($bonded_cards && count($bonded_cards) > 0) {
+					$cardinfo['bonded_cards'] = $bonded_cards;
+				}
+			}
 		}
 
 		return $cardinfo;
