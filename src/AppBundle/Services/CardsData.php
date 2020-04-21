@@ -538,7 +538,7 @@ class CardsData
 	 * @param string $api
 	 * @return multitype:multitype: string number mixed NULL unknown
 	 */
-	public function getCardInfo($card, $api = false)
+	public function getCardInfo($card, $api = false, $bonded_cards = [])
 	{
     $cardinfo = [];
 
@@ -625,6 +625,10 @@ class CardsData
 			}
 			if (isset($cardinfo['restrictions']) && $cardinfo['restrictions']){
 				$cardinfo['restrictions'] = $this->deckValidationHelper->parseReqString($cardinfo['restrictions']);
+			}	
+			// if we have preloaded the bonded cards, add them here		
+			if (isset($bonded_cards) && isset($bonded_cards[$card->getCode()]) && count($bonded_cards[$card->getCode()]) > 0) {
+				$cardinfo['bonded_cards'] = $bonded_cards[$card->getCode()];
 			}
 			$cardinfo = array_filter($cardinfo, function ($var) { return isset($var); });
 		} else {

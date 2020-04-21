@@ -386,24 +386,34 @@ class ApiController extends Controller
 
 		// check the last-modified-since header
 
+		$bonded_cards = [];
 		$lastModified = NULL;
 		/* @var $card \AppBundle\Entity\Card */
 		foreach($list_cards as $card) {
 			if(!$lastModified || $lastModified < $card->getDateUpdate()) {
 				$lastModified = $card->getDateUpdate();
 			}
+			if ($card->getBondedTo()) {
+				$matching_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(['realName' => $card->getBondedTo()]);
+				if (count($matching_cards) > 0) {					
+					foreach($matching_cards as $matching_card) {
+						if (!isset($bonded_cards[$matching_card->getCode()])) {
+							$bonded_cards[$matching_card->getCode()] = [];
+						}
+						$bonded_cards[$matching_card->getCode()][] = ["count" => $card->getBondedCount(), "code" => $card->getCode()];
+					}
+				}
+			}
 		}
 		$response->setLastModified($lastModified);
 		if ($response->isNotModified($request)) {
 			return $response;
 		}
-
-		// build the response
-
+		
 		$cards = array();
 		/* @var $card \AppBundle\Entity\Card */
 		foreach($list_cards as $card) {
-			$cards[] = $this->get('cards_data')->getCardInfo($card, true, "en");
+			$cards[] = $this->get('cards_data')->getCardInfo($card, true, $bonded_cards);
 		}
 
 		$content = json_encode($cards);
