@@ -84,8 +84,8 @@ ui.set_max_qty = function set_max_qty() {
 ui.build_faction_selector = function build_faction_selector() {
 	//app.deck.choices.push({'faction_select':["guardian","seeker"]});
 	
-	$('[data-filter=faction_selector]').hide();
-	$('[data-filter=deck_size_selector]').hide();
+	$('#faction_selector').hide();
+	$('#deck_size_selector').hide();
 	
 	$('[data-filter=faction_selector]').empty();
 	$('[data-filter=deck_size_selector]').empty();
@@ -94,7 +94,7 @@ ui.build_faction_selector = function build_faction_selector() {
 		for (var i = 0; i < app.deck.choices.length; i++){
 			var choice = app.deck.choices[i];
 			if (choice.faction_select) {
-				$('[data-filter=faction_selector]').show();
+				$('#faction_selector').show();
 				choice.faction_select.forEach(function(faction_code){
 					var example = app.data.cards.find({"faction_code": faction_code})[0];
 					var label = $('<option value="' + faction_code + '" title="'+example.faction_name+'"><span class="icon-' + faction_code + '"></span> ' + example.faction_name + '</option>');
@@ -103,11 +103,31 @@ ui.build_faction_selector = function build_faction_selector() {
 				});
 			}
 			if (choice.deck_size_select) {
-				$('[data-filter=deck_size_selector]').show();
+				$('#deck_size_selector').show();
 				choice.deck_size_select.forEach(function(size){
 					var label = $('<option value="' + size + '" title="'+size+' Cards"> ' + size + ' Cards</option>');
 					//label.tooltip({container: 'body'});
 					$('[data-filter=deck_size_selector]').append(label);
+				});
+			}
+			if (choice.back_select) {
+				$('#back_selector').show();
+				var label = $('<option value="" title="Original">Original</option>');
+				$('[data-filter=back_selector]').append(label);
+				choice.back_select.forEach(function(inv){
+					var card = app.data.cards.findById(inv);
+					var label = $('<option value="' + card.code + '" title="'+card.name+'"> ' + card.name + '</option>');
+					$('[data-filter=back_selector]').append(label);
+				});
+			}
+			if (choice.front_select) {
+				$('#front_selector').show();
+				var label = $('<option value="" title="Original">Original</option>');
+				$('[data-filter=front_selector]').append(label);
+				choice.front_select.forEach(function(inv){
+					var card = app.data.cards.findById(inv);
+					var label = $('<option value="' + card.code + '" title="'+card.name+'"> ' + card.name + '</option>');
+					$('[data-filter=front_selector]').append(label);
 				});
 			}
 		}
@@ -342,6 +362,12 @@ ui.init_selectors = function init_selectors() {
 		}
 		if (app.deck.meta.deck_size_selected){
 			$('[data-filter=deck_size_selector]').val(app.deck.meta.deck_size_selected);
+		}
+		if (app.deck.meta.alternate_back){
+			$('[data-filter=back_selector]').val(app.deck.meta.alternate_back);
+		}
+		if (app.deck.meta.alternate_front){
+			$('[data-filter=front_selector]').val(app.deck.meta.alternate_front);
 		}
 	}
 	
@@ -676,7 +702,7 @@ ui.setup_event_handlers = function setup_event_handlers() {
 		click : ui.on_click_filter
 	}, 'label');
 	
-	$('#build_filters [data-filter=faction_selector]').on({
+	$('#deck_options [data-filter=faction_selector]').on({
 		change : function(event){
 			app.deck.meta.faction_selected = event.target.value;
 			ui.refresh_deck();
@@ -684,9 +710,25 @@ ui.setup_event_handlers = function setup_event_handlers() {
 		}
 	});
 
-	$('#build_filters [data-filter=deck_size_selector]').on({
+	$('#deck_options [data-filter=deck_size_selector]').on({
 		change : function(event){
 			app.deck.meta.deck_size_selected = event.target.value;
+			ui.refresh_deck();
+			ui.refresh_lists();
+		}
+	});
+
+	$('#deck_options [data-filter=back_selector]').on({
+		change : function(event){
+			app.deck.meta.alternate_back = event.target.value;
+			ui.refresh_deck();
+			ui.refresh_lists();
+		}
+	});
+
+	$('#deck_options [data-filter=front_selector]').on({
+		change : function(event){
+			app.deck.meta.alternate_front = event.target.value;
 			ui.refresh_deck();
 			ui.refresh_lists();
 		}

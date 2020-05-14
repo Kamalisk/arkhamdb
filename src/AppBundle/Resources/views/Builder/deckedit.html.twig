@@ -46,13 +46,34 @@
 	<input type="hidden" name="xp_spent">
 	<input type="hidden" name="faction_code" value="{{ deck.character.code }}">
 	<input type="hidden" name="tags">
+	<h4 class="deck-section">Deck Options</h4>
+	<div id="deck_options">
+		<div id="deck_size_selector" class="form-group" style="display: none;">
+			<label for="taboo">Deck Size</label>
+			<select class="form-control" data-filter="deck_size_selector"></select>
+		</div>
+		<div id="faction_selector" class="form-group" style="display: none;">
+			<label for="taboo">Class Select</label>
+			<select class="form-control" data-filter="faction_selector"></select>
+		</div>
+		<div id="front_selector" class="form-group" style="display: none;">
+			<label for="taboo">Alternate Investigator Front (Changes ability, stats and art)</label>
+			<select class="form-control" data-filter="front_selector"></select>
+		</div>
+		<div id="back_selector" class="form-group" style="display: none;">
+			<label for="taboo">Alternate Investigator Back (Changes deck building requirements)</label>
+			<select class="form-control" data-filter="back_selector"></select>
+		</div>
+		<div id="taboo_code" class="form-group">
+			<label for="taboo">Taboo List</label>
+			<select class="form-control" name="taboo" data-filter="taboo_code"></select>
+		</div>
+	</div>
+
+	<hr />
 	<div class="form-group">
 		<label for="name">Name</label>
 		<input type="text" class="form-control decklist-name" name="name" value="{{ deck.name }}">
-	</div>
-	<div class="form-group">
-		<label for="taboo">Taboo List</label>
-		<select class="form-control" name="taboo" data-filter="taboo_code"></select>
 	</div>
 	<div class="form-group">
 		<button type="submit" class="btn btn-success">Save</button>

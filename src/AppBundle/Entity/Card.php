@@ -50,7 +50,8 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				'pack',
 				'type',
 				'encounter',
-				'linked_to'
+				'linked_to',
+				'alternate_of'
 		];
 	
 		switch($this->type->getCode()) {
@@ -447,6 +448,11 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	private $reviews;
 
 	/**
+	 * @var \Doctrine\Common\Collections\Collection
+	 */
+	private $alternates;
+
+	/**
 	 * @var \AppBundle\Entity\Pack
 	 */
 	private $pack;
@@ -482,6 +488,11 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	private $linked_to;
 
 	/**
+	 * @var \AppBundle\Entity\Card
+	 */
+	private $alternate_of;
+
+	/**
 	* @var \AppBundle\Entity\Encounter
 	*/
 	private $encounter;
@@ -492,7 +503,8 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	public function __construct()
 	{
 	  $this->reviews = new \Doctrine\Common\Collections\ArrayCollection();
-  	}
+		$this->alternates = new \Doctrine\Common\Collections\ArrayCollection();
+  }
 
 	/**
 	 * Get id
@@ -1809,6 +1821,40 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 		return $this->reviews;
 	}
 
+
+	/**
+	 * Add alternates
+	 *
+	 * @param \AppBundle\Entity\Card $alternate
+	 *
+	 * @return Card
+	 */
+	public function addAlternate(\AppBundle\Entity\Card $alternate)
+	{
+		$this->alternates[] = $alternate;
+
+		return $this;
+	}
+
+	/**
+	 * Remove review
+	 *
+	 * @param \AppBundle\Entity\Card $alternate
+	 */
+	public function removeAlternate(\AppBundle\Entity\Card $alternate)
+	{
+		$this->alternates->removeElement($alternate);
+	}
+
+	/**
+	 * Get alternates
+	 *
+	 * @return \Doctrine\Common\Collections\Collection
+	 */
+	public function getAlternates()
+	{
+		return $this->alternates;
+	}
 	/**
 	 * Set pack
 	 *
@@ -1951,6 +1997,29 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	public function getLinkedTo()
 	{
 		return $this->linked_to;
+	}
+
+		/**
+	 * set alternateOf
+	 *
+	 * @param \AppBundle\Entity\Card $card
+	 *
+	 * @return Card
+	 */
+	public function setAlternateOf(\AppBundle\Entity\Card $alternateOf = null)
+	{
+		$this->alternate_of = $alternateOf;
+		return $this;
+	}
+
+	/**
+	 * Get alternateOf
+	 *
+	 * @return \AppBundle\Entity\Card
+	 */
+	public function getAlternateOf()
+	{
+		return $this->alternate_of;
 	}
 	
 	 /**

@@ -6,14 +6,22 @@ var cards_zoom_regexp = /card\/(\d\d\d\d\d)$/,
 
 function display_card_on_element(card, element, event) {
 	var content;
+	var back_only = false;
+	var front_only = false;
+	if ($(element).data('back')) {
+		back_only = $(element).data('back');
+	}
+	if ($(element).data('front')) {
+		front_only = $(element).data('front');
+	}
 	if(mode == 'text') {
 		var image = card.imagesrc ? '<div class="card-thumbnail card-thumbnail-3x card-thumbnail-'+card.type_code+'" style="background-image:url('+card.imagesrc+')"></div>' : "";		
-		content = image
-		+ '<h4 class="card-name">' + app.format.name(card) + '</h4>'
-		+ '<div class="card-faction">' + app.format.faction(card) + '</div>'
-		+ '<div><span class="card-type">'+card.type_name+((card.type_code == "agenda" || card.type_code == "act") ? '. Stage '+card.stage : '')+(card.slot ? '. '+card.slot : "")+(card.subtype_name ? '. '+card.subtype_name : "")+'</span></div>'
-		+ '<div class="card-traits">' + app.format.traits(card) + '</div>'
-		;
+		content = image	+ '<h4 class="card-name">' + app.format.name(card) + '</h4>';
+		if (!back_only) {
+			content = content + '<div class="card-faction">' + app.format.faction(card) + '</div>';
+			content = content + '<div><span class="card-type">'+card.type_name+((card.type_code == "agenda" || card.type_code == "act") ? '. Stage '+card.stage : '')+(card.slot ? '. '+card.slot : "")+(card.subtype_name ? '. '+card.subtype_name : "")+'</span></div>';
+			content = content + '<div class="card-traits">' + app.format.traits(card) + '</div>';
+		}
 		
 		if (card.type_code == "agenda" || card.type_code == "act"){
 			content += '<div class="card-info">' + app.format.info(card) + '</div>';
@@ -29,21 +37,25 @@ function display_card_on_element(card, element, event) {
 			content += '<div class="card-info">' + app.format.info(card) + '</div>';
 			content += '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>';
 		}else {
-			content += '<div class="card-info">' + app.format.info(card) + '</div>';
-			content += '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>';
-			if (card.taboo_text){
-				content += '<div class="card-text-taboo border-'+card.faction_code+'">' + app.format.text(card, "taboo_text") + '</div>'
-			}
-			if (card.taboo_xp){
-				content += '<div class="card-text-taboo border-'+card.faction_code+'">This card costs ' + card.taboo_xp + ' additional experience</div>'
-			}
-			if (card.double_sided){
-				content += '<hr />';
-				if (card.back_flavor){
-					//content += '<div class="card-flavor">' + card.back_flavor + '</div>';
+			if (!back_only) {
+				content += '<div class="card-info">' + app.format.info(card) + '</div>';
+				content += '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>';
+				if (card.taboo_text){
+					content += '<div class="card-text-taboo border-'+card.faction_code+'">' + app.format.text(card, "taboo_text") + '</div>'
 				}
-				if (card.back_text){
-					content += '<div class="card-text border-'+card.faction_code+'">' + app.format.back_text(card) + '</div>';
+				if (card.taboo_xp){
+					content += '<div class="card-text-taboo border-'+card.faction_code+'">This card costs ' + card.taboo_xp + ' additional experience</div>'
+				}
+			}
+			if (!front_only) {
+				if (card.double_sided){
+					content += '<hr />';
+					if (card.back_flavor){
+						//content += '<div class="card-flavor">' + card.back_flavor + '</div>';
+					}
+					if (card.back_text){
+						content += '<div class="card-text border-'+card.faction_code+'">' + app.format.back_text(card) + '</div>';
+					}
 				}
 			}
 		}

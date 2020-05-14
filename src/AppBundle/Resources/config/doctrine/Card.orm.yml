@@ -48,11 +48,21 @@ AppBundle\Entity\Card:
             joinColumn:
                 name: linked_id
                 referencedColumnName: id
+        alternate_of:
+            targetEntity: Card
+            inversedBy: alternates
+            joinColumn:
+                name: alternate_id
+                referencedColumnName: id
     oneToMany:
         reviews:
             targetEntity: Review
             orderBy: {'dateCreation':'DESC'}
             mappedBy: card
+        alternates:
+            targetEntity: Card
+            orderBy: {'dateCreation':'DESC'}
+            mappedBy: alternate_of
         linked_from:
             targetEntity: Card
             mappedBy: linked_to

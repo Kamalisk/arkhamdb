@@ -193,16 +193,22 @@ class ImportStdCommand extends ContainerAwareCommand
 		}
 		$this->em->flush();
 		// reload the cards so we can link cards
-		if ($this->links && count($this->links) > 0){
+		if ($this->links && count($this->links) > 0) {
 			$output->writeln("Resolving Links");
 			$this->loadCollection('Card');
-			foreach($this->links as $link){
+			foreach($this->links as $link) {
 				$card = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $link['card_id']]);
 				$target = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $link['target_id']]);
-				if ($card && $target){
-					$card->setLinkedTo($target);
-					$target->setLinkedTo();
-					$output->writeln("Importing link between ".$card->getName()." and ".$target->getName().".");
+				if ($card && $target) {
+					if (isset($link['type']) && $link['type'] == 'alternative_of') {
+						$card->setAlternateOf($target);
+						$target->setAlternateOf();
+						$output->writeln("Importing alternative between ".$card->getName()." and ".$target->getName().".");
+					} else {
+						$card->setLinkedTo($target);
+						$target->setLinkedTo();
+						$output->writeln("Importing link between ".$card->getName()." and ".$target->getName().".");
+					}
 				}
 			}
 			$this->em->flush();
@@ -500,6 +506,10 @@ class ImportStdCommand extends ContainerAwareCommand
 					// if we have back link, store the reference here
 					$this->links[] = ['card_id'=> $card->getCode(), 'target_id'=> $cardData['back_link']];
 				}
+				if (isset($cardData['alternative_of'])){
+					// if we have back link, store the reference here
+					$this->links[] = ['card_id'=> $card->getCode(), 'target_id'=> $cardData['alternative_of'], 'type' => 'alternative_of'];
+				}
 			}
 		}
 		
@@ -689,6 +699,9 @@ class ImportStdCommand extends ContainerAwareCommand
 			return $entity;
 		}
 		if (isset($data['back_link']) && $entity->getLinkedTo() && $entity->getLinkedTo()->getCode() !== $data['back_link']){
+			return $entity;
+		}
+		if (isset($data['alternative_of']) && $entity->getAlternateOf() && $entity->getAlternateOf()->getCode() !== $data['alternative_of']){
 			return $entity;
 		}
 	}

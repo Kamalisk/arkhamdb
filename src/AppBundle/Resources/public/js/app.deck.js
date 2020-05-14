@@ -43,10 +43,10 @@ var date_creation,
 // one block view
 layouts[1] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><h4 class="deck-section">Deck</h4><div class="col-sm-10 col-print-10"><%= cards %></div></div> <div id="upgrade_changes"></div> </div>'); 
 // two colum view
-layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><h4 class="deck-section">Deck</h4><div class="row"><div class="col-sm-6 col-print-6"><%= assets %> <%= permanent %></div><div class="col-sm-6 col-print-6"><%= events %> <%= skills %> <%= treachery %> <%= enemy %> <%= hunches %></div></div> <div id="upgrade_changes"></div></div>');
+layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><h4 class="deck-section">Deck</h4><div class="row"><div class="col-sm-6 col-print-6"><%= assets %> <%= permanent %> <%= bonded %></div><div class="col-sm-6 col-print-6"><%= events %> <%= skills %> <%= treachery %> <%= enemy %> <%= hunches %></div></div> <div id="upgrade_changes"></div></div>');
 layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= images %><%= meta %></div><h4 class="deck-section">Deck</h4><div class="col-sm-4"><%= assets %><%= skills %></div><div class="col-sm-4"><%= events %><%= treachery %></div></div></div>');
 // single column view
-layouts[4] = _.template('<div class="deck-content"><div class="row"><%= images %></div><div class="row"><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><h4 class="deck-section">Deck</h4><div class="col-sm-12 col-print-12"><%= assets %> <%= permanent %><%= events %> <%= skills %> <%= treachery %> <%= enemy %></div></div> <div id="upgrade_changes"></div></div>');
+layouts[4] = _.template('<div class="deck-content"><div class="row"><%= images %></div><div class="row"><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><h4 class="deck-section">Deck</h4><div class="col-sm-12 col-print-12"><%= assets %> <%= permanent %> <%= bonded %> <%= events %> <%= skills %> <%= treachery %> <%= enemy %></div></div> <div id="upgrade_changes"></div></div>');
 /**
  * @memberOf deck
  */
@@ -101,8 +101,17 @@ deck.onloaded = function(data){
 		deck.meta = {};
 	}
 	// check for special deck building rules
-	// for now only if they need to select a class
-	if (investigator && investigator.deck_options && investigator.deck_options.length) {
+	// selecting a class for deck building options
+	// selecting front and back for investigator options
+	if (investigator && investigator.deck_options && investigator.deck_options.length) {		
+		var alternates = app.data.cards.find({'alternate_of_code': investigator.code});
+		if (alternates && alternates.length > 0) {
+			var alternate_choices = [];
+			for (var i = 0; i < alternates.length; i++){
+				alternate_choices.push(alternates[i].code)
+			}
+			deck.choices.push({'back_select': alternate_choices});
+		}
 		for (var i = 0; i < investigator.deck_options.length; i++){
 			var option = investigator.deck_options[i];
 			if (option.faction_select){
@@ -473,6 +482,7 @@ deck.get_layout_data = function get_layout_data(options) {
 			treachery: '',
 			enemy: '',
 			permanent: '',
+			bonded: '',
 			hunches: '',
 			cards: ''
 	};
@@ -517,7 +527,10 @@ deck.get_layout_data = function get_layout_data(options) {
 
 	deck.update_layout_section(data, 'images', $('<div style="margin-bottom:10px"><img src="/bundles/cards/'+deck.get_investigator_code()+'.png" class="img-responsive">'));
 	deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold"><a class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="'+deck.get_investigator_code()+'">'+investigator_name+'</a></h4>'));
-	//deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold">'+investigator_name+'</h4>'));
+	if (app.deck.meta && app.deck.meta.alternate_back) {
+		var alternate = app.data.cards.findById(app.deck.meta.alternate_back);
+		deck.update_layout_section(data, 'meta', $('<div>Alternate back: <a class="card card-tip" data-toggle="modal" data-back="true" data-remote="false" data-target="#cardModal" data-code="'+alternate.code+'">'+investigator_name+'</a></div>'));
+	}
 	deck.update_layout_section(data, 'meta', $('<div>'+deck.get_draw_deck_size()+' cards ('+deck.get_real_draw_deck_size()+' total)</div>').addClass(deck.get_draw_deck_size() < size ? 'text-danger': ''));
 	deck.update_layout_section(data, 'meta', $('<div>'+deck.get_xp_usage()+' experience required.</div>'));
 	var pack_string = _.map(deck.get_included_packs(), function (pack) { return pack.name+(pack.quantity > 1 ? ' ('+pack.quantity+')' : ''); }).join(', ');
@@ -1006,13 +1019,24 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 			return false;
 	}
 	
+	var deck_options = [];
+	if (investigator && investigator.deck_options && investigator.deck_options.length) {
+		deck_options = investigator.deck_options;
+	}
+	// if they user has selected different deck building options, point to them here
+	if (deck.meta && deck.meta.alternate_back) {
+		var alternate = app.data.cards.findById(deck.meta.alternate_back);
+		if (alternate && alternate.deck_options && alternate.deck_options.length) {
+			deck_options = alternate.deck_options;
+		}
+	}
 	//var investigator = app.data.cards.findById(investigator_code);
 	// store the overflow from one rule to another for deck limit counting
 	var overflow = 0; 
-	if (investigator && investigator.deck_options && investigator.deck_options.length) {
+	if (deck_options && deck_options.length) {
 		
-		for (var i = 0; i < investigator.deck_options.length; i++){
-			var option = investigator.deck_options[i];
+		for (var i = 0; i < deck_options.length; i++){
+			var option = deck_options[i];
 			
 			var valid = false;
 

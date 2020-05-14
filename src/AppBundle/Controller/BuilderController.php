@@ -32,15 +32,11 @@ class BuilderController extends Controller
 		$packs_owned = explode(",", $collection);
 
 		$type = $em->getRepository('AppBundle:Type')->findOneBy(['code' => 'investigator']);
-		$investigators = $em->getRepository('AppBundle:Card')->findBy(['type' => $type, "hidden" => false, "permanent" => false], ["name"=>"ASC" ]);
-		$my_investigators = [];
-		$other_investigators = [];
+		$investigators = $em->getRepository('AppBundle:Card')->findBy(['type' => $type,  "permanent" => false], ["name"=>"ASC" ]);
+
 		$all_investigators = [];
-		$all_investigators_by_class = [];
 		$classes = [];
-		$my_investigators_by_class = [];
 		$all_unique_investigators = [];
-		$my_unique_investigators = [];
 		foreach($investigators as $investigator){
 			$deck_requirements = $this->get('deck_validation_helper')->parseReqString($investigator->getDeckRequirements());
 			if (isset($deck_requirements['size']) && $deck_requirements['size']){
@@ -60,18 +56,7 @@ class BuilderController extends Controller
 					"size" => $deck_requirements['size']
 				];
 
-
 				$investigator->setDeckRequirements($req);
-
-				if (in_array($investigator->getPack()->getId(), $packs_owned) && !isset($my_unique_investigators[$investigator->getName()]) ){
-					$my_investigators[] = $investigator;
-					$my_unique_investigators[$investigator->getName()] = true;
-					if (!isset($my_investigators_by_class[$investigator->getFaction()->getName()]) ) {
-						$my_investigators_by_class[$investigator->getFaction()->getName()] = [];
-					}
-					$my_investigators_by_class[$investigator->getFaction()->getName()][] = $investigator;
-				}
-
 
 				// only have one investigator per name
 				if (!isset($all_unique_investigators[$investigator->getName()])) {
@@ -84,22 +69,23 @@ class BuilderController extends Controller
 					} else {
 						$investigator->owned = 0;
 					}
-					$all_investigators_by_class[$investigator->getFaction()->getName()][] = $investigator;
 					$all_investigators[preg_replace("/[^A-Za-z0-9 ]/", '', $investigator->getName())] = $investigator;
 					$classes[$investigator->getFaction()->getName()] = $investigator->getFaction()->getName();
+				} else {
+					// investigator already present, but check for owner on the new version
+					$original = $all_investigators[preg_replace("/[^A-Za-z0-9 ]/", '', $investigator->getName())];
+					if (in_array($investigator->getPack()->getId(), $packs_owned) ){
+						$original->owned = 1;
+					}
 				}
 			}
 		}
 		ksort($all_investigators);
-		arsort($all_investigators_by_class);
-		arsort($my_investigators_by_class);
 
 		return $this->render('AppBundle:Builder:initbuild.html.twig', [
 			'pagetitle' => "New deck",
 			'investigators' => $all_investigators,
 			'classes' => $classes,
-			//'my_investigators' => $my_investigators,
-			//'other_investigators' => $other_investigators
 		], $response);
 	}
 
