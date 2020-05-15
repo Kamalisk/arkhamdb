@@ -32,7 +32,7 @@ class BuilderController extends Controller
 		$packs_owned = explode(",", $collection);
 
 		$type = $em->getRepository('AppBundle:Type')->findOneBy(['code' => 'investigator']);
-		$investigators = $em->getRepository('AppBundle:Card')->findBy(['type' => $type,  "permanent" => false], ["name"=>"ASC" ]);
+		$investigators = $em->getRepository('AppBundle:Card')->findBy(['type' => $type,  "hidden" => false, "permanent" => false], ["name"=>"ASC" ]);
 
 		$all_investigators = [];
 		$classes = [];
