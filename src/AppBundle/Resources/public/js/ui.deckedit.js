@@ -116,7 +116,7 @@ ui.build_faction_selector = function build_faction_selector() {
 				$('[data-filter=back_selector]').append(label);
 				choice.back_select.forEach(function(inv){
 					var card = app.data.cards.findById(inv);
-					var label = $('<option value="' + card.code + '" title="'+card.name+'"> ' + card.name + '</option>');
+					var label = $('<option value="' + card.code + '" title="'+card.name+'"> ' + card.name + ' ('+card.pack_name+')</option>');
 					$('[data-filter=back_selector]').append(label);
 				});
 			}
@@ -126,7 +126,7 @@ ui.build_faction_selector = function build_faction_selector() {
 				$('[data-filter=front_selector]').append(label);
 				choice.front_select.forEach(function(inv){
 					var card = app.data.cards.findById(inv);
-					var label = $('<option value="' + card.code + '" title="'+card.name+'"> ' + card.name + '</option>');
+					var label = $('<option value="' + card.code + '" title="'+card.name+'"> ' + card.name + ' ('+card.pack_name+')</option>');
 					$('[data-filter=front_selector]').append(label);
 				});
 			}

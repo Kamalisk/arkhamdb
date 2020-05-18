@@ -111,6 +111,7 @@ deck.onloaded = function(data){
 				alternate_choices.push(alternates[i].code)
 			}
 			deck.choices.push({'back_select': alternate_choices});
+			deck.choices.push({'front_select': alternate_choices});
 		}
 		for (var i = 0; i < investigator.deck_options.length; i++){
 			var option = investigator.deck_options[i];
@@ -529,7 +530,11 @@ deck.get_layout_data = function get_layout_data(options) {
 	deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold"><a class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="'+deck.get_investigator_code()+'">'+investigator_name+'</a></h4>'));
 	if (app.deck.meta && app.deck.meta.alternate_back) {
 		var alternate = app.data.cards.findById(app.deck.meta.alternate_back);
-		deck.update_layout_section(data, 'meta', $('<div>Alternate back: <a class="card card-tip" data-toggle="modal" data-back="true" data-remote="false" data-target="#cardModal" data-code="'+alternate.code+'">'+investigator_name+'</a></div>'));
+		deck.update_layout_section(data, 'meta', $('<div>Alternate back: <a class="card card-tip" data-toggle="modal" data-back="true" data-remote="false" data-target="#cardModal" data-code="'+alternate.code+'">'+investigator_name+' ('+alternate.pack_name+')</a></div>'));
+	}
+	if (app.deck.meta && app.deck.meta.alternate_front) {
+		var alternate = app.data.cards.findById(app.deck.meta.alternate_front);
+		deck.update_layout_section(data, 'meta', $('<div>Alternate front: <a class="card card-tip" data-toggle="modal" data-front="true" data-remote="false" data-target="#cardModal" data-code="'+alternate.code+'">'+investigator_name+' ('+alternate.pack_name+')</a></div>'));
 	}
 	deck.update_layout_section(data, 'meta', $('<div>'+deck.get_draw_deck_size()+' cards ('+deck.get_real_draw_deck_size()+' total)</div>').addClass(deck.get_draw_deck_size() < size ? 'text-danger': ''));
 	deck.update_layout_section(data, 'meta', $('<div>'+deck.get_xp_usage()+' experience required.</div>'));
