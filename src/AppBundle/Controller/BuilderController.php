@@ -807,6 +807,11 @@ class BuilderController extends Controller
 				)
 			);
 		}
+
+		$is_public = false;
+		if ($deck->getUser()->getIsShareDecks()) {
+			$is_public = true;
+		}
 		$editable = true;
 		if ($deck->getNextDeck()){
 			$editable = false;
@@ -825,6 +830,7 @@ class BuilderController extends Controller
 				'deck' => $deck,
 				'deck_id' => $deck_id,
 				'is_owner' => $is_owner,
+				'is_public' => $is_public,
 				'editable' => $editable,
 				'tournaments' => [],
 				'octgnable' => $octgnable

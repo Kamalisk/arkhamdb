@@ -200,10 +200,10 @@ class ImportStdCommand extends ContainerAwareCommand
 				$card = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $link['card_id']]);
 				$target = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $link['target_id']]);
 				if ($card && $target) {
-					if (isset($link['type']) && $link['type'] == 'alternative_of') {
+					if (isset($link['type']) && $link['type'] == 'alternate_of') {
 						$card->setAlternateOf($target);
 						$target->setAlternateOf();
-						$output->writeln("Importing alternative between ".$card->getName()." and ".$target->getName().".");
+						$output->writeln("Importing alternate_of between ".$card->getName()." and ".$target->getName().".");
 					} else {
 						$card->setLinkedTo($target);
 						$target->setLinkedTo();
@@ -506,9 +506,9 @@ class ImportStdCommand extends ContainerAwareCommand
 					// if we have back link, store the reference here
 					$this->links[] = ['card_id'=> $card->getCode(), 'target_id'=> $cardData['back_link']];
 				}
-				if (isset($cardData['alternative_of'])){
+				if (isset($cardData['alternate_of'])){
 					// if we have back link, store the reference here
-					$this->links[] = ['card_id'=> $card->getCode(), 'target_id'=> $cardData['alternative_of'], 'type' => 'alternative_of'];
+					$this->links[] = ['card_id'=> $card->getCode(), 'target_id'=> $cardData['alternate_of'], 'type' => 'alternate_of'];
 				}
 			}
 		}
@@ -701,7 +701,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		if (isset($data['back_link']) && $entity->getLinkedTo() && $entity->getLinkedTo()->getCode() !== $data['back_link']){
 			return $entity;
 		}
-		if (isset($data['alternative_of']) && $entity->getAlternateOf() && $entity->getAlternateOf()->getCode() !== $data['alternative_of']){
+		if (isset($data['alternate_of']) && $entity->getAlternateOf() && $entity->getAlternateOf()->getCode() !== $data['alternate_of']){
 			return $entity;
 		}
 	}

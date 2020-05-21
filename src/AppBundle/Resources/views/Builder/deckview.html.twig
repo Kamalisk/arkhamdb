@@ -7,7 +7,22 @@
 	{% endjavascripts %}
 	<script type="text/javascript">
 	app.deck && app.deck.init({{ deck|json_encode|raw }});
-	app.deck_history && app.deck_history.init({{ deck.history|json_encode|raw }});	
+	app.deck_history && app.deck_history.init({{ deck.history|json_encode|raw }});
+
+	function copy() {
+		/* Get the text field */
+		var copyText = document.getElementById("copy_deck_id");
+
+		/* Select the text field */
+		copyText.select();
+		copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+		/* Copy the text inside the text field */
+		document.execCommand("copy");
+
+		/* Alert the copied text */
+		alert("Copied the deck ID: " + copyText.value);
+	} 
 	</script>
 {% endblock %}
 
@@ -43,7 +58,6 @@
 					{% endif %}
 					
 					<a href="{{ path('deck_clone', {deck_id:deck_id}) }}" id="btn-clone" class="btn btn-info"><span class="fa fa-clone"></span> Clone</a>
-					
 					</div>
 					<div>
 					<div class="btn-group">
@@ -75,6 +89,36 @@
 					</div>
 				</div>
 			</div>
+			<style>
+				.subtext {
+					font-size: 0.8em;
+					margin: 0;
+					padding: 0;
+					margin-left: 5px;
+					color: grey;
+					display: block;
+				}
+			</style>
+			{% if is_public %}
+			<div>
+			<p class="">
+				<span class="fa fa-globe"></span> 
+				This deck can be shared using this <a href="{{ path('deck_view',{deck_id:deck.id}) }}">Link</a>
+				[ Deck ID: {{deck.id}}<input style="display: none;" type="text" value="{{deck.id}}" id="copy_deck_id">
+				<span class="fa fa-copy" style="cursor: pointer;" onclick="copy()" ></span> ]
+				{% if is_owner %}
+				<span class="subtext">All your decks are set to public, change this is in <a href="{{ path('user_profile_edit') }}">user settings</a></span>
+				{% endif %}
+			</p>			
+			</div>
+			{% else %}
+			<p>
+				<span class="fa fa-shield"></span> This is deck is private
+				{% if is_owner %}
+				<span class="subtext">All your decks are set to private, change this is in <a href="{{ path('user_profile_edit') }}">user settings</a></span>
+				{% endif %}
+			</p>
+			{% endif %}
 
 			<p>
 				Version {{ deck.version }}
