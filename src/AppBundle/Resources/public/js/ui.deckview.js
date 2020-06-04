@@ -38,7 +38,7 @@ ui.upgrade = function upgrade(deck_id) {
 	}
 	$('#upgrade_xp').val(0);
 	$('#upgradeModal').modal('show');
-	setTimeout(function() { $('#upgrade_xp').focus(); }, 500);
+	setTimeout(function() { $('#upgrade_xp').focus().select(); }, 500);
 }
 
 ui.create_exile_list = function create_exile_list(){
