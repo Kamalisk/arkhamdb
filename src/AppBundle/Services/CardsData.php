@@ -236,7 +236,7 @@ class CardsData
 								// for traits it is string match
 								$trait_or = [];
 								foreach($option->trait as $trait){
-									$trait_or[] = " c.traits LIKE '%".$trait.".%' ";
+									$trait_or[] = " c.realTraits LIKE '%".$trait.".%' ";
 								}
 								$sub_where[] = " ( ".implode(" OR ", $trait_or). " ) ";
 							}
