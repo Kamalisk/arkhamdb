@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" target-language="ko" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="dpAPG.0" resname="Back">
+        <source>Back</source>
+        <target>__Back</target>
+      </trans-unit>
+      <trans-unit id="R6lTDDD" resname="Deck Building">
+        <source>Deck Building</source>
+        <target>__Deck Building</target>
+      </trans-unit>
+      <trans-unit id="vRWdLVJ" resname="Bonded Cards">
+        <source>Bonded Cards</source>
+        <target>__Bonded Cards</target>
+      </trans-unit>
+      <trans-unit id="JlcIxG6" resname="Related Cards">
+        <source>Related Cards</source>
+        <target>__Related Cards</target>
+      </trans-unit>
+      <trans-unit id="PzQb_na" resname="Your query didn't match any card.">
+        <source>Your query didn't match any card.</source>
+        <target>__Your query didn't match any card.</target>
+      </trans-unit>
+      <trans-unit id="IEpess0" resname="Cost">
+        <source>Cost</source>
+        <target>__Cost</target>
+      </trans-unit>
+      <trans-unit id="FoqtPpg" resname="XP">
+        <source>XP</source>
+        <target>__XP</target>
+      </trans-unit>
+      <trans-unit id="mmCgdrV" resname="Willpower">
+        <source>Willpower</source>
+        <target>__Willpower</target>
+      </trans-unit>
+      <trans-unit id="rddhkTc" resname="Intellect">
+        <source>Intellect</source>
+        <target>__Intellect</target>
+      </trans-unit>
+      <trans-unit id="Sfzyx4t" resname="Combat">
+        <source>Combat</source>
+        <target>__Combat</target>
+      </trans-unit>
+      <trans-unit id="SXlmlNx" resname="Agility">
+        <source>Agility</source>
+        <target>__Agility</target>
+      </trans-unit>
+      <trans-unit id="VYmESet" resname="Health">
+        <source>Health</source>
+        <target>__Health</target>
+      </trans-unit>
+      <trans-unit id="FqWvuTp" resname="Sanity">
+        <source>Sanity</source>
+        <target>__Sanity</target>
+      </trans-unit>
+      <trans-unit id="HvFCyCE" resname="Fight">
+        <source>Fight</source>
+        <target>__Fight</target>
+      </trans-unit>
+      <trans-unit id="U_ddrwe" resname="Evade">
+        <source>Evade</source>
+        <target>__Evade</target>
+      </trans-unit>
+      <trans-unit id="DIdPWBp" resname="Damage">
+        <source>Damage</source>
+        <target>__Damage</target>
+      </trans-unit>
+      <trans-unit id="Jxoi911" resname="Horror">
+        <source>Horror</source>
+        <target>__Horror</target>
+      </trans-unit>
+      <trans-unit id="AKjSmEo" resname="Doom">
+        <source>Doom</source>
+        <target>__Doom</target>
+      </trans-unit>
+      <trans-unit id="jerxSHk" resname="Shroud">
+        <source>Shroud</source>
+        <target>__Shroud</target>
+      </trans-unit>
+      <trans-unit id="hqpRSxB" resname="Clues">
+        <source>Clues</source>
+        <target>__Clues</target>
+      </trans-unit>
+      <trans-unit id="atHRhhN" resname="Test Icons">
+        <source>Test Icons</source>
+        <target>__Test Icons</target>
+      </trans-unit>
+      <trans-unit id="LIdGdPz" resname="My Decks">
+        <source>My Decks</source>
+        <target>__My Decks</target>
+      </trans-unit>
+      <trans-unit id=".KM0IRm" resname="Decklists">
+        <source>Decklists</source>
+        <target>__Decklists</target>
+      </trans-unit>
+      <trans-unit id="pS.LvDN" resname="Cards">
+        <source>Cards</source>
+        <target>__Cards</target>
+      </trans-unit>
+      <trans-unit id="hMt4cbd" resname="Reviews">
+        <source>Reviews</source>
+        <target>__Reviews</target>
+      </trans-unit>
+      <trans-unit id="QiiusHx" resname="Rules">
+        <source>Rules</source>
+        <target>__Rules</target>
+      </trans-unit>
+      <trans-unit id="mFa3Qz_" resname="FAQs">
+        <source>FAQs</source>
+        <target>__FAQs</target>
+      </trans-unit>
+      <trans-unit id="Tvyg0Qx" resname="About">
+        <source>About</source>
+        <target>__About</target>
+      </trans-unit>
+      <trans-unit id="yOWZj2o" resname="API">
+        <source>API</source>
+        <target>__API</target>
+      </trans-unit>
+      <trans-unit id="kyG8wOx" resname="Member since">
+        <source>Member since</source>
+        <target>__Member since</target>
+      </trans-unit>
+      <trans-unit id="yJwYD5S" resname="published decklists">
+        <source>published decklists</source>
+        <target>__published decklists</target>
+      </trans-unit>
+      <trans-unit id="FcxQY4_" resname="One published decklist">
+        <source>One published decklist</source>
+        <target>__One published decklist</target>
+      </trans-unit>
+      <trans-unit id="6a8vzwy" resname="published reviews">
+        <source>published reviews</source>
+        <target>__published reviews</target>
+      </trans-unit>
+      <trans-unit id="QoVVZRb" resname="One published reviews">
+        <source>One published reviews</source>
+        <target>__One published reviews</target>
+      </trans-unit>
+      <trans-unit id="0R5ueJn" resname="Reputation">
+        <source>Reputation</source>
+        <target>__Reputation</target>
+      </trans-unit>
+      <trans-unit id="47ienTP" resname="Username">
+        <source>Username</source>
+        <target>__Username</target>
+      </trans-unit>
+      <trans-unit id="lpzL089" resname="Email">
+        <source>Email</source>
+        <target>__Email</target>
+      </trans-unit>
+      <trans-unit id="PNPBkL1" resname="Something about you">
+        <source>Something about you</source>
+        <target>__Something about you</target>
+      </trans-unit>
+      <trans-unit id="jYuIjQE" resname="Be notified when a user comments one of your decklists">
+        <source>Be notified when a user comments one of your decklists</source>
+        <target>__Be notified when a user comments one of your decklists</target>
+      </trans-unit>
+      <trans-unit id="Oau00iV" resname="Be notified when a user also comments a decklist you commented">
+        <source>Be notified when a user also comments a decklist you commented</source>
+        <target>__Be notified when a user also comments a decklist you commented</target>
+      </trans-unit>
+      <trans-unit id="KfVI5.D" resname="Be notified when a user mentions you in a comment">
+        <source>Be notified when a user mentions you in a comment</source>
+        <target>__Be notified when a user mentions you in a comment</target>
+      </trans-unit>
+      <trans-unit id="iLJEQA0" resname="Make your decks public">
+        <source>Make your decks public</source>
+        <target>__Make your decks public</target>
+      </trans-unit>
+      <trans-unit id="5L.P6Wa" resname="Select a faction color for your username">
+        <source>Select a faction color for your username</source>
+        <target>__Select a faction color for your username</target>
+      </trans-unit>
+      <trans-unit id="FQn1YfJ" resname="Save">
+        <source>Save</source>
+        <target>__Save</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
