@@ -7,19 +7,19 @@
     <body>
       <trans-unit id="67_RjP." resname="Your account is not awaiting confirmation">
         <source>Your account is not awaiting confirmation</source>
-        <target>__Your account is not awaiting confirmation</target>
+        <target>Your account is not awaiting confirmation</target>
       </trans-unit>
       <trans-unit id="iqREVDn" resname="If you forgot your password">
         <source>If you forgot your password</source>
-        <target>__If you forgot your password</target>
+        <target>If you forgot your password</target>
       </trans-unit>
       <trans-unit id="nh5NYWV" resname="click here">
         <source>click here</source>
-        <target>__click here</target>
+        <target>click here</target>
       </trans-unit>
       <trans-unit id="olmUwYV" resname="otherwise log in">
         <source>otherwise log in</source>
-        <target>__otherwise log in</target>
+        <target>otherwise log in</target>
       </trans-unit>
     </body>
   </file>
