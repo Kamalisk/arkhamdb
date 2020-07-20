@@ -1018,7 +1018,7 @@ deck.reset_limit_count = function (){
 deck.get_invalid_cards = function get_invalid_cards() {
 	//var investigator = app.data.cards.findById(investigator_code);
 	deck.reset_limit_count();
-	return _.filter(deck.get_cards(), function (card) {
+	return _.filter(deck.get_cards({'xp': -1}), function (card) {
 		return ! deck.can_include_card(card, true);
 	});
 }
