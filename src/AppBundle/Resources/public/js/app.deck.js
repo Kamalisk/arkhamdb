@@ -15,6 +15,7 @@ var date_creation,
 	investigator_code,
 	investigator_name,
 	investigator,
+	deck_options,
 	unsaved,
 	user_id,
 	taboo_id, 
@@ -103,7 +104,8 @@ deck.onloaded = function(data){
 	// check for special deck building rules
 	// selecting a class for deck building options
 	// selecting front and back for investigator options
-	if (investigator && investigator.deck_options && investigator.deck_options.length) {		
+	if (investigator && investigator.deck_options && investigator.deck_options.length) {	
+		deck.deck_options = investigator.deck_options;
 		var alternates = app.data.cards.find({'alternate_of_code': investigator.code});
 		if (alternates && alternates.length > 0) {
 			var alternate_choices = [];
@@ -129,7 +131,13 @@ deck.onloaded = function(data){
 			}
 		}
 	}
-
+	// if they user has selected different deck building options, point deck_options to the alternate one
+	if (deck.meta && deck.meta.alternate_back) {
+		var alternate = app.data.cards.findById(deck.meta.alternate_back);
+		if (alternate && alternate.deck_options && alternate.deck_options.length) {
+			deck.deck_options = alternate.deck_options;
+		}
+	}
 	if (data.taboo_id){
 		deck.taboo_id = data.taboo_id;
 	}
@@ -933,28 +941,28 @@ deck.get_problem = function get_problem() {
 	}
 		
 
-	for (var i = 0; i < investigator.deck_options.length; i++){
+	for (var i = 0; i < deck.deck_options.length; i++){
 
-		if (investigator.deck_options[i].limit_count && investigator.deck_options[i].limit){
-			if (investigator.deck_options[i].limit_count > investigator.deck_options[i].limit){
-				if (investigator.deck_options[i].error){
-					deck.problem_list.push(investigator.deck_options[i].error);
+		if (deck.deck_options[i].limit_count && deck.deck_options[i].limit){
+			if (deck.deck_options[i].limit_count > deck.deck_options[i].limit){
+				if (deck.deck_options[i].error){
+					deck.problem_list.push(deck.deck_options[i].error);
 				}
 				return 'investigator';
 			}
 		}
 		
-		if (investigator.deck_options[i].atleast_count && investigator.deck_options[i].atleast){
-			if (investigator.deck_options[i].atleast.factions && investigator.deck_options[i].atleast.min){
+		if (deck.deck_options[i].atleast_count && deck.deck_options[i].atleast){
+			if (deck.deck_options[i].atleast.factions && deck.deck_options[i].atleast.min){
 				var faction_count = 0;
-				$.each(investigator.deck_options[i].atleast_count, function(key, value){
-					if (value >= investigator.deck_options[i].atleast.min){
+				$.each(deck.deck_options[i].atleast_count, function(key, value){
+					if (value >= deck.deck_options[i].atleast.min){
 						faction_count++;
 					}
 				})
-				if (faction_count < investigator.deck_options[i].atleast.factions){
-					if (investigator.deck_options[i].error){
-						deck.problem_list.push(investigator.deck_options[i].error);
+				if (faction_count < deck.deck_options[i].atleast.factions){
+					if (deck.deck_options[i].error){
+						deck.problem_list.push(deck.deck_options[i].error);
 					}
 					return 'investigator';
 				}
@@ -977,21 +985,31 @@ deck.get_problem = function get_problem() {
 deck.reset_limit_count = function (){
 	if (investigator){
 		var versatile = app.data.cards.findById("06167");//06167
-		
-		for (var i = investigator.deck_options.length - 1; i >= 0 ; i--){
-			if (investigator.deck_options[i] && investigator.deck_options[i].name == "versatile") {
-				investigator.deck_options.splice(i, 1);
+		// if they user has selected different deck building options, point deck_options to the alternate one
+		if (deck.meta && deck.meta.alternate_back) {
+			var alternate = app.data.cards.findById(deck.meta.alternate_back);
+			if (alternate && alternate.deck_options && alternate.deck_options.length) {
+				deck.deck_options = alternate.deck_options;
 			} else {
-				investigator.deck_options[i].limit_count = 0;
-				investigator.deck_options[i].atleast_count = {};
+				deck.deck_options = investigator.deck_options;
+			}
+		} else {
+			deck.deck_options = investigator.deck_options;
+		}
+		for (var i = deck.deck_options.length - 1; i >= 0 ; i--) {
+			if (deck.deck_options[i] && deck.deck_options[i].name == "versatile") {
+				deck.deck_options.splice(i, 1);
+			} else {
+				deck.deck_options[i].limit_count = 0;
+				deck.deck_options[i].atleast_count = {};
 			}
 		}
 		if (versatile && versatile.indeck) {
 			var new_option = {name: "versatile", faction:["guardian", "seeker", "survivor", "mystic", "rogue"], limit: 1, limit_count: 0, level:{"min":0, "max":0} };
-			investigator.deck_options.push(new_option);
+			deck.deck_options.push(new_option);
 			if (versatile.indeck > 1) {
 				new_option = {name: "versatile", faction:["guardian", "seeker", "survivor", "mystic", "rogue"], limit: 1, limit_count: 0, level:{"min":0, "max":0} };
-				investigator.deck_options.push(new_option);
+				deck.deck_options.push(new_option);
 			}
 		}
 	}
@@ -1024,24 +1042,13 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 			return false;
 	}
 	
-	var deck_options = [];
-	if (investigator && investigator.deck_options && investigator.deck_options.length) {
-		deck_options = investigator.deck_options;
-	}
-	// if they user has selected different deck building options, point to them here
-	if (deck.meta && deck.meta.alternate_back) {
-		var alternate = app.data.cards.findById(deck.meta.alternate_back);
-		if (alternate && alternate.deck_options && alternate.deck_options.length) {
-			deck_options = alternate.deck_options;
-		}
-	}
 	//var investigator = app.data.cards.findById(investigator_code);
 	// store the overflow from one rule to another for deck limit counting
 	var overflow = 0; 
-	if (deck_options && deck_options.length) {
+	if (deck.deck_options && deck.deck_options.length) {
 		
-		for (var i = 0; i < deck_options.length; i++){
-			var option = deck_options[i];
+		for (var i = 0; i < deck.deck_options.length; i++){
+			var option = deck.deck_options[i];
 			
 			var valid = false;
 
