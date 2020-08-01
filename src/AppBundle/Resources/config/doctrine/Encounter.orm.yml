@@ -1,6 +1,9 @@
 AppBundle\Entity\Encounter:
     type: entity
     table: Encounter
+    gedmo:
+        translation:
+            locale: locale
     oneToMany:
         cards:
             targetEntity: Card
@@ -22,6 +25,12 @@ AppBundle\Entity\Encounter:
             length: 255
             nullable: false
         name:
+            type: string
+            length: 1024
+            nullable: false
+            gedmo:
+                - translatable
+        realName:
             type: string
             length: 1024
             nullable: false

@@ -291,6 +291,10 @@ class ImportStdCommand extends ContainerAwareCommand
 					'name'
 			], [], []);
 			if($type) {
+				if ($type->getName()){
+                                        $type->setRealName($type->getName());
+                                }
+
 				$result[] = $type;
 				$this->em->persist($type);
 			}
