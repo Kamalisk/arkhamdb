@@ -143,35 +143,6 @@ class Encounter implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->cards;
     }
-    /**
-     * @var string
-     */
-    private $realName;
-
-
-    /**
-     * Set realName.
-     *
-     * @param string $realName
-     *
-     * @return Encounter
-     */
-    public function setRealName($realName)
-    {
-        $this->realName = $realName;
-
-        return $this;
-    }
-
-    /**
-     * Get realName.
-     *
-     * @return string
-     */
-    public function getRealName()
-    {
-        return $this->realName;
-    }
 
     /**
      * Add scenario.

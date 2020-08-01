@@ -30,10 +30,6 @@ AppBundle\Entity\Encounter:
             nullable: false
             gedmo:
                 - translatable
-        realName:
-            type: string
-            length: 1024
-            nullable: false
     uniqueConstraints:
         encounter_code_idx:
             columns: [ code ]
