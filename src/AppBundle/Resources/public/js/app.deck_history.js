@@ -18,11 +18,11 @@ var tbody,
  */
 deck_history.all_changes = function all_changes() {
 	//console.log("ch ch changes", app.deck.get_content());
-	if (snapshots.length <= 0){		
+	if (snapshots.length <= 0){
 		//console.log("boo");
 		return;
 	}
-	
+
 	// compute diff between last snapshot and current deck
 	var last_snapshot = deck_history.base.content;
 	var current_deck = app.deck.get_content();
@@ -32,7 +32,7 @@ deck_history.all_changes = function all_changes() {
 
 	var diff = result[0];
 	//console.log("DIFFF ", diff);
-	
+
 	var free_0_cards = 0;
 	var removed_0_cards = 0;
 	var cards_removed = [];
@@ -49,7 +49,7 @@ deck_history.all_changes = function all_changes() {
 		};
 		cards_removed.push(card_change);
 	});
-	
+
 	_.each(diff[0], function (qty, code) {
 		var card = app.data.cards.findById(code);
 		if(!card) return;
@@ -64,14 +64,27 @@ deck_history.all_changes = function all_changes() {
 			removed_0_cards += card_change.qty * 5;
 		}
 	});
-	
+
+	// find deja vu
+	var deja_vu = app.data.cards.findById("60531");
+	var deja_vu_exiled = {};
+	// There's a limit on how many discounts per card, and a limit on how
+	// many uses overall.
+	var deja_vu_max_discount = 0;
+	var deja_vu_discounts = 0;
+	if (deja_vu && deja_vu.indeck) {
+		// You get a discount of 1 XP per exile card, per deja vu.
+		deja_vu_max_discount += deja_vu.indeck;
+		deja_vu_discounts += deja_vu_max_discount * 3;
+	}
+
 	// find arcane research
 	var arcane_research = app.data.cards.findById("04109");
 	var spell_upgrade_discounts = 0;
 	if (arcane_research && arcane_research.indeck) {
 		spell_upgrade_discounts += arcane_research.indeck;
 	}
-		
+
 	// find adaptable
 	var adaptable = app.data.cards.findById("02110");
 	if (adaptable && adaptable.indeck){
@@ -83,12 +96,14 @@ deck_history.all_changes = function all_changes() {
 		_.each(app.deck.get_exiles(), function (code, id) {
 			if (cards_exiled[code]){
 				cards_exiled[code] = 2;
+				deja_vu_exiled[code] = 2;
 			} else {
 				cards_exiled[code] = 1;
+				deja_vu_exiled[code] = 1;
 			}
 		});
 	}
-	
+
 	var myriad_madness = {};
 	// first check for same named cards
 	_.each(cards_added, function (addition) {
@@ -131,7 +146,7 @@ deck_history.all_changes = function all_changes() {
 			}
 		});
 	});
-	
+
 	myriad_madness = {};
 	//console.log(removed_0_cards);
 	// then pay for all changes
@@ -150,7 +165,28 @@ deck_history.all_changes = function all_changes() {
 		if (addition.card.taboo_xp){
 			addition_xp += addition.card.taboo_xp;
 		}
-		if (addition_xp >= 0){
+		if (deja_vu_exiled[addition.card.code] && deja_vu_discounts > 0){
+			var discount_per_card = Math.min(
+				addition_xp,
+				deja_vu_max_discount
+			);
+			let deja_vu_cost = 0;
+			// Handle cards one at a time, since each one needs to have a corresponding
+			// exile and we still need to have 'uses' left.
+			for (var i = 0; i < addition.qty; i++){
+				if (deja_vu_exiled[addition.card.code]){
+					deja_vu_exiled[addition.card.code]--;
+					discount = Math.min(discount_per_card, deja_vu_discounts);
+					deja_vu_discounts -= discount;
+					deja_vu_cost += addition_xp - discount;
+				} else {
+					// Only get discount if we replaced something, and have uses left.
+					deja_vu_cost += addition_xp;
+				}
+			}
+			cost = cost + deja_vu_cost;
+			addition.qty = 0;
+		} else if (addition_xp >= 0){
 			if (addition.card.xp === 0 && removed_0_cards > 0 && free_0_cards > 0){
 				free_0_cards -= addition.qty;
 				removed_0_cards -= addition.qty;
@@ -167,15 +203,15 @@ deck_history.all_changes = function all_changes() {
 			addition.qty = 0;
 		}
 	});
-	
-	
+
+
 	var add_list = [];
 	var remove_list = [];
 	var exile_list = [];
 	// run through the changes and show them
 	_.each(diff[0], function (qty, code) {
 		var card = app.data.cards.findById(code);
-		if(!card) return;		
+		if(!card) return;
 		add_list.push('+'+qty+' '+'<a href="'+card.url+'" class="card card-tip fg-'+card.faction_code+'" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="'+card.code+'">'+card.name+'</a>'+app.format.xp(card.xp)+'</a>');
 		//add_list.push('+'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card-tip" data-code="'+code+'">'+card.name+''+(card.xp >= 0 ? ' ('+card.xp+')' : '')+'</a>');
 	});
@@ -197,13 +233,13 @@ deck_history.all_changes = function all_changes() {
 	if(app.deck.get_previous_deck()){
 		$("#upgrade_changes").empty();
 		$("#upgrade_changes").append('<h4 class="deck-section">Progress</h4>');
-		
+
 		if (app.deck.get_xp_adjustment()){
-			$("#upgrade_changes").append('<div>Available experience: <span id="xp_up" class="fa fa-plus-circle xp_up"></span> '+app.deck.get_xp()+' <span id="xp_down" class="fa fa-minus-circle xp_down"></span> ('+app.deck.get_xp_adjustment()+')</div>');	
+			$("#upgrade_changes").append('<div>Available experience: <span id="xp_up" class="fa fa-plus-circle xp_up"></span> '+app.deck.get_xp()+' <span id="xp_down" class="fa fa-minus-circle xp_down"></span> ('+app.deck.get_xp_adjustment()+')</div>');
 		} else {
 			$("#upgrade_changes").append('<div>Available experience: <span id="xp_up" class="fa fa-plus-circle xp_up"></span> '+app.deck.get_xp()+' <span id="xp_down" class="fa fa-minus-circle xp_down"></span></div>');
 		}
-		
+
 		$("#upgrade_changes").append('<div>Spent experience: '+cost+'</div>');
 		if (app.deck.get_previous_deck() && $('#save_form').length <= 0){
 			$("#upgrade_changes").append('<div><a href="'+Routing.generate('deck_view', {deck_id:app.deck.get_previous_deck()})+'">View Previous Deck</a></div>');
@@ -215,11 +251,11 @@ deck_history.all_changes = function all_changes() {
 		if (add_list.length <= 0 && remove_list.length <= 0){
 			$("#upgrade_changes").append('<div class="deck-content">No Changes</div>');
 		}else {
-			$("#upgrade_changes").append('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6">'+add_list.join('<br>')+'</div><div class="col-sm-6 col-print-6">'+remove_list.join('<br>')+'</div></div></div>');	
+			$("#upgrade_changes").append('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6">'+add_list.join('<br>')+'</div><div class="col-sm-6 col-print-6">'+remove_list.join('<br>')+'</div></div></div>');
 		}
 		if (exile_list.length > 0){
 			$("#upgrade_changes").append('<b>Exiled Cards</b>');
-			$("#upgrade_changes").append('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6">'+exile_list.join('<br>')+'</div></div></div>');	
+			$("#upgrade_changes").append('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6">'+exile_list.join('<br>')+'</div></div></div>');
 		}
 	} else if (app.deck.get_next_deck()){
 		if (app.deck.get_next_deck()){
@@ -374,7 +410,7 @@ deck_history.is_changed_since_last_autosave = function is_changed_since_last_aut
 	return changed_since_last_autosave;
 }
 
-deck_history.init = function init(data) 
+deck_history.init = function init(data)
 {
 	// console.log("ch ch changes", app.deck.get_content());
 	snapshots_init = data;
@@ -384,20 +420,20 @@ deck_history.init = function init(data)
  * @memberOf deck_history
  * @param container
  */
-deck_history.setup = function setup_history(container) 
+deck_history.setup = function setup_history(container)
 {
 	tbody = $(container).find('tbody').on('click', 'a[role=button]', deck_history.load_snapshot);
 	progressbar = $(container).find('.progress-bar');
 
 	clock = setInterval(deck_history.autosave_interval, 1000);
-	
+
 	snapshots_init.forEach(function (snapshot) {
 		if (!deck_history.base){
 			deck_history.base = snapshot;
 		}
 		deck_history.add_snapshot(snapshot);
 	});
-	
+
 	deck_history.all_changes();
 }
 
