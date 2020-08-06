@@ -144,7 +144,7 @@ deck_history.all_changes = function all_changes() {
 		});
 	});
 
-  _.each(cards_removed, function (removal) {
+	_.each(cards_removed, function (removal) {
 		if (!app.deck.can_include_card(removal.card)){
 			// Even though its not technically a L0 card, any 'invalid' card that was removed,
 			// by our updated deck rules, can be replaced with an L0 for free.
