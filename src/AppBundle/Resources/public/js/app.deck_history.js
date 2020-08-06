@@ -141,10 +141,18 @@ deck_history.all_changes = function all_changes() {
 				}
 				removal.qty = Math.abs(addition.qty);
 			}
-			if (removal.card.xp === 0){
-				removed_0_cards += removal.qty;
-			}
 		});
+	});
+
+  _.each(cards_removed, function (removal) {
+		if (!app.deck.can_include_card(removal.card)){
+			// Even though its not technically a L0 card, any 'invalid' card that was removed,
+			// by our updated deck rules, can be replaced with an L0 for free.
+			free_0_cards += removal.qty;
+			removed_0_cards += removal.qty;
+		} else if (removal.card.xp === 0){
+			removed_0_cards += removal.qty;
+		}
 	});
 
 	myriad_madness = {};

@@ -512,7 +512,7 @@ deck.get_layout_data = function get_layout_data(options) {
 		if (deck.meta && deck.meta.deck_size_selected){
 			size = parseInt(deck.meta.deck_size_selected, 10);
 		}
-		var versatile = app.data.cards.findById("06167");//06167
+		var versatile = app.data.cards.findById("06167");
 		if (versatile && versatile.indeck) {
 			size = size + 5;
 			if (versatile.indeck > 1) {
@@ -898,7 +898,7 @@ deck.get_problem = function get_problem() {
 		if (deck.meta && deck.meta.deck_size_selected){
 			size = parseInt(deck.meta.deck_size_selected, 10);
 		}
-		var versatile = app.data.cards.findById("06167");//06167
+		var versatile = app.data.cards.findById("06167");
 		if (versatile && versatile.indeck) {
 			size = size + 5;
 			if (versatile.indeck > 1) {
@@ -985,6 +985,7 @@ deck.get_problem = function get_problem() {
 deck.reset_limit_count = function (){
 	if (investigator){
 		var versatile = app.data.cards.findById("06167");//06167
+		var on_your_own = app.data.cards.findById("53010");
 		// if they user has selected different deck building options, point deck_options to the alternate one
 		if (deck.meta && deck.meta.alternate_back) {
 			var alternate = app.data.cards.findById(deck.meta.alternate_back);
@@ -997,18 +998,23 @@ deck.reset_limit_count = function (){
 			deck.deck_options = investigator.deck_options;
 		}
 		for (var i = deck.deck_options.length - 1; i >= 0 ; i--) {
-			if (deck.deck_options[i] && deck.deck_options[i].name == "versatile") {
+			if (deck.deck_options[i] && deck.deck_options[i].dynamic) {
 				deck.deck_options.splice(i, 1);
 			} else {
 				deck.deck_options[i].limit_count = 0;
 				deck.deck_options[i].atleast_count = {};
 			}
 		}
+		if (on_your_own && on_your_own.indeck) {
+			// We put it at the front of the requirements since it is a negated one.
+			var new_option = {name: "on_your_own", dynamic: true, not: true, slot: ['Ally']};
+			deck.deck_options.unshift(new_option);
+		}
 		if (versatile && versatile.indeck) {
-			var new_option = {name: "versatile", faction:["guardian", "seeker", "survivor", "mystic", "rogue"], limit: 1, limit_count: 0, level:{"min":0, "max":0} };
+			var new_option = {name: "versatile", dynamic: true, faction:["guardian", "seeker", "survivor", "mystic", "rogue"], limit: 1, limit_count: 0, level:{"min":0, "max":0} };
 			deck.deck_options.push(new_option);
 			if (versatile.indeck > 1) {
-				new_option = {name: "versatile", faction:["guardian", "seeker", "survivor", "mystic", "rogue"], limit: 1, limit_count: 0, level:{"min":0, "max":0} };
+				new_option = {name: "versatile", dynamic: true, faction:["guardian", "seeker", "survivor", "mystic", "rogue"], limit: 1, limit_count: 0, level:{"min":0, "max":0} };
 				deck.deck_options.push(new_option);
 			}
 		}
@@ -1028,7 +1034,6 @@ deck.get_invalid_cards = function get_invalid_cards() {
  * @memberOf deck
  */
 deck.can_include_card = function can_include_card(card, limit_count, hard_count) {
-	
 	// hide investigators
 	if (card.type_code === "investigator") {
 		return false;
@@ -1084,6 +1089,23 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 				}
 				
 				if (!type_valid){
+					continue;
+				}
+			}
+			
+			if (option.slot){
+				// needs to match at least one slot
+				var slot_valid = false;
+				
+				for(var j = 0; j < option.slot.length; j++){
+					var slot = option.slot[j];
+					
+					if (card.slot && card.slot.toUpperCase().indexOf(slot.toUpperCase()) !== -1){
+						slot_valid = true;
+					}
+				}
+				
+				if (!slot_valid){
 					continue;
 				}
 			}
