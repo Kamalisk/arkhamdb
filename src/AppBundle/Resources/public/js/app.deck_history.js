@@ -153,7 +153,8 @@ deck_history.all_changes = function all_changes() {
 		} else if (removal.card.xp === 0){
 			removed_0_cards += removal.qty;
 		}
-	});
+  });
+  //console.log({ removed_0_cards, free_0_cards });
 
 	myriad_madness = {};
 	//console.log(removed_0_cards);
