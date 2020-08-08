@@ -7,179 +7,179 @@
     <body>
       <trans-unit id="dpAPG.0" resname="Back">
         <source>Back</source>
-        <target>__Back</target>
+        <target>Back</target>
       </trans-unit>
       <trans-unit id="R6lTDDD" resname="Deck Building">
         <source>Deck Building</source>
-        <target>__Deck Building</target>
+        <target>덱 구성</target>
       </trans-unit>
       <trans-unit id="vRWdLVJ" resname="Bonded Cards">
         <source>Bonded Cards</source>
-        <target>__Bonded Cards</target>
+        <target>결속 카드</target>
       </trans-unit>
       <trans-unit id="JlcIxG6" resname="Related Cards">
         <source>Related Cards</source>
-        <target>__Related Cards</target>
+        <target>연관된 카드</target>
       </trans-unit>
       <trans-unit id="PzQb_na" resname="Your query didn't match any card.">
         <source>Your query didn't match any card.</source>
-        <target>__Your query didn't match any card.</target>
+        <target>요청과 일치하는 카드가 없습니다.</target>
       </trans-unit>
       <trans-unit id="IEpess0" resname="Cost">
         <source>Cost</source>
-        <target>__Cost</target>
+        <target>비용</target>
       </trans-unit>
       <trans-unit id="FoqtPpg" resname="XP">
         <source>XP</source>
-        <target>__XP</target>
+        <target>XP</target>
       </trans-unit>
       <trans-unit id="mmCgdrV" resname="Willpower">
         <source>Willpower</source>
-        <target>__Willpower</target>
+        <target>의지</target>
       </trans-unit>
       <trans-unit id="rddhkTc" resname="Intellect">
         <source>Intellect</source>
-        <target>__Intellect</target>
+        <target>지식</target>
       </trans-unit>
       <trans-unit id="Sfzyx4t" resname="Combat">
         <source>Combat</source>
-        <target>__Combat</target>
+        <target>힘</target>
       </trans-unit>
       <trans-unit id="SXlmlNx" resname="Agility">
         <source>Agility</source>
-        <target>__Agility</target>
+        <target>민첩</target>
       </trans-unit>
       <trans-unit id="VYmESet" resname="Health">
         <source>Health</source>
-        <target>__Health</target>
+        <target>체력</target>
       </trans-unit>
       <trans-unit id="FqWvuTp" resname="Sanity">
         <source>Sanity</source>
-        <target>__Sanity</target>
+        <target>정신력</target>
       </trans-unit>
       <trans-unit id="HvFCyCE" resname="Fight">
         <source>Fight</source>
-        <target>__Fight</target>
+        <target>전투</target>
       </trans-unit>
       <trans-unit id="U_ddrwe" resname="Evade">
         <source>Evade</source>
-        <target>__Evade</target>
+        <target>회피</target>
       </trans-unit>
       <trans-unit id="DIdPWBp" resname="Damage">
         <source>Damage</source>
-        <target>__Damage</target>
+        <target>피해</target>
       </trans-unit>
       <trans-unit id="Jxoi911" resname="Horror">
         <source>Horror</source>
-        <target>__Horror</target>
+        <target>공포</target>
       </trans-unit>
       <trans-unit id="AKjSmEo" resname="Doom">
         <source>Doom</source>
-        <target>__Doom</target>
+        <target>파멸</target>
       </trans-unit>
       <trans-unit id="jerxSHk" resname="Shroud">
         <source>Shroud</source>
-        <target>__Shroud</target>
+        <target>장막</target>
       </trans-unit>
       <trans-unit id="hqpRSxB" resname="Clues">
         <source>Clues</source>
-        <target>__Clues</target>
+        <target>단서</target>
       </trans-unit>
       <trans-unit id="atHRhhN" resname="Test Icons">
         <source>Test Icons</source>
-        <target>__Test Icons</target>
+        <target>테스트 아이콘</target>
       </trans-unit>
       <trans-unit id="LIdGdPz" resname="My Decks">
         <source>My Decks</source>
-        <target>__My Decks</target>
+        <target>내 덱</target>
       </trans-unit>
       <trans-unit id=".KM0IRm" resname="Decklists">
         <source>Decklists</source>
-        <target>__Decklists</target>
+        <target>덱 찾기</target>
       </trans-unit>
       <trans-unit id="pS.LvDN" resname="Cards">
         <source>Cards</source>
-        <target>__Cards</target>
+        <target>카드</target>
       </trans-unit>
       <trans-unit id="hMt4cbd" resname="Reviews">
         <source>Reviews</source>
-        <target>__Reviews</target>
+        <target>리뷰</target>
       </trans-unit>
       <trans-unit id="QiiusHx" resname="Rules">
         <source>Rules</source>
-        <target>__Rules</target>
+        <target>규칙(영문)</target>
       </trans-unit>
       <trans-unit id="mFa3Qz_" resname="FAQs">
         <source>FAQs</source>
-        <target>__FAQs</target>
+        <target>FAQ</target>
       </trans-unit>
       <trans-unit id="Tvyg0Qx" resname="About">
         <source>About</source>
-        <target>__About</target>
+        <target>About</target>
       </trans-unit>
       <trans-unit id="yOWZj2o" resname="API">
         <source>API</source>
-        <target>__API</target>
+        <target>API</target>
       </trans-unit>
       <trans-unit id="kyG8wOx" resname="Member since">
         <source>Member since</source>
-        <target>__Member since</target>
+        <target>가입일</target>
       </trans-unit>
       <trans-unit id="yJwYD5S" resname="published decklists">
         <source>published decklists</source>
-        <target>__published decklists</target>
+        <target>공개한 덱</target>
       </trans-unit>
       <trans-unit id="FcxQY4_" resname="One published decklist">
         <source>One published decklist</source>
-        <target>__One published decklist</target>
+        <target>One 공개한 덱</target>
       </trans-unit>
       <trans-unit id="6a8vzwy" resname="published reviews">
         <source>published reviews</source>
-        <target>__published reviews</target>
+        <target>공개한 리뷰</target>
       </trans-unit>
       <trans-unit id="QoVVZRb" resname="One published reviews">
         <source>One published reviews</source>
-        <target>__One published reviews</target>
+        <target>One 공개한 리뷰</target>
       </trans-unit>
       <trans-unit id="0R5ueJn" resname="Reputation">
         <source>Reputation</source>
-        <target>__Reputation</target>
+        <target>명성</target>
       </trans-unit>
       <trans-unit id="47ienTP" resname="Username">
         <source>Username</source>
-        <target>__Username</target>
+        <target>유저명</target>
       </trans-unit>
       <trans-unit id="lpzL089" resname="Email">
         <source>Email</source>
-        <target>__Email</target>
+        <target>이메일</target>
       </trans-unit>
       <trans-unit id="PNPBkL1" resname="Something about you">
         <source>Something about you</source>
-        <target>__Something about you</target>
+        <target>당신에 대한 어떤것이든 작성하세요</target>
       </trans-unit>
       <trans-unit id="jYuIjQE" resname="Be notified when a user comments one of your decklists">
         <source>Be notified when a user comments one of your decklists</source>
-        <target>__Be notified when a user comments one of your decklists</target>
+        <target>어떤 유저가 당신의 덱에 덧글을 작성한 경우 알립니다</target>
       </trans-unit>
       <trans-unit id="Oau00iV" resname="Be notified when a user also comments a decklist you commented">
         <source>Be notified when a user also comments a decklist you commented</source>
-        <target>__Be notified when a user also comments a decklist you commented</target>
+        <target>어떤 유저가 당신이 덧글을 작성한 덱에 덧글을 작성한 경우 알립니다</target>
       </trans-unit>
       <trans-unit id="KfVI5.D" resname="Be notified when a user mentions you in a comment">
         <source>Be notified when a user mentions you in a comment</source>
-        <target>__Be notified when a user mentions you in a comment</target>
+        <target>어떤 유저가 당신을 덧글에서 언급한 경우 알립니다</target>
       </trans-unit>
       <trans-unit id="iLJEQA0" resname="Make your decks public">
         <source>Make your decks public</source>
-        <target>__Make your decks public</target>
+        <target>당신의 덱을 공개 상태로 만듭니다</target>
       </trans-unit>
       <trans-unit id="5L.P6Wa" resname="Select a faction color for your username">
         <source>Select a faction color for your username</source>
-        <target>__Select a faction color for your username</target>
+        <target>당신의 유저명에 사용할 역할군의 색상을 선택해주세요</target>
       </trans-unit>
       <trans-unit id="FQn1YfJ" resname="Save">
         <source>Save</source>
-        <target>__Save</target>
+        <target>저장</target>
       </trans-unit>
     </body>
   </file>
