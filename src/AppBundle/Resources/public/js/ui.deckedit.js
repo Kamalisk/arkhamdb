@@ -797,7 +797,7 @@ ui.select_basic_weakness = function select_basic_weakness() {
 	weaknesses.forEach(function (card){
 		//console.log(card);
 		
-		if($("[name="+card.pack_code+"]").is(":checked") && card.name != "Random Basic Weakness" && card.indeck < card.maxqty){
+		if($("[name="+card.pack_code+"]").is(":checked") && card.code != "01000" && card.indeck < card.maxqty){
 			filtered_weaknesses.push(card);
 		}
 	});
