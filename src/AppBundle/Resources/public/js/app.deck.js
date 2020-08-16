@@ -762,7 +762,7 @@ deck.create_card = function create_card(card){
 		}
 	}
 	
-	if (card.name == "Random Basic Weakness" && $("#special-collection").length > 0 ){
+	if (card.code == "01000" && $("#special-collection").length > 0 ){
 		$div.append(' <a class="fa fa-random" title="Replace with randomly selected weakness from currently selected packs" data-random="'+card.code+'"> <span ></span></a> ');
 	}
 	return $div;
