@@ -870,14 +870,14 @@ deck.get_copies_and_deck_limit = function get_copies_and_deck_limit() {
 		var value = copies_and_deck_limit[card.real_name];
 		if(!value) {
 			copies_and_deck_limit[card.real_name] = {
-					nb_copies: card.indeck,
+					nb_copies: card.indeck - card.ignore,
 					deck_limit: card.deck_limit
 			};
 			if (typeof card.real_text !== 'undefined' && card.real_text.indexOf('Myriad.') !== -1) {
 				copies_and_deck_limit[card.real_name].deck_limit = 3;
 			}
 		} else {
-			value.nb_copies += card.indeck;
+			value.nb_copies += card.indeck - card.ignore;
 			value.deck_limit = Math.min(card.deck_limit, value.deck_limit);
 			if (typeof card.real_text !== 'undefined' && card.real_text.indexOf('Myriad.') !== -1) {
 				value.deck_limit = 3;
