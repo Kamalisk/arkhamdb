@@ -509,6 +509,12 @@ deck.get_layout_data = function get_layout_data(options) {
 		if (card.deck_requirements.size){
 			size = card.deck_requirements.size;
 		}
+		if (deck.meta && deck.meta.alternate_back) {
+			var alternate = app.data.cards.findById(deck.meta.alternate_back);
+			if (alternate && alternate.deck_requirements.size) {
+				size = alternate.deck_requirements.size;
+			}
+		}
 		if (deck.meta && deck.meta.deck_size_selected){
 			size = parseInt(deck.meta.deck_size_selected, 10);
 		}
@@ -894,6 +900,12 @@ deck.get_problem = function get_problem() {
 	if (card && card.deck_requirements){
 		if (card.deck_requirements.size){
 			size = card.deck_requirements.size;
+		}
+		if (deck.meta && deck.meta.alternate_back) {
+			var alternate = app.data.cards.findById(deck.meta.alternate_back);
+			if (alternate && alternate.deck_requirements.size) {
+				size = alternate.deck_requirements.size;
+			}
 		}
 		if (deck.meta && deck.meta.deck_size_selected){
 			size = parseInt(deck.meta.deck_size_selected, 10);

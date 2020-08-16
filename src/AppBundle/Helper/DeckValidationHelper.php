@@ -262,7 +262,7 @@ class DeckValidationHelper
 		if($investigator) {
 			$req = $this->parseReqString($investigator->getDeckRequirements());
 			if ($req && $req['size']){
-				if($deck->getSlots()->getDrawDeck()->countCards() < $req['size']) {
+				if($deck->getSlots()->getDrawDeck()->countCards() < 20) {
 					return 'too_few_cards';
 				}
 			}
