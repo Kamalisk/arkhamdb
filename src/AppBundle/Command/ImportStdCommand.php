@@ -500,6 +500,9 @@ class ImportStdCommand extends ContainerAwareCommand
 				if ($card->getText()){
 					$card->setRealText($card->getText());
 				}
+                                if ($card->getSlot()){
+                                        $card->setRealSlot($card->getSlot());
+                                }
 				$result[] = $card;
 				$this->em->persist($card);
 				if (isset($cardData['back_link'])){

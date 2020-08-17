@@ -697,8 +697,8 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(query, d
 				var $div = deck.create_card(card);
 
 
-				if (card.slot && slots[card.slot]){
-					slots[card.slot].push($div);
+				if (card.real_slot && slots[card.real_slot]){
+					slots[card.real_slot].push($div);
 				} else {
 					slots["Other"].push($div);
 				}
@@ -1112,7 +1112,7 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 				for(var j = 0; j < option.slot.length; j++){
 					var slot = option.slot[j];
 					
-					if (card.slot && card.slot.toUpperCase().indexOf(slot.toUpperCase()) !== -1){
+					if (card.real_slot && card.real_slot.toUpperCase().indexOf(slot.toUpperCase()) !== -1){
 						slot_valid = true;
 					}
 				}
