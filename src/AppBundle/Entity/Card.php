@@ -2175,4 +2175,33 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	{
 		return $this->bondedCount;
 	}
+    /**
+     * @var string
+     */
+    private $realSlot;
+
+
+    /**
+     * Set realSlot.
+     *
+     * @param string $realSlot
+     *
+     * @return Card
+     */
+    public function setRealSlot($realSlot)
+    {
+        $this->realSlot = $realSlot;
+
+        return $this;
+    }
+
+    /**
+     * Get realSlot.
+     *
+     * @return string
+     */
+    public function getRealSlot()
+    {
+        return $this->realSlot;
+    }
 }
