@@ -3,9 +3,9 @@
 	{{ card.text|raw }}
 </div>
 {% if card.victory %}
-	<div class="victory">Victory {{card.victory}}.</div>
+	<div class="victory">{% trans %}Victory{% endtrans %} {{card.victory}}.</div>
 {% endif %}
 {% if card.vengeance %}
-  <div class="vengeance">Vengeance {{card.vengeance}}.</div>
+  <div class="vengeance">{% trans %}Vengeance{% endtrans %} {{card.vengeance}}.</div>
 {% endif %}
 </div>
