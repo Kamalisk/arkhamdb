@@ -491,18 +491,6 @@ class ImportStdCommand extends ContainerAwareCommand
 
 			]);
 			if($card) {
-				if ($card->getName()){
-					$card->setRealName($card->getName());
-				}
-				if ($card->getTraits()){
-					$card->setRealTraits($card->getTraits());
-				}
-				if ($card->getText()){
-					$card->setRealText($card->getText());
-				}
-                                if ($card->getSlot()){
-                                        $card->setRealSlot($card->getSlot());
-                                }
 				$result[] = $card;
 				$this->em->persist($card);
 				if (isset($cardData['back_link'])){
@@ -693,6 +681,19 @@ class ImportStdCommand extends ContainerAwareCommand
 
 		// special case for Card
 		if($entityName === 'AppBundle\Entity\Card') {
+			if ($entity->getName()){
+				$entity->setRealName($entity->getName());
+			}
+			if ($entity->getTraits()){
+				$entity->setRealTraits($entity->getTraits());
+			}
+			if ($entity->getText()){
+				$entity->setRealText($entity->getText());
+			}
+			if ($entity->getSlot()){
+				$entity->setRealSlot($entity->getSlot());
+			}
+
 			// calling a function whose name depends on the type_code
 			$functionName = 'import' . $entity->getType()->getName() . 'Data';
 			$this->$functionName($entity, $data);
