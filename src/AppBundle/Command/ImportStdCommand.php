@@ -493,14 +493,6 @@ class ImportStdCommand extends ContainerAwareCommand
 			if($card) {
 				$result[] = $card;
 				$this->em->persist($card);
-				if (isset($cardData['back_link'])){
-					// if we have back link, store the reference here
-					$this->links[] = ['card_id'=> $card->getCode(), 'target_id'=> $cardData['back_link']];
-				}
-				if (isset($cardData['alternate_of'])){
-					// if we have back link, store the reference here
-					$this->links[] = ['card_id'=> $card->getCode(), 'target_id'=> $cardData['alternate_of'], 'type' => 'alternate_of'];
-				}
 			}
 		}
 		
@@ -694,6 +686,14 @@ class ImportStdCommand extends ContainerAwareCommand
 				$entity->setRealSlot($entity->getSlot());
 			}
 
+			if (isset($data['back_link'])){
+				// if we have back link, store the reference here
+				$this->links[] = ['card_id'=> $entity->getCode(), 'target_id'=> $data['back_link']];
+			}
+			if (isset($data['alternate_of'])){
+				// if we have back link, store the reference here
+				$this->links[] = ['card_id'=> $entity->getCode(), 'target_id'=> $data['alternate_of'], 'type' => 'alternate_of'];
+			}
 			// calling a function whose name depends on the type_code
 			$functionName = 'import' . $entity->getType()->getName() . 'Data';
 			$this->$functionName($entity, $data);
