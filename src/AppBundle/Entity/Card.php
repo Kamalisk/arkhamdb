@@ -2204,4 +2204,33 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         return $this->realSlot;
     }
+    /**
+     * @var string|null
+     */
+    private $realBackText;
+
+
+    /**
+     * Set realBackText.
+     *
+     * @param string|null $realBackText
+     *
+     * @return Card
+     */
+    public function setRealBackText($realBackText = null)
+    {
+        $this->realBackText = $realBackText;
+
+        return $this;
+    }
+
+    /**
+     * Get realBackText.
+     *
+     * @return string|null
+     */
+    public function getRealBackText()
+    {
+        return $this->realBackText;
+    }
 }

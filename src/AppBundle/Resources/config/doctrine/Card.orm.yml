@@ -82,7 +82,7 @@ AppBundle\Entity\Card:
                 default: false
         myriad:
             type: boolean
-            column: myriad            
+            column: myriad
             nullable: true
         encounterPosition:
             type: smallint
@@ -275,6 +275,9 @@ AppBundle\Entity\Card:
             nullable: true
             gedmo:
                 - translatable
+        realBackText:
+            type: text
+            nullable: true
         backFlavor:
             type: text
             nullable: true
