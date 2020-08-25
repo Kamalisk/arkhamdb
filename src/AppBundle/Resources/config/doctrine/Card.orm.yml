@@ -214,7 +214,7 @@ AppBundle\Entity\Card:
         realSlot:
             type: string
             length: 50
-            nullable: false
+            nullable: true
         stage:
             type: smallint
             nullable: true
