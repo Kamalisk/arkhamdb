@@ -5,181 +5,197 @@
       <tool tool-id="symfony" tool-name="Symfony"/>
     </header>
     <body>
-      <trans-unit id="0557fa923dcee4d0f86b1409f5c2167f" resname="Back">
+      <trans-unit id="dpAPG.0" resname="Back">
         <source>Back</source>
         <target>Назад</target>
       </trans-unit>
-      <trans-unit id="b7a772bd89d5f4413e9e6373f8dede2d" resname="Your query didn't match any card.">
+      <trans-unit id="PzQb_na" resname="Your query didn't match any card.">
         <source>Your query didn't match any card.</source>
         <target>По вашему запросу не найдено ни одной карты.</target>
       </trans-unit>
-      <trans-unit id="20b4f77bd00b4f63a49ec8e08f3bf6a6" resname="Cost">
+      <trans-unit id="IEpess0" resname="Cost">
         <source>Cost</source>
         <target>Цена</target>
       </trans-unit>
-      <trans-unit id="9b57db6e9d84ba5f537ce97b13079736" resname="XP">
+      <trans-unit id="FoqtPpg" resname="XP">
         <source>XP</source>
         <target>Опыт</target>
       </trans-unit>
-      <trans-unit id="5b388583a8c29ad05de31c7b1ca38146" resname="Willpower">
+      <trans-unit id="mmCgdrV" resname="Willpower">
         <source>Willpower</source>
         <target>Воля</target>
       </trans-unit>
-      <trans-unit id="591a90c34f2dc753830b9bd6b5c6c815" resname="Intellect">
+      <trans-unit id="rddhkTc" resname="Intellect">
         <source>Intellect</source>
         <target>Интеллект</target>
       </trans-unit>
-      <trans-unit id="30ad1054cf7ad7636a26844a6f782e1f" resname="Combat">
+      <trans-unit id="Sfzyx4t" resname="Combat">
         <source>Combat</source>
         <target>Сила</target>
       </trans-unit>
-      <trans-unit id="241bb470b0110efc8b5609f7311b0bb1" resname="Agility">
+      <trans-unit id="SXlmlNx" resname="Agility">
         <source>Agility</source>
         <target>Ловкость</target>
       </trans-unit>
-      <trans-unit id="605669cab962bf944d99ce89cf9e58d9" resname="Health">
+      <trans-unit id="VYmESet" resname="Health">
         <source>Health</source>
         <target>Здоровье</target>
       </trans-unit>
-      <trans-unit id="ad34a9d5d87691c743dc42cbc5e8b783" resname="Sanity">
+      <trans-unit id="FqWvuTp" resname="Sanity">
         <source>Sanity</source>
         <target>Рассудок</target>
       </trans-unit>
-      <trans-unit id="c8b01a3184580b42a0bfbc05d2dab784" resname="Fight">
+      <trans-unit id="HvFCyCE" resname="Fight">
         <source>Fight</source>
         <target>Бой</target>
       </trans-unit>
-      <trans-unit id="fcebb8bec493a6678a2758580bee43f9" resname="Evade">
+      <trans-unit id="U_ddrwe" resname="Evade">
         <source>Evade</source>
         <target>Уход</target>
       </trans-unit>
-      <trans-unit id="b9f24e83531326204197015b2f43a93f" resname="Damage">
+      <trans-unit id="DIdPWBp" resname="Damage">
         <source>Damage</source>
         <target>Раны</target>
       </trans-unit>
-      <trans-unit id="6dd1b5ddcf2d141fa924bb9207874c6d" resname="Horror">
+      <trans-unit id="Jxoi911" resname="Horror">
         <source>Horror</source>
         <target>Ужас</target>
       </trans-unit>
-      <trans-unit id="63af23acea82542bd29f7e5d19361805" resname="Doom">
+      <trans-unit id="AKjSmEo" resname="Doom">
         <source>Doom</source>
         <target>Безысходность</target>
       </trans-unit>
-      <trans-unit id="60deea80d2e908af97e2c8c0da66949a" resname="Shroud">
+      <trans-unit id="jerxSHk" resname="Shroud">
         <source>Shroud</source>
         <target>Неясность</target>
       </trans-unit>
-      <trans-unit id="140e5f509e8ff4ac1413a3170063af27" resname="Clues">
+      <trans-unit id="hqpRSxB" resname="Clues">
         <source>Clues</source>
         <target>Улики</target>
       </trans-unit>
-      <trans-unit id="9046fcdec95378ce88a0879ebfc44475" resname="Test Icons">
+      <trans-unit id="atHRhhN" resname="Test Icons">
         <source>Test Icons</source>
         <target>Символы навыков</target>
       </trans-unit>
-      <trans-unit id="681aa47f963747cc19ec382e0c7944df" resname="Related Cards">
+      <trans-unit id="JlcIxG6" resname="Related Cards">
         <source>Related Cards</source>
         <target>Похожие карты</target>
       </trans-unit>
-      <trans-unit id="a54df7f0b810414467735acc4f3ca4f9" resname="My Decks">
+      <trans-unit id="LIdGdPz" resname="My Decks">
         <source>My Decks</source>
         <target>Мои колоды</target>
       </trans-unit>
-      <trans-unit id="41bee85f0a581e16440caf695024e618" resname="My Teams">
+      <trans-unit id="fqXQYu3" resname="My Teams">
         <source>My Teams</source>
         <target>Мои команды</target>
       </trans-unit>
-      <trans-unit id="e002169a321adf2814cd157a8dd0ecc5" resname="Decklists">
+      <trans-unit id=".KM0IRm" resname="Decklists">
         <source>Decklists</source>
         <target>Деклисты</target>
       </trans-unit>
-      <trans-unit id="cd81f9f55969c822377f076017bb3484" resname="Cards">
+      <trans-unit id="pS.LvDN" resname="Cards">
         <source>Cards</source>
         <target>Карты</target>
       </trans-unit>
-      <trans-unit id="34e80a799d144cfe4af46815e103f017" resname="Reviews">
+      <trans-unit id="hMt4cbd" resname="Reviews">
         <source>Reviews</source>
         <target>Обзоры</target>
       </trans-unit>
-      <trans-unit id="1f4da964f8eab62e96e8cfe406e44364" resname="Rules">
+      <trans-unit id="QiiusHx" resname="Rules">
         <source>Rules</source>
         <target>Правила</target>
       </trans-unit>
-      <trans-unit id="483a5da192f46e3cfe8391d3ef234fc4" resname="FAQs">
+      <trans-unit id="mFa3Qz_" resname="FAQs">
         <source>FAQs</source>
         <target>FAQ</target>
       </trans-unit>
-      <trans-unit id="8f7f4c1ce7a4f933663d10543562b096" resname="About">
+      <trans-unit id="Tvyg0Qx" resname="About">
         <source>About</source>
         <target>Об Arkhamdb</target>
       </trans-unit>
-      <trans-unit id="db974238714ca8de634a7ce1d083a14f" resname="API">
+      <trans-unit id="yOWZj2o" resname="API">
         <source>API</source>
         <target>API</target>
       </trans-unit>
-      <trans-unit id="d9ed9cfb2b4c0bc9bc7e2208ee80aec0" resname="Member since">
+      <trans-unit id="kyG8wOx" resname="Member since">
         <source>Member since</source>
         <target>На сайте с</target>
       </trans-unit>
-      <trans-unit id="3b8dacebcabd4075dc1dbd89f13a0178" resname="published decklists">
+      <trans-unit id="yJwYD5S" resname="published decklists">
         <source>published decklists</source>
         <target>деклистов опубликовано</target>
       </trans-unit>
-      <trans-unit id="55ec6e23814c55c69572b48aafd4faf9" resname="One published decklist">
+      <trans-unit id="FcxQY4_" resname="One published decklist">
         <source>One published decklist</source>
         <target>Один опубликованный деклист</target>
       </trans-unit>
-      <trans-unit id="1c5bc0508822392420c374b729785958" resname="published reviews">
+      <trans-unit id="6a8vzwy" resname="published reviews">
         <source>published reviews</source>
         <target>отзывов опубликовано</target>
       </trans-unit>
-      <trans-unit id="f1b4b1a6504086c413e446914bcfee1d" resname="One published reviews">
+      <trans-unit id="QoVVZRb" resname="One published reviews">
         <source>One published reviews</source>
         <target>Один опубликованный отзыв</target>
       </trans-unit>
-      <trans-unit id="8d9bec4f224970e231041639de877092" resname="Reputation">
+      <trans-unit id="0R5ueJn" resname="Reputation">
         <source>Reputation</source>
         <target>Репутация</target>
       </trans-unit>
-      <trans-unit id="8b9c006d512295284b651b36cd6349a6" resname="Something about you">
+      <trans-unit id="PNPBkL1" resname="Something about you">
         <source>Something about you</source>
         <target>Пара слов о вас</target>
       </trans-unit>
-      <trans-unit id="ae3ef38738579f5c872777896ac4e8a0" resname="Be notified when a user comments one of your decklists">
+      <trans-unit id="jYuIjQE" resname="Be notified when a user comments one of your decklists">
         <source>Be notified when a user comments one of your decklists</source>
         <target>Уведомлять о новых комментариях к вашим деклистам</target>
       </trans-unit>
-      <trans-unit id="d67d9db427c85b89f10737cdc923b611" resname="Be notified when a user also comments a decklist you commented">
+      <trans-unit id="Oau00iV" resname="Be notified when a user also comments a decklist you commented">
         <source>Be notified when a user also comments a decklist you commented</source>
         <target>Уведомлять о новых комментариях к деклистам, которые вы комментировали</target>
       </trans-unit>
-      <trans-unit id="c46d2731d32c14fd9b5b8d6372021d19" resname="Be notified when a user mentions you in a comment">
+      <trans-unit id="KfVI5.D" resname="Be notified when a user mentions you in a comment">
         <source>Be notified when a user mentions you in a comment</source>
         <target>Уведомлять, когда вас упоминают в комментариях</target>
       </trans-unit>
-      <trans-unit id="ef54f55d1717398848fc37eb0e1b309f" resname="Share your decks.">
+      <trans-unit id="nS7LG_d" resname="Share your decks.">
         <source>Share your decks.</source>
         <target>Открыть доступ к вашим колодам.</target>
       </trans-unit>
-      <trans-unit id="808fc528a81ffee00ce69ee6c57ce9d6" resname="Select a faction color for your username">
+      <trans-unit id="5L.P6Wa" resname="Select a faction color for your username">
         <source>Select a faction color for your username</source>
         <target>Выберите цвет класса для вашего никнейма</target>
       </trans-unit>
-      <trans-unit id="c9cc8cce247e49bae79f15173ce97354" resname="Save">
+      <trans-unit id="FQn1YfJ" resname="Save">
         <source>Save</source>
         <target>Сохранить</target>
       </trans-unit>
-      <trans-unit id="f6039d44b29456b20f8f373155ae4973" resname="Username">
+      <trans-unit id="47ienTP" resname="Username">
         <source>Username</source>
         <target>Никнейм</target>
       </trans-unit>
-      <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d" resname="Email">
+      <trans-unit id="lpzL089" resname="Email">
         <source>Email</source>
         <target>Почта</target>
       </trans-unit>
-      <trans-unit id="f1b7869e146d6dfec49f5eeb69c6de7d" resname="Deck Building">
+      <trans-unit id="R6lTDDD" resname="Deck Building">
         <source>Deck Building</source>
         <target>Колодостроение</target>
+      </trans-unit>
+      <trans-unit id="vRWdLVJ" resname="Bonded Cards">
+        <source>Bonded Cards</source>
+        <target>__Bonded Cards</target>
+      </trans-unit>
+      <trans-unit id="LptaDE5" resname="Victory">
+        <source>Victory</source>
+        <target>__Victory</target>
+      </trans-unit>
+      <trans-unit id="9nMh2sC" resname="Vengeance">
+        <source>Vengeance</source>
+        <target>__Vengeance</target>
+      </trans-unit>
+      <trans-unit id="iLJEQA0" resname="Make your decks public">
+        <source>Make your decks public</source>
+        <target>__Make your decks public</target>
       </trans-unit>
     </body>
   </file>

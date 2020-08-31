@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-class Encounter implements \Serializable
+class Encounter implements \Gedmo\Translatable\Translatable, \Serializable
 {
 	public function serialize() {
 		return [
@@ -142,5 +142,51 @@ class Encounter implements \Serializable
     public function getCards()
     {
         return $this->cards;
+    }
+
+    /**
+     * Add scenario.
+     *
+     * @param \AppBundle\Entity\Scenario $scenario
+     *
+     * @return Encounter
+     */
+    public function addScenario(\AppBundle\Entity\Scenario $scenario)
+    {
+        $this->scenarios[] = $scenario;
+
+        return $this;
+    }
+
+    /**
+     * Remove scenario.
+     *
+     * @param \AppBundle\Entity\Scenario $scenario
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeScenario(\AppBundle\Entity\Scenario $scenario)
+    {
+        return $this->scenarios->removeElement($scenario);
+    }
+
+    /**
+     * Get scenarios.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getScenarios()
+    {
+        return $this->scenarios;
+    }
+
+    /*
+     * I18N vars
+     */
+    private $locale = 'en';
+
+    public function setTranslatableLocale($locale)
+    {
+       $this->locale = $locale;
     }
 }

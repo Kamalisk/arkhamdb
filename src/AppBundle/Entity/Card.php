@@ -53,6 +53,13 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				'linked_to',
 				'alternate_of'
 		];
+
+		$transFields = [
+				'real_name',
+				'real_slot',
+				'real_text',
+				'real_traits'
+		];
 	
 		switch($this->type->getCode()) {
 			case 'asset':
@@ -152,6 +159,12 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 			if ($this->$getter()){
 				$serialized[$externalField.'_code'] = $this->$getter()->getCode();
 			}
+		}
+
+		foreach($transFields as $transField) {
+			$getter = 'get' . $this->snakeToCamel($transField);
+			$serialized[$transField] = $this->$getter();
+			if(!isset($serialized[$transField]) || $serialized[$transField] === '') unset($serialized[$transField]);
 		}
 	
 		ksort($serialized);
@@ -2175,4 +2188,33 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	{
 		return $this->bondedCount;
 	}
+    /**
+     * @var string
+     */
+    private $realSlot;
+
+
+    /**
+     * Set realSlot.
+     *
+     * @param string $realSlot
+     *
+     * @return Card
+     */
+    public function setRealSlot($realSlot)
+    {
+        $this->realSlot = $realSlot;
+
+        return $this;
+    }
+
+    /**
+     * Get realSlot.
+     *
+     * @return string
+     */
+    public function getRealSlot()
+    {
+        return $this->realSlot;
+    }
 }

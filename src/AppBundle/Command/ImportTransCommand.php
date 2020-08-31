@@ -38,6 +38,7 @@ class ImportTransCommand extends ContainerAwareCommand
 	}
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
+		ini_set('memory_limit','1024M');
 		$this->em = $this->getContainer()->get('doctrine')->getEntityManager();
 		$this->output = $output;
 		
@@ -52,7 +53,7 @@ class ImportTransCommand extends ContainerAwareCommand
 		}
 		
 		//$things = ['faction', 'type', 'subtype', 'cycle', 'pack', 'campaign', 'scenario', 'encounter'];
-		$things = ['faction', 'type', 'subtype', 'cycle', 'pack'];
+		$things = ['faction', 'type', 'subtype', 'cycle', 'pack', 'encounter'];
 
 		foreach($locales as $locale) 
 		{
@@ -121,8 +122,8 @@ class ImportTransCommand extends ContainerAwareCommand
 					'subname',
 					'back_name',
 					'back_flavor',
-					'back_text'/*,
-					'slot'*/
+					'back_text',
+					'slot'
 			]);
 		}
 		

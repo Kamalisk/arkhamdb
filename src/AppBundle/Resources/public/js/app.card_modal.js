@@ -57,7 +57,7 @@ function fill_modal (code) {
 	}
 	var qtyelt = modal.find('.modal-ignore');
 	
-	if(qtyelt && card.maxqty && card.code == "05040") {
+	if(qtyelt && card.maxqty && (card.code == "05040" || card.real_traits.indexOf('Fortune.') !== -1 || card.real_traits.indexOf('Gambit.') !== -1 ) ) {
 		qtyelt.closest('.modal-deck-ignore').show();
 		var qty = '';
 		for(var i=0; i<=card.maxqty; i++) {

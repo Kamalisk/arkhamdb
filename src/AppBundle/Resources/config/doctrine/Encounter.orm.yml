@@ -1,6 +1,9 @@
 AppBundle\Entity\Encounter:
     type: entity
     table: Encounter
+    gedmo:
+        translation:
+            locale: locale
     oneToMany:
         cards:
             targetEntity: Card
@@ -25,6 +28,8 @@ AppBundle\Entity\Encounter:
             type: string
             length: 1024
             nullable: false
+            gedmo:
+                - translatable
     uniqueConstraints:
         encounter_code_idx:
             columns: [ code ]

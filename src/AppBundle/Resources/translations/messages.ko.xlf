@@ -181,6 +181,14 @@
         <source>Save</source>
         <target>저장</target>
       </trans-unit>
+      <trans-unit id="LptaDE5" resname="Victory">
+        <source>Victory</source>
+        <target>__Victory</target>
+      </trans-unit>
+      <trans-unit id="9nMh2sC" resname="Vengeance">
+        <source>Vengeance</source>
+        <target>__Vengeance</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

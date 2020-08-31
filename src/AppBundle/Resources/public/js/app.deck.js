@@ -509,6 +509,12 @@ deck.get_layout_data = function get_layout_data(options) {
 		if (card.deck_requirements.size){
 			size = card.deck_requirements.size;
 		}
+		if (deck.meta && deck.meta.alternate_back) {
+			var alternate = app.data.cards.findById(deck.meta.alternate_back);
+			if (alternate && alternate.deck_requirements.size) {
+				size = alternate.deck_requirements.size;
+			}
+		}
 		if (deck.meta && deck.meta.deck_size_selected){
 			size = parseInt(deck.meta.deck_size_selected, 10);
 		}
@@ -691,8 +697,8 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(query, d
 				var $div = deck.create_card(card);
 
 
-				if (card.slot && slots[card.slot]){
-					slots[card.slot].push($div);
+				if (card.real_slot && slots[card.real_slot]){
+					slots[card.real_slot].push($div);
 				} else {
 					slots["Other"].push($div);
 				}
@@ -762,7 +768,7 @@ deck.create_card = function create_card(card){
 		}
 	}
 	
-	if (card.name == "Random Basic Weakness" && $("#special-collection").length > 0 ){
+	if (card.code == "01000" && $("#special-collection").length > 0 ){
 		$div.append(' <a class="fa fa-random" title="Replace with randomly selected weakness from currently selected packs" data-random="'+card.code+'"> <span ></span></a> ');
 	}
 	return $div;
@@ -864,14 +870,14 @@ deck.get_copies_and_deck_limit = function get_copies_and_deck_limit() {
 		var value = copies_and_deck_limit[card.real_name];
 		if(!value) {
 			copies_and_deck_limit[card.real_name] = {
-					nb_copies: card.indeck,
+					nb_copies: card.indeck - card.ignore,
 					deck_limit: card.deck_limit
 			};
 			if (typeof card.real_text !== 'undefined' && card.real_text.indexOf('Myriad.') !== -1) {
 				copies_and_deck_limit[card.real_name].deck_limit = 3;
 			}
 		} else {
-			value.nb_copies += card.indeck;
+			value.nb_copies += card.indeck - card.ignore;
 			value.deck_limit = Math.min(card.deck_limit, value.deck_limit);
 			if (typeof card.real_text !== 'undefined' && card.real_text.indexOf('Myriad.') !== -1) {
 				value.deck_limit = 3;
@@ -894,6 +900,12 @@ deck.get_problem = function get_problem() {
 	if (card && card.deck_requirements){
 		if (card.deck_requirements.size){
 			size = card.deck_requirements.size;
+		}
+		if (deck.meta && deck.meta.alternate_back) {
+			var alternate = app.data.cards.findById(deck.meta.alternate_back);
+			if (alternate && alternate.deck_requirements.size) {
+				size = alternate.deck_requirements.size;
+			}
 		}
 		if (deck.meta && deck.meta.deck_size_selected){
 			size = parseInt(deck.meta.deck_size_selected, 10);
@@ -1100,7 +1112,7 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 				for(var j = 0; j < option.slot.length; j++){
 					var slot = option.slot[j];
 					
-					if (card.slot && card.slot.toUpperCase().indexOf(slot.toUpperCase()) !== -1){
+					if (card.real_slot && card.real_slot.toUpperCase().indexOf(slot.toUpperCase()) !== -1){
 						slot_valid = true;
 					}
 				}
