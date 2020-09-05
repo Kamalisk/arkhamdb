@@ -64,7 +64,7 @@ draw_simulator.render = function() {
 	$(container).empty();
 	$.each(hand, function(key, card){
 		if (card.data){
-			var card_element = $('<div class="simulator-hand-card" data-hand-id="'+(key)+'" data-type="'+card.data.type_code+'" data-subtype="'+card.data.subtype_code+'"></div>');
+			var card_element = $('<div data-code="'+card.data.code+'" class="card card-tip simulator-hand-card" data-hand-id="'+(key)+'" data-type="'+card.data.type_code+'" data-subtype="'+card.data.subtype_code+'"></div>');
 			if (card.selected){
 				card_element.css('opacity', 0.6);
 				$('[data-command=redraw]').prop('disabled', false);
@@ -73,7 +73,7 @@ draw_simulator.render = function() {
 			if(card.data.imagesrc) {
 				card_element.append('<img src="'+card.data.imagesrc+'">');
 			} else {
-				card_element.append('<div>'+card.data.name+'</div>');
+				card_element.append('<div class="card-proxy bg-'+card.data.faction_code+'">'+card.data.name+'</div>');
 			}
 			container.append(card_element);
 			if (card.data.subtype_code && (card.data.subtype_code == "weakness" || card.data.subtype_code == "basicweakness") ){

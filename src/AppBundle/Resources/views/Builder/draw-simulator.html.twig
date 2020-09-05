@@ -1,35 +1,27 @@
 <!-- Draw Simulator -->
-<table class="table table-condensed" id="table-draw-simulator">
-<thead>
-	<tr>
-		<th colspan="1"><span class="fa fa-repeat"></span> Card draw simulator</th>
-	</tr>
-</thead>
-<tbody>
-	<tr>
-		<td class="text-center" title="Click to draw; Shift-click to reset and draw">
-		    <div class="btn-group">
-		    	<button class="btn btn-default btn-sm" disabled="disabled">Draw:</button>
-		    	<button class="btn btn-default btn-sm" data-command="1">1</button>
-		    	<button class="btn btn-default btn-sm" data-command="2">2</button>
-		    	<button class="btn btn-default btn-sm" data-command="5">5</button>
-		    	<button class="btn btn-default btn-sm" data-command="all">all</button>
-		    	<button class="btn btn-default btn-sm" data-command="redraw" disabled="disabled">Redraw Selected</button>
-		    	<button class="btn btn-default btn-sm" data-command="reshuffle" disabled="disabled">Reshuffle Selected</button>
-		    	<button class="btn btn-default btn-sm" data-command="clear" disabled="disabled">Reset</button>
-		    </div>
-		    <div title="Odds to have at least 1 copy of a desired card, after having drawn that many cards from the deck, depending of the number of copies in the deck (1 - 2 - 3)">
-		    	<span class="small">Odds: 
-		    		<span id="draw-simulator-odds-1">0</span>% &ndash; 
-		    		<span id="draw-simulator-odds-2">0</span>% &ndash; 
-		    		<span id="draw-simulator-odds-3">0</span>% 
-		    		<a href="#oddsModal" id="draw-simulator-more" data-toggle="modal" style="margin:0 10px">more</a>
-		    	</span>
-		    </div>
-		</td>
-	</tr>
-	<tr>
-		<td id="table-draw-simulator-content"></td>
-	</tr>
-</tbody>
-</table>
+<div id="table-draw-simulator">
+	<h3><span class="fa fa-repeat"></span> Card draw simulator</h3>
+	<div class="text-center" title="Click to draw; Shift-click to reset and draw">
+		<div class="btn-group">
+			<button class="btn btn-default btn-sm" disabled="disabled">Draw:</button>
+			<button class="btn btn-default btn-sm" data-command="1">1</button>
+			<button class="btn btn-default btn-sm" data-command="2">2</button>
+			<button class="btn btn-default btn-sm" data-command="5">5</button>
+			<button class="btn btn-default btn-sm" data-command="all">all</button>
+		</div>
+		<div class="btn-group">
+			<button class="btn btn-default btn-sm" data-command="redraw" disabled="disabled">Redraw Selected</button>
+			<button class="btn btn-default btn-sm" data-command="reshuffle" disabled="disabled">Reshuffle Selected</button>
+			<button class="btn btn-default btn-sm" data-command="clear" disabled="disabled">Reset</button>
+		</div>
+		<div title="Odds to have at least 1 copy of a desired card, after having drawn that many cards from the deck, depending of the number of copies in the deck (1 - 2 - 3)">
+			<span class="small">Odds: 
+				<span id="draw-simulator-odds-1">0</span>% &ndash; 
+				<span id="draw-simulator-odds-2">0</span>% &ndash; 
+				<span id="draw-simulator-odds-3">0</span>% 
+				<a href="#oddsModal" id="draw-simulator-more" data-toggle="modal" style="margin:0 10px">more</a>
+			</span>
+		</div>
+	</div>
+	<div id="table-draw-simulator-content"></div>
+</div> 

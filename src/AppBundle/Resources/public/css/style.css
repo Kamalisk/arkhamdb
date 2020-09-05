@@ -252,11 +252,17 @@ h4.deck-section {
 #deck-gallery table td > div > div { background: rgba(0, 0, 0, 0.5); position: absolute; left: 1px; bottom: 1px; color: white; width: 24px; height: 24px; line-height: 24px; font-size: 16px; font-weight: bold; text-align: center; border-radius: 15px; font-family: monospace }
 
 /********* DRAW SIMULATOR ************/
-
+#table-draw-simulator-content {
+	display: flex;
+	flex-wrap: wrap;
+}
+#table-draw-simulator-content .simulator-hand-card {
+	cursor: pointer;
+}
 #table-draw-simulator-content img {width:98px;height:136px;float:left;margin:5px;box-shadow: black 0px 0px 5px;border-radius: 5px;}
 #table-draw-simulator-content img.trashed {opacity: 0.25;box-shadow: none;}
 #table-draw-simulator-content img.trashed:hover {opacity: 0.75;}
-#table-draw-simulator-content div.card-proxy {background:#888;color:white;width:99px;height:138px;float:left;margin:5px;box-shadow: black 0px 0px 5px;border-radius: 5px;}
+#table-draw-simulator-content div.card-proxy {padding: 3px;background:#888;color:white;width:99px;height:138px;float:left;margin:5px;box-shadow: black 0px 0px 5px;border-radius: 5px;}
 #table-draw-simulator-content img.card-proxy.trashed {opacity: 0.25;box-shadow: none;}
 #table-draw-simulator-content img.card-proxy.trashed:hover {opacity: 0.75;}
 #table-draw-simulator-content div.card-proxy div{position: relative;top: 50%; transform: translateY(-50%);text-align:center}
