@@ -48,6 +48,12 @@ AppBundle\Entity\Card:
             joinColumn:
                 name: linked_id
                 referencedColumnName: id
+        duplicate_of:
+            targetEntity: Card
+            inversedBy: duplicates
+            joinColumn:
+                name: duplicate_id
+                referencedColumnName: id
         alternate_of:
             targetEntity: Card
             inversedBy: alternates
@@ -60,6 +66,10 @@ AppBundle\Entity\Card:
             orderBy: {'dateCreation':'DESC'}
             mappedBy: card
         alternates:
+            targetEntity: Card
+            orderBy: {'dateCreation':'DESC'}
+            mappedBy: duplicate_of
+        duplicates:
             targetEntity: Card
             orderBy: {'dateCreation':'DESC'}
             mappedBy: alternate_of

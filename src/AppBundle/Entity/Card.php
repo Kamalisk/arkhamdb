@@ -51,7 +51,8 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				'type',
 				'encounter',
 				'linked_to',
-				'alternate_of'
+				'alternate_of',
+				'duplicate_of'
 		];
 
 		$transFields = [
@@ -466,6 +467,11 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	private $alternates;
 
 	/**
+	 * @var \Doctrine\Common\Collections\Collection
+	 */
+	private $duplicates;
+
+	/**
 	 * @var \AppBundle\Entity\Pack
 	 */
 	private $pack;
@@ -505,6 +511,11 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	 */
 	private $alternate_of;
 
+		/**
+	 * @var \AppBundle\Entity\Card
+	 */
+	private $duplicate_of;
+
 	/**
 	* @var \AppBundle\Entity\Encounter
 	*/
@@ -517,6 +528,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	{
 	  $this->reviews = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->alternates = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->duplicates = new \Doctrine\Common\Collections\ArrayCollection();
   }
 
 	/**
@@ -1850,7 +1862,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	}
 
 	/**
-	 * Remove review
+	 * Remove alternates
 	 *
 	 * @param \AppBundle\Entity\Card $alternate
 	 */
@@ -1868,6 +1880,42 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	{
 		return $this->alternates;
 	}
+
+/**
+	 * Add duplicates
+	 *
+	 * @param \AppBundle\Entity\Card $duplicate
+	 *
+	 * @return Card
+	 */
+	public function addDuplicate(\AppBundle\Entity\Card $duplicate)
+	{
+		$this->duplicates[] = $duplicate;
+
+		return $this;
+	}
+
+	/**
+	 * Remove duplicates
+	 *
+	 * @param \AppBundle\Entity\Card $duplicate
+	 */
+	public function removeDuplicates(\AppBundle\Entity\Card $duplicate)
+	{
+		$this->duplicates->removeElement($duplicate);
+	}
+
+	/**
+	 * Get duplicates
+	 *
+	 * @return \Doctrine\Common\Collections\Collection
+	 */
+	public function getDuplicates()
+	{
+		return $this->duplicates;
+	}
+
+
 	/**
 	 * Set pack
 	 *
@@ -2012,7 +2060,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 		return $this->linked_to;
 	}
 
-		/**
+	/**
 	 * set alternateOf
 	 *
 	 * @param \AppBundle\Entity\Card $card
@@ -2033,6 +2081,29 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	public function getAlternateOf()
 	{
 		return $this->alternate_of;
+	}
+
+	/**
+	 * set duplicateOf
+	 *
+	 * @param \AppBundle\Entity\Card $card
+	 *
+	 * @return Card
+	 */
+	public function setDuplicateOf(\AppBundle\Entity\Card $duplicateOf = null)
+	{
+		$this->duplicate_of = $duplicateOf;
+		return $this;
+	}
+
+	/**
+	 * Get duplicateOf
+	 *
+	 * @return \AppBundle\Entity\Card
+	 */
+	public function getDuplicateOf()
+	{
+		return $this->duplicate_of;
 	}
 	
 	 /**
