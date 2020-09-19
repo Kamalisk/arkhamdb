@@ -206,7 +206,9 @@ class ImportStdCommand extends ContainerAwareCommand
 						$output->writeln("Importing alternate_of between ".$card->getName()." and ".$target->getName().".");
 					} else {
 						$card->setLinkedTo($target);
+						$card->setHidden(false);
 						$target->setLinkedTo();
+						$target->setHidden(true);
 						$output->writeln("Importing link between ".$card->getName()." and ".$target->getName().".");
 					}
 				}
