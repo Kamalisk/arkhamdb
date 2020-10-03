@@ -65,11 +65,11 @@ AppBundle\Entity\Card:
             targetEntity: Review
             orderBy: {'dateCreation':'DESC'}
             mappedBy: card
-        alternates:
+        duplicates:
             targetEntity: Card
             orderBy: {'dateCreation':'DESC'}
             mappedBy: duplicate_of
-        duplicates:
+        alternates:
             targetEntity: Card
             orderBy: {'dateCreation':'DESC'}
             mappedBy: alternate_of
