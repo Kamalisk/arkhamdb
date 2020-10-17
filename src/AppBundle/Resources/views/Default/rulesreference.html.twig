@@ -55,6 +55,7 @@
 	<li><a href="#Base_Value">Base Value</a></li>
 	<li><a href="#Bearer">Bearer</a></li>
 	<li><a href="#Blank">Blank</a></li>
+	<li><a href="#Bless_and_Curse_Tokens">Bless and Curse Tokens</a></li>
 	<li><a href="#Bonded">Bonded</a></li>
 	<li><a href="#Campaign_Play">Campaign Play</a></li>
 		<ul>
@@ -116,6 +117,7 @@
 	<li><a href="#Fast">Fast</a></li>
 	<li><a href="#Fight_Action">Fight Action</a></li>
 	<li><a href="#Flavor_Text">Flavor Text</a></li>
+	<li><a href="#Flood_Tokens">Flood Tokens</a></li>
 	<li><a href="#Forced_Abilities">Forced Abilities</a></li>
 	<li><a href="#Gains">Gains</a></li>
 	<li><a href="#Game">Game</a></li>
@@ -134,6 +136,7 @@
 	<li><a href="#Investigation_Phase">Investigation Phase</a></li>
 	<li><a href="#Investigator_Deck">Investigator Deck</a></li>
 	<li><a href="#Joes_Hunch_Deck">Joe's "Hunch Deck"</a></li>
+	<li><a href="#Keys">Keys</a></li>
 	<li><a href="#Keywords">Keywords</a></li>
 	<li><a href="#Killed_Insane_Investigators">Killed/Insane Investigators</a></li>
 	<li><a href="#Lasting_Effects">Lasting Effects</a></li>
@@ -211,6 +214,7 @@
 	<li><a href="#Triggered_Abilities">Triggered Abilities</a></li>
 	<li><a href="#Triggering_Condition">Triggering Condition</a></li>
 	<li><a href="#Unique">Unique</a></li>
+	<li><a href="#unless_all_clues_have_been_discovered">"...Unless all of (location's) clues have been discovered."</a></li>
 	<li><a href="#Upkeep_Phase">Upkeep Phase</a></li>
 	<li><a href="#Uses">Uses (X "type")</a></li>
 	<li><a href="#Vengeance_X">Vengeance X</a></li>
@@ -520,21 +524,21 @@
 
 </ul>
 
-<h2 id="As_If" style="color:blue">"As if..." (added in FAQ, section 'Card Ability Interpretation', point 2.10)</h2>
+<h2 id="As_If" style="color:blue">"As if..." (added in FAQ, section 'Card Ability Interpretation', point 2.10, amended October 2020)</h2>
 
 <p>Some card effects allow an investigator to resolve an ability or perform an action as if a certain aspect of the game state were altered, using the text "as if..." to indicate the difference. The indicated ability or action is resolved with the altered game state in mind, but the actual game state remains unchanged.</p>
 
 <ul>
 
-<li>  This includes all steps of the indicated ability/action, including the paying of its costs, attacks of opportunity (where applicable), and resolving each aspect of its effect.</li>
+<li>  The game state is considered to be altered throughout the duration of the indicated ability or action, from its initiation (including the paying of its costs, attacks of opportunity, etc) through the resolution of each aspect of its effect, and up until its completion.</li>
 
-<li>  Other card abilities or game effects do not resolve with the altered game state in mind; only the indicated ability/action.</li>
+<li>  Other card abilities or game effects resolved during this duration are also resolved with the altered game state in mind.</li>
+
+<li>  The game state is not physically altered in any way. (e.g. if you are considered to be at a location, you do not move your mini-card to that location, enemies at that location do not automatically move to your threat area, etc.)</li>
 
 </ul>
 
-<p><i>Example 1: Luke Robinson’s ability allows him to "play one event each turn as if you were at a connecting location and engaged with each enemy at that location." If Luke plays Barricade as if he were at a connecting location, he would attach it to the location he is considered to be at, instead of the location he is actually at. Doing so would also provoke attacks of opportunities from any enemies at that location, since he is considered to be engaged with them throughout the playing of Barricade. That location has the following ability: "[reaction] After an event card is attached to this location, deal 1 damage to each investigator at this location." This ability would still trigger, but it would not deal any damage to Luke, because he is not actually at that location. He is only considered to be at that location for the purposes of the playing of Barricade.</i></p>
-
-<p><i>Example 2: Luke Robinson instead plays Shortcut as if he were at a connecting location. This would allow him to move to a location connected to the chosen location. If there are 1 or more enemies at that location, they do not move with him, because even though the event is resolved as if Luke is engaged with him, those enemies are not actually in his threat area, and therefore do not move when he moves.</i></p>
+<p><i>For example: Luke Robinson wants to play Preposterous Sketches, but is at a location with no clues. One of the locations next to him has a clue on it, so he uses his ability to play Preposterous Sketches as if he were at that location and engaged with each enemy at that location. The game state is considered to be altered in this way throughout the playing of Preposterous Sketches, from its initiation to its resolution. Among other things, this might mean: (a) if there is an enemy at that location, playing Preposterous Sketches would provoke an attack of opportunity, (b) if that location has an ability that would alter the cost of playing the card, it would do so, and (c) other card abilities that might trigger from Luke drawing 1 or more cards would do so as if he were at that connecting location and engaged with that enemy, and so on and so forth. Once Preposterous Sketches has finished resolving and is placed in the discard pile, Luke is no longer considered to be at that location and engaged with each enemy at that location.</i></p>
 
 <h2 id="Asset_Cards">Asset Cards</h2>
 
@@ -638,7 +642,6 @@
 
 <p><i>For example: Patrice uses the ability on Hope, which reads: "[action] If Hope is ready, exhaust or discard him: <b>Evade.</b> Attempt to evade with a base [agility] value of 5. (If you discarded Hope, this test is automatically successful.)" If Patrice chooses to discard Hope, the skill test automatically succeeds before chaos tokens are revealed; therefore Steps 3 and 4 of the skill test are skipped. However, the skill test still takes place. Cards may still be committed to the test, and the investigator’s total modified skill value is still determined, as it may have some bearing on other card abilities. However, if Patrice instead uses the ability on Stray Cat, which reads: "[fast] Discard Stray Cat: Automatically evade a non-<b>Elite</b> enemy at your location," no skill test is made whatsoever.</i></p>
 
-
 <h2 id="Base_Value">Base Value</h2>
 
 <p>Base value is the value of an element before any modifiers are applied. Unless otherwise specified, the base value of an element derived from a card is the value printed on that card.</p>
@@ -658,6 +661,38 @@
 <li>  A card's text box includes: traits, keywords, card text and abilities.</li>
 
 </ul>
+
+<h2 id="Bless_and_Curse_Tokens" style="color:red">Bless and Curse Tokens (added in <em>The Innsmouth Conspiracy</em>)</h2>
+
+<p>This expansion introduces two new kinds of chaos tokens: bless ([bless]) tokens and curse ([curse]) tokens. By default, the chaos bag does not contain any [bless] or [curse] tokens. However, certain card effects can add these tokens or remove them from the chaos bag.</p>
+
+<ul>
+
+<li>  [bless] tokens revealed during a skill test have the following effects: "+2. Reveal another token. Instead of returning this token to the chaos bag, return it to the token pool."</li>
+
+<dd> No more than 10 total [bless] tokens can be included in the chaos bag or sealed on cards in play at any given time.</dd>
+
+<li>  [curse] tokens revealed during a skill test have the following effects: "–2. Reveal another token. Instead of returning this token to the chaos bag, return it to the token pool."</li>
+
+<dd> No more than 10 total [curse] tokens can be included in the chaos bag or sealed on cards in play at any given time.</dd>
+
+<li>  [bless] or [curse] tokens revealed outside of a skill test have no effect on their own unless otherwise specified by a card effect.</li>
+
+</ul>
+
+<p><span style="color:blue">(Added in FAQ, section 'Frequently Asked Questions')</span><b>Frequently asked Bless and Curse questions:</b></p>
+
+<ol>
+
+<li>  <i>Do [bless] and [curse] tokens have a modifier or value if they are revealed outside of a skill test?</i> No. [bless] and [curse] tokens revealed outside of a skill test have no modifier or value.</li>
+
+<li>  <i>If adding a certain number of [bless] or [curse] tokens to the chaos bag is part of an ability's effect, and there are not enough [bless] or [curse] tokens remaining to fulfill that effect, what happens?</i> You perform as much of the ability as you can, adding [bless] or [curse] tokens until there are none left to add.</li>
+
+<li>  <i>If adding a certain number of [bless] or [curse] tokens to the chaos bag is part of a card/ability's cost, and there are not enough [bless] or [curse] tokens remaining to fulfill that cost, what happens?</i> If the cost cannot be paid, the card/ability therefore cannot be played/triggered.</li>
+
+<li>  <i>During a campaign, do [bless] and [curse] tokens remain in the chaos bag from scenario to scenario?</i> No, [bless] and [curse] tokens do not carry over from scenario to scenario.</li>
+
+</ol>
 
 <h2 id="Bonded" style="color:red">Bonded (added in <em>The Dream-Eaters</em>)</h2>
 
@@ -1389,6 +1424,26 @@
 
 <p>Flavor text is additional text that provides thematic context to a card and/or its abilities. Flavor text does not interact with the game in any manner.</p>
 
+<h2 id="Flood_Tokens" style="color:red">Flood Tokens (added in <em>The Innsmouth Conspiracy</em>)</h2>
+
+<p>Throughout this campaign, scenario card effects can flood locations. Each location has one of three different flood levels: it is either unflooded, partially flooded, or fully flooded. A location's flood level can be tracked using the double‑sided flood tokens included in this deluxe box. <b>A location's flood level has no inherent game effect.</b> However, some card effects may change or become stronger while you are at a flooded location, particularly if that location is fully flooded.</p>
+
+<ul>
+
+<li>  A location with no flood token is unflooded.</li>
+
+<li>  If a location becomes partially flooded, place a flood token on it with the partially flooded side faceup to designate this.</li>
+
+<li>  If a location becomes fully flooded, place a flood token on it with the fully flooded side faceup (or if it is already partially flooded, flip its flood token over) to designate this.</li>
+
+<li>  If a location's flood level is "increased," it changes from unflooded to partially flooded, or from partially flooded to fully flooded. A fully flooded location cannot have its flood level increased.</li>
+
+<li>  If a location's flood level is "decreased," it changes from fully flooded to partially flooded, or from partially flooded to unflooded. If a location becomes unflooded, remove its flood token</li>
+
+<li>  For the purposes of card effects, both partially flooded locations and fully flooded locations are considered to be "flooded."</li>
+
+</ul>
+
 <h2 id="Forced_Abilities">Forced Abilities</h2>
 
 <p>See "<a href="#Abilities_Forced">Ability</a>" on page 2.</p>
@@ -1566,6 +1621,28 @@
 <h2 id="Joes_Hunch_Deck" style="color:red">Joe's "Hunch Deck" (added in <em>The Circle Undone</em>)</h2>
 
 <p>As a private eye, Joe Diamond has learned to follow his instincts, and therefore he has a separate hunch deck, which is constructed during step 4 of the setup of each scenario. The cards in this hunch deck are chosen from Joe's 40-card deck and therefore count toward his total deck size. With the exception of these setup instructions, all references to Joe's "deck" refer to Joe's standard investigator deck and not his hunch deck. Joe's hunch deck has no discard pile; cards from your hunch deck are discarded to your standard discard pile when played.</p>
+
+<h2 id="Keys" style="color:red">Keys (added in <em>The Innsmouth Conspiracy</em>)</h2>
+
+<p> This expansion introduces key tokens that represent important objects or pieces of information that can be claimed and used during scenarios.</p>
+
+<p>Key tokens have two sides. When facedown, all seven keys have the same universal key symbol, so they can be randomized without the investigators knowing which is which. When faceup, each key is color coded with a unique color (<i>red</i>, <i>blue</i>, <i>green</i>, <i>yellow</i>, <i>purple</i>, <i>black</i>, <i>white</i>).</p>
+
+<p>If a scenario uses one or more keys, the setup of that scenario indicates how many are set aside and whether they should be faceup or randomized facedown. Keys can enter play via several different card effects, and they are usually placed on an enemy, location, or story asset. Keys can be acquired in any of three ways:</p> 
+
+<ul>
+
+<li>  If a location with a key on it has no clues, an investigator may take control of each of the location's keys as a [free] ability.</li>
+
+<li>  If an investigator causes an enemy with a key on it to leave play, that investigator must take control of each of the keys that were on that enemy. (If it leaves play through some other means, place its keys on its location.)</li>
+
+<li>  Some card effects may allow an investigator to take control of keys in other ways.</li>
+
+</ul>
+
+<p>When an investigator takes control of a key, they flip it faceup (if it is facedown) and place it on their investigator card. If an investigator who controls one or more keys is eliminated, place each of their keys on their location. As an [action] ability, an investigator may give any number of their keys to another investigator at the same location.</p>
+
+<p><b>Keys have no inherent game effect.</b> However, some card effects may change depending on which keys an investigator controls. Additionally, keys may sometimes be required in order to progress during a scenario.</p>
 
 <h2 id="Keywords">Keywords</h2>
 
@@ -2141,19 +2218,21 @@
 
 <h2 id="Signature_Cards">Signature Cards</h2>
 
-<p>An investigator’s “signature cards” are the cards that are only available to that investigator, and cannot be included in another investigator’s deck. This includes player cards with the text “(Investigator Name) deck only,” as well as non-basic weaknesses that are listed under “Deckbuilding Requirements” and therefore can only be included in that investigator’s deck.</p>
+<p>An investigator's "signature cards" are the cards that are only available to that investigator, and cannot be included in another investigator’s deck. This includes player cards with the text “(Investigator Name) deck only,” as well as non-basic weaknesses that are listed under “Deckbuilding Requirements” and therefore can only be included in that investigator’s deck.</p>
 
 <p>Signature cards are governed by the following additional rules:</p>
 
 <ul>
 
-<li>The number of each signature card listed under an investigator’s “Deckbuilding Requirements” is the exact number of copies of that card that is to be included in that investigator’s deck. If no number is specified, that number is 1.<br>
+<li>The number of each signature card listed under an investigator's "Deckbuilding Requirements" is the exact number of copies of that card that is to be included in that investigator’s deck. If no number is specified, that number is 1.<br>
 
-<i>For example: Under “Deckbuilding Requirements” for Roland Banks, the following cards are listed: “Roland’s .38 Special, Cover Up, 1 random basic weakness.” Roland Banks must include exactly 1 copy of his signature cards—Roland’s .38 Special and Cover Up. He is not permitted to include more than 1 copy of either of these cards.</i></li>
+<i>For example: Under "Deckbuilding Requirements" for Roland Banks, the following cards are listed: "Roland's .38 Special, Cover Up, 1 random basic weakness.” Roland Banks must include exactly 1 copy of his signature cards—Roland’s .38 Special and Cover Up. He is not permitted to include more than 1 copy of either of these cards.</i></li>
 
-<li>An investigator’s signature cards cannot be traded or given to other investigators.<br>
+<li>An investigator cannot control another investigator's signature cards.<br>
 
-<i>For example: Roland has the Roland’s .38 Special card in play. He has the card “Teamwork” which can allow investigators at the same location to trade or give assets among one another. However, because Roland’s .38 Special is one of Roland’s signature cards, he cannot give it to another investigator.</i></li>
+<i>For example: Roland has the Roland's .38 Special card in play. He has the card "Teamwork" which can allow investigators at the same location to trade or give assets among one another. However, because Roland’s .38 Special is one of Roland’s signature cards, he cannot give it to another investigator.</i></li>
+
+<li>Signature cards need not abide by typical deckbuilding restrictions, and do not count toward any deckbuilding limitations if other cards share the same title.<li>
 
 </ul>
 
@@ -2450,6 +2529,10 @@ A player cannot include 50 or more experience worth of cards in a standalone dec
 <li>  If a unique encounter card that shares a title with a unique player card would enter play, discard the player card simultaneously as the encounter card enters play.</li>
 
 </ul>
+
+<h2 id="unless_all_clues_have_been_discovered" style="color:blue">"...Unless all of (location's) clues have been discovered." (added in FAQ, section 'Card Ability Interpretation', point 2.11)</h2>
+
+<p>Some locations have abilities that prevent you from entering or using a particular enemy unless all of the clues have been discovered from a particular location; for example, the Engine Car. When interpreting such an ability, if the location is unrevealed (and therefore has no clues on it), this does not satisfy the ability; it must have been revealed at some point.</p>
 
 <h2>Upkeep Phase</h2>
 
