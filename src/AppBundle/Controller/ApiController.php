@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\Criteria;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Doctrine\ORM\Query;
 
 class ApiController extends Controller
 {
@@ -623,24 +624,12 @@ class ApiController extends Controller
 		$end = clone $start;
 		$end->add(new \DateInterval("P1D"));
 		
-		$expr = Criteria::expr();
-		$criteria = Criteria::create();
-		$criteria->where($expr->gte('dateCreation', $start));
-		$criteria->andWhere($expr->lt('dateCreation', $end));
-		
-		/* @var $decklists \Doctrine\Common\Collections\ArrayCollection */
-		$decklists = $this->getDoctrine()->getRepository('AppBundle:Decklist')->matching($criteria);
-		if(!$decklists) die();
-		
-		$dateUpdates = $decklists->map(function ($decklist) {
-			return $decklist->getDateUpdate();
-		})->toArray();
-		
-		$response->setLastModified(max($dateUpdates));
-		if ($response->isNotModified($request)) {
-			return $response;
-		}
-		
+		$em = $this->container->get('doctrine')->getManager();
+		$q = $em->createQuery("select u from AppBundle:Decklist u where u.dateCreation >= :starttime and u.dateCreation <= :endtime");
+		$q->setParameter(':starttime',$start);
+		$q->setParameter(':endtime',$end);
+		$decklists = $q->getResult();
+
 		$content = json_encode($decklists);
 		
 		if (isset($jsonp)) {
