@@ -1152,15 +1152,30 @@ ui.setup_typeahead = function setup_typeahead() {
 		cb(app.data.cards.find({name: regexp}));
 	}
 
-	$('#filter-text').typeahead({
-		hint: true,
-		highlight: true,
-		minLength: 2
-	},{
-		name : 'cardnames',
-		displayKey: 'name',
-		source: findMatches
-	});
+  $('#filter-text').typeahead({
+    hint: true,
+    highlight: true,
+    minLength: 2
+  },{
+    name : 'cardnames',
+    display: function(data) {
+      var value = data.name;
+      if (data.xp && data.xp > 0) {
+        value = data.name + ' (' + data.xp + ')';
+      }
+      return value;
+    },
+    source: findMatches,
+    templates: {
+      suggestion: function (data){
+        var value = data.name;
+        if (data.xp && data.xp > 0) {
+          value = data.name+' ('+data.xp+')';
+        }
+        return '<div>' + value + '</div>';
+      }
+    }
+  });
 
 }
 
