@@ -124,7 +124,7 @@ deck_history.all_changes = function all_changes() {
 				addition_xp += addition.card.taboo_xp;
 			}
 			if (removal.card.taboo_xp){
-				removal_xp += removal_xp.card.taboo_xp;
+				removal_xp += removal.card.taboo_xp;
 			}
 			if (addition.qty > 0 && removal.qty > 0 && addition_xp >= 0 && addition.card.real_name == removal.card.real_name && addition_xp > removal_xp){
 				addition.qty = addition.qty - removal.qty;
