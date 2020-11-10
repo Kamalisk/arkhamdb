@@ -635,14 +635,14 @@ class ApiController extends Controller
 		$dateUpdates = $decklists->map(function ($decklist) {
 			return $decklist->getDateUpdate();
 		})->toArray();
-		
+
 		$response->setLastModified(max($dateUpdates));
 		if ($response->isNotModified($request)) {
 			return $response;
 		}
 		
-		$content = json_encode($decklists);
-		
+		// the returned results is not an array so convert it, so the json_encode works properly
+		$content = json_encode($decklists->toArray());
 		if (isset($jsonp)) {
 			$content = "$jsonp($content)";
 			$response->headers->set('Content-Type', 'application/javascript');
