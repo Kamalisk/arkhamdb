@@ -6,7 +6,7 @@
     </header>
     <body>
       <trans-unit id="a54df7f0b810414467735acc4f3ca4f9" resname="My Decks">
-        <source>My Decks</source>
+        <source>__My Decks</source>
         <target>Mis mazos</target>
       </trans-unit>
       <trans-unit id="41bee85f0a581e16440caf695024e618" resname="My Teams">
@@ -143,7 +143,7 @@
       </trans-unit>
       <trans-unit id="8b9c006d512295284b651b36cd6349a6" resname="Something about you">
         <source>Something about you</source>
-        <target>Acerca de tí</target>
+        <target>Acerca de ti</target>
       </trans-unit>
       <trans-unit id="ae3ef38738579f5c872777896ac4e8a0" resname="Be notified when a user comments one of your decklists">
         <source>Be notified when a user comments one of your decklists</source>
@@ -180,6 +180,18 @@
       <trans-unit id="f1b7869e146d6dfec49f5eeb69c6de7d" resname="Deck Building">
         <source>Deck Building</source>
         <target>Construcción de mazos</target>
+      </trans-unit>
+      <trans-unit id="LptaDE5" resname="Victory">
+        <source>Victory</source>
+        <target>Victoria</target>
+      </trans-unit>
+      <trans-unit id="9nMh2sC" resname="Vengeance">
+        <source>Vengeance</source>
+        <target>Venganza</target>
+      </trans-unit>
+       <trans-unit id="iLJEQA0" resname="Make your decks public">
+        <source>Make your decks public</source>
+        <target>Haz públicos tus mazos</target>
       </trans-unit>
     </body>
   </file>
