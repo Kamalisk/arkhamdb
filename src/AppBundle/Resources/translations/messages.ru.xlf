@@ -7,7 +7,7 @@
     <body>
       <trans-unit id="dpAPG.0" resname="Back">
         <source>Back</source>
-        <target>Назад</target>
+        <target>Оборот</target>
       </trans-unit>
       <trans-unit id="PzQb_na" resname="Your query didn't match any card.">
         <source>Your query didn't match any card.</source>
@@ -187,15 +187,15 @@
       </trans-unit>
       <trans-unit id="LptaDE5" resname="Victory">
         <source>Victory</source>
-        <target>__Victory</target>
+        <target>Победа</target>
       </trans-unit>
       <trans-unit id="9nMh2sC" resname="Vengeance">
         <source>Vengeance</source>
-        <target>__Vengeance</target>
+        <target>Возмездие</target>
       </trans-unit>
       <trans-unit id="iLJEQA0" resname="Make your decks public">
         <source>Make your decks public</source>
-        <target>__Make your decks public</target>
+        <target>Открыть публичный доступ к колодам</target>
       </trans-unit>
     </body>
   </file>
