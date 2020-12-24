@@ -75,6 +75,12 @@
 .icon-tablet:before {
 	content: "q";
 }
+.icon-bless:before {
+	content: "v";
+}
+.icon-curse:before {
+	content: "w";
+}
 .icon-per_investigator:before {
 	content: "u";
 	vertical-align : top;

@@ -1,6 +1,6 @@
 (function app_textcomplete(textcomplete, $) {
 
-var icons = 'guardian survivor rogue mystic seeker action reaction fast free unique per_investigator null elder_sign elder_thing auto_fail skull cultist lightning tablet willpower intellect combat agility wild'.split(' ');
+var icons = 'guardian survivor rogue mystic seeker action reaction fast free unique per_investigator null elder_sign elder_thing auto_fail skull cultist lightning tablet bless curse willpower intellect combat agility wild'.split(' ');
 
 var rules = [
 	{key:"Intro", value:"The Thing That Should Not Be..."},

@@ -57,7 +57,9 @@ class CardsData
 			'[seeker]' => '<span class="icon-seeker" title="Seeker"></span>',
 			'[mystic]' => '<span class="icon-mystic" title="Mystic"></span>',
 			'[neutral]' => '<span class="icon-neutral" title="Neutral">Neutral</span>',
-			'[per_investigator]' => '<span class="icon-per_investigator" title="Per Investigator"></span>'
+			'[per_investigator]' => '<span class="icon-per_investigator" title="Per Investigator"></span>',
+			'[bless]' => '<span class="icon-bless" title="Bless"></span>',
+			'[curse]' => '<span class="icon-curse" title="Curse"></span>'
 		];
 		$text = preg_replace("/\[\[([^\]]+)\]\]/", '<b><i>${1}</i></b>', $text);
 		return str_replace(array_keys($displayTextReplacements), array_values($displayTextReplacements), $text);
