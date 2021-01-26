@@ -13,6 +13,12 @@
       <link rel="canonical" href="{{ url(app.request.attributes.get('_route'), _route_params|merge(_get_params)|merge({'_locale': 'en'})) }}"/>
     {% endif %}
     {% if pagedescription is defined %}<meta name="description" content="{{ pagedescription }}">{% endif %}
+    {% set currentPath = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
+    {% if "/card" in currentPath and cards is defined and cards[0] is defined %}
+      {% if cards[0].name is defined %}<meta property="og:title" content="{{ cards[0].name }} &middot; ArkhamDB" />{% endif %}
+      {% if cards[0].real_text is defined %}<meta property="og:description" content="{{ cards[0].real_text }}" />{% endif %}
+      {% if cards[0].imagesrc is defined and cards[0].imagesrc %}<meta property="og:image" content="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset(cards[0].imagesrc) }}" />{% endif %}
+    {% endif %}
 
     <link href='https://fonts.googleapis.com/css?family=Amiri:400,400italic,700,700italic|Julius+Sans+One|Open+Sans:400,400italic,700,700italic|Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
