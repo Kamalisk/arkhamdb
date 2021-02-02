@@ -16,8 +16,11 @@
     {% set currentPath = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
     {% if "/card" in currentPath and cards is defined and cards[0] is defined %}
       {% if cards[0].name is defined %}<meta property="og:title" content="{{ cards[0].name }} &middot; ArkhamDB" />{% endif %}
-      {% if cards[0].real_text is defined %}<meta property="og:description" content="{{ cards[0].real_text }}" />{% endif %}
-      {% if cards[0].imagesrc is defined and cards[0].imagesrc %}<meta property="og:image" content="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset(cards[0].imagesrc) }}" />{% endif %}
+      {% if cards[0].real_text is defined %}<meta property="og:description" content="{{ cards[0].real_text|striptags }}" />{% endif %}
+      {% if cards[0].imagesrc is defined and cards[0].imagesrc %}
+          <meta property="og:image" content="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset(cards[0].imagesrc) }}" />
+          <meta name="twitter:card" content="summary_large_image">
+      {% endif %}
     {% endif %}
 
     <link href='https://fonts.googleapis.com/css?family=Amiri:400,400italic,700,700italic|Julius+Sans+One|Open+Sans:400,400italic,700,700italic|Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
