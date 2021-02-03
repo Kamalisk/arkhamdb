@@ -14,6 +14,77 @@ class ApiController extends Controller
 {
 
 	/**
+	 * Get the description of all the cycles as an array of JSON objects.
+	 * 
+	 * @ApiDoc(
+	 *  section="Cycle",
+	 *  resource=true,
+	 *  description="All the Cycles",
+	 *  parameters={
+	 *    {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+	 *  },
+	 * )
+	 * @param Request $request
+	 */
+	public function listCyclesAction(Request $request)
+	{
+		$locale = $request->getLocale();
+
+		$response = new Response();
+		$response->setPublic();
+		$response->setMaxAge($this->container->getParameter('cache_expiration'));
+		$response->headers->add(array(
+            'Access-Control-Allow-Origin' => '*',
+            'Content-Language' => $locale
+        ));
+
+		$jsonp = $request->query->get('jsonp');
+
+		$list_cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findAll();
+
+		// check the last-modified-since header
+
+		$lastModified = NULL;
+		/* @var $cycle \AppBundle\Entity\Cycle */
+		foreach($list_cycles as $cycle) {
+			if(!$lastModified || $lastModified < $cycle->getDateUpdate()) {
+				$lastModified = $cycle->getDateUpdate();
+			}
+		}
+		$response->setLastModified($lastModified);
+		if ($response->isNotModified($request)) {
+			return $response;
+		}
+
+		// build the response
+
+		$cycles = array();
+		/* @var $cycle \AppBundle\Entity\Cycle */
+		foreach($list_cycles as $cycle) {
+			$max = $pack->getSize();
+			$cycles[] = array(
+					"name" => $cycle->getName(),
+					"code" => $cycle->getCode(),
+					"position" => $cycle->getPosition(),
+					"url" => $this->get('router')->generate('cards_list', array('cycle_code' => $cycle->getCode()), UrlGeneratorInterface::ABSOLUTE_URL),
+					"id" => $cycle->getId()
+			);
+		}
+
+		$content = json_encode($cycles);
+		if(isset($jsonp))
+		{
+			$content = "$jsonp($content)";
+			$response->headers->set('Content-Type', 'application/javascript');
+		} else
+		{
+			$response->headers->set('Content-Type', 'application/json');
+		}
+		$response->setContent($content);
+		return $response;
+	}
+
+	/**
 	 * Get the description of all the packs as an array of JSON objects.
 	 * 
 	 * @ApiDoc(
@@ -63,11 +134,14 @@ class ApiController extends Controller
 		foreach($list_packs as $pack) {
 			$real = count($pack->getCards());
 			$max = $pack->getSize();
+			$cycle = $pack->getCycle();
 			$packs[] = array(
 					"name" => $pack->getName(),
 					"code" => $pack->getCode(),
 					"position" => $pack->getPosition(),
-					"cycle_position" => $pack->getCycle()->getPosition(),
+					"cycle_code" => $cycle->getCode(),
+					"cycle_name" => $cycle->getName(),
+					"cycle_position" => $cycle->getPosition(),
 					"available" => $pack->getDateRelease() ? $pack->getDateRelease()->format('Y-m-d') : '',
 					"known" => intval($real),
 					"total" => $max,
