@@ -988,7 +988,7 @@ deck.get_problem = function get_problem() {
 					return 'investigator';
 				}
 			} else if (deck.deck_options[i].atleast.types && deck.deck_options[i].atleast.min){
-        var type_count = 0;
+				var type_count = 0;
 				$.each(deck.deck_options[i].atleast_count, function(key, value){
 					if (value >= deck.deck_options[i].atleast.min){
 						type_count++;
@@ -1000,7 +1000,7 @@ deck.get_problem = function get_problem() {
 					}
 					return 'investigator';
 				}
-      }
+			}
 		}
 	}
 
