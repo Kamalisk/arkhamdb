@@ -679,8 +679,8 @@ class User extends BaseUser
      */
     public function addReviewvote(\AppBundle\Entity\Review $reviewvote)
     {
+        $reviewvote->addVote($this);
         $this->reviewvotes[] = $reviewvote;
-
         return $this;
     }
 
