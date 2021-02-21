@@ -633,9 +633,12 @@ class CardsData
 				$cardinfo['bonded_cards'] = $bonded_cards[$card->getCode()];
 			}
 			if ($card->getDuplicates()) {
-				$cardinfo['duplicated_by'] = [];
-				foreach($card->getDuplicates() as $duplicate) {
-					$cardinfo['duplicated_by'][] = $duplicate->getCode();
+				$dupes = $card->getDuplicates();
+				if (count($dupes) > 0) {
+					$cardinfo['duplicated_by'] = [];
+					foreach($dupes as $duplicate) {
+						$cardinfo['duplicated_by'][] = $duplicate->getCode();
+					}
 				}
 			}
 			$cardinfo = array_filter($cardinfo, function ($var) { return isset($var); });
@@ -669,9 +672,12 @@ class CardsData
 				}
 			}
 			if ($card->getDuplicates()) {
-				$cardinfo['duplicated_by'] = [];
-				foreach($card->getDuplicates() as $duplicate) {
-					$cardinfo['duplicated_by'][] = $duplicate->getCode();
+				$dupes = $card->getDuplicates();
+				if (count($dupes) > 0) {
+					$cardinfo['duplicated_by'] = [];
+					foreach($dupes as $duplicate) {
+						$cardinfo['duplicated_by'][] = $duplicate->getCode();
+					}
 				}
 			}
 		}
