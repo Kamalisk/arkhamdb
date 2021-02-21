@@ -22,6 +22,7 @@ class ImportStdCommand extends ContainerAwareCommand
 
 	private $links = [];
 	private $bonds = [];
+	private $duplicates = [];
 
 	/* @var $output OutputInterface */
 	private $output;
@@ -213,6 +214,39 @@ class ImportStdCommand extends ContainerAwareCommand
 					}
 				}
 			}
+			$this->em->flush();
+		}
+
+		// go over duplicates and create them based on the cards they are duplicating
+		if ($this->duplicates && count($this->duplicates) > 0) {
+			$output->writeln("Resolving Duplicates");
+			$this->loadCollection('Card');
+			foreach($this->duplicates as $duplicate) {
+				$duplicate_of = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $duplicate['duplicate_of']]);
+				$new_card = $duplicate['card'];
+				// create a new "card" using the data of this card. 
+				$new_card_data = $duplicate_of->serialize();
+				$new_card_data['code'] = $new_card['code'];
+				$new_card_data['duplicate_of'] = $duplicate['duplicate_of'];
+				if (isset($new_card['pack_code'])) {
+					$new_card_data['pack_code'] = $new_card['pack_code'];
+				}
+				if (isset($new_card['position'])) {
+					$new_card_data['position'] = $new_card['position'];
+				}
+				if (isset($new_card['quantity'])) {
+					$new_card_data['quantity'] = $new_card['quantity'];
+				}
+				//print_r($new_card_data);
+				$new_cards = [];
+				$new_cards[] = $new_card_data;
+				$duplicates_added = $this->importCardsFromJsonData($new_cards);
+				//print_r(count($duplicates_added));
+				if ($duplicates_added && isset($duplicates_added[0])) {
+					$duplicates_added[0]->setDuplicateOf($duplicate_of);
+				}
+			}
+			
 			$this->em->flush();
 		}
 
@@ -416,20 +450,8 @@ class ImportStdCommand extends ContainerAwareCommand
 		return $result;
 	}
 	
-	protected function importCardsJsonFile(\SplFileInfo $fileinfo, $special="")
-	{
+	protected function importCardsFromJsonData($cardsData) {
 		$result = [];
-	
-		$code = $fileinfo->getBasename('.json');
-		if (stristr($code, "_encounter") !== FALSE && $special){
-			return $result;
-		}
-		$code = str_replace("_encounter", "", $code);
-
-		$pack = $this->em->getRepository('AppBundle:Pack')->findOneBy(['code' => $code]);
-		if(!$pack) throw new \Exception("Unable to find Pack [$code]");
-		
-		$cardsData = $this->getDataFromFile($fileinfo);
 		foreach($cardsData as $cardData) {
 			$card = $this->getEntityFromData('AppBundle\Entity\Card', $cardData, [
 					'code',
@@ -498,6 +520,25 @@ class ImportStdCommand extends ContainerAwareCommand
 			}
 		}
 		
+		return $result;
+	}
+
+	protected function importCardsJsonFile(\SplFileInfo $fileinfo, $special="")
+	{
+		$result = [];
+	
+		$code = $fileinfo->getBasename('.json');
+		if (stristr($code, "_encounter") !== FALSE && $special){
+			return $result;
+		}
+		$code = str_replace("_encounter", "", $code);
+
+		$pack = $this->em->getRepository('AppBundle:Pack')->findOneBy(['code' => $code]);
+		if(!$pack) throw new \Exception("Unable to find Pack [$code]");
+		
+		$cardsData = $this->getDataFromFile($fileinfo);
+		$result = $this->importCardsFromJsonData($cardsData);
+		// return all cards imported
 		return $result;
 	}
 	
@@ -607,6 +648,10 @@ class ImportStdCommand extends ContainerAwareCommand
 			throw new \Exception("Missing key [code] in ".json_encode($data));
 		}
 		
+		if (key_exists('duplicate_of', $data) && !key_exists('name', $data)) {
+			$this->duplicates[] = ['card' => $data, 'duplicate_of' => $data['duplicate_of']];
+			return;
+		}
 		$entity = $this->em->getRepository($entityName)->findOneBy(['code' => $data['code']]);
 
 		if(!$entity) {
@@ -834,6 +879,16 @@ class ImportStdCommand extends ContainerAwareCommand
 	
 		if($data === null) {
 			throw new \Exception("File [".$fileinfo->getPathname()."] contains incorrect JSON (error code ".json_last_error().")");
+		}
+	
+		return $data;
+	}
+
+	protected function getDataFromString($string) {
+		$data = json_decode($string, true);
+	
+		if($data === null) {
+			throw new \Exception("String contains incorrect JSON (error code ".json_last_error().")");
 		}
 	
 		return $data;
