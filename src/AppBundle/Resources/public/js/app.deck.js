@@ -478,7 +478,7 @@ deck.get_included_packs = function get_included_packs() {
 			return
 		}
 		new_packs.push({
-			'name': ${req.pack1.name} + ' / ' + ${req.pack2.name},
+			'name': req.pack1.name + ' / ' + req.pack2.name,
 			'quantity': 1
 		})
 	})
