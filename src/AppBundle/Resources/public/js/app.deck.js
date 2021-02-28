@@ -418,71 +418,23 @@ deck.get_nb_cards = function get_nb_cards(cards) {
 deck.get_included_packs = function get_included_packs() {
 	var cards = deck.get_cards();
 	var nb_packs = {};
-
-	var requirements = [];
-	var req_hash = {};
-	var shared_req = [];
-	// check each card, and see which packs(s) are required
 	cards.forEach(function (card) {
-		if (card.hidden) {
-			return
-		}
-		if (card.duplicate_of_code) {
-			var dupe = app.data.cards.findById(card.duplicate_of_code);
-			var req = {};
-			if (!req_hash[dupe.pack_code + card.pack_code]) {
-				var req = req_hash[dupe.pack_code + card.pack_code] = {
-					pack1: {code: dupe.pack_code, name: dupe.pack_name, quantity: Math.max(Math.ceil(card.indeck / dupe.quantity))},
-					pack2: {code: card.pack_code, name: card.pack_name, quantity: Math.max(Math.ceil(card.indeck / card.quantity))}
-				}
-				shared_req.push(req);
-			}
-		} else if (card.duplicated_by && card.duplicated_by.length > 0) {
-			card.duplicated_by.forEach(function(copy) {
-				var dupe = app.data.cards.findById(copy);
-				if (!req_hash[card.pack_code + dupe.pack_code]) {
-					var req = req_hash[card.pack_code + dupe.pack_code] = {
-						pack1: {code: card.pack_code, name: card.pack_name, quantity: Math.max(Math.ceil(card.indeck / card.quantity))},
-						pack2: {code: dupe.pack_code, name: dupe.pack_name, quantity: Math.max(Math.ceil(card.indeck / dupe.quantity))}
-					}
-					shared_req.push(req);
-				}
-			})
-		} else {
-			if (!req_hash[card.pack_code]) {
-				var req = req_hash[card.pack_code] = Math.max(Math.ceil(card.indeck / card.quantity));
-				requirements.push(req);
-			}
-		}
+		nb_packs[card.pack_code] = Math.max(nb_packs[card.pack_code] || 0, card.indeck / card.quantity);
 	});
-
 	var pack_codes = _.uniq(_.pluck(cards, 'pack_code'));
-	var packs = app.data.packs.find({}, {
+	var packs = app.data.packs.find({
 		'code': {
 			'$in': pack_codes
-		},
+		}
+	}, {
 		'$orderBy': {
 			'available': 1
 		}
 	});
-	var new_packs = packs.filter(function (pack) {
-		pack.quantity = req_hash[pack.code] || 0;
-		if (pack.quantity > 0) {
-			return pack
-		}
+	packs.forEach(function (pack) {
+		pack.quantity = nb_packs[pack.code] || 0;
 	})
-	// apply additional requirements such as alternative pack pairs
-	shared_req.forEach(function(req) {
-		if (req_hash[req.pack1.code] || req_hash[req.pack2.code]) {
-			// if any pack has another requirement no point showing this option
-			return
-		}
-		new_packs.push({
-			'name': req.pack1.name + ' / ' + req.pack2.name,
-			'quantity': 1
-		})
-	})
-	return new_packs;
+	return packs;
 }
 
 
@@ -565,6 +517,10 @@ deck.get_layout_data = function get_layout_data(options) {
 		}
 		if (deck.meta && deck.meta.deck_size_selected){
 			size = parseInt(deck.meta.deck_size_selected, 10);
+		}
+		var ancestral_knowledge = app.data.cards.findById("07303");
+		if (ancestral_knowledge && ancestral_knowledge.indeck) {
+			size = size + 5;
 		}
 		var versatile = app.data.cards.findById("06167");
 		if (versatile && versatile.indeck) {
@@ -958,6 +914,11 @@ deck.get_problem = function get_problem() {
 		if (deck.meta && deck.meta.deck_size_selected){
 			size = parseInt(deck.meta.deck_size_selected, 10);
 		}
+
+		var ancestral_knowledge = app.data.cards.findById("07303");
+		if (ancestral_knowledge && ancestral_knowledge.indeck) {
+			size = size + 5;
+		}
 		var versatile = app.data.cards.findById("06167");
 		if (versatile && versatile.indeck) {
 			size = size + 5;
@@ -1026,6 +987,19 @@ deck.get_problem = function get_problem() {
 					}
 					return 'investigator';
 				}
+			} else if (deck.deck_options[i].atleast.types && deck.deck_options[i].atleast.min){
+				var type_count = 0;
+				$.each(deck.deck_options[i].atleast_count, function(key, value){
+					if (value >= deck.deck_options[i].atleast.min){
+						type_count++;
+					}
+				})
+				if (type_count < deck.deck_options[i].atleast.types){
+					if (deck.deck_options[i].error){
+						deck.problem_list.push(deck.deck_options[i].error);
+					}
+					return 'investigator';
+				}
 			}
 		}
 	}
@@ -1044,6 +1018,7 @@ deck.get_problem = function get_problem() {
 
 deck.reset_limit_count = function (){
 	if (investigator){
+		var ancestral_knowledge = app.data.cards.findById("07303");
 		var versatile = app.data.cards.findById("06167");//06167
 		var on_your_own = app.data.cards.findById("53010");
 		// if they user has selected different deck building options, point deck_options to the alternate one
@@ -1065,9 +1040,15 @@ deck.reset_limit_count = function (){
 				deck.deck_options[i].atleast_count = {};
 			}
 		}
+
 		if (on_your_own && on_your_own.indeck) {
 			// We put it at the front of the requirements since it is a negated one.
 			var new_option = {name: "on_your_own", dynamic: true, not: true, slot: ['Ally']};
+			deck.deck_options.unshift(new_option);
+		}
+		if (ancestral_knowledge && ancestral_knowledge.indeck) {
+			// We put it at the front of the requirements since it needs to count things.
+			var new_option = {name: "ancestral_knowledge", dynamic: true, type:["skill"], atleast: { types: 1, min: 10 }, ignore_match: true };
 			deck.deck_options.unshift(new_option);
 		}
 		if (versatile && versatile.indeck) {
@@ -1260,19 +1241,29 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 						option.limit_count = option.limit;
 						continue;
 					}
-
 				}
+
 				if (limit_count && option.atleast){
-					if (!option.atleast_count[card.faction_code]){
-						option.atleast_count[card.faction_code] = 0;
-					}
-					option.atleast_count[card.faction_code] += card.indeck;
-					if (card.faction2_code) {
-						if (!option.atleast_count[card.faction2_code]) {
-							option.atleast_count[card.faction2_code] = 0;
+					if (option.atleast.factions) {
+						if (!option.atleast_count[card.faction_code]){
+							option.atleast_count[card.faction_code] = 0;
 						}
-						option.atleast_count[card.faction2_code] += card.indeck;
+						option.atleast_count[card.faction_code] += card.indeck;
+						if (card.faction2_code) {
+							if (!option.atleast_count[card.faction2_code]) {
+								option.atleast_count[card.faction2_code] = 0;
+							}
+							option.atleast_count[card.faction2_code] += card.indeck;
+						}
+					} else if (option.atleast.types) {
+						if (!option.atleast_count[card.type_code]) {
+							option.atleast_count[card.type_code] = 0;
+						}
+						option.atleast_count[card.type_code] += card.indeck;
 					}
+				}
+				if (option.ignore_match) {
+					continue;
 				}
 
 				return true;
