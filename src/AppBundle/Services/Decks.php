@@ -129,10 +129,6 @@ class Decks
 			$deck->removeSlot ( $slot );
 			$this->doctrine->remove ( $slot );
 		}
-		foreach ( $deck->getSideSlots () as $slot ) {
-			$deck->removeSideSlot ( $slot );
-			$this->doctrine->remove ( $slot );
-		}
 
 		foreach ( $content as $card_code => $qty ) {
 			$card = $cards [$card_code];
@@ -151,7 +147,11 @@ class Decks
 			);
 		}
 
-		if ($side) {
+		if (is_array($side)) {
+			foreach ( $deck->getSideSlots () as $slot ) {
+				$deck->removeSideSlot ( $slot );
+				$this->doctrine->remove ( $slot );
+			}
 			foreach ( $side as $card_code => $qty ) {
 				$card = $this->doctrine->getRepository ( 'AppBundle:Card' )->findOneBy ( array (
 						"code" => $card_code

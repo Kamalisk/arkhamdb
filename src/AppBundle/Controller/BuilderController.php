@@ -602,7 +602,7 @@ class BuilderController extends Controller
 			}
 		}
 
-		$side = false;
+		$side = [];
 		if ($request->get('side')){
 			$side_array = (array) json_decode($request->get('side'));
 			if (count($side_array)) {

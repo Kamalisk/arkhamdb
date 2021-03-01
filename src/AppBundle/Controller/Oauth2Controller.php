@@ -593,6 +593,7 @@ class Oauth2Controller extends Controller
 		$sideSlots = false;
 		if($request->get('side')) {
 			$sideSlots = (array) json_decode($request->get('side'));
+			$sideSlots = [];
 			if (count($sideSlots)) {
 				foreach($sideSlots as $card_code => $qty) {
 					// type-juggling means codes that don't start with 0 become integers.
