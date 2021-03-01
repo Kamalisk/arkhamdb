@@ -314,6 +314,10 @@ class Oauth2Controller extends Controller
 				$ignored[$slot->getCard()->getCode()] = $slot->getIgnoreDeckLimit();
 			}
 		}
+		$sideSlots = [];
+		foreach ($deck->getSideSlots() as $slot) {
+			$sideSlots[$slot->getCard()->getCode()] = $slot->getQuantity();
+		}
 
 		if ($request->get('exiles')){
 			$exiles = filter_var_array(explode(',', $request->get('exiles')), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -381,7 +385,8 @@ class Oauth2Controller extends Controller
 			$slots,
 			null, // no source deck, we want it to be new.
 			$deck->getProblem(),
-			$ignored
+			$ignored,
+			$sideSlots
 		);
 		if ($meta_json){
 			$newDeck->setMeta($meta);
@@ -583,6 +588,24 @@ class Oauth2Controller extends Controller
 			}
 		}
 
+
+
+		$sideSlots = false;
+		if($request->get('side')) {
+			$sideSlots = (array) json_decode($request->get('side'));
+			if (count($sideSlots)) {
+				foreach($sideSlots as $card_code => $qty) {
+					// type-juggling means codes that don't start with 0 become integers.
+					if((!is_string($card_code) && !is_integer($card_code)) || !is_integer($qty)) {
+						return new JsonResponse([
+								'success' => FALSE,
+								'msg' => "Side Slots invalid"
+						]);
+					}
+				}
+			}
+		}
+
 		$ignored = false;
 		if ($request->get('ignored')){
 			$ignored_array = (array) json_decode($request->get('ignored'));
@@ -654,7 +677,7 @@ class Oauth2Controller extends Controller
 		}
 
 		// Save the deck.
-		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $slots, $deck , $problem, $ignored);
+		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $slots, $deck , $problem, $ignored, $sideSlots);
 		if ($meta_json) {
 			$deck->setMeta($meta);
 		}
@@ -715,7 +738,7 @@ class Oauth2Controller extends Controller
 
 		$name = filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		$descriptionMd = trim($request->request->get('description_md'));
-		if (!$descriptionMd || strlen($descriptionMd) < 20){
+		if (!$descriptionMd || strlen($descriptionMd) < 50){
 			// description too short
 			return new JsonResponse([
 				'success' => FALSE,
