@@ -7,6 +7,7 @@ class ExportableDeck
 	public function getArrayExport($withUnsavedChanges = false)
 	{
 		$slots = $this->getSlots();
+		$sideSlots = $this->getSideSlots();
 		$previousDeck = $this->getPreviousDeck();
 		$nextDeck = $this->getNextDeck();
 		if ($previousDeck){
@@ -19,7 +20,7 @@ class ExportableDeck
 		}else {
 			$nextDeck = null;
 		}
-		
+
 		if (method_exists($this, "getXp")){
 			$xp = $this->getXp();
 		} else {
@@ -47,6 +48,7 @@ class ExportableDeck
 			'investigator_code' => $this->getCharacter()->getCode(),
 			'investigator_name' => $this->getCharacter()->getName(),
 			'slots' => $slots->getContent(),
+			'sideSlots' => $sideSlots->getContent(),
 			'ignoreDeckLimitSlots' => $slots->getIgnoreDeckLimitContent(),
 			'version' => $this->getVersion(),
 			'xp' => $xp,
@@ -58,11 +60,11 @@ class ExportableDeck
 			'previous_deck' => $previousDeck,
 			'next_deck' => $nextDeck
 		];
-	
+
 		return $array;
 	}
-	
-	public function getTextExport($exclude=0) 
+
+	public function getTextExport($exclude=0)
 	{
 		$slots = $this->getSlots();
 		return [
@@ -73,8 +75,8 @@ class ExportableDeck
 				'slots_by_type' => $slots->getSlotsByType()
 		];
 	}
-	
-	public function getOctgnExport() 
+
+	public function getOctgnExport()
 	{
 		$slots = $this->getSlots();
 		return [

@@ -270,7 +270,7 @@ class BuilderController extends Controller
 			} else {
 				continue;
 			}
-			
+
 			$search = [];
 			$search['name'] = $name;
 			if ($subname) {
@@ -439,12 +439,16 @@ class BuilderController extends Controller
 		}
 
 		$content = [];
+		$side_content = [];
 		$ignored = [];
 		foreach ($deck->getSlots() as $slot) {
 			$content[$slot->getCard()->getCode()] = $slot->getQuantity();
 			if ($slot->getIgnoreDeckLimit()){
 				$ignored[$slot->getCard()->getCode()] = $slot->getIgnoreDeckLimit();
 			}
+		}
+		foreach ($deck->getSideSlots() as $slot) {
+			$side_content[$slot->getCard()->getCode()] = $slot->getQuantity();
 		}
 		return $this->forward('AppBundle:Builder:save',
 			array(
@@ -454,6 +458,7 @@ class BuilderController extends Controller
 				'taboo' => $deck->getTaboo() ? $deck->getTaboo()->getId() : "",
 				'meta' => $deck->getMeta() ? $deck->getMeta() : "",
 				'content' => json_encode($content),
+				'side' => json_encode($side_content),
 				'ignored' => json_encode($ignored),
 				'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null
 			)
@@ -509,6 +514,7 @@ class BuilderController extends Controller
 		}
 
 		$content = [];
+		$side_content = [];
 		$ignored = [];
 		foreach ($deck->getSlots() as $slot) {
 			$content[$slot->getCard()->getCode()] = $slot->getQuantity();
@@ -516,12 +522,16 @@ class BuilderController extends Controller
 				$ignored[$slot->getCard()->getCode()] = $slot->getIgnoreDeckLimit();
 			}
 		}
+		foreach ($deck->getSideSlots() as $slot) {
+			$side_content[$slot->getCard()->getCode()] = $slot->getQuantity();
+		}
 		return $this->forward('AppBundle:Builder:save',
 		array(
 			'name' => $deck->getName().'',
 			'faction_code' => $deck->getCharacter()->getCode(),
 			'tags' => $deck->getTags(),
 			'content' => json_encode($content),
+			'side' => json_encode($side_content),
 			'ignored' => json_encode($ignored),
 			'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null,
 			'xp' => $xp,
@@ -592,6 +602,14 @@ class BuilderController extends Controller
 			}
 		}
 
+		$side = false;
+		if ($request->get('side')){
+			$side_array = (array) json_decode($request->get('side'));
+			if (count($side_array)) {
+				$side = $side_array;
+			}
+		}
+
 		$name = filter_var($request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		$problem = filter_var($request->get('problem'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		$decklist_id = filter_var($request->get('decklist_id'), FILTER_SANITIZE_NUMBER_INT);
@@ -620,7 +638,7 @@ class BuilderController extends Controller
 			}
 		}
 
-		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $content, $source_deck ? $source_deck : null, $problem, $ignored);
+		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $content, $source_deck ? $source_deck : null, $problem, $ignored, $side);
 
 		$deck->setTaboo($taboo);
 		if ($request->get('exiles') && $request->get('exiles_string')){
@@ -953,6 +971,7 @@ class BuilderController extends Controller
 		$decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
 
 		$content = [];
+		$side_content = [];
 		$ignored = [];
 		foreach ($decklist->getSlots() as $slot) {
 			$content[$slot->getCard()->getCode()] = $slot->getQuantity();
@@ -960,11 +979,15 @@ class BuilderController extends Controller
 				$ignored[$slot->getCard()->getCode()] = $slot->getIgnoreDeckLimit();
 			}
 		}
+		foreach ($decklist->getSideSlots() as $slot) {
+			$side_content[$slot->getCard()->getCode()] = $slot->getQuantity();
+		}
 		return $this->forward('AppBundle:Builder:save',
 			array(
 				'name' => $decklist->getName(),
 				'faction_code' => $decklist->getCharacter()->getCode(),
 				'content' => json_encode($content),
+				'side' => json_encode($side_content),
 				'ignored' => json_encode($ignored),
 				'decklist_id' => $decklist_id,
 				'taboo' => $decklist->getTaboo() ? $decklist->getTaboo()->getId() : "",

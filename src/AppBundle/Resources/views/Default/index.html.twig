@@ -94,6 +94,17 @@
 </div>
 
 <div class="main container">
+	<h3>Recent Pack Releases</h3>
+	<ul>
+		{% for pack in packs %}
+		<li>
+			{{pack.name}}
+		</li>
+		{% endfor %}
+	</ul>
+</div> <!-- .container -->
+
+<div class="main container">
 <h3>Recent Updates</h3>
 <ul>
 	<li>

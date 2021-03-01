@@ -448,9 +448,11 @@ ui.on_input_smartfilter2 = function on_input_smartfilter2(event) {
 ui.on_submit_form = function on_submit_form(event) {
 	var deck_json = app.deck.get_json();
 	var ignored_json = app.deck.get_ignored_json();
+	var side_json = app.deck.get_side_json();
 	var meta_json = app.deck.get_meta_json();
 	$('input[name=content]').val(deck_json);
 	$('input[name=ignored]').val(ignored_json);
+	$('input[name=side]').val(side_json);
 	$('input[name=meta]').val(meta_json);
 	$('input[name=xp_spent]').val(app.deck.get_xp_spent());
 	$('input[name=xp_adjustment]').val(app.deck.get_xp_adjustment());
@@ -635,6 +637,8 @@ ui.on_modal_quantity_change = function on_modal_quantity_change(event) {
 	modal.modal('hide');
 	if ($(this).attr("name") == "ignoreqty"){
 		ui.on_ignore_quantity_change(code, quantity);
+	} else if ($(this).attr("name") == "sideqty") {
+		ui.on_side_quantity_change(code, quantity);
 	} else {
 		ui.on_quantity_change(code, quantity);
 	}
@@ -681,6 +685,11 @@ ui.on_quantity_change = function on_quantity_change(card_code, quantity) {
 }
 ui.on_ignore_quantity_change = function on_ignore_quantity_change(card_code, quantity) {
 	var update_all = app.deck.set_card_ignores(card_code, quantity);
+	ui.refresh_deck();
+	app.deck_history.all_changes();
+}
+ui.on_side_quantity_change = function on_side_quantity_change(card_code, quantity) {
+	var update_all = app.deck.set_card_sides(card_code, quantity);
 	ui.refresh_deck();
 	app.deck_history.all_changes();
 }

@@ -24,7 +24,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
 	 */
 	public function getUpgrades()
 	{
-		
+
 		$upgrades = [];
 		$previousDeck = $this->getPreviousDeck();
 		while ($previousDeck){
@@ -48,10 +48,10 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
 	public function jsonSerialize()
 	{
 		$array = parent::getArrayExport();
-	
+
 		return $array;
 	}
-	
+
     /**
      * @var integer
      */
@@ -81,7 +81,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      * @var integer
      */
     private $xpAdjustment;
-    
+
 
     /**
      * @var \DateTime
@@ -137,7 +137,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      * @var integer
      */
     private $version;
-    
+
      /**
      * @var \AppBundle\Entity\Decklist
      */
@@ -151,6 +151,11 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      * @var \Doctrine\Common\Collections\Collection
      */
     private $slots;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $sideSlots;
 
     /**
      * @var string
@@ -223,6 +228,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
     public function __construct()
     {
         $this->slots = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->sideSlots = new \Doctrine\Common\Collections\ArrayCollection();
         $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
         $this->successors = new \Doctrine\Common\Collections\ArrayCollection();
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
@@ -587,6 +593,42 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
         return new \AppBundle\Model\SlotCollectionDecorator($this->slots);
     }
 
+
+
+    /**
+     * Add slot
+     *
+     * @param \AppBundle\Entity\SideDecklistSlot $sideSlot
+     *
+     * @return Deck
+     */
+    public function addSideSlot(\AppBundle\Entity\SideDecklistSlot $slot)
+    {
+        $this->sideSlots[] = $slot;
+
+        return $this;
+    }
+
+    /**
+     * Remove slot
+     *
+     * @param \AppBundle\Entity\SideDecklistSlot $slot
+     */
+    public function removeSideSlot(\AppBundle\Entity\SideDecklistSlot $slot)
+    {
+        $this->sideSlots->removeElement($slot);
+    }
+
+    /**
+     * Get slots
+     *
+     * @return \AppBundle\Model\SlotCollectionInterface
+     */
+    public function getSideSlots()
+    {
+        return new \AppBundle\Model\SlotCollectionDecorator($this->sideSlots);
+    }
+
     /**
      * Add comment
      *
@@ -679,7 +721,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
     {
         return $this->previousDeck;
     }
-    
+
     /**
      * Set nextDeck
      *
@@ -714,8 +756,8 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
     {
         return $this->xp;
     }
-    
-    
+
+
     /**
      * Set xp
      *
@@ -740,8 +782,8 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
     {
         return $this->xpSpent;
     }
-    
-    
+
+
     /**
      * Set xpSpent
      *
@@ -766,8 +808,8 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
     {
         return $this->xpAdjustment;
     }
-    
-    
+
+
     /**
      * Set xpSpent
      *

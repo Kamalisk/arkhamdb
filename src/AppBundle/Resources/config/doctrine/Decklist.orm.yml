@@ -55,6 +55,10 @@ AppBundle\Entity\Decklist:
             targetEntity: Decklistslot
             mappedBy: decklist
             cascade: ["persist","remove"]
+        sideSlots:
+            targetEntity: SideDecklistSlot
+            mappedBy: decklist
+            cascade: ["persist","remove"]
         comments:
             targetEntity: Comment
             orderBy: { 'dateCreation': 'ASC' }
@@ -71,7 +75,7 @@ AppBundle\Entity\Decklist:
         nextDeck:
             targetEntity: Decklist
             nullable: true
-            cascade: ["persist","remove"]            
+            cascade: ["persist","remove"]
             joinColumn:
                 name: next_deck
                 referencedColumnName: id

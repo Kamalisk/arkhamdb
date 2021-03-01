@@ -18,9 +18,9 @@ ui.do_action_deck = function do_action_deck(event) {
 		case 'btn-upgrade': ui.upgrade(app.deck.get_id()); break;
 		case 'btn-print': window.print(); break;
 		case 'btn-sort-type': DisplaySort = 'type'; ui.refresh_deck()(); break;
-		case 'btn-sort-position': DisplaySort = 'position'; ui.refresh_deck()(); break;
-		case 'btn-sort-faction': DisplaySort = 'faction'; ui.refresh_deck()(); break;
-		case 'btn-sort-name': DisplaySort = 'name'; ui.refresh_deck()(); break;
+		case 'btn-sort-position': DisplaySort = 'position'; ui.refresh_deck(); break;
+		case 'btn-sort-faction': DisplaySort = 'faction'; ui.refresh_deck(); break;
+		case 'btn-sort-name': DisplaySort = 'name'; ui.refresh_deck(); break;
 		case 'btn-display-plain': export_plaintext(); break;
 		case 'btn-display-bbcode': export_bbcode(); break;
 		case 'btn-display-markdown': export_markdown(); break;
@@ -81,14 +81,14 @@ ui.upgrade_process = function upgrade_process(event) {
 				alert('An error occured while upgrading the deck.');
 				return;
 			}
-			// redirect here 
+			// redirect here
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
 			//console.log('['+moment().format('YYYY-MM-DD HH:mm:ss')+'] Error on '+this.url, textStatus, errorThrown);
 			alert('An error occured while upgrading the deck.');
 		}
 	});
-	
+
 }
 
 /**
@@ -117,7 +117,7 @@ ui.refresh_deck = function refresh_deck() {
  */
 ui.on_dom_loaded = function on_dom_loaded() {
 	ui.setup_event_handlers();
-	app.draw_simulator && app.draw_simulator.on_dom_loaded();	
+	app.draw_simulator && app.draw_simulator.on_dom_loaded();
 };
 
 /**
@@ -125,7 +125,7 @@ ui.on_dom_loaded = function on_dom_loaded() {
  * @memberOf ui
  */
 ui.on_data_loaded = function on_data_loaded() {
-	
+
 };
 
 /**
@@ -138,7 +138,7 @@ ui.on_all_loaded = function on_all_loaded() {
 		ui.refresh_deck();
 		app.deck_history.setup();
 	}
-	
+
 };
 
 })(app.ui, jQuery);

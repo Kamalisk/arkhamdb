@@ -51,11 +51,14 @@ class DefaultController extends Controller
 		$game_name = $this->container->getParameter('game_name');
 		$publisher_name = $this->container->getParameter('publisher_name');
 
+		$packs = $this->getDoctrine()->getRepository('AppBundle:Pack')->findBy([], ['dateRelease' => 'DESC']);
+
 		return $this->render('AppBundle:Default:index.html.twig', [
 		'pagetitle' =>  "$game_name Deckbuilder",
 		'pagedescription' => "Build your deck for $game_name by $publisher_name. Browse the cards and the thousand of decklists submitted by the community. Publish your own decks and get feedback.",
 		'decklists_by_popular' => $decklists_by_popular,
-		'decklists_by_recent' => $decklists_by_recent
+		'decklists_by_recent' => $decklists_by_recent,
+		'packs' => array_slice($packs, 0, 4)
 		], $response);
 	}
 

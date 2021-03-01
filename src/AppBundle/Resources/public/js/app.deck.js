@@ -42,12 +42,12 @@ var date_creation,
  * Templates for the different deck layouts, see deck.get_layout_data
  */
 // one block view
-layouts[1] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><h4 class="deck-section">Deck</h4><div class="col-sm-10 col-print-10"><%= cards %></div></div> <div id="upgrade_changes"></div> </div>');
+layouts[1] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><h4 class="deck-section">Deck</h4><div class="col-sm-10 col-print-10"><%= cards %></div></div> <div id="upgrade_changes"></div> <div><%= side %></div> </div>');
 // two colum view
-layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><h4 class="deck-section">Deck</h4><div class="row"><div class="col-sm-6 col-print-6"><%= assets %> <%= permanent %> <%= bonded %></div><div class="col-sm-6 col-print-6"><%= events %> <%= skills %> <%= treachery %> <%= enemy %> <%= hunches %></div></div> <div id="upgrade_changes"></div></div>');
+layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><h4 class="deck-section">Deck</h4><div class="row"><div class="col-sm-6 col-print-6"><%= assets %> <%= permanent %> <%= bonded %></div><div class="col-sm-6 col-print-6"><%= events %> <%= skills %> <%= treachery %> <%= enemy %> <%= hunches %></div></div> <div id="upgrade_changes"></div> <div><%= side %></div></div>');
 layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= images %><%= meta %></div><h4 class="deck-section">Deck</h4><div class="col-sm-4"><%= assets %><%= skills %></div><div class="col-sm-4"><%= events %><%= treachery %></div></div></div>');
 // single column view
-layouts[4] = _.template('<div class="deck-content"><div class="row"><%= images %></div><div class="row"><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><h4 class="deck-section">Deck</h4><div class="col-sm-12 col-print-12"><%= assets %> <%= permanent %> <%= bonded %> <%= events %> <%= skills %> <%= treachery %> <%= enemy %></div></div> <div id="upgrade_changes"></div></div>');
+layouts[4] = _.template('<div class="deck-content"><div class="row"><%= images %></div><div class="row"><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><h4 class="deck-section">Deck</h4><div class="col-sm-12 col-print-12"><%= assets %> <%= permanent %> <%= bonded %> <%= events %> <%= skills %> <%= treachery %> <%= enemy %></div></div> <div id="upgrade_changes"></div> <div><%= side %></div></div>');
 /**
  * @memberOf deck
  */
@@ -93,6 +93,9 @@ deck.init = function init(data) {
 
 deck.onloaded = function(data){
 	deck.set_slots(data.slots, data.ignoreDeckLimitSlots);
+	if (data.sideSlots) {
+		deck.set_side_slots(data.sideSlots);
+	}
 	investigator = app.data.cards.findById(investigator_code);
 
 	if (data.meta){
@@ -158,6 +161,7 @@ deck.onloaded = function(data){
 deck.set_slots = function set_slots(slots, ignoreSlots) {
 	app.data.cards.update({}, {
 		indeck: 0,
+		insidedeck: 0,
 		ignore: 0
 	});
 
@@ -169,6 +173,19 @@ deck.set_slots = function set_slots(slots, ignoreSlots) {
 	for(code in ignoreSlots) {
 		if(ignoreSlots.hasOwnProperty(code)) {
 			app.data.cards.updateById(code, {ignore: ignoreSlots[code]});
+		}
+	}
+}
+
+
+/**
+ * Sets the slots of the deck
+ * @memberOf deck
+ */
+deck.set_side_slots = function set_side_slots(slots) {
+	for(code in slots) {
+		if(slots.hasOwnProperty(code)) {
+			app.data.cards.updateById(code, {insidedeck: slots[code]});
 		}
 	}
 }
@@ -339,6 +356,27 @@ deck.get_draw_deck = function get_draw_deck(sort) {
 /**
  * @memberOf deck
  */
+deck.get_side_deck = function get_side_deck(sort, query, group) {
+	sort = sort || {};
+	sort['code'] = 1;
+
+	query = query || {};
+	query.insidedeck = {
+		'$gt': 0
+	};
+
+	var options = {
+		'$orderBy': sort
+	};
+	if (group){
+		options.$groupBy = group;
+	}
+	return app.data.cards.find(query, options);
+}
+
+/**
+ * @memberOf deck
+ */
 deck.get_real_draw_deck = function get_real_draw_deck(sort) {
 	return deck.get_cards(sort, {
 		type_code: {
@@ -418,23 +456,71 @@ deck.get_nb_cards = function get_nb_cards(cards) {
 deck.get_included_packs = function get_included_packs() {
 	var cards = deck.get_cards();
 	var nb_packs = {};
+
+	var requirements = [];
+	var req_hash = {};
+	var shared_req = [];
+	// check each card, and see which packs(s) are required
 	cards.forEach(function (card) {
-		nb_packs[card.pack_code] = Math.max(nb_packs[card.pack_code] || 0, card.indeck / card.quantity);
+		if (card.hidden) {
+			return
+		}
+		if (card.duplicate_of_code) {
+			var dupe = app.data.cards.findById(card.duplicate_of_code);
+			var req = {};
+			if (!req_hash[dupe.pack_code + card.pack_code]) {
+				var req = req_hash[dupe.pack_code + card.pack_code] = {
+					pack1: {code: dupe.pack_code, name: dupe.pack_name, quantity: Math.max(Math.ceil(card.indeck / dupe.quantity))},
+					pack2: {code: card.pack_code, name: card.pack_name, quantity: Math.max(Math.ceil(card.indeck / card.quantity))}
+				}
+				shared_req.push(req);
+			}
+		} else if (card.duplicated_by && card.duplicated_by.length > 0) {
+			card.duplicated_by.forEach(function(copy) {
+				var dupe = app.data.cards.findById(copy);
+				if (!req_hash[card.pack_code + dupe.pack_code]) {
+					var req = req_hash[card.pack_code + dupe.pack_code] = {
+						pack1: {code: card.pack_code, name: card.pack_name, quantity: Math.max(Math.ceil(card.indeck / card.quantity))},
+						pack2: {code: dupe.pack_code, name: dupe.pack_name, quantity: Math.max(Math.ceil(card.indeck / dupe.quantity))}
+					}
+					shared_req.push(req);
+				}
+			})
+		} else {
+			if (!req_hash[card.pack_code]) {
+				var req = req_hash[card.pack_code] = Math.max(Math.ceil(card.indeck / card.quantity));
+				requirements.push(req);
+			}
+		}
 	});
+
 	var pack_codes = _.uniq(_.pluck(cards, 'pack_code'));
-	var packs = app.data.packs.find({
+	var packs = app.data.packs.find({}, {
 		'code': {
 			'$in': pack_codes
-		}
-	}, {
+		},
 		'$orderBy': {
 			'available': 1
 		}
 	});
-	packs.forEach(function (pack) {
-		pack.quantity = nb_packs[pack.code] || 0;
+	var new_packs = packs.filter(function (pack) {
+		pack.quantity = req_hash[pack.code] || 0;
+		if (pack.quantity > 0) {
+			return pack
+		}
 	})
-	return packs;
+	// apply additional requirements such as alternative pack pairs
+	shared_req.forEach(function(req) {
+		if (req_hash[req.pack1.code] || req_hash[req.pack2.code]) {
+			// if any pack has another requirement no point showing this option
+			return
+		}
+		new_packs.push({
+			'name': req.pack1.name + ' / ' + req.pack2.name,
+			'quantity': 1
+		})
+	})
+	return new_packs;
 }
 
 
@@ -493,7 +579,8 @@ deck.get_layout_data = function get_layout_data(options) {
 			permanent: '',
 			bonded: '',
 			hunches: '',
-			cards: ''
+			cards: '',
+			side: ''
 	};
 
 	//var investigator = deck.get_investigator();
@@ -580,31 +667,40 @@ deck.get_layout_data = function get_layout_data(options) {
 	var layout_template = 2;
 	if (deck.sort_type == "name"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'name': 1}, null, null));
+		deck.update_layout_section(data, "side", deck.get_layout_section({'name': 1}, null, null, true));
 		//deck.update_layout_section(data, "cards", deck.get_layout_section({'name': 1}, {"type_name":1}, null));
 		layout_template = 1;
 	} else if (deck.sort_type == "set"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'pack_code': 1, "name": 1}, {'pack_name':1}, null));
+		deck.update_layout_section(data, "side", deck.get_layout_section({'pack_code': 1, "name": 1}, {'pack_name':1}, null, true));
 		layout_template = 1;
 	} else if (deck.sort_type == "setnumber"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'code': 1, "position": 1}, {'pack_name':1}, null));
+		deck.update_layout_section(data, "side", deck.get_layout_section({'code': 1, "position": 1}, {'pack_name':1}, null, true));
 		layout_template = 1;
 	} else if (deck.sort_type == "faction"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_code': 1, "name":1}, {'faction_name': 1}, null));
+		deck.update_layout_section(data, "side", deck.get_layout_section({'faction_code': 1, "name":1}, {'faction_name': 1}, null, true));
 		layout_template = 1;
 	} else if (deck.sort_type == "factionnumber"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_code': 1, "code": 1, "position": 1}, {'faction_name': 1}, null));
+		deck.update_layout_section(data, "side", deck.get_layout_section({'faction_code': 1, "code": 1, "position": 1}, {'faction_name': 1}, null, true));
 		layout_template = 1;
 	} else if (deck.sort_type == "factionxp"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_code': 1, "xp":1, "name": 1}, {'faction_name': 1}, null));
+		deck.update_layout_section(data, "side", deck.get_layout_section({'faction_code': 1, "xp":1, "name": 1}, {'faction_name': 1}, null, true));
 		layout_template = 1;
 	} else if (deck.sort_type == "number"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'code': 1}, null, null));
+		deck.update_layout_section(data, "side", deck.get_layout_section({'code': 1}, null, null, true));
 		layout_template = 1;
 	} else if (deck.sort_type == "xp"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'xp': -1, 'name': 1}, {xp: 1}, null));
+		deck.update_layout_section(data, "side", deck.get_layout_section({'xp': -1, 'name': 1}, {xp: 1}, null, true));
 		layout_template = 1;
 	} else if (deck.sort_type == "cost"){
 		deck.update_layout_section(data, "cards", deck.get_layout_section({'cost': 1, 'name': 1}, {'cost':1}, null));
+		deck.update_layout_section(data, "side", deck.get_layout_section({'cost': 1, 'name': 1}, {'cost':1}, null, true));
 		layout_template = 1;
 	} else {
 		layout_template = 2;
@@ -620,6 +716,8 @@ deck.get_layout_data = function get_layout_data(options) {
 		deck.update_layout_section(data, 'treachery', deck.get_layout_data_one_section({'type_code': 'treachery', permanent: false}, 'type_name'));
 		deck.update_layout_section(data, 'enemy', deck.get_layout_data_one_section({'type_code': 'enemy', permanent: false}, 'type_name'));
 		deck.update_layout_section(data, 'permanent', deck.get_layout_data_one_section({permanent: true}, 'type_name'));
+
+		deck.update_layout_section(data, "side", deck.get_layout_section({'name': 1}, null, null, true));
 	}
 	if (options && options.layout) {
 		layout_template = options.layout;
@@ -628,37 +726,39 @@ deck.get_layout_data = function get_layout_data(options) {
 	return layouts[layout_template](data);
 }
 
-deck.get_layout_section = function(sort, group, filter){
+deck.get_layout_section = function(sort, group, filter, side){
 	var section = $('<div>');
 	var query = {};
 	var groups = {};
-	var context = "";
-	if (sort && sort.code){
-		context = "number";
-	}
-	if (sort && sort.position){
-		context = "number";
-	}
+	var field = "";
 	// if we have a group, then send the group by to the query
-	if (group){
+	if (side) {
+		field = "insidedeck";
+		var cards = deck.get_side_deck(sort, query, group);
+		if (cards.length > 0) {
+			section.append('<h4 class="deck-section">Side Deck</h4>');
+		}
+	} else if (group){
 		var cards = deck.get_cards(sort, query, group);
 	} else {
 		var cards = deck.get_cards(sort, query);
 	}
 
 	if(cards.length) {
-
 		//$(header_tpl({code: "Cards", name: "Cards", quantity: deck.get_nb_cards(cards)})).appendTo(section);
 		//'<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'
 		// run through each card and display display it
-		deck.create_card_group(cards, context).appendTo(section);
+		deck.create_card_group(cards, field).appendTo(section);
 
 	} else if (cards.constructor !== Array){
+		if (side) {
+			section.append('<h4 class="deck-section">Side Deck</h4>');
+		}
 		$.each(cards, function (index, group_cards) {
 		//cards.forEach(function (group_cards) {
 			if (group_cards.constructor === Array){
 				$(header_tpl({code: index, name: index == "undefined" ? "Null" : index, quantity: group_cards.reduce(function(a,b){ return a + b.indeck}, 0) })).appendTo(section);
-				deck.create_card_group(group_cards, context).appendTo(section);
+				deck.create_card_group(group_cards, field).appendTo(section);
 			}
 		});
 	}
@@ -731,21 +831,23 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(query, d
 }
 
 
-deck.create_card_group = function(cards, context){
+deck.create_card_group = function(cards, field){
 	var section = $('<div>');
 	cards.forEach(function (card) {
-		var $div = deck.create_card(card);
+		var $div = deck.create_card(card, field);
 		$div.appendTo(section);
 	});
 	return section;
 }
 
-deck.create_card = function create_card(card){
+deck.create_card = function create_card(card, field='indeck'){
 	var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
 
 	$div.append($(card_line_tpl({card:card})));
 
-	$div.prepend(card.indeck+'x ');
+	if (card[field]) {
+		$div.prepend(card[field]+'x ');
+	}
 	if(card.xp && card.xp > 0) {
 		$div.append(app.format.xp(card.xp, card.indeck));
 	}
@@ -815,6 +917,23 @@ deck.set_card_ignores = function set_card_ignores(card_code, nb_copies) {
 
 /**
  * @memberOf deck
+ * @return boolean true if at least one other card quantity was updated
+ */
+deck.set_card_sides = function set_card_sides(card_code, nb_copies) {
+	var card = app.data.cards.findById(card_code);
+	if(!card) return false;
+
+	var updated_other_card = false;
+
+	app.data.cards.updateById(card_code, {
+		insidedeck: nb_copies
+	});
+
+	return updated_other_card;
+}
+
+/**
+ * @memberOf deck
  */
 deck.get_content = function get_content() {
 	var cards = deck.get_cards();
@@ -842,6 +961,18 @@ deck.get_ignored_cards = function get_ignored_cards() {
 /**
  * @memberOf deck
  */
+deck.get_side_cards = function get_side_cards() {
+	var cards = deck.get_side_deck();
+	var side = {};
+	cards.forEach(function (card) {
+		side[card.code] = card.insidedeck;
+	});
+	return side;
+}
+
+/**
+ * @memberOf deck
+ */
 deck.get_json = function get_json() {
 	return JSON.stringify(deck.get_content());
 }
@@ -850,6 +981,12 @@ deck.get_json = function get_json() {
  */
 deck.get_ignored_json = function get_ignored_json() {
 	return JSON.stringify(deck.get_ignored_cards());
+}
+/**
+ * @memberOf deck
+ */
+deck.get_side_json = function get_side_json() {
+	return JSON.stringify(deck.get_side_cards());
 }
 /**
  * @memberOf deck
@@ -1040,7 +1177,6 @@ deck.reset_limit_count = function (){
 				deck.deck_options[i].atleast_count = {};
 			}
 		}
-
 		if (on_your_own && on_your_own.indeck) {
 			// We put it at the front of the requirements since it is a negated one.
 			var new_option = {name: "on_your_own", dynamic: true, not: true, slot: ['Ally']};
@@ -1241,8 +1377,8 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 						option.limit_count = option.limit;
 						continue;
 					}
-				}
 
+				}
 				if (limit_count && option.atleast){
 					if (option.atleast.factions) {
 						if (!option.atleast_count[card.faction_code]){

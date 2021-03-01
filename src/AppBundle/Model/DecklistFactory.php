@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManager;
 use AppBundle\Helper\DeckValidationHelper;
 use AppBundle\Services\Texts;
 use AppBundle\Entity\Decklistslot;
+use AppBundle\Entity\SideDecklistslot;
 
 class DecklistFactory
 {
@@ -24,7 +25,7 @@ class DecklistFactory
 		if(!$lastPack->getDateRelease() || $lastPack->getDateRelease() > new \DateTime()) {
 			throw new \Exception("You cannot publish this deck yet, because it has unreleased cards.");
 		}
-		
+
 		$problem = $this->deckValidationHelper->findProblem($deck);
 		if($problem) {
 			throw new \Exception('This deck cannot be published  because it is invalid: "'.$this->deckValidationHelper->getProblemLabel($problem).'".');
@@ -48,7 +49,7 @@ class DecklistFactory
 
 		$new_content = json_encode($deck->getSlots()->getContent());
 		$new_signature = md5($new_content);
-		
+
 		$decklist = new Decklist();
 		$decklist->setName($name);
 		$decklist->setXp($deck->getXp());
@@ -78,6 +79,13 @@ class DecklistFactory
 			$decklistslot->setDecklist($decklist);
 			$decklist->getSlots()->add($decklistslot);
 		}
+		foreach ($deck->getSideSlots() as $slot) {
+			$decklistslot = new SideDecklistslot();
+			$decklistslot->setQuantity($slot->getQuantity());
+			$decklistslot->setCard($slot->getCard());
+			$decklistslot->setDecklist($decklist);
+			$decklist->getSideSlots()->add($decklistslot);
+		}
 		if (count($deck->getChildren())) {
 			$decklist->setPrecedent($deck->getChildren()[0]);
 		} else {
@@ -88,8 +96,8 @@ class DecklistFactory
 		//$decklist->setParent($deck);
 
 		$deck->setMinorVersion(1);
-		
-		// try to connect decks backwards 
+
+		// try to connect decks backwards
 		if ($nextDecklist){
 			$decklist->setNextdeck($nextDecklist);
 		}

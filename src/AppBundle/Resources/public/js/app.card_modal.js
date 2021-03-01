@@ -38,25 +38,25 @@ function fill_modal (code) {
 			+ (card.taboo_xp ? '<div class="card-text-taboo border-'+card.faction_code+'">This card costs ' + card.taboo_xp + ' additional experience</div>' : '')
 			+ '<div class="card-pack">' + app.format.pack(card) + '</div>'
 	);
-	
+
 	var qtyelt = modal.find('.modal-qty');
 	if(qtyelt && card.maxqty) {
 		var qty = '';
-	  	for(var i=0; i<=card.maxqty; i++) {
-	  		qty += '<label class="btn btn-sm btn-default"><input type="radio" name="qty" value="'+i+'">'+i+'</label>';
-	  	}
-	  	qtyelt.html(qty);
+	  for(var i=0; i<=card.maxqty; i++) {
+	  	qty += '<label class="btn btn-sm btn-default"><input type="radio" name="qty" value="'+i+'">'+i+'</label>';
+	  }
+	  qtyelt.html(qty);
 
-	  	qtyelt.find('label').each(function (index, element) {
+	  qtyelt.find('label').each(function (index, element) {
 			if(index == card.indeck) $(element).addClass('active');
 			else $(element).removeClass('active');
 		});
-
+		qtyelt.closest('.row').show();
 	} else {
-		if(qtyelt) qtyelt.closest('.row').remove();
+		if(qtyelt) qtyelt.closest('.row').hide();
 	}
+
 	var qtyelt = modal.find('.modal-ignore');
-	
 	if(qtyelt && card.maxqty && (card.code == "05040" || card.real_traits.indexOf('Fortune.') !== -1 || card.real_traits.indexOf('Gambit.') !== -1 ) ) {
 		qtyelt.closest('.modal-deck-ignore').show();
 		var qty = '';
@@ -71,6 +71,23 @@ function fill_modal (code) {
 	} else {
 		if(qtyelt) qtyelt.closest('.modal-deck-ignore').hide();
 	}
+
+	var qtyelt = modal.find('.modal-side-qty');
+	if(qtyelt && card.maxqty) {
+		qtyelt.closest('.modal-side-deck-qty').show();
+		var qty = '';
+		for(var i=0; i<=card.maxqty; i++) {
+			if (card.insidedeck == i) {
+				qty += '<label class="btn btn-sm btn-default active"><input type="radio" name="sideqty" value="'+i+'">'+i+'</label>';
+			} else {
+				qty += '<label class="btn btn-sm btn-default"><input type="radio" name="sideqty" value="'+i+'">'+i+'</label>';
+			}
+		}
+		qtyelt.html(qty);
+	} else {
+		if(qtyelt) qtyelt.closest('.modal-side-deck-qty').hide();
+	}
+
 }
 
 $(function () {

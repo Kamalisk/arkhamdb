@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Repository;
 
@@ -8,7 +8,7 @@ class CardRepository extends TranslatableRepository
 	{
 		parent::__construct($entityManager, $entityManager->getClassMetadata('AppBundle\Entity\Card'));
 	}
-	
+
 
 	public function findAll()
 	{
@@ -64,6 +64,14 @@ class CardRepository extends TranslatableRepository
 		$qb->setParameter(1, $code);
 
 		return $this->getOneOrNullResult($qb);
+	}
+
+	public function findByDuplicateOf()
+	{
+		$qb = $this->createQueryBuilder('c')
+			->select('c')
+			->andWhere('c.duplicate_of is not null');
+		return $this->getResult($qb);
 	}
 
 	public function findAllByCode($code)

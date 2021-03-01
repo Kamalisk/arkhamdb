@@ -5,6 +5,7 @@ namespace AppBundle\Services;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Deckslot;
+use AppBundle\Entity\SideDeckslot;
 use Symfony\Bridge\Monolog\Logger;
 use AppBundle\Entity\Deckchange;
 use AppBundle\Helper\DeckValidationHelper;
@@ -44,7 +45,7 @@ class Decks
 	 * @param unknown $content
 	 * @param unknown $source_deck
 	 */
-	public function saveDeck($user, $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck, $problem="", $ignored=false)
+	public function saveDeck($user, $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck, $problem="", $ignored=false, $side=false)
 	{
 		$deck_content = [ ];
 
@@ -87,7 +88,7 @@ class Decks
 			// tags can never be empty. if it is we put faction in
 			$tags = [  ];
 		}
-		if(is_string($tags)) 
+		if(is_string($tags))
 		{
 			$tags = preg_split( '/\s+/', $tags );
 		}
@@ -128,6 +129,10 @@ class Decks
 			$deck->removeSlot ( $slot );
 			$this->doctrine->remove ( $slot );
 		}
+		foreach ( $deck->getSideSlots () as $slot ) {
+			$deck->removeSideSlot ( $slot );
+			$this->doctrine->remove ( $slot );
+		}
 
 		foreach ( $content as $card_code => $qty ) {
 			$card = $cards [$card_code];
@@ -144,6 +149,22 @@ class Decks
 					'card' => $card,
 					'qty' => $qty
 			);
+		}
+
+		if ($side) {
+			foreach ( $side as $card_code => $qty ) {
+				$card = $this->doctrine->getRepository ( 'AppBundle:Card' )->findOneBy ( array (
+						"code" => $card_code
+				) );
+				if (! $card) {
+					continue;
+				}
+				$slot = new SideDeckslot ();
+				$slot->setQuantity ( $qty );
+				$slot->setCard ( $card );
+				$slot->setDeck ( $deck );
+				$deck->addSideSlot ( $slot );
+			}
 		}
 		if ($problem){
 			$deck->setProblem($problem);
@@ -162,22 +183,22 @@ public function upgradeDeck($deck, $xp, $previous_deck, $upgrades, $exiles)
 		$deck->setPreviousDeck ( $previous_deck );
 		$deck->setUpgrades ( $upgrades+1 );
 		$deck->setDescriptionMd ( $previous_deck->getDescriptionMd() );
-		
+
 		// if any cards exiled, remove them from the deck
 		foreach ( $exiles as $exile ) {
 			foreach ( $deck->getSlots () as $slot ) {
 				if ($slot->getCard()->getCode() == $exile->getCode()){
 					if ($slot->getQuantity() <= 1){
 						$deck->removeSlot ( $slot );
-						$this->doctrine->remove ( $slot );	
+						$this->doctrine->remove ( $slot );
 					} else {
 						$slot->setQuantity ( 1 );
-					}					
+					}
 					break;
 				}
 			}
 		}
-		
+
 		$previous_deck->setNextDeck($deck);
 		$this->doctrine->persist ( $deck );
 

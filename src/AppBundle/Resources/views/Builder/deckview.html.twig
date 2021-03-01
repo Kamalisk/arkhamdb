@@ -22,13 +22,15 @@
 
 		/* Alert the copied text */
 		alert("Copied the deck ID: " + copyText.value);
-	} 
+
+
+	}
 	</script>
 {% endblock %}
 
 {% block body %}
 <div class="main white container">
-	
+
 	<div class="row">
 		<div class="col-md-12">
 			<h1 style="border-bottom:1px solid lightgray">{{ deck.name }}</h1>
@@ -56,7 +58,7 @@
 					<button type="button" id="btn-delete" class="btn btn-danger"><span class="fa fa-trash"></span> Delete {% if deck.previousDeck %}upgrade{% endif %}</button>
 					<button type="button" id="btn-upgrade" class="btn btn-danger"><span class="fa fa-arrow-up"></span> Upgrade</button>
 					{% endif %}
-					
+
 					<a href="{{ path('deck_clone', {deck_id:deck_id}) }}" id="btn-clone" class="btn btn-info"><span class="fa fa-clone"></span> Clone</a>
 					</div>
 					<div>
@@ -69,7 +71,7 @@
 							<li><a href="#" onclick="app.deck.change_sort('name')" id="btn-sort-name">by Name</a></li>
 							<li><a href="#" onclick="app.deck.change_sort('set')" id="btn-sort-position">by Set, then Name</a></li>
 							<li><a href="#" onclick="app.deck.change_sort('setnumber')" id="btn-sort-position">by Set, then Number</a></li>
-							<li><a href="#" onclick="app.deck.change_sort('faction')" id="btn-sort-faction">by Faction, then Name</a></li>		
+							<li><a href="#" onclick="app.deck.change_sort('faction')" id="btn-sort-faction">by Faction, then Name</a></li>
 							<li><a href="#" onclick="app.deck.change_sort('factionnumber')" id="btn-sort-faction">by Faction, then Number</a></li>
 							<li><a href="#" onclick="app.deck.change_sort('factionxp')" id="btn-sort-faction">by Faction, then XP</a></li>
 							<li><a href="#" onclick="app.deck.change_sort('number')" id="btn-sort-faction">by Card Number</a></li>
@@ -102,14 +104,14 @@
 			{% if is_public %}
 			<div>
 			<p class="">
-				<span class="fa fa-globe"></span> 
+				<span class="fa fa-globe"></span>
 				This deck can be shared using this <a href="{{ path('deck_view',{deck_id:deck.id}) }}">Link</a>
-				[ Deck ID: {{deck.id}}<input style="display: none;" type="text" value="{{deck.id}}" id="copy_deck_id">
+				[ Deck ID: {{deck.id}}<input style="position: absolute; left: -999em;" type="text" value="{{deck.id}}" id="copy_deck_id">
 				<span class="fa fa-copy" style="cursor: pointer;" onclick="copy()" ></span> ]
 				{% if is_owner %}
 				<span class="subtext">All your decks are set to public, change this is in <a href="{{ path('user_profile_edit') }}">user settings</a></span>
 				{% endif %}
-			</p>			
+			</p>
 			</div>
 			{% else %}
 			<p>
@@ -123,7 +125,7 @@
 			<p>
 				Version {{ deck.version }}
 			</p>
-			
+
 			<!-- Description -->
 			<div class="panel panel-default">
 			  <div class="panel-heading">
