@@ -619,6 +619,9 @@ class CardsData
 
 		if($api) {
 			unset($cardinfo['id']);
+			if (!$cardinfo['hidden']) {
+				unset($cardinfo['hidden']);
+			}
 			if (isset($cardinfo['deck_requirements']) && $cardinfo['deck_requirements']){
 				$cardinfo['deck_requirements'] = $this->deckValidationHelper->parseReqString($cardinfo['deck_requirements']);
 			}
