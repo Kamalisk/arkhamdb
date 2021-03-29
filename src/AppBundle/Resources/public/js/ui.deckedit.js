@@ -569,11 +569,21 @@ ui.chaos = function() {
 
 	var cards = app.data.cards.find(query);
 	var valid_cards = [];
+	var dupes = {};
 
 	cards.forEach(function (card) {
 		card.indeck = 0;
 		if (app.deck.can_include_card(card)){
-			valid_cards.push(card);
+			if (card.duplicate_of_code) {
+				if (!dupes[card.duplicate_of_code]) {
+					dupes[card.duplicate_of_code] = true
+					valid_cards.push(card);
+				}
+			} else {
+				dupes[card.code] = true
+				valid_cards.push(card);
+			}
+
 		}
 	});
 	app.deck.reset_limit_count();
