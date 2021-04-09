@@ -622,6 +622,12 @@ class CardsData
 			if (!$cardinfo['hidden']) {
 				unset($cardinfo['hidden']);
 			}
+			if (!$cardinfo['exile']) {
+				unset($cardinfo['exile']);
+			}
+			if (!$cardinfo['clues_fixed']) {
+				unset($cardinfo['clues_fixed']);
+			}
 			if (isset($cardinfo['deck_requirements']) && $cardinfo['deck_requirements']){
 				$cardinfo['deck_requirements'] = $this->deckValidationHelper->parseReqString($cardinfo['deck_requirements']);
 			}
