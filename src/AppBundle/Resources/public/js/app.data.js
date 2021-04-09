@@ -8,13 +8,13 @@ var force_update = false;
  * @memberOf data
  */
 data.load = function load() {
-	
+
 	data.isLoaded = false;
 
 	var fdb = new ForerunnerDB();
 	data.db = fdb.db('arkhamdb');
 	// seems that indexedDB is failing in chrome, so switching to localstorage for now
-	data.db.persist.driver("LocalStorage");
+	data.db.persist.driver("IndexedDB");
 
 	data.masters = {
 		packs: data.db.collection('master_pack', {primaryKey:'code', changeTimestamp: true}),
@@ -30,13 +30,13 @@ data.load = function load() {
 
 	$.when(data.dfd.packs, data.dfd.cards, data.dfd.taboos).done(data.update_done).fail(data.update_fail);
 
-		// load pack data 
+		// load pack data
 	data.masters.taboos.load(function (err) {
 		if(err) {
 			console.log('error when loading taboos', err);
 			force_update = true;
 		}
-		// load pack data 
+		// load pack data
 		data.masters.packs.load(function (err) {
 			if(err) {
 				console.log('error when loading packs', err);
@@ -101,7 +101,7 @@ data.release = function release() {
 	data.taboos.setData(data.masters.taboos.find());
 
 	data.isLoaded = true;
-	
+
 	$(document).trigger('data.app');
 }
 
@@ -234,14 +234,14 @@ data.apply_taboos = function apply_taboos(taboo_id){
 		update.taboo_text = "";
 		app.data.cards.updateById(card.code, update);
 	});
-	
+
 	//console.log("taboos", taboo_id);
 	var taboo = app.data.taboos.findOne({'id':parseInt(taboo_id)});
 	if (taboo){
 		var parsed_taboo = JSON.parse(taboo.cards);
 		parsed_taboo.forEach(function (taboo_card){
 			//console.log(taboo_card);
-			
+
 			var card = app.data.cards.findOne({'code':taboo_card.code});
 			var update = {'taboo': true};
 			if (taboo_card.exceptional){
