@@ -1,5 +1,5 @@
 (function app_suggestions(suggestions, $) {
-	
+
 suggestions.codesFromindex = [];
 suggestions.matrix = [];
 suggestions.indexFromCodes = {};
@@ -37,9 +37,9 @@ suggestions.query = function query(side) {
  * @memberOf suggestions
  */
 suggestions.compute = function compute() {
-	if(suggestions.number) 
+	if(suggestions.number)
 	{
-	
+
 		// init current suggestions
 		suggestions.codesFromindex.forEach(function (code, index) {
 			suggestions.current[index] = {
@@ -51,7 +51,7 @@ suggestions.compute = function compute() {
 		var indexes = app.data.cards.find({"indeck":{'$gt':0}}).map(function (card) {
 			return suggestions.indexFromCodes[card.code];
 		});
-		console.log(indexes);
+		//console.log(indexes);
 		// add suggestions of all used cards
 		indexes.forEach(function (i) {
 			if(suggestions.matrix[i]) {
@@ -64,7 +64,7 @@ suggestions.compute = function compute() {
 		indexes.forEach(function (i) {
 			if(suggestions.current[i]) suggestions.current[i].proba = 0;
 		});
-		// remove suggestions of identity 
+		// remove suggestions of identity
 		app.data.cards.find({type_code:'character'}).map(function (card) {
 			return suggestions.indexFromCodes[card.code];
 		}).forEach(function (i) {
@@ -78,7 +78,7 @@ suggestions.compute = function compute() {
 		suggestions.current.sort(function (a, b) {
 			return (b.proba - a.proba);
 		});
-		
+
 	}
 	suggestions.show();
 };
@@ -89,7 +89,7 @@ suggestions.compute = function compute() {
 suggestions.show = function show() {
 	var table = $('#table-suggestions');
 	var tbody = table.children('tbody');
-	
+
 	tbody.empty();
 	if(!suggestions.number && table.is(':visible')) {
 		table.hide();
@@ -142,7 +142,7 @@ suggestions.div = function div(record) {
 				+ '">' + influ + '</td><td class="type" title="' + record.type
 				+ '">'
 				+ '</td></tr>');
-	
+
 	return div;
 };
 
@@ -170,7 +170,7 @@ suggestions.pick = function pick(event) {
 $(function() {
 	//suggestions.query("base");
 
-	//console.log("suggestions fired");	
+	//console.log("suggestions fired");
 
 	$('#table-suggestions').on({
 		change : suggestions.pick

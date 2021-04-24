@@ -1,100 +1,97 @@
 
-<div class="row" id="global_filters">
-	
-	<div class="col-md-12 text-right" style="margin-bottom:10px">
-		<div class="btn-group">    	
-    	<button type="button" class="btn btn-xs btn-default" id="chaos">
-				<span class="fa fa-random"></span> Chaos</span>
-			</button>
-		</div>
-    <div class="btn-group">    	
-			<button type="button" class="btn btn-xs btn-default dropdown-toggle " data-toggle="dropdown">
-				<span class="fa fa-sort"></span> <span class="hidden-xs">Sort Deck</span> <span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu" role="menu" id="menu-sort">
-				<li><a href="#" onclick="app.deck.change_sort('default')" id="btn-sort-default">by Type</a></li>
-				<li><a href="#" onclick="app.deck.change_sort('name')" id="btn-sort-name">by Name</a></li>
-				<li><a href="#" onclick="app.deck.change_sort('set')" id="btn-sort-position">by Set, then Name</a></li>
-				<li><a href="#" onclick="app.deck.change_sort('setnumber')" id="btn-sort-position">by Set, then Number</a></li>
-				<li><a href="#" onclick="app.deck.change_sort('faction')" id="btn-sort-faction">by Faction, then Name</a></li>
-				<li><a href="#" onclick="app.deck.change_sort('factionnumber')" id="btn-sort-faction">by Faction, then Number</a></li>
-				<li><a href="#" onclick="app.deck.change_sort('number')" id="btn-sort-faction">by Card Number</a></li>
-				<li><a href="#" onclick="app.deck.change_sort('xp')" id="btn-sort-faction">by XP</a></li>
-				<li><a href="#" onclick="app.deck.change_sort('cost')" id="btn-sort-faction">by Cost</a></li>
-			</ul>
-		</div>
-
-		<div class="btn-group">
-			<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">Pack Filter <span class="caret"></span></button>
-			<ul class="dropdown-menu pull-right" data-filter="pack_code" title="Shift+Click to select only one option ; Alt+Shift+Click to select all other options"></ul>
-		</div>
-		<div class="btn-group">
-			<div class="dropdown dropdown-btn">
-			<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">Options <span class="caret"></span></button>
-				<ul class="dropdown-menu pull-right" id="config-options">
-					<li><a href="#"><label><input type="checkbox" name="show-unusable"> Show unusable cards</label></a></li>
-					<li><a href="#"><label><input type="checkbox" name="show-only-deck"> Show only used cards</label></a></li>
-					<li><a href="#"><label><input type="radio" name="display-column" value="1"> Display on 1 column</label></a></li>
-					<li><a href="#"><label><input type="radio" name="display-column" value="2"> Display on 2 columns</label></a></li>
-					<li><a href="#"><label><input type="radio" name="display-column" value="3"> Display on 3 columns</label></a></li>
-					<li><a href="#"><label><input type="radio" name="show-suggestions" value="0"> Show no suggestion</label></a></li>
-					<li><a href="#"><label><input type="radio" name="show-suggestions" value="3"> Show 3 suggestions</label></a></li>
-					<li><a href="#"><label><input type="radio" name="show-suggestions" value="10"> Show 10 suggestions</label></a></li>
-					<li><a href="#"><label><input type="radio" name="buttons-behavior" value="cumulative"> Class/type cumulative</label></a></li>
-					<li><a href="#"><label><input type="radio" name="buttons-behavior" value="exclusive"> Class/type exclusive</label></a></li>
-				</ul>
+<div id="global_filters">
+	<div class="builder-navigation">
+		<ul class="nav" role="tablist">
+			<li role="presentation" class="active"><a class="btn btn-default" href="#tab-pane-standard" aria-controls="tab-pane-standard" role="tab" data-toggle="tab">Standard Cards</a></li>
+			<li role="presentation" class=""><a class="btn btn-default" href="#tab-pane-special" aria-controls="tab-pane-special" role="tab" data-toggle="tab">Campaign Cards</a></li>
+		</ul>
+		<div>
+			<div class="btn-group">
+				<button type="button" class="btn btn-default" id="chaos">
+					<span class="fa fa-random"></span> Chaos
+				</button>
 			</div>
-		</div><!-- /.btn-group -->
-		<button class="btn btn-default btn-xs" type="button" id="filter-text-button">Filter help</button>
-	</div><!-- /.col-sm-6 -->
-</div><!-- /.row -->
-
-<div class="row" id="build_filters">	
-
-	<!-- Search Bar -->
-	<div class="col-sm-12" style="margin-bottom:10px">
-		<input type="text" class="form-control" id="filter-text" placeholder="Find a card or filter the list" tabindex="1">
+			<div class="btn-group">
+				<div class="dropdown dropdown-btn">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Options <span class="caret"></span></button>
+					<ul class="dropdown-menu pull-right" id="config-options">
+						<li><a href="#"><label><input type="checkbox" name="show-unusable"> Show unusable cards</label></a></li>
+						<li><a href="#"><label><input type="checkbox" name="show-only-deck"> Show only used cards</label></a></li>
+						<li><hr></li>
+						<li><a href="#"><label><input type="radio" name="display-column" value="1"> Display on 1 column</label></a></li>
+						<li><a href="#"><label><input type="radio" name="display-column" value="2"> Display on 2 columns</label></a></li>
+						<li><a href="#"><label><input type="radio" name="display-column" value="3"> Display on 3 columns</label></a></li>
+						<li><hr></li>
+						<li><a href="#"><label><input type="radio" name="show-suggestions" value="0"> Show no suggestion</label></a></li>
+						<li><a href="#"><label><input type="radio" name="show-suggestions" value="3"> Show 3 suggestions</label></a></li>
+						<li><a href="#"><label><input type="radio" name="show-suggestions" value="10"> Show 10 suggestions</label></a></li>
+						<li><hr></li>
+						<li><a href="#"><label><input type="radio" name="buttons-behavior" value="cumulative"> Class/type cumulative</label></a></li>
+						<li><a href="#"><label><input type="radio" name="buttons-behavior" value="exclusive"> Class/type exclusive</label></a></li>
+					</ul>
+				</div>
+			</div><!-- /.btn-group -->
+		</div>
 	</div>
-	
-	
-	<!-- Search Bar -->
-	<div id="player-cards-filters">
-	
-	<div class="col-sm-12" style="margin-bottom:10px">
-      <div class="btn-group btn-group-justified" data-filter="faction_code" data-toggle="buttons"></div>
+	<div class="tab-content">
+		<div role="tabpanel" class="tab-pane active" id="tab-pane-standard">
+			<div id="standard-section">
+				<div class="row" id="build_filters">
+
+					<!-- Search Bar -->
+					<div class="col-sm-12" style="margin-bottom:10px">
+						<div style="display: flex">
+							<div style="flex: 1;">
+								<input type="text" class="form-control" id="filter-text" placeholder="Find a card or filter the list" tabindex="1">
+							</div>
+							<button class="btn btn-default" type="button" id="filter-text-button">Filter help</button>
+						</div>
+					</div>
+
+					<!-- Search Bar -->
+					<div id="player-cards-filters">
+						<div class="col-sm-12" style="margin-bottom:10px">
+							<div class="btn-group btn-group-justified" data-filter="faction_code" data-toggle="buttons"></div>
+						</div>
+
+						<div class="col-sm-8" style="margin-bottom:10px">
+							<div class="btn-group btn-group-justified" data-filter="type_code" data-toggle="buttons"></div>
+						</div>
+
+						<div class="col-sm-4" style="margin-bottom:10px">
+							<div class="btn-group btn-group-justified" data-filter="xp" data-toggle="buttons"></div>
+						</div>
+					</div>
+
+				</div>
+
+				<!-- Collection Table -->
+				<div class="row" id="collection">
+					<div class="col-sm-12">
+						<table class="table table-condensed table-hover" style="margin-bottom:10px">
+							<thead>
+								<tr>
+									<th style="min-width:85px"><a href="#" data-sort="indeck">Quantity</a></th>
+									<th><a href="#" data-sort="name">Name</a></th>
+									<th class="xp"><a href="#" data-sort="xp" title="Level">Level</a></th>
+									<th class="cost"><a href="#" data-sort="cost" title="Cost">Cost</a></th>
+									<th class="type"><a href="#" data-sort="type_code" title="Type">Type</a></th>
+									<th class="faction"><a href="#" data-sort="faction_code" title="Faction">Class</a></th>
+								</tr>
+							</thead>
+							<tbody id="collection-table" class="collection"></tbody>
+						</table>
+					</div><!-- /.col-sm-12 -->
+					<div id="collection-grid" class="col-sm-12"></div>
+				</div><!-- /.row -->
+				<!-- Collection Table -->
+			</div>
+		</div>
+		<div role="tabpanel" class="tab-pane" id="tab-pane-special">
+			{% include 'AppBundle:Builder:tab-pane-personal.html.twig' %}
+		</div>
 	</div>
-	
-	
-	<div class="col-sm-8" style="margin-bottom:10px">
-			<div class="btn-group btn-group-justified" data-filter="type_code" data-toggle="buttons"></div>
-  </div>
-  
-  <div class="col-sm-4" style="margin-bottom:10px">
-			<div class="btn-group btn-group-justified" data-filter="xp" data-toggle="buttons"></div>
-  </div>
-  
-  </div>
-  
-  
 </div>
 
-<!-- Collection Table -->
-<div class="row" id="collection">
-	<div class="col-sm-12">
-		<table class="table table-condensed table-hover" style="margin-bottom:10px">
-			<thead>
-				<tr>
-					<th style="min-width:85px"><a href="#" data-sort="indeck">Quantity</a></th>
-					<th><a href="#" data-sort="name">Name</a></th>
-					<th class="xp"><a href="#" data-sort="xp" title="Level">Level</a></th>		
-					<th class="cost"><a href="#" data-sort="cost" title="Cost">Cost</a></th>					
-					<th class="type"><a href="#" data-sort="type_code" title="Type">Type</a></th>
-					<th class="faction"><a href="#" data-sort="faction_code" title="Faction">Class</a></th>
-				</tr>
-			</thead>
-			<tbody id="collection-table" class="collection"></tbody>
-		</table>
-	</div><!-- /.col-sm-12 -->
-	<div id="collection-grid" class="col-sm-12"></div>
-</div><!-- /.row -->
-<!-- Collection Table -->
+
+

@@ -89,20 +89,21 @@
 <!-- Right-side Column -->
 <div class="col-md-6">
 	<div role="tabpanel">
-	  <ul class="nav nav-tabs" role="tablist">
-	    <li role="presentation" class="active"><a href="#tab-pane-build" aria-controls="tab-pane-build" role="tab" data-toggle="tab"><span class="fa fa-puzzle-piece"></span> Build</a></li>
-	    <li role="presentation"><a href="#tab-pane-personal" aria-controls="tab-pane-personal" role="tab" data-toggle="tab"><span class="fa fa-book"></span> Special</a></li>
-	    <li role="presentation"><a href="#tab-pane-infos" aria-controls="tab-pane-infos" role="tab" data-toggle="tab"><span class="fa fa-pencil-square-o"></span> Notes</a></li>
-	    <li role="presentation"><a href="#tab-pane-draw" aria-controls="tab-pane-draw" role="tab" data-toggle="tab"><span class="fa fa-repeat"></span> Test</a></li>
-			<li role="presentation"><a href="#tab-pane-charts" aria-controls="tab-pane-charts" role="tab" data-toggle="tab"><span class="fa fa-bar-chart"></span> Charts</a></li>
-	    <li role="presentation"><a href="#tab-pane-history" aria-controls="tab-pane-history" role="tab" data-toggle="tab" id="tab-header-history"><span class="fa fa-history"></span> History</a></li>
+	  <ul class="nav builder-tabs" role="tablist">
+	    <li role="presentation" class="active"><a href="#tab-pane-build" aria-controls="tab-pane-build" role="tab" data-toggle="tab">Build</a></li>
+	    <li role="presentation"><a href="#tab-pane-infos" aria-controls="tab-pane-infos" role="tab" data-toggle="tab">Notes</a></li>
+			<li role="presentation"><a href="#tab-pane-collection" aria-controls="tab-pane-collection" role="tab" data-toggle="tab">Collection</a></li>
+	    <li role="presentation"><a href="#tab-pane-draw" aria-controls="tab-pane-draw" role="tab" data-toggle="tab">Test</a></li>
+			<li role="presentation"><a href="#tab-pane-charts" aria-controls="tab-pane-charts" role="tab" data-toggle="tab">Charts</a></li>
+	    <li role="presentation"><a href="#tab-pane-history" aria-controls="tab-pane-history" role="tab" data-toggle="tab" id="tab-header-history">History</a></li>
 	   </ul>
 	  <div class="tab-content">
 	  	<div role="tabpanel" class="tab-pane active" id="tab-pane-build">
 	  	{% include 'AppBundle:Builder:tab-pane-build.html.twig' %}
 	  	</div>
-	  	<div role="tabpanel" class="tab-pane" id="tab-pane-personal">
-	  	{% include 'AppBundle:Builder:tab-pane-personal.html.twig' %}
+			<div role="tabpanel" class="tab-pane" id="tab-pane-collection">
+			<p>You can update which packs to use here, or update your <a target="_blank" href="{{ path('collection_packs') }}">{% trans %}collection{% endtrans %}</a> of packs</p>
+	  	<ul id="inline-collection" data-filter="pack_code" title="Shift+Click to select only one option ; Alt+Shift+Click to select all other options"></ul>
 	  	</div>
 			<div role="tabpanel" class="tab-pane" id="tab-pane-draw">
 			{% include 'AppBundle:Builder:tab-pane-draw.html.twig' %}

@@ -50,6 +50,7 @@ ui.init_config_buttons = function init_config_buttons() {
 	['show-unusable', 'show-only-deck'].forEach(function (checkbox) {
 		if(Config[checkbox]) $('input[name='+checkbox+']').prop('checked', true);
 	})
+
 }
 
 /**
@@ -467,16 +468,28 @@ ui.on_submit_form = function on_submit_form(event) {
 ui.on_config_change = function on_config_change(event) {
 	var name = $(this).attr('name');
 	var type = $(this).prop('type');
-	//console.log(name, type);
+
+	if (name == "mode") {
+		if ($(this).val() == "special") {
+			$('#standard-section').hide();
+			$('#special-section').show();
+		} else {
+			$('#standard-section').show();
+			$('#special-section').hide();
+		}
+		ui.refresh_lists();
+		return
+	}
+
 	switch(type) {
-	case 'radio':
-		var value = $(this).val();
-		if(!isNaN(parseInt(value, 10))) value = parseInt(value, 10);
-		Config[name] = value;
-		break;
-	case 'checkbox':
-		Config[name] = $(this).prop('checked');
-		break;
+		case 'radio':
+			var value = $(this).val();
+			if(!isNaN(parseInt(value, 10))) value = parseInt(value, 10);
+			Config[name] = value;
+			break;
+		case 'checkbox':
+			Config[name] = $(this).prop('checked');
+			break;
 	}
 	ui.write_config_to_storage();
 	switch(name) {
@@ -506,6 +519,7 @@ ui.on_core_change = function on_core_change(event) {
 	if (localStorage) {
 		localStorage.setItem('set_code_' + name, $(this).is(":checked")  );
 	}
+	console.log(name, type);
 	switch(name) {
 		case 'core':
 		case 'core-2':
@@ -780,7 +794,7 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	});
 
 	$('#config-options').on('change', 'input', ui.on_config_change);
-	$('#global_filters [data-filter=pack_code]').on('change', 'input', ui.on_core_change);
+	$('[data-filter=pack_code]').on('change', 'input', ui.on_core_change);
 	$('[data-filter=taboo_code]').on('change',  ui.on_taboo_change);
 	$('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 	$('#special-collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
@@ -850,9 +864,9 @@ ui.in_selected_packs = function in_selected_packs(card, filters) {
  */
 ui.get_filters = function get_filters(prefix) {
 	var filters = {};
-	var target = "#build_filters [data-filter], #global_filters [data-filter]";
+	var target = "#build_filters [data-filter], #inline-collection";
 	if (prefix){
-		target = "#"+prefix+"_filters [data-filter], #global_filters [data-filter]";
+		target = "#"+prefix+"_filters [data-filter]";
 	}
 	$(target).each(
 		function(index, div) {
@@ -1162,7 +1176,7 @@ ui.refresh_list2 = _.debounce(function refresh_list2() {
 		}
 
 		if (Config['display-column'] > 1 && (counter % Config['display-column'] === 0)) {
-			container = $('<div class="row"></div>').appendTo($('#collection-grid'));
+			container = $('<div class="row"></div>').appendTo($('#special-collection-grid'));
 		}
 
 		container.append(row);
@@ -1227,6 +1241,30 @@ ui.setup_typeahead = function setup_typeahead() {
       }
     }
   });
+	$('#filter-text-personal').typeahead({
+    hint: true,
+    highlight: true,
+    minLength: 2
+  },{
+    name : 'cardnames-personal',
+    display: function(data) {
+      var value = data.name;
+      if (data.xp && data.xp > 0) {
+        value = data.name + ' (' + data.xp + ')';
+      }
+      return value;
+    },
+    source: findMatches,
+    templates: {
+      suggestion: function (data){
+        var value = data.name;
+        if (data.xp && data.xp > 0) {
+          value = data.name+' ('+data.xp+')';
+        }
+        return '<div>' + value + '</div>';
+      }
+    }
+  });
 
 }
 
@@ -1240,6 +1278,13 @@ ui.init_filter_help = function init_filter_help() {
 	$('#filter-text-button').popover({
 		container: 'body',
 		content: app.smart_filter.get_help(),
+		html: true,
+		placement: 'bottom',
+		title: 'Smart filter syntax'
+	});
+	$('#filter-text-personal-button').popover({
+		container: 'body',
+		content: app.smart_filter2.get_help(),
 		html: true,
 		placement: 'bottom',
 		title: 'Smart filter syntax'
@@ -1270,6 +1315,7 @@ ui.on_dom_loaded = function on_dom_loaded() {
 	app.markdown && app.markdown.setup('#description', '#description-preview')
 	app.draw_simulator && app.draw_simulator.on_dom_loaded();
 	app.card_modal && $('#filter-text').on('typeahead:selected typeahead:autocompleted', app.card_modal.typeahead);
+	app.card_modal && $('#filter-text-personal').on('typeahead:selected typeahead:autocompleted', app.card_modal.typeahead);
 };
 
 /**

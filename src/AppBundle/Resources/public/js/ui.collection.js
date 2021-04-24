@@ -24,7 +24,7 @@
             });
 
         $('#save-collection').on('click', function() {
-        	
+
         });
     };
 
@@ -55,7 +55,7 @@
             packs.push($(this).data('id'));
         });
         $('#selected-packs').val(packs.join(','));
-        console.log($('#selected-packs').val());
+        //console.log($('#selected-packs').val());
       	app.user.data.owned_packs = $('#selected-packs').val();
       	app.user.store();
     };

@@ -185,23 +185,29 @@ h4, h5 {
 }
 
 h4.deck-section {
-	border-bottom: solid 1px rgba(130, 160, 200, 0.5);
+	border-bottom: dashed 1px rgba(130, 160, 200, 0.4);
 	font-size: 15px;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	padding-bottom: 2px;
+	margin: 0;
 }
+
 
 
 /********** DECK EDITOR ************/
 
-#collection-grid .col-sm-6 .media, #collection-grid .col-sm-4 .media {
+#collection-grid .col-sm-6 .media, #collection-grid .col-sm-4 .media, #special-collection-grid .col-sm-6 .media, #special-collection-grid .col-sm-4 .media {
     margin-bottom: 10px;
     padding-bottom: 10px;
     border-bottom: 1px dotted lightgray;
     overflow: hidden;
 }
-#collection-grid .col-sm-6 .media-object {
+#collection-grid .col-sm-6 .media-object, #special-collection-grid .col-sm-6 .media-object {
     height: 100px;
 }
-#collection-grid .col-sm-4 .media-object {
+#collection-grid .col-sm-4 .media-object, #special-collection-grid .col-sm-4 .media-object {
 	height: 70px;
 }
 
@@ -353,7 +359,7 @@ h4.deck-section {
 }
 
 .card-faded-background {
-	
+
 }
 
 .card-img-thumbnail {
@@ -587,27 +593,27 @@ article.review {
 article.review:first-child {
 	margin-top: 0;
 }
-article.review .review-like { 
-	float:left; 
-	font-size: 120%; 
-	width:50px 
+article.review .review-like {
+	float:left;
+	font-size: 120%;
+	width:50px
 }
-article.review .review-content { 
-	margin-left: 50px 
+article.review .review-content {
+	margin-left: 50px
 }
-article.review .review-text :first-child { 
-	margin-top: 0px 
+article.review .review-text :first-child {
+	margin-top: 0px
 }
-article.review .review-date { 
-	clear: both; 
-	text-align: right 
+article.review .review-date {
+	clear: both;
+	text-align: right
 }
-article.review .review-author { 
-	text-align: right 
+article.review .review-author {
+	text-align: right
 }
-article.review .review-comment { 
-	border-top: 1px solid #ddd; 
-	padding: 0.5em; 
+article.review .review-comment {
+	border-top: 1px solid #ddd;
+	padding: 0.5em;
 }
 
 /****************** BOOTSTRAP MARKDOWN *******************/
@@ -630,7 +636,7 @@ article.review .review-comment {
   	padding: 0;
   	min-height: auto;
   }
-  
+
 	.col-print-1 {width:8%;  float:left;}
 	.col-print-2 {width:16%; float:left;}
 	.col-print-3 {width:25%; float:left;}
@@ -684,4 +690,62 @@ article.review .review-comment {
     background-color: #20638F !important;
     border-color: #194F72 !important;
   }
+}
+
+
+/** Deck Builder **/
+
+.builder-tabs {
+	border-bottom: dotted rgba(200, 200, 200, 0.5) 1px;
+	padding-bottom: 2px;
+	display: flex;
+	flex-wrap: wrap;
+	li a {
+		background: none;
+		padding: 5px;
+		border: 1px solid rgba(200, 200, 200, 0.5);
+		border-radius: 5px;
+		padding-left: 15px;
+		padding-right: 15px;
+		margin: 5px;
+		display: inline-block;
+	}
+	li.active a {
+		background-color: #ddd;
+		border: 1px solid rgba(200, 200, 200, 0.7);
+	}
+}
+
+
+.builder-navigation {
+	display: flex;
+	justify-content: space-between;
+	.nav {
+		display: flex;
+	}
+	li a.btn {
+		background: none;
+		padding: 5px;
+		border: 1px solid #ddd;
+		border-radius: 5px;
+		color: black;
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+	li.active a.btn {
+		background-color: #ddd;
+	}
+	li:first-child a.btn {
+		border-radius: 5px 0px 0px 5px;
+	}
+	li:last-child a.btn {
+		border-radius: 0px 5px 5px 0px;
+	}
+}
+
+#inline-collection {
+	list-style-type: none;
+	input {
+		margin-right: 5px;
+	}
 }

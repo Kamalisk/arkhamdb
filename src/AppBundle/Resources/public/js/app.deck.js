@@ -38,16 +38,78 @@ var date_creation,
 	layout_data = {};
 
 
+sorter = '<div class="btn-group">' +
+'<button type="button" class="btn btn-xs btn-default dropdown-toggle " data-toggle="dropdown">' +
+	'<span class="fa fa-sort"></span> <span class="hidden-xs">Sort Deck</span> <span class="caret"></span>' +
+'</button>' +
+'<ul class="dropdown-menu" role="menu" id="menu-sort">' +
+	'<li><a href="#" onclick="app.deck.change_sort(\'default\')" id="btn-sort-default">by Type</a></li>' +
+	'<li><a href="#" onclick="app.deck.change_sort(\'name\')" id="btn-sort-name">by Name</a></li>' +
+	'<li><a href="#" onclick="app.deck.change_sort(\'set\')" id="btn-sort-position">by Set, then Name</a></li>' +
+	'<li><a href="#" onclick="app.deck.change_sort(\'setnumber\')" id="btn-sort-position">by Set, then Number</a></li>' +
+	'<li><a href="#" onclick="app.deck.change_sort(\'faction\')" id="btn-sort-faction">by Faction, then Name</a></li>' +
+	'<li><a href="#" onclick="app.deck.change_sort(\'factionnumber\')" id="btn-sort-faction">by Faction, then Number</a></li>' +
+	'<li><a href="#" onclick="app.deck.change_sort(\'number\')" id="btn-sort-faction">by Card Number</a></li>' +
+	'<li><a href="#" onclick="app.deck.change_sort(\'xp\')" id="btn-sort-faction">by XP</a></li>' +
+	'<li><a href="#" onclick="app.deck.change_sort(\'cost\')" id="btn-sort-faction">by Cost</a></li>' +
+'</ul>' +
+'</div>';
+
 /*
  * Templates for the different deck layouts, see deck.get_layout_data
  */
 // one block view
-layouts[1] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><h4 class="deck-section">Deck</h4><div class="col-sm-10 col-print-10"><%= cards %></div></div> <div id="upgrade_changes"></div> <div><%= side %></div> </div>');
+layouts[1] = _.template(
+	'<div class="deck-content">' +
+		'<div class="row">' +
+			'<div class="col-sm-5 col-print-6"><%= images %></div>' +
+			'<div class="col-sm-7 col-print-6"><%= meta %></div>' +
+		'</div>' +
+		'<div class="row">' +
+			'<h4 class="deck-section">Deck  ' + sorter + '</h4>' +
+			'<div class="col-sm-10 col-print-10"><%= cards %></div>' +
+		'</div>' +
+		'<div id="upgrade_changes"></div>' +
+		'<div><%= side %></div>' +
+	'</div>'
+);
 // two colum view
-layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-5 col-print-6"><%= images %></div><div class="col-sm-7 col-print-6"><%= meta %></div></div><h4 class="deck-section">Deck</h4><div class="row"><div class="col-sm-6 col-print-6"><%= assets %> <%= permanent %> <%= bonded %></div><div class="col-sm-6 col-print-6"><%= events %> <%= skills %> <%= treachery %> <%= enemy %> <%= hunches %></div></div> <div id="upgrade_changes"></div> <div><%= side %></div></div>');
-layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= images %><%= meta %></div><h4 class="deck-section">Deck</h4><div class="col-sm-4"><%= assets %><%= skills %></div><div class="col-sm-4"><%= events %><%= treachery %></div></div></div>');
+layouts[2] = _.template(
+	'<div class="deck-content">' +
+		'<div class="row">' +
+			'<div class="col-sm-5 col-print-6"><%= images %></div>' +
+			'<div class="col-sm-7 col-print-6"><%= meta %></div>' +
+		'</div>' +
+		'<h4 class="deck-section">Deck  ' + sorter + '</h4>' +
+		'<div class="row">' +
+			'<div class="col-sm-6 col-print-6"><%= assets %> <%= permanent %> <%= bonded %></div>' +
+			'<div class="col-sm-6 col-print-6"><%= events %> <%= skills %> <%= treachery %> <%= enemy %> <%= hunches %></div>' +
+		'</div> ' +
+		'<div id="upgrade_changes"></div> ' +
+		'<div><%= side %></div>' +
+	'</div>');
+layouts[3] = _.template(
+	'<div class="deck-content">' +
+		'<div class="row">' +
+			'<div class="col-sm-4"><%= images %><%= meta %></div>' +
+			'<h4 class="deck-section">Deck  ' + sorter + '</h4>' +
+			'<div class="col-sm-4"><%= assets %><%= skills %></div>' +
+			'<div class="col-sm-4"><%= events %><%= treachery %></div>' +
+		'</div>' +
+	'</div>');
 // single column view
-layouts[4] = _.template('<div class="deck-content"><div class="row"><%= images %></div><div class="row"><div class="col-sm-7 col-print-6"><%= meta %></div></div><div class="row"><h4 class="deck-section">Deck</h4><div class="col-sm-12 col-print-12"><%= assets %> <%= permanent %> <%= bonded %> <%= events %> <%= skills %> <%= treachery %> <%= enemy %></div></div> <div id="upgrade_changes"></div> <div><%= side %></div></div>');
+layouts[4] = _.template(
+	'<div class="deck-content">' + '<div class="row"><%= images %></div>' +
+	'<div class="row">' +
+		'<div class="col-sm-7 col-print-6"><%= meta %></div>' +
+	'</div>' +
+	'<div class="row">' +
+		'<h4 class="deck-section">Deck ' + sorter + '</h4>' +
+		'<div class="col-sm-12 col-print-12"><%= assets %> <%= permanent %> <%= bonded %> <%= events %> <%= skills %> <%= treachery %> <%= enemy %></div>' +
+	'</div>' +
+	'<div id="upgrade_changes"></div>' +
+		'<div><%= side %></div>' +
+	'</div>');
 /**
  * @memberOf deck
  */
@@ -730,7 +792,7 @@ deck.get_layout_section = function(sort, group, filter, side){
 	var section = $('<div>');
 	var query = {};
 	var groups = {};
-	var field = "";
+	var field = null;
 	// if we have a group, then send the group by to the query
 	if (side) {
 		field = "insidedeck";
@@ -799,8 +861,6 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(query, d
 
 			cards.forEach(function (card) {
 				var $div = deck.create_card(card);
-
-
 				if (card.real_slot && slots[card.real_slot]){
 					slots[card.real_slot].push($div);
 				} else {
@@ -842,7 +902,9 @@ deck.create_card_group = function(cards, field){
 
 deck.create_card = function create_card(card, field='indeck'){
 	var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
-
+	if (!field) {
+		field = "indeck";
+	}
 	$div.append($(card_line_tpl({card:card})));
 
 	if (card[field]) {
