@@ -257,6 +257,7 @@ ui.build_pack_selector = function build_pack_selector() {
 			//console.log(app.user.data.owned_packs, collection);
   }
 
+	cycle_position = 1;
 
 	app.data.packs.find({
 		name: {
@@ -299,7 +300,10 @@ ui.build_pack_selector = function build_pack_selector() {
 		if(cards.length) {
 			checked = true;
 		}
-
+		if (record.cycle_position != cycle_position) {
+			cycle_position = record.cycle_position;
+			$('<li><hr/></li>').appendTo('[data-filter=pack_code]');
+		}
 		$('<li><a href="#"><label><input type="checkbox" name="' + record.code + '"' + (checked ? ' checked="checked"' : '') + '>' + record.name + '</label></a></li>').appendTo('[data-filter=pack_code]');
 		// special case for core set 2
 		if (record.code == "core"){
@@ -401,7 +405,8 @@ function check_all_inactive() {
  */
 ui.on_click_filter = function on_click_filter(event) {
 	var dropdown = $(this).closest('ul').hasClass('dropdown-menu');
-	if (dropdown) {
+	var is_collection = $(this).id == "inline-collection";
+	if (dropdown || is_collection) {
 		if (event.shiftKey) {
 			if (!event.altKey) {
 				uncheck_all_others.call(this);
@@ -418,6 +423,23 @@ ui.on_click_filter = function on_click_filter(event) {
 				check_all_inactive.call(this);
 			}
 		}
+	}
+}
+
+ui.select_all = function select_all(event) {
+	var container = $(this).closest('div').hasClass('contains-selectables');
+	if (container) {
+		$('input[type=checkbox]', $(this).closest('div')).prop("checked", true);
+		$('input[type=checkbox]', $(this).closest('div')).first().trigger('change');
+		event.stopPropagation();
+	}
+}
+ui.select_none = function select_none(event) {
+	var container = $(this).closest('div').hasClass('contains-selectables');
+	if (container) {
+		$('input[type=checkbox]', $(this).closest('div')).prop("checked", false);
+		$('input[type=checkbox]', $(this).closest('div')).first().trigger('change');
+		event.stopPropagation();
 	}
 }
 
@@ -603,11 +625,13 @@ ui.chaos = function() {
 	app.deck.reset_limit_count();
 
 	var size = valid_cards.length;
+	var actual_size = valid_cards.reduce(function(a, b) { return a + b.deck_limit }, 0);
+
 	var deck_size = app.data.cards.findById(app.deck.get_investigator_code()).deck_requirements.size;
 	if (app.deck.meta.deck_size_selected) {
 		deck_size = parseInt(app.deck.meta.deck_size_selected);
 	}
-	if (size >= deck_size){
+	if (actual_size >= deck_size){
 		while (counter < deck_size){
 			var random_id = Math.floor(Math.random() * size)
 			var random_card = valid_cards[random_id];
@@ -727,6 +751,17 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	$('#global_filters [data-filter]').on({
 		click : ui.on_click_filter
 	}, 'label');
+
+	$('#tab-pane-collection [data-filter]').on({
+		click : ui.on_click_filter
+	}, 'label');
+
+	$('.select-all').on({
+		click : ui.select_all
+	});
+	$('.select-none').on({
+		click : ui.select_none
+	});
 
 	$('#build_filters [data-filter]').on({
 		change : ui.refresh_list,
@@ -866,7 +901,7 @@ ui.get_filters = function get_filters(prefix) {
 	var filters = {};
 	var target = "#build_filters [data-filter], #inline-collection";
 	if (prefix){
-		target = "#"+prefix+"_filters [data-filter]";
+		target = "#"+prefix+"_filters [data-filter], #inline-collection";
 	}
 	$(target).each(
 		function(index, div) {

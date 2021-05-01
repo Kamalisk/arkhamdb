@@ -101,9 +101,10 @@
 	  	<div role="tabpanel" class="tab-pane active" id="tab-pane-build">
 	  	{% include 'AppBundle:Builder:tab-pane-build.html.twig' %}
 	  	</div>
-			<div role="tabpanel" class="tab-pane" id="tab-pane-collection">
-			<p>You can update which packs to use here, or update your <a target="_blank" href="{{ path('collection_packs') }}">{% trans %}collection{% endtrans %}</a> of packs</p>
-	  	<ul id="inline-collection" data-filter="pack_code" title="Shift+Click to select only one option ; Alt+Shift+Click to select all other options"></ul>
+			<div role="tabpanel" class="tab-pane contains-selectables" id="tab-pane-collection">
+				<p>You can update which packs to use here, or update your <a target="_blank" href="{{ path('collection_packs') }}">{% trans %}collection{% endtrans %}</a> of packs</p>
+				<p><button class="btn btn-sm select-all">Select all</button> <button class="btn btn-sm select-none">Select None</button></p>
+				<ul id="inline-collection" data-filter="pack_code" title="Shift+Click to select only one option ; Alt+Shift+Click to select all other options"></ul>
 	  	</div>
 			<div role="tabpanel" class="tab-pane" id="tab-pane-draw">
 			{% include 'AppBundle:Builder:tab-pane-draw.html.twig' %}
