@@ -59,9 +59,15 @@ deck_history.all_changes = function all_changes() {
 			"card": card
 		};
 		cards_added.push(card_change);
+		// versatile
 		if (card_change.code == "06167") {
 			free_0_cards += card_change.qty * 5;
 			removed_0_cards += card_change.qty * 5;
+		}
+		// ancestral knowledge
+		else if (card_change.code == "07303") {
+			free_0_cards += 5;
+			removed_0_cards += 5;
 		}
 	});
 
