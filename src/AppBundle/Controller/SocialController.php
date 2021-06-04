@@ -360,6 +360,8 @@ class SocialController extends Controller
 		$decklist_name = filter_var($request->query->get('name'), FILTER_SANITIZE_STRING);
 		$sort = $request->query->get('sort');
 		$packs = $request->query->get('packs');
+		$date_from = $request->query->get('date_from');
+		$date_to = $request->query->get('date_to');
 
 		if(!is_array($packs)) {
 			$packs = $dbh->executeQuery("select id from pack")->fetchAll(\PDO::FETCH_COLUMN);
@@ -398,7 +400,9 @@ class SocialController extends Controller
 		'on' => $on,
 		'off' => $off,
 		'author' => $author_name,
-		'name' => $decklist_name
+		'name' => $decklist_name,
+		'date_from' => $date_from,
+		'date_to' => $date_to
 		);
 		$params['sort_'.$sort] = ' selected="selected"';
 		$params['factions'] = $dbh->executeQuery(
