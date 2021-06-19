@@ -6,7 +6,7 @@
     </header>
     <body>
       <trans-unit id="a54df7f0b810414467735acc4f3ca4f9" resname="My Decks">
-        <source>__My Decks</source>
+        <source>My Decks</source>
         <target>Mis mazos</target>
       </trans-unit>
       <trans-unit id="41bee85f0a581e16440caf695024e618" resname="My Teams">
