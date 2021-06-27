@@ -133,6 +133,7 @@ deck_history.all_changes = function all_changes() {
 				removal_xp += removal.card.taboo_xp;
 			}
 			if (addition.qty > 0 && removal.qty > 0 && addition_xp >= 0 && addition.card.real_name == removal.card.real_name && addition_xp > removal_xp){
+				const upgraded_count = Math.min(addition.qty, removal.qty);
 				addition.qty = addition.qty - removal.qty;
 				if (spell_upgrade_discounts > 0 && removal.card.real_traits && removal.card.real_traits.indexOf('Spell.') !== -1 && addition.card.real_traits && addition.card.real_traits.indexOf('Spell.') !== -1) {
 					// It's a spell card, and we have arcane research discounts remaining.
@@ -144,6 +145,10 @@ deck_history.all_changes = function all_changes() {
 					cost = cost + upgradeCost;
 				} else {
 					cost = cost + ((addition_xp - removal_xp) * removal.qty);
+				}
+				if (addition.card.permanent && !removal.card.permanent) {
+					free_0_cards += upgraded_count;
+					removed_0_cards += upgraded_count;
 				}
 				removal.qty = Math.abs(addition.qty);
 			}
