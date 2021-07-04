@@ -1,22 +1,22 @@
-<?php 
+<?php
 
 namespace AppBundle\Helper;
 
 class DeckValidationHelper
 {
-	
+
 	public function __construct(AgendaHelper $agenda_helper)
 	{
 		$this->agenda_helper = $agenda_helper;
 	}
-	
+
 		/**
 	* Parse deck requirements/restrictions and convert to array
 	* @param string $text
 	* @return Array
 	*/
 	public function parseReqString($text) {
-		
+
 		$return_requirements = [];
 		// seperate based on commas
 		$restrictions = explode(",", $text);
@@ -25,14 +25,14 @@ class DeckValidationHelper
 			if (trim($restriction)){
 				$matches = [];
 				$params = explode(":", $restriction);
-				//$text .= print_r($matches,1);	
+				//$text .= print_r($matches,1);
 				if (isset($params[0])){
 					$type = trim($params[0]);
 					$param1 = false;
 					$param2 = false;
 					$param3 = false;
 					$param4 = false;
-					
+
 					if (isset($params[1])){
 						$param1 = trim($params[1]);
 					}
@@ -45,7 +45,7 @@ class DeckValidationHelper
 					if (isset($params[4])){
 						$param4 = trim($params[4]);
 					}
-					
+
 					if (!isset($return_requirements[$type])){
 						$return_requirements[$type] = [];
 					}
@@ -86,7 +86,9 @@ class DeckValidationHelper
 							break;
 						}
 						case "card":{
-							if ($param2){
+							if ($param3){
+								$return_requirements[$type][$param1] = [$param1 => $param1, $param2 => $param2, $param3 => $param3];
+							}else if ($param2){
 								$return_requirements[$type][$param1] = [$param1 => $param1, $param2 => $param2];
 							}else if ($param1){
 								$return_requirements[$type][$param1] = [$param1 => $param1];
@@ -109,7 +111,7 @@ class DeckValidationHelper
 		}
 		return $return_requirements;
 	}
-	
+
 	public function getInvalidCards($deck)
 	{
 		$invalidCards = [];
@@ -121,7 +123,7 @@ class DeckValidationHelper
 		}
 		return $invalidCards;
 	}
-	
+
 	public function canIncludeCard($deck, $slot, $deck_options = []) {
 		$card = $slot->getCard();
 		$indeck = $slot->getQuantity();
@@ -129,7 +131,7 @@ class DeckValidationHelper
 		if ($card->getType()->getCode() === "investigator") {
 			return false;
 		}
-		
+
 		$investigator = $deck->getCharacter();
 		$restrictions = $card->getRestrictions();
 		if ($restrictions){
@@ -138,14 +140,14 @@ class DeckValidationHelper
 				return false;
 			}
 		}
-		
+
 		// allow any 2 random faction cards for now
 		$deck_options[] = json_decode("{faction:['guardian','rogue', 'mystic','survivor','seeker'], limit:2}");
 		// validate deck. duplicating code from app.deck.js but in php
 		if ($deck_options){
 			foreach($deck_options as $option) {
 				$valid = false;
-				
+
 				if (isset($option->faction) && $option->faction) {
 					$faction_valid = false;
 					foreach($option->faction as $faction) {
@@ -157,7 +159,7 @@ class DeckValidationHelper
 						continue;
 					}
 				}
-				
+
 				if (isset($option->type) && $option->type) {
 					// needs to match at least one type
 					$type_valid = false;
@@ -170,7 +172,7 @@ class DeckValidationHelper
 						continue;
 					}
 				}
-				
+
 				if (isset($option->trait) && $option->trait) {
 					// needs to match at least one type
 					$trait_valid = false;
@@ -183,7 +185,7 @@ class DeckValidationHelper
 						continue;
 					}
 				}
-				
+
 				if (isset($option->uses) && $option->uses) {
 					// needs to match at least one type
 					$uses_valid = false;
@@ -196,7 +198,7 @@ class DeckValidationHelper
 						continue;
 					}
 				}
-				
+
 				if (isset($option->text) && $option->text) {
 					// needs to match at least one type
 					$text_valid = false;
@@ -209,8 +211,8 @@ class DeckValidationHelper
 						continue;
 					}
 				}
-				
-				
+
+
 				if (isset($option->level) && $option->level) {
 					// needs to match at least one type
 					$level_valid = false;
@@ -223,7 +225,7 @@ class DeckValidationHelper
 						}
 					}
 				}
-				
+
 				if (isset($option->not) && $option->not){
 					return false;
 				}else {
@@ -239,8 +241,8 @@ class DeckValidationHelper
 						}
 						$option->atleast_count[$card->getFaction()->getCode()] += $indeck;
 					}
-					
-					// if we exceed the limit, the deck is invalid 
+
+					// if we exceed the limit, the deck is invalid
 					if (isset($option->limit_count) && $option->limit_count && $option->limit) {
 						// for now just complain about horribly wrong decks with double over the limit cards
 						if ($option->limit_count > $option->limit * 2) {
@@ -250,12 +252,12 @@ class DeckValidationHelper
 					}
 					return true;
 				}
-				
+
 			}
 		}
 		return false;
 	}
-	
+
 	public function findProblem($deck)
 	{
 		$investigator = $deck->getCharacter();
@@ -274,10 +276,10 @@ class DeckValidationHelper
 		if(!empty($this->getInvalidCards($deck))) {
 			return 'invalid_cards';
 		}
-		
+
 		return null;
 	}
-	
+
 	public function getProblemLabel($problem) {
 		if(! $problem) {
 			return '';
@@ -287,7 +289,7 @@ class DeckValidationHelper
 				'too_many_cards' => "Contains too many cards",
 				'too_many_copies' => "Contains too many copies of a card (by title)",
 				'invalid_cards' => "Contains forbidden cards (cards not permitted by Faction or Agenda)",
-				'deck_options_limit' => "Contains too many limited cards", 
+				'deck_options_limit' => "Contains too many limited cards",
 				'investigator' => "Doesn't comply with the Investigator requirements"
 		];
 		if(isset($labels[$problem])) {
@@ -295,6 +297,6 @@ class DeckValidationHelper
 		}
 		return '';
 	}
-	
-	
+
+
 }
