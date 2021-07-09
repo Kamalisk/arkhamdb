@@ -65,6 +65,19 @@ class ApiControllerTest extends WebTestCase
     	$this->assertInternalType('array', $data);
     	$this->assertNotEmpty($data);
     }
+    
+    public function testListCycles()
+    {
+    	$client = static::createClient();
+       	$client->request('GET', '/api/cycles/');
+    	$response = $client->getResponse();
+    	$json = $response->getContent();
+    	$this->assertJson($json);
+    	$data = json_decode($json, true);
+    	$this->assertNotNull($data);
+    	$this->assertInternalType('array', $data);
+    	$this->assertNotEmpty($data);
+    }
 
    	public function testGetDecklist()
    	{
