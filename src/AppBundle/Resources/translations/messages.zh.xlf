@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="r_ttCrp" resname="Popular Decks">
         <source>Popular Decks</source>
-        <target>__Popular Decks</target>
+        <target>Popular Decks</target>
       </trans-unit>
       <trans-unit id="JyS6ppo" resname="Recent Decks">
         <source>Recent Decks</source>

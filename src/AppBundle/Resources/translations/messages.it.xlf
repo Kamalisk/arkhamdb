@@ -127,7 +127,7 @@
       </trans-unit>
       <trans-unit id="55ec6e23814c55c69572b48aafd4faf9" resname="One published decklist">
         <source>One published decklist</source>
-        <target>__One published decklist</target>
+        <target>One published decklist</target>
       </trans-unit>
       <trans-unit id="1c5bc0508822392420c374b729785958" resname="published reviews">
         <source>published reviews</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="f1b4b1a6504086c413e446914bcfee1d" resname="One published reviews">
         <source>One published reviews</source>
-        <target>__One published reviews</target>
+        <target>One published reviews</target>
       </trans-unit>
       <trans-unit id="8d9bec4f224970e231041639de877092" resname="Reputation">
         <source>Reputation</source>
@@ -179,7 +179,7 @@
       </trans-unit>
       <trans-unit id="f1b7869e146d6dfec49f5eeb69c6de7d" resname="Deck Building">
         <source>Deck Building</source>
-        <target>__Deck Building</target>
+        <target>Deck Building</target>
       </trans-unit>
     </body>
   </file>

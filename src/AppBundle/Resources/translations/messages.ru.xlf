@@ -183,7 +183,7 @@
       </trans-unit>
       <trans-unit id="vRWdLVJ" resname="Bonded Cards">
         <source>Bonded Cards</source>
-        <target>__Bonded Cards</target>
+        <target>Bonded Cards</target>
       </trans-unit>
       <trans-unit id="LptaDE5" resname="Victory">
         <source>Victory</source>
@@ -199,19 +199,19 @@
       </trans-unit>
       <trans-unit id="_nSW5K6" resname="collection">
         <source>collection</source>
-        <target>__collection</target>
+        <target>collection</target>
       </trans-unit>
       <trans-unit id="odAmGiq" resname="Deckbuilder and Card Database for the Arkham Horror LCG">
         <source>Deckbuilder and Card Database for the Arkham Horror LCG</source>
-        <target>__Deckbuilder and Card Database for the Arkham Horror LCG</target>
+        <target>Deckbuilder and Card Database for the Arkham Horror LCG</target>
       </trans-unit>
       <trans-unit id="r_ttCrp" resname="Popular Decks">
         <source>Popular Decks</source>
-        <target>__Popular Decks</target>
+        <target>Popular Decks</target>
       </trans-unit>
       <trans-unit id="JyS6ppo" resname="Recent Decks">
         <source>Recent Decks</source>
-        <target>__Recent Decks</target>
+        <target>Recent Decks</target>
       </trans-unit>
     </body>
   </file>
