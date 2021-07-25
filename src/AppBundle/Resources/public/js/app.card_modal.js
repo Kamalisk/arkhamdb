@@ -27,6 +27,7 @@ function fill_modal (code) {
 
 	modal.data('code', code);
 	modal.find('.card-modal-link').attr('href', card.url);
+	modal.find('.card-modal-link').attr('target', '_blank');
 	modal.find('h3.modal-title').html(app.format.name(card));
 	modal.find('.modal-image').html('<img class="img-responsive" src="'+card.imagesrc+'">');
 	modal.find('.modal-info').html(
@@ -57,7 +58,7 @@ function fill_modal (code) {
 	}
 
 	var qtyelt = modal.find('.modal-ignore');
-	if(qtyelt && card.maxqty && (card.code == "05040" || card.real_traits.indexOf('Fortune.') !== -1 || card.real_traits.indexOf('Gambit.') !== -1 ) ) {
+	if(qtyelt && card.maxqty && (card.code == "05040" || card.real_traits.indexOf('Spell.') !== -1 || card.real_traits.indexOf('Fortune.') !== -1 || card.real_traits.indexOf('Gambit.') !== -1 ) ) {
 		qtyelt.closest('.modal-deck-ignore').show();
 		var qty = '';
 		for(var i=0; i<=card.maxqty; i++) {

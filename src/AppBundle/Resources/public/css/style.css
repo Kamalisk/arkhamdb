@@ -749,3 +749,11 @@ article.review .review-comment {
 		margin-right: 5px;
 	}
 }
+
+.modal-deck-options {
+	display: flex;
+}
+
+.modal-deck-qty, .modal-deck-ignore, .modal-side-deck-qty {
+	width: 32%;
+}
