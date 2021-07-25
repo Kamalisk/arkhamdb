@@ -39,16 +39,18 @@
 			<button type="submit" class="btn btn-primary btn-block">Search</button>
 		</div>
 		<div class="col-sm-4">
-		<p><a data-toggle="collapse" data-target="#allowed_packs" href="#allowed_packs">Select allowed packs</a> (<span id="packs-on">{{ on }}</span> on, <span id="packs-off">{{ off }}</span> off)</p>
+		<p><a id="allowed_collection_packs" href="#allowed_collection_packs">Select packs from your collection</a></p>
+		<p><a data-toggle="collapse" data-target="#allowed_packs" href="#allowed_packs">View allowed packs</a> (<span id="packs-on">{{ on }}</span> on, <span id="packs-off">{{ off }}</span> off)</p>
 		<div id="allowed_packs" class="collapse">
+		<a href="#" id="select_all"><span class="fa fa-check"></span> all</a>
+		/ <a href="#" id="select_none"><span class="fa fa-times"></span> none</a>
 		{% for category in allowed %}
 		  <p><small>{{ category.label }}</small></p>
 		  {% for pack in category.packs %}
-    		<div class="checkbox"><label class="{% if pack.future %}pack-future{% endif %}"><input type="checkbox" name="packs[]" value="{{ pack.id }}" {% if pack.checked %}checked="checked" {% endif %}>{{ pack.label }}</label></div>
+    		<div class="checkbox"><label class="{% if pack.future %}pack-future{% endif %}"><input id="collection-{{ pack.id }}" type="checkbox" name="packs[]" value="{{ pack.id }}" {% if pack.checked %}checked="checked" {% endif %}>{{ pack.label }}</label></div>
     	  {% endfor %}
 		{% endfor %}
-		<a href="#" id="select_all"><span class="fa fa-check"></span> all</a>
-		/ <a href="#" id="select_none"><span class="fa fa-times"></span> none</a>
+
 		</div>
     	</div>
 	</div>

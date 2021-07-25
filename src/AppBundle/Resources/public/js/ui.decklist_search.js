@@ -6,6 +6,27 @@
     	$('#packs-off').text($('#allowed_packs').find('input[type="checkbox"]:not(:checked)').size());
     }
 
+		ui.handle_select_collection_packs = function handle_select_collection_packs() {
+			var collection = {};
+			var no_collection = true;
+			if (app.user.data && app.user.data.owned_packs) {
+					var packs = app.user.data.owned_packs.split(',');
+					_.forEach(packs, function(str) {
+							collection[str] = str;
+							no_collection = false;
+					});
+					//console.log(app.user.data.owned_packs, collection);
+			}
+
+			if (!no_collection) {
+				$('#allowed_packs input').prop('checked', false);
+				_.forEach(collection, function(str) {
+					$('#collection-' + str).prop('checked', true);
+				})
+				ui.handle_checkbox_change()
+			}
+		}
+
     /**
      * @memberOf ui
      */
@@ -50,6 +71,7 @@
 	ui.on_dom_loaded = function on_dom_loaded() {
         ui.setup_typeahead();
     	$('#allowed_packs').on('change', ui.handle_checkbox_change);
+			$('#allowed_collection_packs').on('click', ui.handle_select_collection_packs);
 
     	$('#select_all').on('click', function (event) {
     		$('#allowed_packs').find('input[type="checkbox"]:not(:checked)').prop('checked', true);
