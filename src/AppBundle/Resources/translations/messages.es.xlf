@@ -6,7 +6,7 @@
     </header>
     <body>
       <trans-unit id="a54df7f0b810414467735acc4f3ca4f9" resname="My Decks">
-        <source>__My Decks</source>
+        <source>My Decks</source>
         <target>Mis mazos</target>
       </trans-unit>
       <trans-unit id="41bee85f0a581e16440caf695024e618" resname="My Teams">
@@ -193,6 +193,19 @@
         <source>Make your decks public</source>
         <target>Haz públicos tus mazos</target>
       </trans-unit>
+      <trans-unit id="f185a8462292471da1742bc8b5af0957" resname="Deckbuilder and Card Database for the Arkham Horror LCG">
+        <source>Deckbuilder and Card Database for the Arkham Horror LCG</source>
+        <target>Creador de Mazos y Base de Datos de Cartas para Arkham Horror LCG</target>
+      </trans-unit>
+      <trans-unit id="9fd299f0417140958a6300b85d424e41" resname="Popular Decks">
+        <source>Popular Decks</source>
+        <target>Mazos Populares</target>
+      </trans-unit>
+      <trans-unit id="af91bd7658fa44fc8e701c2900488cd5" resname="Recent Decks">
+        <source>Recent Decks</source>
+        <target>Mazos Recientes</target>
+      </trans-unit>
+      
     </body>
   </file>
 </xliff>
