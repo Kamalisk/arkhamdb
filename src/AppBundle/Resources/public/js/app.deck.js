@@ -671,6 +671,10 @@ deck.get_layout_data = function get_layout_data(options) {
 		if (ancestral_knowledge && ancestral_knowledge.indeck) {
 			size = size + 5;
 		}
+		var underworld_support = app.data.cards.findById("08046");
+		if (underworld_support && underworld_support.indeck) {
+			size = size - 5;
+		}
 		var versatile = app.data.cards.findById("06167");
 		if (versatile && versatile.indeck) {
 			size = size + 5;
@@ -1069,21 +1073,26 @@ deck.get_export = function get_export(format) {
  */
 deck.get_copies_and_deck_limit = function get_copies_and_deck_limit() {
 	var copies_and_deck_limit = {};
+	var underworld_support = app.data.cards.findById("08046");
 	deck.get_draw_deck().forEach(function (card) {
+		const use_underworld_support_limit = !card.restrictions && !!(underworld_support && underworld_support.indeck);
 		var value = copies_and_deck_limit[card.real_name];
 		if(!value) {
-			copies_and_deck_limit[card.real_name] = {
-					nb_copies: card.indeck - card.ignore,
-					deck_limit: card.deck_limit
-			};
-			if (typeof card.real_text !== 'undefined' && card.real_text.indexOf('Myriad.') !== -1) {
-				copies_and_deck_limit[card.real_name].deck_limit = 3;
+			var deck_limit = use_underworld_support_limit ? 1 : card.deck_limit;
+			if(!use_underworld_support_limit && typeof card.real_text !== 'undefined' && card.real_text.indexOf('Myriad.') !== -1) {
+				deck_limit = 3;
 			}
+			copies_and_deck_limit[card.real_name] = {
+				nb_copies: card.indeck - card.ignore,
+				deck_limit,
+			};
 		} else {
 			value.nb_copies += card.indeck - card.ignore;
-			value.deck_limit = Math.min(card.deck_limit, value.deck_limit);
-			if (typeof card.real_text !== 'undefined' && card.real_text.indexOf('Myriad.') !== -1) {
-				value.deck_limit = 3;
+			if(!use_underworld_support_limit) {
+				value.deck_limit = Math.min(card.deck_limit, value.deck_limit);
+				if(typeof card.real_text !== 'undefined' && card.real_text.indexOf('Myriad.') !== -1) {
+					value.deck_limit = 3;
+				}
 			}
 		}
 	})
@@ -1118,6 +1127,10 @@ deck.get_problem = function get_problem() {
 		if (ancestral_knowledge && ancestral_knowledge.indeck) {
 			size = size + 5;
 		}
+    var underworld_support = app.data.cards.findById("08046");
+    if (underworld_support && underworld_support.indeck) {
+      size = size - 5;
+    }
 		var versatile = app.data.cards.findById("06167");
 		if (versatile && versatile.indeck) {
 			size = size + 5;
@@ -1218,7 +1231,7 @@ deck.get_problem = function get_problem() {
 deck.reset_limit_count = function (){
 	if (investigator){
 		var ancestral_knowledge = app.data.cards.findById("07303");
-		var versatile = app.data.cards.findById("06167");//06167
+		var versatile = app.data.cards.findById("06167");
 		var on_your_own = app.data.cards.findById("53010");
 		// if they user has selected different deck building options, point deck_options to the alternate one
 		if (deck.meta && deck.meta.alternate_back) {
