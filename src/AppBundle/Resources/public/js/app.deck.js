@@ -1127,10 +1127,10 @@ deck.get_problem = function get_problem() {
 		if (ancestral_knowledge && ancestral_knowledge.indeck) {
 			size = size + 5;
 		}
-    var underworld_support = app.data.cards.findById("08046");
-    if (underworld_support && underworld_support.indeck) {
-      size = size - 5;
-    }
+		var underworld_support = app.data.cards.findById("08046");
+		if (underworld_support && underworld_support.indeck) {
+			size = size - 5;
+		}
 		var versatile = app.data.cards.findById("06167");
 		if (versatile && versatile.indeck) {
 			size = size + 5;
