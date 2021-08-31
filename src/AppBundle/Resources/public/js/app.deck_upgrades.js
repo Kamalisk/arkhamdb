@@ -69,6 +69,28 @@ deck_upgrades.display = function display() {
 			}
 		});
 
+		// find deja vu
+		var deja_vu = app.data.cards.findById("60531");
+		var deja_vu_exiled = {};
+		// There's a limit on how many discounts per card, and a limit on how
+		// many uses overall.
+		var deja_vu_max_discount = 0;
+		var deja_vu_discounts = 0;
+		if (deja_vu && deja_vu.indeck) {
+			// You get a discount of 1 XP per exile card, per deja vu.
+			deja_vu_max_discount += deja_vu.indeck;
+			deja_vu_discounts += deja_vu_max_discount * 3;
+		}
+
+		// find down the rabbit hole
+		var down_the_rabbit_hole = app.data.cards.findById("08059");
+		var dtr_xp = down_the_rabbit_hole && down_the_rabbit_hole.indeck ? 1 : 0;
+		var upgrade_discounts = 0;
+		if (down_the_rabbit_hole && down_the_rabbit_hole.indeck) {
+			upgrade_discounts += 2;
+		}
+
+
 		// find arcane research
 		var arcane_research = app.data.cards.findById("04109");
 		var spell_upgrade_discounts = 0;
@@ -88,8 +110,10 @@ deck_upgrades.display = function display() {
 			_.each(last_deck.exile_string.split(","), function (code, id) {
 				if (cards_exiled[code]){
 					cards_exiled[code] = 2;
+					deja_vu_exiled[code] = 2;
 				} else {
 					cards_exiled[code] = 1;
+					deja_vu_exiled[code] = 1;
 				}
 			});
 		}
@@ -127,9 +151,20 @@ deck_upgrades.display = function display() {
 							upgradeCost--;
 							spell_upgrade_discounts--;
 						}
+						if (upgradeCost > 0 && upgrade_discounts > 0) {
+							upgradeCost--;
+							upgrade_discounts--;
+						}
 						cost = cost + upgradeCost;
 					} else {
-						cost = cost + ((addition_xp - removal_xp) * removal.qty);
+						var upgradeCost = ((addition_xp - removal_xp) * removal.qty)
+						for (var i = 0; i < upgraded_count; i++) {
+							if (upgradeCost > 0 && upgrade_discounts > 0) {
+								upgradeCost--;
+								upgrade_discounts--;
+							}
+						}
+						cost = cost + upgradeCost;
 					}
 					if (addition.card.permanent && !removal.card.permanent) {
 						free_0_cards += upgraded_count;
@@ -162,11 +197,34 @@ deck_upgrades.display = function display() {
 		if (addition.card.taboo_xp){
 			addition_xp += addition.card.taboo_xp;
 		}
-		if (addition_xp >= 0){
+		if (deja_vu_exiled[addition.card.code] && deja_vu_discounts > 0){
+			var discount_per_card = Math.min(
+				addition_xp,
+				deja_vu_max_discount
+			);
+			let deja_vu_cost = 0;
+			// Handle cards one at a time, since each one needs to have a corresponding
+			// exile and we still need to have 'uses' left.
+			for (var i = 0; i < addition.qty; i++){
+				if (deja_vu_exiled[addition.card.code]){
+					deja_vu_exiled[addition.card.code]--;
+					discount = Math.min(discount_per_card, deja_vu_discounts);
+					deja_vu_discounts -= discount;
+					deja_vu_cost += addition_xp - discount;
+				} else {
+					// Only get discount if we replaced something, and have uses left.
+					deja_vu_cost += addition_xp;
+				}
+			}
+			cost = cost + deja_vu_cost + dtr_xp;
+			addition.qty = 0;
+		} else if (addition_xp >= 0){
 			if (addition.card.xp === 0 && removed_0_cards > 0 && free_0_cards > 0){
 				free_0_cards -= addition.qty;
 				removed_0_cards -= addition.qty;
 				if (removed_0_cards < 0 || free_0_cards < 0){
+					// I think this shouldn't be 1, since now 3/4 cards is possible?
+					// Should be Math.abs(free_0_cards) I believe.
 					addition.qty = 1;
 				} else {
 					addition.qty = 0;
@@ -176,7 +234,7 @@ deck_upgrades.display = function display() {
 			if (addition.card.indeck - addition.qty > 0 && addition.card.ignore) {
 				addition.card.ignore = addition.card.ignore - (addition.card.indeck - addition.qty);
 			}
-			cost = cost + (Math.max(addition_xp, 1) * (addition.qty - addition.card.ignore) );
+			cost = cost + ((dtr_xp + Math.max(addition_xp, 1)) * (addition.qty - addition.card.ignore));
 			addition.qty = 0;
 		}
 	});

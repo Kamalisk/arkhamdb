@@ -675,6 +675,10 @@ deck.get_layout_data = function get_layout_data(options) {
 		if (underworld_support && underworld_support.indeck) {
 			size = size - 5;
 		}
+		var forced_learning = app.data.cards.findById("08031");
+		if (forced_learning && forced_learning.indeck) {
+			size + size + 15;
+		}
 		var versatile = app.data.cards.findById("06167");
 		if (versatile && versatile.indeck) {
 			size = size + 5;
@@ -1130,6 +1134,10 @@ deck.get_problem = function get_problem() {
 		var underworld_support = app.data.cards.findById("08046");
 		if (underworld_support && underworld_support.indeck) {
 			size = size - 5;
+		}
+		var forced_learning = app.data.cards.findById("08031");
+		if (forced_learning && forced_learning.indeck) {
+			size = size + 15;
 		}
 		var versatile = app.data.cards.findById("06167");
 		if (versatile && versatile.indeck) {

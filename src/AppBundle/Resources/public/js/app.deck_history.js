@@ -84,6 +84,14 @@ deck_history.all_changes = function all_changes() {
 		deja_vu_discounts += deja_vu_max_discount * 3;
 	}
 
+	// find down the rabbit hole
+	var down_the_rabbit_hole = app.data.cards.findById("08059");
+	var dtr_xp = down_the_rabbit_hole && down_the_rabbit_hole.indeck ? 1 : 0;
+	var upgrade_discounts = 0;
+	if (down_the_rabbit_hole && down_the_rabbit_hole.indeck) {
+		upgrade_discounts += 2;
+	}
+
 	// find arcane research
 	var arcane_research = app.data.cards.findById("04109");
 	var spell_upgrade_discounts = 0;
@@ -142,9 +150,20 @@ deck_history.all_changes = function all_changes() {
 						upgradeCost--;
 						spell_upgrade_discounts--;
 					}
+					if (upgradeCost > 0 && upgrade_discounts > 0) {
+						upgradeCost--;
+						upgrade_discounts--;
+					}
 					cost = cost + upgradeCost;
 				} else {
-					cost = cost + ((addition_xp - removal_xp) * removal.qty);
+					var upgradeCost = (addition_xp - removal_xp) * removal.qty;
+					for (var i = 0; i < upgraded_count; i++) {
+						if (upgradeCost > 0 && upgrade_discounts > 0) {
+							upgradeCost--;
+							upgrade_discounts--;
+						}
+					}
+					cost = cost + upgradeCost;
 				}
 				if (addition.card.permanent && !removal.card.permanent) {
 					free_0_cards += upgraded_count;
@@ -164,8 +183,8 @@ deck_history.all_changes = function all_changes() {
 		} else if (removal.card.xp === 0){
 			removed_0_cards += removal.qty;
 		}
-  });
-  //console.log({ removed_0_cards, free_0_cards });
+	});
+	//console.log({ removed_0_cards, free_0_cards });
 
 	myriad_madness = {};
 	//console.log(removed_0_cards);
@@ -204,13 +223,15 @@ deck_history.all_changes = function all_changes() {
 					deja_vu_cost += addition_xp;
 				}
 			}
-			cost = cost + deja_vu_cost;
+			cost = cost + deja_vu_cost + dtr_xp;
 			addition.qty = 0;
 		} else if (addition_xp >= 0){
 			if (addition.card.xp === 0 && removed_0_cards > 0 && free_0_cards > 0){
 				free_0_cards -= addition.qty;
 				removed_0_cards -= addition.qty;
 				if (removed_0_cards < 0 || free_0_cards < 0){
+					// I think this shouldn't be 1, since now 3/4 cards is possible?
+					// Should be Math.abs(free_0_cards) I believe.
 					addition.qty = 1;
 				} else {
 					addition.qty = 0;
@@ -219,7 +240,7 @@ deck_history.all_changes = function all_changes() {
 			if (addition.card.indeck - addition.qty > 0 && addition.card.ignore) {
 				addition.card.ignore = addition.card.ignore - (addition.card.indeck - addition.qty);
 			}
-			cost = cost + (Math.max(addition_xp, 1) * (addition.qty - addition.card.ignore) );
+			cost = cost + ((dtr_xp + Math.max(addition_xp, 1)) * (addition.qty - addition.card.ignore));
 			addition.qty = 0;
 		}
 	});
