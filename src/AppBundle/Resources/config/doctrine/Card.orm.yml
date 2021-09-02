@@ -36,6 +36,12 @@ AppBundle\Entity\Card:
             joinColumn:
                 name: faction2_id
                 referencedColumnName: id
+        faction3:
+            targetEntity: Faction
+            nullable: true
+            joinColumn:
+                name: faction3_id
+                referencedColumnName: id
         encounter:
             targetEntity: Encounter
             inversedBy: cards

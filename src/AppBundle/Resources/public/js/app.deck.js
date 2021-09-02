@@ -33,7 +33,7 @@ var date_creation,
 		investigator: "Doesn't comply with the Investigator requirements"
 	},
 	header_tpl = _.template('<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'),
-	card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> icon-<%= card.faction_code %>"></span><% if (typeof(card.faction2_code) !== "undefined") { %><span class="icon icon-<%= card.faction2_code %>"></span> <% } %> <a href="<%= card.url %>" class="card card-tip fg-<%= card.faction_code %> <% if (typeof(card.faction2_code) !== "undefined") { %> fg-dual <% } %>" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a>'),
+	card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> icon-<%= card.faction_code %>"></span><% if (typeof(card.faction2_code) !== "undefined") { %><span class="icon icon-<%= card.faction2_code %>"></span> <% } %><% if (typeof(card.faction3_code) !== "undefined") { %><span class="icon icon-<%= card.faction3_code %>"></span> <% } %> <a href="<%= card.url %>" class="card card-tip fg-<%= card.faction_code %> <% if (typeof(card.faction2_code) !== "undefined") { %> fg-dual <% } %>" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.name %></a>'),
 	layouts = {},
 	layout_data = {};
 
@@ -1307,7 +1307,7 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 				var faction_valid = false;
 				for(var j = 0; j < option.faction.length; j++){
 					var faction = option.faction[j];
-					if (card.faction_code == faction || card.faction2_code == faction){
+					if (card.faction_code == faction || card.faction2_code == faction || card.faction3_code == faction){
 						faction_valid = true;
 					}
 				}
@@ -1452,6 +1452,12 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 								option.atleast_count[card.faction2_code] = 0;
 							}
 							option.atleast_count[card.faction2_code] += card.indeck;
+						}
+						if (card.faction3_code) {
+							if (!option.atleast_count[card.faction3_code]) {
+								option.atleast_count[card.faction3_code] = 0;
+							}
+							option.atleast_count[card.faction3_code] += card.indeck;
 						}
 					} else if (option.atleast.types) {
 						if (!option.atleast_count[card.type_code]) {

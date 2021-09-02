@@ -47,6 +47,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 		$externalFields = [
 				'faction',
 				'faction2',
+				'faction3',
 				'pack',
 				'type',
 				'encounter',
@@ -490,6 +491,11 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	 * @var \AppBundle\Entity\Faction
 	 */
 	private $faction2;
+
+	/**
+	 * @var \AppBundle\Entity\Faction
+	 */
+	private $faction3;
   
 		/**
 	 * @var \AppBundle\Entity\Subtype
@@ -2027,13 +2033,38 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	}
 
 	/**
-	 * Get faction
+	 * Get faction2
 	 *
 	 * @return \AppBundle\Entity\Faction
 	 */
 	public function getFaction2()
 	{
 		return $this->faction2;
+	}
+	
+	
+	/**
+	 * Set faction3
+	 *
+	 * @param \AppBundle\Entity\Faction $faction3
+	 *
+	 * @return Card
+	 */
+	public function setFaction3(\AppBundle\Entity\Faction $faction3 = null)
+	{
+		$this->faction3 = $faction3;
+
+		return $this;
+	}
+
+	/**
+	 * Get faction3
+	 *
+	 * @return \AppBundle\Entity\Faction
+	 */
+	public function getFaction3()
+	{
+		return $this->faction3;
 	}
 
 	

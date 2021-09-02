@@ -73,6 +73,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		$this->em->flush();
 		$this->loadCollection('Faction');
 		$this->collections['Faction2'] = $this->collections['Faction'];
+		$this->collections['Faction3'] = $this->collections['Faction'];
 		$output->writeln("Done.");
 		
 		// types
@@ -461,6 +462,7 @@ class ImportStdCommand extends ContainerAwareCommand
 			], [
 					'faction_code',
 					'faction2_code',
+					'faction3_code',
 					'pack_code',
 					'type_code',
 					'subtype_code',
@@ -688,7 +690,7 @@ class ImportStdCommand extends ContainerAwareCommand
 
 			if(!key_exists($key, $data)) {
 				// optional links to other tables 
-				if ($key === "faction2_code" || $key === "subtype_code" || $key === "encounter_code" || $key === "back_card_code" || $key === "front_card_code"){
+				if ($key === "faction2_code" || $key === "faction3_code" || $key === "subtype_code" || $key === "encounter_code" || $key === "back_card_code" || $key === "front_card_code"){
 					continue;
 				}
 				throw new \Exception("Missing key [$key] in ".json_encode($data));

@@ -3,4 +3,6 @@
 	<span class="card-faction">{{ card.faction_name }}</span>
 	{% if card.faction2_code is defined %}<span class="icon-{{ card.faction2_code }} fg-{{ card.faction2_code }}"></span>
 	<span class="card-faction">{{ card.faction2_name }}</span>{% endif %}
+	{% if card.faction3_code is defined %}<span class="icon-{{ card.faction3_code }} fg-{{ card.faction3_code }}"></span>
+	<span class="card-faction">{{ card.faction3_name }}</span>{% endif %}
 </div>

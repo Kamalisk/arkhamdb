@@ -975,7 +975,8 @@ ui.get_filters = function get_filters(prefix) {
 					if (column_name == "faction_code"){
 						filters['$or'] = [
 							{"faction_code": { '$in': arr }},
-							{"faction2_code": { '$in': arr }}
+							{"faction2_code": { '$in': arr }},
+							{"faction3_code": { '$in': arr }}
 						];
 					} else {
 						filters[column_name] = {

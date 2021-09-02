@@ -48,6 +48,9 @@ format.faction = function faction(card) {
 	if (card.faction2_code) {
 		text += '<span class="fg-'+card.faction2_code+' icon-'+card.faction2_code+'"></span> '+ card.faction2_name + '. ';
 	}
+	if (card.faction3_code) {
+		text += '<span class="fg-'+card.faction3_code+' icon-'+card.faction3_code+'"></span> '+ card.faction3_name + '. ';
+	}
 	return text;
 }
 

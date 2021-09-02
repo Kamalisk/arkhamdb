@@ -187,7 +187,7 @@ class CardsData
 		// construction de la requete sql
 		$repo = $this->doctrine->getRepository('AppBundle:Card');
 		$qb = $repo->createQueryBuilder('c');
-		$qb->select('c', 'p', 'y', 't', 'b', 'm', 'l', 'f', 'f2')
+		$qb->select('c', 'p', 'y', 't', 'b', 'm', 'l', 'f', 'f2', 'f3')
 		    ->leftJoin('c.pack', 'p')
 			->leftJoin('p.cycle', 'y')
 			->leftJoin('c.type', 't')
@@ -195,7 +195,8 @@ class CardsData
 			->leftJoin('c.encounter', 'm')
 			->leftJoin('c.linked_to', 'l')
 			->leftJoin('c.faction', 'f')
-			->leftJoin('c.faction2', 'f2');
+			->leftJoin('c.faction2', 'f2')
+			->leftJoin('c.faction3', 'f3');
 		$qb2 = null;
 		$qb3 = null;
 		if ($encounter === "encounter"){
@@ -371,8 +372,8 @@ class CardsData
 							$or = [];
 							foreach($condition as $arg) {
 								switch($operator) {
-									case ':': $or[] = "(f.code = ?$i)"; $or[] = "(f2.code = ?$i)";break;
-									case '!': $or[] = "(f.code != ?$i)"; $or[] = "(f2.code != ?$i)"; break;
+									case ':': $or[] = "(f.code = ?$i)"; $or[] = "(f2.code = ?$i)"; $or[] = "(f3.code = ?$i)";break;
+									case '!': $or[] = "(f.code != ?$i)"; $or[] = "(f2.code != ?$i)"; $or[] = "(f3.code != ?$i)"; break;
 								}
 								$qb->setParameter($i++, $arg);
 							}
