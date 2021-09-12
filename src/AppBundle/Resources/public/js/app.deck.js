@@ -1079,25 +1079,24 @@ deck.get_copies_and_deck_limit = function get_copies_and_deck_limit() {
 	var copies_and_deck_limit = {};
 	var underworld_support = app.data.cards.findById("08046");
 	deck.get_draw_deck().forEach(function (card) {
-		const use_underworld_support_limit = !card.restrictions && !!(underworld_support && underworld_support.indeck);
+		var use_underworld_support_limit = !card.restrictions && !!(underworld_support && underworld_support.indeck);
 		var value = copies_and_deck_limit[card.real_name];
+
+		var deck_limit = card.deck_limit;
+		if (use_underworld_support_limit) {
+			deck_limit = 1;
+		} else if(typeof card.real_text !== 'undefined' && card.real_text.indexOf('Myriad.') !== -1) {
+			deck_limit = 3;
+		}
+
 		if(!value) {
-			var deck_limit = use_underworld_support_limit ? 1 : card.deck_limit;
-			if(!use_underworld_support_limit && typeof card.real_text !== 'undefined' && card.real_text.indexOf('Myriad.') !== -1) {
-				deck_limit = 3;
-			}
 			copies_and_deck_limit[card.real_name] = {
 				nb_copies: card.indeck - card.ignore,
-				deck_limit,
+				deck_limit
 			};
 		} else {
 			value.nb_copies += card.indeck - card.ignore;
-			if(!use_underworld_support_limit) {
-				value.deck_limit = Math.min(card.deck_limit, value.deck_limit);
-				if(typeof card.real_text !== 'undefined' && card.real_text.indexOf('Myriad.') !== -1) {
-					value.deck_limit = 3;
-				}
-			}
+			value.deck_limit = Math.min(deck_limit, value.deck_limit);
 		}
 	})
 	return copies_and_deck_limit;
