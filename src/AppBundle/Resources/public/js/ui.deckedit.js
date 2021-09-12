@@ -67,7 +67,7 @@ ui.set_max_qty = function set_max_qty() {
 	}
 
 	app.data.cards.find().forEach(function(record) {
-		var max_qty = Math.min(3, record.deck_limit);
+		var max_qty = Math.min(4, record.deck_limit);
 		if (record.pack_code == 'core') {
 			max_qty = Math.min(max_qty, record.quantity * cores);
 		}
@@ -975,7 +975,8 @@ ui.get_filters = function get_filters(prefix) {
 					if (column_name == "faction_code"){
 						filters['$or'] = [
 							{"faction_code": { '$in': arr }},
-							{"faction2_code": { '$in': arr }}
+							{"faction2_code": { '$in': arr }},
+							{"faction3_code": { '$in': arr }}
 						];
 					} else {
 						filters[column_name] = {
