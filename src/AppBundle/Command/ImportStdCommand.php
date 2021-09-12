@@ -26,7 +26,7 @@ class ImportStdCommand extends ContainerAwareCommand
 
 	/* @var $output OutputInterface */
 	private $output;
-	
+
 	private $collections = [];
 
 	protected function configure()
@@ -60,7 +60,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		$helper = $this->getHelper('question');
 		//$this->loadCollection('Card');
 		// factions
-		
+
 		$output->writeln("Importing Classes...");
 		$factionsFileInfo = $this->getFileInfo($path, 'factions.json');
 		$imported = $this->importFactionsJsonFile($factionsFileInfo);
@@ -75,9 +75,9 @@ class ImportStdCommand extends ContainerAwareCommand
 		$this->collections['Faction2'] = $this->collections['Faction'];
 		$this->collections['Faction3'] = $this->collections['Faction'];
 		$output->writeln("Done.");
-		
+
 		// types
-		
+
 		$output->writeln("Importing Types...");
 		$typesFileInfo = $this->getFileInfo($path, 'types.json');
 		$imported = $this->importTypesJsonFile($typesFileInfo);
@@ -90,9 +90,9 @@ class ImportStdCommand extends ContainerAwareCommand
 		$this->em->flush();
 		$this->loadCollection('Type');
 		$output->writeln("Done.");
-		
+
 		// subtypes
-		
+
 		$output->writeln("Importing SubTypes...");
 		$subtypesFileInfo = $this->getFileInfo($path, 'subtypes.json');
 		$imported = $this->importSubtypesJsonFile($subtypesFileInfo);
@@ -107,7 +107,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		$output->writeln("Done.");
 
 		// encounter sets
-		
+
 		$output->writeln("Importing Encounter Sets...");
 		$encounterFileInfo = $this->getFileInfo($path, 'encounters.json');
 		$imported = $this->importEncountersJsonFile($encounterFileInfo);
@@ -120,10 +120,10 @@ class ImportStdCommand extends ContainerAwareCommand
 		$this->em->flush();
 		$this->loadCollection('Encounter');
 		$output->writeln("Done.");
-		
-		
 
-		
+
+
+
 		// cycles
 
 		$output->writeln("Importing Taboos...");
@@ -140,7 +140,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		$output->writeln("Done.");
 
 
-		
+
 		// cycles
 
 		$output->writeln("Importing Cycles...");
@@ -155,10 +155,10 @@ class ImportStdCommand extends ContainerAwareCommand
 		$this->em->flush();
 		$this->loadCollection('Cycle');
 		$output->writeln("Done.");
-		
-		
-		
-		
+
+
+
+
 		// second, packs
 
 		$output->writeln("Importing Packs...");
@@ -174,9 +174,9 @@ class ImportStdCommand extends ContainerAwareCommand
 		$this->em->flush();
 		$this->loadCollection('Pack');
 		$output->writeln("Done.");
-				
+
 		// third, cards
-		
+
 		$output->writeln("Importing Cards...");
 		$imported = [];
 		// get subdirs of files and do this for each file
@@ -225,7 +225,7 @@ class ImportStdCommand extends ContainerAwareCommand
 			foreach($this->duplicates as $duplicate) {
 				$duplicate_of = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $duplicate['duplicate_of']]);
 				$new_card = $duplicate['card'];
-				// create a new "card" using the data of this card. 
+				// create a new "card" using the data of this card.
 				$new_card_data = $duplicate_of->serialize();
 				$new_card_data['code'] = $new_card['code'];
 				$new_card_data['duplicate_of'] = $duplicate['duplicate_of'];
@@ -247,18 +247,18 @@ class ImportStdCommand extends ContainerAwareCommand
 					$duplicates_added[0]->setDuplicateOf($duplicate_of);
 				}
 			}
-			
+
 			$this->em->flush();
 		}
 
 		$output->writeln("Done.");
-		
+
 	}
 
 	protected function importFactionsJsonFile(\SplFileInfo $fileinfo)
 	{
 		$result = [];
-	
+
 		$list = $this->getDataFromFile($fileinfo);
 		foreach($list as $data)
 		{
@@ -272,14 +272,14 @@ class ImportStdCommand extends ContainerAwareCommand
 				$this->em->persist($faction);
 			}
 		}
-	
+
 		return $result;
 	}
-	
+
 	protected function importTypesJsonFile(\SplFileInfo $fileinfo)
 	{
 		$result = [];
-	
+
 		$list = $this->getDataFromFile($fileinfo);
 		foreach($list as $data)
 		{
@@ -292,14 +292,14 @@ class ImportStdCommand extends ContainerAwareCommand
 				$this->em->persist($type);
 			}
 		}
-	
+
 		return $result;
 	}
-	
+
 		protected function importSubtypesJsonFile(\SplFileInfo $fileinfo)
 	{
 		$result = [];
-	
+
 		$list = $this->getDataFromFile($fileinfo);
 		foreach($list as $data)
 		{
@@ -312,14 +312,14 @@ class ImportStdCommand extends ContainerAwareCommand
 				$this->em->persist($type);
 			}
 		}
-	
+
 		return $result;
 	}
 
 		protected function importEncountersJsonFile(\SplFileInfo $fileinfo)
 	{
 		$result = [];
-	
+
 		$list = $this->getDataFromFile($fileinfo);
 		foreach($list as $data)
 		{
@@ -332,7 +332,7 @@ class ImportStdCommand extends ContainerAwareCommand
 				$this->em->persist($type);
 			}
 		}
-	
+
 		return $result;
 	}
 
@@ -340,7 +340,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		protected function importScenariosJsonFile(\SplFileInfo $fileinfo)
 	{
 		$result = [];
-	
+
 		$list = $this->getDataFromFile($fileinfo);
 		foreach($list as $data)
 		{
@@ -355,14 +355,14 @@ class ImportStdCommand extends ContainerAwareCommand
 				$this->em->persist($type);
 			}
 		}
-	
+
 		return $result;
 	}
-	
+
 			protected function importCampaignsJsonFile(\SplFileInfo $fileinfo)
 	{
 		$result = [];
-	
+
 		$list = $this->getDataFromFile($fileinfo);
 		foreach($list as $data)
 		{
@@ -376,20 +376,20 @@ class ImportStdCommand extends ContainerAwareCommand
 				$this->em->persist($type);
 			}
 		}
-	
+
 		return $result;
 	}
-	
+
 	protected function importCyclesJsonFile(\SplFileInfo $fileinfo)
 	{
 		$result = [];
-	
+
 		$cyclesData = $this->getDataFromFile($fileinfo);
 		foreach($cyclesData as $cycleData) {
 			$cycle = $this->getEntityFromData('AppBundle\Entity\Cycle', $cycleData, [
-					'code', 
-					'name', 
-					'position', 
+					'code',
+					'name',
+					'position',
 					'size'
 			], [], []);
 			if($cycle) {
@@ -397,21 +397,21 @@ class ImportStdCommand extends ContainerAwareCommand
 				$this->em->persist($cycle);
 			}
 		}
-		
+
 		return $result;
 	}
 
 	protected function importTaboosJsonFile(\SplFileInfo $fileinfo)
 	{
 		$result = [];
-	
+
 		$taboosData = $this->getDataFromFile($fileinfo);
 		foreach($taboosData as $tabooData) {
 			$tabooData['cards'] = json_encode($tabooData['cards']);
 			$taboo = $this->getEntityFromData('AppBundle\Entity\Taboo', $tabooData, [
-					'code', 
-					'name', 
-					'date_start', 
+					'code',
+					'name',
+					'date_start',
 					'active',
 					'cards'
 			], [], []);
@@ -420,7 +420,7 @@ class ImportStdCommand extends ContainerAwareCommand
 				$this->em->persist($taboo);
 			}
 		}
-		
+
 		return $result;
 	}
 
@@ -428,14 +428,14 @@ class ImportStdCommand extends ContainerAwareCommand
 	protected function importPacksJsonFile(\SplFileInfo $fileinfo)
 	{
 		$result = [];
-	
+
 		$packsData = $this->getDataFromFile($fileinfo);
 		foreach($packsData as $packData) {
 			$pack = $this->getEntityFromData('AppBundle\Entity\Pack', $packData, [
-					'code', 
-					'name', 
-					'position', 
-					'size', 
+					'code',
+					'name',
+					'position',
+					'size',
 					'date_release'
 			], [
 					'cycle_code'
@@ -447,10 +447,10 @@ class ImportStdCommand extends ContainerAwareCommand
 				$this->em->persist($pack);
 			}
 		}
-		
+
 		return $result;
 	}
-	
+
 	protected function importCardsFromJsonData($cardsData) {
 		$result = [];
 		foreach($cardsData as $cardData) {
@@ -521,14 +521,14 @@ class ImportStdCommand extends ContainerAwareCommand
 				$this->em->persist($card);
 			}
 		}
-		
+
 		return $result;
 	}
 
 	protected function importCardsJsonFile(\SplFileInfo $fileinfo, $special="")
 	{
 		$result = [];
-	
+
 		$code = $fileinfo->getBasename('.json');
 		if (stristr($code, "_encounter") !== FALSE && $special){
 			return $result;
@@ -537,21 +537,21 @@ class ImportStdCommand extends ContainerAwareCommand
 
 		$pack = $this->em->getRepository('AppBundle:Pack')->findOneBy(['code' => $code]);
 		if(!$pack) throw new \Exception("Unable to find Pack [$code]");
-		
+
 		$cardsData = $this->getDataFromFile($fileinfo);
 		$result = $this->importCardsFromJsonData($cardsData);
 		// return all cards imported
 		return $result;
 	}
-	
+
 	protected function copyFieldValueToEntity($entity, $entityName, $fieldName, $newJsonValue)
 	{
 		$metadata = $this->em->getClassMetadata($entityName);
 		$type = $metadata->fieldMappings[$fieldName]['type'];
-		
+
 		// new value, by default what json gave us is the correct typed value
 		$newTypedValue = $newJsonValue;
-		
+
 		// current value, by default the json, serialized value is the same as what's in the entity
 		$getter = 'get'.ucfirst($fieldName);
 		$currentJsonValue = $currentTypedValue = $entity->$getter();
@@ -573,7 +573,7 @@ class ImportStdCommand extends ContainerAwareCommand
 				}
 			}
 		}
-		
+
 		$different = ($currentJsonValue !== $newJsonValue);
 		if($different) {
 			//print_r(gettype($currentJsonValue));
@@ -587,7 +587,7 @@ class ImportStdCommand extends ContainerAwareCommand
 			$entity->$setter($newTypedValue);
 		}
 	}
-	
+
 	protected function copyKeyToEntity($entity, $entityName, $data, $key, $isMandatory = TRUE)
 	{
 		$metadata = $this->em->getClassMetadata($entityName);
@@ -598,7 +598,7 @@ class ImportStdCommand extends ContainerAwareCommand
 				$data[$key] = null;
 			}
 		}
-		
+
 		$value = $data[$key];
 		if ($key == "is_unique"){
 			if (!$value){
@@ -620,17 +620,17 @@ class ImportStdCommand extends ContainerAwareCommand
 				$value = false;
 			}
 		}
-		
+
 		if ($key == "deck_options"){
 			if ($value){
 				$value = json_encode($value);
 			}
 		}
-		
+
 		if ($key == "deck_options" && $value){
 			//print_r($value);
 		}
-		
+
 		if ($key == "health_per_investigator" || $key == "is_unique"){
 			if ($value){
 				//echo $key." ".$value."\n";
@@ -640,7 +640,7 @@ class ImportStdCommand extends ContainerAwareCommand
 			throw new \Exception("Missing column [$key] in entity ".$entityName);
 		}
 		$fieldName = $metadata->fieldNames[$key];
-		
+
 		$this->copyFieldValueToEntity($entity, $entityName, $fieldName, $value);
 	}
 
@@ -649,7 +649,7 @@ class ImportStdCommand extends ContainerAwareCommand
 		if(!key_exists('code', $data)) {
 			throw new \Exception("Missing key [code] in ".json_encode($data));
 		}
-		
+
 		if (key_exists('duplicate_of', $data) && !key_exists('name', $data)) {
 			$this->duplicates[] = ['card' => $data, 'duplicate_of' => $data['duplicate_of']];
 			return;
@@ -658,44 +658,51 @@ class ImportStdCommand extends ContainerAwareCommand
 
 		if(!$entity) {
 			// if we cant find it, try more complex methods just to check
-			// the only time this should work is if the existing name also has an _ meaning it was temporary. 
-			
+			// the only time this should work is if the existing name also has an _ meaning it was temporary.
+
 			if ($entityName == "AppBundle\Entity\Card"){
-				
+
 				if (isset($data['xp'])){
-					$entity = $this->em->getRepository($entityName)->findOneBy(['name' => $data['name'], 'type'=> $data['type_code'], 'xp' => $data['xp']]);				
+					$entity = $this->em->getRepository($entityName)->findOneBy(['name' => $data['name'], 'type'=> $data['type_code'], 'xp' => $data['xp']]);
 				}else {
 					$entity = $this->em->getRepository($entityName)->findOneBy(['name' => $data['name'], 'type'=> $data['type_code'], 'xp' => null]);
 				}
 			}
-			
+
 			if (!$entity){
 				$entity = new $entityName();
-			}			
+			}
 		}
 		$orig = $entity->serialize();
 		foreach($mandatoryKeys as $key) {
 			$this->copyKeyToEntity($entity, $entityName, $data, $key, TRUE);
 		}
 
-		foreach($optionalKeys as $key) {			
+		foreach($optionalKeys as $key) {
 			$this->copyKeyToEntity($entity, $entityName, $data, $key, FALSE);
 		}
-		
+
 		foreach($foreignKeys as $key) {
 			$foreignEntityShortName = ucfirst(str_replace('_code', '', $key));
 			if ($key === "front_card_code"){
 				$foreignEntityShortName = "Card";
 			}
 
+			$setter = 'set'.$foreignEntityShortName;
+			$getter = 'get'.$foreignEntityShortName;
+
 			if(!key_exists($key, $data)) {
-				// optional links to other tables 
-				if ($key === "faction2_code" || $key === "faction3_code" || $key === "subtype_code" || $key === "encounter_code" || $key === "back_card_code" || $key === "front_card_code"){
+				// optional links to other tables
+				if ($key === "faction2_code" || $key === "faction3_code" || $key === "subtype_code"){
+					$entity->$setter();
+					continue;
+				}
+				if ($key === "encounter_code" || $key === "back_card_code" || $key === "front_card_code"){
 					continue;
 				}
 				throw new \Exception("Missing key [$key] in ".json_encode($data));
 			}
-			
+
 			$foreignCode = $data[$key];
 			if(!key_exists($foreignEntityShortName, $this->collections)) {
 				throw new \Exception("No collection for [$foreignEntityShortName] in ".json_encode($data));
@@ -703,19 +710,16 @@ class ImportStdCommand extends ContainerAwareCommand
 
 			if (!$foreignCode){
 				continue;
-			} 
+			}
 			//echo "\n";
 			//print("hvor mange ".count($this->collections[$foreignEntityShortName]));
 			if(!key_exists($foreignCode, $this->collections[$foreignEntityShortName])) {
 				throw new \Exception("Invalid code [$foreignCode] for key [$key] in ".json_encode($data));
 			}
 			$foreignEntity = $this->collections[$foreignEntityShortName][$foreignCode];
-	
-			$getter = 'get'.$foreignEntityShortName;
-			
+
 			if(!$entity->$getter() || $entity->$getter()->getId() !== $foreignEntity->getId()) {
 				$this->output->writeln("Changing the <info>$key</info> of <info>".$entity->toString()."</info>");
-				$setter = 'set'.$foreignEntityShortName;
 				$entity->$setter($foreignEntity);
 			}
 		}
@@ -804,12 +808,12 @@ class ImportStdCommand extends ContainerAwareCommand
 			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
 		}
 	}
-	
+
 	protected function importStoryData(Card $card, $data)
 	{
 
 	}
-	
+
 
 	protected function importActData(Card $card, $data)
 	{
@@ -867,56 +871,56 @@ class ImportStdCommand extends ContainerAwareCommand
 
 	protected function getDataFromFile(\SplFileInfo $fileinfo)
 	{
-	
+
 		$file = $fileinfo->openFile('r');
 		$file->setFlags(\SplFileObject::SKIP_EMPTY | \SplFileObject::DROP_NEW_LINE);
-	
+
 		$lines = [];
 		foreach($file as $line) {
 			if($line !== false) $lines[] = $line;
 		}
 		$content = implode('', $lines);
-	
+
 		$data = json_decode($content, true);
-	
+
 		if($data === null) {
 			throw new \Exception("File [".$fileinfo->getPathname()."] contains incorrect JSON (error code ".json_last_error().")");
 		}
-	
+
 		return $data;
 	}
 
 	protected function getDataFromString($string) {
 		$data = json_decode($string, true);
-	
+
 		if($data === null) {
 			throw new \Exception("String contains incorrect JSON (error code ".json_last_error().")");
 		}
-	
+
 		return $data;
 	}
-	
+
 	protected function getFileInfo($path, $filename)
 	{
 		$fs = new Filesystem();
-		
+
 		if(!$fs->exists($path)) {
 			throw new \Exception("No repository found at [$path]");
 		}
-		
+
 		$filepath = "$path/$filename";
-		
+
 		if(!$fs->exists($filepath)) {
 			throw new \Exception("No $filename file found at [$path]");
 		}
-		
+
 		return new \SplFileInfo($filepath);
 	}
-	
+
 	protected function getFileSystemIterator($path)
 	{
 		$fs = new Filesystem();
-		
+
 		if(!$fs->exists($path)) {
 			throw new \Exception("No repository found at [$path]");
 		}
@@ -926,10 +930,10 @@ class ImportStdCommand extends ContainerAwareCommand
 		if(!$iterator->count()) {
 			throw new \Exception("No json file found at [$path/set]");
 		}
-		
+
 		return $iterator;
 	}
-	
+
 	protected function loadCollection($entityShortName)
 	{
 		$this->collections[$entityShortName] = [];
@@ -941,5 +945,5 @@ class ImportStdCommand extends ContainerAwareCommand
 			//echo $entity->getCode()."\n";
 		}
 	}
-	
+
 }
