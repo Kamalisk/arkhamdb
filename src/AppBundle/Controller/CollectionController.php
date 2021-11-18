@@ -15,6 +15,7 @@ class CollectionController extends Controller {
         if ($owned_packs) {
             $oPacks = explode(',', $owned_packs);
         }
+
         foreach ($list_cycles as $cycle) {
             $size = count($cycle->getPacks());
             if ($cycle->getPosition() == 0 || $size == 0) {
@@ -39,12 +40,12 @@ class CollectionController extends Controller {
             foreach ($cycle->getPacks() as $pack) {
                 $checked = count($oPacks) ? in_array($pack->getId(), $oPacks) : ($pack->getDateRelease() != null);
                 $category['packs'][] = ["code" => $pack->getCode(), "id" => $pack->getId(), "label" => $pack->getName(), "checked" => $checked, "future" => $pack->getDateRelease() === null];
-                if ($cycle->getCode() == 'core') {
-		            	$checked = count($oPacks) ? in_array($pack->getId()."-2", $oPacks) : ($pack->getDateRelease() != null);
-		              $category["packs"][] = ["code" => $cycle->getCode(), "id" => $pack->getId().'-2', "label" => "2", "checked" => $checked, "future" => $pack->getDateRelease() === null];
-		            }
+                if ($pack->getCode() == 'core') {
+                    $checked = count($oPacks) ? in_array($pack->getId()."-2", $oPacks) : ($pack->getDateRelease() != null);
+                    $category["packs"][] = ["code" => $cycle->getCode(), "id" => $pack->getId().'-2', "label" => "2", "checked" => $checked, "future" => $pack->getDateRelease() === null];
+                }
             }
-            
+
             $categories[] = $category;
         }
         return $this->render('AppBundle:Collection:collection.html.twig', [
