@@ -66,6 +66,24 @@
 .icon-skull:before {
 	content: "k";
 }
+.icon-frost:before {
+	content: "x";
+}
+.icon-seal_a:before {
+	content: "1";
+}
+.icon-seal_b:before {
+	content: "=2";
+}
+.icon-seal_c:before {
+	content: "3";
+}
+.icon-seal_d:before {
+	content: "4";
+}
+.icon-seal_e:before {
+	content: "5";
+}
 .icon-auto_fail:before {
 	content: "m";
 }

@@ -59,7 +59,13 @@ class CardsData
 			'[neutral]' => '<span class="icon-neutral" title="Neutral">Neutral</span>',
 			'[per_investigator]' => '<span class="icon-per_investigator" title="Per Investigator"></span>',
 			'[bless]' => '<span class="icon-bless" title="Bless"></span>',
-			'[curse]' => '<span class="icon-curse" title="Curse"></span>'
+			'[curse]' => '<span class="icon-curse" title="Curse"></span>',
+			'[frost]' => '<span class="icon-frost" title="frost"></span>',
+			'[seal_a]' => '<span class="icon-seal_a" title="Seal A"></span>',
+			'[seal_b]' => '<span class="icon-seal_b" title="Seal B"></span>',
+			'[seal_c]' => '<span class="icon-seal_c" title="Seal C"></span>',
+			'[seal_d]' => '<span class="icon-seal_d" title="Seal D"></span>',
+			'[seal_e]' => '<span class="icon-seal_e" title="Seal E"></span>'
 		];
 		$text = preg_replace("/\[\[([^\]]+)\]\]/", '<b><i>${1}</i></b>', $text);
 		return str_replace(array_keys($displayTextReplacements), array_values($displayTextReplacements), $text);
