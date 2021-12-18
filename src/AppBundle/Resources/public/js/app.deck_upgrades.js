@@ -220,12 +220,15 @@ deck_upgrades.display = function display() {
 			addition.qty = 0;
 		} else if (addition_xp >= 0){
 			if (addition.card.xp === 0 && removed_0_cards > 0 && free_0_cards > 0){
+				// Account for taboo xp, which still must be paid when deck size grows.
+				cost = cost + (addition.qty * addition_xp);
 				free_0_cards -= addition.qty;
 				removed_0_cards -= addition.qty;
 				if (removed_0_cards < 0 || free_0_cards < 0){
-					// I think this shouldn't be 1, since now 3/4 cards is possible?
+					// I think this shouldn't be 1, since now Sled Dogs (4/non-myriad) card exists.
 					// Should be Math.abs(free_0_cards) I believe.
 					addition.qty = 1;
+					cost = cost - (addition.qty * addition_xp);
 				} else {
 					addition.qty = 0;
 				}
