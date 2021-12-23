@@ -207,7 +207,7 @@
       </trans-unit>
       <trans-unit id="r_ttCrp" resname="Popular Decks">
         <source>Popular Decks</source>
-        <target>Популярные Колоды</target>
+        <target>Популярные колоды</target>
       </trans-unit>
       <trans-unit id="JyS6ppo" resname="Recent Decks">
         <source>Recent Decks</source>
