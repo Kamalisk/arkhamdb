@@ -4,29 +4,33 @@ var cards_zoom_regexp = /card\/(\d\d\d\d\d)$/,
 	mode = 'text',
 	hide_event = 'mouseout';
 
-function display_card_on_element(card, element, event) {
+function getCardText(card, linked) {
 	var content;
-	var back_only = false;
-	var front_only = false;
-	if ($(element).data('back')) {
-		back_only = $(element).data('back');
-	}
-	if ($(element).data('front')) {
-		front_only = $(element).data('front');
-	}
-	if(mode == 'text') {
-		var image = card.imagesrc ? '<div class="card-thumbnail card-thumbnail-3x card-thumbnail-'+card.type_code+'" style="background-image:url('+card.imagesrc+')"></div>' : "";		
-		content = image	+ '<h4 class="card-name">' + app.format.name(card) + '</h4>';
-		if (!back_only) {
-			content = content + '<div class="card-faction">' + app.format.faction(card) + '</div>';
-			content = content + '<div><span class="card-type">'+card.type_name+((card.type_code == "agenda" || card.type_code == "act") ? '. Stage '+card.stage : '')+(card.slot ? '. '+card.slot : "")+(card.subtype_name ? '. '+card.subtype_name : "")+'</span></div>';
-			content = content + '<div class="card-traits">' + app.format.traits(card) + '</div>';
+
+	var image = card.imagesrc ? '<div class="card-thumbnail card-thumbnail-3x card-thumbnail-'+card.type_code+'" style="background-image:url('+card.imagesrc+')"></div>' : "";
+	content = image	+ '<h4 class="card-name">' + app.format.name(card) + '</h4>';
+	content = content + '<div class="card-faction">' + app.format.faction(card) + '</div>';
+	content = content + '<div><span class="card-type">'+card.type_name+((card.type_code == "agenda" || card.type_code == "act") ? '. Stage '+card.stage : '')+(card.slot ? '. '+card.slot : "")+(card.subtype_name ? '. '+card.subtype_name : "")+'</span></div>';
+	content = content + '<div class="card-traits">' + app.format.traits(card) + '</div>';
+
+	if (card.type_code == "agenda" || card.type_code == "act"){
+		content += '<div class="card-info">' + app.format.info(card) + '</div>';
+		content += '<div class="card-flavor">' + card.flavor + '</div><div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>'
+
+		if (card.double_sided) {
+			content += '<hr />';
+			if (card.back_name){
+				content += '<h4 class="card-name">' + card.back_name + '</h4>';
+			}
+			if (card.back_flavor){
+				content += '<div class="card-flavor">' + card.back_flavor + '</div>';
+			}
+			if (card.back_text){
+				content += '<div class="card-text">' + app.format.back_text(card) + '</div>';
+			}
 		}
-		
-		if (card.type_code == "agenda" || card.type_code == "act"){
-			content += '<div class="card-info">' + app.format.info(card) + '</div>';
-			content += '<div class="card-flavor">' + card.flavor + '</div><div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>' 
-		} else if (card.type_code == "location"){			
+	} else if (card.type_code == "location"){
+		if (card.double_sided) {
 			if (card.back_text){
 				content += '<div class="card-text">' + app.format.back_text(card) + '</div>';
 			}
@@ -34,44 +38,58 @@ function display_card_on_element(card, element, event) {
 				content += '<div class="card-flavor">' + card.back_flavor + '</div>';
 			}
 			content += '<hr />';
-			content += '<div class="card-info">' + app.format.info(card) + '</div>';
-			content += '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>';
-		}else {
-			if (!back_only) {
-				content += '<div class="card-info">' + app.format.info(card) + '</div>';
-				content += '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>';
-				if (card.taboo_text){
-					content += '<div class="card-text-taboo border-'+card.faction_code+'">' + app.format.text(card, "taboo_text") + '</div>'
-				}
-				if (card.taboo_xp){
-					content += '<div class="card-text-taboo border-'+card.faction_code+'">This card costs ' + card.taboo_xp + ' additional experience</div>'
-				}
-			}
-			if (!front_only) {
-				if (card.double_sided){
-					content += '<hr />';
-					if (card.back_flavor){
-						//content += '<div class="card-flavor">' + card.back_flavor + '</div>';
-					}
-					if (card.back_text){
-						content += '<div class="card-text border-'+card.faction_code+'">' + app.format.back_text(card) + '</div>';
-					}
-				}
-			}
 		}
-		
-		if (card.victory){
-			content += '<div class="card-type">Victory ' + card.victory + '.</div>'
+		content += '<div class="card-info">' + app.format.info(card) + '</div>';
+		content += '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>';
+	} else {
+		content += '<div class="card-info">' + app.format.info(card) + '</div>';
+		content += '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>';
+		if (card.taboo_text){
+			content += '<div class="card-text-taboo border-'+card.faction_code+'">' + app.format.text(card, "taboo_text") + '</div>'
+		}
+		if (card.taboo_xp){
+			content += '<div class="card-text-taboo border-'+card.faction_code+'">This card costs ' + card.taboo_xp + ' additional experience</div>'
 		}
 
-		if (card.vengeance){
-			content += '<div class="card-type">Vengeance ' + card.vengeance + '.</div>'
+		if (card.double_sided) {
+			content += '<hr />';
+			if (card.back_flavor){
+				if (card.type_code != 'investigator') {
+					content += '<div class="card-flavor">' + card.back_flavor + '</div>';
+				}
+			}
+			if (card.back_text){
+				content += '<div class="card-text border-'+card.faction_code+'">' + app.format.back_text(card) + '</div>';
+			}
 		}
-		
-		content += '<div class="card-pack">' + app.format.pack(card) + '</div>';
-	
 	}
-	else {
+
+	if (card.victory){
+		content += '<div class="card-type">Victory ' + card.victory + '.</div>'
+	}
+
+	if (card.vengeance){
+		content += '<div class="card-type">Vengeance ' + card.vengeance + '.</div>'
+	}
+
+	if (!linked) {
+		// if not a linked card, call this again to display the new card
+		if (card.linked_card) {
+			content += '<hr />';
+			content += getCardText(card.linked_card, true);
+		}
+		content += '<div class="card-pack">' + app.format.pack(card) + '</div>';
+	}
+	return content;
+}
+
+function display_card_on_element(card, element, event) {
+
+	var content = '';
+
+	if(mode == 'text') {
+		content += getCardText(card, false);
+	} else {
 		content = card.imagesrc ? '<img src="'+card.imagesrc+'">' : "";
 	}
 
@@ -96,7 +114,7 @@ function display_card_on_element(card, element, event) {
 			event: hide_event
 		}
 	};
-	
+
 	$(element).qtip(qtip, event);
 }
 
@@ -104,7 +122,7 @@ function display_card_on_element(card, element, event) {
  * @memberOf tip
  * @param event
  */
-tip.display = function display(event) {	
+tip.display = function display(event) {
 	var code = $(this).data('code');
 	var card = app.data.cards.findById(code);
 	if (!card) return;
@@ -129,7 +147,7 @@ tip.display = function display(event) {
  * @memberOf tip
  * @param event
  */
-tip.reveal = function reveal(event) {	
+tip.reveal = function reveal(event) {
 	if ($(this).hasClass('spoiler')){
 		$(this).removeClass('spoiler');
 		$('.spoiler', this.parentNode.parentNode).removeClass('spoiler');
@@ -141,7 +159,7 @@ tip.reveal = function reveal(event) {
  * @memberOf tip
  * @param event
  */
-tip.update_spoiler_cookie = function update_spoiler_cookie(event) {	
+tip.update_spoiler_cookie = function update_spoiler_cookie(event) {
 	if ($(this).is(':checked')){
 		createCookie("spoilers", "hide");
 		window.location.reload(false);
@@ -215,7 +233,7 @@ $(document).on('start.app', function () {
 		mouseover : tip.display,
 		click : tip.reveal
 	}, 'div.card-tip');
-	
+
 	$('body').on({
 		click : tip.reveal
 	}, '.spoiler');
@@ -223,7 +241,7 @@ $(document).on('start.app', function () {
 	$('body').on({
 		mouseover : tip.guess
 	}, 'a:not(.card-tip)');
-	
+
 	$('body').on({
 		change : tip.update_spoiler_cookie
 	}, '#spoilers');
