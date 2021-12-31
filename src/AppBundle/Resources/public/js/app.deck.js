@@ -177,6 +177,7 @@ deck.onloaded = function(data){
 			var alternate_choices = [];
 			var alternate_options = {};
 			alternate_options[''] = investigator.deck_options;
+			alternate_options[investigator_code] = investigator.deck_options;
 			for (var i = 0; i < alternates.length; i++){
 				alternate_choices.push(alternates[i].code)
 				alternate_options[alternates[i].code] = alternates[i].deck_options || [];
