@@ -513,7 +513,8 @@ class ImportStdCommand extends ContainerAwareCommand
 					'permanent',
 					'exile',
 					'exceptional',
-					'myriad'
+					'myriad',
+					'errata_date'
 
 			]);
 			if($card) {

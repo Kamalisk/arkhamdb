@@ -98,7 +98,7 @@ AppBundle\Entity\Card:
                 default: false
         myriad:
             type: boolean
-            column: myriad            
+            column: myriad
             nullable: true
         encounterPosition:
             type: smallint
@@ -157,6 +157,10 @@ AppBundle\Entity\Card:
             gedmo:
                 timestampable:
                     on: update
+        errataDate:
+            type: date
+            nullable: true
+            column: errata_date
         quantity:
             type: smallint
             nullable: false

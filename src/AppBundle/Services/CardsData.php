@@ -570,16 +570,18 @@ class CardsData
     {
     	$getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
     	$value = $card->$getter();
-			switch($metadata->getTypeOfField($fieldName)) {
-				case 'datetime':
-				case 'date':
+		switch($metadata->getTypeOfField($fieldName)) {
+			case 'datetime':
+			case 'date':
+				if ($fieldName != 'errataDate' || !$value) {
 					continue 2;
-					break;
-				case 'boolean':
-					$value = (boolean) $value;
-					break;
-			}
-			$fieldName = ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', $fieldName)), '_');
+				}
+				break;
+			case 'boolean':
+				$value = (boolean) $value;
+				break;
+		}
+		$fieldName = ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', $fieldName)), '_');
     	$cardinfo[$fieldName] = $value;
     }
 
