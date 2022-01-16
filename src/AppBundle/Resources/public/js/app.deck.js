@@ -173,36 +173,47 @@ deck.onloaded = function(data){
 		deck.deck_options = investigator.deck_options;
 		var alternates = app.data.cards.find({'alternate_of_code': investigator.code});
 		if (alternates && alternates.length > 0) {
+			// We store the optional choices/options for use later in the deck editor.
 			var alternate_choices = [];
+			var alternate_options = {};
+			alternate_options[''] = investigator.deck_options;
+			alternate_options[investigator_code] = investigator.deck_options;
 			for (var i = 0; i < alternates.length; i++){
 				alternate_choices.push(alternates[i].code)
+				alternate_options[alternates[i].code] = alternates[i].deck_options || [];
 			}
+			deck.alternate_options = alternate_options;
 			deck.choices.push({'back_select': alternate_choices});
 			deck.choices.push({'front_select': alternate_choices});
 		}
-		for (var i = 0; i < investigator.deck_options.length; i++){
-			var option = investigator.deck_options[i];
+		// Initialize the meta options to sensible 'defaults'
+		for (var i = 0; i < deck.deck_options.length; i++){
+			var option = deck.deck_options[i];
 			if (option.faction_select){
-				deck.choices.push(option);
-				if (!deck.meta || !deck.meta.faction_selected){
-					deck.meta.faction_selected = option.faction_select[0];
+				if (!app.deck.meta || !app.deck.meta.faction_selected){
+					app.deck.meta.faction_selected = option.faction_select[0];
 				}
 			}
 			if (option.deck_size_select){
-				deck.choices.push(option);
-				if (!deck.meta || !deck.meta.deck_size_selected){
-					deck.meta.deck_size_selected = option.deck_size_select[0];
+				if (!app.deck.meta || !app.deck.meta.deck_size_selected){
+					app.deck.meta.deck_size_selected = option.deck_size_select[0];
+				}
+			}
+			if (option.option_select){
+				if (!app.deck.meta || !app.deck.meta.option_selected){
+					app.deck.meta.option_selected = option.option_select[0].id;
 				}
 			}
 		}
-	}
-	// if they user has selected different deck building options, point deck_options to the alternate one
-	if (deck.meta && deck.meta.alternate_back) {
-		var alternate = app.data.cards.findById(deck.meta.alternate_back);
-		if (alternate && alternate.deck_options && alternate.deck_options.length) {
-			deck.deck_options = alternate.deck_options;
+		// if they user has selected different deck building options, point deck_options to the alternate one
+		if (deck.meta && deck.meta.alternate_back) {
+			var alternate = app.data.cards.findById(deck.meta.alternate_back);
+			if (alternate && alternate.deck_options && alternate.deck_options.length) {
+				deck.deck_options = alternate.deck_options;
+			}
 		}
 	}
+
 	if (data.taboo_id){
 		deck.taboo_id = data.taboo_id;
 	}
@@ -686,6 +697,21 @@ deck.get_layout_data = function get_layout_data(options) {
 				size = size + 5;
 			}
 		}
+		for (var i = 0; i < deck.deck_options.length; i++) {
+			var option = deck.deck_options[i];
+			if (option.option_select && deck.meta && deck.meta.option_selected) {
+				for (var j = 0; j < option.option_select.length; j++){
+					var sub_option = option.option_select[j];
+					if (sub_option.id == deck.meta.option_selected){
+						option = sub_option;
+						break;
+					}
+				}
+			}
+			if (option.size) {
+				size = size + option.size;
+			}
+		}
 		// must have the required cards
 		if (card.deck_requirements.card){
 			$.each(card.deck_requirements.card, function (key, value){
@@ -1145,6 +1171,21 @@ deck.get_problem = function get_problem() {
 				size = size + 5;
 			}
 		}
+		for (var i = 0; i < deck.deck_options.length; i++) {
+			var option = deck.deck_options[i];
+			if (option.option_select && deck.meta && deck.meta.option_selected) {
+				for (var j = 0; j < option.option_select.length; j++){
+					var sub_option = option.option_select[j];
+					if (sub_option.id == deck.meta.option_selected){
+						option = sub_option;
+						break;
+					}
+				}
+			}
+			if (option.size) {
+				size = size + option.size;
+			}
+		}
 		// must have the required cards
 		if (card.deck_requirements.card){
 			var req_count = 0;
@@ -1313,6 +1354,15 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 
 		for (var i = 0; i < deck.deck_options.length; i++){
 			var option = deck.deck_options[i];
+			// Handle special select, where we swap an entire option in.
+			if (option.option_select && deck.meta && deck.meta.option_selected) {
+				for (var j = 0; j < option.option_select.length; j++){
+					if (option.option_select[j].id == deck.meta.option_selected){
+						option = option.option_select[j];
+						break;
+					}
+				}
+			}
 
 			var valid = false;
 

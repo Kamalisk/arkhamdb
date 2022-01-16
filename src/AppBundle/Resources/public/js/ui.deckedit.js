@@ -87,13 +87,46 @@ ui.build_faction_selector = function build_faction_selector() {
 
 	$('#faction_selector').hide();
 	$('#deck_size_selector').hide();
+	$('#option_selector').hide();
+
+	// Changing the alternate_back can cause your deck options/choices to change.
+	if (app.deck.alternate_options && app.deck.meta && app.deck.alternate_options[app.deck.meta.alternate_back]){
+		app.deck.deck_options = app.deck.alternate_options[app.deck.meta.alternate_back];
+	}
+
+	// Now calculate the deck 'choices', which might depend on your front/back.
+	var choices = app.deck.choices ? [].concat(app.deck.choices) : [];
+	for (var i = 0; i < app.deck.deck_options.length; i++){
+		var option = app.deck.deck_options[i];
+		if (option.faction_select){
+			choices.push(option);
+			if (!app.deck.meta || !app.deck.meta.faction_selected){
+				app.deck.meta.faction_selected = option.faction_select[0];
+			}
+		}
+		if (option.deck_size_select){
+			choices.push(option);
+			if (!app.deck.meta || !app.deck.meta.deck_size_selected){
+				app.deck.meta.deck_size_selected = option.deck_size_select[0];
+			}
+		}
+		if (option.option_select){
+			choices.push(option);
+			if (!app.deck.meta || !app.deck.meta.option_selected){
+				app.deck.meta.option_selected = option.option_select[0].id;
+			}
+		}
+	}
 
 	$('[data-filter=faction_selector]').empty();
 	$('[data-filter=deck_size_selector]').empty();
+	$('[data-filter=option_selector]').empty();
+	$('[data-filter=front_selector]').empty();
+	$('[data-filter=back_selector]').empty();
 
-	if (app.deck.choices && app.deck.choices.length > 0){
-		for (var i = 0; i < app.deck.choices.length; i++){
-			var choice = app.deck.choices[i];
+	if (choices.length > 0){
+		for (var i = 0; i < choices.length; i++){
+			var choice =choices[i];
 			if (choice.faction_select) {
 				$('#faction_selector').show();
 				choice.faction_select.forEach(function(faction_code){
@@ -110,6 +143,17 @@ ui.build_faction_selector = function build_faction_selector() {
 					//label.tooltip({container: 'body'});
 					$('[data-filter=deck_size_selector]').append(label);
 				});
+			}
+			if (choice.option_select) {
+				if (choice.name) {
+					$('#option_selector_name').text(choice.name);
+				}
+				$('#option_selector').show();
+				choice.option_select.forEach(function(o){
+					var label = $('<option value="' + o.id + '" title="' + o.name + '"> ' + o.name + '</option>');
+					//label.tooltip({container: 'body'});
+					$('[data-filter=option_selector]').append(label);
+				})
 			}
 			if (choice.back_select) {
 				$('#back_selector').show();
@@ -371,6 +415,9 @@ ui.init_selectors = function init_selectors() {
 		if (app.deck.meta.deck_size_selected){
 			$('[data-filter=deck_size_selector]').val(app.deck.meta.deck_size_selected);
 		}
+		if (app.deck.meta.option_selected){
+			$('[data-filter=option_selector]').val(app.deck.meta.option_selected);
+		}
 		if (app.deck.meta.alternate_back){
 			$('[data-filter=back_selector]').val(app.deck.meta.alternate_back);
 		}
@@ -541,7 +588,6 @@ ui.on_core_change = function on_core_change(event) {
 	if (localStorage) {
 		localStorage.setItem('set_code_' + name, $(this).is(":checked")  );
 	}
-	console.log(name, type);
 	switch(name) {
 		case 'core':
 		case 'core-2':
@@ -788,9 +834,18 @@ ui.setup_event_handlers = function setup_event_handlers() {
 		}
 	});
 
+	$('#deck_options [data-filter=option_selector]').on({
+		change : function(event){
+			app.deck.meta.option_selected = event.target.value;
+			ui.refresh_deck();
+			ui.refresh_lists();
+		}
+	});
+
 	$('#deck_options [data-filter=back_selector]').on({
 		change : function(event){
 			app.deck.meta.alternate_back = event.target.value;
+			ui.build_faction_selector();
 			ui.refresh_deck();
 			ui.refresh_lists();
 		}
