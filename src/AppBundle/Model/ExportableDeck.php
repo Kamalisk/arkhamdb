@@ -10,8 +10,12 @@ class ExportableDeck
 		$sideSlots = $this->getSideSlots();
 		$previousDeck = $this->getPreviousDeck();
 		$nextDeck = $this->getNextDeck();
+		$xp_spent = null;
 		if ($previousDeck){
 			$previousDeck = $previousDeck->getId();
+			if (method_exists($this, "getXpSpent")){
+				$xp_spent = $this->getXpSpent();
+			}
 		}else {
 			$previousDeck = null;
 		}
@@ -52,6 +56,7 @@ class ExportableDeck
 			'ignoreDeckLimitSlots' => $slots->getIgnoreDeckLimitContent(),
 			'version' => $this->getVersion(),
 			'xp' => $xp,
+			'xp_spent' => $xp_spent,
 			'xp_adjustment' => $xp_adjustment,
 			'exile_string' => $this->getExiles(),
 			'taboo_id' => $this->getTaboo() ? $this->getTaboo()->getId() : null,
