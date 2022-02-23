@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="_nSW5K6" resname="collection">
         <source>collection</source>
-        <target>collection</target>
+        <target>коллекция</target>
       </trans-unit>
       <trans-unit id="odAmGiq" resname="Deckbuilder and Card Database for the Arkham Horror LCG">
         <source>Deckbuilder and Card Database for the Arkham Horror LCG</source>
@@ -207,11 +207,11 @@
       </trans-unit>
       <trans-unit id="r_ttCrp" resname="Popular Decks">
         <source>Popular Decks</source>
-        <target>Popular Decks</target>
+        <target>Популярные колоды</target>
       </trans-unit>
       <trans-unit id="JyS6ppo" resname="Recent Decks">
         <source>Recent Decks</source>
-        <target>Recent Decks</target>
+        <target>Последние обновленные колоды</target>
       </trans-unit>
     </body>
   </file>
