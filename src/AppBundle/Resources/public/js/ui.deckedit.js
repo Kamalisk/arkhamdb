@@ -86,6 +86,7 @@ ui.build_faction_selector = function build_faction_selector() {
 	//app.deck.choices.push({'faction_select':["guardian","seeker"]});
 
 	$('#faction_selector').hide();
+	$('#faction_selector_2').hide();
 	$('#deck_size_selector').hide();
 	$('#option_selector').hide();
 
@@ -100,7 +101,11 @@ ui.build_faction_selector = function build_faction_selector() {
 		var option = app.deck.deck_options[i];
 		if (option.faction_select){
 			choices.push(option);
-			if (!app.deck.meta || !app.deck.meta.faction_selected){
+			if (option.id) {
+				if (!app.deck.meta || !app.deck.meta[option.id]){
+					app.deck.meta[option.id] = option.faction_select[0];
+				}
+			} else if (!app.deck.meta || !app.deck.meta.faction_selected){
 				app.deck.meta.faction_selected = option.faction_select[0];
 			}
 		}
@@ -119,22 +124,30 @@ ui.build_faction_selector = function build_faction_selector() {
 	}
 
 	$('[data-filter=faction_selector]').empty();
+	$('[data-filter=faction_selector_2]').empty();
 	$('[data-filter=deck_size_selector]').empty();
 	$('[data-filter=option_selector]').empty();
 	$('[data-filter=front_selector]').empty();
 	$('[data-filter=back_selector]').empty();
 
+
+	let faction_selector = 'faction_selector';
 	if (choices.length > 0){
 		for (var i = 0; i < choices.length; i++){
-			var choice =choices[i];
+			var choice = choices[i];
 			if (choice.faction_select) {
-				$('#faction_selector').show();
+				$(`#${faction_selector}`).show();
+				if (choice.id) {
+					$(`[data-filter=${choice.id}]`).empty();
+					$(`#${faction_selector} > select`).attr('data-filter', choice.id);
+				}
 				choice.faction_select.forEach(function(faction_code){
 					var example = app.data.cards.find({"faction_code": faction_code})[0];
 					var label = $('<option value="' + faction_code + '" title="'+example.faction_name+'"><span class="icon-' + faction_code + '"></span> ' + example.faction_name + '</option>');
 					//label.tooltip({container: 'body'});
-					$('[data-filter=faction_selector]').append(label);
+					$(`[data-filter=${choice.id || faction_selector}]`).append(label);
 				});
+				faction_selector = 'faction_selector_2';
 			}
 			if (choice.deck_size_select) {
 				$('#deck_size_selector').show();
@@ -409,21 +422,34 @@ ui.init_selectors = function init_selectors() {
 		$('[data-filter=taboo_code]').val("");
 	}
 	if (app.deck.meta){
-		if (app.deck.meta.faction_selected){
-			$('[data-filter=faction_selector]').val(app.deck.meta.faction_selected);
-		}
-		if (app.deck.meta.deck_size_selected){
-			$('[data-filter=deck_size_selector]').val(app.deck.meta.deck_size_selected);
-		}
-		if (app.deck.meta.option_selected){
-			$('[data-filter=option_selector]').val(app.deck.meta.option_selected);
-		}
-		if (app.deck.meta.alternate_back){
-			$('[data-filter=back_selector]').val(app.deck.meta.alternate_back);
-		}
-		if (app.deck.meta.alternate_front){
-			$('[data-filter=front_selector]').val(app.deck.meta.alternate_front);
-		}
+		Object.keys(app.deck.meta).forEach(key => {
+			switch (key) {
+				case 'faction_selected':
+					$('[data-filter=faction_selector]').val(app.deck.meta.faction_selected);
+					break;
+				case 'deck_size_selected':
+					$('[data-filter=deck_size_selector]').val(app.deck.meta.deck_size_selected);
+					break;
+				case 'option_selected':
+					$('[data-filter=option_selector]').val(app.deck.meta.option_selected);
+					break;
+				case 'alternate_back':
+					$('[data-filter=back_selector]').val(app.deck.meta.alternate_back);
+					break;
+				case 'alternate_front':
+					$('[data-filter=front_selector]').val(app.deck.meta.alternate_front);
+					break;
+				default:
+					// Look for an option matching the 'id' of the meta key.
+					if (investigator.deck_options) {
+						const option = investigator.deck_options.find(option => option.id === key);
+						if (option) {
+							$(`[data-filter=${key}]`).val(app.deck.meta[key]);
+						}
+					}
+					break;
+			}
+		});
 	}
 
 }
@@ -820,7 +846,24 @@ ui.setup_event_handlers = function setup_event_handlers() {
 
 	$('#deck_options [data-filter=faction_selector]').on({
 		change : function(event){
-			app.deck.meta.faction_selected = event.target.value;
+			const id = event.target.attributes['data-filter'].value;
+			if (id === 'faction_selector') {
+				app.deck.meta.faction_selected = event.target.value;
+			} else {
+				app.deck.meta[id] = event.target.value;
+			}
+			ui.refresh_deck();
+			ui.refresh_lists();
+		}
+	});
+	$('#deck_options [data-filter=faction_selector_2]').on({
+		change : function(event){
+			const id = event.target.attributes['data-filter'].value;
+			if (id === 'faction_selector') {
+				app.deck.meta.faction_selected = event.target.value;
+			} else {
+				app.deck.meta[id] = event.target.value;
+			}
 			ui.refresh_deck();
 			ui.refresh_lists();
 		}

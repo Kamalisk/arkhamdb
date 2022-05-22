@@ -190,7 +190,11 @@ deck.onloaded = function(data){
 		for (var i = 0; i < deck.deck_options.length; i++){
 			var option = deck.deck_options[i];
 			if (option.faction_select){
-				if (!app.deck.meta || !app.deck.meta.faction_selected){
+				if (option.id) {
+					if (!app.deck.meta || !app.deck.meta[option.id]) {
+						app.deck.meta[option.id] = option.faction_select[0];
+					}
+				} else if (!app.deck.meta || !app.deck.meta.faction_selected){
 					app.deck.meta.faction_selected = option.faction_select[0];
 				}
 			}
@@ -1366,10 +1370,17 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 
 			var valid = false;
 
-			if (option.faction_select && app.deck.meta && app.deck.meta.faction_selected){
-				// if the user has selected a faction, update this option with the correct choice
-				option.faction = [];
-				option.faction.push(app.deck.meta.faction_selected);
+			if (option.faction_select){
+				if (option.id) {
+					if (app.deck.meta && app.deck.meta[option.id]) {
+						option.faction = [];
+						option.faction.push(app.deck.meta[option.id]);
+					}
+				} else if (app.deck.meta && app.deck.meta.faction_selected) {
+					// if the user has selected a faction, update this option with the correct choice
+					option.faction = [];
+					option.faction.push(app.deck.meta.faction_selected);
+				}
 			}
 
 			if (option.faction){
