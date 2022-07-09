@@ -38,6 +38,9 @@ class BuilderController extends Controller
 		$classes = [];
 		$all_unique_investigators = [];
 		foreach($investigators as $investigator){
+			if ($investigator->getDuplicateOf()) {
+				continue;
+			}
 			$deck_requirements = $this->get('deck_validation_helper')->parseReqString($investigator->getDeckRequirements());
 			if (isset($deck_requirements['size']) && $deck_requirements['size']){
 				$cards_to_add = [];
@@ -69,6 +72,14 @@ class BuilderController extends Controller
 					} else {
 						$investigator->owned = 0;
 					}
+					if ($investigator->getDuplicates()) {
+						foreach($investigator->getDuplicates() as $dupe) {
+							if (in_array($dupe->getPack()->getId(), $packs_owned) ){
+								$investigator->owned = 1;
+							}
+						}
+					}
+
 					$all_investigators[preg_replace("/[^A-Za-z0-9 ]/", '', $investigator->getName())] = $investigator;
 					$classes[$investigator->getFaction()->getName()] = $investigator->getFaction()->getName();
 				} else {
