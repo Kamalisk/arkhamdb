@@ -476,6 +476,7 @@ class ImportStdCommand extends ContainerAwareCommand
 					'flavor',
 					'traits',
 					'text',
+					'customization_text',
 					'cost',
 					'skill_willpower',
 					'skill_intellect',
@@ -487,6 +488,7 @@ class ImportStdCommand extends ContainerAwareCommand
 					'restrictions',
 					'slot',
 					'deck_options',
+					'customization_options',
 					'deck_requirements',
 					'subname',
 					'bonded_to',
@@ -560,8 +562,11 @@ class ImportStdCommand extends ContainerAwareCommand
 		// if the field is a data, the default assumptions above are wrong
 		if(in_array($type, ['date', 'datetime'])) {
 			if($newJsonValue !== null) {
+				if (gettype($newJsonValue) !== "string") {
+					return;
+				}
 				$newTypedValue = new \DateTime($newJsonValue);
-			}
+}
 			if($currentTypedValue !== null) {
 				switch($type) {
 					case 'date': {
@@ -622,7 +627,7 @@ class ImportStdCommand extends ContainerAwareCommand
 			}
 		}
 
-		if ($key == "deck_options"){
+		if ($key == "deck_options" || $key == "customization_options"){
 			if ($value){
 				$value = json_encode($value);
 			}

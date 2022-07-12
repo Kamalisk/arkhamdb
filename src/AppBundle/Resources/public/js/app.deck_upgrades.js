@@ -27,16 +27,15 @@ deck_upgrades.display = function display() {
 	$("#upgrade_changes").append('<h4 class="deck-section>History</h4>');
 	_.each(upgrades, function (deck) {
 		//console.log(last_deck, deck.content);
-		var result = app.diff.compute_simple([last_deck.content, deck.content]);
+		var result = app.diff.compute_simple([last_deck.content, deck.content], [last_deck.meta, deck.meta]);
 		if(!result) return;
-
 		var free_0_cards = 0;
 		var removed_0_cards = 0;
 		var diff = result[0];
 		var cards_removed = [];
 		var cards_added = [];
 		var cards_exiled = {};
-		var cost = 0;
+		var cards_customized = [];
 		_.each(diff[1], function (qty, code) {
 			var card = app.data.cards.findById(code);
 			if(!card) return;
@@ -67,6 +66,15 @@ deck_upgrades.display = function display() {
 				free_0_cards += 5;
 				removed_0_cards += 5;
 			}
+		});
+		_.each(result[2], function(choices, code) {
+			var card = app.data.cards.findById(code);
+			var card_customization = {
+				"choices": choices,
+				"code": code,
+				"card": card,
+			};
+			cards_customized.push(card_customization);
 		});
 
 		// find deja vu
@@ -103,6 +111,27 @@ deck_upgrades.display = function display() {
 		if (adaptable && adaptable.indeck){
 			free_0_cards += 2 * adaptable.indeck;
 		}
+
+		var cost = 0;
+		var free_customize_swaps = {};
+		_.each(cards_customized, function(customization) {
+			_.each(customization.choices, function (choice) {
+				var xp = choice.xp_delta;
+				if (xp > 0 && spell_upgrade_discounts > 0 && customization.card.real_traits && customization.card.real_traits.indexOf('Spell.') !== -1) {
+					// Handle Arcane Research discounts if its a 'spell'
+					const max_discount = Math.min(spell_upgrade_discounts, xp);
+					xp = xp - max_discount;
+					spell_upgrade_discounts = spell_upgrade_discounts - max_discount;
+				}
+				if (xp > 0 && upgrade_discounts > 0) {
+					// Handle DTTR, at most one per 'upgrade' taken.
+					xp = xp - 1;
+					upgrade_discounts = upgrade_discounts - 1;
+				}
+				cost = cost + xp;
+				free_customize_swaps[customization.code] = (free_customize_swaps[customization.code] || 0) + choice.xp_delta;
+			});
+		});
 
 		if (last_deck.exile_string){
 			free_0_cards += last_deck.exile_string.split(",").length;
@@ -219,7 +248,13 @@ deck_upgrades.display = function display() {
 			cost = cost + deja_vu_cost + dtr_xp;
 			addition.qty = 0;
 		} else if (addition_xp >= 0){
-			if (addition.card.xp === 0 && removed_0_cards > 0 && free_0_cards > 0){
+			while (addition.qty > 0 && (free_customize_swaps[addition.code] || 0) > 0) {
+				// Still have to pay taboo XP.
+				cost = cost + addition_xp;
+				free_customize_swaps[addition.code] = free_customize_swaps[addition.code] - 1;
+				addition.qty = addition.qty - 1;
+			}
+			if (addition.qty > 0 && addition.card.xp === 0 && removed_0_cards > 0 && free_0_cards > 0){
 				// Account for taboo xp, which still must be paid when deck size grows.
 				cost = cost + (addition.qty * addition_xp);
 				free_0_cards -= addition.qty;
@@ -243,6 +278,7 @@ deck_upgrades.display = function display() {
 	});
 
 		var add_list = [];
+		var custom_list = [];
 		var remove_list = [];
 		var exile_list = [];
 		// run through the changes and show them
@@ -263,6 +299,24 @@ deck_upgrades.display = function display() {
 			}
 			remove_list.push('&minus;'+qty+' '+'<a href="'+card.url+'" class="card card-tip fg-'+card.faction_code+'" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="'+card.code+'">'+card.name+'</a>'+(app.format.xp(card.xp))+'</a>');
 			//remove_list.push('&minus;'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card-tip" data-code="'+code+'">'+card.name+'</a>');
+		});
+		_.each(cards_customized, function(customization) {
+			var card = customization.card;
+			var lines = (card.customization_text || '').split('\n');
+			if (card) {
+				_.each(customization.choices, function (choice) {
+					var index = choice.index;
+					if (index >= card.customization_options.length) {
+						return;
+					}
+					var option = card.customization_options[index];
+					var line = lines[index];
+					if (option && line) {
+						var choice_name = line.replace(/.*?<b>/, '').replace(/<\/b>.*/, '');
+						custom_list.push('↑'+' '+'<a href="'+card.url+'" class="card card-tip fg-'+card.faction_code+'" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="'+card.code+'">'+card.name+'</a>'+app.format.xp(choice.xp_delta, 1, 'custom')+'</a>&nbsp;<b>' + choice_name + '</b>');
+					}
+				});
+			}
 		});
 		_.each(cards_exiled, function (qty, code) {
 			var card = app.data.cards.findById(code);
@@ -295,10 +349,10 @@ deck_upgrades.display = function display() {
 			div.append('<h5>Scenario '+counter+' complete: '+deck.xp+' xp spent. '+deck.xp_left+' xp remaining</h5>');
 		}
 
-		if (add_list.length <= 0 && remove_list.length <= 0){
+		if (add_list.length <= 0 && remove_list.length <= 0 && custom_list.length <= 0){
 			div.append('<div class="deck-content">No Changes</div>');
 		}else {
-			div.append('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6">'+add_list.join('<br>')+'</div><div class="col-sm-6 col-print-6">'+remove_list.join('<br>')+'</div></div></div>');
+			div.append('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6">'+add_list.join('<br>')+'</div><div class="col-sm-6 col-print-6">'+remove_list.join('<br>')+'</div><div class="col-sm-6 col-print-6">'+custom_list.join('<br>')+'</div></div></div>');
 		}
 
 		if (exile_list.length > 0){
@@ -306,14 +360,10 @@ deck_upgrades.display = function display() {
 			div.append('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6">'+exile_list.join('<br>')+'</div></div></div>');
 		}
 		div.append('<hr>');
-
 		$("#upgrade_changes").append(div);
 		last_deck = deck;
 		counter--;
 	});
-
-
-
 }
 
 deck_upgrades.init = function init(data)

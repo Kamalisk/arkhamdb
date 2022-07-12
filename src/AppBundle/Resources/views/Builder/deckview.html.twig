@@ -7,7 +7,7 @@
 	{% endjavascripts %}
 	<script type="text/javascript">
 	app.deck && app.deck.init({{ deck|json_encode|raw }});
-	app.deck_history && app.deck_history.init({{ deck.history|json_encode|raw }});
+	app.deck_history && app.deck_history.init({{ deck.history|json_encode|raw }}, {{ deck.previousDeck ? deck.previousDeck.meta|raw : ''}});
 
 	function copy() {
 		/* Get the text field */

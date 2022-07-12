@@ -42,7 +42,8 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				'exile',
 				'exceptional',
 				'myriad',
-				'errata_date'
+				'errata_date',
+				'customization_text'
 		];
 
 		$externalFields = [
@@ -237,6 +238,11 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	/**
 	 * @var string
 	 */
+	private $customizationText;
+
+	/**
+	 * @var string
+	 */
 	private $realText;
 
 
@@ -392,10 +398,15 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	 */
 	private $deckRequirements;
 
-		/**
+	/**
 	 * @var string
 	 */
 	private $deckOptions;
+
+	/**
+	 * @var string
+	 */
+	private $customizationOptions;
 
 	/**
 	 * @var string
@@ -746,6 +757,30 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	public function getCost()
 	{
 		return $this->cost;
+	}
+
+	/**
+	 * Set customizationText
+	 *
+	 * @param string $customizationText
+	 *
+	 * @return Card
+	 */
+	public function setCustomizationText($customizationText)
+	{
+		$this->customizationText = $customizationText;
+
+		return $this;
+	}
+
+	/**
+	 * Get customizationText
+	 *
+	 * @return string
+	 */
+	public function getCustomizationText()
+	{
+		return $this->customizationText;
 	}
 
 	/**
@@ -1498,7 +1533,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	}
 
 
-		/**
+	/**
 	 * Set deckOptions
 	 *
 	 * @param string $deckOptions
@@ -1516,9 +1551,33 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	 *
 	 * @return string
 	 */
-	public function getdeckOptions()
+	public function getDeckOptions()
 	{
 		return $this->deckOptions;
+	}
+
+
+	/**
+	 * Set customizationOptions
+	 *
+	 * @param string $customizationOptions
+	 *
+	 * @return Card
+	 */
+	public function setCustomizationOptions($customizationOptions)
+	{
+		$this->customizationOptions = $customizationOptions;
+		return $this;
+	}
+
+	/**
+	 * Get customizationOptions
+	 *
+	 * @return string
+	 */
+	public function getCustomizationOptions()
+	{
+		return $this->customizationOptions;
 	}
 
 		/**

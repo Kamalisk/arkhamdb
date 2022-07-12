@@ -7,6 +7,7 @@ var date_creation,
 	name,
 	tags,
 	meta,
+	previous_meta,
 	choices,
 	xp,
 	xp_spent = 0,
@@ -113,7 +114,7 @@ layouts[4] = _.template(
 /**
  * @memberOf deck
  */
-deck.init = function init(data) {
+deck.init = function init(data, previous_deck_meta) {
 	date_creation = data.date_creation;
 	date_update = data.date_update;
 	description_md = data.description_md;
@@ -121,6 +122,7 @@ deck.init = function init(data) {
 	name = data.name;
 	tags = data.tags;
 	meta = data.meta;
+	deck.previous_meta = previous_deck_meta;
 	choices = [];
 	investigator_code = data.investigator_code;
 	investigator_name = data.investigator_name;
@@ -159,13 +161,13 @@ deck.onloaded = function(data){
 		deck.set_side_slots(data.sideSlots);
 	}
 	investigator = app.data.cards.findById(investigator_code);
-
 	if (data.meta){
 		deck.meta = JSON.parse(data.meta);
 	}
 	if (!deck.meta){
 		deck.meta = {};
 	}
+	deck.load_customizations(deck.meta);
 	// check for special deck building rules
 	// selecting a class for deck building options
 	// selecting front and back for investigator options
@@ -265,6 +267,88 @@ deck.set_side_slots = function set_side_slots(slots) {
 			app.data.cards.updateById(code, {insidedeck: slots[code]});
 		}
 	}
+}
+
+deck.parse_customizations = function(card, entry) {
+	if (!entry || !card.customization_options) {
+		return [];
+	}
+	var lines = (card.customization_text || '').split('\n');
+	return _.map(entry.split(','), function(value) {
+		var parts = value.split('|');
+		var index = parseInt(parts[0]);
+		var xp = parseInt(parts[1]);
+		var option = card.customization_options[index] || {};
+		var result = {
+			index,
+			xp,
+			unlocked: option && option.xp === xp,
+			option,
+			line: lines[index] || '',
+		};
+		if (parts.length > 2) {
+			result.choice = parts[2];
+		}
+		return result;
+	});
+}
+
+/**
+ * Decode a single customization entry
+ * @memberOf deck
+ */
+deck.decode_customizations = function decode_customizations(code, entry) {
+	var card = app.data.cards.findById(code);
+	if (!card) {
+		return [];
+	}
+
+	var result = deck.parse_customizations(card, entry);
+	if (!result.length || !deck.previous_meta || !deck.previous_meta['cus_' + code]) {
+		return result;
+	}
+	var previous = deck.parse_customizations(card, deck.previous_meta['cus_' + code]);
+	return _.map(result, entry => {
+		const pentry = _.find(previous, pentry => pentry.index === entry.index);
+		if (pentry) {
+			entry.locked_xp = pentry.xp;
+			// If its either a no XP option and we have a previous, or we fully paid for
+			// it previously.
+			entry.locked = !entry.option.xp || (pentry.xp === entry.option.xp);
+			return entry;
+		}
+		return entry;
+	});
+}
+
+/**
+ * Encode a single customization entry
+ * @memberOf deck
+ */
+
+deck.encode_customizations = function encode_customizations(customizations) {
+	return _.map(customizations, function(value) {
+		var elements = [value.index, value.xp];
+		if (value.choice) {
+			elements.push(value.choice.replace(/[,|]/g, ''));
+		}
+		return elements.join('|');
+	}).join(',');
+}
+
+
+/**
+ * Sets the customizations of the deck
+ * @memberOf deck
+ */
+ deck.load_customizations = function load_customizations(meta) {
+	Object.keys(meta).forEach(function(key) {
+		if (key.indexOf('cus_') === 0) {
+			var code = key.substring(4);
+			var customizations = deck.decode_customizations(code, meta[key]);
+			app.data.cards.updateById(code, {customizations});
+		}
+	});
 }
 
 /**
@@ -498,7 +582,7 @@ deck.get_xp_usage = function get_xp_usage(sort) {
 	var xp = 0;
 	var myriad_madness = {};
 	deck.get_real_draw_deck().forEach(function (card) {
-		if (card && (card.xp || card.taboo_xp) && card.ignore < card.indeck) {
+		if (card && (card.xp || card.taboo_xp || card.customizations) && card.ignore < card.indeck) {
 			var qty = card.indeck;
 			if (typeof card.real_text !== 'undefined' && card.real_text.indexOf('Myriad.') !== -1) {
 				qty = 1;
@@ -508,6 +592,12 @@ deck.get_xp_usage = function get_xp_usage(sort) {
 				myriad_madness[card.real_name] = 1;
 			}
 			xp += (card.xp + (card.taboo_xp ? card.taboo_xp : 0)) * (qty - card.ignore) * (card.exceptional ? 2: 1);
+
+			if (card.customizations) {
+				card.customizations.forEach(function(choice) {
+					xp += (choice.xp|| 0);
+				});
+			}
 		}
 	});
 	return xp;
@@ -944,12 +1034,24 @@ deck.create_card = function create_card(card, field='indeck'){
 		field = "indeck";
 	}
 	$div.append($(card_line_tpl({card:card})));
+	var customization_xp = 0;
+	if (card.customizations) {
+		card.customizations.forEach(function(choice) {
+			customization_xp += (choice.xp || 0);
+		})
+	}
 
 	if (card[field]) {
 		$div.prepend(card[field]+'x ');
 	}
 	if(card.xp && card.xp > 0) {
 		$div.append(app.format.xp(card.xp, card.indeck));
+	} else if (customization_xp && customization_xp > 0) {
+		var level = Math.floor((customization_xp + 1) / 2.0);
+		$div.append(app.format.xp(level, 1));
+		if (customization_xp - level > 0) {
+			$div.append(app.format.xp(customization_xp - level, 1, "custom"));
+		}
 	}
 	if(card.taboo_xp && card.taboo_xp > 0) {
 		$div.append(app.format.xp(card.taboo_xp, card.indeck, "taboo"));
@@ -965,6 +1067,9 @@ deck.create_card = function create_card(card, field='indeck'){
 	}
 	if(card.exceptional === true) {
 		$div.append(' <span class="icon-eldersign" style="color:orange;" title="Exceptional. Double xp cost and limit one per deck."></span>');
+	}
+	if (card.customization_options) {
+		$div.append(' <a class="fa fa-star" style="color:orange; title="Customize" data-customize="'+card.code+'"><span></span></a>');
 	}
 
 	if (!no_collection){
@@ -1113,6 +1218,13 @@ deck.get_copies_and_deck_limit = function get_copies_and_deck_limit() {
 		var value = copies_and_deck_limit[card.real_name];
 
 		var deck_limit = card.deck_limit;
+		if (card.customizations) {
+			card.customizations.forEach(function(choice) {
+				if (choice.option.deck_limit) {
+					deck_limit = choice.option.deck_limit;
+				}
+			});
+		}
 		if (use_underworld_support_limit) {
 			deck_limit = 1;
 		} else if(typeof card.real_text !== 'undefined' && card.real_text.indexOf('Myriad.') !== -1) {
@@ -1329,7 +1441,7 @@ deck.get_invalid_cards = function get_invalid_cards() {
 	//var investigator = app.data.cards.findById(investigator_code);
 	deck.reset_limit_count();
 	return _.filter(deck.get_cards({'xp': -1}), function (card) {
-		return ! deck.can_include_card(card, true);
+		return ! deck.can_include_card(card, { limit_count: true });
 	});
 }
 
@@ -1337,7 +1449,7 @@ deck.get_invalid_cards = function get_invalid_cards() {
  * returns true if the deck can include the card as parameter
  * @memberOf deck
  */
-deck.can_include_card = function can_include_card(card, limit_count, hard_count) {
+deck.can_include_card = function can_include_card(card, { limit_count, hard_count, customizations } = {}) {
 	// hide investigators
 	if (card.type_code === "investigator") {
 		return false;
@@ -1349,6 +1461,44 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 	// reject cards restricted
 	if (card.restrictions && card.restrictions.investigator && !card.restrictions.investigator[investigator_code]) {
 			return false;
+	}
+
+	var real_slot = card.real_slot && card.real_slot.toUpperCase();
+
+	var selected_customizations = [];
+	var customization_level = 0;
+	if (card.customization_options) {
+		if (customizations) {
+			// Permissive mode, pretend everything is applied.
+			for (var i = 0; i < card.customization_options.length; i++) {
+				var option = card.customization_options[i];
+				selected_customizations.push(option);
+			}
+		} else if (card.customizations) {
+			// We've chosen actual ones and are in strict mode.
+			card.customizations.forEach(function(choice) {
+				selected_customizations.push(choice.option);
+				customization_level += choice.xp;
+				if (choice.option.choice) {
+					switch (choice.option.choice) {
+						case 'remove_slot': {
+							var selection = parseInt(choice.choice || '0', 10);
+							var real_slots = (real_slot ? real_slot.split('.') : [])
+							var new_real_slots = [];
+							for(let i=0; i<real_slots.length; i++) {
+								if (i !== selection) {
+									new_real_slots.push(real_slots[i]);
+								}
+							}
+							real_slot = new_real_slots.join('.');
+							break;
+						}
+					}
+				}
+			});
+			// Round up to nearest level
+			customization_level = Math.floor((customization_level + 1) / 2.0);
+		}
 	}
 
 	//var investigator = app.data.cards.findById(investigator_code);
@@ -1419,8 +1569,17 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 
 				for(var j = 0; j < option.slot.length; j++){
 					var slot = option.slot[j];
-
-					if (card.real_slot && card.real_slot.toUpperCase().indexOf(slot.toUpperCase()) !== -1){
+					if (option.not && customizations &&
+						_.find(selected_customizations, function(c) { return c.choice === 'remove_slot' })
+					) {
+						// Skip this completely for now, since the option to remove slots is on the table and we are in
+						// permissive card-search mode.
+						continue;
+					}
+					if (
+						(real_slot && real_slot.indexOf(slot.toUpperCase()) !== -1) ||
+						(selected_customizations.length && _.find(selected_customizations, function(c) { return c.real_slot && c.real_slot.toUpperCase().indexOf(slot.toUpperCase()) !== -1; }))
+					) {
 						slot_valid = true;
 					}
 				}
@@ -1437,7 +1596,10 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 				for(var j = 0; j < option.trait.length; j++){
 					var trait = option.trait[j];
 
-					if (card.real_traits && card.real_traits.toUpperCase().indexOf(trait.toUpperCase()+".") !== -1){
+					if (
+						(card.real_traits && card.real_traits.toUpperCase().indexOf(trait.toUpperCase()+".") !== -1) ||
+						(selected_customizations.length && _.find(selected_customizations, function(c) { return c.real_traits && c.real_traits.toUpperCase().indexOf(trait.toUpperCase()+".") !== -1; }))
+					) {
 						trait_valid = true;
 					}
 				}
@@ -1454,7 +1616,10 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 				for(var j = 0; j < option.uses.length; j++){
 					var uses = option.uses[j];
 
-					if (card.real_text && card.real_text.toUpperCase().indexOf(""+uses.toUpperCase()+").") !== -1){
+					if (
+						(card.real_text && card.real_text.toUpperCase().indexOf(""+uses.toUpperCase()+").") !== -1) ||
+						(selected_customizations.length && _.find(selected_customizations, function(c) { return c.real_text && c.real_text.toUpperCase().indexOf(""+uses.toUpperCase()+").") !== -1; }))
+					) {
 						uses_valid = true;
 					}
 				}
@@ -1471,8 +1636,10 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 
 				for(var j = 0; j < option.text.length; j++){
 					var text = option.text[j];
-
-					if (card.real_text && card.real_text.toLowerCase().match(text)){
+					if (
+						(card.real_text && card.real_text.toLowerCase().match(text)) ||
+						(selected_customizations.length && _.find(selected_customizations, function(c) { return c.real_text && c.real_text.toLowerCase().match(text); }))
+					){
 						text_valid = true;
 					}
 				}
@@ -1488,10 +1655,19 @@ deck.can_include_card = function can_include_card(card, limit_count, hard_count)
 				var level_valid = false;
 
 				if (typeof card.xp !== 'undefined' && option.level){
-					if (card.xp >= option.level.min && card.xp <= option.level.max){
-						level_valid = true;
-					}else {
-						continue;
+					if (card.customization_options) {
+						// customization cards only use their chosen number of level, not the card's supposed XP.
+						if (customizations || (customization_level >= option.level.min && customization_level <= option.level.max)) {
+							level_valid = true;
+						} else {
+							continue;
+						}
+					} else {
+						if (card.xp >= option.level.min && card.xp <= option.level.max){
+							level_valid = true;
+						} else {
+							continue;
+						}
 					}
 				}
 			}

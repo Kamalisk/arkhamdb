@@ -74,6 +74,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
 					'is_saved' => $change->getIsSaved(),
 					'version' => $change->getVersion(),
 					'content' => $preversion,
+					'meta' => $change->getMeta() ? json_decode($change->getMeta(), TRUE) : null,
 					'date_creation' => $change->getDateCreation()->format('c'),
 			];
 			array_unshift ( $snapshots, $row );
@@ -91,13 +92,13 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
 			}
 			ksort ( $preversion );
 		}
-
 		// add last know version with empty diff
 		$row = [
 				'variation' => null,
 				'is_saved' => true,
 				'version' => "0.0",
 				'content' => $preversion,
+				'meta' => $this->getMeta() ? json_decode($this->getMeta(), TRUE) : null,
 				'date_creation' => $this->getDateCreation()->format('c')
 		];
 		array_unshift ( $snapshots, $row );
@@ -110,6 +111,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
 					'variation' => $variation,
 					'is_saved' => $change->getIsSaved(),
 					'version' => $change->getVersion(),
+					'meta' => $change->getMeta() ? json_decode($change->getMeta(), TRUE) : null,
 					'date_creation' => $change->getDateCreation()->format('c'),
 			];
 
@@ -129,7 +131,6 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
 			$row['content'] = $postversion;
 			array_push ( $snapshots, $row );
 		}
-
 		return $snapshots;
 	}
 

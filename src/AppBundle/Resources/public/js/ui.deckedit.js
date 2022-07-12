@@ -67,7 +67,15 @@ ui.set_max_qty = function set_max_qty() {
 	}
 
 	app.data.cards.find().forEach(function(record) {
-		var max_qty = Math.min(4, record.deck_limit);
+		var deck_limit = record.deck_limit;
+		if (record.customizations) {
+			record.customizations.forEach(function(choice) {
+				if (choice.option.deck_limit) {
+					deck_limit = choice.option.deck_limit;
+				}
+			});
+		}
+		var max_qty = Math.min(4, deck_limit);
 		if (record.pack_code == 'core') {
 			max_qty = Math.min(max_qty, record.quantity * cores);
 		}
@@ -422,7 +430,7 @@ ui.init_selectors = function init_selectors() {
 		$('[data-filter=taboo_code]').val("");
 	}
 	if (app.deck.meta){
-		Object.keys(app.deck.meta).forEach(key => {
+		Object.keys(app.deck.meta).forEach(function(key) {
 			switch (key) {
 				case 'faction_selected':
 					$('[data-filter=faction_selector]').val(app.deck.meta.faction_selected);
@@ -442,7 +450,7 @@ ui.init_selectors = function init_selectors() {
 				default:
 					// Look for an option matching the 'id' of the meta key.
 					if (investigator.deck_options) {
-						const option = investigator.deck_options.find(option => option.id === key);
+						const option = investigator.deck_options.find(function(option) { return option.id === key; });
 						if (option) {
 							$(`[data-filter=${key}]`).val(app.deck.meta[key]);
 						}
@@ -708,7 +716,7 @@ ui.chaos = function() {
 			var random_id = Math.floor(Math.random() * size)
 			var random_card = valid_cards[random_id];
 			if (random_card.indeck < random_card.deck_limit){
-				if (app.deck.can_include_card(random_card, true, true)){
+				if (app.deck.can_include_card(random_card, { limit_count: true, hard_count: true })){
 					random_card.indeck++;
 					//console.log(random_card.name, random_card.indeck, counter);
 					counter++;
@@ -768,6 +776,34 @@ ui.on_modal_quantity_change = function on_modal_quantity_change(event) {
 	}, 100);
 }
 
+
+/**
+ * @memberOf ui
+ * @param event
+ */
+ui.on_modal_customization_change = function on_modal_customization_change(event) {
+	var modal = $('#cardModal');
+	var code = modal.data('code');
+	var target = event.target.value.split('|');
+	const index = parseInt(target[0], 10);
+	const xp = parseInt(target[1], 10)
+	ui.on_customization_change(code, index, event.target.checked ? (xp + 1) : xp);
+}
+
+/**
+ * @memberOf ui
+ * @param event
+ */
+ ui.on_modal_customization_select_change = function on_modal_customization_select_change(event) {
+	var modal = $('#cardModal');
+	var code = modal.data('code');
+	var target = event.target.value.split('|');
+	const index = parseInt(target[0], 10);
+	const xp = parseInt(target[1], 10)
+	const choice = target[2];
+	ui.on_customization_change(code, index, xp, choice);
+}
+
 ui.refresh_row = function refresh_row(card_code, quantity) {
 	// for each set of divs (1, 2, 3 columns)
 	CardDivs.forEach(function(rows) {
@@ -810,6 +846,58 @@ ui.on_ignore_quantity_change = function on_ignore_quantity_change(card_code, qua
 }
 ui.on_side_quantity_change = function on_side_quantity_change(card_code, quantity) {
 	var update_all = app.deck.set_card_sides(card_code, quantity);
+	ui.refresh_deck();
+	app.deck_history.all_changes();
+}
+ui.on_customization_change = function on_customization_change(card_code, index, xp, choice) {
+	var card = app.data.cards.findById(card_code);
+	if (!card) {
+		return;
+	}
+
+
+	var option = (card.customization_options && card.customization_options[index]) || {};
+	var unlocked = option.xp === xp;
+	var new_entry = {
+		index,
+		xp,
+		option,
+		choice,
+		unlocked,
+		line: (card.customization_text && card.customization_text.split("\n")[index]) || '',
+	}
+
+	var customizations = [];
+	_.forEach(
+		app.deck.decode_customizations(card_code, app.deck.meta['cus_' + card_code]),
+		function(entry) {
+			if (entry.index !== index) {
+				// Keep old entries as is
+				customizations.push(entry);
+				return;
+			}
+			// Copy over the locked_xp field to the new entry.
+			new_entry.locked_xp = entry.locked_xp;
+		}
+	);
+	customizations.push(new_entry);
+	app.deck.meta['cus_' + card_code] = app.deck.encode_customizations(customizations);
+
+	if (option.deck_limit) {
+		var update = {customizations};
+		update.maxqty = unlocked ? option.deck_limit : card.deck_limit;
+		card.maxqty = update.maxqty;
+		if (card.indeck) {
+			var indeck = Math.min(card.indeck, update.maxqty);
+			update.indeck = indeck;
+			card.indeck = indeck;
+		}
+		app.data.cards.updateById(card_code, update);
+	} else {
+		app.data.cards.updateById(card_code, {customizations});
+	}
+	card.customizations = customizations;
+	app.card_modal.update_modal(card);
 	ui.refresh_deck();
 	app.deck_history.all_changes();
 }
@@ -933,6 +1021,7 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	$('#special-collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 
 	$('#deck').on('click', 'a[data-random]', ui.select_basic_weakness);
+	$('#deck').on('click', 'a[data-customize]', ui.select_basic_weakness);
 	$('#deck').on('click', '#xp_up', ui.on_adjust_xp_up);
 	$('#deck').on('click', '#xp_down', ui.on_adjust_xp_down);
 
@@ -944,9 +1033,10 @@ ui.setup_event_handlers = function setup_event_handlers() {
 		$('#cardModal .modal-qty input[type=radio][value=' + num + ']').trigger('change');
 	});
 	$('#cardModal').on('change', 'input[type=radio]', ui.on_modal_quantity_change);
+	$('#cardModal').on('change', 'input[type=checkbox]', ui.on_modal_customization_change);
+	$('#cardModal').on('change', 'select', ui.on_modal_customization_select_change);
 
 	$('thead').on('click', 'a[data-sort]', ui.on_table_sort_click);
-
 }
 
 ui.on_adjust_xp_up = function on_adjust_xp_up() {
@@ -1212,7 +1302,7 @@ ui.refresh_list = _.debounce(function refresh_list() {
 
 	cards.forEach(function (card) {
 		if (Config['show-only-deck'] && !card.indeck) return;
-		var unusable = !app.deck.can_include_card(card);
+		var unusable = !app.deck.can_include_card(card, { customizations: true });
 		if (!Config['show-unusable'] && unusable) return;
 
 		// if this card is a duplicate of another
@@ -1287,7 +1377,7 @@ ui.refresh_list2 = _.debounce(function refresh_list2() {
 
 	cards.forEach(function (card) {
 		if (Config['show-only-deck'] && !card.indeck) return;
-		var unusable = !app.deck.can_include_card(card);
+		var unusable = !app.deck.can_include_card(card, { customizations: true });
 		if (!Config['show-unusable'] && unusable) return;
 
 		var row = divs[card.code];

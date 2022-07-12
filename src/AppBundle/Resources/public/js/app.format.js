@@ -17,7 +17,7 @@ format.xp = function xp(xp, in_deck, css) {
  		if (css){
  			string += ' '+css;
  		}
- 		string += '">'+("••••••".slice(-xp))+"</span>";
+ 		string += '">'+("••••••••••••••••••".slice(-xp))+"</span>";
 	}
 	return string;
 };
@@ -102,7 +102,7 @@ format.info = function info(card) {
 		case 'investigator':
 			text += '<div>Willpower: '+card.skill_willpower+'. Intellect: '+card.skill_intellect+'. Combat: '+card.skill_combat+'. Agility: '+card.skill_agility+'.</div>';
 			text += '<div>Health: '+card.health+'. Sanity: '+card.sanity+'.</div>'
-			break;	
+			break;
 		case 'asset':
 		case 'event':
 			text += '<div>Cost: '+format.fancy_int(card.cost)+'. '+(card.xp ? "XP: "+card.xp+"." : "")+'</div>';
@@ -166,6 +166,17 @@ format.text = function text(card, alternate) {
 	if (alternate){
 		text = card[alternate];
 	}
+	text = text.replace(/\[\[([^\]]+)\]\]/g, '<b><i>$1</i></b>');
+	text = text.replace(/\[(\w+)\]/g, '<span title="$1" class="icon-$1"></span>');
+	text = text.split("\n").join('</p><p>');
+	return '<p>'+text+'</p>';
+};
+
+/**
+ * @memberOf format
+ */
+ format.customization_text = function customization_text(card) {
+	var text = card.customization_text || '';
 	text = text.replace(/\[\[([^\]]+)\]\]/g, '<b><i>$1</i></b>');
 	text = text.replace(/\[(\w+)\]/g, '<span title="$1" class="icon-$1"></span>');
 	text = text.split("\n").join('</p><p>');

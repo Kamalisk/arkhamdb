@@ -4,10 +4,10 @@ var name_regexp;
 
 ui.on_content_change = function on_content_change(event) {
 	var text = $(content).val(),
-		slots = {}, 
-		investigator_code, 
+		slots = {},
+		investigator_code,
 		investigator_name;
-	
+
 	text.match(name_regexp).forEach(function (token) {
 		var qty = 1, name = token.trim(), card;
 		if(token[0] === '(') {
@@ -17,26 +17,26 @@ ui.on_content_change = function on_content_change(event) {
 			qty = parseInt(RegExp.$1, 10);
 			name = RegExp.$2.trim();
 		}
-		console.log(name);
-		if(card = app.data.cards.findOne({ name: name })) {			
+		// console.log(name);
+		if(card = app.data.cards.findOne({ name: name })) {
 			if (card.type_code == "investigator"){
 				investigator_code = card.code;
 				investigator_name = card.name;
 			} else {
-				slots[card.code] = qty;	
+				slots[card.code] = qty;
 			}
-			
+
 		}
 		else {
-			console.log('rejecting string ['+name+']');
+			// console.log('rejecting string ['+name+']');
 		}
 	})
-	
+
 	if (!investigator_code){
 		window.alert("Unable to locate investigator");
 		return;
 	}
-	
+
 	app.deck.init({
 		investigator_code: investigator_code,
 		investigator_name: investigator_name,

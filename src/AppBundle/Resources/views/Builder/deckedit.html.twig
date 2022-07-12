@@ -6,9 +6,9 @@
 	<script src="{{ asset_url }}"></script>
 	{% endjavascripts %}
 	<script type="text/javascript">
-	app.deck && app.deck.init({{ deck|json_encode|raw }});
+	app.deck && app.deck.init({{ deck|json_encode|raw }}, {{ deck.previousDeck ? deck.previousDeck.meta|raw : ''}});
 	$( document ).ready(function() {
-		app.deck_history && app.deck_history.init({{ deck.history|json_encode|raw }});
+		app.deck_history && app.deck_history.init({{ deck.history|json_encode|raw }}, {{ deck.previousDeck ? deck.previousDeck.meta|raw : ''}});
 	});
 	</script>
 {% endblock %}

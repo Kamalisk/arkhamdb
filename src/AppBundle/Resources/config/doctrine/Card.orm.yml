@@ -140,6 +140,11 @@ AppBundle\Entity\Card:
             nullable: true
             gedmo:
                 - translatable
+        customizationText:
+            type: text
+            nullable: true
+            gedmo:
+                - translatable
         realText:
             type: text
             nullable: true
@@ -255,6 +260,10 @@ AppBundle\Entity\Card:
         deckOptions:
             type: string
             length: 500
+            nullable: true
+        customizationOptions:
+            type: string
+            length: 1024
             nullable: true
         restrictions:
             type: string

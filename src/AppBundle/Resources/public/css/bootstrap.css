@@ -5916,6 +5916,10 @@ button.close {
   position: relative;
   padding: 20px;
 }
+.modal-customization {
+  position: 'relative';
+  padding: 20px;
+}
 .modal-footer {
   padding: 20px;
   text-align: right;
