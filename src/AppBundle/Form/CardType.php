@@ -41,6 +41,7 @@ class CardType extends AbstractType
             ->add('deckOptions')
             ->add('customizationOptions')
             ->add('customizationText')
+            ->add('customizationChange')
             ->add('octgn_id')
             ->add('is_unique', 'checkbox', array('required' => false))
             ->add('file', 'file', array('label' => 'Image File', 'mapped' => false, 'required' => false))

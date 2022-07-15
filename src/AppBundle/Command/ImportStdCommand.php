@@ -477,6 +477,7 @@ class ImportStdCommand extends ContainerAwareCommand
 					'traits',
 					'text',
 					'customization_text',
+					'customization_change',
 					'cost',
 					'skill_willpower',
 					'skill_intellect',

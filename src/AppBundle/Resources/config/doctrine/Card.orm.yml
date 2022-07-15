@@ -145,6 +145,11 @@ AppBundle\Entity\Card:
             nullable: true
             gedmo:
                 - translatable
+        customizationChange:
+            type: text
+            nullable: true
+            gedmo:
+                - translatable
         realText:
             type: text
             nullable: true

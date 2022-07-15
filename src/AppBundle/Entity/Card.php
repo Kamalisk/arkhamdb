@@ -43,7 +43,8 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				'exceptional',
 				'myriad',
 				'errata_date',
-				'customization_text'
+				'customization_text',
+				'customization_change'
 		];
 
 		$externalFields = [
@@ -239,6 +240,11 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	 * @var string
 	 */
 	private $customizationText;
+
+	/**
+	 * @var string
+	 */
+	private $customizationChange;
 
 	/**
 	 * @var string
@@ -781,6 +787,31 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	public function getCustomizationText()
 	{
 		return $this->customizationText;
+	}
+
+
+	/**
+	 * Set customizationChange
+	 *
+	 * @param string $customizationChange
+	 *
+	 * @return Card
+	 */
+	public function setCustomizationChange($customizationChange)
+	{
+		$this->customizationChange = $customizationChange;
+
+		return $this;
+	}
+
+	/**
+	 * Get customizationText
+	 *
+	 * @return string
+	 */
+	public function getCustomizationChange()
+	{
+		return $this->customizationChange;
 	}
 
 	/**

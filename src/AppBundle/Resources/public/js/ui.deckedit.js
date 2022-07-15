@@ -855,7 +855,6 @@ ui.on_customization_change = function on_customization_change(card_code, index, 
 		return;
 	}
 
-
 	var option = (card.customization_options && card.customization_options[index]) || {};
 	var unlocked = option.xp === xp;
 	var new_entry = {
@@ -896,7 +895,9 @@ ui.on_customization_change = function on_customization_change(card_code, index, 
 	} else {
 		app.data.cards.updateById(card_code, {customizations});
 	}
-	card.customizations = customizations;
+	card.customizations = customizations.sort(function(a, b) {
+		return a.index - b.index;
+	});
 	app.card_modal.update_modal(card);
 	ui.refresh_deck();
 	app.deck_history.all_changes();

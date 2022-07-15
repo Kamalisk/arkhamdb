@@ -213,6 +213,10 @@
         <source>Recent Decks</source>
         <target>Последние обновленные колоды</target>
       </trans-unit>
+      <trans-unit id="IhNnTYA" resname="Customizations">
+        <source>Customizations</source>
+        <target>__Customizations</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -318,6 +318,8 @@ deck.decode_customizations = function decode_customizations(code, entry) {
 			return entry;
 		}
 		return entry;
+	}).sort(function(a, b) {
+		return a.index - b.index;
 	});
 }
 
@@ -1485,7 +1487,7 @@ deck.can_include_card = function can_include_card(card, { limit_count, hard_coun
 							var selection = parseInt(choice.choice || '0', 10);
 							var real_slots = (real_slot ? real_slot.split('.') : [])
 							var new_real_slots = [];
-							for(let i=0; i<real_slots.length; i++) {
+							for(var i=0; i<real_slots.length; i++) {
 								if (i !== selection) {
 									new_real_slots.push(real_slots[i]);
 								}
