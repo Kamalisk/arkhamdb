@@ -5,9 +5,9 @@
  */
 format.traits = function traits(card) {
 	if (card.customizations && card.customization_change) {
-		const changes = card.customization_change.split('\n');
+		var changes = card.customization_change.split('\n');
 		for (var i=0; i<card.customizations.length; i++) {
-			const custom = card.customizations[i];
+			var custom = card.customizations[i];
 			if (custom && custom.unlocked && custom.option.text_change === 'trait') {
 				return changes[custom.index] || card.traits || '';
 			}
@@ -90,9 +90,12 @@ format.info = function info(card) {
 	var cost = card.cost;
 	var health = card.health;
 	var sanity = card.sanity;
+	var xp = card.xp;
 	if (card.customizations) {
+		var customization_xp = 0;
 		for(var i=0; i<card.customizations.length; i++) {
-			const custom = card.customizations[i];
+			var custom = card.customizations[i];
+			customization_xp = customization_xp + (custom.xp || 0);
 			if (custom.unlocked) {
 				if (custom.option.health) {
 					health = (health || 0) + custom.option.health;
@@ -105,6 +108,7 @@ format.info = function info(card) {
 				}
 			}
 		}
+		xp = Math.floor((customization_xp + 1) / 2.0);
 	}
 	switch(card.type_code) {
 		case 'agenda':
@@ -134,7 +138,7 @@ format.info = function info(card) {
 			break;
 		case 'asset':
 		case 'event':
-			text += '<div>Cost: '+format.fancy_int(cost)+'. '+(card.xp ? "XP: "+card.xp+"." : "")+'</div>';
+			text += '<div>Cost: '+format.fancy_int(cost)+'. '+(xp ? "XP: "+xp+"." : "")+'</div>';
 
 			if (card.skill_willpower || card.skill_intellect || card.skill_combat || card.skill_agility || card.skill_wild){
 				text += '<div>Test Icons: ';
@@ -160,8 +164,8 @@ format.info = function info(card) {
 			}
 			break;
 		case 'skill':
-			if (card.xp){
-				text += '<div>'+(card.xp ? "XP: "+card.xp+"." : "")+'</div>';
+			if (xp){
+				text += '<div>'+(xp ? "XP: "+xp+"." : "")+'</div>';
 			}
 			if (card.skill_willpower || card.skill_intellect || card.skill_combat || card.skill_agility || card.skill_wild){
 				text += '<div>Test Icons: ';
@@ -199,9 +203,9 @@ format.text = function text(card, alternate) {
 		var lines = text.split('\n');
 		var changes = (card.customization_change || '').split('\n');
 		for (var i=0; i<card.customizations.length; i++) {
-			const custom = card.customizations[i];
-			const option = custom.option;
-			const change = changes[custom.index] || '';
+			var custom = card.customizations[i];
+			var option = custom.option;
+			var change = changes[custom.index] || '';
 			if (custom.unlocked && option.text_change) {
 				switch (option.text_change) {
 					case 'replace': {
@@ -220,9 +224,9 @@ format.text = function text(card, alternate) {
 			}
 		}
 		for (var i=0; i<card.customizations.length; i++) {
-			const custom = card.customizations[i];
-			const option = custom.option;
-			const change = changes[custom.index] || '';
+			var custom = card.customizations[i];
+			var option = custom.option;
+			var change = changes[custom.index] || '';
 			if (custom.unlocked && option.text_change === 'insert') {
 				lines.splice(option.position || 0, 0, change || '');
 			}
