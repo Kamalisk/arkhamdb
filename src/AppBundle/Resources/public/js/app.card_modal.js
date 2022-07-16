@@ -31,7 +31,7 @@ card_modal.update_modal = function update_modal(card) {
 
 function update_info(modal, card) {
 	modal.find('.modal-info').html(
-		'<div class="card-faction">' + app.format.faction(card) + '</div>'
+		'<div class="card-faction">' + app.format.faction(card) + (card.slot ? (' ' + app.format.slot(card)) : '') + '</div>'
 		+ '<div class="card-info">' + app.format.info(card) + '</div>'
 		+ '<div class="card-traits">' + app.format.traits(card) + '</div>'
 		+ '<div class="card-text border-'+card.faction_code+'">' + app.format.text(card) + '</div>'

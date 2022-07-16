@@ -16,8 +16,9 @@ format.traits = function traits(card) {
 	return card.traits || '';
 };
 
-
-
+/**
+ * @memberOf format
+ */
 format.xp = function xp(xp, in_deck, css) {
 	var string = "";
 	if (xp && xp > 0)
@@ -30,7 +31,6 @@ format.xp = function xp(xp, in_deck, css) {
 	}
 	return string;
 };
-
 
 
 /**
@@ -52,6 +52,9 @@ format.name = function name(card) {
 	return name;
 }
 
+/**
+ * @memberOf format
+ */
 format.faction = function faction(card) {
 	var text = '<span class="fg-'+card.faction_code+' icon-'+card.faction_code+'"></span> '+ card.faction_name + '. ';
 	if (card.faction2_code) {
@@ -190,6 +193,31 @@ format.info = function info(card) {
 	}
 	return text;
 };
+
+/**
+ * @memberOf format
+ */
+format.slot = function slot(card) {
+	var slot = card.slot;
+	if (card.customizations) {
+		for (var i=0; i<card.customizations.length; i++) {
+			var custom = card.customizations[i];
+			var option = custom.option;
+			if (custom.unlocked && option.choice === 'remove_slot') {
+				const choice = parseInt(custom.choice || '0', 10) || 0;
+				var slots = slot.split('.');
+				var new_slots = [];
+				for (let j=0; j<slots.length; j++) {
+					if (j !== choice) {
+						new_slots.push(slots[j].trim());
+					}
+				}
+				slot = new_slots.join('. ');
+			}
+		}
+	}
+	return slot;
+}
 
 /**
  * @memberOf format
