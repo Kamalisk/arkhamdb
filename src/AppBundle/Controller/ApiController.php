@@ -15,7 +15,7 @@ class ApiController extends Controller
 
 	/**
 	 * Get the description of all the packs as an array of JSON objects.
-	 * 
+	 *
 	 * @ApiDoc(
 	 *  section="Pack",
 	 *  resource=true,
@@ -216,7 +216,7 @@ class ApiController extends Controller
 
 		/* @var $card \AppBundle\Entity\Card */
 		$card = $this->get('cards_data')->getCardInfo($card, true, "en");
-		
+
 		$content = json_encode($faqs);
 		if(isset($jsonp))
 		{
@@ -264,7 +264,7 @@ class ApiController extends Controller
 		// check the last-modified-since header
 
 		$lastModified = NULL;
-		
+
 		$response->setLastModified($lastModified);
 		if ($response->isNotModified($request)) {
 			return $response;
@@ -293,7 +293,7 @@ class ApiController extends Controller
 	}
 
 	/**
-	 * Get the cards for all Taboo lists 
+	 * Get the cards for all Taboo lists
 	 *
 	 * @ApiDoc(
 	 *  section="Taboo",
@@ -318,7 +318,7 @@ class ApiController extends Controller
     ));
 
 		$jsonp = $request->query->get('jsonp');
-		
+
 		$list_taboos = $this->getDoctrine()->getRepository('AppBundle:Taboo')->findBy([], ['id' => 'DESC']);
 
 		// check the last-modified-since header
@@ -356,9 +356,10 @@ class ApiController extends Controller
 	 * @ApiDoc(
 	 *  section="Card",
 	 *  resource=true,
-	 *  description="All the Cards",
+	 *  description="Returns all the cards. Defaults to player cards only. Set the encounter parameter to 1 if you want encounter cards included.",
 	 *  parameters={
-	 *      {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+	 *      {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"},
+	 *      {"name"="encounter", "dataType"="integer", "required"=false, "description"="Set this to 1 to also get encounter cards"}
 	 *  },
 	 * )
 	 * @param Request $request
@@ -377,7 +378,7 @@ class ApiController extends Controller
 
 		$jsonp = $request->query->get('jsonp');
 		$include_encounter = $request->query->get('encounter');
-		
+
 		if ($include_encounter){
 			$list_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findAll();
 		}else {
@@ -395,7 +396,7 @@ class ApiController extends Controller
 			}
 			if ($card->getBondedTo()) {
 				$matching_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(['realName' => $card->getBondedTo()]);
-				if (count($matching_cards) > 0) {					
+				if (count($matching_cards) > 0) {
 					foreach($matching_cards as $matching_card) {
 						if (!isset($bonded_cards[$matching_card->getCode()])) {
 							$bonded_cards[$matching_card->getCode()] = [];
@@ -409,7 +410,7 @@ class ApiController extends Controller
 		if ($response->isNotModified($request)) {
 			return $response;
 		}
-		
+
 		$cards = array();
 		/* @var $card \AppBundle\Entity\Card */
 		foreach($list_cards as $card) {
@@ -544,36 +545,36 @@ class ApiController extends Controller
 		$response->setPublic();
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
-		
+
 		$jsonp = $request->query->get('jsonp');
-		
+
 		$format = $request->getRequestFormat();
 		if($format !== 'json') {
 			$response->setContent($request->getRequestFormat() . ' format not supported. Only json is supported.');
 			return $response;
 		}
-		
+
 		/* @var $decklist \AppBundle\Entity\Decklist */
 		$decklist = $this->getDoctrine()->getRepository('AppBundle:Decklist')->find($decklist_id);
 		if(!$decklist) die();
-		
+
 		$response->setLastModified($decklist->getDateUpdate());
 		if ($response->isNotModified($request)) {
 			return $response;
 		}
-		
+
 		$content = json_encode($decklist);
-		
+
 		if (isset($jsonp)) {
 			$content = "$jsonp($content)";
 			$response->headers->set('Content-Type', 'application/javascript');
 		} else {
 			$response->headers->set('Content-Type', 'application/json');
 		}
-		
+
 		$response->setContent($content);
 		return $response;
-		
+
 	}
 
 	/**
@@ -609,29 +610,29 @@ class ApiController extends Controller
 		$response->setPublic();
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
-		
+
 		$jsonp = $request->query->get('jsonp');
-		
+
 		$format = $request->getRequestFormat();
 		if($format !== 'json') {
 			$response->setContent($request->getRequestFormat() . ' format not supported. Only json is supported.');
 			return $response;
 		}
-		
+
 		$start = \DateTime::createFromFormat('Y-m-d', $date);
 		$start->setTime(0, 0, 0);
 		$end = clone $start;
 		$end->add(new \DateInterval("P1D"));
-		
+
 		$expr = Criteria::expr();
 		$criteria = Criteria::create();
 		$criteria->where($expr->gte('dateCreation', $start));
 		$criteria->andWhere($expr->lt('dateCreation', $end));
-		
+
 		/* @var $decklists \Doctrine\Common\Collections\ArrayCollection */
 		$decklists = $this->getDoctrine()->getRepository('AppBundle:Decklist')->matching($criteria);
 		if(!$decklists) die();
-		
+
 		$dateUpdates = $decklists->map(function ($decklist) {
 			return $decklist->getDateUpdate();
 		})->toArray();
@@ -640,7 +641,7 @@ class ApiController extends Controller
 		if ($response->isNotModified($request)) {
 			return $response;
 		}
-		
+
 		// the returned results is not an array so convert it, so the json_encode works properly
 		$content = json_encode($decklists->toArray());
 		if (isset($jsonp)) {
@@ -649,10 +650,10 @@ class ApiController extends Controller
 		} else {
 			$response->headers->set('Content-Type', 'application/json');
 		}
-		
+
 		$response->setContent($content);
 		return $response;
-		
+
 	}
 
 
@@ -687,7 +688,7 @@ class ApiController extends Controller
 	{
 		$response = new Response();
 		$response->headers->add(array('Access-Control-Allow-Origin' => '*'));
-		
+
 		/* @var $deck \AppBundle\Entity\Deck */
 		$deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->find($deck_id);
 		// if we have no deck, check deck uuid
@@ -697,16 +698,16 @@ class ApiController extends Controller
 		if(!$deck || !$deck->getUser() || (!$deck->getUser()->getIsShareDecks() && !$deck->getShared()) ) {
 			throw $this->createAccessDeniedException("Access denied to this object.");
 		}
-		
+
 		$response->setLastModified($deck->getDateUpdate());
 		if ($response->isNotModified($request)) {
 			return $response;
 		}
-		
+
 		$deck->setUser(null);
-		
+
 		$content = json_encode($deck);
-		
+
 		$response->headers->set('Content-Type', 'application/json');
 		$response->setContent($content);
 		return $response;
