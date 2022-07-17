@@ -624,6 +624,9 @@ class CardsData
 
 		if (isset($cardinfo['linked_to_code']) && $cardinfo['linked_to_code']){
 			$cardinfo['linked_card'] = $this->getCardInfo($card->getLinkedTo());
+			if ($card->getLinkedTo() && $card->getLinkedTo()->getEncounter()) {
+				$cardinfo['spoiler'] = 1;
+			}
 		}
 
 		if($api) {
@@ -656,6 +659,15 @@ class CardsData
 					$cardinfo['duplicated_by'] = [];
 					foreach($dupes as $duplicate) {
 						$cardinfo['duplicated_by'][] = $duplicate->getCode();
+					}
+				}
+			}
+			if ($card->getAlternates()) {
+				$dupes = $card->getAlternates();
+				if (count($dupes) > 0) {
+					$cardinfo['alternated_by'] = [];
+					foreach($dupes as $duplicate) {
+						$cardinfo['alternated_by'][] = $duplicate->getCode();
 					}
 				}
 			}
@@ -695,6 +707,15 @@ class CardsData
 					$cardinfo['duplicated_by'] = [];
 					foreach($dupes as $duplicate) {
 						$cardinfo['duplicated_by'][] = $duplicate->getCode();
+					}
+				}
+			}
+			if ($card->getAlternates()) {
+				$dupes = $card->getAlternates();
+				if (count($dupes) > 0) {
+					$cardinfo['alternated_by'] = [];
+					foreach($dupes as $duplicate) {
+						$cardinfo['alternated_by'][] = $duplicate->getCode();
 					}
 				}
 			}
