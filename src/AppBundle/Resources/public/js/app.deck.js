@@ -969,7 +969,23 @@ deck.create_card = function create_card(card, field='indeck'){
 
 	if (!no_collection){
 		var pack = app.data.packs.findById(card.pack_code);
-		if (!collection[pack.id]) {
+		var in_collection = false;
+		if (collection[pack.id]) {
+			in_collection = true;
+		} else {
+			if (card.duplicated_by) {
+				card.duplicated_by.forEach(function (dupe_code) {
+					var dupe_card = app.data.cards.findById(dupe_code);
+					if (dupe_card) {
+						pack = app.data.packs.findById(dupe_card.pack_code);
+						if (collection[pack.id]) {
+							in_collection = true;
+						}
+					}
+				});
+			}
+		}
+		if (!in_collection) {
 			$div.append(' <span class="fa fa-question" title="This card is not part of your collection"></span>');
 		}
 	}

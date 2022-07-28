@@ -41,6 +41,9 @@ class BuilderController extends Controller
 			if ($investigator->getDuplicateOf()) {
 				continue;
 			}
+			if ($investigator->getAlternateOf()) {
+				continue;
+			}
 			$deck_requirements = $this->get('deck_validation_helper')->parseReqString($investigator->getDeckRequirements());
 			if (isset($deck_requirements['size']) && $deck_requirements['size']){
 				$cards_to_add = [];
@@ -74,6 +77,13 @@ class BuilderController extends Controller
 					}
 					if ($investigator->getDuplicates()) {
 						foreach($investigator->getDuplicates() as $dupe) {
+							if (in_array($dupe->getPack()->getId(), $packs_owned) ){
+								$investigator->owned = 1;
+							}
+						}
+					}
+					if ($investigator->getAlternates()) {
+						foreach($investigator->getAlternates() as $dupe) {
 							if (in_array($dupe->getPack()->getId(), $packs_owned) ){
 								$investigator->owned = 1;
 							}
