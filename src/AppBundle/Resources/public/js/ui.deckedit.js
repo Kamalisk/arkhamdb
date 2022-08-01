@@ -804,6 +804,43 @@ ui.on_modal_customization_change = function on_modal_customization_change(event)
 	ui.on_customization_change(code, index, xp, choice);
 }
 
+/**
+ * @memberOf ui
+ * @param event
+ */
+ ui.on_modal_customization_remove_card_choice = function on_modal_customization_remove_card_choice(event) {
+	var modal = $('#cardModal');
+	var code = modal.data('code');
+	var target = event.target.value.split('|');
+	const choice_index = parseInt(target[0], 10);
+	const remove_index = parseInt(target[1], 10);
+
+	var card = app.data.cards.findById(code);
+	if (!card || !card.customizations) {
+		return;
+	}
+
+	var choice = undefined;
+	for (var i=0; i<card.customizations.length; i++) {
+		if (card.customizations[i].index === choice_index) {
+			choice = card.customizations[i];
+			break;
+		}
+	}
+	if (!choice) {
+		return;
+	}
+	var choices = (choice.choice || '').split('^');
+	var new_choices = [];
+	for(let i=0; i<choices.length; i++) {
+		if (choices[i] && i !== remove_index) {
+			new_choices.push(choices[i]);
+		}
+	}
+
+	ui.on_customization_change(code, choice_index, choice.xp, new_choices.join('^'));
+}
+
 ui.refresh_row = function refresh_row(card_code, quantity) {
 	// for each set of divs (1, 2, 3 columns)
 	CardDivs.forEach(function(rows) {
@@ -1036,6 +1073,7 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	$('#cardModal').on('change', 'input[type=radio]', ui.on_modal_quantity_change);
 	$('#cardModal').on('change', 'input[type=checkbox]', ui.on_modal_customization_change);
 	$('#cardModal').on('change', 'select', ui.on_modal_customization_select_change);
+	$('#cardModal').on('click', 'button[class=remove-card-choice]', ui.on_modal_customization_remove_card_choice);
 
 	$('thead').on('click', 'a[data-sort]', ui.on_table_sort_click);
 }
@@ -1449,22 +1487,26 @@ ui.setup_typeahead = function setup_typeahead() {
   },{
     name : 'cardnames',
     display: function(data) {
-      var value = data.name;
-      if (data.xp && data.xp > 0) {
-        value = data.name + ' (' + data.xp + ')';
-      }
-      return value;
+			return data.name;
     },
     source: findMatches,
     templates: {
       suggestion: function (data){
         var value = data.name;
         if (data.xp && data.xp > 0) {
-          value = data.name+' ('+data.xp+')';
+          value = value+' ('+data.xp+')';
         }
+				if (
+					(data.type_code === 'asset') &&
+					(!data.real_traits || data.real_traits.indexOf('Ally.') === -1) &&
+					data.xp &&
+					data.subname
+				) {
+	        value = value + ' - <i>' + data.subname + '</i>';
+  	    }
         return '<div>' + value + '</div>';
-      }
-    }
+    	}
+		}
   });
 	$('#filter-text-personal').typeahead({
     hint: true,
@@ -1473,24 +1515,27 @@ ui.setup_typeahead = function setup_typeahead() {
   },{
     name : 'cardnames-personal',
     display: function(data) {
-      var value = data.name;
-      if (data.xp && data.xp > 0) {
-        value = data.name + ' (' + data.xp + ')';
-      }
-      return value;
+			return data.name;
     },
     source: findMatches,
     templates: {
       suggestion: function (data){
         var value = data.name;
         if (data.xp && data.xp > 0) {
-          value = data.name+' ('+data.xp+')';
+          value = value + ' (' + data.xp + ')';
         }
+				if (
+					(data.type_code === 'asset') &&
+					(!data.real_traits || data.real_traits.indexOf('Ally.') === -1) &&
+					data.xp &&
+					data.subname
+				) {
+	        value = value + ' - <i>' + data.subname + '</i>';
+  	    }
         return '<div>' + value + '</div>';
       }
     }
   });
-
 }
 
 ui.update_sort_caret = function update_sort_caret() {

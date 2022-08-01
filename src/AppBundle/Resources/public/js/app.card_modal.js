@@ -62,17 +62,117 @@ function update_qty(modal, card) {
 
 function make_customization_subchoice(card, index, option, choice, editable) {
 	if (!option.choice) {
-		return '';
+		return { html: '' };
 	}
 	if (option.xp && (!choice || choice.xp < option.xp)) {
-		return '';
+		return { html: '' };
 	}
-	var id = "custom_choice_" + index;
+	var id = 'custom_choice_' + index;
 	switch (option.choice) {
+		case 'choose_card': {
+			editable = editable && (!choice || !choice.locked);
+			var chosen_cards = (choice && choice.choice) ? choice.choice.split('^') : [];
+			var r = '<div style="display:flex; flex-direction: column; margin-left: 8px; margin-top: 4px; margin-bottom: 8px;">';
+			for (var i =0; i<chosen_cards.length; i++) {
+				var code = chosen_cards[i];
+				var chosen_card = app.data.cards.findById(code);
+				r = r + '<div>- ' + (chosen_card ? chosen_card.name : 'Unknown Card');
+				if (editable) {
+					r = r + '<button style="margin-left: 8px; margin-bottom: 2px;" class="remove-card-choice" value="' + index + '|' + i + '">X</button>';
+				}
+				r = r + '</div>';
+			}
+
+			var show_search = editable && (chosen_cards.length < option.quantity);
+			if (show_search) {
+				r = r + '<div><input class="form-control" id="' + id + '" name="' + id + '"' + ((choice && choice.locked) || !editable ? ' disabled' : '') + '/></div>';
+			}
+			r = r + '</div>';
+			return {
+				html: r,
+				build: show_search ? function() {
+					function findCustomizationMatches(q, cb) {
+						if(q.match(/^\w:/)) return;
+						var regexp = new RegExp(q, 'i');
+						var cards = app.data.cards.find({name: regexp});
+						var matching_cards = [];
+						for (var i=0; i<cards.length; i++) {
+							var card = cards[i];
+							if (!card) {
+								continue;
+							}
+							if (!option.card) {
+								// No condition;
+								matching_cards.push(card);
+								continue;
+							}
+							if (option.card.types) {
+								var type_matches = false;
+								for (var j=0; j<option.card.types.length; j++) {
+									if (option.card.types[j] === card.type_code) {
+										type_matches = true;
+										break;
+									}
+								}
+								if (!type_matches) {
+									continue;
+								}
+							}
+							if (option.card.traits) {
+								if (!card.real_traits) {
+									continue;
+								}
+								var trait_matches = false;
+								for (var j=0; j<option.card.traits.length; j++) {
+									if (card.real_traits.toLowerCase().indexOf(option.card.traits[j].toLowerCase()) !== -1) {
+										trait_matches = true;
+										break;
+									}
+								}
+								if (!trait_matches) {
+									continue;
+								}
+							}
+							matching_cards.push(card);
+						}
+						cb(matching_cards);
+					}
+					$('#' + id).typeahead({
+						hint: true,
+						highlight: true,
+						minLength: 2
+					},{
+						name : 'customization',
+						display: function(data) {
+							return data.name;
+						},
+						source: findCustomizationMatches,
+						templates: {
+							suggestion: function (data){
+								var value = data.name;
+								if (data.xp && data.xp > 0) {
+									value = value+' ('+data.xp+')';
+								}
+								if (data.subname) {
+									value = value + ' - <i>' + data.subname + '</i>';
+								}
+								return '<div>' + value + '</div>';
+							}
+						}
+					});
+					$('#' + id).on('typeahead:selected typeahead:autocompleted', function(event, chosen_card) {
+						app.ui.on_customization_change(card.code, index, option.xp,
+							choice && choice.choice ? choice.choice + '^' + chosen_card.code : chosen_card.code
+						);
+					});
+				} : undefined,
+			};
+		}
 		case 'remove_slot': {
-			var r = '<select class="form-control" id="' + id + '" name="' + id + '"' + ((choice && choice.locked) || !editable ? ' disabled' : '') + '>';
-			var real_slots = (card.real_slot || '').split(".");
-			var slots = (card.slot || '').split(".");
+			var r = '<div style="display:flex; flex-direction: row; margin-left: 8px; margin-top: 4px; margin-bottom: 8px;">' +
+				'<select class="form-control" id="' + id + '" name="' + id + '"' + ((choice && choice.locked) || !editable ? ' disabled' : '') + '>';
+			var real_slots = (card.real_slot || '').split('.');
+			var slots = (card.slot || '').split('.');
 			for (var i=0; i<real_slots.length; i++) {
 				var selected=(!choice || !choice.choice ? 0 : parseInt(choice.choice, 10)) === i;
 				var real_slot = real_slots[i].trim();
@@ -82,15 +182,20 @@ function make_customization_subchoice(card, index, option, choice, editable) {
 				var slot = (slots[i] || real_slot).trim();
 				r += '<option value="' + index + '|' + (option.xp || 0) + '|' + i + '"' + (selected ? ' selected' : '') + '>' + slot + '</option>';
 			}
-			r += '</select>';
-			return r;
+			r += '</select></div>';
+			return {
+				html: r,
+			};
 		}
 		default:
-			return '';
+			return {
+				html: '',
+			};
 	}
 }
 
 function update_customizations(modal, card) {
+	var build_controls = [];
 	var customization_html = '';
 	if(card.customization_options && card.customization_text) {
 		customization_html += '<h4 class="modal-title">Customizations</h4>';
@@ -114,13 +219,13 @@ function update_customizations(modal, card) {
 				line = line.replace(/\[\[([^\]]+)\]\]/g, '<b><i>$1</i></b>');
 				line = line.replace(/\[(\w+)\]/g, '<span title="$1" class="icon-$1"></span>');
 				var control = make_customization_subchoice(card, i, option, choice, !!card.maxqty);
-				if (control) {
+				if (control.html) {
 					line = line.replace(/:.*$/,'') + ': ';
 				}
 				if (card.maxqty) {
 					// Edit mode
 					line = line.replace(/□+ /, '');
-					customization_html += '<div style="display:flex; flex-direction: row; align-items:flex-start;">';
+					customization_html += '<div style="display:flex; flex-direction: row; align-items:flex-start;' + (!option.xp ? ' margin-left: 8px;' : '') + '">';
 
 					for(var j=0; j<option.xp; j++) {
 						var name = 'custom_' + i;
@@ -137,8 +242,11 @@ function update_customizations(modal, card) {
 					customization_html += '<div style="margin-left: 8px">' + line + '</div>';
 				}
 
-				if (control) {
-					customization_html += '<div style="display:flex; flex-direction: row; margin-left: 8px; margin-top: 4px; margin-bottom: 8px;">' + control + '</div>';
+				if (control.html) {
+					customization_html += '' + control.html + '';
+					if (control.build) {
+						build_controls.push(control.build);
+					}
 				}
 			}
 			customization_html += '</div>';
@@ -148,6 +256,10 @@ function update_customizations(modal, card) {
 		}
 	}
 	modal.find('.modal-customization').html(customization_html);
+	for (var i=0; i<build_controls.length; i++) {
+		// Now build the advanced controls once we have set the HTML.
+		build_controls[i]();
+	}
 }
 
 function fill_modal (code) {

@@ -282,7 +282,7 @@ deck.parse_customizations = function(card, entry) {
 		var result = {
 			index,
 			xp,
-			unlocked: option && option.xp === xp,
+			unlocked: !option.xp || (option && option.xp === xp),
 			option,
 			line: lines[index] || '',
 		};
