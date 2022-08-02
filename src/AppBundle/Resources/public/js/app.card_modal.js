@@ -106,10 +106,10 @@ function make_customization_subchoice(card, index, option, choice, editable) {
 								matching_cards.push(card);
 								continue;
 							}
-							if (option.card.types) {
+							if (option.card.type) {
 								var type_matches = false;
-								for (var j=0; j<option.card.types.length; j++) {
-									if (option.card.types[j] === card.type_code) {
+								for (var j=0; j<option.card.type.length; j++) {
+									if (option.card.type[j] === card.type_code) {
 										type_matches = true;
 										break;
 									}
@@ -118,13 +118,13 @@ function make_customization_subchoice(card, index, option, choice, editable) {
 									continue;
 								}
 							}
-							if (option.card.traits) {
+							if (option.card.trait) {
 								if (!card.real_traits) {
 									continue;
 								}
 								var trait_matches = false;
-								for (var j=0; j<option.card.traits.length; j++) {
-									if (card.real_traits.toLowerCase().indexOf(option.card.traits[j].toLowerCase()) !== -1) {
+								for (var j=0; j<option.card.trait.length; j++) {
+									if (card.real_traits.toLowerCase().indexOf(option.card.trait[j].toLowerCase()) !== -1) {
 										trait_matches = true;
 										break;
 									}
