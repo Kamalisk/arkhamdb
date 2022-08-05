@@ -137,7 +137,7 @@ deck_history.all_changes = function all_changes() {
 			var xp = choice.xp_delta;
 			if (xp > 0 && spell_upgrade_discounts > 0 && customization.card.real_traits && customization.card.real_traits.indexOf('Spell.') !== -1) {
 				// Handle Arcane Research discounts if its a 'spell'
-				const max_discount = Math.min(spell_upgrade_discounts, xp);
+				var max_discount = Math.min(spell_upgrade_discounts, xp);
 				xp = xp - max_discount;
 				spell_upgrade_discounts = spell_upgrade_discounts - max_discount;
 			}
@@ -173,7 +173,7 @@ deck_history.all_changes = function all_changes() {
 				removal_xp += removal.card.taboo_xp;
 			}
 			if (addition.qty > 0 && removal.qty > 0 && addition_xp >= 0 && addition.card.real_name == removal.card.real_name && addition_xp > removal_xp){
-				const upgraded_count = Math.min(addition.qty, removal.qty);
+				var upgraded_count = Math.min(addition.qty, removal.qty);
 				addition.qty = addition.qty - removal.qty;
 				if (spell_upgrade_discounts > 0 && removal.card.real_traits && removal.card.real_traits.indexOf('Spell.') !== -1 && addition.card.real_traits && addition.card.real_traits.indexOf('Spell.') !== -1) {
 					// It's a spell card, and we have arcane research discounts remaining.
@@ -447,6 +447,13 @@ deck_history.autosave_interval = function autosave_interval() {
 	timer--;
 }
 
+function split_choices(choice) {
+	if (typeof choice === 'string') {
+		return choice.split(',');
+	}
+	return choice || [];
+}
+
 function decode_customization(choice) {
 	if (!choice) {
 		return null;
@@ -483,12 +490,14 @@ deck_history.add_snapshot = function add_snapshot(snapshot) {
 				var card = app.data.cards.findById(code);
 				if(!card || !card.customization_text) return;
 				var lines = card.customization_text.split("\n");
-				const previous_choices = _.map(
-					((snapshot.variation[3] || {})[code] || '').split(','), function(c) {
-					return decode_customization(c);
-				});
+				var previous_choices = _.map(
+					split_choices((snapshot.variation[3] || {})[code] || ''),
+					function(c) {
+						return decode_customization(c);
+					}
+				);
 				if (choices) {
-					_.each(choices.split(','), choice => {
+					_.each(split_choices(choices), choice => {
 						var current = decode_customization(choice);
 						if (!current || current.index >= card.customization_options.length) {
 							return;
@@ -513,12 +522,14 @@ deck_history.add_snapshot = function add_snapshot(snapshot) {
 				var card = app.data.cards.findById(code);
 				if(!card || !card.customization_text) return;
 				var lines = card.customization_text.split("\n");
-				const current_choices = _.map(
-					((snapshot.variation[2] || {})[code] || '').split(','), function(c) {
-					return decode_customization(c);
-				});
+				var current_choices = _.map(
+					split_choices((snapshot.variation[2] || {})[code] || ''),
+					function(c) {
+						return decode_customization(c);
+					}
+				);
 				if (choices) {
-					_.each(choices.split(','), choice => {
+					_.each(split_choices(choices), choice => {
 						var previous = decode_customization(choice);
 						if (!previous || previous.index >= card.customization_options.length) {
 							return;

@@ -233,14 +233,15 @@ format.text = function text(card, alternate) {
 		for (var i=0; i<card.customizations.length; i++) {
 			var custom = card.customizations[i];
 			var option = custom.option;
-			var change = changes[custom.index] || '';
 			if (custom.unlocked && option.text_change) {
 				switch (option.text_change) {
 					case 'replace': {
+						var change = changes[custom.index] || '';
 						lines[option.position || 0] = change || '';
 						break;
 					}
 					case 'append': {
+						var change = changes[custom.index] || '';
 						lines.push(change || '');
 						break;
 					}
@@ -251,15 +252,33 @@ format.text = function text(card, alternate) {
 				}
 			}
 		}
-		for (var i=0; i<card.customizations.length; i++) {
-			var custom = card.customizations[i];
-			var option = custom.option;
-			var change = changes[custom.index] || '';
-			if (custom.unlocked && option.text_change === 'insert') {
-				lines.splice(option.position || 0, 0, change || '');
+		var final_lines = [];
+		for (var i=0; i<lines.length; i++) {
+			final_lines.push(lines[i]);
+			for (var j=0; j<card.customizations.length; j++) {
+				var custom = card.customizations[j];
+				var option = custom.option;
+				if (custom.unlocked && option.text_change === 'insert' && option.position === i) {
+					var change = changes[custom.index] || '';
+					if (option.choice === 'choose_card' && custom.choice) {
+						var card_names = [];
+						var card_codes = custom.choice.split('^');
+						for (var k=0; k<card_codes.length; k++) {
+							var code = card_codes[k];
+							if (code) {
+								var named_card = app.data.cards.findById(code);
+								if (named_card) {
+									card_names.push(named_card.name);
+								}
+							}
+						}
+						change = change + ' ' + card_names.join(', ');
+					}
+					final_lines.push(change);
+				}
 			}
 		}
-		text = lines.join('\n');
+		text = final_lines.join('\n');
 	}
 	text = text.replace(/\[\[([^\]]+)\]\]/g, '<b><i>$1</i></b>');
 	text = text.replace(/\[(\w+)\]/g, '<span title="$1" class="icon-$1"></span>');
