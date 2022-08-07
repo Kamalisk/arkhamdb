@@ -260,19 +260,29 @@ format.text = function text(card, alternate) {
 				var option = custom.option;
 				if (custom.unlocked && option.text_change === 'insert' && option.position === i) {
 					var change = changes[custom.index] || '';
-					if (option.choice === 'choose_card' && custom.choice) {
-						var card_names = [];
-						var card_codes = custom.choice.split('^');
-						for (var k=0; k<card_codes.length; k++) {
-							var code = card_codes[k];
-							if (code) {
-								var named_card = app.data.cards.findById(code);
-								if (named_card) {
-									card_names.push(named_card.name);
+					if (custom.choice) {
+						switch (option.choice) {
+							case 'choose_card': {
+								var card_names = [];
+								var card_codes = custom.choice.split('^');
+								for (var k=0; k<card_codes.length; k++) {
+									var code = card_codes[k];
+									if (code) {
+										var named_card = app.data.cards.findById(code);
+										if (named_card) {
+											card_names.push(named_card.name);
+										}
+									}
 								}
+								change = change + ' ' + card_names.join(', ');
+								break;
+							}
+							case 'choose_trait': {
+								var traits = custom.choice.split('^');
+								change = change + ' ' + traits.join(', ');
+								break;
 							}
 						}
-						change = change + ' ' + card_names.join(', ');
 					}
 					final_lines.push(change);
 				}

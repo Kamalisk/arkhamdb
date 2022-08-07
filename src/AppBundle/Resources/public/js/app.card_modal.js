@@ -168,6 +168,58 @@ function make_customization_subchoice(card, index, option, choice, editable) {
 				} : undefined,
 			};
 		}
+		case 'choose_trait': {
+			editable = editable && (!choice || !choice.locked);
+			var chosen_traits = (choice && choice.choice) ? choice.choice.split('^') : [];
+			var r = '<div style="display:flex; flex-direction: column; margin-left: 8px; margin-top: 4px; margin-bottom: 8px;">';
+			for (var i =0; i<chosen_traits.length; i++) {
+				var trait = chosen_traits[i];
+				r = r + '<div>- ' + trait;
+				if (editable) {
+					r = r + '<button style="margin-left: 8px; margin-bottom: 2px;" class="remove-card-choice" value="' + index + '|' + i + '">X</button>';
+				}
+				r = r + '</div>';
+			}
+
+			var show_search = editable && (chosen_traits.length < option.quantity);
+			if (show_search) {
+				r = r + '<div style="display:flex; flex-direction: row;">' +
+					'<input type="text" class="form-control" id="' + id + '" name="' + id + '"' + ((choice && choice.locked) || !editable ? ' disabled' : '') + '/>' +
+					'<button style="margin-left: 8px; margin-bottom: 2px; display: none;" id="' + id + '_done">Done</button>' +
+					'</div>';
+			}
+			r = r + '</div>';
+			return {
+				html: r,
+				build: show_search ? function() {
+					$('#' + id).on('focus', function(event) {
+						$('#' + id + '_done').show();
+					});
+					$('#' + id).on('blur', function(event) {
+						const trait = event.target.value.trim().replace(/[\^|,]/g, '');
+						console.log(trait);
+						if (trait) {
+							app.ui.on_customization_change(card.code, index, option.xp,
+								choice && choice.choice ? choice.choice + '^' + trait : trait
+							);
+						}
+						$('#' + id + '_done').hide();
+					});
+					$('#' + id).on('keypress', function(event) {
+						if (event.key === "Enter") {
+							event.preventDefault();
+							const trait = event.target.value.trim().replace(/[\^|,]/g, '');
+							console.log(trait);
+							if (trait) {
+								app.ui.on_customization_change(card.code, index, option.xp,
+									choice && choice.choice ? choice.choice + '^' + trait : trait
+								);
+							}
+						}
+					});
+				} : undefined,
+			};
+		}
 		case 'remove_slot': {
 			var r = '<div style="display:flex; flex-direction: row; margin-left: 8px; margin-top: 4px; margin-bottom: 8px;">' +
 				'<select class="form-control" id="' + id + '" name="' + id + '"' + ((choice && choice.locked) || !editable ? ' disabled' : '') + '>';
