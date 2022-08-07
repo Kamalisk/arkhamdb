@@ -279,7 +279,7 @@ format.text = function text(card, alternate) {
 							}
 							case 'choose_trait': {
 								var traits = custom.choice.split('^');
-								change = change + ' ' + traits.join(', ');
+								change = change + ' ' + traits.map(function(trait) { return '<b><i>' + trait + '</i></b>' }).join(', ');
 								break;
 							}
 						}
