@@ -784,7 +784,11 @@ deck.get_layout_data = function get_layout_data(options) {
 		}
 		var forced_learning = app.data.cards.findById("08031");
 		if (forced_learning && forced_learning.indeck) {
-			size + size + 15;
+			size = size + 15;
+		}
+		var underworld_market = app.data.cards.findById("09077");
+		if (underworld_market && underworld_market.indeck) {
+			size = size + 10;
 		}
 		var versatile = app.data.cards.findById("06167");
 		if (versatile && versatile.indeck) {
@@ -1281,6 +1285,10 @@ deck.get_problem = function get_problem() {
 		var forced_learning = app.data.cards.findById("08031");
 		if (forced_learning && forced_learning.indeck) {
 			size = size + 15;
+		}
+		var underworld_market = app.data.cards.findById("09077");
+		if (underworld_market && underworld_market.indeck) {
+			size = size + 10;
 		}
 		var versatile = app.data.cards.findById("06167");
 		if (versatile && versatile.indeck) {
