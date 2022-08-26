@@ -101,6 +101,9 @@ function make_customization_subchoice(card, index, option, choice, editable) {
 							if (!card) {
 								continue;
 							}
+							if (card.duplicate_of_code) {
+								continue;
+							}
 							if (!option.card) {
 								// No condition;
 								matching_cards.push(card);

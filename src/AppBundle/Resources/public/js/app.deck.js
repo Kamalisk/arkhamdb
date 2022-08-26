@@ -156,6 +156,12 @@ deck.init = function init(data, previous_deck_meta) {
 }
 
 deck.onloaded = function(data){
+
+	if (data.taboo_id){
+		deck.taboo_id = data.taboo_id;
+		app.data.apply_taboos(deck.taboo_id);
+	}
+
 	deck.set_slots(data.slots, data.ignoreDeckLimitSlots);
 	if (data.sideSlots) {
 		deck.set_side_slots(data.sideSlots);
@@ -718,8 +724,6 @@ deck.change_sort = function(sort_type){
 deck.display = function display(container, options) {
 	// XXX fetch the selected sort here
 	// default is 2 it seems
-	// before displaying a deck, apply the currently active taboo list
-	app.data.apply_taboos(deck.taboo_id);
 	options = _.extend({sort: 'type', cols: 2}, options);
 
 	var deck_content = deck.get_layout_data(options);
@@ -771,8 +775,13 @@ deck.get_layout_data = function get_layout_data(options) {
 				size = alternate.deck_requirements.size;
 			}
 		}
-		if (deck.meta && deck.meta.deck_size_selected){
-			size = parseInt(deck.meta.deck_size_selected, 10);
+		if (deck.meta && deck.meta.deck_size_selected && card.deck_options){
+			for (var i=0; i<card.deck_options.length; i++) {
+				if (card.deck_options[i].deck_size_select && card.deck_options[i].deck_size_select.length) {
+					size = parseInt(deck.meta.deck_size_selected, 10);
+					break;
+				}
+			}
 		}
 		var ancestral_knowledge = app.data.cards.findById("07303");
 		if (ancestral_knowledge && ancestral_knowledge.indeck) {
@@ -1270,8 +1279,13 @@ deck.get_problem = function get_problem() {
 				size = alternate.deck_requirements.size;
 			}
 		}
-		if (deck.meta && deck.meta.deck_size_selected){
-			size = parseInt(deck.meta.deck_size_selected, 10);
+		if (deck.meta && deck.meta.deck_size_selected && card.deck_options){
+			for (var i=0; i<card.deck_options.length; i++) {
+				if (card.deck_options[i].deck_size_select && card.deck_options[i].deck_size_select.length) {
+					size = parseInt(deck.meta.deck_size_selected, 10);
+					break;
+				}
+			}
 		}
 
 		var ancestral_knowledge = app.data.cards.findById("07303");
@@ -1403,6 +1417,7 @@ deck.get_problem = function get_problem() {
 }
 
 deck.reset_limit_count = function (){
+	var investigator = app.data.cards.findById(investigator_code);
 	if (investigator){
 		var ancestral_knowledge = app.data.cards.findById("07303");
 		var versatile = app.data.cards.findById("06167");

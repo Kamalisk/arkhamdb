@@ -234,14 +234,17 @@ format.text = function text(card, alternate) {
 			var custom = card.customizations[i];
 			var option = custom.option;
 			if (custom.unlocked && option.text_change) {
+				var change = changes[custom.index] || '';
+				if (custom.choice && option.choice === 'choose_trait') {
+					var traits = custom.choice.split('^');
+					change = change.replace('_____', traits.map(function(trait) { return '<b><i>' + trait + '</i></b>' }).join(', '));
+				}
 				switch (option.text_change) {
 					case 'replace': {
-						var change = changes[custom.index] || '';
 						lines[option.position || 0] = change || '';
 						break;
 					}
 					case 'append': {
-						var change = changes[custom.index] || '';
 						lines.push(change || '');
 						break;
 					}
@@ -253,6 +256,39 @@ format.text = function text(card, alternate) {
 			}
 		}
 		var final_lines = [];
+		for (var j=0; j<card.customizations.length; j++) {
+			var custom = card.customizations[j];
+			var option = custom.option;
+			if (custom.unlocked && option.text_change === 'insert' && option.position === -1) {
+				var change = changes[custom.index] || '';
+				if (custom.choice) {
+					switch (option.choice) {
+						case 'choose_card': {
+							var card_names = [];
+							var card_codes = custom.choice.split('^');
+							for (var k=0; k<card_codes.length; k++) {
+								var code = card_codes[k];
+								if (code) {
+									var named_card = app.data.cards.findById(code);
+									if (named_card) {
+										card_names.push(named_card.name);
+									}
+								}
+							}
+							change = change + ' ' + card_names.join(', ');
+							break;
+						}
+						case 'choose_trait': {
+							var traits = custom.choice.split('^');
+							change = change.replace('_____', traits.map(function(trait) { return '<b><i>' + trait + '</i></b>' }).join(', '));
+							break;
+						}
+					}
+				}
+				final_lines.push(change);
+			}
+		}
+
 		for (var i=0; i<lines.length; i++) {
 			final_lines.push(lines[i]);
 			for (var j=0; j<card.customizations.length; j++) {
@@ -279,7 +315,7 @@ format.text = function text(card, alternate) {
 							}
 							case 'choose_trait': {
 								var traits = custom.choice.split('^');
-								change = change + ' ' + traits.map(function(trait) { return '<b><i>' + trait + '</i></b>' }).join(', ');
+								change = change.replace('_____', traits.map(function(trait) { return '<b><i>' + trait + '</i></b>' }).join(', '));
 								break;
 							}
 						}

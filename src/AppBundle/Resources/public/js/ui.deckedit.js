@@ -644,6 +644,12 @@ ui.on_taboo_change = function on_taboo_change(event) {
 
 	app.deck.taboo_id = parseInt(value);
 	app.data.apply_taboos(app.deck.taboo_id);
+
+	// Taboo can change the investigator card.
+	app.deck.reset_limit_count();
+	ui.build_faction_selector();
+
+	// Now reset the list and mark deck as modified
 	ui.reset_list();
 	ui.on_deck_modified();
 }
@@ -707,9 +713,15 @@ ui.chaos = function() {
 	var size = valid_cards.length;
 	var actual_size = valid_cards.reduce(function(a, b) { return a + b.deck_limit }, 0);
 
-	var deck_size = app.data.cards.findById(app.deck.get_investigator_code()).deck_requirements.size;
+	var investigator = app.data.cards.findById(app.deck.get_investigator_code());
+	var deck_size = investigator.deck_requirements.size;
 	if (app.deck.meta.deck_size_selected) {
-		deck_size = parseInt(app.deck.meta.deck_size_selected);
+		for (var i=0; i<investigator.deck_options.length; i++) {
+			if (investigator.deck_options[i].deck_size_select && investigator.deck_options[i].deck_size_select.length) {
+				deck_size = parseInt(app.deck.meta.deck_size_selected, 10);
+				break;
+			}
+		}
 	}
 	if (actual_size >= deck_size){
 		while (counter < deck_size){
@@ -1477,7 +1489,19 @@ ui.setup_typeahead = function setup_typeahead() {
 	function findMatches(q, cb) {
 		if(q.match(/^\w:/)) return;
 		var regexp = new RegExp(q, 'i');
-		cb(app.data.cards.find({name: regexp}));
+		var all_cards = app.data.cards.find({name: regexp});
+		var cards = [];
+		for (var i=0; i<all_cards.length; i++) {
+			var card = all_cards[i];
+			if (!card) {
+				continue;
+			}
+			if (card.duplicate_of_code) {
+				continue;
+			}
+			cards.push(card);
+		}
+		cb(cards);
 	}
 
   $('#filter-text').typeahead({
