@@ -48,7 +48,7 @@ format.name = function name(card) {
 	var name = (card.is_unique ? '<span class="icon-unique"></span> ' : "") + card.name;
 	if (card.subname){
 		if (card.type_code === 'treachery') {
-			name += '<div class="card-subname small">('+card.subname+')</div>';
+			name += ' ('+card.subname+')';
 
 		} else {
 			name += '<div class="card-subname small">'+card.subname+'</div>';

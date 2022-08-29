@@ -115,11 +115,11 @@ class SearchController extends Controller
 		$illustrators = array_map(function ($card) {
 			return $card["illustrator"];
 		}, $list_illustrators);
-		
+
 		$allsets = $this->renderView('AppBundle:Default:allsets.html.twig', [
 			"data" => $this->get('cards_data')->allsetsdata(),
 		]);
-		
+
 		return $this->render('AppBundle:Search:searchform.html.twig', array(
 				"pagetitle" => "Card Search",
 				"pagedescription" => "Find all the cards of the game, easily searchable.",
@@ -142,7 +142,7 @@ class SearchController extends Controller
 
 		$game_name = $this->container->getParameter('game_name');
 		$publisher_name = $this->container->getParameter('publisher_name');
-		
+
 		$meta = $card->getName().", a ".$card->getFaction()->getName()." ".$card->getType()->getName()." card for $game_name from the set ".$card->getPack()->getName()." published by $publisher_name.";
 
 		return $this->forward(
@@ -153,7 +153,7 @@ class SearchController extends Controller
 			    'q' => $card->getCode(),
 				'view' => 'card',
 				'sort' => 'set',
-				'pagetitle' => $card->getName(),
+				'pagetitle' => $card->getName() . ($card->getSubname() && $card->getType()->getCode() == "treachery" ? (' (' . $card->getSubname() . ')') : ''),
 				'meta' => $meta
 			)
 		);
@@ -165,15 +165,15 @@ class SearchController extends Controller
 		if(!$pack) {
 			throw $this->createNotFoundException('This pack does not exist');
 		}
-		
+
 		$show_spoilers = false;
 		if ($request->cookies->get('spoilers') && $request->cookies->get('spoilers') == "show"){
 			$show_spoilers = true;
 		}
-		
+
 		$game_name = $this->container->getParameter('game_name');
 		$publisher_name = $this->container->getParameter('publisher_name');
-		
+
 		$meta = $pack->getName().", a set of cards for $game_name"
 				.($pack->getDateRelease() ? " published on ".$pack->getDateRelease()->format('Y/m/d') : "")
 				." by $publisher_name.";
@@ -204,7 +204,7 @@ class SearchController extends Controller
 
 		$game_name = $this->container->getParameter('game_name');
 		$publisher_name = $this->container->getParameter('publisher_name');
-		
+
 		$meta = $cycle->getName().", a cycle of datapack for $game_name published by $publisher_name.";
 
 		$key = array_search('cycle', SearchController::$searchKeys);
@@ -226,7 +226,7 @@ class SearchController extends Controller
 	}
 
 	/**
-	 * Processes the action of the card search form 
+	 * Processes the action of the card search form
 	 * @param Request $request
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
@@ -272,7 +272,7 @@ class SearchController extends Controller
 		if($sort != "name") $find['sort'] = $sort;
 		if($view != "list") $find['view'] = $view;
 		if($decks != "all") $find['decks'] = $decks;
-		
+
 		$response = $this->redirect($this->generateUrl('cards_find').'?'.http_build_query($find));
 		return $response;
 	}
@@ -289,7 +289,7 @@ class SearchController extends Controller
 		$view = $request->query->get('view') ?: 'list';
 		$decks = $request->query->get('decks') ?: 'all';
 		$sort = $request->query->get('sort') ?: 'name';
-		
+
 		// we may be able to redirect to a better url if the search is on a single set
 		$conditions = $this->get('cards_data')->syntax($q);
 		if(count($conditions) == 1 && count($conditions[0]) == 3 && $conditions[0][1] == ":") {
@@ -318,7 +318,7 @@ class SearchController extends Controller
 				'_route' => $request->get('_route')
 			)
 		);
-		
+
 		return $response;
 	}
 
@@ -329,13 +329,13 @@ class SearchController extends Controller
 		$response->setMaxAge($this->container->getParameter('cache_expiration'));
 
 		static $availability = [];
-		
+
 		$show_spoilers = 0;
 		if ($request->cookies->get('spoilers') && $request->cookies->get('spoilers') == "show"){
 			$show_spoilers = 1;
 		}
 
-		
+
 		$cards = [];
 		$first = 0;
 		$last = 0;
@@ -349,14 +349,14 @@ class SearchController extends Controller
 			'short' => 1000,
 		);
 		$includeReviews = FALSE;
-		
+
 		if(!array_key_exists($view, $pagesizes))
 		{
 			$view = 'list';
 		}
-		
 
-		
+
+
 		$conditions = $this->get('cards_data')->syntax($q);
 		$conditions = $this->get('cards_data')->validateConditions($conditions);
 
@@ -365,7 +365,7 @@ class SearchController extends Controller
 		$include_encounter = false;
 		$include_encounter = true;
 		$spoiler_protection = true;
-		
+
 		if ($decks == "encounter"){
 			$include_encounter = "encounter";
 		}
@@ -513,9 +513,9 @@ class SearchController extends Controller
 	    $prev = $em->getRepository('AppBundle:Card')->findOneBy(array("pack" => $card->getPack(), "position" => $card->getPosition()-1));
 	    $next = $em->getRepository('AppBundle:Card')->findOneBy(array("pack" => $card->getPack(), "position" => $card->getPosition()+1));
 	    return $this->renderView('AppBundle:Search:setnavigation.html.twig', array(
-	            "prevtitle" => $prev ? $prev->getName() : "",
+	            "prevtitle" => $prev ? ($prev->getName() . ($prev->getSubname() && $prev->getType()->getCode() == "treachery" ? (' (' . $prev->getSubname() . ')') : '')) : "",
 	            "prevhref" => $prev ? $this->get('router')->generate('cards_zoom', array('card_code' => $prev->getCode())) : "",
-	            "nexttitle" => $next ? $next->getName() : "",
+	            "nexttitle" => $next ? ($next->getName() . ($next->getSubname() && $next->getType()->getCode() == "treachery" ? (' (' . $next->getSubname() . ')') : '')) : "",
 	            "nexthref" => $next ? $this->get('router')->generate('cards_zoom', array('card_code' => $next->getCode())) : "",
 	            "settitle" => $card->getPack()->getName(),
 	            "sethref" => $this->get('router')->generate('cards_list', array('pack_code' => $card->getPack()->getCode())),
