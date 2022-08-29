@@ -274,7 +274,7 @@ function update_customizations(modal, card) {
 				}
 				var chosen_xp=(choice && choice.xp) || 0;
 				var locked_xp=(choice && choice.locked_xp) || 0;
-				var line=lines[i];
+				var line = lines[i] || '';
 				line = line.replace(/\[\[([^\]]+)\]\]/g, '<b><i>$1</i></b>');
 				line = line.replace(/\[(\w+)\]/g, '<span title="$1" class="icon-$1"></span>');
 				var control = make_customization_subchoice(card, i, option, choice, !!card.maxqty);
