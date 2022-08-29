@@ -314,13 +314,13 @@ ui.build_pack_selector = function build_pack_selector() {
 	var collection = {};
 	var no_collection = true;
 	if (app.user.data && app.user.data.owned_packs) {
-      var packs = app.user.data.owned_packs.split(',');
-      _.forEach(packs, function(str) {
-          collection[str] = 1;
-          no_collection = false;
-      });
+			var packs = app.user.data.owned_packs.split(',');
+			_.forEach(packs, function(str) {
+					collection[str] = 1;
+					no_collection = false;
+			});
 			//console.log(app.user.data.owned_packs, collection);
-  }
+	}
 
 	cycle_position = 1;
 
@@ -329,10 +329,10 @@ ui.build_pack_selector = function build_pack_selector() {
 			'$exists': true
 		}
 	}, {
-	    $orderBy: {
-	        cycle_position: 1,
-	        position: 1
-	    }
+			$orderBy: {
+					cycle_position: 1,
+					position: 1
+			}
 	}).forEach(function(record) {
 		// checked or unchecked ? checked by default
 		var checked = false;
@@ -620,7 +620,7 @@ ui.on_core_change = function on_core_change(event) {
 	var name = $(this).attr('name');
 	var type = $(this).prop('type');
 	if (localStorage) {
-		localStorage.setItem('set_code_' + name, $(this).is(":checked")  );
+		localStorage.setItem('set_code_' + name, $(this).is(":checked")	);
 	}
 	switch(name) {
 		case 'core':
@@ -772,7 +772,7 @@ ui.on_suggestion_quantity_change = function on_suggestion_quantity_change(event)
  */
 ui.on_modal_quantity_change = function on_modal_quantity_change(event) {
 	var modal = $('#cardModal');
-	var code =  modal.data('code');
+	var code =	modal.data('code');
 	var quantity = parseInt($(this).val(), 10);
 	modal.modal('hide');
 	if ($(this).attr("name") == "ignoreqty"){
@@ -1066,7 +1066,7 @@ ui.setup_event_handlers = function setup_event_handlers() {
 
 	$('#config-options').on('change', 'input', ui.on_config_change);
 	$('[data-filter=pack_code]').on('change', 'input', ui.on_core_change);
-	$('[data-filter=taboo_code]').on('change',  ui.on_taboo_change);
+	$('[data-filter=taboo_code]').on('change', ui.on_taboo_change);
 	$('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 	$('#special-collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 
@@ -1267,7 +1267,7 @@ ui.update_list_template = function update_list_template() {
 		DisplayColumnsTpl = _.template(
 			'<div class="col-sm-6">'
 				+ '<div class="media">'
-					+ '<div class="media-left"><img class="media-object"  onerror="this.onerror=null;this.src=\'/bundles/cards/<%= card.code %>.png\';" src="/bundles/cards/<%= card.code %>.jpg" alt="<%= card.name %>"></div>'
+					+ '<div class="media-left"><img class="media-object"	onerror="this.onerror=null;this.src=\'/bundles/cards/<%= card.code %>.png\';" src="/bundles/cards/<%= card.code %>.jpg" alt="<%= card.name %>"></div>'
 					+ '<div class="media-body">'
 						+ '<h4 class="media-heading"><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></h4>'
 						+ '<div class="btn-group" data-toggle="buttons"><%= radios %></div>'
@@ -1504,62 +1504,64 @@ ui.setup_typeahead = function setup_typeahead() {
 		cb(cards);
 	}
 
-  $('#filter-text').typeahead({
-    hint: true,
-    highlight: true,
-    minLength: 2
-  },{
-    name : 'cardnames',
-    display: function(data) {
+	$('#filter-text').typeahead({
+		hint: true,
+		highlight: true,
+		minLength: 2
+	},{
+		name : 'cardnames',
+		display: function(data) {
 			return data.name;
-    },
-    source: findMatches,
-    templates: {
-      suggestion: function (data){
-        var value = data.name;
-        if (data.xp && data.xp > 0) {
-          value = value+' ('+data.xp+')';
-        }
-				if (
+		},
+		source: findMatches,
+		templates: {
+			suggestion: function (data){
+				var value = data.name;
+				if (data.xp && data.xp > 0) {
+					value = value+' ('+data.xp+')';
+				}
+				if (data.subname && (
 					(data.type_code === 'asset') &&
 					(!data.real_traits || data.real_traits.indexOf('Ally.') === -1) &&
-					data.xp &&
-					data.subname
-				) {
-	        value = value + ' - <i>' + data.subname + '</i>';
-  	    }
-        return '<div>' + value + '</div>';
-    	}
+					data.xp
+				)) {
+					value = value + ' - <i>' + data.subname + '</i>';
+				} else if (data.subname && data.type_code === 'treachery') {
+					value = value + ' (' + data.subname + ')';
+				}
+				return '<div>' + value + '</div>';
+			}
 		}
-  });
+	});
 	$('#filter-text-personal').typeahead({
-    hint: true,
-    highlight: true,
-    minLength: 2
-  },{
-    name : 'cardnames-personal',
-    display: function(data) {
+		hint: true,
+		highlight: true,
+		minLength: 2
+	},{
+		name : 'cardnames-personal',
+		display: function(data) {
 			return data.name;
-    },
-    source: findMatches,
-    templates: {
-      suggestion: function (data){
-        var value = data.name;
-        if (data.xp && data.xp > 0) {
-          value = value + ' (' + data.xp + ')';
-        }
-				if (
+		},
+		source: findMatches,
+		templates: {
+			suggestion: function (data){
+				var value = data.name;
+				if (data.xp && data.xp > 0) {
+					value = value + ' (' + data.xp + ')';
+				}
+				if (data.subname &&
 					(data.type_code === 'asset') &&
 					(!data.real_traits || data.real_traits.indexOf('Ally.') === -1) &&
-					data.xp &&
-					data.subname
+					data.xp
 				) {
-	        value = value + ' - <i>' + data.subname + '</i>';
-  	    }
-        return '<div>' + value + '</div>';
-      }
-    }
-  });
+					value = value + ' - <i>' + data.subname + '</i>';
+				} else if (data.subname && data.type_code === 'treachery') {
+					value = value + ' (' + data.subname + ')';
+				}
+				return '<div>' + value + '</div>';
+			}
+		}
+	});
 }
 
 ui.update_sort_caret = function update_sort_caret() {

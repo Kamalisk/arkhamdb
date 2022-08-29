@@ -157,7 +157,11 @@ function make_customization_subchoice(card, index, option, choice, editable) {
 									value = value+' ('+data.xp+')';
 								}
 								if (data.subname) {
-									value = value + ' - <i>' + data.subname + '</i>';
+									if (data.type_code === 'treachery') {
+										value = value + ' (' + data.subname + ')'
+									} else {
+										value = value + ' - <i>' + data.subname + '</i>';
+									}
 								}
 								return '<div>' + value + '</div>';
 							}
