@@ -232,6 +232,7 @@ class Oauth2Controller extends Controller
 
 		// Return a successful deck with just the required cards.
 		return new JsonResponse([
+
 				'success' => TRUE,
 				'msg' => $deck->getId()
 		]);
@@ -381,6 +382,7 @@ class Oauth2Controller extends Controller
 			$deck->getName(),
 			$deck->getCharacter(),
 			$deck->getDescriptionMd(),
+			$meta_json ? $meta : $deck->getMeta(),
 			$deck->getTags(),
 			$slots,
 			null, // no source deck, we want it to be new.
@@ -388,11 +390,6 @@ class Oauth2Controller extends Controller
 			$ignored,
 			$sideSlots
 		);
-		if ($meta_json){
-			$newDeck->setMeta($meta);
-		} else {
-			$newDeck->setMeta($deck->getMeta());
-		}
 		if ($deck->getTaboo()) {
 			$newDeck->setTaboo($deck->getTaboo());
 		}
@@ -677,10 +674,10 @@ class Oauth2Controller extends Controller
 		}
 
 		// Save the deck.
-		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $slots, $deck , $problem, $ignored, $sideSlots);
 		if ($meta_json) {
 			$deck->setMeta($meta);
 		}
+		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $meta_json ? $meta : $deck->getMeta(), $slots, $deck , $problem, $ignored, $sideSlots);
 		$deck->setTaboo($taboo);
 
 		// xp_spent is only read/set if there was a previousDeck.

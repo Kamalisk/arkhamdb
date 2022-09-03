@@ -67,7 +67,15 @@ ui.set_max_qty = function set_max_qty() {
 	}
 
 	app.data.cards.find().forEach(function(record) {
-		var max_qty = Math.min(4, record.deck_limit);
+		var deck_limit = record.deck_limit;
+		if (record.customizations) {
+			record.customizations.forEach(function(choice) {
+				if (choice.option.deck_limit) {
+					deck_limit = choice.option.deck_limit;
+				}
+			});
+		}
+		var max_qty = Math.min(4, deck_limit);
 		if (record.pack_code == 'core') {
 			max_qty = Math.min(max_qty, record.quantity * cores);
 		}
@@ -306,13 +314,13 @@ ui.build_pack_selector = function build_pack_selector() {
 	var collection = {};
 	var no_collection = true;
 	if (app.user.data && app.user.data.owned_packs) {
-      var packs = app.user.data.owned_packs.split(',');
-      _.forEach(packs, function(str) {
-          collection[str] = 1;
-          no_collection = false;
-      });
+			var packs = app.user.data.owned_packs.split(',');
+			_.forEach(packs, function(str) {
+					collection[str] = 1;
+					no_collection = false;
+			});
 			//console.log(app.user.data.owned_packs, collection);
-  }
+	}
 
 	cycle_position = 1;
 
@@ -321,10 +329,10 @@ ui.build_pack_selector = function build_pack_selector() {
 			'$exists': true
 		}
 	}, {
-	    $orderBy: {
-	        cycle_position: 1,
-	        position: 1
-	    }
+			$orderBy: {
+					cycle_position: 1,
+					position: 1
+			}
 	}).forEach(function(record) {
 		// checked or unchecked ? checked by default
 		var checked = false;
@@ -422,7 +430,7 @@ ui.init_selectors = function init_selectors() {
 		$('[data-filter=taboo_code]').val("");
 	}
 	if (app.deck.meta){
-		Object.keys(app.deck.meta).forEach(key => {
+		Object.keys(app.deck.meta).forEach(function(key) {
 			switch (key) {
 				case 'faction_selected':
 					$('[data-filter=faction_selector]').val(app.deck.meta.faction_selected);
@@ -442,7 +450,7 @@ ui.init_selectors = function init_selectors() {
 				default:
 					// Look for an option matching the 'id' of the meta key.
 					if (investigator.deck_options) {
-						const option = investigator.deck_options.find(option => option.id === key);
+						const option = investigator.deck_options.find(function(option) { return option.id === key; });
 						if (option) {
 							$(`[data-filter=${key}]`).val(app.deck.meta[key]);
 						}
@@ -612,7 +620,7 @@ ui.on_core_change = function on_core_change(event) {
 	var name = $(this).attr('name');
 	var type = $(this).prop('type');
 	if (localStorage) {
-		localStorage.setItem('set_code_' + name, $(this).is(":checked")  );
+		localStorage.setItem('set_code_' + name, $(this).is(":checked")	);
 	}
 	switch(name) {
 		case 'core':
@@ -636,6 +644,12 @@ ui.on_taboo_change = function on_taboo_change(event) {
 
 	app.deck.taboo_id = parseInt(value);
 	app.data.apply_taboos(app.deck.taboo_id);
+
+	// Taboo can change the investigator card.
+	app.deck.reset_limit_count();
+	ui.build_faction_selector();
+
+	// Now reset the list and mark deck as modified
 	ui.reset_list();
 	ui.on_deck_modified();
 }
@@ -699,16 +713,22 @@ ui.chaos = function() {
 	var size = valid_cards.length;
 	var actual_size = valid_cards.reduce(function(a, b) { return a + b.deck_limit }, 0);
 
-	var deck_size = app.data.cards.findById(app.deck.get_investigator_code()).deck_requirements.size;
+	var investigator = app.data.cards.findById(app.deck.get_investigator_code());
+	var deck_size = investigator.deck_requirements.size;
 	if (app.deck.meta.deck_size_selected) {
-		deck_size = parseInt(app.deck.meta.deck_size_selected);
+		for (var i=0; i<investigator.deck_options.length; i++) {
+			if (investigator.deck_options[i].deck_size_select && investigator.deck_options[i].deck_size_select.length) {
+				deck_size = parseInt(app.deck.meta.deck_size_selected, 10);
+				break;
+			}
+		}
 	}
 	if (actual_size >= deck_size){
 		while (counter < deck_size){
 			var random_id = Math.floor(Math.random() * size)
 			var random_card = valid_cards[random_id];
 			if (random_card.indeck < random_card.deck_limit){
-				if (app.deck.can_include_card(random_card, true, true)){
+				if (app.deck.can_include_card(random_card, { limit_count: true, hard_count: true })){
 					random_card.indeck++;
 					//console.log(random_card.name, random_card.indeck, counter);
 					counter++;
@@ -752,7 +772,7 @@ ui.on_suggestion_quantity_change = function on_suggestion_quantity_change(event)
  */
 ui.on_modal_quantity_change = function on_modal_quantity_change(event) {
 	var modal = $('#cardModal');
-	var code =  modal.data('code');
+	var code =	modal.data('code');
 	var quantity = parseInt($(this).val(), 10);
 	modal.modal('hide');
 	if ($(this).attr("name") == "ignoreqty"){
@@ -766,6 +786,71 @@ ui.on_modal_quantity_change = function on_modal_quantity_change(event) {
 	setTimeout(function () {
 		$('#filter-text').typeahead('val', '').focus();
 	}, 100);
+}
+
+
+/**
+ * @memberOf ui
+ * @param event
+ */
+ui.on_modal_customization_change = function on_modal_customization_change(event) {
+	var modal = $('#cardModal');
+	var code = modal.data('code');
+	var target = event.target.value.split('|');
+	const index = parseInt(target[0], 10);
+	const xp = parseInt(target[1], 10)
+	ui.on_customization_change(code, index, event.target.checked ? (xp + 1) : xp);
+}
+
+/**
+ * @memberOf ui
+ * @param event
+ */
+ ui.on_modal_customization_select_change = function on_modal_customization_select_change(event) {
+	var modal = $('#cardModal');
+	var code = modal.data('code');
+	var target = event.target.value.split('|');
+	const index = parseInt(target[0], 10);
+	const xp = parseInt(target[1], 10)
+	const choice = target[2];
+	ui.on_customization_change(code, index, xp, choice);
+}
+
+/**
+ * @memberOf ui
+ * @param event
+ */
+ ui.on_modal_customization_remove_card_choice = function on_modal_customization_remove_card_choice(event) {
+	var modal = $('#cardModal');
+	var code = modal.data('code');
+	var target = event.target.value.split('|');
+	const choice_index = parseInt(target[0], 10);
+	const remove_index = parseInt(target[1], 10);
+
+	var card = app.data.cards.findById(code);
+	if (!card || !card.customizations) {
+		return;
+	}
+
+	var choice = undefined;
+	for (var i=0; i<card.customizations.length; i++) {
+		if (card.customizations[i].index === choice_index) {
+			choice = card.customizations[i];
+			break;
+		}
+	}
+	if (!choice) {
+		return;
+	}
+	var choices = (choice.choice || '').split('^');
+	var new_choices = [];
+	for(let i=0; i<choices.length; i++) {
+		if (choices[i] && i !== remove_index) {
+			new_choices.push(choices[i]);
+		}
+	}
+
+	ui.on_customization_change(code, choice_index, choice.xp, new_choices.join('^'));
 }
 
 ui.refresh_row = function refresh_row(card_code, quantity) {
@@ -810,6 +895,59 @@ ui.on_ignore_quantity_change = function on_ignore_quantity_change(card_code, qua
 }
 ui.on_side_quantity_change = function on_side_quantity_change(card_code, quantity) {
 	var update_all = app.deck.set_card_sides(card_code, quantity);
+	ui.refresh_deck();
+	app.deck_history.all_changes();
+}
+ui.on_customization_change = function on_customization_change(card_code, index, xp, choice) {
+	var card = app.data.cards.findById(card_code);
+	if (!card) {
+		return;
+	}
+
+	var option = (card.customization_options && card.customization_options[index]) || {};
+	var unlocked = option.xp === xp;
+	var new_entry = {
+		index,
+		xp,
+		option,
+		choice,
+		unlocked,
+		line: (card.customization_text && card.customization_text.split("\n")[index]) || '',
+	}
+
+	var customizations = [];
+	_.forEach(
+		app.deck.decode_customizations(card_code, app.deck.meta['cus_' + card_code]),
+		function(entry) {
+			if (entry.index !== index) {
+				// Keep old entries as is
+				customizations.push(entry);
+				return;
+			}
+			// Copy over the locked_xp field to the new entry.
+			new_entry.locked_xp = entry.locked_xp;
+		}
+	);
+	customizations.push(new_entry);
+	app.deck.meta['cus_' + card_code] = app.deck.encode_customizations(customizations);
+
+	if (option.deck_limit) {
+		var update = {customizations};
+		update.maxqty = unlocked ? option.deck_limit : card.deck_limit;
+		card.maxqty = update.maxqty;
+		if (card.indeck) {
+			var indeck = Math.min(card.indeck, update.maxqty);
+			update.indeck = indeck;
+			card.indeck = indeck;
+		}
+		app.data.cards.updateById(card_code, update);
+	} else {
+		app.data.cards.updateById(card_code, {customizations});
+	}
+	card.customizations = customizations.sort(function(a, b) {
+		return a.index - b.index;
+	});
+	app.card_modal.update_modal(card);
 	ui.refresh_deck();
 	app.deck_history.all_changes();
 }
@@ -928,11 +1066,12 @@ ui.setup_event_handlers = function setup_event_handlers() {
 
 	$('#config-options').on('change', 'input', ui.on_config_change);
 	$('[data-filter=pack_code]').on('change', 'input', ui.on_core_change);
-	$('[data-filter=taboo_code]').on('change',  ui.on_taboo_change);
+	$('[data-filter=taboo_code]').on('change', ui.on_taboo_change);
 	$('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 	$('#special-collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 
 	$('#deck').on('click', 'a[data-random]', ui.select_basic_weakness);
+	$('#deck').on('click', 'a[data-customize]', ui.select_basic_weakness);
 	$('#deck').on('click', '#xp_up', ui.on_adjust_xp_up);
 	$('#deck').on('click', '#xp_down', ui.on_adjust_xp_down);
 
@@ -944,9 +1083,11 @@ ui.setup_event_handlers = function setup_event_handlers() {
 		$('#cardModal .modal-qty input[type=radio][value=' + num + ']').trigger('change');
 	});
 	$('#cardModal').on('change', 'input[type=radio]', ui.on_modal_quantity_change);
+	$('#cardModal').on('change', 'input[type=checkbox]', ui.on_modal_customization_change);
+	$('#cardModal').on('change', 'select', ui.on_modal_customization_select_change);
+	$('#cardModal').on('click', 'button[class=remove-card-choice]', ui.on_modal_customization_remove_card_choice);
 
 	$('thead').on('click', 'a[data-sort]', ui.on_table_sort_click);
-
 }
 
 ui.on_adjust_xp_up = function on_adjust_xp_up() {
@@ -1111,7 +1252,7 @@ ui.update_list_template = function update_list_template() {
 			'<tr>'
 				+ '<td><div class="btn-group" data-toggle="buttons"><%= radios %></div></td>'
 				+ '<td><a class="card card-tip fg-<%= card.faction_code %> <% if (typeof(card.faction2_code) !== "undefined") { %> fg-dual <% } %>" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal">'
-				+ '<%= card.name %></a>'
+				+ '<%= card.name %><% if (card.subname && card.type_code === "treachery") { %> (<%= card.subname %>) <% } %></a>'
 				+ '<% if (card.taboo) { %> <span class="icon-tablet" style="color:purple;" title="Is mutated by the current taboo list"></span> <% } %>'
 				+ '<% if (card.exceptional) { %> <span class="icon-eldersign" style="color:orange;" title="Exceptional. Double xp cost and limit one per deck."></span> <% } %>'
 				+ '</td>'
@@ -1126,9 +1267,9 @@ ui.update_list_template = function update_list_template() {
 		DisplayColumnsTpl = _.template(
 			'<div class="col-sm-6">'
 				+ '<div class="media">'
-					+ '<div class="media-left"><img class="media-object"  onerror="this.onerror=null;this.src=\'/bundles/cards/<%= card.code %>.png\';" src="/bundles/cards/<%= card.code %>.jpg" alt="<%= card.name %>"></div>'
+					+ '<div class="media-left"><img class="media-object"	onerror="this.onerror=null;this.src=\'/bundles/cards/<%= card.code %>.png\';" src="/bundles/cards/<%= card.code %>.jpg" alt="<%= card.name %><% if (card.subname && card.type_code === "treachery") { %> (<%= card.subname %>) <% } %>"></div>'
 					+ '<div class="media-body">'
-						+ '<h4 class="media-heading"><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></h4>'
+						+ '<h4 class="media-heading"><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %><% if (card.subname && card.type_code === "treachery") { %> (<%= card.subname %>) <% } %></a></h4>'
 						+ '<div class="btn-group" data-toggle="buttons"><%= radios %></div>'
 					+ '</div>'
 				+ '</div>'
@@ -1139,9 +1280,9 @@ ui.update_list_template = function update_list_template() {
 		DisplayColumnsTpl = _.template(
 			'<div class="col-sm-4">'
 				+ '<div class="media">'
-					+ '<div class="media-left"><img class="media-object" onerror="this.onerror=null;this.src=\'/bundles/cards/<%= card.code %>.png\';" src="/bundles/cards/<%= card.code %>.jpg" alt="<%= card.name %>"></div>'
+					+ '<div class="media-left"><img class="media-object" onerror="this.onerror=null;this.src=\'/bundles/cards/<%= card.code %>.png\';" src="/bundles/cards/<%= card.code %>.jpg" alt="<%= card.name %><% if (card.subname && card.type_code === "treachery") { %> (<%= card.subname %>) <% } %>"></div>'
 					+ '<div class="media-body">'
-						+ '<h5 class="media-heading"><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></h5>'
+						+ '<h5 class="media-heading"><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %><% if (card.subname && card.type_code === "treachery") { %> (<%= card.subname %>) <% } %></a></h5>'
 						+ '<div class="btn-group" data-toggle="buttons"><%= radios %></div>'
 					+ '</div>'
 				+ '</div>'
@@ -1212,7 +1353,7 @@ ui.refresh_list = _.debounce(function refresh_list() {
 
 	cards.forEach(function (card) {
 		if (Config['show-only-deck'] && !card.indeck) return;
-		var unusable = !app.deck.can_include_card(card);
+		var unusable = !app.deck.can_include_card(card, { customizations: true });
 		if (!Config['show-unusable'] && unusable) return;
 
 		// if this card is a duplicate of another
@@ -1287,7 +1428,7 @@ ui.refresh_list2 = _.debounce(function refresh_list2() {
 
 	cards.forEach(function (card) {
 		if (Config['show-only-deck'] && !card.indeck) return;
-		var unusable = !app.deck.can_include_card(card);
+		var unusable = !app.deck.can_include_card(card, { customizations: true });
 		if (!Config['show-unusable'] && unusable) return;
 
 		var row = divs[card.code];
@@ -1348,58 +1489,79 @@ ui.setup_typeahead = function setup_typeahead() {
 	function findMatches(q, cb) {
 		if(q.match(/^\w:/)) return;
 		var regexp = new RegExp(q, 'i');
-		cb(app.data.cards.find({name: regexp}));
+		var all_cards = app.data.cards.find({name: regexp});
+		var cards = [];
+		for (var i=0; i<all_cards.length; i++) {
+			var card = all_cards[i];
+			if (!card) {
+				continue;
+			}
+			if (card.duplicate_of_code) {
+				continue;
+			}
+			cards.push(card);
+		}
+		cb(cards);
 	}
 
-  $('#filter-text').typeahead({
-    hint: true,
-    highlight: true,
-    minLength: 2
-  },{
-    name : 'cardnames',
-    display: function(data) {
-      var value = data.name;
-      if (data.xp && data.xp > 0) {
-        value = data.name + ' (' + data.xp + ')';
-      }
-      return value;
-    },
-    source: findMatches,
-    templates: {
-      suggestion: function (data){
-        var value = data.name;
-        if (data.xp && data.xp > 0) {
-          value = data.name+' ('+data.xp+')';
-        }
-        return '<div>' + value + '</div>';
-      }
-    }
-  });
+	$('#filter-text').typeahead({
+		hint: true,
+		highlight: true,
+		minLength: 2
+	},{
+		name : 'cardnames',
+		display: function(data) {
+			return data.name;
+		},
+		source: findMatches,
+		templates: {
+			suggestion: function (data){
+				var value = data.name;
+				if (data.xp && data.xp > 0) {
+					value = value+' ('+data.xp+')';
+				}
+				if (data.subname && (
+					(data.type_code === 'asset') &&
+					(!data.real_traits || data.real_traits.indexOf('Ally.') === -1) &&
+					data.xp
+				)) {
+					value = value + ' - <i>' + data.subname + '</i>';
+				} else if (data.subname && data.type_code === 'treachery') {
+					value = value + ' (' + data.subname + ')';
+				}
+				return '<div>' + value + '</div>';
+			}
+		}
+	});
 	$('#filter-text-personal').typeahead({
-    hint: true,
-    highlight: true,
-    minLength: 2
-  },{
-    name : 'cardnames-personal',
-    display: function(data) {
-      var value = data.name;
-      if (data.xp && data.xp > 0) {
-        value = data.name + ' (' + data.xp + ')';
-      }
-      return value;
-    },
-    source: findMatches,
-    templates: {
-      suggestion: function (data){
-        var value = data.name;
-        if (data.xp && data.xp > 0) {
-          value = data.name+' ('+data.xp+')';
-        }
-        return '<div>' + value + '</div>';
-      }
-    }
-  });
-
+		hint: true,
+		highlight: true,
+		minLength: 2
+	},{
+		name : 'cardnames-personal',
+		display: function(data) {
+			return data.name;
+		},
+		source: findMatches,
+		templates: {
+			suggestion: function (data){
+				var value = data.name;
+				if (data.xp && data.xp > 0) {
+					value = value + ' (' + data.xp + ')';
+				}
+				if (data.subname &&
+					(data.type_code === 'asset') &&
+					(!data.real_traits || data.real_traits.indexOf('Ally.') === -1) &&
+					data.xp
+				) {
+					value = value + ' - <i>' + data.subname + '</i>';
+				} else if (data.subname && data.type_code === 'treachery') {
+					value = value + ' (' + data.subname + ')';
+				}
+				return '<div>' + value + '</div>';
+			}
+		}
+	});
 }
 
 ui.update_sort_caret = function update_sort_caret() {

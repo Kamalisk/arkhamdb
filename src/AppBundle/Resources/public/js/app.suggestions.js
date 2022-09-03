@@ -102,7 +102,7 @@ suggestions.show = function show() {
 	for(var i=0; i<suggestions.current.length; i++) {
 		var card = app.data.cards.findById(suggestions.current[i].code);
 		if ($('input[name="'+card.pack_code+'"]').is(":checked")){
-			if(app.deck.can_include_card(card) && !card.indeck && card.xp === 0) {
+			if(app.deck.can_include_card(card, { customizations: true }) && !card.indeck && card.xp === 0) {
 				var div = suggestions.div(card);
 				div.on('click', 'button.close', suggestions.exclude.bind(this, card.code));
 				tbody.append(div);

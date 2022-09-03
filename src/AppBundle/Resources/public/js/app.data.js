@@ -230,6 +230,18 @@ data.apply_taboos = function apply_taboos(taboo_id){
 			update.exceptional = false;
 			update.taboo_exceptional = false;
 		}
+		if (card.taboo_remove_exceptional) {
+			update.exceptional = true;
+			update.taboo_remove_exceptional = false;
+		}
+		if (card.taboo_deck_requirements) {
+			update.deck_requirements = card.deck_requirements;
+			update.taboo_deck_requirements = null;
+		}
+		if (card.taboo_deck_options) {
+			update.deck_options = card.taboo_deck_options;
+			update.taboo_deck_options = null;
+		}
 		update.taboo_xp = 0;
 		update.taboo_text = "";
 		app.data.cards.updateById(card.code, update);
@@ -247,6 +259,18 @@ data.apply_taboos = function apply_taboos(taboo_id){
 			if (taboo_card.exceptional){
 				update.exceptional = true;
 				update.taboo_exceptional = true;
+			} else if (taboo_card.exceptional === false) {
+				update.exceptional = false;
+				update.taboo_remove_exceptional = true;
+			}
+
+			if (taboo_card.deck_options) {
+				update.taboo_deck_options = card.deck_options;
+				update.deck_options = taboo_card.deck_options;
+			}
+			if (taboo_card.deck_requirements) {
+				update.taboo_deck_requirements = card.deck_requirements;
+				update.deck_requirements = taboo_card.deck_requirements;
 			}
 			if (taboo_card.xp){
 				update.taboo_xp = taboo_card.xp;

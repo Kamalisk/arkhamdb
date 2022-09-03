@@ -32,6 +32,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
 			$cards = $slots->getContent();
 			$upgrade = [
 					'content' => $cards,
+					'meta' => $previousDeck->getMeta(),
 					'exile_string' => $previousDeck->getExiles(),
 					'xp' => $previousDeck->getNextDeck()->getXpSpent(),
 					'xp_left' => $previousDeck->getNextDeck()->getXp() - $previousDeck->getNextDeck()->getXpSpent() + $previousDeck->getNextDeck()->getXpAdjustment(),

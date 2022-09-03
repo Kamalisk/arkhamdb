@@ -4,11 +4,21 @@
  * @memberOf format
  */
 format.traits = function traits(card) {
+	if (card.customizations && card.customization_change) {
+		var changes = card.customization_change.split('\n');
+		for (var i=0; i<card.customizations.length; i++) {
+			var custom = card.customizations[i];
+			if (custom && custom.unlocked && custom.option.text_change === 'trait') {
+				return changes[custom.index] || card.traits || '';
+			}
+		}
+	}
 	return card.traits || '';
 };
 
-
-
+/**
+ * @memberOf format
+ */
 format.xp = function xp(xp, in_deck, css) {
 	var string = "";
 	if (xp && xp > 0)
@@ -17,11 +27,10 @@ format.xp = function xp(xp, in_deck, css) {
  		if (css){
  			string += ' '+css;
  		}
- 		string += '">'+("••••••".slice(-xp))+"</span>";
+ 		string += '">'+("••••••••••••••••••".slice(-xp))+"</span>";
 	}
 	return string;
 };
-
 
 
 /**
@@ -38,11 +47,19 @@ format.fancy_int = function traits(num) {
 format.name = function name(card) {
 	var name = (card.is_unique ? '<span class="icon-unique"></span> ' : "") + card.name;
 	if (card.subname){
-		name += '<div class="card-subname small">'+card.subname+'</div>';
+		if (card.type_code === 'treachery') {
+			name += ' ('+card.subname+')';
+
+		} else {
+			name += '<div class="card-subname small">'+card.subname+'</div>';
+		}
 	}
 	return name;
 }
 
+/**
+ * @memberOf format
+ */
 format.faction = function faction(card) {
 	var text = '<span class="fg-'+card.faction_code+' icon-'+card.faction_code+'"></span> '+ card.faction_name + '. ';
 	if (card.faction2_code) {
@@ -77,6 +94,30 @@ format.pack = function pack(card) {
  */
 format.info = function info(card) {
 	var text = '';
+
+	var cost = card.cost;
+	var health = card.health;
+	var sanity = card.sanity;
+	var xp = card.xp;
+	if (card.customizations) {
+		var customization_xp = 0;
+		for(var i=0; i<card.customizations.length; i++) {
+			var custom = card.customizations[i];
+			customization_xp = customization_xp + (custom.xp || 0);
+			if (custom.unlocked) {
+				if (custom.option.health) {
+					health = (health || 0) + custom.option.health;
+				}
+				if (custom.option.sanity) {
+					sanity = (sanity || 0) + custom.option.sanity;
+				}
+				if (custom.option.cost) {
+					cost = (cost || 0) + custom.option.cost;
+				}
+			}
+		}
+		xp = Math.floor((customization_xp + 1) / 2.0);
+	}
 	switch(card.type_code) {
 		case 'agenda':
 			text += '<div>Doom: '+format.fancy_int(card.doom)+'.</div>';
@@ -102,10 +143,10 @@ format.info = function info(card) {
 		case 'investigator':
 			text += '<div>Willpower: '+card.skill_willpower+'. Intellect: '+card.skill_intellect+'. Combat: '+card.skill_combat+'. Agility: '+card.skill_agility+'.</div>';
 			text += '<div>Health: '+card.health+'. Sanity: '+card.sanity+'.</div>'
-			break;	
+			break;
 		case 'asset':
 		case 'event':
-			text += '<div>Cost: '+format.fancy_int(card.cost)+'. '+(card.xp ? "XP: "+card.xp+"." : "")+'</div>';
+			text += '<div>Cost: '+format.fancy_int(cost)+'. '+(xp ? "XP: "+xp+"." : "")+'</div>';
 
 			if (card.skill_willpower || card.skill_intellect || card.skill_combat || card.skill_agility || card.skill_wild){
 				text += '<div>Test Icons: ';
@@ -127,12 +168,12 @@ format.info = function info(card) {
 				text += '</div>';
 			}
 			if (card.health || card.sanity){
-				text += '<div>Health: '+format.fancy_int(card.health)+'. Sanity: '+format.fancy_int(card.sanity)+'.</div>';
+				text += '<div>Health: '+format.fancy_int(health)+'. Sanity: '+format.fancy_int(sanity)+'.</div>';
 			}
 			break;
 		case 'skill':
-			if (card.xp){
-				text += '<div>'+(card.xp ? "XP: "+card.xp+"." : "")+'</div>';
+			if (xp){
+				text += '<div>'+(xp ? "XP: "+xp+"." : "")+'</div>';
 			}
 			if (card.skill_willpower || card.skill_intellect || card.skill_combat || card.skill_agility || card.skill_wild){
 				text += '<div>Test Icons: ';
@@ -161,11 +202,146 @@ format.info = function info(card) {
 /**
  * @memberOf format
  */
+format.slot = function slot(card) {
+	var slot = card.slot;
+	if (card.customizations) {
+		for (var i=0; i<card.customizations.length; i++) {
+			var custom = card.customizations[i];
+			var option = custom.option;
+			if (custom.unlocked && option.choice === 'remove_slot') {
+				const choice = parseInt(custom.choice || '0', 10) || 0;
+				var slots = slot.split('.');
+				var new_slots = [];
+				for (let j=0; j<slots.length; j++) {
+					if (j !== choice) {
+						new_slots.push(slots[j].trim());
+					}
+				}
+				slot = new_slots.join('. ');
+			}
+		}
+	}
+	return slot;
+}
+
+/**
+ * @memberOf format
+ */
 format.text = function text(card, alternate) {
 	var text = card.text || '';
 	if (alternate){
 		text = card[alternate];
 	}
+	if (card.customizations) {
+		var lines = text.split('\n');
+		var changes = (card.customization_change || '').split('\n');
+		for (var i=0; i<card.customizations.length; i++) {
+			var custom = card.customizations[i];
+			var option = custom.option;
+			if (custom.unlocked && option.text_change) {
+				var change = changes[custom.index] || '';
+				if (custom.choice && option.choice === 'choose_trait') {
+					var traits = custom.choice.split('^');
+					change = change.replace('_____', traits.map(function(trait) { return '<b><i>' + trait + '</i></b>' }).join(', '));
+				}
+				switch (option.text_change) {
+					case 'replace': {
+						lines[option.position || 0] = change || '';
+						break;
+					}
+					case 'append': {
+						lines.push(change || '');
+						break;
+					}
+					default: {
+						// Delay handling inserts for now.
+						break;
+					}
+				}
+			}
+		}
+		var final_lines = [];
+		for (var j=0; j<card.customizations.length; j++) {
+			var custom = card.customizations[j];
+			var option = custom.option;
+			if (custom.unlocked && option.text_change === 'insert' && option.position === -1) {
+				var change = changes[custom.index] || '';
+				if (custom.choice) {
+					switch (option.choice) {
+						case 'choose_card': {
+							var card_names = [];
+							var card_codes = custom.choice.split('^');
+							for (var k=0; k<card_codes.length; k++) {
+								var code = card_codes[k];
+								if (code) {
+									var named_card = app.data.cards.findById(code);
+									if (named_card) {
+										card_names.push(named_card.name);
+									}
+								}
+							}
+							change = change + ' ' + card_names.join(', ');
+							break;
+						}
+						case 'choose_trait': {
+							var traits = custom.choice.split('^');
+							change = change.replace('_____', traits.map(function(trait) { return '<b><i>' + trait + '</i></b>' }).join(', '));
+							break;
+						}
+					}
+				}
+				final_lines.push(change);
+			}
+		}
+
+		for (var i=0; i<lines.length; i++) {
+			final_lines.push(lines[i]);
+			for (var j=0; j<card.customizations.length; j++) {
+				var custom = card.customizations[j];
+				var option = custom.option;
+				if (custom.unlocked && option.text_change === 'insert' && option.position === i) {
+					var change = changes[custom.index] || '';
+					if (custom.choice) {
+						switch (option.choice) {
+							case 'choose_card': {
+								var card_names = [];
+								var card_codes = custom.choice.split('^');
+								for (var k=0; k<card_codes.length; k++) {
+									var code = card_codes[k];
+									if (code) {
+										var named_card = app.data.cards.findById(code);
+										if (named_card) {
+											card_names.push(named_card.name);
+										}
+									}
+								}
+								change = change + ' ' + card_names.join(', ');
+								break;
+							}
+							case 'choose_trait': {
+								var traits = custom.choice.split('^');
+								change = change.replace('_____', traits.map(function(trait) { return '<b><i>' + trait + '</i></b>' }).join(', '));
+								break;
+							}
+						}
+					}
+					final_lines.push(change);
+				}
+			}
+		}
+		text = final_lines.join('\n');
+	}
+	text = text.replace(/\[\[([^\]]+)\]\]/g, '<b><i>$1</i></b>');
+	text = text.replace(/\[(\w+)\]/g, '<span title="$1" class="icon-$1"></span>');
+	text = text.split("\n").join('</p><p>');
+	return '<p>'+text+'</p>';
+};
+
+/**
+ * @memberOf format
+ */
+ format.customization_text = function customization_text(card) {
+	var text = card.customization_text || '';
 	text = text.replace(/\[\[([^\]]+)\]\]/g, '<b><i>$1</i></b>');
 	text = text.replace(/\[(\w+)\]/g, '<span title="$1" class="icon-$1"></span>');
 	text = text.split("\n").join('</p><p>');

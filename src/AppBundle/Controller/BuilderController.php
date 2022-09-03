@@ -659,17 +659,11 @@ class BuilderController extends Controller
 			}
 		}
 
-		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $content, $source_deck ? $source_deck : null, $problem, $ignored, $side);
+		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $meta_json ? $meta : "", $tags, $content, $source_deck ? $source_deck : null, $problem, $ignored, $side);
 
 		$deck->setTaboo($taboo);
 		if ($request->get('exiles') && $request->get('exiles_string')){
 			$deck->setExiles($request->get('exiles_string'));
-		}
-
-		if ($meta_json){
-			$deck->setMeta($meta);
-		} else {
-			$deck->setMeta("");
 		}
 
 		if ($source_deck){
@@ -1091,7 +1085,7 @@ class BuilderController extends Controller
 
 				$deck = new Deck();
 				$em->persist($deck);
-				$this->get('decks')->saveDeck($this->getUser(), $deck, null, $name, '', '', $parse['content']);
+				$this->get('decks')->saveDeck($this->getUser(), $deck, null, $name, '', '', '', $parse['content']);
 			}
 		}
 		$zip->close();
@@ -1126,14 +1120,19 @@ class BuilderController extends Controller
 		}
 
 		$diff = json_decode($request->get('diff'), true);
-		if (count($diff) != 2) {
+		if ($request->get('meta')) {
+			$meta = json_decode($request->get('meta'), true);
+		} else {
+			$meta = json_decode("{}", true);
+		}
+		if (count($diff) != 2 && count($diff) != 4) {
 			$this->get('logger')->error("cannot use diff", $diff);
 			throw new BadRequestHttpException("Wrong content ".json_encode($diff));
 		}
-
-		if( (isset($diff[0]) && count($diff[0])) || (isset($diff[1]) && count($diff[1])) ) {
+		if( (isset($diff[0]) && count($diff[0])) || (isset($diff[1]) && count($diff[1])) || (count($diff) > 2 && isset($diff[2]) && count($diff[2])) || (count($diff) > 3 && isset($diff[3]) && count($diff[3])) ) {
 			$change = new Deckchange();
 			$change->setDeck($deck);
+			$change->setMeta(json_encode($meta));
 			$change->setVariation(json_encode($diff));
 			$change->setIsSaved(FALSE);
 			$em->persist($change);

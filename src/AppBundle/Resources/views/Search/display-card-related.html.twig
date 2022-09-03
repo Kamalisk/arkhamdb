@@ -10,14 +10,14 @@
 		</div>
 	</div>
 </div>
-	
+
 {% endif %}
 
 {% if card.bonded_cards is defined and card.bonded_cards|length > 0 %}
 <div class="col-md-12" style="margin-top:2em">
 <div class="row">
 	<div class="col-md-9">
-		
+
 		<div style="line-height:34px" id="related-header">
 			<span style="font-size:24px">{% trans %}Bonded Cards{% endtrans %}</span>
 		</div>
@@ -28,7 +28,7 @@
 				<a href="{{ path('cards_zoom',{card_code:bonded.code}) }}" class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %} card-tip" data-code="{{ bonded.code }}">
 				{{ bonded.name }}{% if bonded.subname%}: {{ bonded.subname }}{% endif %}
 				{% if bonded.backname %}: {{ bonded.backname }}{% endif %}</a>
-				{% if bonded.xp %}<span class="xp-{{ bonded.xp }}"> ({{ bonded.xp }})</span>{% endif %} 
+				{% if bonded.xp %}<span class="xp-{{ bonded.xp }}"> ({{ bonded.xp }})</span>{% endif %}
 				{{bonded.getPack().getName()}} #{{bonded.position}}
 			</li>
 		{% endfor %}
@@ -44,7 +44,7 @@
 <div class="col-md-12" style="margin-top:2em">
 <div class="row">
 	<div class="col-md-9">
-		
+
 		<div style="line-height:34px" id="related-header">
 			<span style="font-size:24px">{% trans %}Related Cards{% endtrans %}</span>
 		</div>
@@ -54,9 +54,9 @@
 			<li>
 				<span class="icon icon-{{ related.getType().getCode()}} fg-{{ related.getFaction().getCode() }}"></span>
 				<a href="{{ path('cards_zoom',{card_code:related.code}) }}" class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %} card-tip" data-code="{{ related.code }}">
-				{{ related.name }}{% if related.subname%}: {{ related.subname }}{% endif %}
+				{{ related.name }}{% if related.subname %}{% if related.getType().getCode() == "treachery" %} ({{ related.subname }}){% else %}: {{ related.subname }}{% endif %}{% endif %}
 				{% if related.backname %}: {{ related.backname }}{% endif %}</a>
-				{% if related.xp %}<span class="xp-{{ related.xp }}"> ({{ related.xp }})</span>{% endif %} 
+				{% if related.xp %}<span class="xp-{{ related.xp }}"> ({{ related.xp }})</span>{% endif %}
 				{{related.getPack().getName()}} #{{related.position}}
 				</li>
 			{% endif %}

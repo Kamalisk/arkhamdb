@@ -35,7 +35,19 @@
     	function findMatches(q, cb) {
     		if(q.match(/^\w:/)) return;
     		var regexp = new RegExp(q, 'i');
-    		cb(app.data.cards.find({name: regexp}));
+				var all_cards = app.data.cards.find({name: regexp});
+				var cards = [];
+				for (var i=0; i<all_cards.length; i++) {
+					var card = all_cards[i];
+					if (!card) {
+						continue;
+					}
+					if (card.duplicate_of_code) {
+						continue;
+					}
+					cards.push(card);
+				}
+				cb(cards);
     	}
 
     	$('#card').typeahead({

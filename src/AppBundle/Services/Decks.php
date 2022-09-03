@@ -45,7 +45,7 @@ class Decks
 	 * @param unknown $content
 	 * @param unknown $source_deck
 	 */
-	public function saveDeck($user, $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck, $problem="", $ignored=false, $side=false)
+	public function saveDeck($user, $deck, $decklist_id, $name, $faction, $description, $meta, $tags, $content, $source_deck, $problem="", $ignored=false, $side=false)
 	{
 		$deck_content = [ ];
 
@@ -97,13 +97,56 @@ class Decks
 		$this->doctrine->persist ( $deck );
 
 		// on the deck content
-
 		if ($source_deck) {
 			// compute diff between current content and saved content
 			list ( $listings ) = $this->diff->diffContents ( array (
 					$content,
 					$source_deck->getSlots()->getContent()
 			) );
+
+			$has_meta_change = false;
+			// Look for changes to customized cards in the meta on this upgrade.
+			// You aren't allowed to remove any, so we ignore those for now.
+			if ($meta) {
+				$old_meta = json_decode($source_deck->getMeta(), true);
+				$new_meta = json_decode($meta, true);
+				$meta_add = json_decode("{}", true);
+				$meta_remove = json_decode("{}", true);
+				if ($old_meta != $new_meta) {
+					foreach ($new_meta as $key => $value) {
+						if (substr($key, 0, 4) == "cus_") {
+							$new_value = explode(',', $value);
+							if (isset($old_meta[$key])) {
+								$old_value = explode(',', $old_meta[$key]);
+								$added_entries = array_diff($new_value, $old_value);
+								if (count($added_entries)) {
+									$meta_add[substr($key, 4)] = implode(',', $added_entries);
+									$has_meta_change = true;
+								}
+								$removed_entries = array_diff($old_value, $new_value);
+								if (count($removed_entries)) {
+									$meta_remove[substr($key, 4)] = implode(',', $removed_entries);
+									$has_meta_change = true;
+								}
+							} else {
+								$meta_add[substr($key, 4)] = $value;
+							}
+						}
+					}
+					if ($old_meta) {
+						foreach ($old_meta as $key => $value) {
+							if (substr($key, 0, 4) == "cus_") {
+								if (!isset($new_meta[$key])) {
+									$meta_remove[substr($key, 4)] = $value;
+								}
+							}
+						}
+					}
+				}
+				$listings[2] = $meta_add;
+				$listings[3] = $meta_remove;
+			}
+
 			// remove all change (autosave) since last deck update (changes are sorted)
 			$changes = $this->getUnsavedChanges ( $deck );
 			foreach ( $changes as $change ) {
@@ -111,8 +154,9 @@ class Decks
 			}
 			$this->doctrine->flush ();
 			// save new change unless empty
-			if (count ( $listings [0] ) || count ( $listings [1] )) {
+			if (count ( $listings [0] ) || count ( $listings [1] ) || $has_meta_change) {
 				$change = new Deckchange ();
+				$change->setMeta ( $meta );
 				$change->setDeck ( $deck );
 				$change->setVariation ( json_encode ( $listings ) );
 				$change->setIsSaved ( TRUE );
@@ -125,6 +169,7 @@ class Decks
 			$deck->setMinorVersion($source_deck->getMinorVersion());
 
 		}
+		$deck->setMeta ( $meta );
 		foreach ( $deck->getSlots () as $slot ) {
 			$deck->removeSlot ( $slot );
 			$this->doctrine->remove ( $slot );

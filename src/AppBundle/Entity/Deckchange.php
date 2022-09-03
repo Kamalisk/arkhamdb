@@ -23,6 +23,11 @@ class Deckchange
     private $variation;
 
     /**
+     * @var string
+     */
+    private $meta;
+
+    /**
      * @var boolean
      */
     private $isSaved;
@@ -94,6 +99,30 @@ class Deckchange
     public function getVariation()
     {
         return $this->variation;
+    }
+
+    /**
+     * Set meta
+     *
+     * @param string $meta
+     *
+     * @return Deckchange
+     */
+    public function setMeta($meta)
+    {
+        $this->meta = $meta;
+
+        return $this;
+    }
+
+    /**
+     * Get meta
+     *
+     * @return string
+     */
+    public function getMeta()
+    {
+        return $this->meta;
     }
 
     /**

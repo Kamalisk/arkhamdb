@@ -115,7 +115,7 @@ class DeckValidationHelper
 	public function getInvalidCards($deck)
 	{
 		$invalidCards = [];
-		$deck_options = json_decode($deck->getCharacter()->getdeckOptions());
+		$deck_options = json_decode($deck->getCharacter()->getDeckOptions());
 		foreach ( $deck->getSlots() as $slot ) {
 			if(! $this->canIncludeCard($deck, $slot, $deck_options)) {
 				$invalidCards[] = $slot->getCard();

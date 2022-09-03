@@ -10,6 +10,7 @@ var tbody,
 	timer,
 	ajax_in_process = false,
 	period = 60,
+	previous_meta,
 	changed_since_last_autosave = false;
 
 
@@ -22,23 +23,34 @@ deck_history.all_changes = function all_changes() {
 		//console.log("boo");
 		return;
 	}
-
 	// compute diff between last snapshot and current deck
 	var last_snapshot = deck_history.base.content;
+	var last_meta = deck_history.base.meta;
 	var current_deck = app.deck.get_content();
+	var current_meta = app.deck.meta || {};
 
-	var result = app.diff.compute_simple([current_deck, last_snapshot]);
+	var result = app.diff.compute_simple([current_deck, last_snapshot], [current_meta, last_meta]);
 	if(!result) return;
 
 	var diff = result[0];
-	//console.log("DIFFF ", diff);
+	//console.log("DIFFF ", result);
 
 	var free_0_cards = 0;
 	var removed_0_cards = 0;
 	var cards_removed = [];
 	var cards_added = [];
 	var cards_exiled = {};
-	var cost = 0;
+
+	var cards_customized = [];
+	_.each(result[2], function(choices, code) {
+		var card = app.data.cards.findById(code);
+		var card_customization = {
+			"choices": choices,
+			"code": code,
+			"card": card,
+		};
+		cards_customized.push(card_customization);
+	});
 	_.each(diff[1], function (qty, code) {
 		var card = app.data.cards.findById(code);
 		if(!card) return;
@@ -118,6 +130,26 @@ deck_history.all_changes = function all_changes() {
 		});
 	}
 
+	var cost = 0;
+	var free_customize_swaps = {};
+	_.each(cards_customized, function(customization) {
+		_.each(customization.choices, function (choice) {
+			var xp = choice.xp_delta;
+			if (xp > 0 && spell_upgrade_discounts > 0 && customization.card.real_traits && customization.card.real_traits.indexOf('Spell.') !== -1) {
+				// Handle Arcane Research discounts if its a 'spell'
+				var max_discount = Math.min(spell_upgrade_discounts, xp);
+				xp = xp - max_discount;
+				spell_upgrade_discounts = spell_upgrade_discounts - max_discount;
+			}
+			if (xp > 0 && upgrade_discounts > 0) {
+				// Handle DTTR, at most one per 'upgrade' taken.
+				xp = xp - 1;
+				upgrade_discounts = upgrade_discounts - 1;
+			}
+			cost = cost + xp;
+			free_customize_swaps[customization.code] = (free_customize_swaps[customization.code] || 0) + choice.xp_delta;
+		});
+	});
 	var myriad_madness = {};
 	// first check for same named cards
 	_.each(cards_added, function (addition) {
@@ -141,7 +173,7 @@ deck_history.all_changes = function all_changes() {
 				removal_xp += removal.card.taboo_xp;
 			}
 			if (addition.qty > 0 && removal.qty > 0 && addition_xp >= 0 && addition.card.real_name == removal.card.real_name && addition_xp > removal_xp){
-				const upgraded_count = Math.min(addition.qty, removal.qty);
+				var upgraded_count = Math.min(addition.qty, removal.qty);
 				addition.qty = addition.qty - removal.qty;
 				if (spell_upgrade_discounts > 0 && removal.card.real_traits && removal.card.real_traits.indexOf('Spell.') !== -1 && addition.card.real_traits && addition.card.real_traits.indexOf('Spell.') !== -1) {
 					// It's a spell card, and we have arcane research discounts remaining.
@@ -173,7 +205,6 @@ deck_history.all_changes = function all_changes() {
 			}
 		});
 	});
-
 	_.each(cards_removed, function (removal) {
 		if (!app.deck.can_include_card(removal.card)){
 			// Even though its not technically a L0 card, any 'invalid' card that was removed,
@@ -226,7 +257,13 @@ deck_history.all_changes = function all_changes() {
 			cost = cost + deja_vu_cost + dtr_xp;
 			addition.qty = 0;
 		} else if (addition_xp >= 0){
-			if (addition.card.xp === 0 && removed_0_cards > 0 && free_0_cards > 0){
+			while (addition.qty > 0 && addition.card.xp === 0 && (free_customize_swaps[addition.code] || 0) > 0) {
+				// Still have to pay taboo XP.
+				cost = cost + addition_xp;
+				free_customize_swaps[addition.code] = free_customize_swaps[addition.code] - 1;
+				addition.qty = addition.qty - 1;
+			}
+			if (addition.qty > 0 && addition.card.xp === 0 && removed_0_cards > 0 && free_0_cards > 0){
 				// Account for taboo xp, which still must be paid when deck size grows.
 				cost = cost + (addition.qty * addition_xp);
 				free_0_cards -= addition.qty;
@@ -251,6 +288,7 @@ deck_history.all_changes = function all_changes() {
 
 	var add_list = [];
 	var remove_list = [];
+	var custom_list = [];
 	var exile_list = [];
 	// run through the changes and show them
 	_.each(diff[0], function (qty, code) {
@@ -265,6 +303,27 @@ deck_history.all_changes = function all_changes() {
 		remove_list.push('&minus;'+qty+' '+'<a href="'+card.url+'" class="card card-tip fg-'+card.faction_code+'" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="'+card.code+'">'+card.name+'</a>'+app.format.xp(card.xp)+'</a>');
 		//remove_list.push('&minus;'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card-tip" data-code="'+code+'">'+card.name+'</a>');
 	});
+	_.each(cards_customized, function(customization) {
+		var card = customization.card;
+		var lines = (card.customization_text || '').split('\n');
+		if (card) {
+			_.each(customization.choices, function (choice) {
+				if (choice.xp_delta === 0) {
+					return;
+				}
+				var index = choice.index;
+				if (index >= card.customization_options.length) {
+					return;
+				}
+				var option = card.customization_options[index];
+				var line = lines[index];
+				if (option && line) {
+					var choice_name = line.replace(/.*?<b>/, '').replace(/<\/b>.*/, '');
+					custom_list.push('↑'+' '+'<a href="'+card.url+'" class="card card-tip fg-'+card.faction_code+'" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="'+card.code+'">'+card.name+'</a>'+app.format.xp(choice.xp_delta, 1, 'custom')+'</a>&nbsp;<b>' + choice_name + '</b>');
+				}
+			});
+		}
+	});
 	_.each(cards_exiled, function (qty, code) {
 		var card = app.data.cards.findById(code);
 		if(!card) return;
@@ -274,38 +333,39 @@ deck_history.all_changes = function all_changes() {
 	if (cost && app.deck.get_previous_deck()){
 		app.deck.set_xp_spent(cost)
 	}
+	node = $("#upgrade_changes");
 	if(app.deck.get_previous_deck()){
-		$("#upgrade_changes").empty();
-		$("#upgrade_changes").append('<h4 class="deck-section">Progress</h4>');
+		node.empty();
+		node.append('<h4 class="deck-section">Progress</h4>');
 
 		if (app.deck.get_xp_adjustment()){
-			$("#upgrade_changes").append('<div>Available experience: <span id="xp_up" class="fa fa-plus-circle xp_up"></span> '+app.deck.get_xp()+' <span id="xp_down" class="fa fa-minus-circle xp_down"></span> ('+app.deck.get_xp_adjustment()+')</div>');
+			node.append('<div>Available experience: <span id="xp_up" class="fa fa-plus-circle xp_up"></span> '+app.deck.get_xp()+' <span id="xp_down" class="fa fa-minus-circle xp_down"></span> ('+app.deck.get_xp_adjustment()+')</div>');
 		} else {
-			$("#upgrade_changes").append('<div>Available experience: <span id="xp_up" class="fa fa-plus-circle xp_up"></span> '+app.deck.get_xp()+' <span id="xp_down" class="fa fa-minus-circle xp_down"></span></div>');
+			node.append('<div>Available experience: <span id="xp_up" class="fa fa-plus-circle xp_up"></span> '+app.deck.get_xp()+' <span id="xp_down" class="fa fa-minus-circle xp_down"></span></div>');
 		}
 
-		$("#upgrade_changes").append('<div>Spent experience: '+cost+'</div>');
+		node.append('<div>Spent experience: '+cost+'</div>');
 		if (app.deck.get_previous_deck() && $('#save_form').length <= 0){
-			$("#upgrade_changes").append('<div><a href="'+Routing.generate('deck_view', {deck_id:app.deck.get_previous_deck()})+'">View Previous Deck</a></div>');
+			node.append('<div><a href="'+Routing.generate('deck_view', {deck_id:app.deck.get_previous_deck()})+'">View Previous Deck</a></div>');
 		}
 		if (app.deck.get_next_deck()){
-			$("#upgrade_changes").append('<div><a href="'+Routing.generate('deck_view', {deck_id:app.deck.get_next_deck()})+'">View Next Deck</a></div>');
+			node.append('<div><a href="'+Routing.generate('deck_view', {deck_id:app.deck.get_next_deck()})+'">View Next Deck</a></div>');
 		}
-		$("#upgrade_changes").append('<h4 class="deck-section">Changes</h4>');
-		if (add_list.length <= 0 && remove_list.length <= 0){
-			$("#upgrade_changes").append('<div class="deck-content">No Changes</div>');
+		node.append('<h4 class="deck-section">Changes</h4>');
+		if (add_list.length <= 0 && remove_list.length <= 0 && custom_list.length <= 0){
+			node.append('<div class="deck-content">No Changes</div>');
 		}else {
-			$("#upgrade_changes").append('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6">'+add_list.join('<br>')+'</div><div class="col-sm-6 col-print-6">'+remove_list.join('<br>')+'</div></div></div>');
+			node.append('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6">'+add_list.join('<br>')+'</div><div class="col-sm-6 col-print-6">'+remove_list.join('<br>')+'</div><div class="col-sm-6 col-print-6">'+custom_list.join('<br>')+'</div></div></div>');
 		}
 		if (exile_list.length > 0){
-			$("#upgrade_changes").append('<b>Exiled Cards</b>');
-			$("#upgrade_changes").append('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6">'+exile_list.join('<br>')+'</div></div></div>');
+			node.append('<b>Exiled Cards</b>');
+			node.append('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6">'+exile_list.join('<br>')+'</div></div></div>');
 		}
 	} else if (app.deck.get_next_deck()){
 		if (app.deck.get_next_deck()){
-			$("#upgrade_changes").empty();
-			$("#upgrade_changes").append('<h4 class="deck-section">Progress</h4>');
-			$("#upgrade_changes").append('<div><a href="'+Routing.generate('deck_view', {deck_id:app.deck.get_next_deck()})+'">View Next Deck</a></div>');
+			node.empty();
+			node.append('<h4 class="deck-section">Progress</h4>');
+			node.append('<div><a href="'+Routing.generate('deck_view', {deck_id:app.deck.get_next_deck()})+'">View Next Deck</a></div>');
 		}
 	}
 	//console.log(result[1])
@@ -321,16 +381,18 @@ deck_history.autosave = function autosave() {
 
 	// compute diff between last snapshot and current deck
 	var last_snapshot = snapshots[snapshots.length-1].content;
+	var last_meta = snapshots[snapshots.length-1].meta;
 	var current_deck = app.deck.get_content();
+	var current_meta = app.deck.meta || {};
 
 	changed_since_last_autosave = false;
 
-	var result = app.diff.compute_simple([current_deck, last_snapshot]);
+	var result = app.diff.compute_simple([current_deck, last_snapshot], [current_meta, last_meta]);
 	if(!result) return;
 
 	var diff = result[0];
 	var diff_json = JSON.stringify(diff);
-	if(diff_json == '[{},{}]') return;
+	if(diff_json == '[{},{},{},{}]') return;
 
 	// send diff to autosave
 	$('#tab-header-history').html("Autosave...");
@@ -339,11 +401,18 @@ deck_history.autosave = function autosave() {
 	$.ajax(Routing.generate('deck_autosave'), {
 		data: {
 			diff: diff_json,
+			meta: JSON.stringify(current_meta),
 			deck_id: app.deck.get_id()
 		},
 		type: 'POST',
 		success: function(data, textStatus, jqXHR) {
-			deck_history.add_snapshot({datecreation: data, variation: diff, content: current_deck, is_saved: false});
+			deck_history.add_snapshot({
+				datecreation: data,
+				variation: diff,
+				content: current_deck,
+				is_saved: false,
+				meta: current_meta,
+			});
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
 			console.log('['+moment().format('YYYY-MM-DD HH:mm:ss')+'] Error on '+this.url, textStatus, errorThrown);
@@ -378,11 +447,29 @@ deck_history.autosave_interval = function autosave_interval() {
 	timer--;
 }
 
+function split_choices(choice) {
+	if (typeof choice === 'string') {
+		return choice.split(',');
+	}
+	return choice || [];
+}
+
+function decode_customization(choice) {
+	if (!choice) {
+		return null;
+	}
+	var parts = choice.split('|');
+	var result = { index: parseInt(parts[0], 10), xp: parseInt(parts[1], 10) };
+	if (parts.length > 2) {
+		result.choice = parts[2];
+	}
+	return result;
+}
+
 /**
  * @memberOf deck_history
  */
 deck_history.add_snapshot = function add_snapshot(snapshot) {
-
 	snapshot.date_creation = snapshot.date_creation ? moment(snapshot.date_creation) : moment();
 	snapshots.push(snapshot);
 
@@ -398,6 +485,72 @@ deck_history.add_snapshot = function add_snapshot(snapshot) {
 			if(!card) return;
 			list.push('&minus;'+qty+' '+'<a href="'+Routing.generate('cards_zoom',{card_code:code})+'" class="card-tip" data-code="'+code+'">'+card.name+'</a>');
 		});
+		if (snapshot.variation[2]) {
+			_.each(snapshot.variation[2], function (choices, code) {
+				var card = app.data.cards.findById(code);
+				if(!card || !card.customization_text) return;
+				var lines = card.customization_text.split("\n");
+				var previous_choices = _.map(
+					split_choices((snapshot.variation[3] || {})[code] || ''),
+					function(c) {
+						return decode_customization(c);
+					}
+				);
+				if (choices) {
+					_.each(split_choices(choices), choice => {
+						var current = decode_customization(choice);
+						if (!current || current.index >= card.customization_options.length) {
+							return;
+						}
+						var option = card.customization_options[current.index];
+						var previous = _.find(previous_choices, function (p) {
+							return !!p && p.index === current.index;
+						});
+						var xp = current.xp - (previous ? previous.xp : 0);
+						var line = lines[current.index];
+						if (option && line && xp > 0) {
+							var choice_name = line.replace(/.*?<b>/, '').replace(/<\/b>.*/, '');
+							list.push('↑ <a href="'+card.url+'" class="card card-tip fg-'+card.faction_code+'" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="'+card.code+'">'+card.name+'</a>'+app.format.xp(xp, 1, 'custom')+'</a>&nbsp;<b>' + choice_name + '</b>');
+						}
+					});
+				}
+			});
+		}
+
+		if (snapshot.variation[3]) {
+			_.each(snapshot.variation[3], function (choices, code) {
+				var card = app.data.cards.findById(code);
+				if(!card || !card.customization_text) return;
+				var lines = card.customization_text.split("\n");
+				var current_choices = _.map(
+					split_choices((snapshot.variation[2] || {})[code] || ''),
+					function(c) {
+						return decode_customization(c);
+					}
+				);
+				if (choices) {
+					_.each(split_choices(choices), choice => {
+						var previous = decode_customization(choice);
+						if (!previous || previous.index >= card.customization_options.length) {
+							return;
+						}
+						if (_.find(current_choices, function (c) {
+							return !!c && c.index === previous.index;
+						})) {
+							// Already handled it in the above.
+							return;
+						}
+						var xp = previous.xp;
+						var option = card.customization_options[previous.index];
+						var line = lines[previous.index];
+						if (option && line && xp > 0) {
+							var choice_name = line.replace(/.*?<b>/, '').replace(/<\/b>.*/, '');
+							list.push('<span class="invalid-card">↑ '+'<a href="'+card.url+'" class="card card-tip invalid-card fg-'+card.faction_code+'" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="'+card.code+'">'+card.name+'</a>'+app.format.xp(xp, 1, 'custom')+'</a>&nbsp;<b>' + choice_name + '</b></span>');
+						}
+					});
+				}
+			});
+		}
 	} else {
 		list.push("First version");
 	}
@@ -423,9 +576,14 @@ deck_history.load_snapshot = function load_snapshot(event) {
 			indeck = snapshot.content[card.code];
 		}
 		app.data.cards.updateById(card.code, {
-			indeck : indeck
+			indeck : indeck,
+			customizations : [],
 		});
 	});
+	if (snapshot.meta) {
+		app.deck.meta = snapshot.meta
+		app.deck.load_customizations(app.deck.meta);
+	}
 
 	app.ui.on_deck_modified();
 	changed_since_last_autosave = true;
@@ -454,10 +612,11 @@ deck_history.is_changed_since_last_autosave = function is_changed_since_last_aut
 	return changed_since_last_autosave;
 }
 
-deck_history.init = function init(data)
+deck_history.init = function init(data, previous_deck_meta)
 {
 	// console.log("ch ch changes", app.deck.get_content());
 	snapshots_init = data;
+	previous_meta = previous_deck_meta;
 }
 
 /**
@@ -466,7 +625,10 @@ deck_history.init = function init(data)
  */
 deck_history.setup = function setup_history(container)
 {
-	tbody = $(container).find('tbody').on('click', 'a[role=button]', deck_history.load_snapshot);
+	tbody = $(container).find('tbody');
+	tbody.on('click', 'a[role=button]', deck_history.load_snapshot);
+	// Needed to clear the table out since 'setup' gets called multiple times.
+	tbody.empty();
 	progressbar = $(container).find('.progress-bar');
 
 	clock = setInterval(deck_history.autosave_interval, 1000);
@@ -474,6 +636,7 @@ deck_history.setup = function setup_history(container)
 	snapshots_init.forEach(function (snapshot) {
 		if (!deck_history.base){
 			deck_history.base = snapshot;
+			deck_history.base.meta = previous_meta || snapshot.meta;
 		}
 		deck_history.add_snapshot(snapshot);
 	});

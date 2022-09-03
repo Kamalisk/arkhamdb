@@ -25,6 +25,10 @@ AppBundle\Entity\Deckchange:
         variation:
             type: string
             length: 1024
+        meta:
+            type: string
+            length: 1024
+            nullable: true
         isSaved:
             type: boolean
             column: is_saved
