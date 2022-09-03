@@ -1491,11 +1491,11 @@ deck.get_invalid_cards = function get_invalid_cards() {
  * @memberOf deck
  */
 deck.can_include_card = function can_include_card(card, options) {
-	if (options) {
-		limit_count = options.limit_count;
-		hard_count = options.hard_count;
-		customizations = options.customizations;
-	}
+
+	var limit_count = options && options.limit_count;
+	var hard_count = options && options.hard_count;
+	var customizations = options && options.customizations;
+
 	// hide investigators
 	if (card.type_code === "investigator") {
 		return false;
