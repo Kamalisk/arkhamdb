@@ -450,7 +450,7 @@ ui.init_selectors = function init_selectors() {
 				default:
 					// Look for an option matching the 'id' of the meta key.
 					if (investigator.deck_options) {
-						const option = investigator.deck_options.find(function(option) { return option.id === key; });
+						var option = investigator.deck_options.find(function(option) { return option.id === key; });
 						if (option) {
 							$(`[data-filter=${key}]`).val(app.deck.meta[key]);
 						}
@@ -797,8 +797,8 @@ ui.on_modal_customization_change = function on_modal_customization_change(event)
 	var modal = $('#cardModal');
 	var code = modal.data('code');
 	var target = event.target.value.split('|');
-	const index = parseInt(target[0], 10);
-	const xp = parseInt(target[1], 10)
+	var index = parseInt(target[0], 10);
+	var xp = parseInt(target[1], 10)
 	ui.on_customization_change(code, index, event.target.checked ? (xp + 1) : xp);
 }
 
@@ -810,9 +810,9 @@ ui.on_modal_customization_change = function on_modal_customization_change(event)
 	var modal = $('#cardModal');
 	var code = modal.data('code');
 	var target = event.target.value.split('|');
-	const index = parseInt(target[0], 10);
-	const xp = parseInt(target[1], 10)
-	const choice = target[2];
+	var index = parseInt(target[0], 10);
+	var xp = parseInt(target[1], 10)
+	var choice = target[2];
 	ui.on_customization_change(code, index, xp, choice);
 }
 
@@ -824,8 +824,8 @@ ui.on_modal_customization_change = function on_modal_customization_change(event)
 	var modal = $('#cardModal');
 	var code = modal.data('code');
 	var target = event.target.value.split('|');
-	const choice_index = parseInt(target[0], 10);
-	const remove_index = parseInt(target[1], 10);
+	var choice_index = parseInt(target[0], 10);
+	var remove_index = parseInt(target[1], 10);
 
 	var card = app.data.cards.findById(code);
 	if (!card || !card.customizations) {
@@ -984,7 +984,7 @@ ui.setup_event_handlers = function setup_event_handlers() {
 
 	$('#deck_options [data-filter=faction_selector]').on({
 		change : function(event){
-			const id = event.target.attributes['data-filter'].value;
+			var id = event.target.attributes['data-filter'].value;
 			if (id === 'faction_selector') {
 				app.deck.meta.faction_selected = event.target.value;
 			} else {
@@ -996,7 +996,7 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	});
 	$('#deck_options [data-filter=faction_selector_2]').on({
 		change : function(event){
-			const id = event.target.attributes['data-filter'].value;
+			var id = event.target.attributes['data-filter'].value;
 			if (id === 'faction_selector') {
 				app.deck.meta.faction_selected = event.target.value;
 			} else {

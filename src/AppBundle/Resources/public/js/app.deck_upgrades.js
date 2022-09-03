@@ -119,7 +119,7 @@ deck_upgrades.display = function display() {
 				var xp = choice.xp_delta;
 				if (xp > 0 && spell_upgrade_discounts > 0 && customization.card.real_traits && customization.card.real_traits.indexOf('Spell.') !== -1) {
 					// Handle Arcane Research discounts if its a 'spell'
-					const max_discount = Math.min(spell_upgrade_discounts, xp);
+					var max_discount = Math.min(spell_upgrade_discounts, xp);
 					xp = xp - max_discount;
 					spell_upgrade_discounts = spell_upgrade_discounts - max_discount;
 				}
@@ -171,7 +171,7 @@ deck_upgrades.display = function display() {
 					removal_xp += removal.card.taboo_xp;
 				}
 				if (addition.qty > 0 && removal.qty > 0 && addition_xp >= 0 && addition.card.real_name == removal.card.real_name && addition_xp > removal_xp){
-					const upgraded_count = Math.min(addition.qty, removal.qty);
+					var upgraded_count = Math.min(addition.qty, removal.qty);
 					addition.qty = addition.qty - removal.qty;
 					if (spell_upgrade_discounts > 0 && removal.card.real_traits && removal.card.real_traits.indexOf('Spell.') !== -1 && addition.card.real_traits && addition.card.real_traits.indexOf('Spell.') !== -1) {
 						// It's a spell card, and we have arcane research discounts remaining.

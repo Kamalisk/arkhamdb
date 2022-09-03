@@ -203,8 +203,7 @@ function make_customization_subchoice(card, index, option, choice, editable) {
 						$('#' + id + '_done').show();
 					});
 					$('#' + id).on('blur', function(event) {
-						const trait = event.target.value.trim().replace(/[\^|,]/g, '');
-						console.log(trait);
+						var trait = event.target.value.trim().replace(/[\^|,]/g, '');
 						if (trait) {
 							app.ui.on_customization_change(card.code, index, option.xp,
 								choice && choice.choice ? choice.choice + '^' + trait : trait
@@ -215,8 +214,7 @@ function make_customization_subchoice(card, index, option, choice, editable) {
 					$('#' + id).on('keypress', function(event) {
 						if (event.key === "Enter") {
 							event.preventDefault();
-							const trait = event.target.value.trim().replace(/[\^|,]/g, '');
-							console.log(trait);
+							var trait = event.target.value.trim().replace(/[\^|,]/g, '');
 							if (trait) {
 								app.ui.on_customization_change(card.code, index, option.xp,
 									choice && choice.choice ? choice.choice + '^' + trait : trait
