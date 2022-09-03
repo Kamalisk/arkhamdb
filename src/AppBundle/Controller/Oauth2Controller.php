@@ -677,7 +677,7 @@ class Oauth2Controller extends Controller
 		if ($meta_json) {
 			$deck->setMeta($meta);
 		}
-		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $tags, $meta_json ? $meta : $deck->getMeta(), $slots, $deck , $problem, $ignored, $sideSlots);
+		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $investigator, $description, $meta_json ? $meta : $deck->getMeta(), $tags, $slots, $deck , $problem, $ignored, $sideSlots);
 		$deck->setTaboo($taboo);
 
 		// xp_spent is only read/set if there was a previousDeck.
