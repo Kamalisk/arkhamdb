@@ -315,7 +315,7 @@ deck.decode_customizations = function decode_customizations(code, entry) {
 	}
 	var previous = deck.parse_customizations(card, deck.previous_meta['cus_' + code]);
 	return _.map(result, entry => {
-		const pentry = _.find(previous, pentry => pentry.index === entry.index);
+		var pentry = _.find(previous, pentry => pentry.index === entry.index);
 		if (pentry) {
 			entry.locked_xp = pentry.xp;
 			// If its either a no XP option and we have a previous, or we fully paid for
@@ -1490,7 +1490,12 @@ deck.get_invalid_cards = function get_invalid_cards() {
  * returns true if the deck can include the card as parameter
  * @memberOf deck
  */
-deck.can_include_card = function can_include_card(card, { limit_count, hard_count, customizations } = {}) {
+deck.can_include_card = function can_include_card(card, options) {
+	if (options) {
+		limit_count = options.limit_count;
+		hard_count = options.hard_count;
+		customizations = options.customizations;
+	}
 	// hide investigators
 	if (card.type_code === "investigator") {
 		return false;
