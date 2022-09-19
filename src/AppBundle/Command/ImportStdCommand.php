@@ -475,6 +475,7 @@ class ImportStdCommand extends ContainerAwareCommand
 					'illustrator',
 					'flavor',
 					'traits',
+					'tags',
 					'text',
 					'customization_text',
 					'customization_change',

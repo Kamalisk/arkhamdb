@@ -392,12 +392,15 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	 */
 	private $traits;
 
-
 	/**
 	 * @var string
 	 */
 	private $realTraits;
 
+	/**
+	 * @var string
+	 */
+	private $tags;
 
 	/**
 	 * @var string
@@ -1537,6 +1540,30 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 	public function getTraits()
 	{
 		return $this->traits;
+	}
+
+	/**
+	 * Get tags
+	 *
+	 * @return string
+	 */
+	public function getTags()
+	{
+		return $this->tags;
+	}
+
+	/**
+	 * Set traits
+	 *
+	 * @param string $tags
+	 *
+	 * @return Card
+	 */
+	public function setTags($tags)
+	{
+		$this->tags = $tags;
+
+		return $this;
 	}
 
 	/**
