@@ -44,7 +44,8 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				'myriad',
 				'errata_date',
 				'customization_text',
-				'customization_change'
+				'customization_change',
+				'tags'
 		];
 
 		$externalFields = [
