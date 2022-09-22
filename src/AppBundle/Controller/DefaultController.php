@@ -86,6 +86,19 @@ class DefaultController extends Controller
 		), $response);
 	}
 
+	function deleteAccountAction()
+	{
+		$response = new Response();
+		$response->setPublic();
+		$response->setMaxAge($this->container->getParameter('cache_expiration'));
+
+		return $this->render('AppBundle:Default:account_delete.html.twig', array(
+		"pagetitle" => "Delete Account",
+
+		"game_name" => $this->container->getParameter('game_name'),
+		), $response);
+	}
+
 	function apiIntroAction()
 	{
 		$response = new Response();
