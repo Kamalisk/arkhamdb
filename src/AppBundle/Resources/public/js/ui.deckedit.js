@@ -816,6 +816,21 @@ ui.on_modal_customization_change = function on_modal_customization_change(event)
 	ui.on_customization_change(code, index, xp, choice);
 }
 
+
+/**
+ * @memberOf ui
+ * @param event
+ */
+ ui.on_modal_customization_radio_change = function on_modal_customization_radio_change(event) {
+	var modal = $('#cardModal');
+	var code = modal.data('code');
+	var target = event.target.value.split('|');
+	var index = parseInt(target[0], 10);
+	var xp = parseInt(target[1], 10)
+	var choice = target[2];
+	ui.on_customization_change(code, index, xp, choice);
+}
+
 /**
  * @memberOf ui
  * @param event
@@ -1082,9 +1097,10 @@ ui.setup_event_handlers = function setup_event_handlers() {
 		var num = parseInt(event.which, 10) - 48;
 		$('#cardModal .modal-qty input[type=radio][value=' + num + ']').trigger('change');
 	});
-	$('#cardModal').on('change', 'input[type=radio]', ui.on_modal_quantity_change);
+	$('#cardModal').on('change', 'input[class=qty]', ui.on_modal_quantity_change);
 	$('#cardModal').on('change', 'input[type=checkbox]', ui.on_modal_customization_change);
 	$('#cardModal').on('change', 'select', ui.on_modal_customization_select_change);
+	$('#cardModal').on('change', 'input[class=customize]', ui.on_modal_customization_radio_change);
 	$('#cardModal').on('click', 'button[class=remove-card-choice]', ui.on_modal_customization_remove_card_choice);
 
 	$('thead').on('click', 'a[data-sort]', ui.on_table_sort_click);
@@ -1298,7 +1314,7 @@ ui.update_list_template = function update_list_template() {
  */
 ui.build_row = function build_row(card) {
 	var radios = '', radioTpl = _.template(
-		'<label class="btn btn-xs btn-default <%= active %>"><input type="radio" name="qty-<%= card.code %>" value="<%= i %>"><%= i %></label>'
+		'<label class="btn btn-xs btn-default <%= active %>"><input type="radio" class="qty" name="qty-<%= card.code %>" value="<%= i %>"><%= i %></label>'
 	);
 
 	//console.log(card.name, card.maxqty, card.quantity);

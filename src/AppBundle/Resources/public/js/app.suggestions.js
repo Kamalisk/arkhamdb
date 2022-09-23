@@ -127,7 +127,7 @@ suggestions.div = function div(record) {
 	for (var i = 0; i <= record.maxqty; i++) {
 		radios += '<label class="btn btn-xs btn-default'
 				+ (i == record.indeck ? ' active' : '')
-				+ '"><input type="radio" name="qty-' + record.code
+				+ '"><input type="radio" class="qty" name="qty-' + record.code
 				+ '" value="' + i + '">' + i + '</label>';
 	}
 	var div = $('<tr class="card-container" data-code="'
