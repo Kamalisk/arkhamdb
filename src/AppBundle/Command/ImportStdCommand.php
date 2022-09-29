@@ -195,6 +195,50 @@ class ImportStdCommand extends ContainerAwareCommand
 		}
 		$this->em->flush();
 		// reload the cards so we can link cards
+
+		// go over duplicates and create them based on the cards they are duplicating
+		if ($this->duplicates && count($this->duplicates) > 0) {
+			$output->writeln("Resolving Duplicates");
+			$this->loadCollection('Card');
+			foreach($this->duplicates as $duplicate) {
+				$duplicate_of = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $duplicate['duplicate_of']]);
+				$new_card = $duplicate['card'];
+				// create a new "card" using the data of this card.
+				$new_card_data = $duplicate_of->serialize();
+
+				$new_card_data['code'] = $new_card['code'];
+				$new_card_data['duplicate_of'] = $duplicate['duplicate_of'];
+				if (isset($new_card['pack_code'])) {
+					$new_card_data['pack_code'] = $new_card['pack_code'];
+				}
+				if (isset($new_card['position'])) {
+					$new_card_data['position'] = $new_card['position'];
+				}
+				if (isset($new_card['quantity'])) {
+					$new_card_data['quantity'] = $new_card['quantity'];
+				}
+				if (isset($new_card['hidden'])) {
+					$new_card_data['hidden'] = $new_card['hidden'];
+				}
+				if (isset($new_card['alternate_of'])) {
+					$new_card_data['alternate_of'] = $new_card['alternate_of'];
+				}
+				if ($duplicate_of->getDeckOptions()) {
+					$new_card_data['deck_options'] = json_decode($duplicate_of->getDeckOptions());
+				}
+
+				$new_cards = [];
+				$new_cards[] = $new_card_data;
+				$duplicates_added = $this->importCardsFromJsonData($new_cards);
+				//print_r(count($duplicates_added));
+				if ($duplicates_added && isset($duplicates_added[0])) {
+					$duplicates_added[0]->setDuplicateOf($duplicate_of);
+				}
+			}
+
+			$this->em->flush();
+		}
+
 		if ($this->links && count($this->links) > 0) {
 			$output->writeln("Resolving Links");
 			$this->loadCollection('Card');
@@ -215,39 +259,6 @@ class ImportStdCommand extends ContainerAwareCommand
 					}
 				}
 			}
-			$this->em->flush();
-		}
-
-		// go over duplicates and create them based on the cards they are duplicating
-		if ($this->duplicates && count($this->duplicates) > 0) {
-			$output->writeln("Resolving Duplicates");
-			$this->loadCollection('Card');
-			foreach($this->duplicates as $duplicate) {
-				$duplicate_of = $this->em->getRepository('AppBundle\\Entity\\Card')->findOneBy(['code' => $duplicate['duplicate_of']]);
-				$new_card = $duplicate['card'];
-				// create a new "card" using the data of this card.
-				$new_card_data = $duplicate_of->serialize();
-				$new_card_data['code'] = $new_card['code'];
-				$new_card_data['duplicate_of'] = $duplicate['duplicate_of'];
-				if (isset($new_card['pack_code'])) {
-					$new_card_data['pack_code'] = $new_card['pack_code'];
-				}
-				if (isset($new_card['position'])) {
-					$new_card_data['position'] = $new_card['position'];
-				}
-				if (isset($new_card['quantity'])) {
-					$new_card_data['quantity'] = $new_card['quantity'];
-				}
-				//print_r($new_card_data);
-				$new_cards = [];
-				$new_cards[] = $new_card_data;
-				$duplicates_added = $this->importCardsFromJsonData($new_cards);
-				//print_r(count($duplicates_added));
-				if ($duplicates_added && isset($duplicates_added[0])) {
-					$duplicates_added[0]->setDuplicateOf($duplicate_of);
-				}
-			}
-
 			$this->em->flush();
 		}
 
@@ -563,11 +574,11 @@ class ImportStdCommand extends ContainerAwareCommand
 		// if the field is a data, the default assumptions above are wrong
 		if(in_array($type, ['date', 'datetime'])) {
 			if($newJsonValue !== null) {
-				if (gettype($newJsonValue) !== "string") {
-					return;
+				if (gettype($newJsonValue) == "object") {
+					$newJsonValue = $newJsonValue->format('Y-m-d');
 				}
 				$newTypedValue = new \DateTime($newJsonValue);
-}
+			}
 			if($currentTypedValue !== null) {
 				switch($type) {
 					case 'date': {
