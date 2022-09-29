@@ -199,15 +199,14 @@ class DeckValidationHelper
 					}
 				}
 
-				if (isset($option->text) && $option->text) {
-					// needs to match at least one type
-					$text_valid = false;
-					foreach($option->text as $text) {
-						if (preg_match( "/".$text."/", strtolower($card->getRealText()) ) === 1){
-							$text_valid = true;
+				if (isset($option->tag) && $option->tag) {
+					$tag_valid = false;
+					foreach($option->tag as $tag) {
+						if (strpos(strtoupper($card->getTags()), strtoupper($tag)."." ) !== false){
+							$tag_valid = true;
 						}
 					}
-					if (!$text_valid){
+					if (!$tag_valid){
 						continue;
 					}
 				}
