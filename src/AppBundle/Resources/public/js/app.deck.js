@@ -1683,8 +1683,8 @@ deck.can_include_card = function can_include_card(card, options) {
 				for(var j = 0; j < option.text.length; j++){
 					var text = option.text[j];
 					if (
-						(card.real_text && card.real_text.toLowerCase().match(text)) ||
-						(selected_customizations.length && _.find(selected_customizations, function(c) { return c.real_text && c.real_text.toLowerCase().match(text); }))
+						(card.real_text && card.real_text.match(text)) ||
+						(selected_customizations.length && _.find(selected_customizations, function(c) { return c.real_text && c.real_text.match(text); }))
 					){
 						text_valid = true;
 					}
