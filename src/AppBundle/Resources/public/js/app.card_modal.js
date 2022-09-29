@@ -46,7 +46,7 @@ function update_qty(modal, card) {
 	if(qtyelt && card.maxqty) {
 		var qty = '';
 		for(var i=0; i<=card.maxqty; i++) {
-			qty += '<label class="btn btn-sm btn-default"><input type="radio" name="qty" value="'+i+'">'+i+'</label>';
+			qty += '<label class="btn btn-sm btn-default"><input class="qty" type="radio" name="qty" value="'+i+'">'+i+'</label>';
 		}
 		qtyelt.html(qty);
 
@@ -60,7 +60,7 @@ function update_qty(modal, card) {
 	}
 }
 
-function make_customization_subchoice(card, index, option, choice, editable) {
+function make_customization_subchoice(card, index, option, choice, editable, stat_choices) {
 	if (!option.choice) {
 		return { html: '' };
 	}
@@ -244,6 +244,36 @@ function make_customization_subchoice(card, index, option, choice, editable) {
 				html: r,
 			};
 		}
+
+		case 'choose_skill': {
+			var r = '<div style="display:flex; flex-direction: row; margin-left: 8px; margin-top: 4px; margin-bottom: 8px;">' +
+				'<div class="btn-group" data-toggle="buttons">';
+			var all_stats = ['willpower', 'intellect', 'combat', 'agility'];
+			var locked = (choice && choice.locked) || !editable;
+			if (locked) {
+				var stat = (choice && choice.choice) || 'wild';
+				r += '<span title="' + stat + '" class="icon-' + stat + '"></span>';
+			} else {
+				for (var i=0; i<all_stats.length; i++) {
+					var stat = all_stats[i];
+					var selected=(!choice || !choice.choice ? 0 : parseInt(choice.choice, 10)) === i;
+					var already_selected = false;
+					for (var j=0; j<stat_choices.length; j++) {
+						if (stat_choices[j].index !== index && stat_choices[j].choice === stat) {
+							already_selected = true;
+							break;
+						}
+					}
+					if (!already_selected && (!locked || selected)) {
+						r += '<label class="btn btn-sm btn-default' + (choice && choice.choice === stat ? ' active' : '') + '"><input class="customize" type="radio" name="' + id + '"' + ' value="' + index + '|' + (option.xp || 0) + '|' + stat + '"' + '><span title="' + stat + '" class="icon-' + stat + '"></span></input></label>';
+					}
+				}
+			}
+			r += '</div></div>';
+			return {
+				html: r,
+			};
+		}
 		default:
 			return {
 				html: '',
@@ -257,6 +287,24 @@ function update_customizations(modal, card) {
 	if(card.customization_options && card.customization_text) {
 		customization_html += '<h4 class="modal-title">Customizations</h4>';
 		if (card.indeck) {
+			var stat_choices = [];
+			for (var i=0; i<card.customization_options.length; i++) {
+				var option=card.customization_options[i];
+				if (option.choice === 'choose_skill') {
+					var choice=null;
+					if (card.customizations) {
+						for(var j=0; j<card.customizations.length; j++) {
+							if (card.customizations[j].index === i) {
+								choice = card.customizations[j];
+								break;
+							}
+						}
+					}
+					if (choice) {
+						stat_choices.push(choice);
+					}
+				}
+			}
 			var lines = card.customization_text.split('\n');
 			customization_html += '<div class="card-text border-'+card.faction_code+'">';
 			for(var i=0; i<card.customization_options.length; i++) {
@@ -275,7 +323,7 @@ function update_customizations(modal, card) {
 				var line = lines[i] || '';
 				line = line.replace(/\[\[([^\]]+)\]\]/g, '<b><i>$1</i></b>');
 				line = line.replace(/\[(\w+)\]/g, '<span title="$1" class="icon-$1"></span>');
-				var control = make_customization_subchoice(card, i, option, choice, !!card.maxqty);
+				var control = make_customization_subchoice(card, i, option, choice, !!card.maxqty, stat_choices);
 				if (control.html) {
 					line = line.replace(/:.*$/,'') + ': ';
 				}
@@ -341,9 +389,9 @@ function fill_modal (code) {
 		var qty = '';
 		for(var i=0; i<=card.maxqty; i++) {
 			if (card.ignore == i) {
-				qty += '<label class="btn btn-sm btn-default active"><input type="radio" name="ignoreqty" value="'+i+'">'+i+'</label>';
+				qty += '<label class="btn btn-sm btn-default active"><input class="qty" type="radio" name="ignoreqty" value="'+i+'">'+i+'</label>';
 			} else {
-				qty += '<label class="btn btn-sm btn-default"><input type="radio" name="ignoreqty" value="'+i+'">'+i+'</label>';
+				qty += '<label class="btn btn-sm btn-default"><input class="qty" type="radio" name="ignoreqty" value="'+i+'">'+i+'</label>';
 			}
 		}
 		qtyelt.html(qty);
@@ -357,9 +405,9 @@ function fill_modal (code) {
 		var qty = '';
 		for(var i=0; i<=card.maxqty; i++) {
 			if (card.insidedeck == i) {
-				qty += '<label class="btn btn-sm btn-default active"><input type="radio" name="sideqty" value="'+i+'">'+i+'</label>';
+				qty += '<label class="btn btn-sm btn-default active"><input class="qty" type="radio" name="sideqty" value="'+i+'">'+i+'</label>';
 			} else {
-				qty += '<label class="btn btn-sm btn-default"><input type="radio" name="sideqty" value="'+i+'">'+i+'</label>';
+				qty += '<label class="btn btn-sm btn-default"><input class="qty" type="radio" name="sideqty" value="'+i+'">'+i+'</label>';
 			}
 		}
 		qtyelt.html(qty);

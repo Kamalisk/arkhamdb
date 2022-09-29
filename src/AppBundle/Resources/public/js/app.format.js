@@ -209,7 +209,7 @@ format.slot = function slot(card) {
 			var custom = card.customizations[i];
 			var option = custom.option;
 			if (custom.unlocked && option.choice === 'remove_slot') {
-				const choice = parseInt(custom.choice || '0', 10) || 0;
+				var choice = parseInt(custom.choice || '0', 10) || 0;
 				var slots = slot.split('.');
 				var new_slots = [];
 				for (let j=0; j<slots.length; j++) {
@@ -240,9 +240,13 @@ format.text = function text(card, alternate) {
 			var option = custom.option;
 			if (custom.unlocked && option.text_change) {
 				var change = changes[custom.index] || '';
-				if (custom.choice && option.choice === 'choose_trait') {
-					var traits = custom.choice.split('^');
-					change = change.replace('_____', traits.map(function(trait) { return '<b><i>' + trait + '</i></b>' }).join(', '));
+				if (custom.choice) {
+					if (option.choice === 'choose_trait') {
+						var traits = custom.choice.split('^');
+						change = change.replace('_____', traits.map(function(trait) { return '<b><i>' + trait + '</i></b>' }).join(', '));
+					} else if (option.choice === 'choose_skill') {
+						change = change.replace('_____', '<span title="' + custom.choice + '" class="icon-' + custom.choice + '"></span>');
+					}
 				}
 				switch (option.text_change) {
 					case 'replace': {
@@ -288,6 +292,10 @@ format.text = function text(card, alternate) {
 							change = change.replace('_____', traits.map(function(trait) { return '<b><i>' + trait + '</i></b>' }).join(', '));
 							break;
 						}
+						case 'choose_skill': {
+							change = change.replace('_____', '<span title="' + custom.choice + '" class="icon-' + custom.choice + '"></span>');
+							break;
+						}
 					}
 				}
 				final_lines.push(change);
@@ -321,6 +329,10 @@ format.text = function text(card, alternate) {
 							case 'choose_trait': {
 								var traits = custom.choice.split('^');
 								change = change.replace('_____', traits.map(function(trait) { return '<b><i>' + trait + '</i></b>' }).join(', '));
+								break;
+							}
+							case 'choose_skill': {
+								change = change.replace('_____', '<span title="' + custom.choice + '" class="icon-' + custom.choice + '"></span>');
 								break;
 							}
 						}
