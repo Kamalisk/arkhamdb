@@ -1659,10 +1659,10 @@ deck.can_include_card = function can_include_card(card, options) {
 
 			if (option.tag){
 				// needs to match at least one trait
-				var trait_valid = false;
+				var tag_valid = false;
 
 				for(var j = 0; j < option.tag.length; j++){
-					var trait = option.tag[j];
+					var tag = option.tag[j];
 
 					if (
 						(card.tags && card.tags.toUpperCase().indexOf(tag.toUpperCase()+".") !== -1) ||
