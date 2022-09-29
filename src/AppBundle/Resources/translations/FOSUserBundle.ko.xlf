@@ -7,19 +7,19 @@
     <body>
       <trans-unit id="67_RjP." resname="Your account is not awaiting confirmation">
         <source>Your account is not awaiting confirmation</source>
-        <target>Your account is not awaiting confirmation</target>
+        <target>당신의 계정은 확인을 기다리고 있습니다.</target>
       </trans-unit>
       <trans-unit id="iqREVDn" resname="If you forgot your password">
         <source>If you forgot your password</source>
-        <target>If you forgot your password</target>
+        <target>당신의 비밀번호을 잊어버렸다면</target>
       </trans-unit>
       <trans-unit id="nh5NYWV" resname="click here">
         <source>click here</source>
-        <target>click here</target>
+        <target>여기를 클릭하세요</target>
       </trans-unit>
       <trans-unit id="olmUwYV" resname="otherwise log in">
         <source>otherwise log in</source>
-        <target>otherwise log in</target>
+        <target>아니라면 로그인하세요</target>
       </trans-unit>
     </body>
   </file>
