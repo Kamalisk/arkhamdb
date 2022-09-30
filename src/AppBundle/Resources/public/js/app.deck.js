@@ -1084,7 +1084,7 @@ deck.create_card = function create_card(card, field='indeck'){
 		$div.append(' <span class="icon-eldersign" style="color:orange;" title="Exceptional. Double xp cost and limit one per deck."></span>');
 	}
 	if (card.customization_options) {
-		$div.append(' <a class="fa fa-star" style="color:orange; title="Customize" data-customize="'+card.code+'"><span></span></a>');
+		$div.append(' <span class="fa fa-star" style="color:orange; title="Customize" data-customize="'+card.code+'"></span>');
 	}
 
 	if (!no_collection){
