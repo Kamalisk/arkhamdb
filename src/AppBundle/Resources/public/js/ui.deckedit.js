@@ -1086,7 +1086,6 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	$('#special-collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
 
 	$('#deck').on('click', 'a[data-random]', ui.select_basic_weakness);
-	$('#deck').on('click', 'a[data-customize]', ui.select_basic_weakness);
 	$('#deck').on('click', '#xp_up', ui.on_adjust_xp_up);
 	$('#deck').on('click', '#xp_down', ui.on_adjust_xp_down);
 
