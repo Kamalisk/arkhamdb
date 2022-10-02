@@ -63,7 +63,7 @@ class DecklistManager
 	{
 		$qb = $this->doctrine->createQueryBuilder();
 		$qb->select('d');
-		$qb->from('AppBundle:Decklist', 'd');		
+		$qb->from('AppBundle:Decklist', 'd');
 		if($this->faction) {
 			$qb->join('d.character', 'c');
 			$qb->where('c.faction = :faction');
@@ -71,7 +71,6 @@ class DecklistManager
 		}
 		$qb->setFirstResult($this->start);
 		$qb->setMaxResults($this->limit);
-		$qb->distinct();
 		$qb->andWhere('d.nextDeck IS NULL');
 		return $qb;
 	}
@@ -80,10 +79,12 @@ class DecklistManager
 	 * creates the paginator around the query
 	 * @param Query $query
 	 */
-	private function getPaginator(Query $query)
+	private function getPaginator(Query $query, $withCount = true)
 	{
 		$paginator = new Paginator($query, $fetchJoinCollection = FALSE);
-		$this->maxcount = $paginator->count();
+		if ($withCount) {
+			$this->maxcount = $paginator->count();
+		}
 		return $paginator;
 	}
 
@@ -93,20 +94,20 @@ class DecklistManager
 		return new ArrayCollection([]);
 	}
 
-	public function findDecklistsByPopularity()
+	public function findDecklistsByPopularity($withCount = true)
 	{
 		$qb = $this->getQueryBuilder();
 		$qb->addSelect('(1+d.nbVotes)/(1+POWER(DATE_DIFF(CURRENT_TIMESTAMP(), d.dateCreation), 1.2)) AS HIDDEN popularity');
 		$qb->orderBy('popularity', 'DESC');
-		return $this->getPaginator($qb->getQuery());
+		return $this->getPaginator($qb->getQuery(), $withCount);
 	}
 
-	public function findDecklistsByAge($ignoreEmptyDescriptions = FALSE)
+	public function findDecklistsByAge($ignoreEmptyDescriptions = FALSE, $withCount = true)
 	{
 		$qb = $this->getQueryBuilder();
 		$qb->andWhere('LENGTH(d.descriptionMd) > 40');
 		$qb->orderBy('d.dateCreation', 'DESC');
-		return $this->getPaginator($qb->getQuery());
+		return $this->getPaginator($qb->getQuery(), $withCount);
 	}
 
 	public function findDecklistsByFavorite(User $user)
@@ -160,7 +161,7 @@ class DecklistManager
 		$qb->orderBy('d.dateCreation', 'DESC');
 		return $this->getPaginator($qb->getQuery());
 	}
-	
+
 	public function findDecklistsInMultiplayer()
 	{
 		$qb = $this->getQueryBuilder();
@@ -168,7 +169,7 @@ class DecklistManager
 		$qb->orderBy('d.dateCreation', 'DESC');
 		return $this->getPaginator($qb->getQuery());
 	}
-	
+
 	public function findDecklistsInBeginner()
 	{
 		$qb = $this->getQueryBuilder();
@@ -176,7 +177,7 @@ class DecklistManager
 		$qb->orderBy('d.dateCreation', 'DESC');
 		return $this->getPaginator($qb->getQuery());
 	}
-	
+
 	public function findDecklistsInTheme()
 	{
 		$qb = $this->getQueryBuilder();
@@ -209,7 +210,7 @@ class DecklistManager
 
 		$qb = $this->getQueryBuilder();
 		$joinTables = [];
-		
+
 		if(!empty($faction)) {
 			$qb->join('d.character', 'a');
 			$qb->where('a.faction = :faction');
@@ -236,7 +237,7 @@ class DecklistManager
 						$qb->andWhere("s$i.code = :card$i");
 						$qb->setParameter("card$i", $card_code);
 						$packs[] = $card->getPack()->getId();
-					} else {						
+					} else {
 						$qb->innerJoin('d.slots', "s$i");
 						$qb->andWhere("s$i.card = :card$i");
 						$qb->setParameter("card$i", $card);
@@ -250,7 +251,7 @@ class DecklistManager
 				$sub->from("AppBundle:Card","c");
 				$sub->innerJoin('AppBundle:Decklistslot', 's', 'WITH', 's.card = c');
 				$sub->where('s.decklist = d');
-				// if a second core set is included ignore check for card quantity 
+				// if a second core set is included ignore check for card quantity
 				if (in_array("1-2", $packs)){
 					$sub->andWhere($sub->expr()->notIn('c.pack', $packs));
 				} else {
@@ -266,7 +267,7 @@ class DecklistManager
 				$qb->andWhere($qb->expr()->not($qb->expr()->exists($sub->getDQL())));
 			}
 		}
-		
+
 		switch($sort) {
 			case 'date':
 				$qb->orderBy('d.dateCreation', 'DESC');
@@ -287,7 +288,7 @@ class DecklistManager
 				$qb->orderBy('popularity', 'DESC');
 				break;
 		}
-		
+
 		return $this->getPaginator($qb->getQuery());
 	}
 

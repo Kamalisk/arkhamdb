@@ -31,15 +31,17 @@ class DefaultController extends Controller
 		$decklists_by_recent = [];
 		$factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findBy(['isPrimary' => true], ['code' => 'ASC']);
 
-		$paginator = $decklist_manager->findDecklistsByPopularity();
+		$paginator = $decklist_manager->findDecklistsByPopularity(false);
+
 		$iterator = $paginator->getIterator();
+
 		while($iterator->valid() && count($decklists_by_popular) < 5)
 		{
 			$decklist = $iterator->current();
 			$decklists_by_popular[] = ['faction' => $decklist->getCharacter()->getFaction(), 'decklist' => $decklist];
 			$iterator->next();
 		}
-		$paginator = $decklist_manager->findDecklistsByAge();
+		$paginator = $decklist_manager->findDecklistsByAge(false, false);
 		$iterator = $paginator->getIterator();
 		while($iterator->valid() && count($decklists_by_recent) < 5)
 		{
