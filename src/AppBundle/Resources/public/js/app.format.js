@@ -208,16 +208,20 @@ format.slot = function slot(card) {
 		for (var i=0; i<card.customizations.length; i++) {
 			var custom = card.customizations[i];
 			var option = custom.option;
-			if (custom.unlocked && option.choice === 'remove_slot') {
-				var choice = parseInt(custom.choice || '0', 10) || 0;
-				var slots = slot.split('.');
-				var new_slots = [];
-				for (let j=0; j<slots.length; j++) {
-					if (j !== choice) {
-						new_slots.push(slots[j].trim());
+			if (custom.unlocked) {
+				if (option.choice === 'remove_slot') {
+					var choice = parseInt(custom.choice || '0', 10) || 0;
+					var slots = slot.split('.');
+					var new_slots = [];
+					for (let j=0; j<slots.length; j++) {
+						if (j !== choice) {
+							new_slots.push(slots[j].trim());
+						}
 					}
+					slot = new_slots.join('. ');
+				} else if (option.real_slot && slot_names) {
+					slot = slot_names[option.real_slot];
 				}
-				slot = new_slots.join('. ');
 			}
 		}
 	}

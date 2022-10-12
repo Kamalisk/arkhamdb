@@ -1,4 +1,4 @@
 <div class="card-info{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}" >
-	<span class="card-type">{{ card.type_name }}{% if card.stage %}. Stage {{card.stage}}{% endif %}{% if card.slot %}. {{card.slot}}{% endif %}{% if card.subtype_name is defined %}. {{card.subtype_name}}{% endif %}</span>
+	<span class="card-type">{{ card.type_name }}{% if card.stage %}. Stage {{card.stage}}{% endif %}{% if card.slot %}. {{app.format.slot(slot)}}{% endif %}{% if card.subtype_name is defined %}. {{card.subtype_name}}{% endif %}</span>
 	{% include 'AppBundle:Search:card-props.html.twig' %}
 </div>
