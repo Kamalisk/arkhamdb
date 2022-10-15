@@ -11,11 +11,11 @@
       </trans-unit>
       <trans-unit id="41bee85f0a581e16440caf695024e618" resname="My Teams">
         <source>My Teams</source>
-        <target>My Teams</target>
+        <target>Mes Équipes</target>
       </trans-unit>
       <trans-unit id="e002169a321adf2814cd157a8dd0ecc5" resname="Decklists">
         <source>Decklists</source>
-        <target>Decklists</target>
+        <target>Listes de Decks</target>
       </trans-unit>
       <trans-unit id="cd81f9f55969c822377f076017bb3484" resname="Cards">
         <source>Cards</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="34e80a799d144cfe4af46815e103f017" resname="Reviews">
         <source>Reviews</source>
-        <target>Reviews</target>
+        <target>Avis</target>
       </trans-unit>
       <trans-unit id="1f4da964f8eab62e96e8cfe406e44364" resname="Rules">
         <source>Rules</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="9046fcdec95378ce88a0879ebfc44475" resname="Test Icons">
         <source>Test Icons</source>
-        <target>Test Icons</target>
+        <target>Icônes de Compétence</target>
       </trans-unit>
       <trans-unit id="0557fa923dcee4d0f86b1409f5c2167f" resname="Back">
         <source>Back</source>
@@ -111,11 +111,11 @@
       </trans-unit>
       <trans-unit id="b7a772bd89d5f4413e9e6373f8dede2d" resname="Your query didn't match any card.">
         <source>Your query didn't match any card.</source>
-        <target>Your query didn't match any card.</target>
+        <target>Votre recherche ne correspond à aucune carte.</target>
       </trans-unit>
       <trans-unit id="681aa47f963747cc19ec382e0c7944df" resname="Related Cards">
         <source>Related Cards</source>
-        <target>Related Cards</target>
+        <target>Cartes en relation</target>
       </trans-unit>
       <trans-unit id="d9ed9cfb2b4c0bc9bc7e2208ee80aec0" resname="Member since">
         <source>Member since</source>
@@ -123,39 +123,39 @@
       </trans-unit>
       <trans-unit id="3b8dacebcabd4075dc1dbd89f13a0178" resname="published decklists">
         <source>published decklists</source>
-        <target>published decklists</target>
+        <target>listes de decks publiées</target>
       </trans-unit>
       <trans-unit id="55ec6e23814c55c69572b48aafd4faf9" resname="One published decklist">
         <source>One published decklist</source>
-        <target>One published decklist</target>
+        <target>Une liste de deck publiée</target>
       </trans-unit>
       <trans-unit id="1c5bc0508822392420c374b729785958" resname="published reviews">
         <source>published reviews</source>
-        <target>published reviews</target>
+        <target>avis publiés</target>
       </trans-unit>
       <trans-unit id="f1b4b1a6504086c413e446914bcfee1d" resname="One published reviews">
         <source>One published reviews</source>
-        <target>One published reviews</target>
+        <target>Un avis publié</target>
       </trans-unit>
       <trans-unit id="8d9bec4f224970e231041639de877092" resname="Reputation">
         <source>Reputation</source>
-        <target>Reputation</target>
+        <target>Réputation</target>
       </trans-unit>
       <trans-unit id="8b9c006d512295284b651b36cd6349a6" resname="Something about you">
         <source>Something about you</source>
-        <target>Something about you</target>
+        <target>Quelque chose à votre sujet</target>
       </trans-unit>
       <trans-unit id="ae3ef38738579f5c872777896ac4e8a0" resname="Be notified when a user comments one of your decklists">
         <source>Be notified when a user comments one of your decklists</source>
-        <target>Be notified when a user comments one of your decklists</target>
+        <target>Être notifié quand un utilisateur commente une de vos listes de deck</target>
       </trans-unit>
       <trans-unit id="d67d9db427c85b89f10737cdc923b611" resname="Be notified when a user also comments a decklist you commented">
         <source>Be notified when a user also comments a decklist you commented</source>
-        <target>Be notified when a user also comments a decklist you commented</target>
+        <target>Être notifié quand un utilisateur commente une liste de deck que vous avez commentée</target>
       </trans-unit>
       <trans-unit id="c46d2731d32c14fd9b5b8d6372021d19" resname="Be notified when a user mentions you in a comment">
         <source>Be notified when a user mentions you in a comment</source>
-        <target>Be notified when a user mentions you in a comment</target>
+        <target>Être notifié quand un utilisateur vous mentionne dans un commentaire</target>
       </trans-unit>
       <trans-unit id="ef54f55d1717398848fc37eb0e1b309f" resname="Share your decks.">
         <source>Share your decks.</source>
@@ -179,7 +179,7 @@
       </trans-unit>
       <trans-unit id="f1b7869e146d6dfec49f5eeb69c6de7d" resname="Deck Building">
         <source>Deck Building</source>
-        <target>Deck Building</target>
+        <target>Construction de Deck</target>
       </trans-unit>
     </body>
   </file>
