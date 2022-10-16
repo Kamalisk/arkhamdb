@@ -43,10 +43,10 @@ diff.compute_simple = function compute_simple(contents, meta_contents) {
 					var xp = parseInt(parts[1], 10);
 					var choice = parts.length > 2 ? parts[2] : undefined;
 					r.push({
-						index,
-						xp,
-						choice,
-						raw: entry,
+						"index": index,
+						"xp": xp,
+						"choice": choice,
+						"raw": entry,
 					});
 				}
 				if (r.length) {
@@ -86,8 +86,8 @@ diff.compute_simple = function compute_simple(contents, meta_contents) {
 			if (!found) {
 				// Something changed
 				new_choices.push({
-					index: choice.index,
-					xp_delta: choice.xp - ((p && p.xp) || 0)
+					"index": choice.index,
+					"xp_delta": choice.xp - ((p && p.xp) || 0)
 				});
 				additions.push(choice.raw);
 			}

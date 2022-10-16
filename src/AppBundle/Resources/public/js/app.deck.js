@@ -361,7 +361,7 @@ deck.encode_customizations = function encode_customizations(customizations) {
 		if (key.indexOf('cus_') === 0) {
 			var code = key.substring(4);
 			var customizations = deck.decode_customizations(code, meta[key]);
-			app.data.cards.updateById(code, {customizations});
+			app.data.cards.updateById(code, {customizations: customizations});
 		}
 	});
 }
