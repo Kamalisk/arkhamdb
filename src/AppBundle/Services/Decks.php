@@ -67,8 +67,9 @@ class Decks
 			$card = $this->doctrine->getRepository ( 'AppBundle:Card' )->findOneBy ( array (
 					"code" => $card_code
 			) );
-			if (! $card)
+			if (!$card) {
 				continue;
+			}
 			$pack = $card->getPack ();
 			if (! $latestPack) {
 				$latestPack = $pack;
@@ -177,6 +178,9 @@ class Decks
 
 		foreach ( $content as $card_code => $qty ) {
 			$card = $cards [$card_code];
+			if (!$card) {
+				continue;
+			}
 			$slot = new Deckslot ();
 			$slot->setQuantity ( $qty );
 			$slot->setCard ( $card );
