@@ -258,9 +258,9 @@ deck_history.all_changes = function all_changes() {
 			addition.qty = 0;
 		} else if (addition_xp >= 0){
 			while (addition.qty > 0 && addition.card.xp === 0 && (free_customize_swaps[addition.code] || 0) > 0) {
-				// Still have to pay taboo XP.
-				cost = cost + addition_xp;
-				free_customize_swaps[addition.code] = free_customize_swaps[addition.code] - 1;
+				// Still have to pay taboo XP and DTR_XP, but customizations lets you swap in cards for free
+				// without paying min 1 cost, per the FAQ
+				cost = cost + dtr_xp + addition_xp;
 				addition.qty = addition.qty - 1;
 			}
 			if (addition.qty > 0 && addition.card.xp === 0 && removed_0_cards > 0 && free_0_cards > 0){
