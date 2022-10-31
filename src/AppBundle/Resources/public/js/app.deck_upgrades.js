@@ -66,6 +66,11 @@ deck_upgrades.display = function display() {
 				free_0_cards += 5;
 				removed_0_cards += 5;
 			}
+			// underworld market
+			else if (card_change.code == "09077") {
+				free_0_cards += 10;
+				removed_0_cards += 10;
+			}
 		});
 		_.each(result[2], function(choices, code) {
 			var card = app.data.cards.findById(code);

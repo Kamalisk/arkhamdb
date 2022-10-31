@@ -81,6 +81,11 @@ deck_history.all_changes = function all_changes() {
 			free_0_cards += 5;
 			removed_0_cards += 5;
 		}
+		// underworld market
+		else if (card_change.code == "09077") {
+			free_0_cards += 10;
+			removed_0_cards += 10;
+		}
 	});
 
 	// find deja vu
