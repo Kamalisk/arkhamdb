@@ -187,9 +187,11 @@ deck_history.all_changes = function all_changes() {
 						upgradeCost--;
 						spell_upgrade_discounts--;
 					}
-					if (upgradeCost > 0 && upgrade_discounts > 0) {
-						upgradeCost--;
-						upgrade_discounts--;
+					for (var i = 0; i < upgraded_count; i++) {
+						if (upgradeCost > 0 && upgrade_discounts > 0) {
+							upgradeCost--;
+							upgrade_discounts--;
+						}
 					}
 					cost = cost + upgradeCost;
 				} else {
