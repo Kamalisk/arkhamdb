@@ -332,7 +332,7 @@ class Oauth2Controller extends Controller
 			foreach ($exiles as $exile) {
 				$exile_card = $em->getRepository('AppBundle:Card')->findOneBy(array("code" => $exile));
 				// Validate that the exile card code is valid and is exilable.
-				if ($exile_card && $exile_card->getExile()) {
+				if ($exile_card) {
 					$filtered_exile_cards[] = $exile_card;
 					$filtered_exiles[] = $exile_card->getCode();
 

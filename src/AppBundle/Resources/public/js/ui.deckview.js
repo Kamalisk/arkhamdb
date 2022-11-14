@@ -8,6 +8,18 @@ function confirm_delete() {
 	$('#deleteModal').modal('show');
 }
 
+ui.show_non_exiles = function show_non_exiles(event) {
+	var non_list = $('#non-exile-list');
+	console.log(event);
+	console.log(non_list.css('display'));
+	if (non_list.css('display') == 'none') {
+		non_list.css({ display: 'block' });
+		$('#show-non-exile-button').attr('value', 'Hide non-exile cards');
+	} else {
+		non_list.css({display: 'none' });
+		$('#show-non-exile-button').attr('value', 'Show non-exile cards');
+	}
+}
 ui.do_action_deck = function do_action_deck(event) {
 
 	var action_id = $(this).attr('id');
@@ -42,26 +54,42 @@ ui.upgrade = function upgrade(deck_id) {
 }
 
 ui.create_exile_list = function create_exile_list(){
-	var exile_cards = app.data.cards.find({
-		exile: {
-			'$eq': true
-		},
+	var all_cards = app.data.cards.find({
 		indeck: {
 			'$gt': 0
 		}
+	}, {
+		'$orderBy': { 'name': 1 }
 	});
-	if (exile_cards.length){
-		var list = $('<ul>');
-		exile_cards.forEach(function (card) {
-			list.append('<li><label><input type="checkbox" name="exiles[]" value="'+card.code+'"> '+card.name+'</label></li>');
-			if (card.indeck > 1){
-				list.append('<li><label><input type="checkbox" name="exiles[]" value="'+card.code+'"> '+card.name+'</label></li>');
+	var exile_list = $('<ul>');
+	var non_exile_list = $('<ul id="non-exile-list" style="display:none">');
+	var exile_count = 0;
+	if (all_cards.length) {
+		all_cards.forEach(function (card) {
+			for (var i = 0; i < card.deck_limit; i++) {
+				if (card.indeck > i) {
+					if (card.exile) {
+						exile_count ++;
+						exile_list.append('<li><label><input type="checkbox" name="exiles[]" value="'+card.code+'"> '+card.name+'</label></li>');
+					} else if (card.xp != null) {
+						non_exile_list.append('<li><label><input type="checkbox" name="exiles[]" value="'+card.code+'"> '+card.name+'</label></li>')
+					}
+				}
 			}
 		});
-		return list;
-	} else {
-		return false;
 	}
+	var final_list = $('<div>');
+	if (!exile_count) {
+		exile_list.append('<li>None</li>');
+	}
+	final_list.append(exile_list);
+	var show_button = $('<input type="button" id="show-non-exile-button" value="Show all cards" />');
+	show_button.on({
+		click: ui.show_non_exiles,
+	});
+	final_list.append(show_button);
+	final_list.append(non_exile_list);
+	return final_list;
 }
 
 
