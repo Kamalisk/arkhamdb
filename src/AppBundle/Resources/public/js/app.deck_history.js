@@ -287,7 +287,8 @@ deck_history.all_changes = function all_changes() {
 			if (addition.card.indeck - addition.qty > 0 && addition.card.ignore) {
 				addition.card.ignore = addition.card.ignore - (addition.card.indeck - addition.qty);
 			}
-			cost = cost + ((dtr_xp + Math.max(addition_xp, 1)) * (addition.qty - addition.card.ignore));
+			// Down the Rabbit Hole satisfiest the minimum 1 XP cost when swapping in cards.
+			cost = cost + ((dtr_xp > 0 ? (dtr_xp + addition_xp) : Math.max(addition_xp, 1)) * (addition.qty - addition.card.ignore));
 			addition.qty = 0;
 		}
 	});

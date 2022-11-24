@@ -279,7 +279,7 @@ deck_upgrades.display = function display() {
 			if (addition.card.indeck - addition.qty > 0 && addition.card.ignore) {
 				addition.card.ignore = addition.card.ignore - (addition.card.indeck - addition.qty);
 			}
-			cost = cost + ((dtr_xp + Math.max(addition_xp, 1)) * (addition.qty - addition.card.ignore));
+			cost = cost + ((dtr_xp > 0 ? (dtr_xp + addition_xp) : Math.max(addition_xp, 1)) * (addition.qty - addition.card.ignore));
 			addition.qty = 0;
 		}
 	});
