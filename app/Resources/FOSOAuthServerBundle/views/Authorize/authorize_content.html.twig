@@ -1,0 +1,40 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block navbar %}{% endblock %}
+
+{% block body %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title" style="line-height:2em">Grant access to your account?</h3>
+				</div>
+				<div class="panel-body">
+					<div class="form">
+						<p>The application "{{ client.name }}" would like to connect to your account.</p>
+                        <p>If you choose to grant access, this application will be able to take the following actions on your behalf:</p>
+                        <ul>
+                            <li>Read decks you have created.</li>
+                            <li>Create and modify your decks.</li>
+                            <li>Delete decks from your account.</li>
+                        </ul>
+                        <p>Would you like to approve this access?</p>
+
+						{{ form_start(form, {method: 'POST', action: path('fos_oauth_server_authorize'), label_attr: {class: 'fos_oauth_server_authorize'} }) }}
+                            <input class="btn btn-primary" type="submit" name="accepted" value="{{ 'authorize.accept'|trans({}, 'FOSOAuthServerBundle') }}" />
+                            <input class="btn btn-default"  type="submit" name="rejected" value="{{ 'authorize.reject'|trans({}, 'FOSOAuthServerBundle') }}" />
+                            {{ form_row(form.client_id) }}
+                            {{ form_row(form.response_type) }}
+                            {{ form_row(form.redirect_uri) }}
+                            {{ form_row(form.state) }}
+                            {{ form_row(form.scope) }}
+                        {{ form_end(form) }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block footer %}{% endblock %}
