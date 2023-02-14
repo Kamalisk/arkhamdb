@@ -787,6 +787,11 @@ class ImportStdCommand extends ContainerAwareCommand
 
 	}
 
+	protected function importKeyData(Card $card, $data)
+	{
+
+	}
+
 	protected function importInvestigatorData(Card $card, $data)
 	{
 		$mandatoryKeys = [
