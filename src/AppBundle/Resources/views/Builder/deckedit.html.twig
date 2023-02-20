@@ -6,6 +6,16 @@
 	<script src="{{ asset_url }}"></script>
 	{% endjavascripts %}
 	<script type="text/javascript">
+	var slot_names = {
+		'Accessory': '{% trans %}Accessory{% endtrans %}',
+		'Body': '{% trans %}Body{% endtrans %}',
+		'Arcane': '{% trans %}Arcane{% endtrans %}',
+		'Arcane x2': '{% trans %}Arcane x2{% endtrans %}',
+		'Hand': '{% trans %}Hand{% endtrans %}',
+		'Hand x2': '{% trans %}Hand x2{% endtrans %}',
+		'Ally': '{% trans %}Ally{% endtrans %}',
+		'Tarot': '{% trans %}Tarot{% endtrans %}',
+	};
 	app.deck && app.deck.init({{ deck|json_encode|raw }}, {{ deck.previousDeck ? deck.previousDeck.meta|raw : ''}});
 	$( document ).ready(function() {
 		app.deck_history && app.deck_history.init({{ deck.history|json_encode|raw }}, {{ deck.previousDeck ? deck.previousDeck.meta|raw : ''}});

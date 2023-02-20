@@ -81,6 +81,11 @@ deck_history.all_changes = function all_changes() {
 			free_0_cards += 5;
 			removed_0_cards += 5;
 		}
+		// underworld market
+		else if (card_change.code == "09077") {
+			free_0_cards += 10;
+			removed_0_cards += 10;
+		}
 	});
 
 	// find deja vu
@@ -182,9 +187,11 @@ deck_history.all_changes = function all_changes() {
 						upgradeCost--;
 						spell_upgrade_discounts--;
 					}
-					if (upgradeCost > 0 && upgrade_discounts > 0) {
-						upgradeCost--;
-						upgrade_discounts--;
+					for (var i = 0; i < upgraded_count; i++) {
+						if (upgradeCost > 0 && upgrade_discounts > 0) {
+							upgradeCost--;
+							upgrade_discounts--;
+						}
 					}
 					cost = cost + upgradeCost;
 				} else {
@@ -258,9 +265,9 @@ deck_history.all_changes = function all_changes() {
 			addition.qty = 0;
 		} else if (addition_xp >= 0){
 			while (addition.qty > 0 && addition.card.xp === 0 && (free_customize_swaps[addition.code] || 0) > 0) {
-				// Still have to pay taboo XP.
-				cost = cost + addition_xp;
-				free_customize_swaps[addition.code] = free_customize_swaps[addition.code] - 1;
+				// Still have to pay taboo XP and DTR_XP, but customizations lets you swap in cards for free
+				// without paying min 1 cost, per the FAQ
+				cost = cost + dtr_xp + addition_xp;
 				addition.qty = addition.qty - 1;
 			}
 			if (addition.qty > 0 && addition.card.xp === 0 && removed_0_cards > 0 && free_0_cards > 0){
@@ -280,7 +287,8 @@ deck_history.all_changes = function all_changes() {
 			if (addition.card.indeck - addition.qty > 0 && addition.card.ignore) {
 				addition.card.ignore = addition.card.ignore - (addition.card.indeck - addition.qty);
 			}
-			cost = cost + ((dtr_xp + Math.max(addition_xp, 1)) * (addition.qty - addition.card.ignore));
+			// Down the Rabbit Hole satisfiest the minimum 1 XP cost when swapping in cards.
+			cost = cost + ((dtr_xp > 0 ? (dtr_xp + addition_xp) : Math.max(addition_xp, 1)) * (addition.qty - addition.card.ignore));
 			addition.qty = 0;
 		}
 	});

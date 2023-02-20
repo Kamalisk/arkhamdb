@@ -1273,7 +1273,7 @@ ui.update_list_template = function update_list_template() {
 				+ '</td>'
 				+ '<td class="xp"><%= card.xp %></td>'
 				+ '<td class="cost"><%= card.cost %></td>'
-				+ '<td class="type" style="text-align : left;"><span class="" title="<%= card.type_name %>"><%= card.type_name %></span> <% if (card.slot) { %> - <%= card.slot %> <% } %></td>'
+				+ '<td class="type" style="text-align : left;"><span class="" title="<%= card.type_name %>"><%= card.type_name %></span> <% if (card.slot) { %> - <%= app.format.slot(card) %> <% } %></td>'
 				+ '<td class="faction"><span class="fg-<%= card.faction_code %>" title="<%= card.faction_name %>"><%= card.faction_name %></span></td>'
 			+ '</tr>'
 		);

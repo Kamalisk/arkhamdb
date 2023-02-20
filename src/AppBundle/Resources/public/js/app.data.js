@@ -253,32 +253,35 @@ data.apply_taboos = function apply_taboos(taboo_id){
 		var parsed_taboo = JSON.parse(taboo.cards);
 		parsed_taboo.forEach(function (taboo_card){
 			//console.log(taboo_card);
+			var og_card = app.data.cards.findOne({'code':taboo_card.code});
+			var cards = app.data.cards.find({'duplicate_of_code':taboo_card.code});
+			cards.push(og_card);
+			cards.forEach(function (card){
+				var update = {'taboo': true};
+				if (taboo_card.exceptional){
+					update.exceptional = true;
+					update.taboo_exceptional = true;
+				} else if (taboo_card.exceptional === false) {
+					update.exceptional = false;
+					update.taboo_remove_exceptional = true;
+				}
 
-			var card = app.data.cards.findOne({'code':taboo_card.code});
-			var update = {'taboo': true};
-			if (taboo_card.exceptional){
-				update.exceptional = true;
-				update.taboo_exceptional = true;
-			} else if (taboo_card.exceptional === false) {
-				update.exceptional = false;
-				update.taboo_remove_exceptional = true;
-			}
-
-			if (taboo_card.deck_options) {
-				update.taboo_deck_options = card.deck_options;
-				update.deck_options = taboo_card.deck_options;
-			}
-			if (taboo_card.deck_requirements) {
-				update.taboo_deck_requirements = card.deck_requirements;
-				update.deck_requirements = taboo_card.deck_requirements;
-			}
-			if (taboo_card.xp){
-				update.taboo_xp = taboo_card.xp;
-			}
-			if (taboo_card.text){
-				update.taboo_text = taboo_card.text;
-			}
-			app.data.cards.updateById(card.code, update);
+				if (taboo_card.deck_options) {
+					update.taboo_deck_options = card.deck_options;
+					update.deck_options = taboo_card.deck_options;
+				}
+				if (taboo_card.deck_requirements) {
+					update.taboo_deck_requirements = card.deck_requirements;
+					update.deck_requirements = taboo_card.deck_requirements;
+				}
+				if (taboo_card.xp){
+					update.taboo_xp = taboo_card.xp;
+				}
+				if (taboo_card.text){
+					update.taboo_text = taboo_card.text;
+				}
+				app.data.cards.updateById(card.code, update);
+			});
 		});
 	}
 }

@@ -1011,8 +1011,34 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(query, d
 
 			cards.forEach(function (card) {
 				var $div = deck.create_card(card);
-				if (card.real_slot && slots[card.real_slot]){
-					slots[card.real_slot].push($div);
+				if (card.real_slot) {
+					var real_slot = card.real_slot;
+					if (card.customizations) {
+						for (var i=0; i<card.customizations.length; i++) {
+							var custom = card.customizations[i];
+							var option = custom.option;
+							if (custom.unlocked) {
+								if (option.choice === 'remove_slot') {
+									var choice = parseInt(custom.choice || '0', 10) || 0;
+									var real_slots = real_slot.split('.');
+									var new_slots = [];
+									for (let j=0; j<real_slots.length; j++) {
+										if (j !== choice) {
+											new_slots.push(real_slots[j].trim());
+										}
+									}
+									real_slot = new_slots.join('. ');
+								} else if (option.real_slot) {
+									real_slot = option.real_slot;
+								}
+							}
+						}
+					}
+					if (slots[real_slot]){
+						slots[real_slot].push($div);
+					} else {
+						slots["Other"].push($div);
+					}
 				} else {
 					slots["Other"].push($div);
 				}
