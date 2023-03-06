@@ -329,7 +329,7 @@ function update_customizations(modal, card) {
 				}
 				if (card.maxqty) {
 					// Edit mode
-					line = line.replace(/□+ /, '');
+					line = line.replace(/□+\s?/, '');
 					customization_html += '<div style="display:flex; flex-direction: row; align-items:flex-start;' + (!option.xp ? ' margin-left: 8px;' : '') + '">';
 
 					for(var j=0; j<option.xp; j++) {
