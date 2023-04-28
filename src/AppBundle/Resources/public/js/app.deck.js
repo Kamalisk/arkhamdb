@@ -1499,7 +1499,7 @@ deck.reset_limit_count = function (){
 		}
 		if (ancestral_knowledge && ancestral_knowledge.indeck) {
 			// We put it at the front of the requirements since it needs to count things.
-			var new_option = {name: "ancestral_knowledge", dynamic: true, type:["skill"], atleast: { types: 1, min: 10 }, atleast_count: {}, ignore_match: true };
+			var new_option = {name: "ancestral_knowledge", dynamic: true, type:["skill"], level: { min: 0, max: 5}, atleast: { types: 1, min: 10 }, atleast_count: {}, ignore_match: true };
 			deck.deck_options.unshift(new_option);
 		}
 		if (versatile && versatile.indeck) {
