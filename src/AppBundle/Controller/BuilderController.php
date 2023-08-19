@@ -140,7 +140,10 @@ class BuilderController extends Controller
 					if ($card_code){
 						$card_to_add = $em->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
 						if ($card_to_add){
-							$cards_to_add[] = $card_to_add;
+							$cards_to_add[$card_to_add->getCode()] = [
+								'card' => $card_to_add,
+								'quantity' => $card_to_add->getDeckLimit()
+							];
 						}
 					}
 				}
@@ -159,7 +162,16 @@ class BuilderController extends Controller
 							if ($valid_targets){
 								$key = array_rand($valid_targets);
 								// should disable adding random weakness
-								$cards_to_add[] = $valid_targets[$key];
+								// $cards_to_add[] = $valid_targets[$key];
+
+								if (isset($cards_to_add[$valid_targets[$key]->getCode()])) {
+									$cards_to_add[$valid_targets[$key]->getCode()]['quantity']++;
+								} else {
+									$cards_to_add[$valid_targets[$key]->getCode()] = [
+										'card' => $valid_targets[$key],
+										'quantity' => 1
+									];
+								}
 							}
 						}
 					}
@@ -193,10 +205,10 @@ class BuilderController extends Controller
 		$deck->setTags(join(' ', array_unique($tags)));
 		$deck->setUser($this->getUser());
 
-		foreach ($cards_to_add as $card) {
+		foreach ($cards_to_add as $card_to_add) {
 			$slot = new Deckslot();
-			$slot->setQuantity( $card->getDeckLimit() );
-			$slot->setCard( $card );
+			$slot->setQuantity( $card_to_add['quantity'] );
+			$slot->setCard( $card_to_add['card'] );
 			$slot->setDeck( $deck );
 			$slot->setIgnoreDeckLimit(0);
 			$deck->addSlot( $slot );

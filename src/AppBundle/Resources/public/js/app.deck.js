@@ -1531,6 +1531,8 @@ deck.can_include_card = function can_include_card(card, options) {
 	var hard_count = options && options.hard_count;
 	var customizations = options && options.customizations;
 
+	var investigator = app.data.cards.findById(this.get_investigator_code());
+
 	// hide investigators
 	if (card.type_code === "investigator") {
 		return false;
@@ -1542,6 +1544,13 @@ deck.can_include_card = function can_include_card(card, options) {
 	// reject cards restricted
 	if (card.restrictions && card.restrictions.investigator && !card.restrictions.investigator[investigator_code]) {
 			return false;
+	}
+
+	// always allow the required cards regardless
+	if (investigator && investigator.deck_requirements) {
+		if (investigator.deck_requirements.card && investigator.deck_requirements.card[card.code]) {
+			return true;
+		}
 	}
 
 	var real_slot = card.real_slot && card.real_slot.toUpperCase();
@@ -1640,6 +1649,12 @@ deck.can_include_card = function can_include_card(card, options) {
 				}
 
 				if (!type_valid){
+					continue;
+				}
+			}
+
+			if (option.permanent){
+				if (card.permanent !== option.permanent){
 					continue;
 				}
 			}
