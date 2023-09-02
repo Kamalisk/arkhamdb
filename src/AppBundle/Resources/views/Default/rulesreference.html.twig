@@ -258,6 +258,9 @@
 	<li><a href="#Vengeance_X">Vengeance X</a></li>
 	<li><a href="#Victory_Display_Victory_Points">Victory Display, Victory Points</a></li>
 	<li><a href="#Weakness">Weakness</a></li>
+                <ul>	
+		<li><a href="#Weakness_Events_And_Changing_The_Game_State">Weakness Events and "changing the game state"</a></li>
+		</ul>
 	<li><a href="#When">When</a></li>
 	<li><a href="#Wild_Skill_Icons">Wild Skill Icons</a></li>
 	<li><a href="#Winning_and_Losing">Winning and Losing</a></li>
@@ -644,6 +647,8 @@
 <li> If a player card with 1 or more player attachments changes control, the card’s new controller takes control of those player attachments.</li>
 
 <li> If an investigator attaches a player card to an encounter card, he or she retains control of the attachment (but does not gain control of the attached encounter card).</li>
+
+<li> A card with the permanent keyword cannot be chosen to be attached to another player card unless explicitly stated.</li>
 
 </ul>
 
@@ -1553,7 +1558,7 @@
 
 <h2 id="Farthest_From_All_Investigators" style="color:blue">"Farthest from all investigators" (added in FAQ, section 'Card Ability Interpretation', point 2.16)</h2>
 
-<p>Some card effects instruct investigators to put a card into play at the location farthest from all investigators. This is determined by finding the location with the highest combined distance from each investigator. In the event of a tie, as usual, the lead investigator decides.</p>
+<p>Some card effects instruct investigators to put a card into play at the location farthest from all investigators. This is determined by finding the location with the highest combined distance from each investigator (with no investigators at it, if able). In the event of a tie, as usual, the lead investigator decides.</p>
 
 <p><i>For example: Location A is 5 connections away from investigator A and 1 connection away from investigator B. Location B is 3 connections away from investigator A and 4 connections away from investigator B. Location B is therefore the farthest from both investigators, because the total distance for each investigator to get to location B is higher than location A. (This is true even though location A is farther from investigator A.)</i></p>
 
@@ -1621,11 +1626,11 @@
 
 <h2 id="For_Each_Or_For_Every" style="color:blue">"For each" or "for every" (added in FAQ, section 'Card Ability Interpretation', point 2.23)</h2>
 
-<p>Some card effects instruct an investigator to perform an effect multiple times for each instance of a particular condition (e.g. "for each horror on you," or "for each card in your hand"). If such an effect can be calculated and resolved simultaneously, it should be resolved as a single cumulative effect. If it cannot be resolved simultaneously (for example, if it has multiple steps or other dependencies), each instance should be resolved as separate effects.</p>
+<p>Some card effects instruct an investigator to perform an effect multiple times for each instance of a particular condition (e.g. "for each horror on you," or "for each card in your hand"). If such an effect can be calculated and resolved simultaneously, it should be resolved (and may be canceled, ignored, or prevented) as a single cumulative effect. If it cannot be resolved simultaneously (for example, if it has multiple steps or other dependencies), each instance should be resolved as a separate effect (and must be canceled, ignored, or prevented independently of each other effect).</p>
 
 <p><i>For example: A treachery card instructs you to "take 1 horror for each point you fail by." Since you can calculate how many points you fail by and resolve the dealt horror simultaneously, it should be resolved as a single instance of horror.</p>
 
-<p>A different treachery card instructs you: "For each point you fail by, discard 1 random card from your hand. For each card you cannot discard, take 1 horror or 1 damage." In this case, the effect must be applied in full one at a time for each point you fail by.</i></p>
+<p>A different treachery card instructs you: "For each point you fail by, you must either lose 1 action or take 1 horror. This treachery must be resolved as separate effects; each point failed by requires you to make a choice, whether that choice is to lose an action or to take a horror. Each instance must be resolved separately, even if the resulting outcome only causes you to take horror.</i></p>
 
 <h2 id="Forced_Abilities">Forced Abilities</h2>
 
@@ -1833,7 +1838,7 @@
 
 <h2 id="Keys2" style="color:red">Keys (cardtype) (added in <em>The Scarlet Keys</em>)</h2>
 
-<p><i>The Scarlet Keys</i> campaign features a new cardtype: keys. Keys are powerful artifacts that may be "shifted" to either aid or hinder investigators, depending on whom they are attached to and whether their <b><i>Stable</i</b> or <b><i>Unstable</i></b> side is faceup.</p>
+<p><i>The Scarlet Keys</i> campaign features a new cardtype: keys. Keys are powerful artifacts that may be "shifted" to either aid or hinder investigators, depending on whom they are attached to and whether their <b><i>Stable</i></b> or <b><i>Unstable</i></b> side is faceup.</p>
 
 <ul>
 
@@ -2511,7 +2516,7 @@
 
 <i>For example: Under "Deckbuilding Requirements" for Roland Banks, the following cards are listed: "Roland's .38 Special, Cover Up, 1 random basic weakness.” Roland Banks must include exactly 1 copy of his signature cards—Roland’s .38 Special and Cover Up. He is not permitted to include more than 1 copy of either of these cards.</i></li>
 
-<li>An investigator cannot play another investigator’s signature cards, control another investigator’s signature cards while they are in play, or possess another investigator’s signature cards in their hand <span style="color:blue">(amended in FAQ, section 'Definitions and Terms', v.2.0)</span>.<br>
+<li>An investigator cannot play another investigator’s signature cards, control another investigator’s signature cards while they are in play, or possess another investigator’s signature cards in their hand <span style="color:blue">(amended in FAQ, section 'Definitions and Terms', v.2.0)</span>. If a game effect would force a player to take control of a card with another investigator's signature card attached to it, that signature card is discarded <span style="color:blue">(amended in FAQ, section 'Definitions and Terms', v.2.1)</span>.<br>
 
 <i>For example: Roland has the Roland's .38 Special card in play. He has the card "Teamwork" which can allow investigators at the same location to trade or give assets among one another. However, because Roland’s .38 Special is one of Roland’s signature cards, he cannot give it to another investigator.</i></li>
 
@@ -2932,6 +2937,10 @@ A player cannot include 50 or more experience worth of cards in a standalone dec
 <li>  Some card and game text references a "basic weakness." A basic weakness can be identified by the presence of the words "Basic Weakness" and the symbol indicated below.</li>
 
 </ul>
+
+<h3 id="Weakness_Events_And_Changing_The_Game_State" style="color:blue">Weakness Events and "changing the game state" (added in FAQ, section 'Game Play', point 1.27)</h3>
+
+<p>Some weakness events such as Quantum Paradox do not change the game state in the traditional sense when played, but nevertheless provide negative effects if they are in your hand. These weakness events may still be played to avoid their negative effects.</p>
 
 <h2 id="When">When</h2>
 
