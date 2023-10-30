@@ -90,6 +90,9 @@
 	<li><a href="#Control">Control</a></li>
 	<li><a href="#Copy">Copy</a></li>
 	<li><a href="#Costs">Costs</a></li>
+		<ul>
+		<li><a href="#Ignoring_All_Costs">"Ignoring all costs"</a></li>
+		</ul>
 	<li><a href="#Dealing_Damage_Horror">Dealing Damage/Horror</a></li>
 	<li><a href="#Deck">Deck</a></li>
 	<li><a href="#Deckbuilding">Deckbuilding</a></li>
@@ -210,6 +213,9 @@
 	<li><a href="#Resources">Resources</a></li>
 	<li><a href="#Retaliate">Retaliate</a></li>
 	<li><a href="#Revelation">Revelation</a></li>
+		<ul>
+		<li><a href="#Revelation_Ability_Priority">Revelation Ability Priority</a></li>
+		</ul>
 	<li><a href="#Sanity_and_Horror">Sanity and Horror</a></li>
 	<li><a href="#Seal">Seal</a></li>
 	<li><a href="#Search">Search</a></li>
@@ -258,6 +264,9 @@
 	<li><a href="#Vengeance_X">Vengeance X</a></li>
 	<li><a href="#Victory_Display_Victory_Points">Victory Display, Victory Points</a></li>
 	<li><a href="#Weakness">Weakness</a></li>
+                <ul>	
+		<li><a href="#Weakness_Events_And_Changing_The_Game_State">Weakness Events and "changing the game state"</a></li>
+		</ul>
 	<li><a href="#When">When</a></li>
 	<li><a href="#Wild_Skill_Icons">Wild Skill Icons</a></li>
 	<li><a href="#Winning_and_Losing">Winning and Losing</a></li>
@@ -645,6 +654,8 @@
 
 <li> If an investigator attaches a player card to an encounter card, he or she retains control of the attachment (but does not gain control of the attached encounter card).</li>
 
+<li> A card with the permanent keyword cannot be chosen to be attached to another player card unless explicitly stated.</li>
+
 </ul>
 
 <h3 id="Moving_Attachments" style="color:blue">Moving Attachments (added in FAQ, section 'Game Play', point 1.25)</h3>
@@ -1025,6 +1036,16 @@
 
 <p><i>For example: There is a Coterie Agent and a Coterie Assassin in the shadows. There is a concealed mini-card at Kymani’s location and another concealed mini-card at a connecting location. (1) First, Kymani plays an event that discovers a clue at their location, but instead of discovering a clue, they choose to expose the concealed mini-card at their location, flipping it over. That mini-card is a decoy, and is set aside without effect. (2) Next, they move to the connecting location with the other concealed mini-card and attempt to expose it using an evade action. They succeed and flip the mini-card over... revealing the Coterie Assassin’s mini-card! (3) The Coterie Assassin’s mini-card is set aside, and the Coterie Assassin in the shadows is moved to Kymani’s location, engaging them. Because there is another enemy in the shadows, they do not remove any of the other concealed mini-cards from play.</i></p>
 
+<p><span style="color:blue">(Added in FAQ, section 'Frequently Asked Questions')</span> <b>Frequently asked Concealed Mini-Card questions:</b></p>
+
+<ol>
+
+<li>  <i>How many concealed mini-cards can I expose if I resolve an ability with multiple effects, such as Power Word with its Tonguetwister or Thrice Spoken commands, or Breaking and Entering?</i> An ability that contains multiple effects able to expose an enemy can have just one of those effects replaced with the exposure. A concealed mini-card may be exposed by successfully attacking it, successfully/automatically evading it, successfully investigating its location, automatically dealing damage to it, or automatically discovering a clue at its location. Any of these effects can be replaced with the exposing of one mini-card, and only one mini-card at a time can be exposed by such an effect. For example, Breaking and Entering has two effects: investigating and, if successful, automatically evading an enemy. Either of these effects may be replaced with exposing a concealed mini-card, but not both. Likewise, if you issue the Betray and Confess commands via Power Word’s Tonguetwister upgrade, only the damage or the clue discovery may be replaced with an exposure; the other effect is resolved as normal. This holds true even if issuing two commands to 3 enemies via Thrice Spoken: only 1 single concealed mini-card may be exposed even when resolving the effect for 3 different enemies.</li>
+
+<li>  <i>Does a concealed mini-card count as an enemy for the purposes of card effects that depend on having an enemy at my location?</i>  No. A concealed mini-card can be attacked or evaded "as if it were an engaged enemy", but for all other effects, it is not considered an enemy at the location. For example, if Trish Scarborough discovers a clue at a location with a concealed mini-card but no enemies, she is unable to trigger her [reaction] ability because the clue was not discovered at a location "with an enemy." Additionally, card effects that require an investigator to "choose an enemy", such as Expose Weakness, cannot be used to target a concealed mini-card.</li>
+
+</ol>
+
 <h2 id="Constant_Abilities">Constant Abilities</h2>
 
 <p>See "<a href="#Abilities_Constant">Ability</a>" on page 2.</p>
@@ -1062,6 +1083,12 @@
 <li>  If an investigator takes damage or horror as a cost and reassigns any of it to an asset, the cost is still considered paid.</li>
 
 </ul>
+
+<h3 id="Ignoring_All_Costs" style="color:blue">"Ignoring all costs" (added in FAQ, section 'Card Ability Interpretation', point 2.24)</h3>
+
+<p>Some cards like Knowledge is Power or Word of Woe allow an investigator to play a card or activate an ability on an asset, "ignoring all costs." These effects only ignore the costs of initiating an ability. They do not ignore additional costs that must be paid when resolving that ability — in other words, anything "before the colon" is ignored, but any additional costs "after the colon" must be paid as normal.</p>
+
+<p><i>For example, if an investigator uses Knowledge is Power to activate the [action] ability on Old Book of Lore, Knowledge is Power allows you to ignore the action cost and exhausting of Old Book of Lore to activate its ability and search your deck for a card, but does not waive the additional cost to spend a secret to play that card. Likewise, playing Word of Woe waives the action cost to activate the ability on Earthly Serenity, but does not waive the cost to spend charges to heal an investigator at your location.</i></p>
 
 <h2 id="Dealing_Damage_Horror">Dealing Damage/Horror</h2>
 
@@ -1553,7 +1580,7 @@
 
 <h2 id="Farthest_From_All_Investigators" style="color:blue">"Farthest from all investigators" (added in FAQ, section 'Card Ability Interpretation', point 2.16)</h2>
 
-<p>Some card effects instruct investigators to put a card into play at the location farthest from all investigators. This is determined by finding the location with the highest combined distance from each investigator. In the event of a tie, as usual, the lead investigator decides.</p>
+<p>Some card effects instruct investigators to put a card into play at the location farthest from all investigators. This is determined by finding the location with the highest combined distance from each investigator (with no investigators at it, if able). In the event of a tie, as usual, the lead investigator decides.</p>
 
 <p><i>For example: Location A is 5 connections away from investigator A and 1 connection away from investigator B. Location B is 3 connections away from investigator A and 4 connections away from investigator B. Location B is therefore the farthest from both investigators, because the total distance for each investigator to get to location B is higher than location A. (This is true even though location A is farther from investigator A.)</i></p>
 
@@ -1621,11 +1648,11 @@
 
 <h2 id="For_Each_Or_For_Every" style="color:blue">"For each" or "for every" (added in FAQ, section 'Card Ability Interpretation', point 2.23)</h2>
 
-<p>Some card effects instruct an investigator to perform an effect multiple times for each instance of a particular condition (e.g. "for each horror on you," or "for each card in your hand"). If such an effect can be calculated and resolved simultaneously, it should be resolved as a single cumulative effect. If it cannot be resolved simultaneously (for example, if it has multiple steps or other dependencies), each instance should be resolved as separate effects.</p>
+<p>Some card effects instruct an investigator to perform an effect multiple times for each instance of a particular condition (e.g. "for each horror on you," or "for each card in your hand"). If such an effect can be calculated and resolved simultaneously, it should be resolved (and may be canceled, ignored, or prevented) as a single cumulative effect. If it cannot be resolved simultaneously (for example, if it has multiple steps or other dependencies), each instance should be resolved as a separate effect (and must be canceled, ignored, or prevented independently of each other effect).</p>
 
 <p><i>For example: A treachery card instructs you to "take 1 horror for each point you fail by." Since you can calculate how many points you fail by and resolve the dealt horror simultaneously, it should be resolved as a single instance of horror.</p>
 
-<p>A different treachery card instructs you: "For each point you fail by, discard 1 random card from your hand. For each card you cannot discard, take 1 horror or 1 damage." In this case, the effect must be applied in full one at a time for each point you fail by.</i></p>
+<p>A different treachery card instructs you: "For each point you fail by, you must either lose 1 action or take 1 horror. This treachery must be resolved as separate effects; each point failed by requires you to make a choice, whether that choice is to lose an action or to take a horror. Each instance must be resolved separately, even if the resulting outcome only causes you to take horror.</i></p>
 
 <h2 id="Forced_Abilities">Forced Abilities</h2>
 
@@ -1833,7 +1860,7 @@
 
 <h2 id="Keys2" style="color:red">Keys (cardtype) (added in <em>The Scarlet Keys</em>)</h2>
 
-<p><i>The Scarlet Keys</i> campaign features a new cardtype: keys. Keys are powerful artifacts that may be "shifted" to either aid or hinder investigators, depending on whom they are attached to and whether their <b><i>Stable</i</b> or <b><i>Unstable</i></b> side is faceup.</p>
+<p><i>The Scarlet Keys</i> campaign features a new cardtype: keys. Keys are powerful artifacts that may be "shifted" to either aid or hinder investigators, depending on whom they are attached to and whether their <b><i>Stable</i></b> or <b><i>Unstable</i></b> side is faceup.</p>
 
 <ul>
 
@@ -2435,6 +2462,10 @@
 
 </ul>
 
+<h3 id="Revelation_Ability_Priority" style="color:blue">Revelation Ability Priority (added in FAQ, section 'Card Ability Interpretation', point 2.25)</h3>
+
+<p>If an investigator has both a <b><i>Dilemma</i></b> card and a weakness and/or encounter card in their hand, the weakness and/or encounter card must be resolved first.</p>
+
 <h2 id="Sanity_and_Horror">Sanity and Horror</h2>
 
 <p>Sanity represents a card's mental and emotional fortitude. Horror tracks the harm that has been done to a card's psyche by exposure to the Mythos.</p>
@@ -2511,7 +2542,7 @@
 
 <i>For example: Under "Deckbuilding Requirements" for Roland Banks, the following cards are listed: "Roland's .38 Special, Cover Up, 1 random basic weakness.” Roland Banks must include exactly 1 copy of his signature cards—Roland’s .38 Special and Cover Up. He is not permitted to include more than 1 copy of either of these cards.</i></li>
 
-<li>An investigator cannot play another investigator’s signature cards, control another investigator’s signature cards while they are in play, or possess another investigator’s signature cards in their hand <span style="color:blue">(amended in FAQ, section 'Definitions and Terms', v.2.0)</span>.<br>
+<li>An investigator cannot play another investigator’s signature cards, control another investigator’s signature cards while they are in play, or possess another investigator’s signature cards in their hand <span style="color:blue">(amended in FAQ, section 'Definitions and Terms', v.2.0)</span>. If a game effect would force a player to take control of a card with another investigator's signature card attached to it, that signature card is discarded <span style="color:blue">(amended in FAQ, section 'Definitions and Terms', v.2.1)</span>.<br>
 
 <i>For example: Roland has the Roland's .38 Special card in play. He has the card "Teamwork" which can allow investigators at the same location to trade or give assets among one another. However, because Roland’s .38 Special is one of Roland’s signature cards, he cannot give it to another investigator.</i></li>
 
@@ -2932,6 +2963,10 @@ A player cannot include 50 or more experience worth of cards in a standalone dec
 <li>  Some card and game text references a "basic weakness." A basic weakness can be identified by the presence of the words "Basic Weakness" and the symbol indicated below.</li>
 
 </ul>
+
+<h3 id="Weakness_Events_And_Changing_The_Game_State" style="color:blue">Weakness Events and "changing the game state" (added in FAQ, section 'Game Play', point 1.27)</h3>
+
+<p>Some weakness events such as Quantum Paradox do not change the game state in the traditional sense when played, but nevertheless provide negative effects if they are in your hand. These weakness events may still be played to avoid their negative effects.</p>
 
 <h2 id="When">When</h2>
 
