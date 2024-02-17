@@ -394,6 +394,13 @@ class ApiController extends Controller
 			if(!$lastModified || $lastModified < $card->getDateUpdate()) {
 				$lastModified = $card->getDateUpdate();
 			}
+		}
+		$response->setLastModified($lastModified);
+		if ($response->isNotModified($request)) {
+			return $response;
+		}
+
+		foreach($list_cards as $card) {
 			if ($card->getBondedTo()) {
 				$matching_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(['realName' => $card->getBondedTo()]);
 				if (count($matching_cards) > 0) {
@@ -405,10 +412,6 @@ class ApiController extends Controller
 					}
 				}
 			}
-		}
-		$response->setLastModified($lastModified);
-		if ($response->isNotModified($request)) {
-			return $response;
 		}
 
 		$cards = array();
