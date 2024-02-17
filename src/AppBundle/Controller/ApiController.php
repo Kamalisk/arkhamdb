@@ -379,27 +379,29 @@ class ApiController extends Controller
 		$jsonp = $request->query->get('jsonp');
 		$include_encounter = $request->query->get('encounter');
 
+		$cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy([], ['dateUpdate' => 'DESC'], 1, 0);
+
+		// check the last-modified-since header
+		$lastModified = NULL;
+		/* @var $card \AppBundle\Entity\Card */
+		if($cards && isset($cards[0])) {
+			if(!$lastModified || $lastModified < $cards[0]->getDateUpdate()) {
+				$lastModified = $cards[0]->getDateUpdate();
+			}
+		}
+
+		$response->setLastModified($lastModified);
+		if ($response->isNotModified($request)) {
+			return $response;
+		}
+
 		if ($include_encounter){
 			$list_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findAll();
 		}else {
 			$list_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findAllWithoutEncounter();
 		}
 
-		// check the last-modified-since header
-
 		$bonded_cards = [];
-		$lastModified = NULL;
-		/* @var $card \AppBundle\Entity\Card */
-		foreach($list_cards as $card) {
-			if(!$lastModified || $lastModified < $card->getDateUpdate()) {
-				$lastModified = $card->getDateUpdate();
-			}
-		}
-		$response->setLastModified($lastModified);
-		if ($response->isNotModified($request)) {
-			return $response;
-		}
-
 		foreach($list_cards as $card) {
 			if ($card->getBondedTo()) {
 				$matching_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(['realName' => $card->getBondedTo()]);
