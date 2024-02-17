@@ -224,7 +224,17 @@ class DeckValidationHelper
 						}
 					}
 				}
-
+				
+				if(isset($option->permanent) && $option->permanent) {
+					$permanent_valid = false;
+					//Not permanent and not Ravenous
+					if ($card->getPermanent() == $option->permanent && $card->getCode() != 89002) {
+						$permanent_valid = true;
+					} else {
+						continue;
+					}
+				} 
+				
 				if (isset($option->not) && $option->not){
 					return false;
 				}else {
