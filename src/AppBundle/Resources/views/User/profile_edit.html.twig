@@ -8,7 +8,7 @@
 <div class="col-md-6 col-md-offset-3">
 <div class="panel panel-default">
 <div class="panel-heading">
-<h3 class="panel-title" id="title">Profile</h3>
+  <h3 class="panel-title" id="title">Profile</h3>
 </div>
 <div class="panel-body" id="main">
 
@@ -19,6 +19,7 @@
     <p>{{ user.reputation }}</p>
   </div>
 
+  <h4>Account</h4>
   <div class="form-group">
     <label for="username">{% trans %}Username{% endtrans %}</label>
     <input type="text" name="username" id="username" value="{{ user.username }}" class="form-control">
@@ -34,6 +35,23 @@
     <textarea id="resume" name="resume" class="form-control">{{ user.resume }}</textarea>
   </div>
 
+  <h4>Decks</h4>
+  <div class="checkbox">
+    <label>
+        <input type="checkbox" name="taboo" value="1" {% if user.isTaboo %}checked{% endif %}>
+        {% trans %}Default to the latest taboo{% endtrans %}
+    </label>
+    <p class="help-block">Checking this box will default new decks to the latest taboo rules. The taboo list can still be changed manually.</p>
+  </div>
+  <div class="checkbox">
+    <label>
+        <input type="checkbox" name="share_decks" value="1" {% if user.isShareDecks %}checked{% endif %}>
+        {% trans %}Make your decks public{% endtrans %}
+    </label>
+    <p class="help-block">If you check this box, the "View" page of your decks will be public instead of private. You can then send the link to your friends. If you uncheck the box, all your decks become private immediately.</p>
+  </div>
+
+  <h4>Social</h4>
   <div class="checkbox">
     <label>
         <input type="checkbox" name="notif_author" value="1" {% if user.isNotifAuthor %}checked{% endif %}>
@@ -55,24 +73,18 @@
     </label>
   </div>
 
-  <div class="checkbox">
-    <label>
-        <input type="checkbox" name="share_decks" value="1" {% if user.isShareDecks %}checked{% endif %}>
-        {% trans %}Make your decks public{% endtrans %}
-    </label>
-    <p class="help-block">If you check this box, the "View" page of your decks will be public instead of private. You can then send the link to your friends. If you uncheck the box, all your decks become private immediately.</p>
-  </div>
-
   <div class="form-group">
     <label for="color">{% trans %}Select a faction color for your username{% endtrans %}</label>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center;">
     {% for faction in factions %}
-    <div class="radio">
-      <label class="{{ faction.code }}">
-        <input type="radio" name="user_faction_code" id="optionsRadios1" value="{{ faction.code }}" {% if user.color == faction.code %}checked{% endif %}>
+      <div >
+        <label class="{{ faction.code }}">
+          <input type="radio" name="user_faction_code" id="optionsRadios1" value="{{ faction.code }}" {% if user.color == faction.code %}checked{% endif %}>
           {{ faction.name }}
-	  </label>
-	</div>
-	{% endfor %}
+        </label>
+      </div>
+    {% endfor %}
+    </div>
   </div>
 
   <button type="submit" class="btn btn-primary">{% trans %}Save{% endtrans %}</button>

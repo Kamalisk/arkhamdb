@@ -77,6 +77,7 @@ class UserController extends Controller
     	$notifCommenter = $request->get('notif_commenter') ? TRUE : FALSE;
     	$notifMention = $request->get('notif_mention') ? TRUE : FALSE;
     	$shareDecks = $request->get('share_decks') ? TRUE : FALSE;
+			$taboo = $request->get('taboo') ? TRUE : FALSE;
 
     	$user->setColor($faction_code);
     	$user->setResume($resume);
@@ -84,6 +85,7 @@ class UserController extends Controller
     	$user->setIsNotifCommenter($notifCommenter);
     	$user->setIsNotifMention($notifMention);
     	$user->setIsShareDecks($shareDecks);
+			$user->setIsTaboo($taboo);
 
     	$this->getDoctrine()->getManager()->flush();
 
@@ -104,7 +106,7 @@ class UserController extends Controller
         $content = null;
 
         $securityContext = $this->container->get('security.authorization_checker');
-        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) 
+        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED'))
         {
         	$user = $this->getUser();
         	$user_id = $user->getId();

@@ -195,6 +195,7 @@ class BuilderController extends Controller
 			$name = sprintf("%s is the best investigator", $investigator->getName());
 		}
 
+		$user = $this->getUser();
 
 		$deck = new Deck();
 		$deck->setDescriptionMd("");
@@ -203,7 +204,15 @@ class BuilderController extends Controller
 		$deck->setName($name);
 		$deck->setProblem('too_few_cards');
 		$deck->setTags(join(' ', array_unique($tags)));
-		$deck->setUser($this->getUser());
+		$deck->setUser($user);
+
+		if ($user->getIsTaboo()) {
+			// get latest taboo
+			$taboo = $em->getRepository('AppBundle:Taboo')->findOneBy(['active' => true], ['dateStart' => 'DESC'], 1, 0);
+			if ($taboo)	{
+				$deck->setTaboo($taboo);
+			}
+		}
 
 		foreach ($cards_to_add as $card_to_add) {
 			$slot = new Deckslot();

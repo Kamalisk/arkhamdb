@@ -81,6 +81,11 @@ class User extends BaseUser
     private $isShareDecks = false;
 
     /**
+     * @var boolean
+     */
+    private $isTaboo = false;
+
+    /**
      * @var string
      */
     private $ownedPacks;
@@ -460,6 +465,30 @@ class User extends BaseUser
     public function getIsShareDecks()
     {
         return $this->isShareDecks;
+    }
+
+    /**
+     * Set isTaboo
+     *
+     * @param boolean $isTaboo
+     *
+     * @return User
+     */
+    public function setIsTaboo($isTaboo)
+    {
+        $this->isTaboo = $isTaboo;
+
+        return $this;
+    }
+
+    /**
+     * Get isTaboo
+     *
+     * @return boolean
+     */
+    public function getIsTaboo()
+    {
+        return $this->isTaboo;
     }
 
     /**
