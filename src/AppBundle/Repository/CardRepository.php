@@ -19,9 +19,7 @@ class CardRepository extends TranslatableRepository
 			->leftJoin('c.type', 't')
 			->leftJoin('c.subtype', 'b')
 			->leftJoin('c.faction', 'f')
-			->leftJoin('c.encounter', 'e')
-			->orderBY('c.code', 'ASC');
-
+			->leftJoin('c.encounter', 'e');
 		return $this->getResult($qb);
 	}
 
@@ -35,9 +33,7 @@ class CardRepository extends TranslatableRepository
 			->leftJoin('c.subtype', 'b')
 			->leftJoin('c.faction', 'f')
 			->leftJoin('c.encounter', 'e')
-			->andWhere('c.encounter IS NULL')
-			->orderBY('c.code', 'ASC');
-
+			->andWhere('c.encounter IS NULL');
 		return $this->getResult($qb);
 	}
 
