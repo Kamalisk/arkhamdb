@@ -204,6 +204,10 @@ class DecklistManager
 
 		$decklist_name = filter_var($request->query->get('name'), FILTER_SANITIZE_STRING);
 
+		$date_from = $request->query->get('date_from');
+
+		$date_to = $request->query->get('date_to');
+
 		$sort = $request->query->get('sort');
 
 		$packs = $request->query->get('packs');
@@ -226,6 +230,14 @@ class DecklistManager
 		if(! empty($decklist_name)) {
 			$qb->andWhere('d.name like :deckname');
 			$qb->setParameter('deckname', "%$decklist_name%");
+		}
+		if(! empty($date_from)) {
+			$qb->andWhere('d.dateCreation >= :date_from');
+			$qb->setParameter('date_from', "$date_from 00:00:00");
+		}
+		if(! empty($date_to)) {
+            $qb->andWhere('d.dateCreation <= :date_to');
+            $qb->setParameter('date_to', "$date_to 23:59:59");
 		}
 		if(!empty($cards_code) || !empty($packs)) {
 			if (!empty($cards_code) ) {
