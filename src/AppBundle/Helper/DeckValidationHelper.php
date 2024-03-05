@@ -1,13 +1,14 @@
 <?php
 
 namespace AppBundle\Helper;
+use Doctrine\ORM\EntityManager;
 
 class DeckValidationHelper
 {
 
-	public function __construct(AgendaHelper $agenda_helper)
+	public function __construct(EntityManager $entityManager)
 	{
-		$this->agenda_helper = $agenda_helper;
+		$this->entityManager = $entityManager;
 	}
 
 		/**
@@ -116,6 +117,16 @@ class DeckValidationHelper
 	{
 		$invalidCards = [];
 		$deck_options = json_decode($deck->getCharacter()->getDeckOptions());
+
+		if ($deck->getMeta()) {
+			$meta = json_decode($deck->getMeta(), true);
+			if (isset($meta['alternate_back'])) {
+				$card = $this->entityManager->getRepository('AppBundle:Card')->findOneBy([ 'code' => $meta['alternate_back'] ]);
+				if ($card && $card->getDeckOptions()){
+					$deck_options = json_decode($card->getDeckOptions());
+				}
+			}
+		}
 		foreach ( $deck->getSlots() as $slot ) {
 			if(! $this->canIncludeCard($deck, $slot, $deck_options)) {
 				$invalidCards[] = $slot->getCard();
@@ -224,7 +235,7 @@ class DeckValidationHelper
 						}
 					}
 				}
-				
+
 				if(isset($option->permanent) && $option->permanent) {
 					$permanent_valid = false;
 					//Not permanent and not Ravenous
@@ -233,8 +244,8 @@ class DeckValidationHelper
 					} else {
 						continue;
 					}
-				} 
-				
+				}
+
 				if (isset($option->not) && $option->not){
 					return false;
 				}else {

@@ -4,7 +4,7 @@ services:
         class: AppBundle\Listener\CoreExceptionListener
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }
-            
+
     # subdomain listener
     locale_prefix_listener:
        class: AppBundle\Listener\LocalePrefixListener
@@ -41,5 +41,5 @@ services:
         arguments: ["@doctrine.orm.entity_manager"]
     deck_validation_helper:
         class: AppBundle\Helper\DeckValidationHelper
-        arguments: ["@agenda_helper"]
+        arguments: ["@doctrine.orm.entity_manager"]
         public: true
