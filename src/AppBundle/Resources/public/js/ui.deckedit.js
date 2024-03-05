@@ -183,6 +183,9 @@ ui.build_faction_selector = function build_faction_selector() {
 				choice.back_select.forEach(function(inv){
 					var card = app.data.cards.findById(inv);
 					var label = $('<option value="' + card.code + '" title="'+card.name+'"> ' + card.name + ' ('+card.pack_name+')</option>');
+					if (app.deck.meta.alternate_back && app.deck.meta.alternate_back == card.code) {
+						label.attr('selected', true);
+					}
 					$('[data-filter=back_selector]').append(label);
 				});
 			}
@@ -193,6 +196,9 @@ ui.build_faction_selector = function build_faction_selector() {
 				choice.front_select.forEach(function(inv){
 					var card = app.data.cards.findById(inv);
 					var label = $('<option value="' + card.code + '" title="'+card.name+'"> ' + card.name + ' ('+card.pack_name+')</option>');
+					if (app.deck.meta.alternate_front && app.deck.meta.alternate_front == card.code) {
+						label.attr('selected', true);
+					}
 					$('[data-filter=front_selector]').append(label);
 				});
 			}
