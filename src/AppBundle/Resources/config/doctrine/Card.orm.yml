@@ -313,6 +313,9 @@ AppBundle\Entity\Card:
             nullable: true
             gedmo:
                 - translatable
+        realBackText:
+            type: text
+            nullable: true
         backFlavor:
             type: text
             nullable: true
