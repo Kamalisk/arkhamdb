@@ -94,6 +94,11 @@ about:
     defaults:
         _controller: AppBundle:Default:about
 
+delete_account:
+    path: /delete_account
+    defaults:
+        _controller: AppBundle:Default:deleteAccount
+
 rules:
     path: /rules
     defaults:
