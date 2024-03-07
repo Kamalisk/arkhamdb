@@ -92,11 +92,13 @@
 				data: data,
 				type: 'POST',
 				success: function(data, textStatus, jqXHR) {
-					form.replaceWith('<div class="alert alert-success" role="alert">Your comment has been posted. It will appear on the site in a few minutes.</div>');
+					form.remove();
+					$('#comment-alert').empty().append('<div class="alert alert-success" role="alert">Your comment has been posted. It will appear on the site in a few minutes.</div>');
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 					console.log('['+moment().format('YYYY-MM-DD HH:mm:ss')+'] Error on '+this.url, textStatus, errorThrown);
-					form.replaceWith('<div class="alert alert-danger" role="alert">An error occured while posting your comment ('+jqXHR.statusText+'). Reload the page and try again.</div>');
+					$('#comment-alert').empty().append('<div class="alert alert-danger" role="alert">An error occured while posting your comment ('+jqXHR.statusText+').</div>');
+					already_submitted = false;
 				}
 			});
 		});
