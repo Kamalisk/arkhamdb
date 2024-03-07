@@ -1,20 +1,15 @@
 {% import "AppBundle::macros.html.twig" as macros %}
-<div>
-<form method="POST" action="{{ path('card_review_post') }}" style="clear:right" id="faq-edit-form">
-	<input type="hidden" name="card_id" value="{{ card.id }}">
-	<input type="hidden" name="review_id" value="">
-</form>
 
 <div>
-	<h3 id="reviews-header">
-		Reviews
+	<h3 id="question-header">
+		Questions/Comments
 	</h3>
-	<form method="POST" action="{{ path('card_review_post') }}" style="clear:right" id="review-edit-form">
+	<form method="POST" action="{{ path('card_review_post') }}" style="clear:right" id="question-edit-form">
 		<input type="hidden" name="card_id" value="{{ card.id }}">
 		<input type="hidden" name="review_id" value="">
 	</form>
-	{% if card.reviews is defined and card.reviews|length %}
-		{% for review in card.reviews %}
+	{% if card.questions is defined and card.questions|length %}
+		{% for review in card.questions %}
 		<article class="review" data-id="{{ review.id }}" id="review-{{ review.id }}">
 			<div class="review-like">
 				<a id="review-social-icon-like" href="#" class="social-icon-like" data-toggle="tooltip" data-placement="bottom" title="Like that review">
@@ -46,7 +41,7 @@
 		</article>
 		{% endfor %}
 	{% else %}
-	<p><i>No review yet for this card.</i></p>
+	<p><i>No questions or comments yet</i></p>
 	{% endif %}
 </div>
-</div>
+

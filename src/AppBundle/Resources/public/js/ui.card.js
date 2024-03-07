@@ -3,35 +3,44 @@
 	/**
 	 * The user is loaded and they have written a review on the page
 	 */
-	ui.setup_edit = function setup_edit(review_id, is_faq) 
+	ui.setup_edit = function setup_edit(review_id, type)
 	{
-		if (is_faq){
-			var button = $('<button class="btn btn-default" id="faq-button"><span class="glyphicon glyphicon-pencil"></span> Edit FAQ</a>');	
+		if (type == 'faq'){
+			var button = $('<button class="btn btn-default" id="faq-button"><span class="glyphicon glyphicon-pencil"></span> Edit FAQ</a>');
+		} else if (type == 'question'){
+			var button = $('<button class="btn btn-default" id="question-button"><span class="glyphicon glyphicon-pencil"></span> Edit Question</a>');
 		} else {
 			var button = $('<button class="btn btn-default" id="review-button"><span class="glyphicon glyphicon-pencil"></span> Edit Review</a>');
 		}
 		$('#review-'+review_id+' .review-text').append(button);
-		if (is_faq){
+		if (type == 'faq'){
 			$('#faq-edit-form input[name=review_id').val(review_id);
+		} else if (type == 'question'){
+			$('#question-edit-form input[name=review_id').val(review_id);
 		}else {
-			$('#review-edit-form input[name=review_id').val(review_id);	
+			$('#review-edit-form input[name=review_id').val(review_id);
 		}
-		
+
 	}
-	
+
 	/**
 	 * The user is loaded and they haven't written a review on the page yet
 	 */
-	ui.setup_write = function setup_write(is_faq)
+	ui.setup_write = function setup_write(type)
 	{
-		if (is_faq){
-			var button = $('<button class="pull-right btn btn-default" id="faq-button"><span class="glyphicon glyphicon-plus"></span> Write a FAQ</button>');	
+		if (type == 'faq'){
+			var button = $('<button class="pull-right btn btn-default" id="faq-button"><span class="glyphicon glyphicon-plus"></span> Write a FAQ</button>');
+			$('#faq-header').prepend(button);
+		} else if (type == 'question'){
+			var button = $('<button class="pull-right btn btn-default" id="question-button"><span class="glyphicon glyphicon-plus"></span> Ask a Question</button>');
+			$('#question-header').prepend(button);
 		} else {
 			var button = $('<button class="pull-right btn btn-default" id="review-button"><span class="glyphicon glyphicon-plus"></span> Write a review</button>');
+			$('#reviews-header').prepend(button);
 		}
-		$('#reviews-header').prepend(button);
+
 	}
-	
+
 	ui.check_review = function check_review(event)
 	{
 		var faq = false;
@@ -39,7 +48,7 @@
 			faq = true;
 		}
 		event.preventDefault();
-		
+
 		if (faq){
 			var form = $("#faq-edit-form");
 		}else {
@@ -49,7 +58,7 @@
 			}
 			var form = $("#review-edit-form");
 		}
-		
+
 		var url = Routing.generate('card_review_post');
 		if (faq){
 			if(app.user.data.faq_id) {
@@ -58,12 +67,12 @@
 		}else {
 			if(app.user.data.review_id) {
 				url = Routing.generate('card_review_edit');
-			}	
+			}
 		}
-		
-		
+
+
 		var data = $(this).serialize();
-		
+
 		$.ajax(url, {
 			data: data,
 			type: 'POST',
@@ -78,13 +87,13 @@
 			}
 		});
 	}
-	
+
 	ui.notify = function notify(form, type, message)
 	{
 		var alert = $('<div class="alert" role="alert"></div>').addClass('alert-'+type).text(message);
 		$(form).after(alert);
 	}
-	
+
 	/**
 	 * The user has clicked on the button to write a new review or edit the current one
 	 * This function adds a review form to the page
@@ -97,60 +106,56 @@
 		/**
 		 * Display the form
 		 */
-		
+
 		var faq = false;
 		if (event.data && event.data.is_faq){
-			faq = true;
-		}
-		
-		if (faq){
-			var form = $("#faq-edit-form"); 	
-		} else {
-			var form = $("#review-edit-form"); 	
-		}
-		
-		if (faq && app.user && app.user.data.can_faq ){
+			var form = $("#faq-edit-form");
+			if (app.user && app.user.data.can_faq ){
+				form.append('<div><div class="form-group">'
+					+ '<textarea id="faq-form-text" class="form-control" rows="20" name="review" placeholder="Write your analysis of the card, in at least 200 characters. You can write a number of card reviews equal to your reputation. This is not a place for questions or comments. Type # to enter a card name. Type $ to enter a symbol."></textarea>'
+					+ '</div><div class="well text-muted" id="faq-form-preview"><small>Preview. Look <a href="http://daringfireball.net/projects/markdown/dingus">here</a> for a Markdown syntax reference.</small></div>'
+					+ '<input type="hidden" name="is_faq" id="is_faq" value="1">'
+					+ '<button type="submit" class="btn btn-success">Submit FAQ</button></div>');
+
+				form.on('submit', {"is_faq": true}, ui.check_review);
+				app.markdown.setup('#faq-form-text', '#faq-form-preview');
+				app.textcomplete.setup('#faq-form-text');
+
+				if(app.user.data.faq_id) {
+					//$('#is_faq').prop( "checked", true );
+					$('#faq-form-text').val(app.user.data.faq_text).trigger('keyup');
+				}
+			}
+		} else if (event.data && event.data.is_question){
+			var form = $("#question-edit-form");
 			form.append('<div><div class="form-group">'
-				+ '<textarea id="faq-form-text" class="form-control" rows="20" name="review" placeholder="Write your analysis of the card, in at least 200 characters. You can write a number of card reviews equal to your reputation. This is not a place for questions or comments. Type # to enter a card name. Type $ to enter a symbol."></textarea>'
-				+ '</div><div class="well text-muted" id="faq-form-preview"><small>Preview. Look <a href="http://daringfireball.net/projects/markdown/dingus">here</a> for a Markdown syntax reference.</small></div>'
-				+ '<input type="hidden" name="is_faq" id="is_faq" value="1">'
-				+ '<button type="submit" class="btn btn-success">Submit FAQ</button></div>');
+				+ '<textarea id="question-form-text" class="form-control" rows="20" name="review" placeholder="Write a question or short comment about this card. Type # to enter a card name. Type $ to enter a symbol."></textarea>'
+				+ '</div><div class="well text-muted" id="question-form-preview"><small>Preview. Look <a href="http://daringfireball.net/projects/markdown/dingus">here</a> for a Markdown syntax reference.</small></div>'
+				+ '<input type="hidden" name="is_question" id="is_question" value="1">'
+				+ '<button type="submit" class="btn btn-success">Submit question</button></div>');
+
+			form.on('submit', {"is_question": true}, ui.check_review);
+			app.markdown.setup('#question-form-text', '#question-form-preview');
+			app.textcomplete.setup('#question-form-text');
+			if(app.user.data.question_id) {
+				$('#question-form-text').val(app.user.data.question_text).trigger('keyup');
+			}
 		} else {
+			var form = $("#review-edit-form");
 			form.append('<div><div class="form-group">'
 				+ '<textarea id="review-form-text" class="form-control" rows="20" name="review" placeholder="Write your analysis of the card, in at least 200 characters. You can write a number of card reviews equal to your reputation. This is not a place for questions or comments. Type # to enter a card name. Type $ to enter a symbol."></textarea>'
 				+ '</div><div class="well text-muted" id="review-form-preview"><small>Preview. Look <a href="http://daringfireball.net/projects/markdown/dingus">here</a> for a Markdown syntax reference.</small></div>'
-				+ '<button type="submit" class="btn btn-success">Submit review</button></div>');	
-		}
-		
-		
-		
-		/**
-		 * Setup the Markdown preview and Textcomplete shortcuts
-		 */
-		if (faq){
-			form.on('submit', {"is_faq": true}, ui.check_review);
-			app.markdown.setup('#faq-form-text', '#faq-form-preview');
-			app.textcomplete.setup('#faq-form-text');
-		}else {
+				+ '<button type="submit" class="btn btn-success">Submit review</button></div>');
+
 			form.on('submit', ui.check_review);
 			app.markdown.setup('#review-form-text', '#review-form-preview');
 			app.textcomplete.setup('#review-form-text');
-		}
-		/**
-		 * If the User already wrote a review, we fill the form with the current values
-		 */
-		 if (faq){
-		 	if(app.user.data.faq_id) {
-				//$('#is_faq').prop( "checked", true );
-				$('#faq-form-text').val(app.user.data.faq_text).trigger('keyup');
-			}
-		 } else {
 			if(app.user.data.review_id) {
 				$('#review-form-text').val(app.user.data.review_text).trigger('keyup');
 			}
 		}
 	}
-	
+
 	/**
 	 * The user has clicked on "Add a comment"
 	 * Thsi function replace that button with a one-line for to input and submit the comment
@@ -185,7 +190,7 @@
 			}
 		});
 	}
-	
+
 	ui.like_review = function like_review(event)
 	{
 		event.preventDefault();
@@ -197,34 +202,41 @@
 			obj.find('.num').text(jqXHR.responseJSON.nbVotes);
 		});
 	}
-	
+
 	/**
 	 * called when the DOM is loaded
 	 * @memberOf ui
 	 */
-	ui.on_dom_loaded = function on_dom_loaded() 
+	ui.on_dom_loaded = function on_dom_loaded()
 	{
 		app.user.loaded.done(function () {
 			if(app.user.data.review_id) {
 				ui.setup_edit(app.user.data.review_id);
 			}
 			if(app.user.data.faq_id) {
-				ui.setup_edit(app.user.data.faq_id, true);
-			} 
+				ui.setup_edit(app.user.data.faq_id, 'faq');
+			}
+			if(app.user.data.question_id) {
+				ui.setup_edit(app.user.data.question_id, 'question');
+			}
 			if(!app.user.data.review_id) {
-				ui.setup_write();				
+				ui.setup_write();
+			}
+			if(!app.user.data.question_id) {
+				ui.setup_write('question');
 			}
 			if (app.user && app.user.data.can_faq ){
 				if(!app.user.data.faq_id) {
-					ui.setup_write(true);				
+					ui.setup_write('faq');
 				}
 			}
 		});
-		
+
 		$(window.document).on('click', '.btn-write-comment', ui.write_comment);
 		$(window.document).on('click', '.social-icon-like', ui.like_review);
 		$(window.document).on('click', '#review-button', ui.write_review_open);
 		$(window.document).on('click', '#faq-button', {'is_faq': true}, ui.write_review_open);
+		$(window.document).on('click', '#question-button', {'is_question': true}, ui.write_review_open);
 		$(window.document).on('submit', 'form.form-comment', ui.form_comment_submit);
 	};
 

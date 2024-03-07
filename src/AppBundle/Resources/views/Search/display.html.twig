@@ -3,7 +3,7 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-<div class="main white container">
+<div class="main white container container-wide">
 
 {{ searchbar|raw }}
 
@@ -20,7 +20,7 @@
 <div class="col-sm-12" style="margin-top:10px">
 	<p class="alert alert-warning">{% trans %}Your query didn't match any card.{% endtrans %}</p>
 </div>
-	
+
 {% endif %}
 
 {{ pagination|raw }}

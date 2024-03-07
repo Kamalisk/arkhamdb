@@ -609,10 +609,11 @@ article.review .review-like {
 	width:50px
 }
 article.review .review-content {
-	margin-left: 50px
+	margin-left: 50px;
 }
-article.review .review-text :first-child {
-	margin-top: 0px
+article.review .review-text ul {
+	margin-top: 0px;
+	padding-left: 1.5rem;
 }
 article.review .review-date {
 	clear: both;

@@ -11,26 +11,167 @@
 {% endblock %}
 
 {% block main %}
-<div class="row">
-    <div class="col-md-9">
-        <div class="row">
-				{% for card in cards %}
-        	
-        	{% if card.type_code == "location" %}
-        	{% include 'AppBundle:Search:card-back.html.twig' %}
-        	{% include 'AppBundle:Search:card-front.html.twig' %}
-        	{% else %}
-        	{% include 'AppBundle:Search:card-front.html.twig' %}
-        	{% include 'AppBundle:Search:card-back.html.twig' %}
-        	{% endif %}
-	        {% if includeReviews %}
-	        	{% include 'AppBundle:Search:display-card-related.html.twig' %}
-	   	    	{% include 'AppBundle:Search:display-card-reviews.html.twig' %}
-	        {% endif %}
-				{% endfor %}
-        </div>
-    </div>
+
+<style>
+	.card-block {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		gap: 2rem;
+	}
+	.card-block-info {
+		width: 500px;
+		display: flex;
+		gap: 2rem;
+		flex-direction: column;
+	}
+	.card-block-image {
+
+	}
+	.card-block-extra {
+		flex: 1;
+	}
+	.card-block-extra ul {
+		margin-left: 0;
+		padding-left: 2rem;
+	}
+	.card-block-faqs {
+
+	}
+	.card-block-reviews {
+		flex: 0.6;
+	}
+	.card-block-questions {
+		flex: 0.4;
+	}
+
+	@media (max-width: 768px) {
+		.card-block {
+			flex-direction: column;
+		}
+		.card-block-info {
+			flex-direction: column;
+			width: auto;
+		}
+	}
+
+	@media (max-width: 1200px) {
+		.card-block {
+			flex-wrap: wrap;
+		}
+	}
+
+	.card-info-block {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+	.card-info-block p {
+		margin: 0;
+		padding: 0;
+	}
+	.card-info-block > div:nth-child(2) {
+		text-align: right;
+	}
+	.investigator-stat-list {
+		padding: 0;
+		margin: 0;
+		list-style-type: none;
+		display: flex;
+		flex-direction: row;
+		gap: 1rem;
+	}
+</style>
+
+{% for card in cards %}
+<div class="card-block">
+	<div class="card-block-info">
+		{% if card.type_code == "location" %}
+		{% include 'AppBundle:Search:card-back.html.twig' %}
+		{% include 'AppBundle:Search:card-front.html.twig' %}
+		{% else %}
+		{% include 'AppBundle:Search:card-front.html.twig' %}
+		{% include 'AppBundle:Search:card-back.html.twig' %}
+		{% endif %}
+
+		{% if card.linked_card is defined %}
+			{% block linkedblockinfo %}
+				{% set card = card.linked_card %}
+				{% include 'AppBundle:Search:card-front.html.twig' %}
+			{% endblock %}
+		{% endif %}
+
+		{% if card.customization_text %}
+			<div style="margin-bottom:2em">
+				<div>
+					<div class="panel panel-default border-{{ card.faction_code }} {% if card.faction2_code is defined %} border-dual {% endif %}">
+						<div class="panel-heading border-{{ card.faction_code }} bg-{{ card.faction_code }} {% if card.faction2_code is defined %} bg-dual border-dual{% endif %}">
+							<h3 class="panel-title">
+								<div>{% trans %}Customizations{% endtrans %}</div>
+							</h3>
+						</div>
+						<div class="panel-body card-content border-{{ card.faction_code }}">
+							<div class="card-text border-{{ card.faction_code }}">
+								{{ card.customization_text|raw }}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+	<div class="card-block-image">
+		<div style="margin-bottom:2em">
+			<div class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">
+				{% if card.imagesrc %}
+					<img src="{{ card.imagesrc }}" alt="{{ card.name }}" class="img-responsive img-vertical-card" style="margin:auto">
+				{% else %}
+					<div class="no-image" style="margin:auto"><div class="no-image-text">No image</div></div>
+				{% endif %}
+			</div>
+		</div>
+		{% if card.double_sided %}
+			<div class="col-sm-5" style="margin-bottom:2em">
+				<div class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">
+					{% if card.backimagesrc %}
+						<img src="{{ card.backimagesrc }}" alt="{{ card.name }}" class="img-responsive img-vertical-card" style="margin:auto">
+					{% endif %}
+				</div>
+			</div>
+		{% endif %}
+		{% if card.linked_card is defined %}
+			{% block linkedblockimage %}
+				{% set card = card.linked_card %}
+				<div style="margin-bottom:2em">
+					<div class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">
+						{% if card.imagesrc %}
+							<img src="{{ card.imagesrc }}" alt="{{ card.name }}" class="img-responsive img-vertical-card" style="margin:auto">
+						{% else %}
+							<div class="no-image" style="margin:auto"><div class="no-image-text">No image</div></div>
+						{% endif %}
+					</div>
+				</div>
+			{% endblock %}
+		{% endif %}
+	</div>
+	<div class="card-block-extra">
+		{% if includeReviews %}
+			{% include 'AppBundle:Search:display-card-related.html.twig' %}
+			{% include 'AppBundle:Search:display-card-faqs.html.twig' %}
+		{% endif %}
+	</div>
 </div>
+{% if includeReviews %}
+	<div class="card-block">
+		<div class="card-block-reviews">
+			{% include 'AppBundle:Search:display-card-reviews.html.twig' %}
+		</div>
+		<div class="card-block-questions">
+
+		</div>
+	</div>
+{% endif %}
+{% endfor %}
 
 {% endblock %}
 

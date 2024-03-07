@@ -1,5 +1,4 @@
-
-<div class="col-sm-7">
+<div>
 	<div>
 		<div class="panel panel-default border-{{ card.faction_code }} {% if card.faction2_code is defined %} border-dual {% endif %}">
 			<div class="panel-heading border-{{ card.faction_code }} bg-{{ card.faction_code }} {% if card.faction2_code is defined %} bg-dual border-dual{% endif %}">
@@ -8,7 +7,6 @@
 				</h3>
   		</div>
 			<div class="panel-body card-content">
-				{% include 'AppBundle:Search:card-faction.html.twig' %}
 				{% include 'AppBundle:Search:card-info.html.twig' %}
 				{% if card.type_code == 'agenda' or card.type_code == 'act' %}
 				{% include 'AppBundle:Search:card-flavor.html.twig' %}
@@ -17,8 +15,10 @@
 				{% include 'AppBundle:Search:card-text.html.twig' %}
 				{% include 'AppBundle:Search:card-flavor.html.twig' %}
 				{% endif %}
-				{% include 'AppBundle:Search:card-illustrator.html.twig' %}
-				{% include 'AppBundle:Search:card-pack.html.twig' %}
+				<div class="card-info-block">
+					{% include 'AppBundle:Search:card-illustrator.html.twig' %}
+					{% include 'AppBundle:Search:card-pack.html.twig' %}
+				</div>
 				{% if taboos is defined %}
 					{% if taboos[card.code] is defined %}
 						{% set taboo = taboos[card.code] %}
@@ -36,19 +36,3 @@
 		</div>
 	</div>
 </div>
-<div class="col-sm-5" style="margin-bottom:2em">
-	<div class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">
-		{% if card.imagesrc %}
-		   <img src="{{ card.imagesrc }}" alt="{{ card.name }}" class="img-responsive img-vertical-card" style="margin:auto">
-		{% else %}
-		   <div class="no-image" style="margin:auto"><div class="no-image-text">No image</div></div>
-		{% endif %}
-	</div>
-</div>
-
-{% block cardbackblock %} 
-{% if card.linked_card is defined %}
-{% set card = card.linked_card %}
-{% include 'AppBundle:Search:card-front.html.twig' %}
-{% endif %}
-{% endblock %}

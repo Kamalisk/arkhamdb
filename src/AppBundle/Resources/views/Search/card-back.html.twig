@@ -1,6 +1,6 @@
 
 {% if card.double_sided %}
-<div class="col-sm-7" style="margin-bottom:2em">
+<div style="margin-bottom:2em">
 	<div>
 		<div class="panel panel-default border-{{ card.faction_code }} {% if card.faction2_code is defined %} border-dual {% endif %}">
 			{% if card.back_name %}
@@ -44,31 +44,6 @@
 				{% endif %}
   		</div>
   		{% endif %}
-		</div>
-	</div>
-</div>
-<div class="col-sm-5" style="margin-bottom:2em">
-	<div class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %}">
-		{% if card.backimagesrc %}
-		   <img src="{{ card.backimagesrc }}" alt="{{ card.name }}" class="img-responsive img-vertical-card" style="margin:auto">
-		{% endif %}
-	</div>
-</div>
-{% endif %}
-{% if card.customization_text %}
-<div class="col-sm-7" style="margin-bottom:2em">
-	<div>
-		<div class="panel panel-default border-{{ card.faction_code }} {% if card.faction2_code is defined %} border-dual {% endif %}">
-			<div class="panel-heading border-{{ card.faction_code }} bg-{{ card.faction_code }} {% if card.faction2_code is defined %} bg-dual border-dual{% endif %}">
-				<h3 class="panel-title">
-					<div>{% trans %}Customizations{% endtrans %}</div>
-				</h3>
-  		</div>
-  		<div class="panel-body card-content border-{{ card.faction_code }}">
-				<div class="card-text border-{{ card.faction_code }}">
-  				{{ card.customization_text|raw }}
-				</div>
-  		</div>
 		</div>
 	</div>
 </div>

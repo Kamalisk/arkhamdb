@@ -115,6 +115,10 @@
 
 }
 
+.icon-large {
+	font-size: 18px;
+}
+
 .spoiler {
 	background-color : #dfdfdf;
 	color : #dfdfdf!important;

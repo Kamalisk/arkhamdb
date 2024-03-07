@@ -1,0 +1,35 @@
+{% import "AppBundle::macros.html.twig" as macros %}
+<form method="POST" action="{{ path('card_review_post') }}" style="clear:right" id="faq-edit-form">
+	<input type="hidden" name="card_id" value="{{ card.id }}">
+	<input type="hidden" name="review_id" value="">
+</form>
+<h4 id="faq-header">
+	FAQs
+</h3>
+
+{% if card.faqs is defined and card.faqs|length %}
+	<i>(from the official FAQ or responses to the <a href="https://www.fantasyflightgames.com/en/contact/rules/">official rules question form</a>)</i>
+	{% for review in card.faqs %}
+	<article class="review" data-id="{{ review.id }}" id="review-{{ review.id }}">
+		<div class="faq-content">
+			<div class="review-text">
+				{{ review.textHtml|raw }}
+			</div>
+			<div class="review-date">
+				Last updated <time datetime="{{ review.dateUpdate|date('c') }}" title="{{ review.dateUpdate|date('F jS, Y') }}">{{ review.dateUpdate|date('n/j/y') }}</time>
+			</div>
+
+			{% for comment in review.comments %}
+			<div class="review-comment text-muted small">{{ comment.text|raw }}
+				&mdash;
+				<span class="username">{{ macros.username(comment.user) }}</span>
+				<time datetime="{{ comment.dateCreation|date('c') }}" title="{{ comment.dateCreation|date('F jS, Y') }}">{{ comment.dateCreation|date('n/j/y') }}</time>
+			</div>
+			{% endfor %}
+
+		</div>
+	</article>
+	{% endfor %}
+{% else %}
+	<p><i>No faqs yet for this card.</i></p>
+{% endif %}
