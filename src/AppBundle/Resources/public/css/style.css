@@ -459,6 +459,10 @@ div.site-slogan {
 #deck-description h4 {
 	font-size: 107%;
 }
+#comment-alert {
+	margin-top: 20px;
+}
+
 
 /************** FACTIONS COLORS **************/
 .bg-faction a, .bg-faction span {
