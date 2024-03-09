@@ -157,11 +157,15 @@
 	<div class="card-block-extra">
 		{% if includeReviews %}
 			{% include 'AppBundle:Search:display-card-related.html.twig' %}
-			{% include 'AppBundle:Search:display-card-faqs.html.twig' %}
 		{% endif %}
 	</div>
 </div>
 {% if includeReviews %}
+	<div>
+		<div class="card-block-faqs">
+			{% include 'AppBundle:Search:display-card-faqs.html.twig' %}
+		</div>
+	</div>
 	<div class="card-block">
 		<div class="card-block-reviews">
 			{% include 'AppBundle:Search:display-card-reviews.html.twig' %}
