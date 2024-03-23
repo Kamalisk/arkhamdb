@@ -4,6 +4,12 @@ api_packs:
     defaults:
         _controller: AppBundle:Api:listPacks
 
+api_cycles:
+    path: /cycles/
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Api:listCycles
+
 api_factions:
     path: /factions/
     methods: [GET]
