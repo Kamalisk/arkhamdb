@@ -112,10 +112,31 @@ class CardRepository extends TranslatableRepository
 			->select('c')
 			->join('c.pack', 'p')
 			->andWhere('p.code = ?1')
-			->andWhere('c.position = ?2');
+			->andWhere('c.hidden = false');
+
+		// select the card next in the sequence based on position or set position (since sometimes cards have the same position)
+		if ($position > 0) {
+			$exp1 = $qb->expr()->andX('c.position > ?2');
+			$exp2 = $qb->expr()->andX('c.encounterPosition > ?3', 'c.position >= ?2');
+			$exp3 = $qb->expr()->orX($exp1, $exp2);
+
+			$qb->andWhere($exp3)
+			->orderBy('c.position', 'ASC')
+			->addOrderBy('c.encounterPosition', 'ASC');
+		} else {
+			$exp1 = $qb->expr()->andX('c.position < ?2');
+			$exp2 = $qb->expr()->andX('c.encounterPosition < ?3', 'c.position <= ?2');
+			$exp3 = $qb->expr()->orX($exp1, $exp2);
+
+			$qb->andWhere($exp3)
+			->orderBy('c.position', 'DESC')
+			->addOrderBy('c.encounterPosition', 'DESC');
+		}
 
 		$qb->setParameter(1, $card->getPack()->getCode());
-		$qb->setParameter(2, $card->getPosition()+$position);
+		$qb->setParameter(2, $card->getPosition());
+		$qb->setParameter(3, $card->getEncounterPosition());
+		$qb->setMaxResults(1);
 
 		return $this->getOneOrNullResult($qb);
 	}

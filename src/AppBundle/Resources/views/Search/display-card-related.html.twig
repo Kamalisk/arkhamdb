@@ -1,3 +1,22 @@
+{% if card.investigator is defined and card.investigator and card.investigator|length > 1 %}
+	<h4 id="related-header">
+		{% trans %}Investigator Cards{% endtrans %}
+	</h4>
+	<ul>
+	{% for related in card.investigator %}
+		{% if card.code != related.code %}
+		<li>
+			<span class="icon icon-{{ related.getType().getCode()}} fg-{{ related.getFaction().getCode() }}"></span>
+			<a href="{{ path('cards_zoom',{card_code:related.code}) }}" class="{% if card.spoiler is defined and not show_spoilers %} spoiler{% endif %} card-tip" data-code="{{ related.code }}">
+			{{ related.name }}{% if related.subname %}{% if related.getType().getCode() == "treachery" %} ({{ related.subname }}){% else %}: {{ related.subname }}{% endif %}{% endif %}
+			{% if related.backname %}: {{ related.backname }}{% endif %}</a>
+			{% if related.xp %}<span class="xp-{{ related.xp }}"> ({{ related.xp }})</span>{% endif %}
+			({{related.getPack().getName()}} #{{related.position}})
+			</li>
+		{% endif %}
+	{% endfor %}
+	</ul>
+{% endif %}
 
 {% if card.type_code == "investigator" %}
 	<h4 id="related-header">
@@ -44,5 +63,3 @@
 	{% endfor %}
 	</ul>
 {% endif %}
-
-

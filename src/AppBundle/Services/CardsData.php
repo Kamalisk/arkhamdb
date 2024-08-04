@@ -232,6 +232,15 @@ class CardsData
 						$where = [];
 						// parse the json options
 						$json_options = json_decode($card->getDeckOptions());
+						foreach ($json_options as $key => $option){
+							// if they have a choice, assume all possible choices
+							if(isset($option->option_select)) {
+								foreach ($option->option_select as $choice){
+									$json_options[] = $choice;
+								}
+								unset($json_options[$key]);
+							}
+						}
 						$nots = [];
 						foreach ($json_options as $option){
 							$sub_where = [];
@@ -716,7 +725,7 @@ class CardsData
 				if (count($dupes) > 0) {
 					$cardinfo['duplicated_by'] = [];
 					foreach($dupes as $duplicate) {
-						$cardinfo['duplicated_by'][] = $duplicate->getCode();
+						$cardinfo['duplicated_by'][] = $duplicate;
 					}
 				}
 			}
@@ -725,7 +734,7 @@ class CardsData
 				if (count($dupes) > 0) {
 					$cardinfo['alternated_by'] = [];
 					foreach($dupes as $duplicate) {
-						$cardinfo['alternated_by'][] = $duplicate->getCode();
+						$cardinfo['alternated_by'][] = $duplicate;
 					}
 				}
 			}
@@ -872,12 +881,30 @@ class CardsData
 
     public function get_related($card)
     {
-        $cards = $this->doctrine->getRepository('AppBundle:Card')->findBy(array('realName' => $card->getRealName()), array('position' => 'ASC'));
+        $cards = $this->doctrine->getRepository('AppBundle:Card')->findBy(array('realName' => $card->getRealName(), 'hidden' => false), array('position' => 'ASC'));
 
         $response = $cards;
 
         return $response;
 		}
+
+		public function get_investigator_cards($card)
+    {
+			$cardsToFind = [];
+			$deck_requirements = $this->deckValidationHelper->parseReqString($card->getDeckRequirements());
+			if ($deck_requirements){
+				foreach($deck_requirements['card'] as $card_code){
+					if ($card_code){
+						$cardsToFind = array_merge($cardsToFind, $card_code);
+					}
+				}
+			}
+			$cards = $this->doctrine->getRepository('AppBundle:Card')->findBy(array('code' => $cardsToFind, 'hidden' => false), array('pack' => 'ASC', 'position' => 'ASC', 'encounter' => 'ASC',));
+
+			return $cards;
+		}
+
+
 
 		public function get_bonded($card)
     {

@@ -7,203 +7,207 @@
     <body>
       <trans-unit id="dpAPG.0" resname="Back">
         <source>Back</source>
-        <target>__Back</target>
+        <target>背面</target>
       </trans-unit>
       <trans-unit id="R6lTDDD" resname="Deck Building">
         <source>Deck Building</source>
-        <target>__Deck Building</target>
+        <target>牌组构建</target>
       </trans-unit>
       <trans-unit id="vRWdLVJ" resname="Bonded Cards">
         <source>Bonded Cards</source>
-        <target>__Bonded Cards</target>
+        <target>绑定卡牌</target>
       </trans-unit>
       <trans-unit id="JlcIxG6" resname="Related Cards">
         <source>Related Cards</source>
-        <target>__Related Cards</target>
+        <target>相关卡牌</target>
       </trans-unit>
       <trans-unit id="PzQb_na" resname="Your query didn't match any card.">
         <source>Your query didn't match any card.</source>
-        <target>__Your query didn't match any card.</target>
+        <target>你的查询未匹配到任何卡牌。</target>
       </trans-unit>
       <trans-unit id="LptaDE5" resname="Victory">
         <source>Victory</source>
-        <target>__Victory</target>
+        <target>胜利</target>
       </trans-unit>
       <trans-unit id="IEpess0" resname="Cost">
         <source>Cost</source>
-        <target>__Cost</target>
+        <target>费用</target>
       </trans-unit>
       <trans-unit id="FoqtPpg" resname="XP">
         <source>XP</source>
-        <target>__XP</target>
+        <target>XP</target>
       </trans-unit>
       <trans-unit id="mmCgdrV" resname="Willpower">
         <source>Willpower</source>
-        <target>__Willpower</target>
+        <target>意志</target>
       </trans-unit>
       <trans-unit id="rddhkTc" resname="Intellect">
         <source>Intellect</source>
-        <target>__Intellect</target>
+        <target>智慧</target>
       </trans-unit>
       <trans-unit id="Sfzyx4t" resname="Combat">
         <source>Combat</source>
-        <target>__Combat</target>
+        <target>战斗</target>
       </trans-unit>
       <trans-unit id="SXlmlNx" resname="Agility">
         <source>Agility</source>
-        <target>__Agility</target>
+        <target>敏捷</target>
       </trans-unit>
       <trans-unit id="VYmESet" resname="Health">
         <source>Health</source>
-        <target>__Health</target>
+        <target>生命值</target>
       </trans-unit>
       <trans-unit id="FqWvuTp" resname="Sanity">
         <source>Sanity</source>
-        <target>__Sanity</target>
+        <target>神智值</target>
       </trans-unit>
       <trans-unit id="HvFCyCE" resname="Fight">
         <source>Fight</source>
-        <target>__Fight</target>
+        <target>攻击</target>
       </trans-unit>
       <trans-unit id="U_ddrwe" resname="Evade">
         <source>Evade</source>
-        <target>__Evade</target>
+        <target>躲避</target>
       </trans-unit>
       <trans-unit id="DIdPWBp" resname="Damage">
         <source>Damage</source>
-        <target>__Damage</target>
+        <target>伤害</target>
       </trans-unit>
       <trans-unit id="Jxoi911" resname="Horror">
         <source>Horror</source>
-        <target>__Horror</target>
+        <target>恐惧</target>
       </trans-unit>
       <trans-unit id="AKjSmEo" resname="Doom">
         <source>Doom</source>
-        <target>__Doom</target>
+        <target>毁灭</target>
       </trans-unit>
       <trans-unit id="jerxSHk" resname="Shroud">
         <source>Shroud</source>
-        <target>__Shroud</target>
+        <target>隐藏</target>
       </trans-unit>
       <trans-unit id="hqpRSxB" resname="Clues">
         <source>Clues</source>
-        <target>__Clues</target>
+        <target>线索</target>
       </trans-unit>
       <trans-unit id="atHRhhN" resname="Test Icons">
         <source>Test Icons</source>
-        <target>__Test Icons</target>
+        <target>检定图标</target>
       </trans-unit>
       <trans-unit id="9nMh2sC" resname="Vengeance">
         <source>Vengeance</source>
-        <target>__Vengeance</target>
+        <target>复仇</target>
       </trans-unit>
       <trans-unit id="LIdGdPz" resname="My Decks">
         <source>My Decks</source>
-        <target>__My Decks</target>
+        <target>我的牌组</target>
       </trans-unit>
       <trans-unit id=".KM0IRm" resname="Decklists">
         <source>Decklists</source>
-        <target>__Decklists</target>
+        <target>牌组列表</target>
       </trans-unit>
       <trans-unit id="pS.LvDN" resname="Cards">
         <source>Cards</source>
-        <target>__Cards</target>
+        <target>卡牌</target>
       </trans-unit>
       <trans-unit id="hMt4cbd" resname="Reviews">
         <source>Reviews</source>
-        <target>__Reviews</target>
+        <target>评论</target>
       </trans-unit>
       <trans-unit id="QiiusHx" resname="Rules">
         <source>Rules</source>
-        <target>__Rules</target>
+        <target>规则</target>
       </trans-unit>
       <trans-unit id="mFa3Qz_" resname="FAQs">
         <source>FAQs</source>
-        <target>__FAQs</target>
+        <target>FAQs</target>
       </trans-unit>
       <trans-unit id="Tvyg0Qx" resname="About">
         <source>About</source>
-        <target>__About</target>
+        <target>关于</target>
       </trans-unit>
       <trans-unit id="yOWZj2o" resname="API">
         <source>API</source>
-        <target>__API</target>
+        <target>API</target>
       </trans-unit>
       <trans-unit id="kyG8wOx" resname="Member since">
         <source>Member since</source>
-        <target>__Member since</target>
+        <target>成为成员自从</target>
       </trans-unit>
       <trans-unit id="yJwYD5S" resname="published decklists">
         <source>published decklists</source>
-        <target>__published decklists</target>
+        <target>已发布的牌组列表</target>
       </trans-unit>
       <trans-unit id="FcxQY4_" resname="One published decklist">
         <source>One published decklist</source>
-        <target>__One published decklist</target>
+        <target>一个已发布的牌组列表</target>
       </trans-unit>
       <trans-unit id="6a8vzwy" resname="published reviews">
         <source>published reviews</source>
-        <target>__published reviews</target>
+        <target>已发布的评论</target>
       </trans-unit>
       <trans-unit id="QoVVZRb" resname="One published reviews">
         <source>One published reviews</source>
-        <target>__One published reviews</target>
+        <target>一条已发布的评论</target>
       </trans-unit>
       <trans-unit id="0R5ueJn" resname="Reputation">
         <source>Reputation</source>
-        <target>__Reputation</target>
+        <target>声望</target>
       </trans-unit>
       <trans-unit id="47ienTP" resname="Username">
         <source>Username</source>
-        <target>__Username</target>
+        <target>用户名</target>
       </trans-unit>
       <trans-unit id="lpzL089" resname="Email">
         <source>Email</source>
-        <target>__Email</target>
+        <target>邮箱</target>
       </trans-unit>
       <trans-unit id="PNPBkL1" resname="Something about you">
         <source>Something about you</source>
-        <target>__Something about you</target>
+        <target>个人简介</target>
       </trans-unit>
       <trans-unit id="jYuIjQE" resname="Be notified when a user comments one of your decklists">
         <source>Be notified when a user comments one of your decklists</source>
-        <target>__Be notified when a user comments one of your decklists</target>
+        <target>当一个用户评论你的一个牌组列表时，将收到通知</target>
       </trans-unit>
       <trans-unit id="Oau00iV" resname="Be notified when a user also comments a decklist you commented">
         <source>Be notified when a user also comments a decklist you commented</source>
-        <target>__Be notified when a user also comments a decklist you commented</target>
+        <target>当一个用户对你评论过的一个牌组列表也评论时，将收到通知</target>
       </trans-unit>
       <trans-unit id="KfVI5.D" resname="Be notified when a user mentions you in a comment">
         <source>Be notified when a user mentions you in a comment</source>
-        <target>__Be notified when a user mentions you in a comment</target>
+        <target>当一个用户在评论中提到你时，将收到通知</target>
       </trans-unit>
       <trans-unit id="iLJEQA0" resname="Make your decks public">
         <source>Make your decks public</source>
-        <target>__Make your decks public</target>
+        <target>使你的牌组公开可见</target>
       </trans-unit>
       <trans-unit id="5L.P6Wa" resname="Select a faction color for your username">
         <source>Select a faction color for your username</source>
-        <target>__Select a faction color for your username</target>
+        <target>为你的用户名选择一个派系颜色</target>
       </trans-unit>
       <trans-unit id="FQn1YfJ" resname="Save">
         <source>Save</source>
-        <target>__Save</target>
+        <target>保存</target>
       </trans-unit>
       <trans-unit id="_nSW5K6" resname="collection">
         <source>collection</source>
-        <target>__collection</target>
+        <target>收集</target>
       </trans-unit>
       <trans-unit id="odAmGiq" resname="Deckbuilder and Card Database for the Arkham Horror LCG">
         <source>Deckbuilder and Card Database for the Arkham Horror LCG</source>
-        <target>__Deckbuilder and Card Database for the Arkham Horror LCG</target>
+        <target>诡镇奇谈卡牌版的牌组构筑和卡牌数据库</target>
       </trans-unit>
       <trans-unit id="r_ttCrp" resname="Popular Decks">
         <source>Popular Decks</source>
-        <target>Popular Decks</target>
+        <target>流行牌组</target>
       </trans-unit>
       <trans-unit id="JyS6ppo" resname="Recent Decks">
         <source>Recent Decks</source>
-        <target>__Recent Decks</target>
+        <target>近期牌组</target>
+      </trans-unit>
+      <trans-unit id="fqXQYu3" resname="My Teams">
+        <source>My Teams</source>
+        <target>我的小组</target>
       </trans-unit>
     </body>
   </file>
