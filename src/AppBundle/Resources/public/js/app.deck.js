@@ -1653,8 +1653,8 @@ deck.can_include_card = function can_include_card(card, options) {
 				}
 			}
 
-			if (option.permanent){
-				if (card.permanent !== option.permanent){
+			if (option.permanent != null) {
+				if (card.permanent !== option.permanent) {
 					continue;
 				}
 			}

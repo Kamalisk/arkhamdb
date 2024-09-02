@@ -236,10 +236,9 @@ class DeckValidationHelper
 					}
 				}
 
-				if(isset($option->permanent) && $option->permanent) {
+				if (isset($option->permanent)) {
 					$permanent_valid = false;
-					//Not permanent and not Ravenous
-					if ($card->getPermanent() == $option->permanent && $card->getCode() != 89002) {
+					if ($card->getPermanent() == $option->permanent && !is_null($card->getXp())) {
 						$permanent_valid = true;
 					} else {
 						continue;
