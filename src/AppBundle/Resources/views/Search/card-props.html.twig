@@ -58,7 +58,14 @@
 			{% trans %}Sanity{% endtrans %}: {{ macros.integer_or_x(card.sanity) }}.
 			</div>
 		{% endif %}
-		{% elseif card.type_code == 'enemy' %}
+		{% elseif card.type_code == 'enemy' or card.type_code == 'enemy_location' %}
+			{% if card.clues is not null or card.shroud %}
+			<div>
+			{% if card.shroud %}<span title="Shroud" class="icon icon-shroud color-shroud"></span>{% trans %}Shroud{% endtrans %}: {{macros.integer_or_x(card.shroud)}}.{% endif %}
+			{% if card.clues %}<span title="Clues" class="icon icon-clues color-clues"></span>{% trans %}Clues{% endtrans %}: {{card.clues}}{% if not card.clues_fixed %}<span class="icon icon-per_investigator" title="Per Investigator"></span>{% endif %}.{% endif %}
+			{% if card.clues == 0 %}<span title="Clues" class="icon icon-clues color-clues"></span>{% trans %}Clues{% endtrans %}: {% if card.clues is null %}&ndash;{% else %}{{card.clues}}{% endif %}{% endif %}
+			</div>
+			{% endif %}
 			<div>
 			{% trans %}Fight{% endtrans %}: {{ macros.integer_or_x(card.enemy_fight) }}.
 			{% trans %}Health{% endtrans %}: {{ macros.integer_or_x(card.health) }}{% if card.health_per_investigator %}<span class="icon icon-per_investigator"></span>{% endif %}.
