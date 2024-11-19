@@ -143,6 +143,11 @@ class DeckValidationHelper
 			return false;
 		}
 
+		if ($card->getFaction()->getCode() === "mythos") {
+			return false;
+		}
+
+		// reject cards restricted
 		$investigator = $deck->getCharacter();
 		$restrictions = $card->getRestrictions();
 		if ($restrictions){
@@ -150,6 +155,19 @@ class DeckValidationHelper
 			if ($parsed && $parsed['investigator'] && !isset($parsed['investigator'][$investigator->getCode()]) ){
 				return false;
 			}
+		}
+
+		// always allow the required cards regardless
+		$requirements = $investigator->getDeckRequirements();
+		if ($requirements) {
+			$parsed = $this->parseReqString($requirements);
+			if ($parsed && $parsed['card'] && $parsed['card'][$card->getCode()]) {
+				return true;
+			}
+		}
+
+		if ($card->getDeckLimit() > 0 && is_null($card->getXp())) {
+			return true;
 		}
 
 		// allow any 2 random faction cards for now
@@ -236,14 +254,8 @@ class DeckValidationHelper
 					}
 				}
 
-				if(isset($option->permanent) && $option->permanent) {
-					$permanent_valid = false;
-					//Not permanent and not Ravenous
-					if ($card->getPermanent() == $option->permanent && $card->getCode() != 89002) {
-						$permanent_valid = true;
-					} else {
-						continue;
-					}
+				if(isset($option->permanent) && $card->getPermanent() != $option->permanent) {
+					continue;
 				}
 
 				if (isset($option->not) && $option->not){
