@@ -767,7 +767,7 @@ class ImportStdCommand extends ContainerAwareCommand
 				$this->links[] = ['card_id'=> $entity->getCode(), 'target_id'=> $data['alternate_of'], 'type' => 'alternate_of'];
 			}
 			// calling a function whose name depends on the type_code
-			$functionName = 'import' . $entity->getType()->getName() . 'Data';
+			$functionName = 'import' . str_replace("-", "", $entity->getType()->getName()) . 'Data';
 			$this->$functionName($entity, $data);
 		}
 
@@ -862,6 +862,20 @@ class ImportStdCommand extends ContainerAwareCommand
 		}
 	}
 
+	protected function importEnemyLocationData(Card $card, $data)
+	{
+		$mandatoryKeys = [
+			'shroud',
+			'clues',
+			'enemy_fight',
+			'enemy_evade',
+			'health'
+		];
+
+		foreach($mandatoryKeys as $key) {
+			$this->copyKeyToEntity($card, 'AppBundle\Entity\Card', $data, $key, TRUE);
+		}
+	}
 
 	protected function importEventData(Card $card, $data)
 	{
