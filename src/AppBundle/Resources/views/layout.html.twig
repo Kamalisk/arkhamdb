@@ -5,8 +5,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
-    <link rel="icon" sizes="192x192" href="/icon-192.png" />
-    <link rel="apple-touch-icon" sizes="120x120" href="/icon-120.png" />
+
+    <!-- Light mode favicon -->
+    <link rel="icon" sizes="192x192" href="/icon-light-192.png" media="(prefers-color-scheme: light)" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/icon-light-120.png" media="(prefers-color-scheme: light)" />
+    
+    <!-- Dark mode favicon -->
+    <link rel="icon" sizes="192x192" href="/icon-dark-192.png" media="(prefers-color-scheme: dark)" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/icon-dark-120.png" media="(prefers-color-scheme: dark)" />
+
     {% if app.request.locale != "en" and app.request.attributes.get('_route') != "" %}
       {% set _route_params = app.request.attributes.get('_route_params')|default({}) %}
       {% set _get_params = app.request.query.all()|default({}) %}
