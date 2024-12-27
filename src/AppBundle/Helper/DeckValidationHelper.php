@@ -161,7 +161,7 @@ class DeckValidationHelper
 		$requirements = $investigator->getDeckRequirements();
 		if ($requirements) {
 			$parsed = $this->parseReqString($requirements);
-			if ($parsed && $parsed['card'] && $parsed['card'][$card->getCode()]) {
+			if ($parsed && $parsed['card'] && isset($parsed['card'][$card->getCode()])) {
 				return true;
 			}
 		}
