@@ -1089,7 +1089,9 @@ deck.create_card = function create_card(card, field='indeck'){
 		})
 	}
 
-	if (card[field]) {
+	if (Number.isInteger(field)) {
+		$div.prepend(field.toString()+'');
+	} else if (card[field]) {
 		$div.prepend(card[field]+'x ');
 	}
 	if(card.xp && card.xp > 0) {
