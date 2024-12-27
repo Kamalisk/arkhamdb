@@ -17,11 +17,17 @@
 				{% endif %}
 				<div class="card-info-block">
 					{% include 'AppBundle:Search:card-illustrator.html.twig' %}
+				</div>
+				<div class="card-info-block">
 					{% include 'AppBundle:Search:card-pack.html.twig' %}
 				</div>
 				{% if taboos is defined %}
 					{% if taboos[card.code] is defined %}
 						{% set taboo = taboos[card.code] %}
+					{% elseif taboos[card.duplicate_of_code] is defined %}
+						{% set taboo = taboos[card.duplicate_of_code] %}
+					{% endif %}
+					{% if taboo is defined %}
 						<hr />
 						<h4>Latest Taboo</h4>
 						{% if taboo.xp is defined %}
