@@ -24,7 +24,7 @@
 				{% if taboos is defined %}
 					{% if taboos[card.code] is defined %}
 						{% set taboo = taboos[card.code] %}
-					{% elseif taboos[card.duplicate_of_code] is defined %}
+					{% elseif card.duplicate_of_code is defined and taboos[card.duplicate_of_code] is defined %}
 						{% set taboo = taboos[card.duplicate_of_code] %}
 					{% endif %}
 					{% if taboo is defined %}
