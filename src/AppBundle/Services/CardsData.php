@@ -556,10 +556,9 @@ class CardsData
 	 * @param string $api
 	 * @return multitype:multitype: string number mixed NULL unknown
 	 */
-	public function getCardInfo($card, $api = false, $bonded_cards = [])
+	public function getCardInfo($card, $api = false, $bonded_cards = [], $locale = null)
 	{
     $cardinfo = [];
-
     $metadata = $this->doctrine->getManager()->getClassMetadata('AppBundle:Card');
     $fieldNames = $metadata->getFieldNames();
     $associationMappings = $metadata->getAssociationMappings();
@@ -594,7 +593,14 @@ class CardsData
     	$cardinfo[$fieldName] = $value;
     }
 
-		$cardinfo['url'] = $this->router->generate('cards_zoom', array('card_code' => $card->getCode()), UrlGeneratorInterface::ABSOLUTE_URL);
+		if ($locale && $api){
+			$cardinfo['url'] = $this->router->generate('cards_zoom', array('card_code' => $card->getCode(), '_locale' => $locale), UrlGeneratorInterface::ABSOLUTE_URL);
+			$cardinfo['url'] = str_replace("http://", "https://", $cardinfo['url']);
+		} else {
+			$cardinfo['url'] = $this->router->generate('cards_zoom', array('card_code' => $card->getCode()), UrlGeneratorInterface::ABSOLUTE_URL);
+		}
+		$cardinfo['url'] = str_replace("http://", "https://", $cardinfo['url']);
+
 		$imageurl = $this->assets_helper->getUrl('bundles/cards/'.$card->getCode().'.png');
 		$imagepath= $this->rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl);
 		if(file_exists($imagepath)) {
