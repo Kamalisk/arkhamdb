@@ -415,9 +415,13 @@ class SocialController extends Controller
 			"SELECT
 			c.name,
 			c.code,
-			f.code faction_code
+			f.code faction_code,
+			c.xp,
+			c.position,
+			p.name as pack_name
 			from card c
 			join faction f on f.id=c.faction_id
+			join pack p on p.id = c.pack_id
 			where c.code in (?)
 			order by c.code desc", array($cards_code), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY))
 			->fetchAll();

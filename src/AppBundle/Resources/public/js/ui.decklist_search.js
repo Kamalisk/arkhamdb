@@ -57,16 +57,19 @@
     	},{
     		name : 'cardnames',
     		displayKey: 'name',
-    		source: findMatches
+    		source: findMatches,
+				templates: {
+					suggestion: _.template('<div><strong class="fg-<%= faction_code %>"><%= name %> <% if (typeof(xp) !== "undefined" && xp) { %>[<%= xp %>]<% } %></strong> (<%= type_name %>, <%= pack_name %> #<%= position %>)</div>')
+				}
     	});
 
 
         $('#card').on('typeahead:selected typeahead:autocompleted', function(event, data) {
             var card = app.data.cards.find({
-                name : data.name
+                code : data.code
             })[0];
             var line = $('<p class="fg-'+card.faction_code+'" style="padding: 3px 5px;border-radius: 3px;border: 1px solid silver"><button type="button" class="close" aria-hidden="true">&times;</button><input type="hidden" name="cards[]" value="'+card.code+'">'+
-                      card.name + '</p>');
+							'<strong>' + card.name + (card.xp ? ' [' + card.xp + ']' : '') + '</strong> (' + card.pack_name + ' #' + card.position + ')</p>');
             line.on({
                 click: function(event) { line.remove(); }
             });
