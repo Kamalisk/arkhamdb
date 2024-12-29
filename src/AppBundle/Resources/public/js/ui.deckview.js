@@ -5,6 +5,14 @@ var DisplaySort = 'type'
 function confirm_delete() {
 	$('#delete-deck-name').text(app.deck.get_name());
 	$('#delete-deck-id').val(app.deck.get_id());
+	$('#delete-deck-all').val("");
+	$('#deleteModal').modal('show');
+}
+
+function confirm_delete_all() {
+	$('#delete-deck-name').text(app.deck.get_name()+' and all it\'s upgrades');
+	$('#delete-deck-id').val(app.deck.get_id());
+	$('#delete-deck-all').val("true");
 	$('#deleteModal').modal('show');
 }
 
@@ -27,6 +35,7 @@ ui.do_action_deck = function do_action_deck(event) {
 
 	switch(action_id) {
 		case 'btn-delete': confirm_delete(); break;
+		case 'btn-delete-all': confirm_delete_all(); break;
 		case 'btn-upgrade': ui.upgrade(app.deck.get_id()); break;
 		case 'btn-print': window.print(); break;
 		case 'btn-sort-type': DisplaySort = 'type'; ui.refresh_deck()(); break;

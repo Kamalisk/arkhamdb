@@ -62,26 +62,43 @@
 
 			<div style="margin-bottom:20px" id="btn-group-deck">
 				<div style="margin-bottom:5px">
+					<div style="margin-bottom:5px">
 					{% if is_owner and editable %}
 					<a href="{{ path('deck_edit', {deck_id:deck_id}) }}" class="btn btn-primary"><span class="fa fa-pencil"></span> Edit</a>
 					<a href="{{ path('deck_publish_form', {deck_id:deck_id}) }}" id="btn-publish" class="btn btn-success"><span class="fa fa-share"></span> Publish</a>
-					<button type="button" id="btn-delete" class="btn btn-danger"><span class="fa fa-trash"></span> Delete {% if deck.previousDeck %}upgrade{% endif %}</button>
+					{% if deck.previousDeck or deck.nextDeck %}
+
+					{% else %}
+						<button type="button" id="btn-delete" class="btn btn-danger"><span class="fa fa-trash"></span> Delete</button>
+					{% endif %}
 					<button type="button" id="btn-upgrade" class="btn btn-danger"><span class="fa fa-arrow-up"></span> Upgrade</button>
 					{% endif %}
 
 					<a href="{{ path('deck_clone', {deck_id:deck_id}) }}" id="btn-clone" class="btn btn-info"><span class="fa fa-clone"></span> Clone</a>
 					</div>
-					<div>
 
-					<button type="button" id="btn-print" class="btn btn-default"><span class="fa fa-print"></span> Print</button>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							<span class="fa fa-download"></span> Download <span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="{{ path('deck_export_text', {deck_id:deck_id}) }}">Text file</a></li>
-							<li><a {% if not octgnable %} onclick="window.alert('Warning: Some cards from this deck are missing OCTGN IDs (most likely the latest cards or the special random basic weakness card)')" {% endif %}href="{{ path('deck_export_octgn', {deck_id:deck_id}) }}">Octgn file</a></li>
-						</ul>
+					{% if is_owner and editable %}
+					<div style="margin-bottom:5px">
+					{% if deck.previousDeck or deck.nextDeck %}
+						<button type="button" id="btn-delete" class="btn btn-danger"><span class="fa fa-trash"></span> Delete upgrade only</button>
+						<button type="button" id="btn-delete-all" class="btn btn-danger"><span class="fa fa-trash"></span> Delete all versions</button>
+					{% else %}
+
+					{% endif %}
+					</div>
+					{% endif %}
+
+					<div style="margin-bottom:5px">
+						<button type="button" id="btn-print" class="btn btn-default"><span class="fa fa-print"></span> Print</button>
+						<div class="btn-group">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								<span class="fa fa-download"></span> Download <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu" role="menu">
+								<li><a href="{{ path('deck_export_text', {deck_id:deck_id}) }}">Text file</a></li>
+								<li><a {% if not octgnable %} onclick="window.alert('Warning: Some cards from this deck are missing OCTGN IDs (most likely the latest cards or the special random basic weakness card)')" {% endif %}href="{{ path('deck_export_octgn', {deck_id:deck_id}) }}">Octgn file</a></li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>

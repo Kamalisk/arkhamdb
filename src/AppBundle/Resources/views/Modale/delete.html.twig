@@ -11,6 +11,7 @@
 					<div class="col-md-12">
 						<form action="{{ path('deck_delete') }}" method="POST" enctype="application/x-www-form-urlencoded" id="delete-deck-form">
 							<input type="hidden" name="deck_id" id="delete-deck-id" value="">
+							<input type="hidden" name="all" id="delete-deck-all" value="">
 							<p>
 							Are you sure that you want to delete the deck <b id="delete-deck-name"></b>?
 							</p>

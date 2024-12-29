@@ -264,6 +264,33 @@ public function upgradeDeck($deck, $xp, $previous_deck, $upgrades, $exiles)
 		$this->doctrine->flush ();
 	}
 
+	/**
+	 * Delete Deck
+	 *
+	 * Recursive method to delete previous
+	 * versions of a deck
+	 *
+	 * @param Deck $deck
+	 * @param bool $recursive
+  */
+	public function deleteDeck(Deck $deck, $recursive = false)
+	{
+			$em = $this->doctrine;
+			if ($previousDeck = $deck->getPreviousDeck()) {
+					$previousDeck->setNextDeck(null);
+					$deck->setPreviousDeck(null);
+					if ($recursive) {
+							$this->deleteDeck($previousDeck, $recursive);
+					}
+			}
+
+			foreach ($deck->getChildren() as $decklist) {
+					$decklist->setParent(null);
+			}
+
+			$em->remove($deck);
+	}
+
 	public function getUnsavedChanges($deck)
 	{
 		return $this->doctrine->getRepository ( 'AppBundle:Deckchange' )->findBy ( array (

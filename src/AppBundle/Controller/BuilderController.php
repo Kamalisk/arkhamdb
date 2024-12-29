@@ -754,17 +754,9 @@ class BuilderController extends Controller
 		if ($this->getUser()->getId() != $deck->getUser()->getId())
 		throw new UnauthorizedHttpException("You don't have access to this deck.");
 
-		if ($deck->getPreviousDeck()){
-			$deck->getPreviousDeck()->setNextDeck(null);
-		}
-		if ($deck->getPreviousDeck()){
-			$deck->getPreviousDeck()->setNextDeck(null);
-			$deck->setPreviousDeck(null);
-		}
-		foreach ($deck->getChildren() as $decklist) {
-			$decklist->setParent(null);
-		}
-		$em->remove($deck);
+		$all = $request->get('all');
+
+		$this->get('decks')->deleteDeck($deck, $all);
 		$em->flush();
 
 		$this->get('session')

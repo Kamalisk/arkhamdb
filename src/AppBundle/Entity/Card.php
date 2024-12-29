@@ -54,6 +54,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				'faction3',
 				'pack',
 				'type',
+				'subtype',
 				'encounter',
 				'linked_to',
 				'alternate_of',
