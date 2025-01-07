@@ -1,0 +1,22 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<script src="https://www.google.com/recaptcha/api.js"></script>
+
+<!-- Replace the variables below. -->
+<script>
+  function onSubmit(token) {
+    document.getElementById("register-form").submit();
+  }
+</script>
+
+{{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'id': 'register-form', 'class': 'fos_user_registration_register'}}) }}
+    {{ form_widget(form) }}
+    <div>
+        <button class="g-recaptcha"
+            data-sitekey="6LcAMLAqAAAAAFcVBGf7wEl00QCp1rQlwrB5Zdii"
+            data-callback='onSubmit'
+            data-action='submit'>
+        {{ 'registration.submit'|trans }}
+        </button>
+    </div>
+{{ form_end(form) }}
