@@ -12,3 +12,6 @@ services:
     fos_user.registration.controller:
         class: AppBundle\Controller\RegistrationController
         arguments: ["@event_dispatcher", "@fos_user.registration.form.factory", "@fos_user.user_manager", "@security.token_storage"]
+    fos_user.resetting.controller:
+        class: AppBundle\Controller\ResettingController
+        arguments: ["@event_dispatcher", "@fos_user.registration.form.factory", "@fos_user.user_manager", "@fos_user.util.token_generator", "@fos_user.mailer", "%fos_user.resetting.retry_ttl%"]

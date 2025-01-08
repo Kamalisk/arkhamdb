@@ -1,0 +1,27 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<script src="https://www.google.com/recaptcha/api.js"></script>
+
+<!-- Replace the variables below. -->
+<script>
+  function onSubmit(token) {
+    document.getElementById("reset-form").submit();
+  }
+</script>
+
+<form id="reset-form" action="{{ path('fos_user_resetting_send_email') }}" method="POST" class="fos_user_resetting_request">
+    <div>
+        <label for="username">{{ 'resetting.request.username'|trans }}</label>
+        <input type="text" id="username" name="username" required="required" />
+    </div>
+    <div>
+        <button class="g-recaptcha"
+            data-sitekey="6LcAMLAqAAAAAFcVBGf7wEl00QCp1rQlwrB5Zdii"
+            data-callback='onSubmit'
+            data-action='submit'>
+        {{ 'resetting.request.submit'|trans }}
+        </button>
+    </div>
+</form>
+
+{% trans_default_domain 'FOSUserBundle' %}
