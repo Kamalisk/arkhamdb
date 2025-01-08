@@ -5,6 +5,8 @@ parameters:
     database_user:     root
     database_password: ~
 
+    captcha: ~
+
     mailer_transport:  smtp
     mailer_host:       127.0.0.1
     mailer_user:       ~
@@ -12,20 +14,20 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
-    
+
     # units: seconds
     cache_expiration:  600
-    
+
     # Email sender
     email_sender_address: ~
     email_sender_name: ~
-    
+
     # Branding
     website_name: ~
     website_url: ~
     game_name: ~
     publisher_name: ~ 
-    
+
     # Analytics & AdSense
     google_analytics_tracking_code: UA-00000000-1
     google_adsense_client: ca-pub-000000000000000
