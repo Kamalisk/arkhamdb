@@ -27,7 +27,6 @@ AppBundle\Entity\Deckchange:
             length: 1024
         meta:
             type: string
-            length: 1024
             nullable: true
         isSaved:
             type: boolean
