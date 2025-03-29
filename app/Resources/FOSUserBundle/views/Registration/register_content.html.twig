@@ -11,6 +11,9 @@
 
 {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'id': 'register-form', 'class': 'fos_user_registration_register'}}) }}
     {{ form_widget(form) }}
+
+    <input type="text" name="email2" value="" style="visibility: hidden;" />
+
     <div>
         <button class="g-recaptcha"
             data-sitekey="6LcAMLAqAAAAAFcVBGf7wEl00QCp1rQlwrB5Zdii"

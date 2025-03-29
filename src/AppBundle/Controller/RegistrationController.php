@@ -81,6 +81,13 @@ class RegistrationController extends BaseController
             if (preg_match('/[ |\\\\\/:@<>]/m', $request->request->get('fos_user_registration_form')['username'])) {
                 return new RedirectResponse($this->generateUrl('fos_user_registration_register'));
             }
+            if (preg_match_all("/[A-Z]/", $request->request->get('fos_user_registration_form')['username']) > 3) {
+                return new RedirectResponse($this->generateUrl('fos_user_registration_register'));
+            }
+        }
+
+        if (isset($request->request->get('fos_user_registration_form')['email2']) && $request->request->get('fos_user_registration_form')['email2']) {
+            return new RedirectResponse($this->generateUrl('fos_user_registration_register'));
         }
 
         // check recaptcha url
@@ -103,7 +110,7 @@ class RegistrationController extends BaseController
             $result = file_get_contents($url, false, $context);
             if ($result) {
                 $data = json_decode($result);
-                if ($data && $data->success) {
+                if ($data && $data->success && $data->score >= 0.8) {
                     // if we got here then its all good
                 } else {
                     return new RedirectResponse($this->generateUrl('fos_user_registration_register'));
