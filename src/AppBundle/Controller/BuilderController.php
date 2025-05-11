@@ -64,9 +64,13 @@ class BuilderController extends Controller
 
 				$investigator->setDeckRequirements($req);
 
-				// only have one investigator per name
-				if (!isset($all_unique_investigators[$investigator->getName()])) {
-					$all_unique_investigators[$investigator->getName()] = true;
+				// only have one investigator per faction and name
+				$investigator_key = preg_replace(
+					"/[^A-Za-z0-9 ]/", '', sprintf('%s (%s)', $investigator->getName(), $investigator->getFaction()->getName())
+				);
+
+				if (!isset($all_unique_investigators[$investigator_key])) {
+					$all_unique_investigators[$investigator_key] = true;
 					if (!isset($all_investigators_by_class[$investigator->getFaction()->getName()]) ) {
 						$all_investigators_by_class[$investigator->getFaction()->getName()] = [];
 					}
@@ -90,11 +94,11 @@ class BuilderController extends Controller
 						}
 					}
 
-					$all_investigators[preg_replace("/[^A-Za-z0-9 ]/", '', $investigator->getName())] = $investigator;
+					$all_investigators[$investigator_key] = $investigator;
 					$classes[$investigator->getFaction()->getName()] = $investigator->getFaction()->getName();
 				} else {
 					// investigator already present, but check for owner on the new version
-					$original = $all_investigators[preg_replace("/[^A-Za-z0-9 ]/", '', $investigator->getName())];
+					$original = $all_investigators[$investigator_key];
 					if (in_array($investigator->getPack()->getId(), $packs_owned) ){
 						$original->owned = 1;
 					}

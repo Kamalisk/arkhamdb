@@ -79,10 +79,14 @@ class DeckValidationHelper
 							break;
 						}
 						case "investigator":{
+							if (!isset($return_requirements[$type])) {
+								$return_requirements[$type] = [];
+							}
 							if ($param2){
-								$return_requirements[$type] = [$param1 => $param1, $param2 => $param2];
+								$return_requirements[$type][$param1] = $param1;
+								$return_requirements[$type][$param2] = $param2;
 							}else if ($param1){
-								$return_requirements[$type] = [$param1 => $param1];
+								$return_requirements[$type][$param1] = $param1;
 							}
 							break;
 						}
