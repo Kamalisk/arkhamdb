@@ -28,6 +28,16 @@
 					placeholder="Enter text to search in name">
 			</div>
 			<div class="form-group">
+				<label for="">Decklist created after</label> <input type="date"
+				    class="form-control" id="date_from" name="date_from" value="{{ date_from }}"
+				    placeholder="Enter text to search in name">
+			</div>
+			<div class="form-group">
+				<label for="">Decklist created before</label> <input type="date"
+				    class="form-control" id="date_to" name="date_to" value="{{ date_to }}"
+				    placeholder="Enter text to search in name">
+			</div>
+			<div class="form-group">
 				<label for="">Sort</label> <select class="form-control" id="sort"
 					name="sort">
 					<option value="popularity"{{ sort_popularity|default('') }}>by Popularity</option>
