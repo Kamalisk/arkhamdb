@@ -137,8 +137,8 @@
         <source>published reviews</source>
         <target>공개한 리뷰</target>
       </trans-unit>
-      <trans-unit id="QoVVZRb" resname="One published reviews">
-        <source>One published reviews</source>
+      <trans-unit id="QoVVZRb" resname="One published review">
+        <source>One published review</source>
         <target>1 공개한 리뷰</target>
       </trans-unit>
       <trans-unit id="0R5ueJn" resname="Reputation">
