@@ -268,7 +268,7 @@ AppBundle\Entity\Card:
             nullable: true
         deckOptions:
             type: string
-            length: 500
+            length: 1024
             nullable: true
         customizationOptions:
             type: string
@@ -326,6 +326,7 @@ AppBundle\Entity\Card:
                 - translatable
         octgnId:
             type: string
+            length: 1024
             nullable: true
             column: octgn_id
     uniqueConstraints:
