@@ -15,7 +15,7 @@ card_modal.display_modal = function display_modal(event, element) {
  * @memberOf card_modal
  */
 card_modal.typeahead = function typeahead(event, card) {
-	fill_modal(card.code);
+	fill_modal(card.code, true);
 	$('#cardModal').modal('show');
 };
 
@@ -367,13 +367,14 @@ function update_customizations(modal, card) {
 	}
 }
 
-function fill_modal (code) {
+function fill_modal (code, typeahead = false) {
 	var card = app.data.cards.findById(code),
 		modal = $('#cardModal');
 
 	if(!card) return;
 
 	modal.data('code', code);
+	modal.data('typeahead', typeahead);
 	modal.find('.card-modal-link').attr('href', card.url);
 	modal.find('.card-modal-link').attr('target', '_blank');
 	modal.find('h3.modal-title').html(app.format.name(card));

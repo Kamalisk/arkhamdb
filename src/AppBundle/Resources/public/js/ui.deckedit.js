@@ -779,6 +779,7 @@ ui.on_suggestion_quantity_change = function on_suggestion_quantity_change(event)
 ui.on_modal_quantity_change = function on_modal_quantity_change(event) {
 	var modal = $('#cardModal');
 	var code =	modal.data('code');
+	var typeahead = modal.data('typeahead');
 	var quantity = parseInt($(this).val(), 10);
 	modal.modal('hide');
 	if ($(this).attr("name") == "ignoreqty"){
@@ -789,9 +790,12 @@ ui.on_modal_quantity_change = function on_modal_quantity_change(event) {
 		ui.on_quantity_change(code, quantity);
 	}
 
-	setTimeout(function () {
-		$('#filter-text').typeahead('val', '').focus();
-	}, 100);
+	// if the modal is from type ahead, refocus on input
+	if (typeahead) {
+		setTimeout(function () {
+			$('#filter-text').typeahead('val', '').focus();
+		}, 100);
+	}
 }
 
 
