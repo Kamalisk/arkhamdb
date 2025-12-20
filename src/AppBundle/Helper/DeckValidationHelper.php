@@ -121,7 +121,7 @@ class DeckValidationHelper
 	{
 		$invalidCards = [];
 		$deck_options = json_decode($deck->getCharacter()->getDeckOptions());
-
+		$deck_customs = [];
 		if ($deck->getMeta()) {
 			$meta = json_decode($deck->getMeta(), true);
 			if (isset($meta['alternate_back'])) {
@@ -130,16 +130,26 @@ class DeckValidationHelper
 					$deck_options = json_decode($card->getDeckOptions());
 				}
 			}
+			// quick method to check level of customized cards
+			foreach($meta as $key => $value) {
+				if (preg_match('/cus_(.*)/', $key, $matches)) {
+					$cardId = $matches[1];
+					preg_match_all('/[0-9]\|([0-9])/', $value, $matches);
+					if (isset($matches[1]) && count($matches[1]) > 0) {
+						$deck_customs[$cardId] = ceil(array_sum($matches[1]) / 2);
+					}
+				}
+			}
 		}
 		foreach ( $deck->getSlots() as $slot ) {
-			if(! $this->canIncludeCard($deck, $slot, $deck_options)) {
+			if(! $this->canIncludeCard($deck, $slot, $deck_options, $deck_customs)) {
 				$invalidCards[] = $slot->getCard();
 			}
 		}
 		return $invalidCards;
 	}
 
-	public function canIncludeCard($deck, $slot, $deck_options = []) {
+	public function canIncludeCard($deck, $slot, $deck_options = [], $deck_customs = []) {
 		$card = $slot->getCard();
 		$indeck = $slot->getQuantity();
 		// hide investigators
@@ -248,9 +258,13 @@ class DeckValidationHelper
 				if (isset($option->level) && $option->level) {
 					// needs to match at least one type
 					$level_valid = false;
+					$custom_level = 0;
+					if (isset($deck_customs[$card->getCode()])) {
+						$custom_level = $deck_customs[$card->getCode()];
+					}
 
 					if (!is_null($card->getXp()) && $option->level){
-						if ($card->getXp() >= $option->level->min && $card->getXp() <= $option->level->max) {
+						if ($card->getXp() + $custom_level >= $option->level->min && $card->getXp() + $custom_level <= $option->level->max) {
 							$level_valid = true;
 						} else {
 							continue;
