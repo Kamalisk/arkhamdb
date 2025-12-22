@@ -11,6 +11,7 @@ use AppBundle\Entity\Pack;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use AppBundle\Entity\Faction;
+use AppBundle\Entity\Card;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -26,6 +27,7 @@ class DecklistManager
 	protected $start = 0;
 	protected $limit = 30;
 	protected $maxcount = 0;
+	protected $popularityString = '(1+d.nbVotes)/(1 + POWER(DATE_DIFF(CURRENT_TIMESTAMP(), d.dateCreation), 1) )';
 
 	public function __construct(EntityManager $doctrine, RequestStack $request_stack, Router $router, LoggerInterface $logger)
 	{
@@ -100,6 +102,20 @@ class DecklistManager
 		$qb->addSelect('(1+d.nbVotes)/(1+POWER(DATE_DIFF(CURRENT_TIMESTAMP(), d.dateCreation), 1.2)) AS HIDDEN popularity');
 		$qb->orderBy('popularity', 'DESC');
 		return $this->getPaginator($qb->getQuery(), $withCount);
+	}
+
+	public function findDecklistsByInvestigator(Card $character, $ignoreEmptyDescriptions = FALSE)
+	{
+		$qb = $this->getQueryBuilder();
+		$qb->addSelect($this->popularityString.' AS HIDDEN popularity');
+		$qb->andWhere('d.character = :character');
+		$qb->setParameter('character', $character);
+		if ($ignoreEmptyDescriptions){
+			$qb->andWhere('LENGTH(d.descriptionHtml) > 199');
+		}
+		$qb->orderBy('popularity', 'DESC');
+
+		return $this->getPaginator($qb->getQuery());
 	}
 
 	public function findDecklistsByAge($ignoreEmptyDescriptions = FALSE, $withCount = true)
@@ -200,6 +216,12 @@ class DecklistManager
 			$faction = $this->doctrine->getRepository('AppBundle:Faction')->findOneBy(['code' => $faction_code]);
 		}
 
+		$investigator = false;
+		$investigator_code = filter_var($request->query->get('investigator'), FILTER_SANITIZE_STRING);
+		if($investigator_code) {
+			$investigator = $this->doctrine->getRepository('AppBundle:Card')->findOneBy(['code' => $investigator_code]);
+		}
+
 		$author_name = filter_var($request->query->get('author'), FILTER_SANITIZE_STRING);
 
 		$decklist_name = filter_var($request->query->get('name'), FILTER_SANITIZE_STRING);
@@ -210,6 +232,12 @@ class DecklistManager
 
 		$qb = $this->getQueryBuilder();
 		$joinTables = [];
+
+		if($investigator) {
+			$qb->innerJoin('d.character', "investigator");
+			$qb->andWhere("investigator.code = :investigator");
+			$qb->setParameter("investigator", $investigator->getCode());
+		}
 
 		if(!empty($faction)) {
 			$qb->join('d.character', 'a');
@@ -284,7 +312,7 @@ class DecklistManager
 				break;
 			case 'popularity':
 			default:
-				$qb->addSelect('(1+d.nbVotes)/(1+POWER(DATE_DIFF(CURRENT_TIMESTAMP(), d.dateCreation), 2)) AS HIDDEN popularity');
+				$qb->addSelect($this->popularityString.' AS HIDDEN popularity');
 				$qb->orderBy('popularity', 'DESC');
 				break;
 		}

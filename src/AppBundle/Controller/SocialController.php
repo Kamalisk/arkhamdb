@@ -454,6 +454,8 @@ class SocialController extends Controller
 
 		$request_attributes = $request->attributes->all();
 
+		$investigator_code = filter_var($request->query->get('investigator'), FILTER_SANITIZE_STRING);
+
 		$pagetitle = "Decklists";
 		$header = '';
 
@@ -523,7 +525,7 @@ class SocialController extends Controller
 			break;
 			case 'popular':
 			default:
-			$paginator = $decklist_manager->findDecklistsByPopularity();
+			$paginator = $decklist_manager->findDecklistsWithComplexSearch();
 			$pagetitle = "Popular Decklists";
 			break;
 		}

@@ -427,12 +427,18 @@ h1.site-title {
 	margin-top: 0;
 	margin: 0;
 	padding: 0;
+	background-image: linear-gradient(290deg,rgba(217, 30, 30, 1) 0%, rgba(0, 161, 19, 1) 100%);
+    color: transparent;
+    background-clip: text;
 }
 div.site-slogan {
 	font-family: 'Open Sans Condensed', sans-serif;
 	position:relative;
 	font-size:30px;
 	text-align:center;
+	background-image: linear-gradient(158deg,rgba(217, 30, 30, 1) 0%, rgba(0, 161, 19, 1) 100%);
+    color: transparent;
+    background-clip: text;
 }
 
 /************ LIST OF DECKLISTS **************/

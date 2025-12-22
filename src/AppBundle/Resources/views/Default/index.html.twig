@@ -5,92 +5,72 @@
 
 <div class="main container">
 <h1 class="site-title hidden-xs">ArkhamDB</h1>
-<div class="site-slogan">{% trans %}Deckbuilder and Card Database for the Arkham Horror LCG{% endtrans %}</div>
+<div class="site-slogan"><span class="icon-eldersign"></span>{% trans %}Deckbuilder and Card Database for the Arkham Horror LCG{% endtrans %}<span class="icon-eldersign"></span></div>
 </div> <!-- .container -->
 
-<div class="main container">
-	<div class="row col-md-6">
-		<h3>{% trans %}Popular Decks{% endtrans %}</h3>
+<style>
+	.box {
+		margin: 5px;
+		background: #fff;
+		overflow: hidden;
+	}
+
+	.front-block {
+		display: flex;
+		align-items: stretch;
+		flex-direction: row;
+		justify-content: space-between;
+		gap: 0.4rem;
+	}
+	.front-block > div {
+		flex: 1;
+	}
+	.card-day-decklists {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
+	@media (max-width:992px){
+		.front-block {
+			flex-direction: column;
+		}
+		.card-day-decklists {
+			display: flex;
+			flex-direction: column;
+		}
+	}
+
+</style>
+
+<div class="main container front-block">
+	<div style="display: flex; flex-direction: column; background-image: linear-gradient(130deg,rgba(186, 186, 186, 1) 0%, rgba(181, 181, 181, 1) 100%); border-radius: 5px; padding: 0.5rem;">
+		<header style="display: flex; align-items: center; gap: 1rem; justify-content: space-between; padding: 1rem;">
+			<div>
+				<h5 style="font-size: 16px; padding: 0;"></h5>
+				<h4 style="font-size: 30px; display: flex; align-items: center; gap: 1rem; justify-content: space-between; margin: 0;">
+					<a href="/decklists?sort=popular">Popular Decks</a>
+				</h4>
+			</div>
+		</header>
 		{% for data in decklists_by_popular %}
-		<div style="margin-bottom:10px; ">
-			<div class="bg-faction faint-{{ data.faction.code }}" style="padding:4px; height: 24px;">
-				<div class="media">
-					<div class="media-body">
-							<h4 class="media-heading" style="white-space:nowrap; font-size: 1.15em; line-height: 14px;vertical-align: top;">
-								<span class="icon icon-{{ data.faction.code }}"></span>
-								<a href="{{ path('decklist_detail',{decklist_id:data.decklist.id,decklist_name:data.decklist.nameCanonical}) }}">{{ data.decklist.name }}</a>
-							</h4>
-					</div>              
-				</div>
-			</div>
-			<div style="background-color: white; background-position: -50px -250px; background-size: 1200px 800px; background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png);">
-				<div style="padding: 2px 5px 5px 5px; background-color: rgba(255, 255, 255, 0.88);">					
-					{% set character = data.decklist.getCharacter() %}					
-					<div class="pull-left" style="margin-right : 5px; margin-top : 2px;">
-						<div class="card-thumbnail-static card-thumbnail-wide card-thumbnail-investigator" style="background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png)"></div>
-					</div>
-					<div>
-						Investigator: <a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.decklist.getCharacter().getName()}}</a>
-						<div class="small pull-right">
-						{{ macros.decklist_social_icons(data.decklist ) }}						
-						</div>
-					</div>
-					<div>
-					Tags: {{ data.decklist.tags }}
-					</div>
-					<div>
-						Author: <span class="username">{{ macros.username_colorless(data.decklist.user) }}</span>
-						<div class="small pull-right">
-						<time datetime="{{ data.decklist.dateCreation|date('c') }}">{{ data.decklist.dateCreation|date('M d, Y') }}</time>
-						</div>
-					</div>					
-				</div>
-			</div>
-		</div>
-		{% endfor %}
-	</div>
-	
-	<div class="row col-md-6" style="margin-left: 5px;">
-		<h3>{% trans %}Recent Decks{% endtrans %}</h3>
-		{% for data in decklists_by_recent %}
-		<div style="margin-bottom:10px; ">
-			<div class="bg-faction faint-{{ data.faction.code }}" style="padding:4px; height: 24px;">
-				<div class="media">
-					<div class="media-body">
-							<h4 class="media-heading" style="white-space:nowrap; font-size: 1.15em; line-height: 14px;vertical-align: top;">
-								<span class="icon icon-{{ data.faction.code }}"></span>
-								<a href="{{ path('decklist_detail',{decklist_id:data.decklist.id,decklist_name:data.decklist.nameCanonical}) }}">{{ data.decklist.name }}</a>
-							</h4>
-					</div>              
-				</div>
-			</div>
-			<div style="background-color: white; background-position: -50px -250px; background-size: 1200px 800px; background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png);">
-				<div style="padding: 2px 5px 5px 5px; background-color: rgba(255, 255, 255, 0.88);">					
-					{% set character = data.decklist.getCharacter() %}					
-					<div class="pull-left" style="margin-right : 5px; margin-top : 2px;">
-						<div class="card-thumbnail-static card-thumbnail-wide card-thumbnail-investigator" style="background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png)"></div>
-					</div>
-					<div>
-						Investigator: <a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.decklist.getCharacter().getName()}}</a>
-						<div class="small pull-right">
-						{{ macros.decklist_social_icons(data.decklist ) }}						
-						</div>
-					</div>
-					<div>
-					Tags: {{ data.decklist.tags }}
-					</div>
-					<div>
-						Author: <span class="username">{{ macros.username_colorless(data.decklist.user) }}</span>
-						<div class="small pull-right">
-						<time datetime="{{ data.decklist.dateCreation|date('c') }}">{{ data.decklist.dateCreation|date('M d, Y') }}</time>
-						</div>
-					</div>					
-				</div>
-			</div>
-		</div>
+			{{ macros.decklist_block(data) }}
 		{% endfor %}
 	</div>
 
+	{{ macros.investigator_highlight(investigator_highlight, decklists_by_investigator) }}
+
+	<div style="display: flex; flex-direction: column; background-image: linear-gradient(130deg,rgba(186, 186, 186, 1) 0%, rgba(181, 181, 181, 1) 100%); border-radius: 5px; padding: 0.5rem;">
+		<header style="display: flex; align-items: center; gap: 1rem; justify-content: space-between; padding: 1rem;">
+			<div>
+				<h5 style="font-size: 16px; padding: 0;"></h5>
+				<h4 style="font-size: 30px; display: flex; align-items: center; gap: 1rem; justify-content: space-between; margin: 0;">
+					<a href="/decklists?sort=date">Recent Decks</a>
+				</h4>
+			</div>
+		</header>
+		{% for data in decklists_by_recent %}
+			{{ macros.decklist_block(data) }}
+		{% endfor %}
+	</div>
 </div>
 
 <div class="main container">
@@ -108,22 +88,22 @@
 <h3>Recent Updates</h3>
 <ul>
 	<li>
-		<h4>Taboos</h4> 
-		Can now set your deck to use the Taboo List, this will show XP and other card changes to help build your deck. 
+		<h4>Taboos</h4>
+		Can now set your deck to use the Taboo List, this will show XP and other card changes to help build your deck.
 		Selecting the Taboo List as default is coming soon.
 	</li>
 	<li>
-		<h4>Campaign Rewards</h4> 
-		If a campaign lets you add a regular player card that does not count towards your deck limit, you can do so by opening the card popup 
+		<h4>Campaign Rewards</h4>
+		If a campaign lets you add a regular player card that does not count towards your deck limit, you can do so by opening the card popup
 		and manually adjust how many of that card ignore your deck limit.
 	</li>
 	<li>
-		<h4>Ultimatum of Chaos</h4> 
-		You can create random decks with the chaos button found in the deck builder. 
+		<h4>Ultimatum of Chaos</h4>
+		You can create random decks with the chaos button found in the deck builder.
 	</li>
 	<li>
-		<h4>Card Ownership</h4> 
-		You can set which packs you own in the collection manager (see My Collection in the user menu). When looking at decks, any 
+		<h4>Card Ownership</h4>
+		You can set which packs you own in the collection manager (see My Collection in the user menu). When looking at decks, any
 		cards in packs you do not own will be highlighted with a <span class="fa fa-question"></span>
 	</li>
 </ul>

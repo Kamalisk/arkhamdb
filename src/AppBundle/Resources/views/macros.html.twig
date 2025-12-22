@@ -50,3 +50,160 @@
 {% macro slot_with_icons(slot) %}
 {{ slot.quantity }}x <span class="icon icon-{{ slot.card.type.code }} fg-{{ slot.card.faction.code }}"></span> <a href="{{ path('cards_zoom', {card_code: slot.card.code }) }}" class="card card-tip" data-code="{{ slot.card.code }}">{{ slot.card.name }}</a>
 {% endmacro %}
+
+{% macro investigator_highlight(investigator, decklists) %}
+	{% import _self as macros %}
+	<div class="bg-faction bg-{{ investigator.faction.code }}" style="color: black!important; display: flex; flex-direction: column; border-radius: 5px; padding: 0.5rem;">
+		<header style="display: flex; align-items: center; gap: 1rem; justify-content: space-between; padding: 1rem;">
+			<div>
+				<h5 style="font-size: 16px; padding: 0;">Investigator Spotlight</h5>
+				<h4 style="font-size: 30px; display: flex; align-items: center; gap: 1rem; justify-content: space-between; margin: 0;">
+					<div>
+						<a href="/decklists?investigator={{investigator.code}}">{{investigator.name}}</a>
+					</div>
+				</h4>
+			</div>
+			<div class="card-thumbnail-static card-thumbnail-wide card-thumbnail-investigator" style="background-image:url(/bundles/cards/{{investigator.getCode()}}.png)"></div>
+		</header>
+		{% for decklist in decklists %}
+			{{macros.decklist_block(decklist, true)}}
+		{% endfor %}
+	</div>
+{% endmacro %}
+
+{% macro decklist_block(data, compact) %}
+	<div class="box">
+		<div style="background-color: rgba(255,255,255,0.97); border-radius: 5px;">
+			<div class="bg-faction faint-{{ data.faction.code }}" style="display: flex; align-items: stretch;">
+				<h4 style="font-size: 1.15em; flex: 1; margin: 0; padding: 0.5rem; padding-left: 1rem; padding-right: 1rem; display: flex; align-items: center;">
+					<a href="{{ path('decklist_detail',{decklist_id:data.decklist.id,decklist_name:data.decklist.nameCanonical}) }}">{{ data.decklist.name }}</a>
+				</h4>
+				{% if not compact %}
+					<div class="card-thumbnail-wide card-thumbnail-investigator" style="min-height: 55px; {% if data.hero_meta.offset is defined%}background-position: {{data.hero_meta.offset}}; {% endif %}background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png)"></div>
+				{% endif %}
+			</div>
+			<div style="background-color: white; padding: 0.7rem; border-top: solid black 1px;">
+				{% set character = data.decklist.getCharacter() %}
+				<div style="display: flex; justify-content: stretch;">
+					<div style="flex: 0.5;">
+						<a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.decklist.getCharacter().getName()}}</a>
+						<div>
+						{% if data.meta.aspect is defined %}<span class="fa fa-circle fg-{{data.meta.aspect}}" title="{{data.meta.aspect}}"></span> {{data.meta.aspect|capitalize}} {% endif %}
+						{% if data.meta.aspect2 is defined %}<span class="fa fa-circle fg-{{data.meta.aspect2}}" title="{{data.meta.aspect2}}"></span> {{data.meta.aspect2|capitalize}} {% endif %}
+						</div>
+						<div style="font-size: 1.2rem;">
+							Tags: {{ data.decklist.tags | split(',') | join(', ')}}
+						</div>
+					</div>
+					<div style="flex: 0.5; text-align: right;">
+						<div class="small">
+						{{ _self.decklist_social_icons(data.decklist ) }}
+						</div>
+						<div>
+							<span class="username">by {{ _self.username_colorless(data.decklist.user) }}</span>
+						</div>
+						<div class="small pull-right">
+							<time datetime="{{ data.decklist.dateCreation|date('c') }}">{{ data.decklist.dateCreation|date('M d, Y') }}</time>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endmacro %}
+
+{% macro deck_block(data, compact, single) %}
+	{% set character = data.deck.getCharacter() %}
+
+	{% if single %}
+	<div class="box" style="margin-bottom: 1rem;">
+		<div style="">
+			<div class="deck-box-hero-and-header">
+				<div class="hero-banner bg-faction faint-{{ data.faction.code }}" style="padding: 0.4rem;">
+					<input class="deck_select" data-id="{{data.deck.id}}" type="checkbox" style="margin: 0;">
+				</div>
+
+				<div class="bg-faction faint-{{ data.faction.code }}" style="display: flex; align-items: stretch; padding: 1rem; flex: 1;">
+					<h4 style="font-size: 1.15em; flex: 1; margin: 0; padding-left: 1rem; padding-right: 1rem; display: flex; align-items: center; gap: 1rem;">
+						<a href="{{ path('deck_view',{deck_id:data.deck.id,deck_name:data.deck.name}) }}" style="line-height: normal;">
+							{{ data.deck.name }} v{{ data.deck.version }}
+						</a>
+					</h4>
+				</div>
+				<div class="card-thumbnail-wide card-thumbnail-hero" style="min-height: 55px; {% if data.hero_meta.offset is defined%}background-position: {{data.hero_meta.offset}}; {% endif %}background-image:url(/bundles/cards/{{data.deck.getCharacter().getCode()}}.png)"></div>
+			</div>
+			<div class="deck-box-content">
+				<div class="deck-box-meta" style="">
+					<a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.deck.getCharacter().getName()}}</a>
+					<div>
+					{% if data.meta.aspect is defined %}<span class="fa fa-circle fg-{{data.meta.aspect}}" title="{{data.meta.aspect}}"></span> {{data.meta.aspect|capitalize}} {% endif %}
+					{% if data.meta.aspect2 is defined %}<span class="fa fa-circle fg-{{data.meta.aspect2}}" title="{{data.meta.aspect2}}"></span> {{data.meta.aspect2|capitalize}} {% endif %}
+					</div>
+
+				</div>
+				<div class="deck-box-meta">
+					<div style="font-size: 1.2rem;">
+						Tags: {{ data.deck.tags | split(',') | join(', ')}}
+					</div>
+					{% if data.deck.problem is not null %}
+						<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> {{ deck_validation_helper.getProblemLabel(data.deck.problem) }}</div>
+					{% endif %}
+				</div>
+				<div class="deck-box-controls" style="">
+					<div>
+						<a href="{{ path('deck_edit',{deck_id:data.deck.id}) }}" class="btn btn-sm btn-default" data-toggle="tooltip" title="Edit"><span class="fa fa-pencil fa-fw"></span></a>
+						<a href="{{ path('deck_publish_form',{deck_id:data.deck.id}) }}" class="btn btn-sm btn-default" data-toggle="tooltip" title="Publish"><span class="fa fa-share fa-fw"></span></a>
+						<button class="btn btn-sm btn-default btn-delete-deck" data-id="{{data.deck.id}}" data-name="{{data.deck.name}}" data-toggle="tooltip" title="Delete"><span class="fa fa-trash-o fa-fw"></span></button>
+					</div>
+					<div class="small">
+						<time datetime="{{ data.deck.dateUpdate|date('c') }}">{{ data.deck.dateUpdate|date('M d, Y') }}</time>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% else %}
+	<div class="box">
+		<div style="background-color: rgba(255,255,255,0.97); border-radius: 5px;">
+			<div class="bg-faction {% if data.meta.aspect is defined %}faint-{{ data.meta.aspect }}{% else %}faint-basic{% endif %}" style="display: flex; align-items: stretch;">
+				<h4 style="font-size: 1.15em; flex: 1; margin: 0; padding-left: 1rem; padding-right: 1rem; display: flex; align-items: center; gap: 1rem;">
+
+					<input class="deck_select" data-id="{{data.deck.id}}" type="checkbox" style="margin: 0;">
+
+					<a href="{{ path('deck_view',{deck_id:data.deck.id,deck_name:data.deck.name}) }}" style="line-height: normal;">
+						{{ data.deck.name }} v{{ data.deck.version }}
+					</a>
+				</h4>
+				<div class="card-thumbnail-wide card-thumbnail-hero" style="min-height: 55px; {% if data.hero_meta.offset is defined%}background-position: {{data.hero_meta.offset}}; {% endif %}background-image:url(/bundles/cards/{{data.deck.getCharacter().getCode()}}.png)"></div>
+			</div>
+			<div style="background-image: linear-gradient(100deg, {{data.hero_meta.colors[0]}} 49.5%, {{data.hero_meta.colors[2]}} 50%, {{data.hero_meta.colors[2]}} 51%, {{data.hero_meta.colors[1]}} 51.5%, {{data.hero_meta.colors[1]}} 100%); padding: 0.4rem;">
+			</div>
+			<div style="padding: 1rem; flex: 1; display: flex; justify-content: stretch;">
+				<div style="flex: 0.5; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 0.5rem;">
+					<a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.deck.getCharacter().getName()}}</a>
+					<div>
+					{% if data.meta.aspect is defined %}<span class="fa fa-circle fg-{{data.meta.aspect}}" title="{{data.meta.aspect}}"></span> {{data.meta.aspect|capitalize}} {% endif %}
+					{% if data.meta.aspect2 is defined %}<span class="fa fa-circle fg-{{data.meta.aspect2}}" title="{{data.meta.aspect2}}"></span> {{data.meta.aspect2|capitalize}} {% endif %}
+					</div>
+					<div style="font-size: 1.2rem;">
+						Tags: {{ data.deck.tags | split(',') | join(', ')}}
+					</div>
+				</div>
+				<div style="flex: 0.5; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; gap: 0.5rem;">
+					<div>
+						<a href="{{ path('deck_edit',{deck_id:data.deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit"><span class="fa fa-pencil fa-fw"></span></a>
+						<a href="{{ path('deck_publish_form',{deck_id:data.deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Publish"><span class="fa fa-share fa-fw"></span></a>
+						<button class="btn btn-xs btn-default btn-delete-deck" data-id="{{data.deck.id}}" data-name="{{data.deck.name}}" data-toggle="tooltip" title="Delete"><span class="fa fa-trash-o fa-fw"></span></button>
+					</div>
+					{% if data.deck.problem is not null %}
+						<div class="text-danger small text-right"><span class="fa fa-exclamation-triangle"></span> {{ deck_validation_helper.getProblemLabel(data.deck.problem) }}</div>
+					{% endif %}
+					<div class="small">
+						<time datetime="{{ data.deck.dateUpdate|date('c') }}">{{ data.deck.dateUpdate|date('M d, Y') }}</time>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+{% endmacro %}
