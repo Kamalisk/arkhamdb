@@ -443,9 +443,75 @@ div.site-slogan {
 
 /************ LIST OF DECKLISTS **************/
 
+.quick-search-decklists {
+	display: flex;
+	gap: 0.5rem;
+	justify-content: space-between;
+	flex: 1;
+}
+@media (max-width:992px){
+	.quick-search-decklists {
+		flex-direction: column;
+
+	}
+}
+
 .decklist-faction-image img {
     height: 64px;
 }
+
+.decklists-advanced-search {
+	display: none;
+	flex-direction: column;
+}
+.decklists-advanced-search a {
+	cursor: pointer;
+}
+
+.decklists-advanced-search > div {
+	gap: 0.5rem;
+	justify-content: stretch;
+	flex: 1;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	display: flex;
+}
+.decklists-advanced-search > div > div {
+	flex: 1;
+}
+.decklists-advanced-search-expanded {
+	display: flex;
+}
+.decklists-advanced-search-toggle {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 0.5rem;
+	cursor: pointer;
+}
+.decklists-advanced-search-toggle span {
+	font-size: 30px;
+}
+.decklists-advanced-packs-category {
+	display: grid;
+	grid-template-columns: calc(20%) calc(20%) calc(20%) calc(20%) calc(20%);
+	width: 100%;
+}
+.decklists-advanced-pack-checkbox input {
+	margin-right: 1rem;
+}
+@media (max-width:992px){
+	.decklists-advanced-search {
+		flex-direction: column;
+	}
+	.decklists-advanced-search > div {
+		flex-direction: column;
+	}
+	.decklists-advanced-packs-category {
+		grid-template-columns: calc(50%) calc(50%);
+	}
+}
+
 
 /************* DECKLIST *********************/
 

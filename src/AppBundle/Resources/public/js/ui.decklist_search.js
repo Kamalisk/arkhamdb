@@ -84,22 +84,66 @@
 	 * @memberOf ui
 	 */
 	ui.on_dom_loaded = function on_dom_loaded() {
-        ui.setup_typeahead();
-    	$('#allowed_packs').on('change', ui.handle_checkbox_change);
+		ui.setup_typeahead();
+		$('#allowed_packs').on('change', ui.handle_checkbox_change);
 			$('#allowed_collection_packs').on('click', ui.handle_select_collection_packs);
 
-    	$('#select_all').on('click', function (event) {
-    		$('#allowed_packs').find('input[type="checkbox"]:not(:checked)').prop('checked', true);
-    		ui.handle_checkbox_change();
-    		return false;
-    	});
+		$('#select_all').on('click', function (event) {
+			$('#allowed_packs').find('input[type="checkbox"]:not(:checked)').prop('checked', true);
+			ui.handle_checkbox_change();
+			return false;
+		});
 
-    	$('#select_none').on('click', function (event) {
-    		$('#allowed_packs').find('input[type="checkbox"]:checked').prop('checked', false);
-    		ui.handle_checkbox_change();
-    		return false;
-    	});
+		$('#select_none').on('click', function (event) {
+			$('#allowed_packs').find('input[type="checkbox"]:checked').prop('checked', false);
+			ui.handle_checkbox_change();
+			return false;
+		});
+
+		$('#decklist-quick-investigator').on('change', function (event) {
+			ui.update_url('investigator', event.currentTarget.value);
+			return false;
+		});
+		$('#decklist-quick-tag').on('change', function (event) {
+			ui.update_url('tag', event.currentTarget.value);
+			return false;
+		});
+		$('#decklist-quick-sort').on('change', function (event) {
+			ui.update_url('sort', event.currentTarget.value);
+			return false;
+		});
+		$('#decklist-quick-category').on('change', function (event) {
+			ui.update_url('category', event.currentTarget.value);
+			return false;
+		});
+		$('#decklist-quick-collection').on('change', function (event) {
+			ui.update_url('collection', event.currentTarget.value);
+			return false;
+		});
+		$('#toggle-advanced-decklist-search').on('click', function (event) {
+			if ($('.decklists-advanced-search-expanded').length > 0) {
+					$('.decklists-advanced-search-expanded').removeClass('decklists-advanced-search-expanded');
+					$('.decklists-advanced-search-toggle span').removeClass('fa-caret-up');
+					$('.decklists-advanced-search-toggle span').addClass('fa-caret-down');
+				} else {
+					$('.decklists-advanced-search').addClass('decklists-advanced-search-expanded');
+					$('.decklists-advanced-search-toggle span').removeClass('fa-caret-down');
+					$('.decklists-advanced-search-toggle span').addClass('fa-caret-up');
+				}
+		});
 	};
+
+	ui.update_url = function update_url(param, value) {
+		if ('URLSearchParams' in window) {
+			var searchParams = new URLSearchParams(window.location.search);
+			if (value) {
+				searchParams.set(param, value);
+			} else {
+				searchParams.delete(param);
+			}
+			window.location.search = searchParams.toString();
+		}
+	}
 
 	/**
 	 * called when the app data is loaded

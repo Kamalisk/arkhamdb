@@ -1,0 +1,37 @@
+<div class="quick-search-decklists">
+	<select class="form-control" id="decklist-quick-category" name="category">
+		<option {% if category is not defined %} selected="selected"{% endif %} value="">All Decklists</option>
+		<option {% if category is defined and category == 'favorites' %} selected="selected"{% endif %} value="favorites">My favorites</option>
+		<option {% if category is defined and category == 'mine' %} selected="selected"{% endif %} value="mine">My decklists</option>
+	</select>
+
+	<select class="form-control" id="decklist-quick-investigator" name="investigator">
+		<option value="">Any investigator</option>
+		{% for investigator in investigators %}
+		<option value="{{ investigator.code }}"{% if investigator_code is defined and investigator_code == investigator.code %} selected="selected"{% endif %}>
+			{{ investigator.name }}
+		</option>
+		{% endfor %}
+	</select>
+
+	<select class="form-control" id="decklist-quick-tag" name="tag">
+		<option {% if tag is not defined %} selected="selected"{% endif %} value="">All Tags</option>
+		<option {% if tag is defined and tag == 'solo' %} selected="selected"{% endif %} value="solo">Solo</option>
+		<option {% if tag is defined and tag == 'multiplayer' %} selected="selected"{% endif %} value="multiplayer">Multiplayer</option>
+		<option {% if tag is defined and tag == 'beginner' %} selected="selected"{% endif %} value="beginner">Beginner</option>
+		<option {% if tag is defined and tag == 'theme' %} selected="selected"{% endif %} value="theme">Theme</option>
+	</select>
+
+	<select class="form-control" id="decklist-quick-collection" name="collection">
+		<option {% if collection is not defined%} selected="selected"{% endif %} value="">All Cards</option>
+		<option {% if collection is defined and collection == 'mine' %} selected="selected"{% endif %} value="mine">My Collection (must be logged in)</option>
+	</select>
+
+	<select class="form-control" id="decklist-quick-sort" name="sort">
+		<option {% if sort is not defined%} selected="selected"{% endif %} value=""{{ sort_popularity|default('') }}>Sort by Popularity</option>
+		<option {% if sort is defined and sort == 'date' %} selected="selected"{% endif %} value="date"{{ sort_date|default('') }}>Sort by Date</option>
+		<option {% if sort is defined and sort == 'activity' %} selected="selected"{% endif %} value="activity"{{ sort_activity|default('') }}>Sort by Activity (Hot topics)</option>
+		<option {% if sort is defined and sort == 'likes' %} selected="selected"{% endif %} value="likes"{{ sort_likes|default('') }}>Sort by Number of Likes</option>
+		<option {% if sort is defined and sort == 'reputation' %} selected="selected"{% endif %} value="reputation"{{ sort_reputation|default('') }}>Sort by Reputation of Author</option>
+	</select>
+</div>

@@ -202,7 +202,7 @@ class DecklistManager
 		return $this->getPaginator($qb->getQuery());
 	}
 
-	public function findDecklistsWithComplexSearch()
+	public function findDecklistsWithComplexSearch($user = false)
 	{
 		$request = $this->request_stack->getCurrentRequest();
 
@@ -230,18 +230,77 @@ class DecklistManager
 
 		$packs = $request->query->get('packs');
 
+		$collection = filter_var($request->query->get('collection'), FILTER_SANITIZE_STRING);
+		if (!$packs && $collection && $user) {
+			// figure out users collection and assign the packs here!
+			$owned_packs = $user->getOwnedPacks();
+			if ($owned_packs) {
+				$packs = explode(',', $owned_packs);
+			}
+		}
+
 		$qb = $this->getQueryBuilder();
 		$joinTables = [];
 
 		if($investigator) {
+			$duplicates = [];
+			if ($investigator->getDuplicates()) {
+				foreach ($investigator->getDuplicates() as $duplicate) {
+					$duplicates[] = $duplicate->getCode();
+				}
+			}
 			$qb->innerJoin('d.character', "investigator");
-			$qb->andWhere("investigator.code = :investigator");
-			$qb->setParameter("investigator", $investigator->getCode());
+			if ($duplicates && count($duplicates) > 0) {
+				$qb->andWhere("investigator.code IN (:investigator)");
+				$qb->setParameter("investigator", array_merge([$investigator->getCode()], $duplicates));
+			} else {
+				$qb->andWhere("investigator.code = :investigator");
+				$qb->setParameter("investigator", $investigator->getCode());
+			}
+		}
+
+		$tag = filter_var($request->query->get('tag'), FILTER_SANITIZE_STRING);
+		if($tag) {
+			switch($tag) {
+				case "multiplayer":
+					$qb->andWhere("d.tags like '%multiplayer%'");
+					break;
+				case "theme":
+					$qb->andWhere("d.tags like '%theme%'");
+					break;
+				case "beginner":
+					$qb->andWhere("d.tags like '%beginner%'");
+					break;
+				case "solo":
+					$qb->andWhere("d.tags like '%solo%'");
+					break;
+			}
+		}
+
+		$category = filter_var($request->query->get('category'), FILTER_SANITIZE_STRING);
+		if($category) {
+			switch($category) {
+				case "favorites":
+					$qb->leftJoin('d.favorites', 'u');
+					$qb->andWhere('u = :user');
+					$qb->setParameter('user', $user);
+					$qb->orderBy('d.dateCreation', 'DESC');
+					break;
+				case "mine":
+					if ($user) {
+						$qb->andWhere('d.user = :user');
+						$qb->setParameter('user', $user);
+						$qb->orderBy('d.dateCreation', 'DESC');
+					} else {
+						$qb->andWhere('true = false');
+					}
+					break;
+			}
 		}
 
 		if(!empty($faction)) {
 			$qb->join('d.character', 'a');
-			$qb->where('a.faction = :faction');
+			$qb->andWhere('a.faction = :faction');
 			//$qb->andWhere('d.faction = :faction');
 			$qb->setParameter('faction', $faction);
 		}

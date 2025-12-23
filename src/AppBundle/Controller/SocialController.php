@@ -410,6 +410,7 @@ class SocialController extends Controller
 		->fetchAll();
 		$params['faction_selected'] = $faction_code;
 
+		$params['cards'] = '';
 		if (! empty($cards_code) && is_array($cards_code)) {
 			$cards = $dbh->executeQuery(
 			"SELECT
@@ -430,7 +431,11 @@ class SocialController extends Controller
 			foreach($cards as $card) {
 				$params['cards'] .= $this->renderView('AppBundle:Search:card.html.twig', $card);
 			}
+		}
 
+		$params['expanded'] = false;
+		if ($params['cards'] || $params['author'] || $params['name'] || $request->query->get('packs')) {
+			$params['expanded'] = true;
 		}
 
 		return $this->renderView('AppBundle:Search:form.html.twig', $params);
@@ -455,19 +460,50 @@ class SocialController extends Controller
 		$request_attributes = $request->attributes->all();
 
 		$investigator_code = filter_var($request->query->get('investigator'), FILTER_SANITIZE_STRING);
+		$tag = filter_var($request->query->get('tag'), FILTER_SANITIZE_STRING);
+		$sort = filter_var($request->query->get('sort'), FILTER_SANITIZE_STRING);
+		$category = filter_var($request->query->get('category'), FILTER_SANITIZE_STRING);
+		$collection = filter_var($request->query->get('collection'), FILTER_SANITIZE_STRING);
+
+		$investigator_type = $this->getDoctrine()->getRepository('AppBundle:Type')->findOneBy(['code' => 'investigator'], ['id' => 'DESC']);
+		$all_investigators = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(['type' => $investigator_type], ['name' => 'ASC']);
+
+		$unique_investigators = [];
+		$investigators = [];
+		foreach($all_investigators as $investigator) {
+			$unique_key = $investigator->getName();
+
+			if (isset($unique_investigators[$unique_key])) {
+				continue;
+			}
+			$unique_investigators[$unique_key] = true;
+			$investigators[] = $investigator;
+		}
+		$searchForm = $this->renderView('AppBundle:Search:form-quick.html.twig',
+			array(
+				'investigators' => $investigators,
+				'investigator_code' => $investigator_code,
+				'tag' => $tag,
+				'sort' => $sort,
+				'category' => $category,
+				'collection' => $collection
+			)
+		);
+		$advancedSearchForm = $this->searchForm($request);
 
 		$pagetitle = "Decklists";
 		$header = '';
+
+		$user = $this->getUser();
 
 		switch ($type) {
 			case 'find':
 			$pagetitle = "Decklist search results";
 			$header = $this->searchForm($request);
-			$paginator = $decklist_manager->findDecklistsWithComplexSearch();
+			$paginator = $decklist_manager->findDecklistsWithComplexSearch($user);
 			break;
 			case 'favorites':
 			$response->setPrivate();
-			$user = $this->getUser();
 			if($user)
 			{
 				$paginator = $decklist_manager->findDecklistsByFavorite($user);
@@ -480,7 +516,6 @@ class SocialController extends Controller
 			break;
 			case 'mine':
 			$response->setPrivate();
-			$user = $this->getUser();
 			if($user)
 			{
 				$paginator = $decklist_manager->findDecklistsByAuthor($user);
@@ -525,22 +560,24 @@ class SocialController extends Controller
 			break;
 			case 'popular':
 			default:
-			$paginator = $decklist_manager->findDecklistsWithComplexSearch();
+			$paginator = $decklist_manager->findDecklistsWithComplexSearch($user);
 			$pagetitle = "Popular Decklists";
 			break;
 		}
 
 		return $this->render('AppBundle:Decklist:decklists.html.twig',
 		array(
-		'pagetitle' => $pagetitle,
-		'pagedescription' => "Browse the collection of thousands of premade decks.",
-		'decklists' => $paginator,
-		'url' => $request->getRequestUri(),
-		'header' => $header,
-		'type' => $type,
-		'pages' => $decklist_manager->getClosePages(),
-		'prevurl' => $decklist_manager->getPreviousUrl(),
-		'nexturl' => $decklist_manager->getNextUrl(),
+			'pagetitle' => $pagetitle,
+			'pagedescription' => "Browse the collection of thousands of premade decks.",
+			'decklists' => $paginator,
+			'url' => $request->getRequestUri(),
+			'investigators' => $investigators,
+			'header' => $searchForm,
+			'advanced' => $advancedSearchForm,
+			'type' => $type,
+			'pages' => $decklist_manager->getClosePages(),
+			'prevurl' => $decklist_manager->getPreviousUrl(),
+			'nexturl' => $decklist_manager->getNextUrl(),
 		), $response);
 
 	}

@@ -1,57 +1,59 @@
-<form method="GET" action="{{ path('decklists_list', {type:'find'}) }}"
-	role="form">
-	<div class="row" style="margin-bottom:1em">
-		<div class="col-sm-4">
-			<div class="form-group">
-				<label for="">Class</label> <select class="form-control" id="faction" name="faction">
-					<option value="">any</option>
-					{% for faction in factions %}
-					<option value="{{ faction.code }}"{% if faction_selected is defined  and faction_selected == faction.code %} selected="selected"{% endif %}>{{ faction.name }}</option>
-					{% endfor %}
-				</select>
-			</div>
-            <div class="form-group">
-				<label for="">Cards used</label>
-				{{ cards|default('')|raw }}
-				<input type="text" class="form-control" id="card" placeholder="Enter card name">
-			</div>
-		</div>
-		<div class="col-sm-4">
-			<div class="form-group">
-				<label for="">Author name</label> <input type="text"
-					class="form-control" id="author" name="author"
-					placeholder="Enter author name" value="{{ author }}">
-			</div>
-			<div class="form-group">
-				<label for="">Decklist name</label> <input type="text"
-					class="form-control" id="name" name="name" value="{{ name }}"
-					placeholder="Enter text to search in name">
-			</div>
-			<div class="form-group">
-				<label for="">Sort</label> <select class="form-control" id="sort"
-					name="sort">
-					<option value="popularity"{{ sort_popularity|default('') }}>by Popularity</option>
-					<option value="date"{{ sort_date|default('') }}>by Date</option>
-					<option value="likes"{{ sort_likes|default('') }}>by Number of Likes</option>
-					<option value="reputation"{{ sort_reputation|default('') }}>by Reputation of Author</option>
-				</select>
-			</div>
-			<button type="submit" class="btn btn-primary btn-block">Search</button>
-		</div>
-		<div class="col-sm-4">
-		<p><a id="allowed_collection_packs" href="#allowed_collection_packs">Select packs from your collection</a></p>
-		<p><a data-toggle="collapse" data-target="#allowed_packs" href="#allowed_packs">View allowed packs</a> (<span id="packs-on">{{ on }}</span> on, <span id="packs-off">{{ off }}</span> off)</p>
-		<div id="allowed_packs" class="collapse">
-		<a href="#" id="select_all"><span class="fa fa-check"></span> all</a>
-		/ <a href="#" id="select_none"><span class="fa fa-times"></span> none</a>
-		{% for category in allowed %}
-		  <p><small>{{ category.label }}</small></p>
-		  {% for pack in category.packs %}
-    		<div class="checkbox"><label class="{% if pack.future %}pack-future{% endif %}"><input id="collection-{{ pack.id }}" type="checkbox" name="packs[]" value="{{ pack.id }}" {% if pack.checked %}checked="checked" {% endif %}>{{ pack.label }}</label></div>
-    	  {% endfor %}
-		{% endfor %}
+<div class="decklists-advanced-search-toggle" id="toggle-advanced-decklist-search">
+	<span class="fa fa-caret-down"></span><a>Show advanced search</a>
+</div>
 
+<div style="background-color: #ededed; border-radius: 5px; padding: 1rem;" class="decklists-advanced-search {% if expanded %}decklists-advanced-search-expanded{% endif %}">
+	<form method="GET" action="{{ path('decklists_list', {type:'find'}) }}"
+		role="form">
+		<div class="row" style="margin-bottom:1em">
+			<div class="col-sm-12">
+				<div class="form-group">
+					<label for="">Class</label> <select class="form-control" id="faction" name="faction">
+						<option value="">any</option>
+						{% for faction in factions %}
+						<option value="{{ faction.code }}"{% if faction_selected is defined  and faction_selected == faction.code %} selected="selected"{% endif %}>{{ faction.name }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="">Author name</label> <input type="text"
+						class="form-control" id="author" name="author"
+						placeholder="Enter author name" value="{{ author }}">
+				</div>
+				<div class="form-group">
+					<label for="">Decklist name</label> <input type="text"
+						class="form-control" id="name" name="name" value="{{ name }}"
+						placeholder="Enter text to search in name">
+				</div>
+				<button type="submit" class="btn btn-primary btn-block">Search</button>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="">Cards used</label>
+					{{ cards|default('')|raw }}
+					<input type="text" class="form-control" id="card" placeholder="Enter card name">
+				</div>
+			</div>
 		</div>
-    	</div>
-	</div>
-</form>
+		<div class="row" style="margin-bottom:1em">
+			<div class="col-sm-12">
+				<p><a id="allowed_collection_packs" href="#allowed_collection_packs">Select packs from your collection</a></p>
+				<p><a data-toggle="collapse" data-target="#allowed_packs" href="#allowed_packs">View allowed packs</a> (<span id="packs-on">{{ on }}</span> on, <span id="packs-off">{{ off }}</span> off)</p>
+				<div id="allowed_packs" class="collapse">
+					<a href="#" id="select_all"><span class="fa fa-check"></span> all</a>
+					/ <a href="#" id="select_none"><span class="fa fa-times"></span> none</a>
+					<div style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 1rem;">
+						{% for category in allowed %}
+							<div style="flex: 25%;">
+								<p><small>{{ category.label }}</small></p>
+								{% for pack in category.packs %}
+									<div class="checkbox"><label class="{% if pack.future %}pack-future{% endif %}"><input id="collection-{{ pack.id }}" type="checkbox" name="packs[]" value="{{ pack.id }}" {% if pack.checked %}checked="checked" {% endif %}>{{ pack.label }}</label></div>
+								{% endfor %}
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
