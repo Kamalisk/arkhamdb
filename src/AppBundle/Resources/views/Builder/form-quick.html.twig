@@ -1,0 +1,28 @@
+<div class="quick-search-decklists">
+	<select class="form-control" id="decklist-quick-investigator" name="investigator">
+		<option value="">Any investigator</option>
+		{% for investigator in investigators %}
+		<option value="{{ investigator.code }}"{% if investigator_code is defined and investigator_code == investigator.code %} selected="selected"{% endif %}>
+			{{ investigator.name }}
+		</option>
+		{% endfor %}
+	</select>
+
+	<select class="form-control" id="decklist-quick-tag" name="tag">
+		<option {% if tag is not defined%} selected="selected"{% endif %} value="">Any tag</option>
+		{% for possible_tag in tags %}
+			<option value="{{ possible_tag }}"{% if tag is defined and possible_tag == tag %} selected="selected"{% endif %}>{{ possible_tag }}</option>
+		{% endfor %}
+	</select>
+
+	<select class="form-control" id="decklist-quick-collection" name="collection">
+		<option {% if collection is not defined%} selected="selected"{% endif %} value="">All Cards</option>
+		<option {% if collection is defined and collection == 'mine' %} selected="selected"{% endif %} value="mine">My Collection (must be logged in)</option>
+	</select>
+
+	<select class="form-control" id="decklist-quick-sort" name="sort">
+		<option {% if sort is not defined%} selected="selected"{% endif %} value=""{{ sort_date|default('') }}>Sort by Updated</option>
+		<option {% if sort is defined and sort == 'date' %} selected="selected"{% endif %} value="date">Sort by Created</option>
+		<option {% if sort is defined and sort == 'name' %} selected="selected"{% endif %} value="name">Sort by Name</option>
+	</select>
+</div>

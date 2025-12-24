@@ -128,9 +128,10 @@ ui.do_diff = function do_diff(ids) {
 ui.do_action_selection = function do_action_selection(event) {
 	event.stopPropagation();
 	var action_id = $(this).attr('id');
-	var ids = $('.list-decks input:checked').map(function (index, elt) {
-		return $(elt).closest('tr').data('id');
+	var ids = $('input:checked').map(function (index, elt) {
+		return $(elt).data('id');
 	}).get();
+
 	if(!action_id || !ids.length) return;
 	switch(action_id) {
 		case 'btn-compare': ui.do_diff(ids); break;
@@ -164,6 +165,27 @@ ui.on_dom_loaded = function on_dom_loaded() {
 
 	$('#btn-group-selection').on('click', 'button[id],a[id]', ui.do_action_selection);
 
+	$('#decklist-quick-investigator').on('change', function (event) {
+		ui.update_url('investigator', event.currentTarget.value);
+		return false;
+	});
+	$('#decklist-quick-tag').on('change', function (event) {
+		ui.update_url('tag', event.currentTarget.value);
+		return false;
+	});
+	$('#decklist-quick-sort').on('change', function (event) {
+		ui.update_url('sort', event.currentTarget.value);
+		return false;
+	});
+	$('#decklist-quick-category').on('change', function (event) {
+		ui.update_url('category', event.currentTarget.value);
+		return false;
+	});
+	$('#decklist-quick-collection').on('change', function (event) {
+		ui.update_url('collection', event.currentTarget.value);
+		return false;
+	});
+
 	$('#tag_toggles').on('click', 'button', function (event) {
 		var button = $(this);
 		if(!event.shiftKey) {
@@ -176,6 +198,18 @@ ui.on_dom_loaded = function on_dom_loaded() {
 	ui.update_tag_toggles();
 
 };
+
+ui.update_url = function update_url(param, value) {
+	if ('URLSearchParams' in window) {
+		var searchParams = new URLSearchParams(window.location.search);
+		if (value) {
+			searchParams.set(param, value);
+		} else {
+			searchParams.delete(param);
+		}
+		window.location.search = searchParams.toString();
+	}
+}
 
 /**
  * called when the app data is loaded

@@ -116,51 +116,60 @@
 	{% set character = data.deck.getCharacter() %}
 
 	{% if single %}
-	<div class="box" style="margin-bottom: 1rem;">
-		<div style="">
-			<div class="deck-box-hero-and-header">
-				<div class="hero-banner bg-faction faint-{{ data.faction.code }}" style="padding: 0.4rem;">
-					<input class="deck_select" data-id="{{data.deck.id}}" type="checkbox" style="margin: 0;">
-				</div>
-
-				<div class="bg-faction faint-{{ data.faction.code }}" style="display: flex; align-items: stretch; padding: 1rem; flex: 1;">
-					<h4 style="font-size: 1.15em; flex: 1; margin: 0; padding-left: 1rem; padding-right: 1rem; display: flex; align-items: center; gap: 1rem;">
-						<a href="{{ path('deck_view',{deck_id:data.deck.id,deck_name:data.deck.name}) }}" style="line-height: normal;">
-							{{ data.deck.name }} v{{ data.deck.version }}
-						</a>
-					</h4>
-				</div>
-				<div class="card-thumbnail-wide card-thumbnail-hero" style="min-height: 55px; {% if data.hero_meta.offset is defined%}background-position: {{data.hero_meta.offset}}; {% endif %}background-image:url(/bundles/cards/{{data.deck.getCharacter().getCode()}}.png)"></div>
-			</div>
-			<div class="deck-box-content">
-				<div class="deck-box-meta" style="">
-					<a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.deck.getCharacter().getName()}}</a>
-					<div>
-					{% if data.meta.aspect is defined %}<span class="fa fa-circle fg-{{data.meta.aspect}}" title="{{data.meta.aspect}}"></span> {{data.meta.aspect|capitalize}} {% endif %}
-					{% if data.meta.aspect2 is defined %}<span class="fa fa-circle fg-{{data.meta.aspect2}}" title="{{data.meta.aspect2}}"></span> {{data.meta.aspect2|capitalize}} {% endif %}
+	<div class="border-{{ data.faction.code }}" style="margin-bottom: 1rem; border-width: 1px; border-style: solid;">
+		<div class="box">
+			<div style="">
+				<div class="deck-box-hero-and-header">
+					<div class="hero-banner bg-faction faint-{{ data.faction.code }}" style="padding: 0.4rem;">
+						<input class="deck_select" data-id="{{data.deck.id}}" type="checkbox" style="margin: 0;">
 					</div>
 
-				</div>
-				<div class="deck-box-meta">
-					<div style="font-size: 1.2rem;">
-						Tags: {{ data.deck.tags | split(',') | join(', ')}}
+					<div class="bg-faction faint-{{ data.faction.code }}" style="display: flex; align-items: stretch; padding: 1rem; flex: 1;">
+						<h4 style="font-size: 1.15em; flex: 1; margin: 0; padding-left: 1rem; padding-right: 1rem; display: flex; align-items: center; gap: 1rem;">
+							<a href="{{ path('deck_view',{deck_id:data.deck.id,deck_name:data.deck.name}) }}" style="line-height: normal;">
+								{{ data.deck.name }} v{{ data.deck.version }}
+							</a>
+						</h4>
 					</div>
-					{% if data.deck.problem is not null %}
-						<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> {{ deck_validation_helper.getProblemLabel(data.deck.problem) }}</div>
-					{% endif %}
+					<div class="card-thumbnail-wide card-thumbnail-investigator" style="min-height: 100%; background-image:url(/bundles/cards/{{data.deck.getCharacter().getCode()}}.png)"></div>
 				</div>
-				<div class="deck-box-controls" style="">
-					<div>
-						<a href="{{ path('deck_edit',{deck_id:data.deck.id}) }}" class="btn btn-sm btn-default" data-toggle="tooltip" title="Edit"><span class="fa fa-pencil fa-fw"></span></a>
-						<a href="{{ path('deck_publish_form',{deck_id:data.deck.id}) }}" class="btn btn-sm btn-default" data-toggle="tooltip" title="Publish"><span class="fa fa-share fa-fw"></span></a>
-						<button class="btn btn-sm btn-default btn-delete-deck" data-id="{{data.deck.id}}" data-name="{{data.deck.name}}" data-toggle="tooltip" title="Delete"><span class="fa fa-trash-o fa-fw"></span></button>
+				<div class="deck-box-content">
+					<div class="deck-box-meta" style="">
+						<a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.deck.getCharacter().getName()}}</a>
 					</div>
-					<div class="small">
-						<time datetime="{{ data.deck.dateUpdate|date('c') }}">{{ data.deck.dateUpdate|date('M d, Y') }}</time>
+					<div class="deck-box-meta">
+						<div style="font-size: 1.2rem;">
+							Tags: {{ data.deck.tags | split(',') | join(', ')}}
+						</div>
+						{% if data.deck.problem is not null %}
+							<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> {{ deck_validation_helper.getProblemLabel(data.deck.problem) }}</div>
+						{% endif %}
+					</div>
+					<div class="deck-box-controls" style="">
+						<div>
+							<a href="{{ path('deck_edit',{deck_id:data.deck.id}) }}" class="btn btn-sm btn-default" data-toggle="tooltip" title="Edit"><span class="fa fa-pencil fa-fw"></span></a>
+							<a href="{{ path('deck_publish_form',{deck_id:data.deck.id}) }}" class="btn btn-sm btn-default" data-toggle="tooltip" title="Publish"><span class="fa fa-share fa-fw"></span></a>
+							<button class="btn btn-sm btn-default btn-delete-deck" data-id="{{data.deck.id}}" data-name="{{data.deck.name}}" data-toggle="tooltip" title="Delete"><span class="fa fa-trash-o fa-fw"></span></button>
+						</div>
+						<div class="small">
+							<time datetime="{{ data.deck.dateUpdate|date('c') }}">{{ data.deck.dateUpdate|date('M d, Y') }}</time>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		{% if data.previous_decks and data.previous_decks|length > 0 %}
+			<div class="box" style="margin-left: 3rem; margin-bottom: 1rem;">
+				<span>{{ data.deck.upgrades }} scenarios. Experience:  {{ data.deck.xp }} available. {{ data.deck.xpSpent ? data.deck.xpSpent : 0}} spent</span>
+				{% for previous_deck in data.previous_decks %}
+					<h5 style="font-size: 1.15em; flex: 1; margin: 0; padding-left: 1rem; padding-right: 1rem; display: flex; align-items: center; gap: 1rem;">
+						<a href="{{ path('deck_view',{deck_id:previous_deck.id,deck_name:previous_deck.name}) }}" style="line-height: normal;">
+							{{ previous_deck.name }}
+						</a>
+					</h5>
+				{% endfor %}
+			</div>
+		{% endif %}
 	</div>
 	{% else %}
 	<div class="box">

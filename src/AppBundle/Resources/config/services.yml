@@ -36,6 +36,10 @@ services:
     decklist_factory:
         class: AppBundle\Model\DecklistFactory
         arguments: ["@doctrine.orm.entity_manager", "@deck_validation_helper", "@texts"]
+    deck_manager:
+        class: AppBundle\Model\DeckManager
+        shared: false
+        arguments: ["@doctrine.orm.entity_manager", "@request_stack", "@router", "@logger"]
     agenda_helper:
         class: AppBundle\Helper\AgendaHelper
         arguments: ["@doctrine.orm.entity_manager"]

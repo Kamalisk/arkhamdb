@@ -1,4 +1,5 @@
 {% extends 'AppBundle::layout.html.twig' %}
+{% import "AppBundle::macros.html.twig" as macros %}
 
 {% block javascripts %}
 	{% javascripts '@AppBundle/Resources/public/js/ui.decks.js' %}
@@ -8,108 +9,157 @@
 
 {% block body %}
 
+<style>
+	.decks-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin: 1rem;
+		gap: 0.5rem;
+	}
+	.decks-header h1 {
+		margin: 0.1rem;
+	}
+	.decks-controls {
+		display: flex;
+		gap: 0.2rem;
+	}
+	@media (max-width:992px){
+		.decks-header {
+			flex-direction: column;
+		}
+	}
+	.active {
+		background-color: #cbcbcb;
+	}
+	.decks > div {
+		display: flex;
+		flex-direction: column;
+	}
+	.decks > div > .box > div {
+		background-color: rgba(255,255,255,0.97);
+		border-radius: 5px;
+		display: grid;
+		grid-template-columns: 1.5fr 2fr;
+	}
+	.decks .deck-box-content {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+	}
+	.decks .deck-box-hero-and-header {
+		display: grid;
+		grid-template-columns: auto 1fr 120px;
+	}
+	.deck-box-meta {
+		flex: 0.5;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: center;
+		gap: 0.5rem;
+		padding: 1rem;
+	}
+	.deck-box-controls {
+		flex: 0.5;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		justify-content: center;
+		gap: 0.5rem;
+		padding: 1rem;
+	}
+	.decks .hero-banner {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+	@media (max-width:992px){
+		.decks > .box > div {
+			display: flex;
+		}
+		.decks .deck-box-content {
+			display: flex;
+			flex-direction: column;
+			gap: 0rem;
+		}
+		.deck-box-meta {
+			flex-direction: row;
+			justify-content: space-between;
+			padding: 0.5rem;
+		}
+		.deck-box-controls {
+			flex-direction: row;
+			justify-content: space-between;
+			padding: 0.5rem;
+		}
+	}
+</style>
+
 <div class="main white container">
-
-<div class="row">
-
-<!-- Right-side column -->
-<div class="col-md-4 col-md-push-8">
-
-<div class="row" style="margin-bottom:10px">
-<div class="col-md-12">
-	<a href="{{ path('deck_buildform') }}" class="btn btn-default btn-sm"{% if cannotcreate %} disabled="disabled"{% endif %}><span class="fa fa-plus"></span> New Deck</a>
-	<div class="btn-group">
-		<button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown"{% if cannotcreate %} disabled="disabled"{% endif %}>
-			<span class="fa fa-upload"></span> Import Deck <span class="caret"></span>
-		</button>
-		<ul class="dropdown-menu" role="menu">
-			<li><a href="{{ path('deck_import') }}" id="btn-import-paste">Copy/paste</a></li>
-			<li><a href="#" onclick="$('#fileModal').modal('show')" id="btn-import-file">File</a></li>
-		</ul>
-	</div>
-</div>
-</div>
-
-<div class="row" style="margin-bottom:10px">
-<div class="col-md-12">
-	<div class="btn-group" id="btn-group-selection">
-		<button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
-			<span class="fa fa-check-square-o"></span> With Selection <span class="caret"></span>
-		</button>
-		<ul class="dropdown-menu" role="menu">
-			<li class="dropdown-header"><span class="fa fa-exchange"></span> Compare</li>
-		    <li><a href="#" id="btn-compare">Compare two decks</a></li>
-		    <li class="dropdown-header"><span class="fa fa-tag"></span> Tags</li>
-		    <li><a href="#" id="btn-tag-add">Add one or more tags</a></li>
-			<li><a href="#" id="btn-tag-remove-one">Remove one or more tags</a></li>
-			<li><a href="#" id="btn-tag-remove-all">Clear all tags</a></li>
-			<li class="dropdown-header"><span class="fa fa-trash-o"></span> Delete</li>
-			<li><a href="#" id="btn-delete-selected"><span style="color:red" class="fa fa-exclamation-triangle"></span> Delete all decks selected</a></li>
-		</ul>
-	</div>
-</div>
-</div>
-<div class="row" style="margin-bottom:10px">
-<div class="col-md-12" id="tag_toggles" title="Click to switch to this tag. Shift-click to toggle this tag."></div>
-</div>
-
-</div>
-<!-- / Right-side column -->
-
-<!-- Left-side column -->
-<div class="col-md-8 col-md-pull-4">
-
-<h1>My private decks <small style="font-size:16px" class="hidden-xs {% if cannotcreate %}text-danger{% endif %}">({{ nbdecks }}/{{ nbmax }} slots)</small></h1>
-
-<table class="table table-expanded list-decks">
-<tbody id="decks">
-{% for deck in decks %}
-	<tr data-id="{{ deck.id }}">
-		<td style="width : 30px"><input id="deck_select_{{deck.id}}" type="checkbox"></td>
-		<td class="hidden-xs" style="width : 60px">
-			<label for="deck_select_{{deck.id}}">
-			<div class="deck-list-investigator-image card-thumbnail-3x card-thumbnail-investigator hidden-xs" title="{{ deck.character.name }}" style="background-image:url({{ asset('/bundles/cards/'~deck.character.code~'.png') }})"></div>
-			</label>
-		</td>
-		<td>
-			<a href="{{ path('deck_view',{deck_id:deck.id}) }}" class="deck-name">{{ deck.name }}</a> {{ deck.version }}
-			{% if deck.problem is not null %}
-			<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> {{ deck_validation_helper.getProblemLabel(deck.problem) }}</div>
-			{% endif %}
-			<div class="tags">
-			{% for tag in deck.tags|split(' ') %}
-			<span class="tag" data-tag="{{ tag }}">{{ tag }}</span>
-			{% endfor %}
+	<header class="decks-header">
+		<h1>My private decks <small style="font-size:16px" class="hidden-xs {% if cannotcreate %}text-danger{% endif %}">({{ nbdecks }}/{{ nbmax }} slots)</small></h1>
+		<div class="decks-controls">
+			<a href="{{ path('deck_buildform') }}" class="btn btn-default btn-sm"{% if cannotcreate %} disabled="disabled"{% endif %}><span class="fa fa-plus"></span> New Deck</a>
+			<div class="btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown"{% if cannotcreate %} disabled="disabled"{% endif %}>
+					<span class="fa fa-upload"></span> Import Deck <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li><a href="{{ path('deck_import') }}" id="btn-import-paste">Copy/paste</a></li>
+					<li><a href="#" onclick="$('#fileModal').modal('show')" id="btn-import-file">File</a></li>
+				</ul>
 			</div>
-			{% if deck.upgrades is not null %}
-			<div>
-			<span>{{ deck.upgrades }} scenarios. Experience:  {{ deck.xp }} available. {{ deck.xpSpent ? deck.xpSpent : 0}} spent</span>
+			<div class="btn-group" id="btn-group-selection">
+				<button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
+					<span class="fa fa-check-square-o"></span> With Selection <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li class="dropdown-header"><span class="fa fa-exchange"></span> Compare</li>
+						<li><a href="#" id="btn-compare">Compare two decks</a></li>
+						<li class="dropdown-header"><span class="fa fa-tag"></span> Tags</li>
+						<li><a href="#" id="btn-tag-add">Add one or more tags</a></li>
+					<li><a href="#" id="btn-tag-remove-one">Remove one or more tags</a></li>
+					<li><a href="#" id="btn-tag-remove-all">Clear all tags</a></li>
+					<li class="dropdown-header"><span class="fa fa-trash-o"></span> Delete</li>
+					<li><a href="#" id="btn-delete-selected"><span style="color:red" class="fa fa-exclamation-triangle"></span> Delete all decks selected</a></li>
+				</ul>
 			</div>
-			{% endif %}
-			{% if previousdecks[deck.id] is not null and previousdecks[deck.id] %}			
-			<ul style="padding-left : 20px; font-size : 0.8em">
-			{% for previousdeck in previousdecks[deck.id] %}
-			<li style="margin-left : 10px;"><a href="{{ path('deck_view',{deck_id:previousdeck.id}) }}" class="deck-name">{{ previousdeck.name }}</a></li>
+		</div>
+	</header>
+
+	<div id="decks">
+		<header style="margin-bottom: 1rem; background-image: linear-gradient(100deg, rgba(159, 159, 159, 0.5) 49.5%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.2) 51%, rgba(200, 200, 200, 0.5) 51.5%, rgba(200, 200, 200, 0.5) 100%); border-radius: 5px; padding: 1rem;">
+			{{ header|raw }}
+		</header>
+		<!--
+		<div style="display: flex; gap: 0.5rem;">
+			<div id="toggle-grid-2" class="active" style="cursor: pointer; width: 25px; height: 25px; padding: 0.5rem; border-radius: 5px;">
+				<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+					<path fill="currentColor" d="M192 176C192 202.5 170.5 224 144 224H48C21.49 224 0 202.5 0 176V80C0 53.49 21.49 32 48 32H144C170.5 32 192 53.49 192 80V176zM192 432C192 458.5 170.5 480 144 480H48C21.49 480 0 458.5 0 432V336C0 309.5 21.49 288 48 288H144C170.5 288 192 309.5 192 336V432zM256 80C256 53.49 277.5 32 304 32H400C426.5 32 448 53.49 448 80V176C448 202.5 426.5 224 400 224H304C277.5 224 256 202.5 256 176V80zM448 432C448 458.5 426.5 480 400 480H304C277.5 480 256 458.5 256 432V336C256 309.5 277.5 288 304 288H400C426.5 288 448 309.5 448 336V432z" class="">
+					</path>
+				</svg>
+			</div>
+			<div id="toggle-grid-1" style="cursor: pointer; width: 25px; height: 25px; padding: 0.5rem; border-radius: 5px;">
+				<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+					<path fill="currentColor" d="M16 96C16 69.49 37.49 48 64 48C90.51 48 112 69.49 112 96C112 122.5 90.51 144 64 144C37.49 144 16 122.5 16 96zM480 64C497.7 64 512 78.33 512 96C512 113.7 497.7 128 480 128H192C174.3 128 160 113.7 160 96C160 78.33 174.3 64 192 64H480zM480 224C497.7 224 512 238.3 512 256C512 273.7 497.7 288 480 288H192C174.3 288 160 273.7 160 256C160 238.3 174.3 224 192 224H480zM480 384C497.7 384 512 398.3 512 416C512 433.7 497.7 448 480 448H192C174.3 448 160 433.7 160 416C160 398.3 174.3 384 192 384H480zM16 416C16 389.5 37.49 368 64 368C90.51 368 112 389.5 112 416C112 442.5 90.51 464 64 464C37.49 464 16 442.5 16 416zM112 256C112 282.5 90.51 304 64 304C37.49 304 16 282.5 16 256C16 229.5 37.49 208 64 208C90.51 208 112 229.5 112 256z" class="">
+					</path>
+				</svg>
+			</div>
+		</div>
+		-->
+		{% include 'AppBundle:Default:pagination.html.twig' %}
+		<div class="decks">
+			{% for data in decks %}
+				{{ macros.deck_block(data, false, true) }}
 			{% endfor %}
-			</ul>
-			{% endif %}
-		</td>
-		<td class="decks-actions text-right">
-			<a href="{{ path('deck_edit',{deck_id:deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit"><span class="fa fa-pencil fa-fw"></span></a>
-			<a href="{{ path('deck_publish_form',{deck_id:deck.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Publish"><span class="fa fa-share fa-fw"></span></a>
-			<button class="btn btn-xs btn-default btn-delete-deck" data-toggle="tooltip" title="Delete"><span class="fa fa-trash-o fa-fw"></span></button>
-		</td>
-	</tr>
-{% endfor %}
-</tbody>
-</table>
+		</div>
+		{% include 'AppBundle:Default:pagination.html.twig' %}
 
-<div id="deck"></div>
+		<div id="deck"></div>
 
-</div>
-<!-- / Left-side column -->
+	</div>
+	<!-- / Left-side column -->
 
-</div>
 </div><!-- /.container -->
 
 {% include 'AppBundle:Modale:file.html.twig' %}

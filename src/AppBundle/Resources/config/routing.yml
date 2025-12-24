@@ -52,10 +52,13 @@ donators:
         _controller: AppBundle:Social:donators
 
 decks_list:
-    path: /decks
+    path: /decks/{page}
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:list
+        page: 1
+    requirements:
+        page: \d+
 
 decklists_searchform:
     path: /decklists/search
