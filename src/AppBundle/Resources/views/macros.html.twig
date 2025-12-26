@@ -116,33 +116,51 @@
 	{% set character = data.deck.getCharacter() %}
 
 	{% if single %}
-	<div class="border-{{ data.faction.code }}" style="margin-bottom: 1rem; border-width: 1px; border-style: solid;">
+	<div class="border-{{ data.faction.code }}" style="margin-bottom: 1rem; border-width: 1px; border-style: solid; border-radius: 5px;">
 		<div class="box">
 			<div style="">
 				<div class="deck-box-hero-and-header">
 					<div class="hero-banner bg-faction faint-{{ data.faction.code }}" style="padding: 0.4rem;">
 						<input class="deck_select" data-id="{{data.deck.id}}" type="checkbox" style="margin: 0;">
 					</div>
-
-					<div class="bg-faction faint-{{ data.faction.code }}" style="display: flex; align-items: stretch; padding: 1rem; flex: 1;">
-						<h4 style="font-size: 1.15em; flex: 1; margin: 0; padding-left: 1rem; padding-right: 1rem; display: flex; align-items: center; gap: 1rem;">
+					<div style="display: flex; flex-direction: column; justify-content: center; padding: 5px;">
+						<div class="card-thumbnail-wide card-thumbnail-investigator" style="width: 120px; height: 60px; border-radius: 5px; background-image:url(/bundles/cards/{{data.deck.getCharacter().getCode()}}.png)"></div>
+					</div>
+					<div style="display: flex; justify-content: center; flex-direction: column; padding: 1rem; flex: 1; gap: 0.5rem;">
+						<div style="padding: 0;margin: 0; display: flex; align-items: center; gap: 0.5rem;">
 							<a href="{{ path('deck_view',{deck_id:data.deck.id,deck_name:data.deck.name}) }}" style="line-height: normal;">
 								{{ data.deck.name }} v{{ data.deck.version }}
 							</a>
-						</h4>
+						</div>
+						<div>
+							<a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.deck.getCharacter().getName()}}</a>
+						</div>
 					</div>
-					<div class="card-thumbnail-wide card-thumbnail-investigator" style="min-height: 100%; background-image:url(/bundles/cards/{{data.deck.getCharacter().getCode()}}.png)"></div>
 				</div>
 				<div class="deck-box-content">
-					<div class="deck-box-meta" style="">
-						<a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.deck.getCharacter().getName()}}</a>
-					</div>
 					<div class="deck-box-meta">
 						<div style="font-size: 1.2rem;">
 							Tags: {{ data.deck.tags | split(',') | join(', ')}}
 						</div>
 						{% if data.deck.problem is not null %}
 							<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> {{ deck_validation_helper.getProblemLabel(data.deck.problem) }}</div>
+						{% endif %}
+						{% if data.previous_decks and data.previous_decks|length > 0 %}
+						<div class="deck-upgrades-list" style="display: flex; flex-direction: column; cursor: pointer;">
+							<span>
+								<span class="fa fa-caret-right"></span>
+								{{ data.deck.upgrades }} scenarios. Experience:  {{ data.deck.xp }} available. {{ data.deck.xpSpent ? data.deck.xpSpent : 0}} spent
+							</span>
+							<div class="deck-upgrades-deck-list" style="display: none;">
+								{% for previous_deck in data.previous_decks %}
+									<h5 style="font-size: 1.15em; flex: 1; margin: 0; padding-left: 1rem; padding-right: 1rem; display: flex; align-items: center; gap: 1rem;">
+										<a href="{{ path('deck_view',{deck_id:previous_deck.id,deck_name:previous_deck.name}) }}" style="line-height: normal;">
+											{{ previous_deck.name }}
+										</a>
+									</h5>
+								{% endfor %}
+							</div>
+						</div>
 						{% endif %}
 					</div>
 					<div class="deck-box-controls" style="">
@@ -158,18 +176,6 @@
 				</div>
 			</div>
 		</div>
-		{% if data.previous_decks and data.previous_decks|length > 0 %}
-			<div class="box" style="margin-left: 3rem; margin-bottom: 1rem;">
-				<span>{{ data.deck.upgrades }} scenarios. Experience:  {{ data.deck.xp }} available. {{ data.deck.xpSpent ? data.deck.xpSpent : 0}} spent</span>
-				{% for previous_deck in data.previous_decks %}
-					<h5 style="font-size: 1.15em; flex: 1; margin: 0; padding-left: 1rem; padding-right: 1rem; display: flex; align-items: center; gap: 1rem;">
-						<a href="{{ path('deck_view',{deck_id:previous_deck.id,deck_name:previous_deck.name}) }}" style="line-height: normal;">
-							{{ previous_deck.name }}
-						</a>
-					</h5>
-				{% endfor %}
-			</div>
-		{% endif %}
 	</div>
 	{% else %}
 	<div class="box">

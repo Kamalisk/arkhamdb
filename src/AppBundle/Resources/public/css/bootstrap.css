@@ -4477,7 +4477,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   }
 }
 .navbar-default {
-  background: linear-gradient(158deg, #B3000C 0%, #036F3E 100%);
+  background: #415d43;
   border-color: #eeeeee;
 }
 .navbar-default .navbar-brand {

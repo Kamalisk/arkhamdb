@@ -185,6 +185,10 @@ ui.on_dom_loaded = function on_dom_loaded() {
 		ui.update_url('collection', event.currentTarget.value);
 		return false;
 	});
+	$('#decklist-quick-per').on('change', function (event) {
+		ui.update_url('perPage', event.currentTarget.value);
+		return false;
+	});
 
 	$('#tag_toggles').on('click', 'button', function (event) {
 		var button = $(this);
@@ -194,6 +198,18 @@ ui.on_dom_loaded = function on_dom_loaded() {
 			});
 		}
 		setTimeout(ui.filter_decks, 0);
+	});
+
+	$('.deck-upgrades-list').on('click', function (event) {
+			if ($('.deck-upgrades-deck-list', event.target.parentNode.parentNode).css('display') == 'block') {
+				$('span > span', event.target.parentNode.parentNode).removeClass('fa-caret-down');
+				$('span > span', event.target.parentNode.parentNode).addClass('fa-caret-right');
+				$('.deck-upgrades-deck-list', event.target.parentNode.parentNode).css('display', 'none');
+			} else {
+				$('span > span', event.target.parentNode.parentNode).removeClass('fa-caret-right');
+				$('span > span', event.target.parentNode.parentNode).addClass('fa-caret-down');
+				$('.deck-upgrades-deck-list', event.target.parentNode.parentNode).css('display', 'block');
+			}
 	});
 	ui.update_tag_toggles();
 

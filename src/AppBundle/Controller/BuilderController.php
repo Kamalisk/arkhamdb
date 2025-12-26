@@ -957,12 +957,17 @@ class BuilderController extends Controller
 		$sort = filter_var($request->query->get('sort'), FILTER_SANITIZE_STRING);
 		$category = filter_var($request->query->get('category'), FILTER_SANITIZE_STRING);
 		$collection = filter_var($request->query->get('collection'), FILTER_SANITIZE_STRING);
+		$perPage = filter_var($request->query->get('perPage'), FILTER_SANITIZE_NUMBER_INT);
 
 		/**
 		* @var $deck_manager DeckManager
 		*/
 		$deck_manager = $this->get('deck_manager');
-		$deck_manager->setLimit(12); // 12
+		if ($perPage && in_array($perPage, [10,25,50,100])){
+			$deck_manager->setLimit($perPage);
+		} else {
+			$deck_manager->setLimit(12);
+		}
 		$deck_manager->setPage($page);
 		$deck_manager->setUser($user);
 
@@ -991,6 +996,7 @@ class BuilderController extends Controller
 				'tag' => $tag,
 				'tags' => $tags,
 				'sort' => $sort,
+				'perPage' => $perPage,
 				'category' => $category,
 				'collection' => $collection
 			)

@@ -25,4 +25,11 @@
 		<option {% if sort is defined and sort == 'date' %} selected="selected"{% endif %} value="date">Sort by Created</option>
 		<option {% if sort is defined and sort == 'name' %} selected="selected"{% endif %} value="name">Sort by Name</option>
 	</select>
+
+	<select class="form-control" id="decklist-quick-per" name="perPage">
+		<option {% if perPage is defined and perPage == 10 %} selected="selected"{% endif %} value="10">10 per page</option>
+		<option {% if perPage is not defined or perPage == 0 %} selected="selected"{% endif %} value="">25 per page</option>
+		<option {% if perPage is defined and perPage == 50 %} selected="selected"{% endif %} value="50">50 per page</option>
+		<option {% if perPage is defined and perPage == 100 %} selected="selected"{% endif %} value="100">100 per page</option>
+	</select>
 </div>
