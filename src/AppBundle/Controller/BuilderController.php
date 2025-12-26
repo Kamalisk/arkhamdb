@@ -966,7 +966,7 @@ class BuilderController extends Controller
 		if ($perPage && in_array($perPage, [10,25,50,100])){
 			$deck_manager->setLimit($perPage);
 		} else {
-			$deck_manager->setLimit(12);
+			$deck_manager->setLimit(25);
 		}
 		$deck_manager->setPage($page);
 		$deck_manager->setUser($user);
