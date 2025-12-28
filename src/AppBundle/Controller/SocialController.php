@@ -466,11 +466,15 @@ class SocialController extends Controller
 		$collection = filter_var($request->query->get('collection'), FILTER_SANITIZE_STRING);
 
 		$investigator_type = $this->getDoctrine()->getRepository('AppBundle:Type')->findOneBy(['code' => 'investigator'], ['id' => 'DESC']);
-		$all_investigators = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(['type' => $investigator_type], ['name' => 'ASC']);
+		$all_investigators = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(['type' => $investigator_type, "hidden" => false, "permanent" => false], ['name' => 'ASC']);
 
 		$unique_investigators = [];
 		$investigators = [];
 		foreach($all_investigators as $investigator) {
+			$deck_requirements = $this->get('deck_validation_helper')->parseReqString($investigator->getDeckRequirements());
+			if (!isset($deck_requirements['size'])) {
+				continue;
+			}
 			$unique_key = $investigator->getName();
 
 			if (isset($unique_investigators[$unique_key])) {

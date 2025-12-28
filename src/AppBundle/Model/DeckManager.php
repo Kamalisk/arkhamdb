@@ -159,9 +159,23 @@ class DeckManager
 		$joinTables = [];
 
 		if($investigator) {
+			$duplicates = [];
+			if ($investigator->getDuplicates()) {
+				foreach ($investigator->getDuplicates() as $duplicate) {
+					$duplicates[] = $duplicate->getCode();
+				}
+			}
+			if ($investigator->getDuplicateOf()) {
+				$duplicates[] = $investigator->getDuplicateOf()->getCode();
+			}
 			$qb->innerJoin('d.character', "investigator");
-			$qb->andWhere("investigator.code = :investigator");
-			$qb->setParameter("investigator", $investigator->getCode());
+			if ($duplicates && count($duplicates) > 0) {
+				$qb->andWhere("investigator.code IN (:investigator)");
+				$qb->setParameter("investigator", array_merge([$investigator->getCode()], $duplicates));
+			} else {
+				$qb->andWhere("investigator.code = :investigator");
+				$qb->setParameter("investigator", $investigator->getCode());
+			}
 		}
 
 		$tag = filter_var($request->query->get('tag'), FILTER_SANITIZE_STRING);
