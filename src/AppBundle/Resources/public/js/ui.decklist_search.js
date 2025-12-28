@@ -35,7 +35,7 @@
     	function findMatches(q, cb) {
     		if(q.match(/^\w:/)) return;
     		var regexp = new RegExp(q, 'i');
-				var all_cards = app.data.cards.find({name: regexp});
+				var all_cards = app.data.cards.find({name: regexp, deck_limit: {$gte: 1}});
 				var cards = [];
 				for (var i=0; i<all_cards.length; i++) {
 					var card = all_cards[i];
