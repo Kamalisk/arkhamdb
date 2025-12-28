@@ -133,7 +133,19 @@
 							</a>
 						</div>
 						<div>
-							<a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.deck.getCharacter().getName()}}</a>
+							<a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">
+								{{data.deck.getCharacter().getName()}}
+								{% if data.deck.getCharacter().getSubName() %}{% endif %}
+								{% set alternateFront = data.deck.getAlternateFront() %}
+								{% set alternateBack = data.deck.getAlternateBack() %}
+								{% if alternateFront and alternateBack %}
+									({{alternateFront.getPack().getName()}})
+								{% elseif alternateFront %}
+									(Front: {{alternateFront.getPack().getName()}})
+								{% elseif alternateBack %}
+									(Back: {{alternateBack.getPack().getName()}})
+								{% endif %}
+							</a>
 						</div>
 					</div>
 				</div>

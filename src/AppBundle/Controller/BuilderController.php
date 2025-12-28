@@ -973,15 +973,20 @@ class BuilderController extends Controller
 
 		$tags = $deck_manager->getAllTags();
 		$tags = array_unique($tags);
+		asort($tags);
 
 		$paginator = $deck_manager->findDecksWithComplexSearch($user);
 
 		$investigator_type = $this->getDoctrine()->getRepository('AppBundle:Type')->findOneBy(['code' => 'investigator'], ['id' => 'DESC']);
-		$all_investigators = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(['type' => $investigator_type], ['name' => 'ASC']);
+		$all_investigators = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(['type' => $investigator_type, "hidden" => false, "permanent" => false], ['name' => 'ASC']);
 
 		$unique_investigators = [];
 		$investigators = [];
 		foreach($all_investigators as $investigator) {
+			$deck_requirements = $this->get('deck_validation_helper')->parseReqString($investigator->getDeckRequirements());
+			if (!isset($deck_requirements['size'])) {
+				continue;
+			}
 			$unique_key = $investigator->getName();
 			if (isset($unique_investigators[$unique_key])) {
 				continue;
@@ -1015,9 +1020,14 @@ class BuilderController extends Controller
 				$previous_deck = $previous_deck->getPreviousDeck();
 			}
 
+			$investigator = $deck->getCharacter();
+
+			$meta = $deck->getMeta() ? json_decode($deck->getMeta(), true) : null;
+
 			$deck_data[] = [
 				'faction' => $deck->getCharacter()->getFaction(),
 				'deck' => $deck,
+				'meta' => $meta,
 				'previous_decks' => $previous_decks
 			];
 			$iterator->next();
