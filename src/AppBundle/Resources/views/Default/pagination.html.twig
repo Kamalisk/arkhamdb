@@ -1,25 +1,23 @@
 <div class="text-center">
-<ul class="pagination pagination-sm" style="margin-top:0">
+	<ul class="pagination pagination-sm" style="margin: 0.2rem;">
+		{% if prevurl is null %}
+		<li class="disabled"><a href="#">&laquo;</a></li>
+		{% else %}
+		<li class=""><a href="{{ prevurl }}">&laquo;</a></li>
+		{% endif %}
 
-{% if prevurl is null %}
-  <li class="disabled"><a href="#">&laquo;</a></li>
-{% else %}
-  <li class=""><a href="{{ prevurl }}">&laquo;</a></li>
-{% endif %}
+		{% for page in pages %}
+			{% if page.current %}
+			<li class="active"><a href="{{ page.url }}">{{ page.numero }} <span class="sr-only">(current)</span></a></li>
+			{% else %}
+			<li><a href="{{ page.url }}">{{ page.numero }}</a></li>
+			{% endif %}
+		{% endfor %}
 
-{% for page in pages %}
-	{% if page.current %}
-	  <li class="active"><a href="{{ page.url }}">{{ page.numero }} <span class="sr-only">(current)</span></a></li>
-	{% else %}
-	  <li><a href="{{ page.url }}">{{ page.numero }}</a></li>
-	{% endif %}
-{% endfor %}
-
-{% if nexturl is null %}
-  <li class="disabled"><a href="#">&raquo;</a></li>
-{% else %}
-  <li class=""><a href="{{ nexturl }}">&raquo;</a></li>
-{% endif %}
-
-</ul>
+		{% if nexturl is null %}
+		<li class="disabled"><a href="#">&raquo;</a></li>
+		{% else %}
+		<li class=""><a href="{{ nexturl }}">&raquo;</a></li>
+		{% endif %}
+	</ul>
 </div>
