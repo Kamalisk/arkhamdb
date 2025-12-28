@@ -933,6 +933,27 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
         return $this->character;
     }
 
+    public function getAlternateFront(){
+        $card  = $this->getCharacter();
+        $meta = json_decode($this->getMeta(), true);
+        if ($meta && isset($meta['alternate_front'])) {
+            return $card->getAlternates()->filter(function($alternate) use ($meta) {
+                return $alternate->getCode() == $meta['alternate_front'];
+            })->first();
+        }
+        return null;
+    }
+    public function getAlternateBack() {
+        $card  = $this->getCharacter();
+        $meta = json_decode($this->getMeta(), true);
+        if ($meta && isset($meta['alternate_back'])) {
+            return $card->getAlternates()->filter(function($alternate) use ($meta) {
+                return $alternate->getCode() == $meta['alternate_back'];
+            })->first();
+        }
+        return null;
+    }
+
     /**
      * Set lastPack
      *

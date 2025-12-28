@@ -76,33 +76,50 @@ $(function () {
 <tbody>
 
 {% for decklist in decklists %}
+	{% set character = decklist.getCharacter() %}
+	<tr>
+		<td class="decklist-faction-image hidden-xs">
+			<div class="card-thumbnail-wide card-thumbnail-investigator" style="width: 120px; height: 60px; border-radius: 5px; background-image:url(/bundles/cards/{{character.getCode()}}.png)"></div>
+		</td>
+		<td>
+			<article>
+			<h4>
+				<small class="pull-right">
+					{{ macros.decklist_social_icons(decklist) }}
+				</small>
+				<a class="decklist-name" href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.nameCanonical|e('url') }) }}">{{ decklist.name }}</a>
+			</h4>
+			<div>
 
-<tr>
-<td class="decklist-faction-image hidden-xs">
-	<img src="/bundles/cards/{{decklist.getCharacter().getCode()}}.png">
-</td>
-<td>
-    <article>
-	<h4>
-		<small class="pull-right">
-			{{ macros.decklist_social_icons(decklist) }}
-		</small>
-		<a class="decklist-name" href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.nameCanonical|e('url') }) }}">{{ decklist.name }}</a>
-	</h4>
-	<h5>
-		<time class="pull-right" datetime="{{ decklist.dateCreation|date('c') }}">{{ decklist.dateCreation|date('M d') }}</time>
-		<span class="username">
-    		<a href="{{ path('user_profile_public', {user_id:decklist.user.id,user_name:decklist.user.username|e('url')}) }}" class="{{ decklist.user.color }}">{{ decklist.user.username }}</a>
-    		<small class="reputation">{{ decklist.user.reputation }}</small>
-		</span>
-		{% if decklist.tags %}
-		<span>[{{decklist.tags}}]</span>
-		{% endif %}
-	</h5>
-
-	</article>
-</td>
-</tr>
+			</div>
+			<h5>
+				<div class="pull-right">
+					<span class="username">
+						<a href="{{ path('user_profile_public', {user_id:decklist.user.id,user_name:decklist.user.username|e('url')}) }}" class="{{ decklist.user.color }}">{{ decklist.user.username }}</a>
+						<small class="reputation">{{ decklist.user.reputation }}</small>
+					</span>
+					·
+					<time datetime="{{ decklist.dateCreation|date('c') }}">{{ decklist.dateCreation|date('M d') }}</time>
+				</div>
+				<a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">
+					{{character.getName()}}
+					{% set alternateFront = decklist.getAlternateFront() %}
+					{% set alternateBack = decklist.getAlternateBack() %}
+					{% if alternateFront and alternateBack %}
+						({{alternateFront.getPack().getName()}})
+					{% elseif alternateFront %}
+						(Front: {{alternateFront.getPack().getName()}})
+					{% elseif alternateBack %}
+						(Back: {{alternateBack.getPack().getName()}})
+					{% endif %}
+				</a>
+				{% if decklist.tags %}
+				<span>[{{decklist.tags}}]</span>
+				{% endif %}
+			</h5>
+			</article>
+		</td>
+	</tr>
 {% endfor %}
 
 </tbody>

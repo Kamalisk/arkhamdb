@@ -361,7 +361,7 @@ h4.deck-section {
 	background-repeat:no-repeat;
 	width:120px;height:55px;
 	background-size:270px 180px;
-	background-position: -5px -45px
+	background-position: -5px -38px
 }
 
 .card-faded-background {
@@ -454,8 +454,8 @@ div.site-slogan {
 	}
 }
 
-.decklist-faction-image img {
-    height: 64px;
+.decklist-faction-image {
+	width: 120px;
 }
 
 .decklists-advanced-search {
