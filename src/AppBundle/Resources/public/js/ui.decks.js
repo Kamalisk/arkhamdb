@@ -2,10 +2,59 @@
 
 ui.decks = [];
 
+// setup typehead for the card search
+ui.setup_typeahead = function setup_typeahead() {
+	function findMatches(q, cb) {
+		if(q.match(/^\w:/)) return;
+		var regexp = new RegExp(q, 'i');
+			var all_cards = app.data.cards.find({name: regexp, deck_limit: {$gte: 1}});
+			var cards = [];
+			for (var i=0; i<all_cards.length; i++) {
+				var card = all_cards[i];
+				if (!card) {
+					continue;
+				}
+				if (card.duplicate_of_code) {
+					continue;
+				}
+				cards.push(card);
+			}
+			cb(cards);
+	}
+
+	$('#card').typeahead({
+		hint: true,
+		highlight: true,
+		minLength: 2
+	},{
+		name : 'cardnames',
+		displayKey: 'name',
+		source: findMatches,
+			templates: {
+				suggestion: _.template('<div><strong class="fg-<%= faction_code %>"><%= name %> <% if (typeof(xp) !== "undefined" && xp) { %>[<%= xp %>]<% } %></strong> (<%= type_name %>, <%= pack_name %> #<%= position %>)</div>')
+			}
+	});
+
+
+	$('#card').on('typeahead:selected typeahead:autocompleted', function(event, data) {
+		var card = app.data.cards.find({
+			code : data.code
+		})[0];
+		var line = $('<p class="fg-'+card.faction_code+'" style="padding: 3px 5px;border-radius: 3px;border: 1px solid silver"><button type="button" class="close" aria-hidden="true">&times;</button><input type="hidden" name="cards[]" value="'+card.code+'">'+
+						'<strong>' + card.name + (card.xp ? ' [' + card.xp + ']' : '') + '</strong> (' + card.pack_name + ' #' + card.position + ')</p>');
+		line.on({
+			click: function(event) { line.remove(); }
+		});
+		line.insertBefore($('#card'));
+		$(event.target).typeahead('val', '');
+	});
+
+}
+
 ui.confirm_delete = function confirm_delete(event) {
-	var tr = $(this).closest('tr');
+	var tr = $(event.currentTarget);
 	var deck_id = tr.data('id');
-	var deck_name = tr.find('.deck-name').text();
+	var deck_name = tr.data('name');
 	$('#delete-deck-name').text(deck_name);
 	$('#delete-deck-id').val(deck_id);
 	$('#deleteModal').modal('show');
@@ -150,7 +199,7 @@ ui.do_action_selection = function do_action_selection(event) {
  * @memberOf ui
  */
 ui.on_dom_loaded = function on_dom_loaded() {
-
+	ui.setup_typeahead();
 	$('#decks').on('click', 'button.btn-delete-deck', ui.confirm_delete);
 	$('#decks').on('click', 'input[type=checkbox]', function (event) {
 		var checked = $(this).closest('tbody').find('input[type=checkbox]:checked');
