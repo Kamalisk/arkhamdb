@@ -53,7 +53,7 @@
 
 {% macro investigator_highlight(investigator, decklists) %}
 	{% import _self as macros %}
-	<div class="bg-faction bg-{{ investigator.faction.code }}" style="color: black!important; display: flex; flex-direction: column; border-radius: 5px; padding: 0.5rem;">
+	<div class="bg-faction faint-{{ investigator.faction.code }} border-{{ investigator.faction.code }}" style="display: flex; flex-direction: column; border-width: 6px; border-style: solid; border-radius: 5px; padding: 0.5rem;">
 		<header style="display: flex; align-items: center; gap: 1rem; justify-content: space-between; padding: 1rem;">
 			<div>
 				<h5 style="font-size: 16px; padding: 0;">Investigator Spotlight</h5>
@@ -73,24 +73,20 @@
 
 {% macro decklist_block(data, compact) %}
 	<div class="box">
-		<div style="background-color: rgba(255,255,255,0.97); border-radius: 5px;">
-			<div class="bg-faction faint-{{ data.faction.code }}" style="display: flex; align-items: stretch;">
+		<div>
+			<div class="border-{{ data.faction.code }}" style="display: flex; align-items: stretch; border-bottom-style: solid; border-bottom-width: 6px;">
 				<h4 style="font-size: 1.15em; flex: 1; margin: 0; padding: 0.5rem; padding-left: 1rem; padding-right: 1rem; display: flex; align-items: center;">
 					<a href="{{ path('decklist_detail',{decklist_id:data.decklist.id,decklist_name:data.decklist.nameCanonical}) }}">{{ data.decklist.name }}</a>
 				</h4>
 				{% if not compact %}
-					<div class="card-thumbnail-wide card-thumbnail-investigator" style="min-height: 55px; {% if data.hero_meta.offset is defined%}background-position: {{data.hero_meta.offset}}; {% endif %}background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png)"></div>
+					<div class="card-thumbnail-wide card-thumbnail-investigator" style="min-height: 55px; background-image:url(/bundles/cards/{{data.decklist.getCharacter().getCode()}}.png)"></div>
 				{% endif %}
 			</div>
-			<div style="background-color: white; padding: 0.7rem; border-top: solid black 1px;">
+			<div style="padding: 0.7rem;">
 				{% set character = data.decklist.getCharacter() %}
 				<div style="display: flex; justify-content: stretch;">
 					<div style="flex: 0.5;">
 						<a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.decklist.getCharacter().getName()}}</a>
-						<div>
-						{% if data.meta.aspect is defined %}<span class="fa fa-circle fg-{{data.meta.aspect}}" title="{{data.meta.aspect}}"></span> {{data.meta.aspect|capitalize}} {% endif %}
-						{% if data.meta.aspect2 is defined %}<span class="fa fa-circle fg-{{data.meta.aspect2}}" title="{{data.meta.aspect2}}"></span> {{data.meta.aspect2|capitalize}} {% endif %}
-						</div>
 						<div style="font-size: 1.2rem;">
 							Tags: {{ data.decklist.tags | split(',') | join(', ')}}
 						</div>

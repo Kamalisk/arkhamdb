@@ -944,6 +944,7 @@ class BuilderController extends Controller
 
 	public function listAction ($page = 1, Request $request)
 	{
+		$dbh = $this->getDoctrine()->getConnection();
 		/* @var $user \AppBundle\Entity\User */
 		$user = $this->getUser();
 
@@ -958,6 +959,8 @@ class BuilderController extends Controller
 		$category = filter_var($request->query->get('category'), FILTER_SANITIZE_STRING);
 		$collection = filter_var($request->query->get('collection'), FILTER_SANITIZE_STRING);
 		$perPage = filter_var($request->query->get('perPage'), FILTER_SANITIZE_NUMBER_INT);
+		$cards_code = $request->query->get('cards');
+		$deck_name = filter_var($request->query->get('name'), FILTER_SANITIZE_STRING);
 
 		/**
 		* @var $deck_manager DeckManager
@@ -994,6 +997,29 @@ class BuilderController extends Controller
 			$unique_investigators[$unique_key] = true;
 			$investigators[] = $investigator;
 		}
+
+		$cardFilters = '';
+		if (! empty($cards_code) && is_array($cards_code)) {
+			$cards = $dbh->executeQuery(
+			"SELECT
+			c.name,
+			c.code,
+			f.code faction_code,
+			c.xp,
+			c.position,
+			p.name as pack_name
+			from card c
+			join faction f on f.id=c.faction_id
+			join pack p on p.id = c.pack_id
+			where c.code in (?)
+			order by c.code desc", array($cards_code), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY))
+			->fetchAll();
+
+			foreach($cards as $card) {
+				$cardFilters .= $this->renderView('AppBundle:Search:card.html.twig', $card);
+			}
+		}
+
 		$header = $this->renderView('AppBundle:Builder:form-quick.html.twig',
 			array(
 				'investigators' => $investigators,
@@ -1033,12 +1059,20 @@ class BuilderController extends Controller
 			$iterator->next();
 		}
 
+		$expanded = false;
+		if ($cardFilters || $deck_name) {
+			$expanded = true;
+		}
+
 		if(count($decks)) {
 			return $this->render('AppBundle:Builder:decks.html.twig',
 				array(
 					'pagetitle' => "My Decks",
 					'pagedescription' => "Create custom decks with the help of a powerful deckbuilder.",
 					'decks' => $deck_data,
+					'cardFilters' => $cardFilters,
+					'expanded' => $expanded,
+					'name' => $deck_name,
 					'tags' => $tags,
 					'nbmax' => $user->getMaxNbDecks(),
 					'nbdecks' => count($decks),

@@ -141,7 +141,7 @@ class DeckManager
 			$investigator = $this->doctrine->getRepository('AppBundle:Card')->findOneBy(['code' => $investigator_code]);
 		}
 
-		$decklist_name = filter_var($request->query->get('name'), FILTER_SANITIZE_STRING);
+		$deck_name = filter_var($request->query->get('name'), FILTER_SANITIZE_STRING);
 
 		$sort = $request->query->get('sort');
 		$packs = $request->query->get('packs');
@@ -184,9 +184,9 @@ class DeckManager
 			$qb->setParameter("tags", '%'.$tag.'%');
 		}
 
-		if(! empty($decklist_name)) {
+		if(!empty($deck_name)) {
 			$qb->andWhere('d.name like :deckname');
-			$qb->setParameter('deckname', "%$decklist_name%");
+			$qb->setParameter('deckname', "%$deck_name%");
 		}
 		if(!empty($cards_code) || !empty($packs)) {
 			if (!empty($cards_code) ) {

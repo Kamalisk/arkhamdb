@@ -29,6 +29,18 @@
 			flex-direction: column;
 		}
 	}
+	.advancedFilters {
+		display: grid;
+		grid-template-columns: 0.4fr 0.4fr 0.2fr;
+		gap: 0.5rem;
+		padding: 0.5rem;
+	}
+	@media (max-width:992px){
+		.advancedFilters {
+			flex-direction: column;
+			display: flex;
+		}
+	}
 	.active {
 		background-color: #cbcbcb;
 	}
@@ -37,7 +49,6 @@
 		flex-direction: column;
 	}
 	.decks > div > .box > div {
-		background-color: rgba(255,255,255,0.97);
 		border-radius: 5px;
 		display: grid;
 		grid-template-columns: 1fr 1.1fr;
@@ -133,25 +144,23 @@
 	</header>
 
 	<div id="decks">
-		<header style="padding: 1rem;">
-			{{ header|raw }}
-		</header>
-		<!--
-		<div style="display: flex; gap: 0.5rem;">
-			<div id="toggle-grid-2" class="active" style="cursor: pointer; width: 25px; height: 25px; padding: 0.5rem; border-radius: 5px;">
-				<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-					<path fill="currentColor" d="M192 176C192 202.5 170.5 224 144 224H48C21.49 224 0 202.5 0 176V80C0 53.49 21.49 32 48 32H144C170.5 32 192 53.49 192 80V176zM192 432C192 458.5 170.5 480 144 480H48C21.49 480 0 458.5 0 432V336C0 309.5 21.49 288 48 288H144C170.5 288 192 309.5 192 336V432zM256 80C256 53.49 277.5 32 304 32H400C426.5 32 448 53.49 448 80V176C448 202.5 426.5 224 400 224H304C277.5 224 256 202.5 256 176V80zM448 432C448 458.5 426.5 480 400 480H304C277.5 480 256 458.5 256 432V336C256 309.5 277.5 288 304 288H400C426.5 288 448 309.5 448 336V432z" class="">
-					</path>
-				</svg>
+		<form method="GET" action="{{ path('decks_list') }}" role="form" id="deck-search-form" style="margin: 0; padding: 0;">
+			<header style="padding: 0.5rem;">
+				{{ header|raw }}
+			</header>
+			<div class="advancedFilters">
+				<input type="text" name="name" class="form-control" value="{{name}}" placeholder="Deck name contains">
+				<div style="display: flex; flex-direction : column;">
+					<input type="text" class="form-control" id="card" placeholder="Enter card name">
+					<div id="filterCardsList">
+						{{ cardFilters|default('')|raw }}
+					</div>
+				</div>
+				<div>
+					<button type="submit" class="btn btn-primary btn-block">Search</button>
+				</div>
 			</div>
-			<div id="toggle-grid-1" style="cursor: pointer; width: 25px; height: 25px; padding: 0.5rem; border-radius: 5px;">
-				<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-					<path fill="currentColor" d="M16 96C16 69.49 37.49 48 64 48C90.51 48 112 69.49 112 96C112 122.5 90.51 144 64 144C37.49 144 16 122.5 16 96zM480 64C497.7 64 512 78.33 512 96C512 113.7 497.7 128 480 128H192C174.3 128 160 113.7 160 96C160 78.33 174.3 64 192 64H480zM480 224C497.7 224 512 238.3 512 256C512 273.7 497.7 288 480 288H192C174.3 288 160 273.7 160 256C160 238.3 174.3 224 192 224H480zM480 384C497.7 384 512 398.3 512 416C512 433.7 497.7 448 480 448H192C174.3 448 160 433.7 160 416C160 398.3 174.3 384 192 384H480zM16 416C16 389.5 37.49 368 64 368C90.51 368 112 389.5 112 416C112 442.5 90.51 464 64 464C37.49 464 16 442.5 16 416zM112 256C112 282.5 90.51 304 64 304C37.49 304 16 282.5 16 256C16 229.5 37.49 208 64 208C90.51 208 112 229.5 112 256z" class="">
-					</path>
-				</svg>
-			</div>
-		</div>
-		-->
+		</form>
 		{% include 'AppBundle:Default:pagination.html.twig' %}
 		<div class="decks">
 			{% for data in decks %}

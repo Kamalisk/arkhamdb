@@ -1076,6 +1076,12 @@ body {
   color: #000000;
   background-color: #fcfcfc;
 }
+
+body.dark {
+  background-color: #131313;
+  color: #E0E0E0;
+}
+
 input,
 button,
 select,
@@ -1088,10 +1094,16 @@ a {
   color: #2015a0;
   text-decoration: none;
 }
+.dark a {
+  color: #bababa;
+}
 a:hover,
 a:focus {
   color: #120c5c;
   text-decoration: underline;
+}
+.dark a:hover, .dark a:focus {
+  color: #aaaaaa;
 }
 a:focus {
   outline: 5px auto -webkit-focus-ring-color;
@@ -1354,6 +1366,9 @@ a.text-warning:focus {
 }
 .text-danger {
   color: #b94a48;
+}
+.dark .text-danger {
+  color: #e95a58;
 }
 a.text-danger:hover,
 a.text-danger:focus {
@@ -2555,6 +2570,13 @@ output {
   -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
+
+.dark .form-control {
+  color: #FFFFFF;
+  background-color: #282D33;
+  border: 1px solid #666666;
+}
+
 .form-control:focus {
   border-color: #66afe9;
   outline: 0;
@@ -4713,6 +4735,13 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   border: 1px solid #dddddd;
   margin-left: -1px;
 }
+
+.dark .pagination > li > a,
+.dark .pagination > li > span {
+  background-color: #191919;
+  border: 1px solid #666666;
+}
+
 .pagination > li:first-child > a,
 .pagination > li:first-child > span {
   margin-left: 0;
@@ -4745,6 +4774,15 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   border-color: #2015a0;
   cursor: default;
 }
+.dark .pagination > .active > a,
+.dark .pagination > .active > span,
+.dark .pagination > .active > a:hover,
+.dark .pagination > .active > span:hover,
+.dark .pagination > .active > a:focus,
+.dark .pagination > .active > span:focus {
+  background-color: #2015a0;
+}
+
 .pagination > .disabled > span,
 .pagination > .disabled > span:hover,
 .pagination > .disabled > span:focus,
@@ -6745,6 +6783,9 @@ button.close {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffefefe', endColorstr='#ffeeeeee', GradientType=0);
   filter: none;
   border: 1px solid #dddddd;
+}
+.dark .btn-default {
+  background-image: linear-gradient(#fefefe, #f6f6f6 6%, #eeeeee);
 }
 .btn-primary {
   background-image: -webkit-linear-gradient(#2317ae, #2015a0 6%, #1d1392);

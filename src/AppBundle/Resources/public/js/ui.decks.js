@@ -45,7 +45,7 @@ ui.setup_typeahead = function setup_typeahead() {
 		line.on({
 			click: function(event) { line.remove(); }
 		});
-		line.insertBefore($('#card'));
+		$('#filterCardsList').first().append(line);
 		$(event.target).typeahead('val', '');
 	});
 

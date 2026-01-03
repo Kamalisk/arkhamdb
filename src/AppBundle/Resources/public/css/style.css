@@ -106,9 +106,15 @@ td.type, td.faction {
 	padding-top: 8px;
 	padding-bottom: 10px;
 }
+
 .container.main.white {
 	background-color: #fff;
 }
+
+.dark .container.main.white {
+	background-color: #131313;
+}
+
 .container.main.admin {
 	background-color: #fff;
 	border: 1px solid red;
@@ -139,10 +145,18 @@ div.tags span.tag:not(:first-child)::before {
 }
 
 .social-icons>*{margin-left:5px}
-.social-icon-like{color:red}
-.social-icon-favorite{color:orange}
-.social-icon-comment{color:green}
-.social-icon-version{color:blue}
+.social-icon-like, .dark .social-icon-like {
+	color:red
+}
+.social-icon-favorite, .dark .social-icon-favorite {
+	color:orange
+}
+.social-icon-comment, .dark .social-icon-comment {
+	color:green
+}
+.social-icon-version, .dark .social-icon-version {
+	color:blue
+}
 
 /*** generic ****/
 
@@ -427,16 +441,12 @@ h1.site-title {
 	margin-top: 0;
 	margin: 0;
 	padding: 0;
-    color: black;
-    background-clip: text;
 }
 div.site-slogan {
 	font-family: 'Open Sans Condensed', sans-serif;
 	position:relative;
 	font-size:30px;
 	text-align:center;
-    color: black;
-    background-clip: text;
 }
 
 /************ LIST OF DECKLISTS **************/
@@ -536,7 +546,7 @@ div.site-slogan {
 
 /************** FACTIONS COLORS **************/
 .bg-faction a, .bg-faction span {
-	color: inherit;
+
 }
 .bg-guardian {
 	background-color: #2b80c5 !important;
