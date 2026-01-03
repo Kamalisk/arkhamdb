@@ -11,8 +11,15 @@
 <style>
 	.box {
 		margin: 5px;
-		background: #fff;
 		overflow: hidden;
+		border-radius : 5px;
+		border: solid grey 1px;
+		background-color: #fcfcfc;
+	}
+
+	.dark .box {
+		background-color: #131313;
+  	color: #E0E0E0;
 	}
 
 	.front-block {
@@ -25,6 +32,22 @@
 	.front-block > div {
 		flex: 1;
 	}
+
+	.front-decklist-list {
+		display: flex;
+		flex-direction: column;
+		border-radius: 5px;
+		padding: 0.5rem;
+	}
+
+	.front-decklist-list header {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		justify-content: space-between;
+		padding: 1rem;
+	}
+
 	.card-day-decklists {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
@@ -42,8 +65,8 @@
 </style>
 
 <div class="main container front-block">
-	<div style="display: flex; flex-direction: column; background-image: linear-gradient(130deg,rgba(186, 186, 186, 1) 0%, rgba(181, 181, 181, 1) 100%); border-radius: 5px; padding: 0.5rem;">
-		<header style="display: flex; align-items: center; gap: 1rem; justify-content: space-between; padding: 1rem;">
+	<div class="front-decklist-list">
+		<header>
 			<div>
 				<h5 style="font-size: 16px; padding: 0;"></h5>
 				<h4 style="font-size: 30px; display: flex; align-items: center; gap: 1rem; justify-content: space-between; margin: 0;">
@@ -58,8 +81,8 @@
 
 	{{ macros.investigator_highlight(investigator_highlight, decklists_by_investigator) }}
 
-	<div style="display: flex; flex-direction: column; background-image: linear-gradient(130deg,rgba(186, 186, 186, 1) 0%, rgba(181, 181, 181, 1) 100%); border-radius: 5px; padding: 0.5rem;">
-		<header style="display: flex; align-items: center; gap: 1rem; justify-content: space-between; padding: 1rem;">
+	<div class="front-decklist-list">
+		<header>
 			<div>
 				<h5 style="font-size: 16px; padding: 0;"></h5>
 				<h4 style="font-size: 30px; display: flex; align-items: center; gap: 1rem; justify-content: space-between; margin: 0;">
