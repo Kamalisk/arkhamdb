@@ -252,6 +252,14 @@ class DecklistManager
 			if ($investigator->getDuplicateOf()) {
 				$duplicates[] = $investigator->getDuplicateOf()->getCode();
 			}
+			if ($investigator->getAlternates()) {
+				foreach ($investigator->getAlternates() as $duplicate) {
+					$duplicates[] = $duplicate->getCode();
+				}
+			}
+			if ($investigator->getAlternateOf()) {
+				$duplicates[] = $investigator->getAlternateOf()->getCode();
+			}
 			$qb->innerJoin('d.character', "investigator");
 			if ($duplicates && count($duplicates) > 0) {
 				$qb->andWhere("investigator.code IN (:investigator)");
