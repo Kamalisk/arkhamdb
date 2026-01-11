@@ -86,7 +86,18 @@
 				{% set character = data.decklist.getCharacter() %}
 				<div style="display: flex; justify-content: stretch;">
 					<div style="flex: 0.5;">
-						<a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">{{data.decklist.getCharacter().getName()}}</a>
+						<a class="card card-tip fg-{{ character.getFaction().getCode() }}" data-code="{{ character.getCode() }}" data-toggle="modal" data-target="#cardModal" data-remote="false" href="">
+							{{data.decklist.getCharacter().getName()}}
+							{% set alternateFront = data.deck.getAlternateFront() %}
+							{% set alternateBack = data.deck.getAlternateBack() %}
+							{% if alternateFront and alternateBack %}
+								({{alternateFront.getPack().getName()}})
+							{% elseif alternateFront %}
+								(Front: {{alternateFront.getPack().getName()}})
+							{% elseif alternateBack %}
+								(Back: {{alternateBack.getPack().getName()}})
+							{% endif %}
+						</a>
 						<div style="font-size: 1.2rem;">
 							Tags: {{ data.decklist.tags | split(',') | join(', ')}}
 						</div>
