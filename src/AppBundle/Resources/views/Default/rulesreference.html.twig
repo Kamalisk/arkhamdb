@@ -58,6 +58,7 @@
 		<li><a href="#Control_of_Attachments">Control of Attachments</a></li>
 		<li><a href="#Moving_Attachments">Moving Attachments</a></li>
 		<li><a href="#Controlling_and_Attaching_Permanent_Cards">Controlling and Attaching Permanent Cards</a></li>
+		<li><a href="#Enemy_Attachments_with_Victory_X">Enemy Attachments with Victory X</a></li>
 		</ul>
 	<li><a href="#Attacker_Attacked">Attacker, Attacked</a></li>
 	<li><a href="#Attack_of_Opportunity">Attack of Opportunity</a></li>
@@ -99,6 +100,7 @@
 	<li><a href="#Costs">Costs</a></li>
 		<ul>
 		<li><a href="#Ignoring_All_Costs">"Ignoring all costs"</a></li>
+		<li><a href="#Costs_and_Restrictions_during_the_Initiation_Sequence">"Costs and Restrictions during the Initiation Sequence"</a></li>
 		</ul>
 	<li><a href="#Customizable">Customizable</a></li>
 	<li><a href="#Day_and_Night">Day and Night</a></li>
@@ -108,6 +110,7 @@
 		<ul>
 		<li><a href="#Classes">Classes</a></li>
 		<li><a href="#Deckbuilding_Options">Deckbuilding Options</a></li>
+		<li><a href="#Purchasing_Player_Cards_with_Deckbuilding_Effects">Purchasing Player Cards with Deckbuilding Effects</a></li>
 		</ul>
 	<li><a href="#Defeat">Defeat</a></li>
 	<li><a href="#Delayed_Effects">Delayed Effects</a></li>
@@ -165,6 +168,9 @@
 	<li><a href="#Investigate_Action">Investigate Action</a></li>
 	<li><a href="#Investigation_Phase">Investigation Phase</a></li>
 	<li><a href="#Investigator_Deck">Investigator Deck</a></li>
+		<ul>
+		<li><a href="#Scenario_Effects_on_Investigator_Decks">Scenario Effects on Investigator Decks</a></li>
+		</ul>
 	<li><a href="#Joes_Hunch_Deck">Joe's "Hunch Deck"</a></li>
 	<li><a href="#Keys">Keys <i>(Innsmouth)</i></a></li>
 	<li><a href="#Keys2">Keys <i>(Scarlet Keys)</i></a></li>
@@ -181,6 +187,7 @@
 	<li><a href="#Location_Cards">Location Cards</a></li>
 		<ul>	
 		<li><a href="#Being_at_No_Location">Being at No Location</a></li>
+		<li><a href="#Revealing_and_Flipping_Locations">Revealing and Flipping Locations</a></li>
 		</ul>
 	<li><a href="#Lola_and_Roles">Lola and "Roles"</a></li>
 	<li><a href="#Massive">Massive</a></li>
@@ -239,8 +246,11 @@
 	<li><a href="#Set_Aside">Set Aside</a></li>
 	<li><a href="#Signature_Cards">Signature Cards</a></li>
 	<li><a href="#Skill_Cards">Skill Cards</a></li>
-	<li><a href="#Skill_Test_Results_and_Advanced_Timing">Skill Test Results and Advanced Timing</a></li>
 	<li><a href="#Skill_Tests">Skill Tests</a></li>
+		<ul>
+		<li><a href="#Skill_Test_Results_and_Advanced_Timing">Skill Test Results and Advanced Timing</a></li>
+		<li><a href="#Variable_Difficulty_Skill_Tests">Variable Difficulty Skill Tests</a></li>
+		</ul>
 	<li><a href="#Slots">Slots</a></li>
 		<ul>
 		<li><a href="#Shifting_Slots">Shifting Slots</a></li>
@@ -250,6 +260,9 @@
 		<li><a href="#Spawning_an_Enemy">Spawning an Enemy</a></li>
 		</ul>
 	<li><a href="#Standalone_Mode">Standalone Mode</a></li>
+		<ul>
+		<li><a href="#Standalone_Scenario_Setup">Standalone Scenario Setup</a></li>
+		</ul>
 	<li><a href="#Story_Cards">Story Cards</a></li>
 	<li><a href="#Supplies">Supplies</a></li>
 	<li><a href="#Surge">Surge</a></li>
@@ -276,8 +289,9 @@
 	<li><a href="#Vengeance_X">Vengeance X</a></li>
 	<li><a href="#Victory_Display_Victory_Points">Victory Display, Victory Points</a></li>
 	<li><a href="#Weakness">Weakness</a></li>
-                <ul>	
+        <ul>	
 		<li><a href="#Weakness_Events_And_Changing_The_Game_State">Weakness Events and "changing the game state"</a></li>
+		<li><a href="#Weakness_with_Player_Cardtypes">Weaknesses with Player Cardtypes</a></li>
 		</ul>
 	<li><a href="#When">When</a></li>
 	<li><a href="#Wild_Skill_Icons">Wild Skill Icons</a></li>
@@ -552,9 +566,9 @@
 
 <p><i>For example: an investigator may use Close the Circle’s ability to take a basic <b>Fight</b> action but cannot use it to <b>Play</b> an event with a <b>Fight</b> action designator, as playing an event is not considered a basic action.</i></p>
 
-<h3 id="Gaining_Spending_And_Forfeiting_Actions" style="color:blue">Gaining, Spending, and Forfeiting Actions (added in FAQ, section 'Game Play', point 1.31)</h3>
+<h3 id="Gaining_Spending_And_Forfeiting_Actions" style="color:blue">Gaining, Spending, and Forfeiting Actions (added in FAQ, section 'Game Play', point 1.31, updated FAQ v2.5)</h3>
 
-<p>Investigators gain actions during step 4.2 of the upkeep phase. Any unused actions are forfeited when an investigator chooses to end their turn (during step 2.2.2 of the investigation phase). An investigator may lose actions via card effects outside of their turn, but may not voluntarily spend actions outside of their turn unless explicitly granted via a card effect.</p>
+<p>Investigators gain actions during step 4.2 of the upkeep phase. Any unused actions are forfeited at the end of an investigator's turn (during step 2.2.2 of the investigation phase). An investigator may lose actions via card effects outside of their turn, but may not voluntarily spend actions outside of their turn unless explicitly granted via a card effect.</p>
 
 <p><i>Note: Investigators <b>always</b> begin the game with 3 actions.</i></p>
 
@@ -588,13 +602,13 @@
 
 <p>See also: "<a href="#Ability">Ability</a>" on page 2, "<a href="#Priority_of_Simultaneous_Resolution">Priority of Simultaneous Resolution</a>" on page 17.</p>
 
-<h2 id="Additional_Costs" style="color:blue">Additional Costs (added in FAQ, section 'Game Play', point 1.6)</h2>
+<h2 id="Additional_Costs" style="color:blue">Additional Costs (added in FAQ, section 'Game Play', point 1.6, updated v2.5)</h2>
 
 <p>Some cards add additional costs that must be paid in order to perform certain effects or actions, in the form of "As an additional cost to (specified effect/action) you must (additional cost)" or "You must (additional cost) to (specified effect/action)."</p>
 
 <p>Additional costs are costs that can be paid outside the normal timing point of paying costs (for instance, during the resolution of an effect). If an effect that requires an additional cost would resolve, the additional cost must be paid at that time. If the additional cost cannot be paid, that aspect of the effect fails to resolve.</p>
 
-<p>Additional costs do not have to be paid when a <b>Forced</b> effect or mandatory instruction (such as in the Campaign Guide, or on the back of an Act or Agenda card) requires an investigator to resolve an effect.</p>
+<p>Additional costs are not paid when a mandatory instruction (such as in the Campaign Guide, or on the back of an Act or Agenda card) requires an investigator to resolve an effect.</p>
 
 <p><i>For example: “Ashcan” Pete is at the Miskatonic Quad and activates Duke’s second ability, which reads: "[action] Exhaust Duke: <b>Investigate</b>. You investigate with a base skill of 4. You may move to a connecting location immediately before investigating with this effect.” Pete pays the cost to activate this ability, which is spending one action and exhausting Duke. Then Pete resolves the ability, first moving to the Orne Library, followed by investigating. The Orne Library, however, reads: “You must spend 1 additional action to investigate the Orne Library.” This adds an additional cost that must be paid in order to investigate the Orne Library. This additional cost is paid when the investigate action would resolve, outside the normal timing point for paying costs. If Pete cannot spend the additional action, that aspect of Duke’s effect fails to resolve.</i></p>
 
@@ -699,6 +713,10 @@
 <p>A card with the permanent keyword cannot leave its controller’s play area unless directed by scenario card effects. Cards with the permanent keyword cannot be attached to other cards in an investigator’s play area. Investigators cannot take control of another investigator’s permanent cards.</p>
 
 <p><i>For example: an investigator cannot attach Sin-Eater to Elle Rubash even if Sin-Eater has one or more doom on it.</i></p>
+
+<h3 id="Enemy_Attachments_with_Victory_X" style="color:blue">Enemy Attachments with Victory X (added in FAQ, section 'Game Play', point 1.33)</h3>
+
+<p>If a card with Victory X is attached to an enemy and that enemy is defeated, the attachment is placed in the victory display instead of the usual out-of-play area corresponding to its card type.</p>
 
 <h2 id="Attacker_Attacked">Attacker, Attacked</h2>
 
@@ -1024,6 +1042,14 @@
 
 <p><em>Example: Sean and Etienne are each using a deck built from Sean's collection. If Etienne is instructed to "search the collection," he searches Sean's collection.</em></p>
 
+<ul>
+
+<li>  <span style="color:blue">(Added in FAQ, section 'Rulebook Errata', v2.5)</span> The collection exists outside of the game. Effects that search the collection cannot search in-game areas, such as decks or set-aside cards.</li>
+
+<li>  <span style="color:blue">(Added in FAQ, section 'Rulebook Errata', v2.5)</span> If a player owns multiple copies of a single product, their collection is still only defined (for the purposes of game effects) as a single copy of each unique product they own.</li>
+
+</ul>
+
 <h2 id="Concealed_X" style="color:red">Concealed X (added in <em>The Scarlet Keys</em>)</h2>
 
 <p>Concealed X is a keyword that appears on some enemy cards in <i>The Scarlet Keys</i> campaign. Concealed enemies represent hidden enemies whose true location is a mystery until the investigators work to expose where - and in some cases, who - they truly are.</p>
@@ -1131,6 +1157,12 @@
 <p>Some cards like Knowledge is Power or Word of Woe allow an investigator to play a card or activate an ability on an asset, "ignoring all costs." These effects only ignore the costs of initiating an ability, such as [action] costs, resource costs, spending uses, etc. They do not ignore additional costs that must be paid when resolving that ability — in other words, anything "before the colon" is ignored, but any additional costs "after the colon" must be paid as normal. Abilities that exile a card and/or remove a card from the game as a cost cannot be ignored.</p>
 
 <p><i>For example, if an investigator uses Knowledge is Power to activate the [action] ability on Old Book of Lore, Knowledge is Power allows you to ignore the action cost and exhausting of Old Book of Lore to activate its ability and search your deck for a card, but does not waive the additional cost to spend a secret to play that card. Likewise, playing Word of Woe waives the action cost to activate the ability on Earthly Serenity, but does not waive the cost to spend charges to heal an investigator at your location. Additionally, Pushed to the Limit does not allow an investigator to waive the cost of exiling Fire Extinguisher when resolving its second ability.</i></p>
+
+<h3 id="Costs_and_Restrictions_during_the_Initiation_Sequence" style="color:blue">"Costs and Restrictions during the Initiation Sequence" (added in FAQ, section 'Game Play', point 1.32)</h3>
+
+<p>When checking play restrictions and costs to determine whether a card may be played or an ability triggered, if the card or ability in question itself modifies those restrictions or costs during initiation or resolution such that they are able to be met or paid prior to taking effect, the preliminary confirmations are considered to have been successfully fulfilled.</p>
+
+<p><i>For example: An investigator may play Spectral Razor targeting an unengaged enemy with Aloof, on the condition that they do subsequently fulfill the <b>Fight</b> action's restriction (that it cannot be performed against an unegaged Aloof enemy) via Spectral Razor's ability to engage that enemy.</i></p>
 
 <h2 id="Customizable" style="color:red">Customizable (added in <em>The Scarlet Keys</em>)</h2>
 
@@ -1281,6 +1313,12 @@
 <li>  If one of the categories of an investigator’s deckbuilding options lists card text in it, cards fall into this category if the listed text appears in the card in any capacity, even if it is circumstantial. <i>(For example, if an investigator’s deckbuilding options reads: "cards that 'heal horror' level 0–5," any card with an ability that heals any amount of horror will fall into this category, even if it only heals horror under specific circumstances.)</i></li>
 
 </ul>
+
+<h3 id="Purchasing_Player_Cards_with_Deckbuilding_Effects" style="color:blue">Purchasing Player Cards with Deckbuilding Effects (added in FAQ, section 'Game Play', point 1.37)</h3>
+
+<p>When purchasing cards between scenarios, each card is purchased one at a time. If a card is purchased that has abilities that affect deckbuilding, upgrading, or purchasing cards, those abilities immediately come into effect for the current purchasing period.</p>
+
+<p><i>For example: Purchasing Adaptable allows an investigator to swap level 0 cards immediately. Purchasing Underworld Market immediately increases an investigator's Deck Size.</i></p>
 
 <h2 id="Defeat">Defeat</h2>
 
@@ -1926,6 +1964,10 @@
 
 <p>A player's "investigator deck" is the deck that contains that player's asset, event, skill, and weakness cards. A reference to "your deck" refers to the investigator deck under your control.</p>
 
+<h3 id="Scenario_Effects_on_Investigator_Decks" style="color:blue">Scenario Effects on Investigator Decks (added in FAQ, section 'Game Play', point 1.36)</h3>
+
+<p>A scenario may instruct an investigator to add a card to their deck. Unless this instruction includes the word "may," the investigator must add that card to their deck; this effect cannot be canceled or ignored, and is not restricted by an investigator's Deckbuilding Options.</p>
+
 <h2 id="Joes_Hunch_Deck" style="color:red">Joe's "Hunch Deck" (added in <em>The Circle Undone</em>)</h2>
 
 <p>As a private eye, Joe Diamond has learned to follow his instincts, and therefore he has a separate hunch deck, which is constructed during step 4 of the setup of each scenario. The cards in this hunch deck are chosen from Joe's 40-card deck and therefore count toward his total deck size. With the exception of these setup instructions, all references to Joe's "deck" refer to Joe's standard investigator deck and not his hunch deck. Joe's hunch deck has no discard pile; cards from your hunch deck are discarded to your standard discard pile when played.</p>
@@ -2074,11 +2116,13 @@
 
 </ul>
 
-<h2 id="Limbo" style="color:blue">Limbo (added in FAQ, section 'Game Play', point 1.23)</h2>
+<h2 id="Limbo" style="color:blue">Limbo (added in FAQ, section 'Game Play', point 1.23, updated FAQ v2.5)</h2>
 
 <p>While the effects of an event or treachery card are being resolved, or while a skill is committed to a skill test, it is neither in play, in the discard pile, nor is it in an investigator’s hand. For the purposes of rules clarification, this liminal state is called "limbo."</p>
 
-<p>An event card enters limbo during step 3 of the Initiation Sequence, after costs are paid and attacks of opportunity are made <i>(see "<a href="#Appendix_I_Initiation_Sequence">Appendix I: Initiation Sequence</a>")</i>. A treachery card enters limbo after it is drawn, while its revelation ability is being resolved. A skill card enters limbo as it is committed to a skill test. While in limbo, the card is typically placed on the table to show that its effects are being resolved. It is no longer considered to be in any investigator’s hand, but it has not yet been placed in any discard pile. It is technically not in play, and does not count as being in play for the purposes of other card effects, however its effects may still alter the game state. After resolving the card’s effects <i>in full</i>, it is placed in its relevant discard pile and is no longer in limbo. If its effects cause it to enter play (such as attaching to another game element or placing it in an investigator’s threat or play area), it leaves limbo and enters play at that point in time.</p>
+<p>An event card enters limbo during step 3 of the Initiation Sequence, after costs are paid and attacks of opportunity are made <i>(see "<a href="#Appendix_I_Initiation_Sequence">Appendix I: Initiation Sequence</a>")</i>. A treachery card enters limbo after it is drawn, while its revelation ability is being resolved. A skill card enters limbo as it is committed to a skill test.</p>
+
+<p>Limbo is not a physical game area. While in limbo, a card is typically placed on the table to show that its effects are currently being resolved (unless it is attached to another game element, in which case it remains in its current position). It is no longer considered to be in any investigator’s hand, but it has not yet been placed in any discard pile. It is technically not in play, and does not count as being in play for the purposes of other card effects, however its effects may still alter the game state. After resolving the card’s effects <i>in full</i>, it is placed in its relevant discard pile and is no longer in limbo. If its effects cause it to enter play (such as attaching to another game element or placing it in an investigator’s threat or play area), it leaves limbo and enters play at that point in time.</p>
 
 <h2 id="Limits_and_Maximums">Limits and Maximums</h2>
 
@@ -2125,6 +2169,12 @@
 <h3 id="Being_at_No_Location" style="color:blue">Being at No Location (added in FAQ, section 'Game Play', point 1.21)</h3>
 
 <p>Unless explicitly specified by game text, enemies and investigators must always be at a location during gameplay. If an effect (such as a "cannot move" effect) would cause an investigator or enemy to not be at a location, ignore that effect.</p>
+
+<h3 id="Revealing_and_Flipping_Locations" style="color:blue">Revealing and Flipping Locations (added in FAQ, section 'Game Play', point 1.39)</h3>
+
+<p>If a location is revealed, then leaves play, and later re-enters play and is revealed again, place clues on it up to its clue value (as if this were the first time an investigator had revealed that location this game).</p>
+
+<p>If a location with 2 revealed sides flips without leaving play, do not place or replenish clues on that location when it flips unless otherwise stated.</p>
 
 <h2 id="Lola_and_Roles" style="color:red">Lola and "Roles" (added in <em>The Path to Carcosa</em>)</h2>
 
@@ -2353,6 +2403,8 @@
 <li>  A card with the permanent keyword cannot leave play (except by elimination).</li>
 
 <li>  Once added to your deck, permanent cards cannot be removed from your deck or swapped out of your deck unless explicitly stated otherwise.</li>
+
+<li>  <span style="color:blue">(Added in FAQ, section 'Rulebook Errata', v2.5)</span> A permanent card cannot have its text box blanked or treated as if it were blank.</li>
 
 </ul>
 
@@ -2682,12 +2734,6 @@
 
 <p>See "<a href="#Skill_Test_Timing">Skill Test Timing</a>" on page 26.</p>
 
-<h2 id="Skill_Test_Results_and_Advanced_Timing" style="color:blue">Skill Test Results and Advanced Timing (added in FAQ, section 'Game Play', point 1.7)</h2>
-
-<p>During Step 7 of Skill Test Timing ("Apply skill test results"), all of the effects of the successful skill test are determined and resolved, one at a time. This includes the effects of the test itself (such as the clue discovered while investigating, or the damage dealt during an attack), as well as any "If this test is successful..." effects from card abilities or skill cards committed to the test.</p>
-
-<p>[reaction] or <b>Forced</b> abilities with a triggering condition dependent upon the skill test being successful or unsuccessful (such as "After you successfully investigate," or "After you fail a skill test by 2 or more") do not trigger at this time. These abilities are triggered during Step 6, "Determine success/failure of skill test."</p>
-
 <h2 id="Skill_Tests">Skill Tests</h2>
 
 <p>A number of situations in the game require an investigator to make a skill test, using one of his or her four skills: willpower ([willpower]), intellect ([intellect]), combat ([combat]), or agility ([agility]). A skill test pits the investigator's value in a specified skill against a difficulty value that is determined by the ability or game step that initiated the test. The investigator is attempting to match or exceed this difficulty value in order to succeed at the test.</p>
@@ -2695,6 +2741,20 @@
 <p>A skill test is often referred to as a test of the specified skill. <em>(For example: "agility test," "combat test," "willpower test," or "intellect test.")</em></p>
 
 <p>See "<a href="#Skill_Test_Timing">Skill Test Timing</a>".</p>
+
+<h3 id="Skill_Test_Results_and_Advanced_Timing" style="color:blue">Skill Test Results and Advanced Timing (added in FAQ, section 'Game Play', point 1.7)</h3>
+
+<p>During Step 7 of Skill Test Timing ("Apply skill test results"), all of the effects of the successful skill test are determined and resolved, one at a time. This includes the effects of the test itself (such as the clue discovered while investigating, or the damage dealt during an attack), as well as any "If this test is successful..." effects from card abilities or skill cards committed to the test.</p>
+
+<p>[reaction] or <b>Forced</b> abilities with a triggering condition dependent upon the skill test being successful or unsuccessful (such as "After you successfully investigate," or "After you fail a skill test by 2 or more") do not trigger at this time. These abilities are triggered during Step 6, "Determine success/failure of skill test."</p>
+
+<h3 id="Variable_Difficulty_Skill_Tests" style="color:blue">Variable Difficulty Skill Tests (added in FAQ, section 'Game Play', point 1.38)</h3>
+
+<p>While performing a skill test whose difficulty is modified based on another aspect of the game, that difficulty changes whenever the corresponding aspect's status does.</p>
+
+<p>If an ability or game effect checks a variable difficulty, most commonly during a skill test's ST.6 to determine whether that test succeeded or failed, the value of that difficulty is set for the effect in question and is not re-evaluated if the variable difficulty continues to change.</p>
+
+<p><i>For example: An investigator draws Empyrean Brilliance during a Day scenario. They have five cards in hand, making the [willpower] test’s difficulty 4. They commit one card to the test during ST.2, at which point their hand size drops below 5 and the test's difficulty updates correspondingly to 2. If, instead, they committed no cards and proceeded to fail the test during ST.6, their hand size would drop below 5 during ST.7 due to Empyrean Brilliance's effect. While the skill test's difficulty would then update to 2, the test's success/failure (and degree thereof) has already been determined and is not re-evaluated based on the new difficulty.</i></p>
 
 <h2 id="Slots">Slots</h2>
 
@@ -2805,6 +2865,12 @@ A player cannot include 50 or more experience worth of cards in a standalone dec
 <li>  If a scenario weakness or asset is earned that is in an expansion you do not own, simply continue without that card.</li>
 
 </ul>
+
+<h3 id="Standalone_Scenario_Setup" style="color:blue">Standalone Scenario Setup (added in FAQ, section 'Game Play', point 1.34)</h3>
+
+<p>Most campaign scenarios contain additional instructions for playing that scenario in Standalone Mode, which can be found at the end of that scenario’s normal setup instructions. These may be used in place of simulating campaign resolutions (as described in the Rules Reference) in order to determine setup for a standalone game.</p> 
+
+<p>If a scenario lacks these additional instructions, players may instead choose (prior to game start if possible, or as relevant during gameplay otherwise) what details have been recorded in their temporary Campaign Log. When assembling the chaos bag, players do so using the Campaign Setup instructions. As an optional rule, players may then increase the quantities of [skull], [cultist], [tablet], [elder_thing], or any other campaign-specific symbol tokens contained in the chaos bag.</p>
 
 <h2 id="Story_Cards" style="color:red">Story Cards (added in <em>The Path to Carcosa</em>)</h2>
 
@@ -3091,6 +3157,10 @@ A player cannot include 50 or more experience worth of cards in a standalone dec
 <h3 id="Weakness_Events_And_Changing_The_Game_State" style="color:blue">Weakness Events and "changing the game state" (added in FAQ, section 'Game Play', point 1.27)</h3>
 
 <p>Some weakness events such as Quantum Paradox do not change the game state in the traditional sense when played, but nevertheless provide negative effects if they are in your hand. These weakness events may still be played to avoid their negative effects.</p>
+
+<h3 id="Weakness_with_Player_Cardtypes" style="color:blue">Weaknesses with Player Cardtypes (added in FAQ, section 'Game Play', point 1.35)</h3>
+
+<p>Unlike other player cards that are not affiliated with any class, weakness cards with player cardtypes (asset, event, or skill) are not considered to be Neutral cards. All weaknesses, regardless of their primary cardtype, do not interact with the player card class system or an investigator’s Deckbuilding Options.</p>
 
 <h2 id="When">When</h2>
 
@@ -3643,3 +3713,4 @@ document.getElementById("rules").innerHTML = curInnerHTML;
 
 
 {% endblock %}
+
