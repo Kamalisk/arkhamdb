@@ -100,7 +100,7 @@
 	<li><a href="#Costs">Costs</a></li>
 		<ul>
 		<li><a href="#Ignoring_All_Costs">"Ignoring all costs"</a></li>
-		<li><a href="#Costs_and_Restrictions_during_the_Initiation_Sequence">"Costs and Restrictions during the Initiation Sequence"</a></li>
+		<li><a href="#Costs_and_Restrictions_during_the_Initiation_Sequence">Costs and Restrictions during the Initiation Sequence</a></li>
 		</ul>
 	<li><a href="#Customizable">Customizable</a></li>
 	<li><a href="#Day_and_Night">Day and Night</a></li>
@@ -109,6 +109,7 @@
 	<li><a href="#Deckbuilding">Deckbuilding</a></li>
 		<ul>
 		<li><a href="#Classes">Classes</a></li>
+		<li><a href="#Synergy_and_Neutral_Cards">Synergy and Neutral Cards</a></li>
 		<li><a href="#Deckbuilding_Options">Deckbuilding Options</a></li>
 		<li><a href="#Purchasing_Player_Cards_with_Deckbuilding_Effects">Purchasing Player Cards with Deckbuilding Effects</a></li>
 		</ul>
@@ -191,6 +192,9 @@
 		</ul>
 	<li><a href="#Lola_and_Roles">Lola and "Roles"</a></li>
 	<li><a href="#Massive">Massive</a></li>
+		<ul>	
+		<li><a href="#Massive_Enemy_Attacks">Massive Enemy Attacks</a></li>
+		</ul>
 	<li><a href="#May">May</a></li>
 	<li><a href="#Modifiers">Modifiers</a></li>
 	<li><a href="#Move">Move</a></li>
@@ -278,7 +282,7 @@
 	<li><a href="#Trauma">Trauma</a></li>
 	<li><a href="#Treachery_Cards">Treachery Cards</a></li>
 		<ul>
-		<li><a href="#Treachery_Subtitles">Treachery Subtitles</a></li>
+		<li><a href="#Treachery_and_Event_Subtitles">Treachery and Event Subtitles</a></li>
 		</ul>
 	<li><a href="#Triggered_Abilities">Triggered Abilities</a></li>
 	<li><a href="#Triggering_Condition">Triggering Condition</a></li>
@@ -634,7 +638,7 @@
 
 </ul>
 
-<h2 id="As_If" style="color:blue">"As if..." (added in FAQ, section 'Card Ability Interpretation', point 2.10, amended October 2020)</h2>
+<h2 id="As_If" style="color:blue">"As if..." (added in FAQ, section 'Card Ability Interpretation', point 2.10, amended October 2020, updated FAQ v2.5)</h2>
 
 <p>Some card effects allow an investigator to resolve an ability or perform an action as if a certain aspect of the game state were altered, using the text "as if..." to indicate the difference. The indicated ability or action is resolved with the altered game state in mind, but the actual game state remains unchanged.</p>
 
@@ -646,9 +650,17 @@
 
 <li>  The game state is not physically altered in any way. (e.g. if you are considered to be at a location, you do not move your mini-card to that location, enemies at that location do not automatically move to your threat area, etc.)</li>
 
+<li>  Unless otherwise stated, an investigator's threat area is not inherently altered during the resolution of the indicated ability or action. (For example, if you are engaged with an enemy prior to resolving an ability "as if" you are at a connecting location, that enemy remains engaged with you and will still make attacks of opportunity, even though it does not leave your shared, actual location.)</li>
+
 </ul>
 
 <p><i>For example: Luke Robinson wants to play Preposterous Sketches, but is at a location with no clues. One of the locations next to him has a clue on it, so he uses his ability to play Preposterous Sketches as if he were at that location and engaged with each enemy at that location. The game state is considered to be altered in this way throughout the playing of Preposterous Sketches, from its initiation to its resolution. Among other things, this might mean: (a) if there is an enemy at that location, playing Preposterous Sketches would provoke an attack of opportunity, (b) if that location has an ability that would alter the cost of playing the card, it would do so, and (c) other card abilities that might trigger from Luke drawing 1 or more cards would do so as if he were at that connecting location and engaged with that enemy, and so on and so forth. Once Preposterous Sketches has finished resolving and is placed in the discard pile, Luke is no longer considered to be at that location and engaged with each enemy at that location.</i></p>
+
+<ul>
+
+<li>  <span style="color:blue">(Added in FAQ, section 'Frequently Asked Questions')</span> <i>Q: Does an enemy exhaust when an effect causes it to attack "as if it were the enemy phase?" What about an effect that causes an enemy to attack without that text?</i> A: Yes, if an enemy attacks "as if it were the enemy phase," it will exhaust after attacking. However, if an effect causes an enemy to attack without that phrasing, the enemy does not exhaust after attacking.</li>
+
+</ul>
 
 <h2 id="Asset_Cards">Asset Cards</h2>
 
@@ -1154,11 +1166,11 @@
 
 <h3 id="Ignoring_All_Costs" style="color:blue">"Ignoring all costs" (added in FAQ, section 'Card Ability Interpretation', point 2.24)</h3>
 
-<p>Some cards like Knowledge is Power or Word of Woe allow an investigator to play a card or activate an ability on an asset, "ignoring all costs." These effects only ignore the costs of initiating an ability, such as [action] costs, resource costs, spending uses, etc. They do not ignore additional costs that must be paid when resolving that ability — in other words, anything "before the colon" is ignored, but any additional costs "after the colon" must be paid as normal. Abilities that exile a card and/or remove a card from the game as a cost cannot be ignored.</p>
+<p>Some cards like Knowledge is Power or Word of Woe allow an investigator to play a card or activate an ability on an asset, "ignoring all costs." These effects only ignore the activation costs of an ability, such as [action] costs, resource costs, spending uses, etc. - in other words, anything written "before the colon." They do not ignore additional costs that must be paid when resolving that ability, or are otherwise written "after the colon;" these must be paid as normal. Effects or costs that exile a card and/or remove a card from the game cannot be ignored.</p>
 
 <p><i>For example, if an investigator uses Knowledge is Power to activate the [action] ability on Old Book of Lore, Knowledge is Power allows you to ignore the action cost and exhausting of Old Book of Lore to activate its ability and search your deck for a card, but does not waive the additional cost to spend a secret to play that card. Likewise, playing Word of Woe waives the action cost to activate the ability on Earthly Serenity, but does not waive the cost to spend charges to heal an investigator at your location. Additionally, Pushed to the Limit does not allow an investigator to waive the cost of exiling Fire Extinguisher when resolving its second ability.</i></p>
 
-<h3 id="Costs_and_Restrictions_during_the_Initiation_Sequence" style="color:blue">"Costs and Restrictions during the Initiation Sequence" (added in FAQ, section 'Game Play', point 1.32)</h3>
+<h3 id="Costs_and_Restrictions_during_the_Initiation_Sequence" style="color:blue">Costs and Restrictions during the Initiation Sequence (added in FAQ, section 'Game Play', point 1.32)</h3>
 
 <p>When checking play restrictions and costs to determine whether a card may be played or an ability triggered, if the card or ability in question itself modifies those restrictions or costs during initiation or resolution such that they are able to be met or paid prior to taking effect, the preliminary confirmations are considered to have been successfully fulfilled.</p>
 
@@ -1195,6 +1207,18 @@
 <li>  Additional printer-friendly upgrade sheets can be downloaded and printed from <a href="www.FantasyFlightGames.com">Fantasy Flight Games</a>.</li>
 
 </ul>
+
+<p><span style="color:blue">(Added in FAQ, section 'Frequently Asked Questions')</span> <b>Frequently asked Customizable questions:</b></p>
+
+<ol>
+
+<li>  <i>If I exile the last copy of an upgraded customizable card from my deck, would it retain those upgrades if I repurchase the card?</i> No. If all copies of a customizable card are removed from your deck, any upgrades on the upgrade sheet are also removed. If those cards are later repurchased, treat them as newly purchased cards with blank upgrade sheets.</li>
+
+<li>  <i>If I have 2 copies of an upgraded customizable card in my deck, and exile 1 of them, what would be the experience cost to repurchase that card?</i> You have two options to repurchase an exiled customizable card: either paying the cost of the card as indicated by its upgrade sheet, or if you're able, spending experience on the card's upgrade sheet to add a copy of that card for free to your deck.</li>
+
+<li>  <i>If I play or take control of another investigator's customizable card, does that card retain its upgrades?</i>  Yes. Any upgrades purchased for a customizable card by its owner are considered to be printed on that card, regardless of who plays or controls it.</li>
+
+</ol>
 
 <h2 id="Day_and_Night" style="color:red">Day and Night (added in <em>The Feast of Hemlock Vale</em>)</h2>
 
@@ -1301,6 +1325,10 @@
 <p>Some cards are not affiliated with any class; these cards are neutral. Generally, investigators only have access to cards from their class.</p>
 
 <p>Some investigators have access to cards from other classes. Refer to the "Deckbuilding Options" on the back of an investigator card to view which cards an investigator has access to.</p>
+
+<h3 id="Synergy_and_Neutral_Cards" style="color:blue">Synergy and Neutral Cards (added in FAQ, section 'Card Ability Interpretation', point 2.27)</h3>
+
+<p>Cards with the <b><i>Synergy</i></b> trait do not consider Neutral (classless) player cards when identifying the number of different classes among cards an investigator controls.</p>
 
 <h3 id="Deckbuilding_Options" style="color:blue">Deckbuilding Options (added in FAQ, section 'Game Play', point 1.15)</h3>
 
@@ -1658,6 +1686,8 @@
 
 <li>  An event card cannot be played unless the resolution of its effect has the potential to change the game state.</li>
 
+<li>  See "<a href="#Treachery_and_Event_Subtitles">Treachery and Event Subtitles</a>" below for information on event subtitles.</li>
+
 </ul>
 
 <h2 id="Exceptional">Exceptional</h2>
@@ -1712,9 +1742,9 @@
 
 <h2 id="Farthest_From_All_Investigators" style="color:blue">"Farthest from all investigators" (added in FAQ, section 'Card Ability Interpretation', point 2.16)</h2>
 
-<p>Some card effects instruct investigators to put a card into play at the location farthest from all investigators. This is determined by finding the location with the highest combined distance from each investigator (with no investigators at it, if able). In the event of a tie, as usual, the lead investigator decides.</p>
+<p>Some card effects instruct investigators to put a card into play at the location farthest from all investigators. This is determined by finding the location from which the shortest distance (by movement) to any investigator is the highest out of all eligible locations. In the event of a tie, as usual, the lead investigator decides.</p>
 
-<p><i>For example: Location A is 5 connections away from investigator A and 1 connection away from investigator B. Location B is 3 connections away from investigator A and 4 connections away from investigator B. Location B is therefore the farthest from both investigators, because the total distance for each investigator to get to location B is higher than location A. (This is true even though location A is farther from investigator A.)</i></p>
+<p><i>For example: Location A is 5 connections away from investigator A and 1 connection away from investigator B. Location B is 3 connections away from investigator A and 4 connections away from investigator B. Location B is therefore the farthest from both investigators, because its distance to the nearest investigator is greater than that of location A. (This is true even though location A is farther from investigator A.)</i></p>
 
 <h2 id="Fast">Fast</h2>
 
@@ -2036,6 +2066,8 @@
 
 <li>  Some card effects may directly flip a key attached to an investigator or story asset from its <b><i>Stable</i></b> side to its <b><i>Unstable</i></b> side, or vice versa. This is not the same as shifting a key, and does not resolve its shift ability.</li>
 
+<li>  <span style="color:blue">(Added in FAQ, section 'Card Ability Interpretation', point 2.30)</span> A Key card changes its card category based on its bearer/controller. While attached to an investigator, or to a story asset controlled by an investigator, a Key is a player card. Otherwise, a Key is a scenario card.</li>
+
 </ul>
 
 <h2 id="Keywords">Keywords</h2>
@@ -2199,6 +2231,12 @@
 <li>  If an investigator fails a combat test against a massive enemy, no damage is dealt to the engaged investigators.</li>
 
 </ul>
+
+<h3 id="Massive_Enemy_Attacks" style="color:blue">Massive Enemy Attacks (added in FAQ, section 'Card Ability Interpretation', point 2.29)</h3>
+
+<p>A massive enemy that is ready during the enemy phase attacks each investigator at its location, one at a time, in an order determined by the lead investigator. Because it is engaged with each investigator at its location, these attacks occur outside the standard timing of enemy attacks, which are usually resolved in player order.</p>
+
+<p>While resolving a massive enemy's attacks, if an investigator becomes engaged with the enemy, that investigator will be added to the list of targets the enemy will perform an attack against. If a massive enemy exhausts before resolving all of its attacks, it does not initiate any remaining attacks.</p>
 
 <h2 id="May">May</h2>
 
@@ -2365,6 +2403,8 @@
 <li> If there are multiple locations that qualify as the desginated location, the lead investigator may choose which location the enemy moves toward.</li>
 
 <li> If an enemy with patrol would be compelled to move to a location which is blocked by a card ability, the enemy does not move.</li>
+
+<li> <span style="color:blue">(Added in FAQ, section 'Frequently Asked Questions')</span> <i>Q: What happens when an enemy with the patrol keyword is already at its target location at the start of the enemy phase?</i> A: If a patrol enemy is at the target location indicated by its patrol ability at the start of step 3.2 of the enemy phase, that enemy does not move.</li>
 
 </ul>
 
@@ -3006,9 +3046,9 @@ A player cannot include 50 or more experience worth of cards in a standalone dec
 
 <p>See "<a href="#Mythos_Phase">1.4 Each investigator draws 1 encounter card</a>" on page 24.</p>
 
-<h3 id="Treachery_Subtitles" style="color:blue">Treachery Subtitles (added in FAQ, section 'Card Ability Interpretation', point 2.21)</h3>
+<h3 id="Treachery_and_Event_Subtitles" style="color:blue">Treachery and Event Subtitles (added in FAQ, section 'Card Ability Interpretation', point 2.21, updated FAQ v2.5)</h3>
 
-<p>Treachery cards do not have a header for their subtitle. If the title of a treachery card contains 1 or more words in parentheses, that is considered to be its subtitle. Other cards with the same title and a different subtitle are still considered to be copies of one another. <i>e.g. Restless Journey (Fallacy) and Restless Journey (Hardship) are both copies of Restless Journey.</i></p>
+<p>Treachery and event cards do not have a header for their subtitle. If the title of a treachery or event card contains 1 or more words in parentheses, that is considered to be its subtitle. Other cards with the same title and a different subtitle are still considered to be copies of one another. <i>e.g. Restless Journey (Fallacy) and Restless Journey (Hardship) are both copies of Restless Journey.</i></p>
 
 <h2 id="Triggered_Abilities">Triggered Abilities</h2>
 
@@ -3232,7 +3272,7 @@ A player cannot include 50 or more experience worth of cards in a standalone dec
 
 <h3 id="Interpreting_You_When_Taking_or_Being_Dealt_Damage" style="color:blue">Interpreting "You" When Taking or Being Dealt Damage (added in FAQ, section 'Card Ability Interpretation', point 2.12)</h3>
 
-<p>When an ability refers to "you" in response to taking damage or being dealt damage, it also includes any assets you control.</p>
+<p>When an ability refers to "you" in response to taking damage/horror or being dealt damage/horror, it also includes any assets you control.</p>
 
 <p><i>For example: The [reaction] ability on Survival Knife triggers "after an enemy attack deals damage to you during the enemy phase." This ability triggers even if the damage from that attack is assigned to one or more of your assets, and not your investigator card. However, if all of the damage from that attack is assigned to another investigator or their assets (through the use of a card effect that allows them to do so), then no damage has been dealt to you.</i></p>
 
@@ -3273,6 +3313,8 @@ A player cannot include 50 or more experience worth of cards in a standalone dec
 </ul>
 
 </ol>
+
+<p><span style="color:blue">(Added in FAQ, section 'Frequently Asked Questions')</span> <i>Q: If I initiate a skill test at a given location, then trigger an effect that causes me to move before that test finishes resolving, what happens to that skill test?</i> A: Once you initiate a skill test or ability, you'll resolve that test or ability as completely as possible, regardless of your location (unless another effect cancels or interrupts it). For example, if you attacked an elusive enemy with One-Two Punch, you could attack that same enemy with the card's second fight, even though it has moved to a connecting location.</p>
 
 <h1 id="Appendix_II_Timing_and_Gameplay">Appendix II: Timing and Gameplay</h1>
 
@@ -3713,4 +3755,5 @@ document.getElementById("rules").innerHTML = curInnerHTML;
 
 
 {% endblock %}
+
 
