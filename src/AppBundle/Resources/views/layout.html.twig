@@ -9,7 +9,7 @@
     <!-- Light mode favicon -->
     <link rel="icon" sizes="192x192" href="/icon-light-192.png" media="(prefers-color-scheme: light)" />
     <link rel="apple-touch-icon" sizes="120x120" href="/icon-light-120.png" media="(prefers-color-scheme: light)" />
-    
+
     <!-- Dark mode favicon -->
     <link rel="icon" sizes="192x192" href="/icon-dark-192.png" media="(prefers-color-scheme: dark)" />
     <link rel="apple-touch-icon" sizes="120x120" href="/icon-dark-120.png" media="(prefers-color-scheme: dark)" />
@@ -83,7 +83,7 @@
                   </form>
               </div>
             </li>
-            
+
             <!-- locale selection -->
 
             {% if _route is not defined or _route is not empty or app.request.attributes.get('_route') is not empty %}
@@ -108,7 +108,7 @@
             </li>
             {% endif %}
             {% endif %}
-            
+
             <li id="login">
                 <a href="#" class="disabled"><span class="fa fa-user"></span></a>
             </li>
@@ -142,7 +142,7 @@
 
     <p>
     Based on ThronesDB by Alsciende. Modified by Kam.
-    Contact:     
+    Contact:
     <a href="https://reddit.com/user/kamalisk/" title="Reddit"><span class="fa fa-reddit"></span></a>
     <a href="mailto:s.arkhamdb@kamalisk.com" title="E-mail"><span class="fa fa-envelope"></span></a>
     </p>
@@ -189,11 +189,6 @@
     {% endfor %}
 	});
     </script>
-
-	{% if app.environment == 'prod' %}
-		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-		{% include 'AppBundle:Default:google-analytics.html.twig' %}
-	{% endif %}
 
 	{% javascripts filter="?jsqueeze" output="js/app.js"
 		'@AppBundle/Resources/public/js/bootstrap.js'
