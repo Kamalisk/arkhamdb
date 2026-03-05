@@ -238,7 +238,6 @@ deck.onloaded = function(data){
 		// figure out which packs are in the collection
 		// has "virtual" packs for the reprints
 		_.forEach(packs_data, function(pack) {
-			console.log(pack);
 			collection.packs[pack.id] = 1;
 			collection.empty = false;
 			if (pack.reprint_packs && pack.reprint_packs.length > 0) {
@@ -252,7 +251,6 @@ deck.onloaded = function(data){
 				})
 			}
 		});
-		console.log(collection);
 	}
 }
 
