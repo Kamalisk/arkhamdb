@@ -69,6 +69,10 @@ class ApiController extends Controller
 					"position" => $pack->getPosition(),
 					"cycle_position" => $pack->getCycle()->getPosition(),
 					"available" => $pack->getDateRelease() ? $pack->getDateRelease()->format('Y-m-d') : '',
+					"reprint_packs" => $pack->getReprintPacks(),
+					"reprint_type" => $pack->getReprintType(),
+					"replaced" => $pack->getReplaced(),
+					"chapter" => $pack->getChapter(),
 					"known" => intval($real),
 					"total" => $max,
 					"url" => $this->get('router')->generate('cards_list', array('pack_code' => $pack->getCode()), UrlGeneratorInterface::ABSOLUTE_URL),
@@ -211,11 +215,6 @@ class ApiController extends Controller
 		if ($response->isNotModified($request)) {
 			return $response;
 		}
-
-		// build the response
-
-		/* @var $card \AppBundle\Entity\Card */
-		$card = $this->get('cards_data')->getCardInfo($card, true, "en");
 
 		$content = json_encode($faqs);
 		if(isset($jsonp))

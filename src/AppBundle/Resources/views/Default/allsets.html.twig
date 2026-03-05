@@ -1,13 +1,13 @@
-<ol>
+<ul style="list-style-type: none; padding-left: 0;">
 	{% for cycle in data %}
-		<li><a href="{{ cycle.url }}">{{ cycle.name }}</a><span> </span>
+		<li style="padding-bottom: 1em;"><a style="font-size: 0.8em; border-bottom: 1px solid #ccc; display: block;" href="{{ cycle.url }}">{{ cycle.name }}</a>
 		{% if cycle.packs is defined %}
-		<ol>
-		{% for pack in cycle.packs %}
-		<li><a {% if pack.available == false %}class="card-preview" title="Not yet released"{% endif %} href="{{ pack.url }}">{{ pack.name }}</a><span> {% if pack.available == false %}({{pack.known}} cards){% endif %}</span></li>
-		{% endfor %}
-		</ol>
+		<ul style="list-style-type: none; padding-left: 2px;">
+			{% for pack in cycle.packs %}
+			<li><a {% if pack.available == false %}class="card-preview" title="Not yet released"{% endif %} href="{{ pack.url }}">{{ pack.name }}</a><span> {% if pack.available == false %}({{pack.known}} cards){% endif %}</span></li>
+			{% endfor %}
+		</ul>
 		{% endif %}
 		</li>
 	{% endfor %}
-</ol>
+</ul>

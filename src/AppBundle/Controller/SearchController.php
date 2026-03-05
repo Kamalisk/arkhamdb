@@ -133,6 +133,10 @@ class SearchController extends Controller
 			"data" => $this->get('cards_data')->allsetsdata(),
 		]);
 
+		$alloldsets = $this->renderView('AppBundle:Default:allsets.html.twig', [
+			"data" => $this->get('cards_data')->allsetsdata(true),
+		]);
+
 		return $this->render('AppBundle:Search:searchform.html.twig', array(
 				"pagetitle" => "Card Search",
 				"pagedescription" => "Find all the cards of the game, easily searchable.",
@@ -146,6 +150,7 @@ class SearchController extends Controller
 				"encounters" => $encounters,
 				"illustrators" => $illustrators,
 				"allsets" => $allsets,
+				"alloldsets" => $alloldsets,
 		), $response);
 	}
 

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Entity;
 
@@ -12,17 +12,22 @@ class Pack implements \Gedmo\Translatable\Translatable, \Serializable
 				'name' => $this->name,
 				'position' => $this->position,
 				'size' => $this->size,
+                'chapter' => $this->chapter,
+                'cgdb_id' => $this->cgdbId,
+                'replaced' => $this->replaced,
+                'reprint_packs' => $this->reprintPacks,
+                'reprint_type' => $this->reprintType
 		];
 	}
-	
+
 	public function unserialize($serialized) {
 		throw new \Exception("unserialize() method unsupported");
 	}
-	
+
     public function toString() {
 		return $this->name;
 	}
-	
+
     /**
      * @var integer
      */
@@ -47,6 +52,11 @@ class Pack implements \Gedmo\Translatable\Translatable, \Serializable
      * @var integer
      */
     private $position;
+
+    /**
+     * @var integer
+     */
+    private $chapter;
 
     /**
      * @var integer
@@ -77,6 +87,21 @@ class Pack implements \Gedmo\Translatable\Translatable, \Serializable
      * @var \AppBundle\Entity\Cycle
      */
     private $cycle;
+
+    /**
+     * @var boolean
+     */
+    private $replaced;
+
+    /**
+     * @var json_array
+     */
+    private $reprintPacks;
+
+    /**
+     * @var string
+     */
+    private $reprintType;
 
     /**
      * Constructor
@@ -190,6 +215,30 @@ class Pack implements \Gedmo\Translatable\Translatable, \Serializable
     public function getPosition()
     {
         return $this->position;
+    }
+
+    /**
+     * Set chapter
+     *
+     * @param integer $chapter
+     *
+     * @return Pack
+     */
+    public function setChapter($chapter)
+    {
+        $this->chapter = $chapter;
+
+        return $this;
+    }
+
+    /**
+     * Get chapter
+     *
+     * @return integer
+     */
+    public function getChapter()
+    {
+        return $this->chapter;
     }
 
     /**
@@ -344,6 +393,78 @@ class Pack implements \Gedmo\Translatable\Translatable, \Serializable
     public function getCycle()
     {
         return $this->cycle;
+    }
+
+    /**
+     * Set replaced
+     *
+     * @param boolean $replaced
+     *
+     * @return Pack
+     */
+    public function setReplaced($replaced = false)
+    {
+        $this->replaced = $replaced;
+
+        return $this;
+    }
+
+    /**
+     * Get replacedBy
+     *
+     * @return boolean
+     */
+    public function getReplaced()
+    {
+        return $this->replaced;
+    }
+
+    /**
+     * Set replaced
+     *
+     * @param json_array $reprintPacks
+     *
+     * @return Pack
+     */
+    public function setReprintPacks($reprintPacks = false)
+    {
+        $this->reprintPacks = $reprintPacks;
+
+        return $this;
+    }
+
+    /**
+     * Get reprintPacks
+     *
+     * @return json_array
+     */
+    public function getReprintPacks()
+    {
+        return $this->reprintPacks;
+    }
+
+    /**
+     * Set reprintType
+     *
+     * @param string $reprintType
+     *
+     * @return Pack
+     */
+    public function setReprintType($reprintType = false)
+    {
+        $this->reprintType = $reprintType;
+
+        return $this;
+    }
+
+    /**
+     * Get reprintType
+     *
+     * @return string
+     */
+    public function getReprintType()
+    {
+        return $this->reprintType;
     }
 
     /*

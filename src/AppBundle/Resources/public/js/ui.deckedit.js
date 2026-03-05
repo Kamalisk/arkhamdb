@@ -20,6 +20,7 @@ ui.read_config_from_storage = function read_config_from_storage() {
 	Config = _.extend({
 		'show-unusable': false,
 		'show-only-deck': false,
+		'show-side-deck-qty': false,
 		'display-column': 1,
 		'core-set': 2,
 		'show-suggestions': 0,
@@ -47,7 +48,7 @@ ui.init_config_buttons = function init_config_buttons() {
 		$('input[name='+radio+'][value='+Config[radio]+']').prop('checked', true);
 	});
 	// checkbox
-	['show-unusable', 'show-only-deck'].forEach(function (checkbox) {
+	['show-unusable', 'show-only-deck', 'show-side-deck-qty'].forEach(function (checkbox) {
 		if(Config[checkbox]) $('input[name='+checkbox+']').prop('checked', true);
 	})
 
@@ -375,7 +376,9 @@ ui.build_pack_selector = function build_pack_selector() {
 			cycle_position = record.cycle_position;
 			$('<li><hr/></li>').appendTo('[data-filter=pack_code]');
 		}
-		$('<li><a href="#"><label><input type="checkbox" name="' + record.code + '"' + (checked ? ' checked="checked"' : '') + '>' + record.name + '</label></a></li>').appendTo('[data-filter=pack_code]');
+
+		$('<li><a href="#"><label><input data-replace-type="' + (record.reprint_type ? record.reprint_type : '') + '" data-replaces="' + (record.reprint_packs ? record.reprint_packs.join(',') : '') + '" type="checkbox" name="' + record.code + '"' + (checked ? ' checked="checked"' : '') + '>' + record.name + '</label></a></li>').appendTo('[data-filter=pack_code]');
+
 		// special case for core set 2
 		if (record.code == "core"){
 			if (collection[record.id+"-2"]){
@@ -604,6 +607,7 @@ ui.on_config_change = function on_config_change(event) {
 	switch(name) {
 		case 'buttons-behavior':
 		break;
+		case 'show-side-deck-qty':
 		case 'display-column':
 		ui.update_list_template();
 		ui.refresh_lists();
@@ -761,14 +765,18 @@ ui.on_list_quantity_change = function on_list_quantity_change(event) {
 	var row = $(this).closest('.card-container');
 	var code = row.data('code');
 	var quantity = parseInt($(this).val(), 10);
-//	row[quantity ? "addClass" : "removeClass"]('in-deck');
 	ui.on_quantity_change(code, quantity);
+}
+ui.on_list_side_quantity_change = function on_list_side_quantity_change(event) {
+	var row = $(this).closest('.card-container');
+	var code = row.data('code');
+	var quantity = parseInt($(this).val(), 10);
+	ui.on_side_quantity_change(code, quantity);
 }
 ui.on_suggestion_quantity_change = function on_suggestion_quantity_change(event) {
 	var row = $(event.target).closest('.card-container');
 	var code = row.data('code');
 	var quantity = parseInt($(event.target).val(), 10);
-//	row[quantity ? "addClass" : "removeClass"]('in-deck');
 	ui.on_quantity_change(code, quantity);
 }
 
@@ -878,7 +886,7 @@ ui.on_modal_customization_change = function on_modal_customization_change(event)
 	ui.on_customization_change(code, choice_index, choice.xp, new_choices.join('^'));
 }
 
-ui.refresh_row = function refresh_row(card_code, quantity) {
+ui.refresh_row = function refresh_row(card_code, quantity, sideQuantity) {
 	// for each set of divs (1, 2, 3 columns)
 	CardDivs.forEach(function(rows) {
 		var row = rows[card_code];
@@ -886,15 +894,28 @@ ui.refresh_row = function refresh_row(card_code, quantity) {
 
 		// rows[card_code] is the card row of our card
 		// for each "quantity switch" on that row
-		row.find('input[name="qty-' + card_code + '"]').each(function(i, element) {
-			// if that switch is NOT the one with the new quantity, uncheck it
-			// else, check it
-			if($(element).val() != quantity) {
-				$(element).prop('checked', false).closest('label').removeClass('active');
-			} else {
-				$(element).prop('checked', true).closest('label').addClass('active');
-			}
-		});
+		if (quantity !== undefined && quantity !== null) {
+			row.find('input[name="qty-' + card_code + '"]').each(function(i, element) {
+				// if that switch is NOT the one with the new quantity, uncheck it
+				// else, check it
+				if($(element).val() != quantity) {
+					$(element).prop('checked', false).closest('label').removeClass('active');
+				} else {
+					$(element).prop('checked', true).closest('label').addClass('active');
+				}
+			});
+		}
+		if (sideQuantity !== undefined && sideQuantity !== null) {
+			row.find('input[name="side-qty-' + card_code + '"]').each(function(i, element) {
+				// if that switch is NOT the one with the new quantity, uncheck it
+				// else, check it
+				if($(element).val() != sideQuantity) {
+					$(element).prop('checked', false).closest('label').removeClass('active');
+				} else {
+					$(element).prop('checked', true).closest('label').addClass('active');
+				}
+			});
+		}
 	});
 }
 
@@ -907,8 +928,7 @@ ui.on_quantity_change = function on_quantity_change(card_code, quantity) {
 	app.suggestions.compute();
 	if(update_all) {
 		ui.refresh_lists();
-	}
-	else {
+	} else {
 		ui.refresh_row(card_code, quantity);
 	}
 	app.deck_history.all_changes();
@@ -921,6 +941,11 @@ ui.on_ignore_quantity_change = function on_ignore_quantity_change(card_code, qua
 ui.on_side_quantity_change = function on_side_quantity_change(card_code, quantity) {
 	var update_all = app.deck.set_card_sides(card_code, quantity);
 	ui.refresh_deck();
+	if(update_all) {
+		ui.refresh_lists();
+	} else {
+		ui.refresh_row(card_code, null, quantity);
+	}
 	app.deck_history.all_changes();
 }
 ui.on_customization_change = function on_customization_change(card_code, index, xp, choice) {
@@ -1092,8 +1117,10 @@ ui.setup_event_handlers = function setup_event_handlers() {
 	$('#config-options').on('change', 'input', ui.on_config_change);
 	$('[data-filter=pack_code]').on('change', 'input', ui.on_core_change);
 	$('[data-filter=taboo_code]').on('change', ui.on_taboo_change);
-	$('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
-	$('#special-collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
+	$('#collection').on('change', '.qty', ui.on_list_quantity_change);
+	$('#special-collection').on('change', '.qty', ui.on_list_quantity_change);
+	$('#collection').on('change', '.sideqty', ui.on_list_side_quantity_change);
+	$('#special-collection').on('change', '.sideqty', ui.on_list_side_quantity_change);
 
 	$('#deck').on('click', 'a[data-random]', ui.select_basic_weakness);
 	$('#deck').on('click', '#xp_up', ui.on_adjust_xp_up);
@@ -1147,13 +1174,24 @@ ui.select_basic_weakness = function select_basic_weakness() {
 
 ui.in_selected_packs = function in_selected_packs(card, filters) {
 	var found = false;
-	if (card && filters && filters.pack_code && filters.pack_code['$in']) {
-		filters.pack_code['$in'].forEach(function(pack_code) {
-			if (pack_code == card.pack_code) {
-				found = true;
+	if (card && filters && filters['$and']) {
+		filters['$and'].forEach(function(fragment) {
+			if (fragment['$or']) {
+				fragment['$or'].forEach(function(orFragment) {
+					if (orFragment.pack_code && orFragment.pack_code['$in'] && orFragment.pack_code['$in'].indexOf(card.pack_code) > -1) {
+						if (orFragment.encounter_code && orFragment.encounter_code['$exists'] === true && card.encounter_code) {
+							found = true;
+						} else if (orFragment.encounter_code && orFragment.encounter_code['$exists'] === false && !card.encounter_code) {
+							found = true;
+						} else if (!orFragment.encounter_code) {
+							found = true;
+						}
+					}
+				})
 			}
 		})
 	}
+
 	return found;
 }
 
@@ -1167,6 +1205,10 @@ ui.get_filters = function get_filters(prefix) {
 	if (prefix){
 		target = "#"+prefix+"_filters [data-filter], #inline-collection";
 	}
+	var fragments = [];
+	var playerReplacements = [];
+	var encounterReplacements = [];
+
 	$(target).each(
 		function(index, div) {
 			var column_name = $(div).data('filter');
@@ -1228,7 +1270,20 @@ ui.get_filters = function get_filters(prefix) {
 							if ($(elt).attr('name') == "core-2"){
 								if($(elt).prop('checked')) arr.push("core");
 							}else {
-								if($(elt).prop('checked')) arr.push($(elt).attr('name'));
+								if($(elt).prop('checked')) {
+									arr.push($(elt).attr('name'));
+									if ($(elt).data('replaces')) {
+										// if a pack replaces another pack, need to add special filter for those packs and the type
+										var replaces = $(elt).data('replaces').split(',');
+										replaces.forEach(function(replace) {
+											if ($(elt).data('replace-type') == "campaign") {
+												encounterReplacements.push(replace);
+											} else {
+												playerReplacements.push(replace);
+											}
+										})
+									}
+								}
 							}
 
 						}
@@ -1237,11 +1292,25 @@ ui.get_filters = function get_filters(prefix) {
 				if(arr.length) {
 					// check both faction codes
 					if (column_name == "faction_code"){
-						filters['$or'] = [
-							{"faction_code": { '$in': arr }},
-							{"faction2_code": { '$in': arr }},
-							{"faction3_code": { '$in': arr }}
-						];
+						fragments.push(
+							{
+								'$or': [
+									{"faction_code": { '$in': arr }},
+									{"faction2_code": { '$in': arr }},
+									{"faction3_code": { '$in': arr }}
+								]
+							}
+						)
+					} else if (column_name == "pack_code"){
+						fragments.push(
+								{
+									'$or': [
+										{"pack_code": { '$in': arr }},
+										{"pack_code": { '$in': playerReplacements }, "encounter_code": { '$exists': false }},
+										{"pack_code": { '$in': encounterReplacements }, "encounter_code": { '$exists': true } },
+									]
+								}
+							)
 					} else {
 						filters[column_name] = {
 							'$in': arr
@@ -1260,9 +1329,15 @@ ui.get_filters = function get_filters(prefix) {
 	} else {
 		filters['xp']['$exists'] = true;
 	}
+
+	// for complex queries combine them into an and block
+	if (fragments.length) {
+		filters['$and'] = fragments;
+	}
+
 	filters['deck_limit'] = {};
 	filters['deck_limit']['$exists'] = true;
-	//console.log(filters);
+
 	return filters;
 }
 
@@ -1285,6 +1360,7 @@ ui.update_list_template = function update_list_template() {
 				+ '<td class="cost"><%= card.cost %></td>'
 				+ '<td class="type" style="text-align : left;"><span class="" title="<%= card.type_name %>"><%= card.type_name %></span> <% if (card.slot) { %> - <%= app.format.slot(card) %> <% } %></td>'
 				+ '<td class="faction"><span class="fg-<%= card.faction_code %>" title="<%= card.faction_name %>"><%= card.faction_name %></span></td>'
+				// + '<% if (sideRadios) { %><td><div class="btn-group" data-toggle="buttons"><%= sideRadios %></div></td><% } %>'
 			+ '</tr>'
 		);
 		break;
@@ -1326,6 +1402,10 @@ ui.build_row = function build_row(card) {
 		'<label class="btn btn-xs btn-default <%= active %>"><input type="radio" class="qty" name="qty-<%= card.code %>" value="<%= i %>"><%= i %></label>'
 	);
 
+	var sideRadios = '', sideRadioTpl = _.template(
+		'<label class="btn btn-xs btn-default <%= active %>"><input type="radio" class="sideqty" name="side-qty-<%= card.code %>" value="<%= i %>"><%= i %></label>'
+	);
+
 	//console.log(card.name, card.maxqty, card.quantity);
 	for (var i = 0; i <= card.maxqty; i++) {
 		radios += radioTpl({
@@ -1335,8 +1415,19 @@ ui.build_row = function build_row(card) {
 		});
 	}
 
+	if (Config['show-side-deck-qty']) {
+		for (var i = 0; i <= card.maxqty; i++) {
+			sideRadios += sideRadioTpl({
+				i: i,
+				active: (i == card.indeck ? ' active' : ''),
+				card: card
+			});
+		}
+	}
+
 	var html = DisplayColumnsTpl({
 		radios: radios,
+		// sideRadios: sideRadios,
 		url: Routing.generate('cards_zoom', {card_code:card.code}),
 		card: card
 	});

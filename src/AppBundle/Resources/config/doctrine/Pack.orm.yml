@@ -36,6 +36,14 @@ AppBundle\Entity\Pack:
         cgdbId:
             type: smallint
             nullable: true
+        chapter:
+            type: smallint
+            nullable: true
+        replaced:
+            type: boolean
+            nullable: true
+            options:
+                default: false
         position:
             type: smallint
             nullable: false
@@ -60,7 +68,14 @@ AppBundle\Entity\Pack:
             type: date
             nullable: true
             column: date_release
+        reprintPacks:
+            type: json_array
+            nullable: true
+        reprintType:
+            type: string
+            length: 10
+            nullable: true
     uniqueConstraints:
         pack_code_idx:
             columns: [ code ]
-            
+

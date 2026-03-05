@@ -139,7 +139,7 @@ class CardsData
 		return $packs;
 	}
 
-	public function allsetsdata()
+	public function allsetsdata($replaced = false)
 	{
 		$list_cycles = $this->doctrine->getRepository('AppBundle:Cycle')->findAll();
 		$cycles = array();
@@ -147,6 +147,9 @@ class CardsData
 			$packs = array();
 			$sreal=0; $smax = 0;
 			foreach($cycle->getPacks() as $pack) {
+				if ($pack->getReplaced() != $replaced){
+					continue;
+				}
 				$real = count($pack->getCards());
 				$sreal += $real;
 				$max = $pack->getSize();
@@ -154,12 +157,16 @@ class CardsData
 				$packs[] = array(
 						"name" => $pack->getName(),
 						"code" => $pack->getCode(),
+						"replaced" => $pack->getReplaced(),
 						"available" => $pack->getDateRelease() ? $pack->getDateRelease()->format('Y-m-d') : '',
 						"known" => intval($real),
 						"total" => $max,
 						"url" => $this->router->generate('cards_list', array('pack_code' => $pack->getCode()), UrlGeneratorInterface::ABSOLUTE_URL),
 						"search" => "e:".$pack->getCode()
 				);
+			}
+			if (count($packs) == 0){
+				continue;
 			}
 			if($cycle->getSize() === 1) {
 				$cycles[] = $packs[0];
@@ -362,7 +369,26 @@ class CardsData
 							$or = [];
 							foreach($condition as $arg) {
 								switch($operator) {
-									case ':': $or[] = "(p.code = ?$i)"; break;
+									case ':':
+										$subQb = $this->doctrine->getRepository('AppBundle:Pack')->createQueryBuilder('subp');
+										$subQb->select('subp.reprintPacks, subp.reprintType')->where('subp.code = ?1');
+										// just get the result now
+										$subQb->setParameter(1, $arg);
+
+										$result = $subQb->getQuery()->getOneOrNullResult();
+										$reprintPacks = $result ? $result['reprintPacks'] : null;
+										$reprintType = $result ? $result['reprintType'] : null;
+
+										$or[] = 'p.code = ?' . ($i+1) . ' OR p.code IN (?' . ($i) . ')';
+										$qb->setParameter($i++, $reprintPacks);
+
+										if ($reprintType == "campaign"){
+											$qb->andWhere("(c.encounter IS NOT NULL)");
+										}else {
+											$qb->andWhere("(c.encounter IS NULL)");
+										}
+
+										break;
 									case '!': $or[] = "(p.code != ?$i)"; break;
 									case '<':
 										if(!isset($qb2)) {

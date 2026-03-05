@@ -8,7 +8,9 @@ use Symfony\Component\HttpFoundation\Response;
 class CollectionController extends Controller {
     public function packsAction($reloaduser = false) {
         $categories = [];
+        $replaced_categories = [];
         //$categories[] = ["label" => "Core", "packs" => []];
+        //
         $list_cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findBy([], ["position" => "ASC"]);
         $owned_packs = $this->getUser()->getOwnedPacks();
         $oPacks = [];
@@ -37,20 +39,35 @@ class CollectionController extends Controller {
             } else {
             */
             $category = ["label" => $cycle->getName(), "packs" => []];
+            $replaced_category = ["label" => $cycle->getName(), "packs" => []];
             foreach ($cycle->getPacks() as $pack) {
                 $checked = count($oPacks) ? in_array($pack->getId(), $oPacks) : ($pack->getDateRelease() != null);
-                $category['packs'][] = ["code" => $pack->getCode(), "id" => $pack->getId(), "label" => $pack->getName(), "checked" => $checked, "future" => $pack->getDateRelease() === null];
+                if ($pack->getReplaced()) {
+                    $replaced_category['packs'][] = ["code" => $pack->getCode(), "id" => $pack->getId(), "label" => $pack->getName(), "checked" => $checked, "future" => $pack->getDateRelease() === null];
+                } else {
+                    $category['packs'][] = ["code" => $pack->getCode(), "id" => $pack->getId(), "label" => $pack->getName(), "checked" => $checked, "future" => $pack->getDateRelease() === null];
+                }
                 if ($pack->getCode() == 'core') {
                     $checked = count($oPacks) ? in_array($pack->getId()."-2", $oPacks) : ($pack->getDateRelease() != null);
-                    $category["packs"][] = ["code" => $cycle->getCode(), "id" => $pack->getId().'-2', "label" => "2", "checked" => $checked, "future" => $pack->getDateRelease() === null];
+                    if ($pack->getReplaced()) {
+                        $replaced_category["packs"][] = ["code" => $pack->getCode(), "id" => $pack->getId().'-2', "label" => "2", "checked" => $checked, "future" => $pack->getDateRelease() === null];
+                    } else {
+                        $category["packs"][] = ["code" => $pack->getCode(), "id" => $pack->getId().'-2', "label" => "2", "checked" => $checked, "future" => $pack->getDateRelease() === null];
+                    }
                 }
             }
 
-            $categories[] = $category;
+            if (count($category['packs']) > 0) {
+                $categories[] = $category;
+            }
+            if (count($replaced_category['packs']) > 0) {
+                $replaced_categories[] = $replaced_category;
+            }
         }
         return $this->render('AppBundle:Collection:collection.html.twig', [
             'pagetitle' =>  "My Collection",
             'categories' => $categories,
+            'replaced_categories' => $replaced_categories,
             'reloaduser' => $reloaduser
         ]);
     }
