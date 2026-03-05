@@ -23,7 +23,6 @@ var date_creation,
 	sort_type = "default",
 	sort_dir = 1,
 	problem_list = [],
-	no_collection = true,
 	collection = {},
 	problem_labels = {
 		too_few_cards: "Contains too few cards",
@@ -143,8 +142,12 @@ deck.init = function init(data, previous_deck_meta) {
 	}
 	deck.choices = [];
 	// parse pack owner string
-	collection = {};
-	no_collection = true;
+	collection = {
+		"packs": {},
+		"player_packs": {},
+		"campaign_packs": {},
+		"empty": true
+	};
 
 	if(app.data.isLoaded) {
 		deck.onloaded(data);
@@ -156,12 +159,10 @@ deck.init = function init(data, previous_deck_meta) {
 }
 
 deck.onloaded = function(data){
-
 	if (data.taboo_id){
 		deck.taboo_id = data.taboo_id;
 		app.data.apply_taboos(deck.taboo_id);
 	}
-
 	deck.set_slots(data.slots, data.ignoreDeckLimitSlots);
 	if (data.sideSlots) {
 		deck.set_side_slots(data.sideSlots);
@@ -231,11 +232,27 @@ deck.onloaded = function(data){
 	}
 
 	if (app.user.data && app.user.data.owned_packs) {
-		var packs = app.user.data.owned_packs.split(',');
-		_.forEach(packs, function(str) {
-			collection[str] = 1;
-			no_collection = false;
+		var packs = app.user.data.owned_packs.split(',').map(Number);
+		var packs_data = app.data.packs.find({id: {'$in': packs}});
+
+		// figure out which packs are in the collection
+		// has "virtual" packs for the reprints
+		_.forEach(packs_data, function(pack) {
+			console.log(pack);
+			collection.packs[pack.id] = 1;
+			collection.empty = false;
+			if (pack.reprint_packs && pack.reprint_packs.length > 0) {
+				_.forEach(pack.reprint_packs, function(reprint) {
+					var reprint_pack = app.data.packs.findById(reprint);
+					if (pack.reprint_type == "campaign") {
+						collection.campaign_packs[reprint_pack.id] = 1;
+					} else {
+						collection.player_packs[reprint_pack.id] = 1;
+					}
+				})
+			}
 		});
+		console.log(collection);
 	}
 }
 
@@ -1066,6 +1083,23 @@ deck.get_layout_data_one_section = function get_layout_data_one_section(query, d
 	return section;
 }
 
+deck.is_card_in_collection = function is_pack_in_collection(card) {
+	if (!card) {
+		return false;
+	}
+	pack = app.data.packs.findById(card.pack_code);
+
+	if (collection.packs[pack.id]) {
+		return true;
+	}
+	if (!card.encounter_code && collection.player_packs[pack.id]) {
+		return true;
+	}
+	if (card.encounter_code && collection.campaign_packs[pack.id]) {
+		return true;
+	}
+	return false;
+}
 
 deck.create_card_group = function(cards, field){
 	var section = $('<div>');
@@ -1122,10 +1156,9 @@ deck.create_card = function create_card(card, field='indeck'){
 		$div.append(' <span class="fa fa-star" style="color:orange; title="Customize" data-customize="'+card.code+'"></span>');
 	}
 
-	if (!no_collection){
-		var pack = app.data.packs.findById(card.pack_code);
+	if (!collection.empty){
 		var in_collection = false;
-		if (collection[pack.id]) {
+		if (deck.is_card_in_collection(card)) {
 			in_collection = true;
 		} else {
 			if (card.duplicated_by) {
@@ -1133,11 +1166,31 @@ deck.create_card = function create_card(card, field='indeck'){
 					var dupe_card = app.data.cards.findById(dupe_code);
 					if (dupe_card) {
 						pack = app.data.packs.findById(dupe_card.pack_code);
-						if (collection[pack.id]) {
+						if (deck.is_card_in_collection(dupe_card)) {
 							in_collection = true;
 						}
 					}
 				});
+			} else if (card.duplicate_of_code) {
+				var dupe_card = app.data.cards.findById(card.duplicate_of_code);
+				if (dupe_card) {
+					pack = app.data.packs.findById(dupe_card.pack_code);
+					if (deck.is_card_in_collection(dupe_card)) {
+						in_collection = true;
+					} else {
+						if (dupe_card.duplicated_by) {
+							dupe_card.duplicated_by.forEach(function (dupe_code) {
+								var dupe_card = app.data.cards.findById(dupe_code);
+								if (dupe_card) {
+									pack = app.data.packs.findById(dupe_card.pack_code);
+									if (deck.is_card_in_collection(dupe_card)) {
+										in_collection = true;
+									}
+								}
+							});
+						}
+					}
+				}
 			}
 		}
 		if (!in_collection) {
@@ -1364,19 +1417,21 @@ deck.get_problem = function get_problem() {
 				size = size + 5;
 			}
 		}
-		for (var i = 0; i < deck.deck_options.length; i++) {
-			var option = deck.deck_options[i];
-			if (option.option_select && deck.meta && deck.meta.option_selected) {
-				for (var j = 0; j < option.option_select.length; j++){
-					var sub_option = option.option_select[j];
-					if (sub_option.id == deck.meta.option_selected){
-						option = sub_option;
-						break;
+		if (deck.deck_options) {
+			for (var i = 0; i < deck.deck_options.length; i++) {
+				var option = deck.deck_options[i];
+				if (option.option_select && deck.meta && deck.meta.option_selected) {
+					for (var j = 0; j < option.option_select.length; j++){
+						var sub_option = option.option_select[j];
+						if (sub_option.id == deck.meta.option_selected){
+							option = sub_option;
+							break;
+						}
 					}
 				}
-			}
-			if (option.size) {
-				size = size + option.size;
+				if (option.size) {
+					size = size + option.size;
+				}
 			}
 		}
 		// must have the required cards
@@ -1414,49 +1469,49 @@ deck.get_problem = function get_problem() {
 		return 'invalid_cards';
 	}
 
+	if (deck.deck_options) {
+		for (var i = 0; i < deck.deck_options.length; i++){
 
-	for (var i = 0; i < deck.deck_options.length; i++){
-
-		if (deck.deck_options[i].limit_count && deck.deck_options[i].limit){
-			if (deck.deck_options[i].limit_count > deck.deck_options[i].limit){
-				if (deck.deck_options[i].error){
-					deck.problem_list.push(deck.deck_options[i].error);
+			if (deck.deck_options[i].limit_count && deck.deck_options[i].limit){
+				if (deck.deck_options[i].limit_count > deck.deck_options[i].limit){
+					if (deck.deck_options[i].error){
+						deck.problem_list.push(deck.deck_options[i].error);
+					}
+					return 'investigator';
 				}
-				return 'investigator';
 			}
-		}
 
-		if (deck.deck_options[i].atleast_count && deck.deck_options[i].atleast){
-			if (deck.deck_options[i].atleast.factions && deck.deck_options[i].atleast.min){
-				var faction_count = 0;
-				$.each(deck.deck_options[i].atleast_count, function(key, value){
-					if (value >= deck.deck_options[i].atleast.min){
-						faction_count++;
+			if (deck.deck_options[i].atleast_count && deck.deck_options[i].atleast){
+				if (deck.deck_options[i].atleast.factions && deck.deck_options[i].atleast.min){
+					var faction_count = 0;
+					$.each(deck.deck_options[i].atleast_count, function(key, value){
+						if (value >= deck.deck_options[i].atleast.min){
+							faction_count++;
+						}
+					})
+					if (faction_count < deck.deck_options[i].atleast.factions){
+						if (deck.deck_options[i].error){
+							deck.problem_list.push(deck.deck_options[i].error);
+						}
+						return 'investigator';
 					}
-				})
-				if (faction_count < deck.deck_options[i].atleast.factions){
-					if (deck.deck_options[i].error){
-						deck.problem_list.push(deck.deck_options[i].error);
+				} else if (deck.deck_options[i].atleast.types && deck.deck_options[i].atleast.min){
+					var type_count = 0;
+					$.each(deck.deck_options[i].atleast_count, function(key, value){
+						if (value >= deck.deck_options[i].atleast.min){
+							type_count++;
+						}
+					})
+					if (type_count < deck.deck_options[i].atleast.types){
+						if (deck.deck_options[i].error){
+							deck.problem_list.push(deck.deck_options[i].error);
+						}
+						return 'investigator';
 					}
-					return 'investigator';
-				}
-			} else if (deck.deck_options[i].atleast.types && deck.deck_options[i].atleast.min){
-				var type_count = 0;
-				$.each(deck.deck_options[i].atleast_count, function(key, value){
-					if (value >= deck.deck_options[i].atleast.min){
-						type_count++;
-					}
-				})
-				if (type_count < deck.deck_options[i].atleast.types){
-					if (deck.deck_options[i].error){
-						deck.problem_list.push(deck.deck_options[i].error);
-					}
-					return 'investigator';
 				}
 			}
 		}
 	}
-
 		// at least 60 others cards
 	if(deck.get_draw_deck_size() < size) {
 		return 'too_few_cards';
