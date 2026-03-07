@@ -66,9 +66,7 @@ class BuilderController extends Controller
 				$investigator->setDeckRequirements($req);
 
 				// only have one investigator per faction and name
-				$investigator_key = preg_replace(
-					"/[^A-Za-z0-9 ]/", '', sprintf('%s (%s)', $investigator->getName(), $investigator->getFaction()->getName())
-				);
+				$investigator_key = $investigator->getCode();
 
 				if (!isset($all_unique_investigators[$investigator_key])) {
 					$all_unique_investigators[$investigator_key] = true;
