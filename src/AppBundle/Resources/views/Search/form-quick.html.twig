@@ -9,7 +9,7 @@
 		<option value="">Any investigator</option>
 		{% for investigator in investigators %}
 		<option value="{{ investigator.code }}"{% if investigator_code is defined and investigator_code == investigator.code %} selected="selected"{% endif %}>
-			{{ investigator.name }}
+			{{ investigator.name }} {{ investigator.pack.chapter > 1 ? '(Chapter ' ~ investigator.pack.chapter ~ ')' : '' }}
 		</option>
 		{% endfor %}
 	</select>
