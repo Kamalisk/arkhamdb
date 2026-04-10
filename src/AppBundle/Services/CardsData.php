@@ -382,9 +382,9 @@ class CardsData
 										$or[] = 'p.code = ?' . ($i+1) . ' OR p.code IN (?' . ($i) . ')';
 										$qb->setParameter($i++, $reprintPacks);
 
-										if ($reprintType == "campaign"){
+										if ($reprintType == "campaign") {
 											$qb->andWhere("(c.encounter IS NOT NULL)");
-										}else {
+										} else if ($reprintType == "player") {
 											$qb->andWhere("(c.encounter IS NULL)");
 										}
 
