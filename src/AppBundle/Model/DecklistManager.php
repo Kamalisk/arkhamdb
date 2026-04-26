@@ -106,10 +106,30 @@ class DecklistManager
 
 	public function findDecklistsByInvestigator(Card $character, $ignoreEmptyDescriptions = FALSE)
 	{
+		$relatedCards = [$character->getCode()];
+
+		if ($character->getDuplicates()) {
+			foreach ($character->getDuplicates() as $duplicate) {
+				$relatedCards[] = $duplicate->getCode();
+			}
+		}
+		if ($character->getDuplicateOf()) {
+			$relatedCards[] = $character->getDuplicateOf()->getCode();
+		}
+		if ($character->getAlternates()) {
+			foreach ($character->getAlternates() as $alternate) {
+				$relatedCards[] = $alternate->getCode();
+			}
+		}
+		if ($character->getAlternateOf()) {
+			$relatedCards[] = $character->getAlternateOf()->getCode();
+		}
+
 		$qb = $this->getQueryBuilder();
 		$qb->addSelect($this->popularityString.' AS HIDDEN popularity');
-		$qb->andWhere('d.character = :character');
-		$qb->setParameter('character', $character);
+		$qb->innerJoin('d.character', 'investigator');
+		$qb->andWhere('investigator.code IN (:investigator)');
+		$qb->setParameter('investigator', $relatedCards);
 		if ($ignoreEmptyDescriptions){
 			$qb->andWhere('LENGTH(d.descriptionHtml) > 199');
 		}
