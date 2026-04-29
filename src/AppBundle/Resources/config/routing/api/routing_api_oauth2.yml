@@ -75,3 +75,15 @@ api_oauth2_update_account_meta:
     defaults:
         _controller: AppBundle:Oauth2:updateAccountMeta
 
+api_oauth2_get_account_meta_key:
+    path: /account/meta/{key}
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Oauth2:getAccountMetaKey
+
+api_oauth2_update_account_meta_key:
+    path: /account/meta/{key}
+    methods: [PUT]
+    defaults:
+        _controller: AppBundle:Oauth2:updateAccountMetaKey
+

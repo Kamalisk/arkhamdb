@@ -808,15 +808,15 @@ class Oauth2Controller extends Controller
     }
 
     /**
-     * Store an arbitrary JSON blob (up to 64 KB) against the authenticated user account.
-     * The entire blob is replaced on each write.
+     * Replace the entire account metadata object for the authenticated user.
+     * The value must be a JSON object. Replaces any previously stored data.
      *
      * @ApiDoc(
      *  section="Account",
      *  resource=true,
-     *  description="Update Account Metadata",
+     *  description="Replace Account Metadata",
      *  parameters={
-     *      {"name"="data", "dataType"="string", "required"=true, "format"="JSON", "description"="JSON blob to store (max 64 KB)"},
+     *      {"name"="data", "dataType"="string", "required"=true, "format"="JSON", "description"="JSON object to store (max 64 KB)"},
      *  },
      * )
      * @param Request $request
@@ -833,9 +833,13 @@ class Oauth2Controller extends Controller
             return new JsonResponse(['success' => false, 'msg' => 'data exceeds the 64 KB limit.'], 400);
         }
 
-        json_decode($raw);
+        $decoded = json_decode($raw);
         if (json_last_error() !== JSON_ERROR_NONE) {
             return new JsonResponse(['success' => false, 'msg' => 'data must be valid JSON.'], 400);
+        }
+
+        if (!($decoded instanceof \stdClass)) {
+            return new JsonResponse(['success' => false, 'msg' => 'data must be a JSON object.'], 400);
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -851,6 +855,117 @@ class Oauth2Controller extends Controller
 
         $userMeta->setMeta($raw);
         $em->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
+
+    /**
+     * Get the value of a single key from the authenticated user's account metadata.
+     * Returns 404 if the key does not exist.
+     *
+     * @ApiDoc(
+     *  section="Account",
+     *  resource=true,
+     *  description="Get Account Metadata Key",
+     *  requirements={
+     *      {"name"="key", "dataType"="string", "description"="Key to retrieve (alphanumeric, underscore, hyphen, dot; max 128 chars)"},
+     *  },
+     * )
+     * @param string $key
+     */
+    public function getAccountMetaKeyAction($key)
+    {
+        if (!preg_match('/^[a-zA-Z0-9_\-\.]{1,128}$/', $key)) {
+            return new JsonResponse(['success' => false, 'msg' => 'Invalid key.'], 400);
+        }
+
+        $userMeta = $this->getUser()->getMeta();
+        if (!$userMeta || !$userMeta->getMeta()) {
+            return new JsonResponse(['success' => false, 'msg' => 'Key not found.'], 404);
+        }
+
+        $data = json_decode($userMeta->getMeta(), true);
+        if (!is_array($data) || !array_key_exists($key, $data)) {
+            return new JsonResponse(['success' => false, 'msg' => 'Key not found.'], 404);
+        }
+
+        $response = new Response(json_encode($data[$key]), 200, ['Content-Type' => 'application/json']);
+        $response->headers->add(['Access-Control-Allow-Origin' => '*']);
+        return $response;
+    }
+
+    /**
+     * Set a single key in the authenticated user's account metadata without affecting other keys.
+     * Multiple third-party apps can safely update their own keys concurrently.
+     * The total metadata size must remain under 64 KB after the update.
+     *
+     * @ApiDoc(
+     *  section="Account",
+     *  resource=true,
+     *  description="Update Account Metadata Key",
+     *  requirements={
+     *      {"name"="key", "dataType"="string", "description"="Key to set (alphanumeric, underscore, hyphen, dot; max 128 chars)"},
+     *  },
+     *  parameters={
+     *      {"name"="data", "dataType"="string", "required"=true, "format"="JSON", "description"="JSON value to store at this key"},
+     *  },
+     * )
+     * @param string  $key
+     * @param Request $request
+     */
+    public function updateAccountMetaKeyAction($key, Request $request)
+    {
+        if (!preg_match('/^[a-zA-Z0-9_\-\.]{1,128}$/', $key)) {
+            return new JsonResponse(['success' => false, 'msg' => 'Invalid key.'], 400);
+        }
+
+        $raw = $request->get('data');
+        if ($raw === null) {
+            return new JsonResponse(['success' => false, 'msg' => 'data parameter is required.'], 400);
+        }
+
+        $value = json_decode($raw);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return new JsonResponse(['success' => false, 'msg' => 'data must be valid JSON.'], 400);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+
+        $em->beginTransaction();
+        try {
+            $userMeta = $em->createQuery('SELECT um FROM AppBundle:UserMeta um WHERE um.user = :user')
+                ->setParameter('user', $user)
+                ->setLockMode(\Doctrine\DBAL\LockMode::PESSIMISTIC_WRITE)
+                ->getOneOrNullResult();
+
+            $existing = [];
+            if ($userMeta && $userMeta->getMeta()) {
+                $existing = json_decode($userMeta->getMeta(), true) ?: [];
+            }
+
+            $existing[$key] = $value;
+            $encoded = json_encode($existing);
+
+            if (strlen($encoded) > 65535) {
+                $em->rollback();
+                return new JsonResponse(['success' => false, 'msg' => 'Total metadata would exceed the 64 KB limit.'], 400);
+            }
+
+            if (!$userMeta) {
+                $userMeta = new UserMeta();
+                $userMeta->setUser($user);
+                $user->setMeta($userMeta);
+                $em->persist($userMeta);
+            }
+
+            $userMeta->setMeta($encoded);
+            $em->flush();
+            $em->commit();
+        } catch (\Exception $e) {
+            $em->rollback();
+            throw $e;
+        }
 
         return new JsonResponse(['success' => true]);
     }
