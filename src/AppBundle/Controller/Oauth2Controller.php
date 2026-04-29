@@ -829,7 +829,7 @@ class Oauth2Controller extends Controller
             return new JsonResponse(['success' => false, 'msg' => 'data parameter is required.'], 400);
         }
 
-        if (strlen($raw) > 65536) {
+        if (strlen($raw) > 65535) {
             return new JsonResponse(['success' => false, 'msg' => 'data exceeds the 64 KB limit.'], 400);
         }
 
