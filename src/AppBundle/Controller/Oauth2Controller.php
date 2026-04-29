@@ -884,12 +884,12 @@ class Oauth2Controller extends Controller
             return new JsonResponse(['success' => false, 'msg' => 'Key not found.'], 404);
         }
 
-        $data = json_decode($userMeta->getMeta(), true);
-        if (!is_array($data) || !array_key_exists($key, $data)) {
+        $data = json_decode($userMeta->getMeta());
+        if (!($data instanceof \stdClass) || !property_exists($data, $key)) {
             return new JsonResponse(['success' => false, 'msg' => 'Key not found.'], 404);
         }
 
-        $response = new Response(json_encode($data[$key]), 200, ['Content-Type' => 'application/json']);
+        $response = new Response(json_encode($data->{$key}), 200, ['Content-Type' => 'application/json']);
         $response->headers->add(['Access-Control-Allow-Origin' => '*']);
         return $response;
     }
