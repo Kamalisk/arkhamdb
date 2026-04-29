@@ -91,6 +91,11 @@ class User extends BaseUser
     private $ownedPacks;
 
     /**
+     * @var \AppBundle\Entity\UserMeta
+     */
+    private $meta;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $decks;
@@ -489,6 +494,17 @@ class User extends BaseUser
     public function getIsTaboo()
     {
         return $this->isTaboo;
+    }
+
+    public function getMeta()
+    {
+        return $this->meta;
+    }
+
+    public function setMeta(\AppBundle\Entity\UserMeta $meta = null)
+    {
+        $this->meta = $meta;
+        return $this;
     }
 
     /**

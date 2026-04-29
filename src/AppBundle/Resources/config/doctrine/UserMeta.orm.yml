@@ -1,0 +1,19 @@
+AppBundle\Entity\UserMeta:
+    type: entity
+    table: user_meta
+    oneToOne:
+        user:
+            targetEntity: User
+            inversedBy: meta
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        meta:
+            type: text
+            nullable: false

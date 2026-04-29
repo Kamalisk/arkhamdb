@@ -1,6 +1,11 @@
 AppBundle\Entity\User:
     type:  entity
     table: user
+    oneToOne:
+        meta:
+            targetEntity: UserMeta
+            mappedBy: user
+            cascade: ["remove"]
     oneToMany:
         decks:
             targetEntity: Deck

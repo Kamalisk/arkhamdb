@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Deckslot;
+use AppBundle\Entity\UserMeta;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Oauth2Controller extends Controller
@@ -781,6 +782,71 @@ class Oauth2Controller extends Controller
         		'success' => TRUE,
         		'msg' => $decklist->getId()
         ]);
+    }
+
+    /**
+     * Get the account metadata blob for the authenticated user.
+     * Returns an empty object if none has been saved yet.
+     *
+     * @ApiDoc(
+     *  section="Account",
+     *  resource=true,
+     *  description="Get Account Metadata",
+     * )
+     */
+    public function getAccountMetaAction()
+    {
+        $userMeta = $this->getUser()->getMeta();
+        $data = $userMeta ? $userMeta->getMeta() : '{}';
+        return new Response($data, 200, ['Content-Type' => 'application/json']);
+    }
+
+    /**
+     * Store an arbitrary JSON blob (up to 64 KB) against the authenticated user account.
+     * The entire blob is replaced on each write.
+     *
+     * @ApiDoc(
+     *  section="Account",
+     *  resource=true,
+     *  description="Update Account Metadata",
+     *  parameters={
+     *      {"name"="data", "dataType"="string", "required"=true, "format"="JSON", "description"="JSON blob to store (max 64 KB)"},
+     *  },
+     * )
+     * @param Request $request
+     */
+    public function updateAccountMetaAction(Request $request)
+    {
+        $raw = $request->get('data');
+
+        if ($raw === null) {
+            return new JsonResponse(['success' => false, 'msg' => 'data parameter is required.'], 400);
+        }
+
+        $decoded = json_decode($raw);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return new JsonResponse(['success' => false, 'msg' => 'data must be valid JSON.'], 400);
+        }
+
+        if (strlen($raw) > 65536) {
+            return new JsonResponse(['success' => false, 'msg' => 'data exceeds the 64 KB limit.'], 400);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+
+        $userMeta = $user->getMeta();
+        if (!$userMeta) {
+            $userMeta = new UserMeta();
+            $userMeta->setUser($user);
+            $user->setMeta($userMeta);
+            $em->persist($userMeta);
+        }
+
+        $userMeta->setMeta($raw);
+        $em->flush();
+
+        return new JsonResponse(['success' => true]);
     }
 
     /**
