@@ -800,7 +800,7 @@ class Oauth2Controller extends Controller
         $response->headers->add(['Access-Control-Allow-Origin' => '*']);
 
         $userMeta = $this->getUser()->getMeta();
-        $data = $userMeta ? $userMeta->getMeta() : '{}';
+        $data = ($userMeta && $userMeta->getMeta()) ? $userMeta->getMeta() : '{}';
 
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent($data);
@@ -939,13 +939,21 @@ class Oauth2Controller extends Controller
                 ->setLockMode(\Doctrine\DBAL\LockMode::PESSIMISTIC_WRITE)
                 ->getOneOrNullResult();
 
-            $existing = [];
+            $existing = new \stdClass();
             if ($userMeta && $userMeta->getMeta()) {
-                $existing = json_decode($userMeta->getMeta(), true) ?: [];
+                $decoded = json_decode($userMeta->getMeta());
+                if ($decoded instanceof \stdClass) {
+                    $existing = $decoded;
+                }
             }
 
-            $existing[$key] = $value;
+            $existing->{$key} = $value;
             $encoded = json_encode($existing);
+
+            if ($encoded === false) {
+                $em->rollback();
+                return new JsonResponse(['success' => false, 'msg' => 'Failed to encode metadata.'], 500);
+            }
 
             if (strlen($encoded) > 65535) {
                 $em->rollback();
