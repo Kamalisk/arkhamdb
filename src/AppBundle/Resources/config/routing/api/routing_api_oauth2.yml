@@ -74,5 +74,3 @@ api_oauth2_update_account_meta:
     methods: [PUT]
     defaults:
         _controller: AppBundle:Oauth2:updateAccountMeta
-
-
