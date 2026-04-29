@@ -16,4 +16,4 @@ AppBundle\Entity\UserMeta:
                 strategy: AUTO
         meta:
             type: text
-            nullable: false
+            nullable: true
