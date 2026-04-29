@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Deckslot;
-use AppBundle\Entity\UserMeta;
+use AppBundle\Entity\UserClientMeta;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Oauth2Controller extends Controller
@@ -785,7 +785,7 @@ class Oauth2Controller extends Controller
     }
 
     /**
-     * Get the account metadata blob for the authenticated user.
+     * Get the metadata stored by the calling OAuth client for the authenticated user.
      * Returns an empty object if none has been saved yet.
      *
      * @ApiDoc(
@@ -796,11 +796,16 @@ class Oauth2Controller extends Controller
      */
     public function getAccountMetaAction()
     {
+        $client = $this->getOAuthClient();
+        $user = $this->getUser();
+
+        $userClientMeta = $this->getDoctrine()->getRepository('AppBundle:UserClientMeta')
+            ->findOneBy(['user' => $user, 'client' => $client]);
+
         $response = new Response();
         $response->headers->add(['Access-Control-Allow-Origin' => '*']);
 
-        $userMeta = $this->getUser()->getMeta();
-        $data = ($userMeta && $userMeta->getMeta()) ? $userMeta->getMeta() : '{}';
+        $data = ($userClientMeta && $userClientMeta->getMeta()) ? $userClientMeta->getMeta() : '{}';
 
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent($data);
@@ -808,15 +813,16 @@ class Oauth2Controller extends Controller
     }
 
     /**
-     * Replace the entire account metadata object for the authenticated user.
-     * The value must be a JSON object. Replaces any previously stored data.
+     * Replace the metadata stored by the calling OAuth client for the authenticated user.
+     * Each OAuth client gets its own isolated 64 KB of storage per user.
+     * The value must be a JSON object.
      *
      * @ApiDoc(
      *  section="Account",
      *  resource=true,
-     *  description="Replace Account Metadata",
+     *  description="Update Account Metadata",
      *  parameters={
-     *      {"name"="data", "dataType"="string", "required"=true, "format"="JSON", "description"="JSON object to store (max 64 KB)"},
+     *      {"name"="data", "dataType"="string", "required"=true, "format"="JSON", "description"="JSON object to store (max 64 KB per client)"},
      *  },
      * )
      * @param Request $request
@@ -842,140 +848,32 @@ class Oauth2Controller extends Controller
             return new JsonResponse(['success' => false, 'msg' => 'data must be a JSON object.'], 400);
         }
 
+        $client = $this->getOAuthClient();
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $userMeta = $user->getMeta();
-        if (!$userMeta) {
-            $userMeta = new UserMeta();
-            $userMeta->setUser($user);
-            $user->setMeta($userMeta);
-            $em->persist($userMeta);
+        $userClientMeta = $em->getRepository('AppBundle:UserClientMeta')
+            ->findOneBy(['user' => $user, 'client' => $client]);
+
+        if (!$userClientMeta) {
+            $userClientMeta = new UserClientMeta();
+            $userClientMeta->setUser($user);
+            $userClientMeta->setClient($client);
+            $em->persist($userClientMeta);
         }
 
-        $userMeta->setMeta($raw);
+        $userClientMeta->setMeta($raw);
         $em->flush();
 
         return new JsonResponse(['success' => true]);
     }
 
-    /**
-     * Get the value of a single key from the authenticated user's account metadata.
-     * Returns 404 if the key does not exist.
-     *
-     * @ApiDoc(
-     *  section="Account",
-     *  resource=true,
-     *  description="Get Account Metadata Key",
-     *  requirements={
-     *      {"name"="key", "dataType"="string", "description"="Key to retrieve (alphanumeric, underscore, hyphen, dot; max 128 chars)"},
-     *  },
-     * )
-     * @param string $key
-     */
-    public function getAccountMetaKeyAction($key)
+    private function getOAuthClient()
     {
-        if (!preg_match('/^[a-zA-Z0-9_\-\.]{1,128}$/', $key)) {
-            return new JsonResponse(['success' => false, 'msg' => 'Invalid key.'], 400);
-        }
-
-        $userMeta = $this->getUser()->getMeta();
-        if (!$userMeta || !$userMeta->getMeta()) {
-            return new JsonResponse(['success' => false, 'msg' => 'Key not found.'], 404);
-        }
-
-        $data = json_decode($userMeta->getMeta());
-        if (!($data instanceof \stdClass) || !property_exists($data, $key)) {
-            return new JsonResponse(['success' => false, 'msg' => 'Key not found.'], 404);
-        }
-
-        $response = new Response(json_encode($data->{$key}), 200, ['Content-Type' => 'application/json']);
-        $response->headers->add(['Access-Control-Allow-Origin' => '*']);
-        return $response;
-    }
-
-    /**
-     * Set a single key in the authenticated user's account metadata without affecting other keys.
-     * Multiple third-party apps can safely update their own keys concurrently.
-     * The total metadata size must remain under 64 KB after the update.
-     *
-     * @ApiDoc(
-     *  section="Account",
-     *  resource=true,
-     *  description="Update Account Metadata Key",
-     *  requirements={
-     *      {"name"="key", "dataType"="string", "description"="Key to set (alphanumeric, underscore, hyphen, dot; max 128 chars)"},
-     *  },
-     *  parameters={
-     *      {"name"="data", "dataType"="string", "required"=true, "format"="JSON", "description"="JSON value to store at this key"},
-     *  },
-     * )
-     * @param string  $key
-     * @param Request $request
-     */
-    public function updateAccountMetaKeyAction($key, Request $request)
-    {
-        if (!preg_match('/^[a-zA-Z0-9_\-\.]{1,128}$/', $key)) {
-            return new JsonResponse(['success' => false, 'msg' => 'Invalid key.'], 400);
-        }
-
-        $raw = $request->get('data');
-        if ($raw === null) {
-            return new JsonResponse(['success' => false, 'msg' => 'data parameter is required.'], 400);
-        }
-
-        $value = json_decode($raw);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return new JsonResponse(['success' => false, 'msg' => 'data must be valid JSON.'], 400);
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->getUser();
-
-        $em->beginTransaction();
-        try {
-            $userMeta = $em->createQuery('SELECT um FROM AppBundle:UserMeta um WHERE um.user = :user')
-                ->setParameter('user', $user)
-                ->setLockMode(\Doctrine\DBAL\LockMode::PESSIMISTIC_WRITE)
-                ->getOneOrNullResult();
-
-            $existing = new \stdClass();
-            if ($userMeta && $userMeta->getMeta()) {
-                $decoded = json_decode($userMeta->getMeta());
-                if ($decoded instanceof \stdClass) {
-                    $existing = $decoded;
-                }
-            }
-
-            $existing->{$key} = $value;
-            $encoded = json_encode($existing);
-
-            if ($encoded === false) {
-                $em->rollback();
-                return new JsonResponse(['success' => false, 'msg' => 'Failed to encode metadata.'], 500);
-            }
-
-            if (strlen($encoded) > 65535) {
-                $em->rollback();
-                return new JsonResponse(['success' => false, 'msg' => 'Total metadata would exceed the 64 KB limit.'], 400);
-            }
-
-            if (!$userMeta) {
-                $userMeta = new UserMeta();
-                $userMeta->setUser($user);
-                $user->setMeta($userMeta);
-                $em->persist($userMeta);
-            }
-
-            $userMeta->setMeta($encoded);
-            $em->flush();
-            $em->commit();
-        } catch (\Exception $e) {
-            $em->rollback();
-            throw $e;
-        }
-
-        return new JsonResponse(['success' => true]);
+        $tokenString = $this->get('security.token_storage')->getToken()->getCredentials();
+        $accessToken = $this->getDoctrine()->getRepository('AppBundle:AccessToken')
+            ->findOneBy(['token' => $tokenString]);
+        return $accessToken->getClient();
     }
 
     /**

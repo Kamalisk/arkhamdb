@@ -2,11 +2,13 @@
 
 namespace AppBundle\Entity;
 
-class UserMeta
+class UserClientMeta
 {
     private $id;
 
     private $user;
+
+    private $client;
 
     private $meta;
 
@@ -23,6 +25,17 @@ class UserMeta
     public function setUser(User $user)
     {
         $this->user = $user;
+        return $this;
+    }
+
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    public function setClient(Client $client)
+    {
+        $this->client = $client;
         return $this;
     }
 
