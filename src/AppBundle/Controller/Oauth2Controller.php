@@ -796,9 +796,15 @@ class Oauth2Controller extends Controller
      */
     public function getAccountMetaAction()
     {
+        $response = new Response();
+        $response->headers->add(['Access-Control-Allow-Origin' => '*']);
+
         $userMeta = $this->getUser()->getMeta();
         $data = $userMeta ? $userMeta->getMeta() : '{}';
-        return new Response($data, 200, ['Content-Type' => 'application/json']);
+
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent($data);
+        return $response;
     }
 
     /**
@@ -823,13 +829,13 @@ class Oauth2Controller extends Controller
             return new JsonResponse(['success' => false, 'msg' => 'data parameter is required.'], 400);
         }
 
-        $decoded = json_decode($raw);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return new JsonResponse(['success' => false, 'msg' => 'data must be valid JSON.'], 400);
-        }
-
         if (strlen($raw) > 65536) {
             return new JsonResponse(['success' => false, 'msg' => 'data exceeds the 64 KB limit.'], 400);
+        }
+
+        json_decode($raw);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return new JsonResponse(['success' => false, 'msg' => 'data must be valid JSON.'], 400);
         }
 
         $em = $this->getDoctrine()->getManager();

@@ -15,5 +15,5 @@ AppBundle\Entity\UserMeta:
             generator:
                 strategy: AUTO
         meta:
-            type: text
+            type: longtext
             nullable: false
