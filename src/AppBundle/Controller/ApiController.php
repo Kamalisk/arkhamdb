@@ -365,7 +365,7 @@ class ApiController extends Controller
 	 */
 	public function listCardsAction(Request $request)
 	{
-		ini_set('zlib.output_compression', 1);
+		// ini_set('zlib.output_compression', 1);
 		$locale = $request->getLocale();
 
 		$response = new Response();
@@ -389,61 +389,39 @@ class ApiController extends Controller
 		$webdir = $this->container->get('kernel')->getRootDir() . "/../web";
 		$file = $webdir."/".$file;
 
-		if (file_exists($file)) {
-			$date = new \DateTime();
-			$lastModified = $date->setTimestamp(filemtime($file));
-			$response->setLastModified($lastModified);
-			if ($response->isNotModified($request)) {
-				return $response;
+		// Unique cache keys for this specific JSON file
+		$mtime_cache_key = 'arkham_file_mtime_' . md5($file);
+		$content_cache_key = 'arkham_file_content_' . md5($file);
+
+		$last_modified_timestamp = apcu_fetch($mtime_cache_key);
+
+		if ($last_modified_timestamp === false) {
+			if (file_exists($file)) {
+				$last_modified_timestamp = filemtime($file);
+				// Cache the timestamp in RAM for 60 seconds
+				apcu_store($mtime_cache_key, $last_modified_timestamp, 60);
+			} else {
+				throw $this->createNotFoundException('Data file not found.');
 			}
-			$content = file_get_contents($file);
-		} else {
-
-			$cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy([], ['dateUpdate' => 'DESC'], 1, 0);
-
-			// check the last-modified-since header
-			$lastModified = NULL;
-			/* @var $card \AppBundle\Entity\Card */
-			if($cards && isset($cards[0])) {
-				if(!$lastModified || $lastModified < $cards[0]->getDateUpdate()) {
-					$lastModified = $cards[0]->getDateUpdate();
-				}
-			}
-
-			$response->setLastModified($lastModified);
-			if ($response->isNotModified($request)) {
-				return $response;
-			}
-
-			if ($include_encounter){
-				$list_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findAll();
-			}else {
-				$list_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findAllWithoutEncounter();
-			}
-
-			$bonded_cards = [];
-			foreach($list_cards as $card) {
-				if ($card->getBondedTo()) {
-					$matching_cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(['realName' => $card->getBondedTo()]);
-					if (count($matching_cards) > 0) {
-						foreach($matching_cards as $matching_card) {
-							if (!isset($bonded_cards[$matching_card->getCode()])) {
-								$bonded_cards[$matching_card->getCode()] = [];
-							}
-							$bonded_cards[$matching_card->getCode()][] = ["count" => $card->getBondedCount(), "code" => $card->getCode()];
-						}
-					}
-				}
-			}
-
-			$cards = array();
-			/* @var $card \AppBundle\Entity\Card */
-			foreach($list_cards as $card) {
-				$cards[] = $this->get('cards_data')->getCardInfo($card, true, $bonded_cards);
-			}
-
-			$content = json_encode($cards);
 		}
+
+		$date = new \DateTime();
+		$lastModified = $date->setTimestamp($last_modified_timestamp);
+		$response->setLastModified($lastModified);
+
+		if ($response->isNotModified($request)) {
+			// Exits immediately! 0ms execution time, 0 disk operations, 0% CPU.
+			return $response;
+		}
+
+		$content = apcu_fetch($content_cache_key);
+
+		if ($content === false) {
+			$content = file_get_contents($file);
+			// Cache the full file content string in RAM for 60 seconds
+			apcu_store($content_cache_key, $content, 60);
+		}
+
 		if(isset($jsonp))
 		{
 			$content = "$jsonp($content)";
