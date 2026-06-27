@@ -49,6 +49,12 @@ class DefaultController extends Controller
 		$weeks_since = ($diff / (60 * 60 * 24 * 7));
 		if ($weeks_since >= 0 && $weeks_since < count($cards)) {
 			$card = $cards[$weeks_since];
+			if (!$card->getDeckOptions()) {
+				$card = $cards[$weeks_since - 1];
+			}
+			if (!$card->getDeckOptions()) {
+				$card = $cards[$weeks_since - 2];
+			}
 		} else {
 			throw new \Exception("Ran out of investigators for spotlight.");
 		}
