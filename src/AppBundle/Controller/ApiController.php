@@ -431,6 +431,18 @@ class ApiController extends Controller
 			$response->headers->set('Content-Type', 'application/json');
 		}
 		$response->setContent($content);
+
+		// Check if the client browser supports GZIP compression
+		if (strpos($request->headers->get('Accept-Encoding'), 'gzip') !== false && !headers_sent()) {
+				// Compress the string output
+				$compressedContent = gzencode($response->getContent(), 9);
+				$response->setContent($compressedContent);
+
+				// Explicitly set the headers so the client knows it is GZIP encoded
+				$response->headers->set('Content-Encoding', 'gzip');
+				$response->headers->set('Content-Length', strlen($compressedContent));
+		}
+
 		return $response;
 
 	}
