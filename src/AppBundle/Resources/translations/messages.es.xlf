@@ -133,8 +133,8 @@
         <source>published reviews</source>
         <target>reseñas publicadas</target>
       </trans-unit>
-      <trans-unit id="f1b4b1a6504086c413e446914bcfee1d" resname="One published reviews">
-        <source>One published reviews</source>
+      <trans-unit id="f1b4b1a6504086c413e446914bcfee1d" resname="One published review">
+        <source>One published review</source>
         <target>Una reseña publicada</target>
       </trans-unit>
       <trans-unit id="8d9bec4f224970e231041639de877092" resname="Reputation">

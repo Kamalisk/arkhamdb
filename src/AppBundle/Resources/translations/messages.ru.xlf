@@ -133,8 +133,8 @@
         <source>published reviews</source>
         <target>отзывов опубликовано</target>
       </trans-unit>
-      <trans-unit id="QoVVZRb" resname="One published reviews">
-        <source>One published reviews</source>
+      <trans-unit id="QoVVZRb" resname="One published review">
+        <source>One published review</source>
         <target>Один опубликованный отзыв</target>
       </trans-unit>
       <trans-unit id="0R5ueJn" resname="Reputation">
