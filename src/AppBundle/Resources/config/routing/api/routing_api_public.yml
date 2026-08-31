@@ -49,6 +49,12 @@ api_cards_pack:
     requirements:
         _format: json|xml|xlsx|xls
 
+api_cards_find:
+    path: /find
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Api:findCards
+
 api_decklist:
     path: /decklist/{decklist_id}.{_format}
     methods: [GET]
