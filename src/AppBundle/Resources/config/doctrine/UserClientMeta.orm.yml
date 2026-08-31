@@ -1,0 +1,30 @@
+AppBundle\Entity\UserClientMeta:
+    type: entity
+    table: user_client_meta
+    uniqueConstraints:
+        user_client_unique:
+            columns: [user_id, client_id]
+    manyToOne:
+        user:
+            targetEntity: User
+            nullable: false
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+                onDelete: CASCADE
+        client:
+            targetEntity: Client
+            nullable: false
+            joinColumn:
+                name: client_id
+                referencedColumnName: id
+                onDelete: CASCADE
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        meta:
+            type: text
+            nullable: true
