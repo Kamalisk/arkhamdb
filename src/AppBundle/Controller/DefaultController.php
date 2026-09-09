@@ -33,9 +33,15 @@ class DefaultController extends Controller
 		$dupe_deck_list = [];
 
 		$type = $this->getDoctrine()->getRepository('AppBundle:Type')->findOneBy(['code' => 'investigator'], ['id' => 'DESC']);
-		$cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findBy(['type' => $type], ['id' => 'ASC']);
+		$qb = $this->getDoctrine()->getRepository('AppBundle:Card')->createQueryBuilder('c');
+		$cards = $qb->where('c.type = :type')
+			->andWhere('c.deckOptions IS NOT NULL AND c.deckOptions != \'\'')
+			->setParameter('type', $type)
+			->orderBy('c.id', 'ASC')
+			->getQuery()
+			->getResult();
 
-		$date1 = strtotime('2025-12-20');
+		$date1 = strtotime('2025-12-01');
 		$date2 = time();
 
 		$year1 = date('Y', $date1);
