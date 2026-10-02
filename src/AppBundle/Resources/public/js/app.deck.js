@@ -809,6 +809,10 @@ deck.get_layout_data = function get_layout_data(options) {
 		if (ancestral_knowledge && ancestral_knowledge.indeck) {
 			size = size + 5;
 		}
+		var collector = app.data.cards.findById("12181");
+		if (collector && collector.indeck) {
+			size = size + 5;
+		}
 		var underworld_support = app.data.cards.findById("08046");
 		if (underworld_support && underworld_support.indeck) {
 			size = size - 5;
@@ -1396,6 +1400,10 @@ deck.get_problem = function get_problem() {
 		if (ancestral_knowledge && ancestral_knowledge.indeck) {
 			size = size + 5;
 		}
+		var collector = app.data.cards.findById("12181");
+		if (collector && collector.indeck) {
+			size = size + 5;
+		}
 		var underworld_support = app.data.cards.findById("08046");
 		if (underworld_support && underworld_support.indeck) {
 			size = size - 5;
@@ -1527,6 +1535,7 @@ deck.reset_limit_count = function (){
 	if (investigator){
 		var ancestral_knowledge = app.data.cards.findById("07303");
 		var versatile = app.data.cards.findById("06167");
+		var collector = app.data.cards.findById("12181");
 		var on_your_own = app.data.cards.findById("53010");
 		// if they user has selected different deck building options, point deck_options to the alternate one
 		if (deck.meta && deck.meta.alternate_back) {
@@ -1556,6 +1565,10 @@ deck.reset_limit_count = function (){
 			// We put it at the front of the requirements since it needs to count things.
 			var new_option = {name: "ancestral_knowledge", dynamic: true, type:["skill"], atleast: { types: 1, min: 10 }, atleast_count: {}, ignore_match: true };
 			deck.deck_options.unshift(new_option);
+		}
+		if (collector && collector.indeck) {
+			var new_option = {name: "collector", dynamic: true, trait: ["relic", "charm"], limit: 1, limit_count: 0, level: {"min": 0, "max": 3} };
+			deck.deck_options.push(new_option);
 		}
 		if (versatile && versatile.indeck) {
 			var new_option = {name: "versatile", dynamic: true, faction:["guardian", "seeker", "survivor", "mystic", "rogue"], limit: 1, limit_count: 0, level:{"min":0, "max":0} };
