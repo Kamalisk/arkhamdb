@@ -26,7 +26,7 @@
             <a href="{{ path('card_reviews_list_byauthor',{page:1,user_id:user.id}) }}">{{ user.reviews|length }} {% trans %}published reviews{% endtrans %}.</a>
         {% else %}
             {% if user.reviews|length == 1 %}
-                <a href="{{ path('card_reviews_list_byauthor',{page:1,user_id:user.id}) }}">{% trans %}One published reviews{% endtrans %}.</a>
+                <a href="{{ path('card_reviews_list_byauthor',{page:1,user_id:user.id}) }}">{% trans %}One published review{% endtrans %}.</a>
             {% else %}
                 No published reviews.
             {% endif %}
