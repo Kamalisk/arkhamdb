@@ -378,6 +378,17 @@ class DecklistManager
 						$sub->expr()->gt('s.quantity', 'c.quantity')
 					));
 				}
+				// the Random Basic Weakness (01000) is a placeholder that only exists in the original Core Set,
+				// but any Core Set provides basic weaknesses, so ignore it if any Core Set is in the collection
+				$core_pack_ids = [];
+				$core_packs = $this->doctrine->getRepository('AppBundle:Pack')->findBy(['code' => ['core', 'rcore', 'core_2026']]);
+				foreach ($core_packs as $core_pack) {
+					$core_pack_ids[] = (string) $core_pack->getId();
+				}
+				if (array_intersect($core_pack_ids, array_map('strval', $packs))) {
+					$sub->andWhere('c.code <> :rbw_code');
+					$qb->setParameter('rbw_code', '01000');
+				}
 				//$sub->where('s.quantity >= c.quantity');
 				//$qb->expr()->or()
 				//$sub->andWhere($sub->expr()->notIn('c.pack', $packs));
