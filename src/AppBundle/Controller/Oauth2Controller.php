@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Deckslot;
+use AppBundle\Entity\UserClientMeta;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Oauth2Controller extends Controller
@@ -781,6 +782,98 @@ class Oauth2Controller extends Controller
         		'success' => TRUE,
         		'msg' => $decklist->getId()
         ]);
+    }
+
+    /**
+     * Get the metadata stored by the calling OAuth client for the authenticated user.
+     * Returns an empty object if none has been saved yet.
+     *
+     * @ApiDoc(
+     *  section="Account",
+     *  resource=true,
+     *  description="Get Account Metadata",
+     * )
+     */
+    public function getAccountMetaAction()
+    {
+        $client = $this->getOAuthClient();
+        $user = $this->getUser();
+
+        $userClientMeta = $this->getDoctrine()->getRepository('AppBundle:UserClientMeta')
+            ->findOneBy(['user' => $user, 'client' => $client]);
+
+        $response = new Response();
+        $response->headers->add(['Access-Control-Allow-Origin' => '*']);
+
+        $data = ($userClientMeta && $userClientMeta->getMeta()) ? $userClientMeta->getMeta() : '{}';
+
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent($data);
+        return $response;
+    }
+
+    /**
+     * Replace the metadata stored by the calling OAuth client for the authenticated user.
+     * Each OAuth client gets its own isolated 64 KB of storage per user.
+     * The value must be a JSON object.
+     *
+     * @ApiDoc(
+     *  section="Account",
+     *  resource=true,
+     *  description="Update Account Metadata",
+     *  parameters={
+     *      {"name"="data", "dataType"="string", "required"=true, "format"="JSON", "description"="JSON object to store (max 64 KB per client)"},
+     *  },
+     * )
+     * @param Request $request
+     */
+    public function updateAccountMetaAction(Request $request)
+    {
+        $raw = $request->get('data');
+
+        if ($raw === null) {
+            return new JsonResponse(['success' => false, 'msg' => 'data parameter is required.'], 400);
+        }
+
+        if (strlen($raw) > 65535) {
+            return new JsonResponse(['success' => false, 'msg' => 'data exceeds the 64 KB limit.'], 400);
+        }
+
+        $decoded = json_decode($raw);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return new JsonResponse(['success' => false, 'msg' => 'data must be valid JSON.'], 400);
+        }
+
+        if (!($decoded instanceof \stdClass)) {
+            return new JsonResponse(['success' => false, 'msg' => 'data must be a JSON object.'], 400);
+        }
+
+        $client = $this->getOAuthClient();
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+
+        $userClientMeta = $em->getRepository('AppBundle:UserClientMeta')
+            ->findOneBy(['user' => $user, 'client' => $client]);
+
+        if (!$userClientMeta) {
+            $userClientMeta = new UserClientMeta();
+            $userClientMeta->setUser($user);
+            $userClientMeta->setClient($client);
+            $em->persist($userClientMeta);
+        }
+
+        $userClientMeta->setMeta($raw);
+        $em->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
+
+    private function getOAuthClient()
+    {
+        $tokenString = $this->get('security.token_storage')->getToken()->getCredentials();
+        $accessToken = $this->getDoctrine()->getRepository('AppBundle:AccessToken')
+            ->findOneBy(['token' => $tokenString]);
+        return $accessToken->getClient();
     }
 
     /**

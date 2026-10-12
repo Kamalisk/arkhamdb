@@ -63,3 +63,14 @@ api_oauth2_update_collection:
     defaults:
         _controller: AppBundle:Oauth2:updateCollection
 
+api_oauth2_get_account_meta:
+    path: /account/meta
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Oauth2:getAccountMeta
+
+api_oauth2_update_account_meta:
+    path: /account/meta
+    methods: [PUT]
+    defaults:
+        _controller: AppBundle:Oauth2:updateAccountMeta
