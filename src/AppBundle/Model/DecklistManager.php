@@ -251,11 +251,17 @@ class DecklistManager
 		$packs = $request->query->get('packs');
 
 		$collection = filter_var($request->query->get('collection'), FILTER_SANITIZE_STRING);
-		if (!$packs && $collection && $user) {
+		if ($collection && $user) {
 			// figure out users collection and assign the packs here!
 			$owned_packs = $user->getOwnedPacks();
 			if ($owned_packs) {
-				$packs = explode(',', $owned_packs);
+				$owned_packs = explode(',', $owned_packs);
+				// the search form submits every pack by default, so only keep the owned ones
+				$packs = $packs ? array_intersect($packs, $owned_packs) : $owned_packs;
+				if (!$packs) {
+					// none of the selected packs are owned
+					$packs = [0];
+				}
 			}
 		}
 
@@ -383,6 +389,17 @@ class DecklistManager
 				//$sub->andWhere($sub->expr()->notIn('c.pack', $packs));
 
 				$qb->andWhere($qb->expr()->not($qb->expr()->exists($sub->getDQL())));
+
+				// the investigator is not in the deck slots: require it, or a reprint of it, in the collection
+				$qb->innerJoin('d.character', 'owned_investigator');
+				$inv = $this->doctrine->createQueryBuilder();
+				$inv->select('i');
+				$inv->from('AppBundle:Card', 'i');
+				$inv->where('i.pack IN (:investigator_packs)');
+				$inv->andWhere('COALESCE(IDENTITY(i.duplicate_of), i.id) = COALESCE(IDENTITY(owned_investigator.duplicate_of), owned_investigator.id)');
+				$qb->andWhere($qb->expr()->exists($inv->getDQL()));
+				// "1-2" (second core set) becomes 1
+				$qb->setParameter('investigator_packs', array_map('intval', $packs));
 			}
 		}
 
