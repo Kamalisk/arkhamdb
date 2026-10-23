@@ -147,11 +147,17 @@ class DeckManager
 		$packs = $request->query->get('packs');
 
 		$collection = filter_var($request->query->get('collection'), FILTER_SANITIZE_STRING);
-		if (!$packs && $collection && $user) {
+		if ($collection && $user) {
 			// figure out users collection and assign the packs here!
 			$owned_packs = $user->getOwnedPacks();
 			if ($owned_packs) {
-				$packs = explode(',', $owned_packs);
+				$owned_packs = explode(',', $owned_packs);
+				// the search form submits every pack by default, so only keep the owned ones
+				$packs = $packs ? array_intersect($packs, $owned_packs) : $owned_packs;
+				if (!$packs) {
+					// none of the selected packs are owned
+					$packs = [0];
+				}
 			}
 		}
 
