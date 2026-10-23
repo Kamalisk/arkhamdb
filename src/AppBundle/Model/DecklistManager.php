@@ -389,6 +389,17 @@ class DecklistManager
 				//$sub->andWhere($sub->expr()->notIn('c.pack', $packs));
 
 				$qb->andWhere($qb->expr()->not($qb->expr()->exists($sub->getDQL())));
+
+				// the investigator is not in the deck slots: require it, or a reprint of it, in the collection
+				$qb->innerJoin('d.character', 'owned_investigator');
+				$inv = $this->doctrine->createQueryBuilder();
+				$inv->select('i');
+				$inv->from('AppBundle:Card', 'i');
+				$inv->where('i.pack IN (:investigator_packs)');
+				$inv->andWhere('COALESCE(IDENTITY(i.duplicate_of), i.id) = COALESCE(IDENTITY(owned_investigator.duplicate_of), owned_investigator.id)');
+				$qb->andWhere($qb->expr()->exists($inv->getDQL()));
+				// "1-2" (second core set) becomes 1
+				$qb->setParameter('investigator_packs', array_map('intval', $packs));
 			}
 		}
 
