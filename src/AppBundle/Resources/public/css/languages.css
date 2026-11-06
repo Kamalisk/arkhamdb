@@ -401,3 +401,23 @@ h6>.lang-xs:after { top:  -1px; }
 .btn.btn-lg>.lang-sm:after { top:  -3px; }
 .btn.btn-lg>.lang-xs       { top:   6px; }
 .btn.btn-lg>.lang-xs:after { top:  -6px; }
+
+/* Brazilian Portuguese Flag & Label Override */
+.lang-xs[lang=pt] {
+    background-image: url('flag-br.svg');
+    background-position: left center;
+    background-size: 14px 10px;
+}
+.lang-sm[lang=pt] {
+    background-image: url('flag-br.svg');
+    background-position: left center;
+    background-size: 22px 15px;
+}
+.lang-lg[lang=pt] {
+    background-image: url('flag-br.svg');
+    background-position: left center;
+    background-size: 30px 21px;
+}
+.lang-lbl[lang=pt]:after { content: "Portugu\0000EAs (BR)"; }
+.lang-lbl-en[lang=pt]:after { content: "Portuguese (Brazil)"; }
+.lang-lbl-full[lang=pt]:after { content: "Portugu\0000EAs (BR)\0000A0/\0000A0Portuguese (Brazil)"; }
