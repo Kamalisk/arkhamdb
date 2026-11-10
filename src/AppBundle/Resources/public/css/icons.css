@@ -73,16 +73,16 @@
 	content: "1";
 }
 .icon-seal_b:before {
-	content: "=2";
+	content: "4";
 }
 .icon-seal_c:before {
 	content: "3";
 }
 .icon-seal_d:before {
-	content: "4";
+	content: "5";
 }
 .icon-seal_e:before {
-	content: "5";
+	content: "2";
 }
 .icon-auto_fail:before {
 	content: "m";
